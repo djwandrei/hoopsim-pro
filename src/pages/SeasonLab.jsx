@@ -145,6 +145,19 @@ export default function SeasonLab() {
     }
   };
 
+  const saveCurrentRun = () => {
+    if (!aggRef.current || !lastRepeat || running) return;
+    const sorted = summarizeAggregate(aggRef.current).sort((a, b) => b.wins - a.wins);
+    saveEntry({
+      year: league.seasonStartYear,
+      label: league.label,
+      repeats: aggRef.current.repeats,
+      champion: lastRepeat.bracket?.champion || null,
+      leader: sorted[0] ? { code: sorted[0].code, wins: sorted[0].wins } : null,
+    });
+    setHistoryNote(`${league.label} saved · ${aggRef.current.repeats} replays${lastRepeat.bracket ? ` · champion ${lastRepeat.bracket.champion}` : ''}.`);
+  };
+
   const handlePlay = async (code, prediction) => {
     if (!lastRepeat || running) return;
     const baseline = lastRepeat.standings.find(item => item.code === code);
@@ -236,6 +249,7 @@ export default function SeasonLab() {
               <HistoryPanel
                 seasons={history}
                 canSave={Boolean(lastRepeat)}
+                onSave={saveCurrentRun}
                 onAdvance={advanceSeason}
                 onClear={() => { setHistory([]); try { localStorage.removeItem(LEAGUE_STORE); } catch { /* storage unavailable */ } setHistoryNote('Saved season history cleared.'); }}
                 running={running}

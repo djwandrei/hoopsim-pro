@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { FastForward, Trash2 } from 'lucide-react';
+import { FastForward, Save, Trash2 } from 'lucide-react';
 
-export default function HistoryPanel({ seasons, canSave, onAdvance, onClear, running, note }) {
+export default function HistoryPanel({ seasons, canSave, onSave, onAdvance, onClear, running, note }) {
   return (
     <section className="court-panel p-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -14,6 +14,9 @@ export default function HistoryPanel({ seasons, canSave, onAdvance, onClear, run
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <Button variant="secondary" onClick={onSave} disabled={running || !canSave} className="gap-2">
+            <Save className="h-4 w-4" />Save current run
+          </Button>
           <Button variant="secondary" onClick={() => onAdvance()} disabled={running || !canSave} className="gap-2">
             <FastForward className="h-4 w-4" />Advance to next season
           </Button>

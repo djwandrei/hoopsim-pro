@@ -7,7 +7,13 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 // Add page imports here
+import StudioHome from '@/pages/StudioHome';
 import SeasonLab from '@/pages/SeasonLab';
+import PlayerLab from '@/pages/PlayerLab';
+import ChemistryLab from '@/pages/ChemistryLab';
+import ForgeLab from '@/pages/ForgeLab';
+import GameLab from '@/pages/GameLab';
+import CareerLab from '@/pages/CareerLab';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -36,7 +42,13 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Add your page Route elements here */}
-      <Route path="/" element={<SeasonLab />} />
+      <Route path="/" element={<StudioHome />} />
+      <Route path="/season" element={<SeasonLab />} />
+      <Route path="/players" element={<PlayerLab />} />
+      <Route path="/chemistry" element={<ChemistryLab />} />
+      <Route path="/forge" element={<ForgeLab />} />
+      <Route path="/game" element={<GameLab />} />
+      <Route path="/career" element={<CareerLab />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import StudioShell from '@/components/studio/StudioShell';
 import StudioHero from '@/components/season/StudioHero';
 import SetupPanel from '@/components/season/SetupPanel';
 import DashboardTab from '@/components/season/DashboardTab';
 import GameTape from '@/components/season/GameTape';
 import ChallengePanel from '@/components/season/ChallengePanel';
 import HistoryPanel from '@/components/season/HistoryPanel';
-import { base44 } from '@/api/base44Client';
 import { loadSeasonSource, AVAILABLE_YEARS } from '@/lib/season/dataClient';
 import {
   buildLeague, runRepeat, aggregateRepeats, summarizeAggregate,
@@ -176,7 +176,7 @@ export default function SeasonLab() {
   const tabsReady = { dashboard: Boolean(summary.length), tape: Boolean(lastRepeat), challenge: Boolean(lastRepeat), history: true };
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <StudioShell active="/season">
       <StudioHero league={league} source={source} sourceState={sourceState} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
         <SetupPanel
@@ -245,6 +245,6 @@ export default function SeasonLab() {
           </>
         )}
       </main>
-    </div>
+    </StudioShell>
   );
 }

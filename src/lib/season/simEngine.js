@@ -423,3 +423,9 @@ export function nextLeague(league, year) {
     generated: true,
   };
 }
+
+export function simSingleGame(league, home, away, { seed = 1, neutral = false, defenseWeight = 0.8 } = {}) {
+  LEAGUE = league;
+  const rng = mulberry32(seed >>> 0);
+  return simGame(home, away, rng, { defenseWeight, neutral });
+}

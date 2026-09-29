@@ -107,7 +107,8 @@
   @apply rounded-xl border border-border/60 bg-card shadow-lg;
 }
 .court-kicker {
-  @apply font-display tracking-[0.2em] text-gold text-sm;
+  @apply font-display tracking-[0.2em] text-sm;
+  color: hsl(var(--court-accent));
 }
 .court-display {
   @apply font-display tracking-wide;

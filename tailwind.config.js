@@ -60,7 +60,15 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+  			canvas: 'hsl(var(--court-canvas) / <alpha-value>)',
+  			surface: 'hsl(var(--court-surface) / <alpha-value>)',
+  			raised: 'hsl(var(--court-raised) / <alpha-value>)',
+  			gold: 'hsl(var(--court-accent) / <alpha-value>)',
+  			goldSoft: 'hsl(var(--court-focus) / <alpha-value>)',
+  			trim: 'hsl(var(--court-trim) / <alpha-value>)',
+  			positive: 'hsl(var(--court-positive) / <alpha-value>)',
+  			royal: 'hsl(var(--court-royal) / <alpha-value>)'
   		},
   		fontFamily: {
   			heading: ['var(--font-heading)'],

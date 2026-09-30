@@ -35,7 +35,7 @@ export default function PlayerPicker({ players, onSelect, selectedRef, placehold
               onClick={() => onSelect(p)}
               aria-pressed={selectedRef === p.playerRef}
               className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                selectedRef === p.playerRef ? 'bg-royal/30 text-foreground' : 'text-foreground hover:bg-raised'
+                selectedRef === p.playerRef ? 'bg-gold/10 text-gold ring-1 ring-gold/30' : 'text-foreground hover:bg-raised'
               }`}
             >
               <span className="truncate">{p.name}</span>

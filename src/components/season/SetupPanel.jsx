@@ -22,7 +22,7 @@ export default function SetupPanel({
           <span className="court-kicker">SEASON OUTLOOK</span>
           <h2 className="court-display mt-1 text-3xl text-foreground">BUILD YOUR REPLAY</h2>
         </div>
-        <Button onClick={onRun} disabled={busy || sourceState !== 'ready' || !Number.isInteger(Number(setup.seed)) || Number(setup.seed) < 0 || Number(setup.seed) > 4294967295} className="min-w-44 gap-2">
+        <Button onClick={onRun} disabled={busy || sourceState !== 'ready' || setup.seed === '' || !Number.isInteger(Number(setup.seed)) || Number(setup.seed) < 0 || Number(setup.seed) > 4294967295} className="min-w-44 gap-2">
           {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
           {running ? 'Simulating…' : hasResults ? 'Run new lab' : 'Run season lab'}
         </Button>
@@ -50,7 +50,7 @@ export default function SetupPanel({
         <div className="flex items-end">
           <div className="flex w-full items-center justify-between rounded-md border border-input bg-raised px-3 py-2">
             <span className="text-sm text-foreground">Playoffs</span>
-            <Switch checked={setup.playoffs} onCheckedChange={checked => onSetupChange({ ...setup, playoffs: checked })} disabled={running} />
+            <Switch aria-label="Include playoffs" checked={setup.playoffs} onCheckedChange={checked => onSetupChange({ ...setup, playoffs: checked })} disabled={running} />
           </div>
         </div>
       </div>

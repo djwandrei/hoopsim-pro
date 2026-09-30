@@ -108,15 +108,15 @@ export default function CareerLab() {
                       <ResponsiveContainer width="100%" height={260}>
                         <LineChart data={chartData} margin={{ top: 8, right: 12, bottom: 0, left: -12 }}>
                           <CartesianGrid stroke="rgba(108,122,142,0.25)" strokeDasharray="3 3" />
-                          <XAxis dataKey="age" tick={{ fill: '#B1BED2', fontSize: 12 }} stroke="rgba(108,122,142,0.4)" />
-                          <YAxis tick={{ fill: '#B1BED2', fontSize: 12 }} stroke="rgba(108,122,142,0.4)" domain={['dataMin - 1', 'dataMax + 1']} />
+                          <XAxis dataKey="age" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} stroke="rgba(108,122,142,0.4)" />
+                          <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} stroke="rgba(108,122,142,0.4)" domain={['dataMin - 1', 'dataMax + 1']} />
                           <Tooltip
-                            contentStyle={{ background: '#19233B', border: '1px solid #6C7A8E', borderRadius: 8, color: '#F4F6FA' }}
-                            labelStyle={{ color: '#E9B949' }}
+                            contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8, color: 'hsl(var(--foreground))' }}
+                            labelStyle={{ color: 'hsl(var(--court-accent))' }}
                           />
-                          <Line type="monotone" dataKey="p90" stroke="#6C7A8E" strokeDasharray="4 4" dot={false} name="P90" />
-                          <Line type="monotone" dataKey="p50" stroke="#E9B949" strokeWidth={2.5} dot={{ r: 3 }} name="Median" />
-                          <Line type="monotone" dataKey="p10" stroke="#6C7A8E" strokeDasharray="4 4" dot={false} name="P10" />
+                          <Line type="monotone" dataKey="p90" stroke="hsl(var(--muted-foreground))" strokeDasharray="4 4" dot={false} name="P90" />
+                          <Line type="monotone" dataKey="p50" stroke="hsl(var(--court-accent))" strokeWidth={2.5} dot={{ r: 3 }} name="Median" />
+                          <Line type="monotone" dataKey="p10" stroke="hsl(var(--muted-foreground))" strokeDasharray="4 4" dot={false} name="P10" />
                         </LineChart>
                       </ResponsiveContainer>
                     </div>

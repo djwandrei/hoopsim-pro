@@ -60,6 +60,8 @@ export default function SeasonLab() {
   useEffect(() => {
     let cancelled = false;
     setSourceState('loading');
+    setLeague(null);
+    setSource(null);
     setSourceError('');
     (async () => {
       try {
@@ -126,7 +128,7 @@ export default function SeasonLab() {
     }
     aggRef.current = accum;
     setAgg(accum);
-    setLastRepeat(rep);
+    if (rep) setLastRepeat(rep);
     setRunning(false);
     setPaused(false);
     if (control.cancelled) setHistoryNote('Run cancelled at a completed-replay checkpoint. Any completed replays remain available.');
@@ -235,7 +237,7 @@ export default function SeasonLab() {
                   onClick={() => setTab(key)}
                   disabled={!tabsReady[key]}
                   className={`flex-1 whitespace-nowrap rounded-lg px-4 py-2 font-display text-sm tracking-widest transition-colors ${
-                    tab === key ? 'bg-royal text-white' : 'text-muted-foreground hover:bg-raised disabled:opacity-40'
+                    tab === key ? 'bg-gold/10 text-gold ring-1 ring-gold/30' : 'text-muted-foreground hover:bg-raised disabled:opacity-40'
                   }`}
                 >
                   {label}

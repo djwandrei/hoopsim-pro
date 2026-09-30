@@ -105,7 +105,7 @@ export default function PlayerLab() {
                       <div>
                         <h2 className="court-display text-3xl text-foreground">{player.name}</h2>
                         <div className="mt-1 flex flex-wrap gap-2 text-xs">
-                          <span className="rounded-full bg-royal/30 px-2 py-0.5 text-foreground">{player.teamCode}</span>
+                          <span className="rounded-md border border-gold/30 bg-gold/10 px-3 py-1 font-mono text-gold">{player.teamCode}</span>
                           <span className="rounded-full bg-raised px-2 py-0.5 text-muted-foreground">
                             {(player.positions || []).join(' / ') || 'Position n/a'}
                           </span>

@@ -56,14 +56,14 @@ export default function GameTape({ games, focusCode, league }) {
           <span className="court-kicker text-xs">GAME TAPE</span>
           <h3 className="court-display text-2xl text-foreground">INSPECT A COMPLETED GAME</h3>
         </div>
-        <div className="flex items-center gap-2">
-          <select className={selectCls} value={scope} onChange={event => { setScope(event.target.value); setIndex(0); }}>
+        <div className="flex flex-wrap items-center gap-2">
+          <select aria-label="Game tape scope" className={selectCls} value={scope} onChange={event => { setScope(event.target.value); setIndex(0); }}>
             <option value="focus">{focusCode} games only</option>
             <option value="all">All games</option>
           </select>
-          <Button variant="secondary" size="icon" onClick={() => setIndex(Math.max(0, safeIndex - 1))} disabled={safeIndex === 0}><ChevronLeft className="h-4 w-4" /></Button>
+          <Button aria-label="Previous game" variant="secondary" size="icon" onClick={() => setIndex(Math.max(0, safeIndex - 1))} disabled={safeIndex === 0}><ChevronLeft className="h-4 w-4" /></Button>
           <span className="font-mono text-xs text-muted-foreground">{list.length ? safeIndex + 1 : 0}/{list.length}</span>
-          <Button variant="secondary" size="icon" onClick={() => setIndex(Math.min(list.length - 1, safeIndex + 1))} disabled={safeIndex >= list.length - 1}><ChevronRight className="h-4 w-4" /></Button>
+          <Button aria-label="Next game" variant="secondary" size="icon" onClick={() => setIndex(Math.min(list.length - 1, safeIndex + 1))} disabled={safeIndex >= list.length - 1}><ChevronRight className="h-4 w-4" /></Button>
         </div>
       </div>
 

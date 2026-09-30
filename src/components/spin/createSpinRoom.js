@@ -44,6 +44,7 @@ export function createSpinRoom({ root, documentRef = root?.ownerDocument || glob
   }
   function syncControls() {
     const ready = state.pool?.status === 'ready' && !state.dirty, remaining = ready ? Math.max(0,state.pool.entries.length-state.history.length) : 0, maxAllowed = Math.min(remaining,SPIN_LIMIT);
+    element.dataset.state = ready ? remaining ? 'ready' : 'complete' : state.dirty ? 'dirty' : 'unavailable';
     spinButton.disabled = !ready || maxAllowed === 0; rebuildButton.textContent = state.dirty ? 'Apply seed and role' : 'Rebuild pool'; spinButton.textContent = state.history.length ? `Spin next role · ${state.history.length+1}` : 'Spin first role';
     if (ready) { poolCount.textContent = `${state.pool.entries.length} eligible ${state.pool.entries.length === 1 ? 'player' : 'players'} · ${selectedRole().label}`; if (remaining === 0) motionNote.textContent = 'Pool complete. Rebuild to replay from the first pick.'; else if (remaining < state.pool.entries.length) motionNote.textContent = `${remaining} eligible ${remaining === 1 ? 'player' : 'players'} remain · no repeats.`; else motionNote.textContent = 'No repeats until the pool is rebuilt.'; }
     renderReceipt();
@@ -64,7 +65,7 @@ export function createSpinRoom({ root, documentRef = root?.ownerDocument || glob
     const entry = result?.selected?.[0]; if (result?.status !== 'ready' || !entry) { setStatus(result?.reason || 'The next seeded draw is unavailable.'); return result; }
     state.history.push({ entry,spin:result }); outcomeTitle.textContent = displayName(entry); outcomeContext.textContent = displayContext(entry) || `Selected on spin ${state.history.length}.`; setStatus(`Spin ${state.history.length}: ${displayName(entry)} selected from ${selectedRole().label}.`); syncControls(); onSelection({ entry,spin:result,pool:state.pool,spinPool,spinNumber:state.history.length }); return result;
   }
-  function onControlChange() { state.dirty = true; spinButton.disabled = true; rebuildButton.textContent = 'Apply seed and role'; poolCount.textContent = 'Seed or role changed · rebuild the eligible pool'; setStatus('Apply the new seed and role before the next spin.'); }
+  function onControlChange() { state.dirty = true; element.dataset.state = 'dirty'; spinButton.disabled = true; rebuildButton.textContent = 'Apply seed and role'; poolCount.textContent = 'Seed or role changed · rebuild the eligible pool'; setStatus('Apply the new seed and role before the next spin.'); }
   const submitHandler = event => { event.preventDefault(); rebuild(); };
   controls.addEventListener('submit',submitHandler); seedInput.addEventListener('input',onControlChange); roleSelect.addEventListener('change',onControlChange); spinButton.addEventListener('click',spinNext); rebuild();
   return { element,rebuild,spinNext,destroy() { timerHost.clearTimeout?.(state.timer); controls.removeEventListener('submit',submitHandler); seedInput.removeEventListener('input',onControlChange); roleSelect.removeEventListener('change',onControlChange); spinButton.removeEventListener('click',spinNext); root.replaceChildren(); } };

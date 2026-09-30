@@ -7,7 +7,7 @@ export const SEEDED_POOL_LIMITS = Object.freeze({ maxEntries:10000, maxSpins:100
 const textCompare = (left,right) => left < right ? -1 : left > right ? 1 : 0;
 const sortedUnique = values => [...new Set(values)].sort(textCompare);
 const cloneEntry = entry => isObject(entry) ? { ...entry } : entry;
-function entryKey(entry,index = 0,uniquePlayerKey = null) {
+function entryKey(entry,_index = 0,uniquePlayerKey = null) {
   if (!isObject(entry)) return null;
   const explicit = uniquePlayerKey && entry[uniquePlayerKey] != null ? entry[uniquePlayerKey] : null;
   const raw = explicit ?? entry.id ?? entry.key ?? entry.playerSeasonRef ?? entry.playerRef ?? entry.playerId;

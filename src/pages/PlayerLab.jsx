@@ -1,11 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import { Dices, Loader2 } from 'lucide-react';
+import { Dices } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StudioShell from '@/components/studio/StudioShell';
-import SeasonSelect from '@/components/studio/SeasonSelect';
+import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
+import SourceStatus from '@/components/studio/SourceStatus';
+import PlayerProfileViews from '@/components/players/PlayerProfileViews';
+import WorkspaceEmpty from '@/components/studio/WorkspaceEmpty';
+
 import PlayerPicker from '@/components/studio/PlayerPicker';
 import useSeasonSource from '@/hooks/useSeasonSource';
-import { observedPlayers, perGameStats, per36Stats, projectNextGame } from '@/lib/season/labs';
+import { observedPlayers, perGameStats, projectNextGame } from '@/lib/season/labs';
 
 const BAND_COLS = ['P10', 'P25', 'MEDIAN', 'P75', 'P90'];
 
@@ -66,7 +70,7 @@ function ProbChips({ projection }) {
 }
 
 export default function PlayerLab() {
-  const { year, setYear, years, source, league, state, error } = useSeasonSource();
+  const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
   const [player, setPlayer] = useState(null);
   const [oppCode, setOppCode] = useState('league');
   const [seed, setSeed] = useState(11);
@@ -79,36 +83,17 @@ export default function PlayerLab() {
     [player, opponent, league, seed],
   );
   const gameStats = player ? perGameStats(player) : null;
-  const rateStats = player ? per36Stats(player) : null;
   const team = player ? league?.byCode.get(player.teamCode) : null;
 
   return (
     <StudioShell active="/players">
-      <header className="border-b border-border/50">
-        <div className="mx-auto max-w-6xl px-4 pb-8 pt-10">
-          <span className="court-kicker inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            SWISHIQ STUDIO
-          </span>
-          <h1 className="court-display mt-2 text-5xl text-foreground">PLAYER BLUEPRINT</h1>
-          <p className="mt-2 max-w-xl text-muted-foreground">
-            Pick any player from the season package and model their next game — percentile bands driven by minutes, role and opponent defense.
-          </p>
-        </div>
-      </header>
+      <WorkbenchHeader title="PLAYER BLUEPRINT" description="Browse observed player records, compare rates, and keep next-game scenarios separate from the evidence." steps={['Roster', 'Profile', 'Scenario']} current={player ? 1 : 0} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
-        {state === 'loading' && (
-          <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-card p-8 text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin text-gold" /> Loading the selected season package…
-          </div>
-        )}
-        {state === 'error' && (
-          <div className="rounded-xl border border-trim/50 bg-card p-6 text-sm text-trim">{error}</div>
-        )}
+        <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value); setPlayer(null); }} onRetry={retry} />
         {state === 'ready' && (
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="space-y-4">
-              <SeasonSelect years={years} year={year} onChange={value => { setYear(value); setPlayer(null); }} />
+              <p className="court-kicker">Observed roster browser</p>
               <PlayerPicker players={players} onSelect={setPlayer} selectedRef={player?.playerRef} />
             </div>
 
@@ -132,7 +117,7 @@ export default function PlayerLab() {
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <div className="w-56">
+                        <div className="w-full sm:w-56">
                           <TeamSelect teams={teams} value={oppCode} onChange={setOppCode} />
                         </div>
                         <Button variant="outline" onClick={() => setSeed(Math.floor(Math.random() * 4294967296))} className="gap-2 border-gold/50 text-goldSoft hover:bg-gold/10">
@@ -140,31 +125,16 @@ export default function PlayerLab() {
                         </Button>
                       </div>
                     </div>
-                    <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                      {[
-                        ['MPG', gameStats.mpg],
-                        ['PTS/G', gameStats.pts],
-                        ['REB/G', gameStats.reb],
-                        ['AST/G', gameStats.ast],
-                        ['PTS/36', rateStats.pts],
-                        ['REB/36', rateStats.reb],
-                        ['AST/36', rateStats.ast],
-                        ['TOV/G', gameStats.tov],
-                      ].map(([label, value]) => (
-                        <div key={label} className="rounded-lg bg-raised/60 px-3 py-2">
-                          <p className="text-xs text-muted-foreground">{label}</p>
-                          <p className="court-display text-2xl text-foreground">{value.toFixed(1)}</p>
-                        </div>
-                      ))}
-                    </div>
                   </section>
+                  <PlayerProfileViews player={player} year={year} source={source} />
 
                   {projection && (
                     <section className="court-panel p-5">
                       <h3 className="court-display text-xl text-foreground">
-                        NEXT-GAME PROJECTION {opponent ? `vs ${opponent.code}` : 'vs league average'}
+                        LOCAL NEXT-GAME SCENARIO {opponent ? `vs ${opponent.code}` : 'vs league average'}
                       </h3>
-                      <div className="mt-3 overflow-x-auto">
+                      <p className="mt-2 text-xs text-muted-foreground">2,000 modeled trials · seed {seed} · percentile bands, not a validated forecast.</p>
+                      <div className="mt-3 overflow-x-auto" tabIndex={0} aria-label="Next-game scenario percentile bands">
                         <BandTable rows={[
                           { label: 'PTS', band: projection.pts },
                           { label: 'REB', band: projection.reb },
@@ -179,9 +149,7 @@ export default function PlayerLab() {
                 </>
               )}
               {!player && (
-                <p className="rounded-xl border border-border/50 bg-card p-8 text-center text-sm text-muted-foreground">
-                  Select a player to build their blueprint.
-                </p>
+                <WorkspaceEmpty title="START WITH THE ROSTER">Search by name or team, select a player, then explore Profile, Stats and Bio alongside the source evidence.</WorkspaceEmpty>
               )}
             </div>
           </div>

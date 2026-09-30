@@ -22,7 +22,7 @@ export default function SetupPanel({
           <span className="court-kicker">SEASON OUTLOOK</span>
           <h2 className="court-display mt-1 text-3xl text-foreground">BUILD YOUR REPLAY</h2>
         </div>
-        <Button onClick={onRun} disabled={busy || sourceState !== 'ready'} className="min-w-44 gap-2">
+        <Button onClick={onRun} disabled={busy || sourceState !== 'ready' || !Number.isInteger(Number(setup.seed)) || Number(setup.seed) < 0 || Number(setup.seed) > 4294967295} className="min-w-44 gap-2">
           {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
           {running ? 'Simulating…' : hasResults ? 'Run new lab' : 'Run season lab'}
         </Button>
@@ -55,8 +55,9 @@ export default function SetupPanel({
         </div>
       </div>
 
+      <div className="mt-4 flex flex-wrap items-end gap-4"><label className="block"><span className="mb-1.5 block text-xs text-muted-foreground">Base replay seed</span><input type="number" min={0} max={4294967295} value={setup.seed} disabled={running} onChange={event => onSetupChange({ ...setup, seed: event.target.value })} className="min-h-10 w-40 rounded-md border border-input bg-raised px-3 text-sm" /></label><p className="max-w-lg text-xs leading-relaxed text-muted-foreground">Each replay increments the seed. The current model uses fixed team rates and pinned rosters; rotation and coaching decisions are not supported.</p></div>
       {running && (
-        <div className="mt-4">
+        <div className="mt-4" role="status" aria-live="polite">
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Simulating seasons…</span>
             <span className="font-mono">{Math.round(progress * 100)}%</span>
@@ -68,7 +69,7 @@ export default function SetupPanel({
       )}
 
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-        <span>Exact NBA schedule · {league ? league.teams.length : '—'} teams</span>
+        <span>{league?.generated ? 'Generated schedule · conditional next season' : 'Published NBA schedule'} · {league ? league.teams.length : '—'} teams</span>
         {league?.hasActualResults && <span className="text-positive">Actual results available for comparison</span>}
         {sourceState === 'loading' && <span className="text-gold">Loading the selected season package…</span>}
         {sourceError && <span className="text-trim">{sourceError}</span>}

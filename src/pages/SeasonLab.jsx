@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import StudioShell from '@/components/studio/StudioShell';
+import SourceStatus from '@/components/studio/SourceStatus';
+import RunControls from '@/components/studio/RunControls';
+import useStudioSeason from '@/components/studio/useStudioSeason';
 import StudioHero from '@/components/season/StudioHero';
 import SetupPanel from '@/components/season/SetupPanel';
 import DashboardTab from '@/components/season/DashboardTab';
@@ -32,13 +35,16 @@ function readStore(key, fallback) {
 }
 
 export default function SeasonLab() {
-  const [year, setYear] = useState(2025);
+  const [year, setYear] = useStudioSeason(2025);
+  const [retryToken, setRetryToken] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const controlRef = useRef({ paused: false, cancelled: false });
   const [source, setSource] = useState(null);
   const [sourceState, setSourceState] = useState('idle');
   const [sourceError, setSourceError] = useState('');
   const [league, setLeague] = useState(null);
   const [schedule, setSchedule] = useState([]);
-  const [setup, setSetup] = useState({ repeats: 25, playoffs: true, blend: '0.5' });
+  const [setup, setSetup] = useState({ repeats: 25, playoffs: true, blend: '0.5', seed: 11 });
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [agg, setAgg] = useState(null);
@@ -76,7 +82,9 @@ export default function SeasonLab() {
       }
     })();
     return () => { cancelled = true; };
-  }, [year]);
+  }, [year, retryToken]);
+
+  useEffect(() => () => { controlRef.current.cancelled = true; }, []);
 
   const actualMap = useMemo(() => {
     if (!source || league?.generated) return new Map();
@@ -95,14 +103,19 @@ export default function SeasonLab() {
 
   const runRepeats = async ({ count, lg = league, sc = schedule, pending = null, autoSave = false } = {}) => {
     if (!lg || running) return;
+    const control = { paused: false, cancelled: false };
+    controlRef.current = control;
+    setPaused(false);
     setRunning(true);
     setProgress(0);
     const weight = BLEND_WEIGHTS[setup.blend] ?? 0.8;
     let accum = aggRef.current;
     let rep = null;
     for (let i = 0; i < count; i += 1) {
+      while (control.paused && !control.cancelled) await new Promise(resolve => setTimeout(resolve, 50));
+      if (control.cancelled) break;
       rep = runRepeat(lg, sc, {
-        seed: Math.floor(Math.random() * 4294967296),
+        seed: (Number(setup.seed) + i) >>> 0,
         playoffs: setup.playoffs,
         defenseWeight: weight,
       });
@@ -115,7 +128,9 @@ export default function SeasonLab() {
     setAgg(accum);
     setLastRepeat(rep);
     setRunning(false);
-    if (pending && rep) {
+    setPaused(false);
+    if (control.cancelled) setHistoryNote('Run cancelled at a completed-replay checkpoint. Any completed replays remain available.');
+    if (pending && rep && !control.cancelled) {
       const row = rep.standings.find(item => item.code === pending.code);
       const direction = row.wins > pending.baselineWins ? 'more' : row.wins < pending.baselineWins ? 'fewer' : 'same';
       const won = direction === pending.prediction;
@@ -132,7 +147,7 @@ export default function SeasonLab() {
       });
       setChallengeMsg(`${pending.teamName}: ${pending.baselineWins} → ${row.wins} wins. ${won ? 'Prediction correct.' : `Missed — the result was ${direction} wins.`}`);
     }
-    if (autoSave && rep) {
+    if (autoSave && rep && !control.cancelled) {
       const sorted = summarizeAggregate(accum).sort((a, b) => b.wins - a.wins);
       saveEntry({
         year: lg.seasonStartYear,
@@ -192,6 +207,7 @@ export default function SeasonLab() {
     <StudioShell active="/season">
       <StudioHero league={league} source={source} sourceState={sourceState} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
+        <SourceStatus state={sourceState} source={source} error={sourceError} year={year} onRetry={() => setRetryToken(value => value + 1)} />
         <SetupPanel
           years={AVAILABLE_YEARS}
           year={year}
@@ -207,7 +223,8 @@ export default function SeasonLab() {
           hasResults={Boolean(lastRepeat)}
         />
 
-        {league && (
+        {running && <RunControls paused={paused} onPause={() => { controlRef.current.paused = !controlRef.current.paused; setPaused(controlRef.current.paused); }} onCancel={() => { controlRef.current.cancelled = true; controlRef.current.paused = false; setPaused(false); }} label="Pause or cancel at the next completed season replay, not during a possession." />}
+        {league && sourceState === 'ready' && (
           <>
             <nav className="sticky top-2 z-10 flex gap-1 overflow-x-auto rounded-xl border border-border/60 bg-card/95 p-1 backdrop-blur">
               {TABS.map(([key, label]) => (

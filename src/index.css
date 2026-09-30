@@ -4,112 +4,71 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* DJHC court palette (SwishIQ Studio visual contract) */
-    --court-canvas: 219 49% 10%;      /* #0C1326 */
-    --court-surface: 219 39% 17%;     /* #19233B */
-    --court-raised: 218 38% 22%;      /* #23304C */
-    --court-text: 220 33% 96%;        /* #F4F6FA */
-    --court-muted: 217 24% 76%;       /* #B1BED2 */
-    --court-border: 217 15% 49%;      /* #6C7A8E */
-    --court-accent: 43 78% 60%;       /* #E9B949 */
-    --court-focus: 43 85% 72%;        /* #F4D37C */
-    --court-trim: 356 66% 53%;        /* #D63A4B */
-    --court-positive: 148 55% 68%;    /* #80DBB0 */
-    --court-royal: 227 73% 57%;       /* #4169E1 */
-
-    --background: 219 49% 10%;
-    --foreground: 220 33% 96%;
-    --card: 219 39% 17%;
-    --card-foreground: 220 33% 96%;
-    --popover: 218 38% 14%;
-    --popover-foreground: 220 33% 96%;
-    --primary: 227 73% 57%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 218 38% 22%;
-    --secondary-foreground: 220 33% 96%;
-    --muted: 218 38% 22%;
-    --muted-foreground: 217 24% 76%;
-    --accent: 218 38% 22%;
-    --accent-foreground: 220 33% 96%;
+  :root, .dark {
+    --court-canvas: 210 11% 7%;
+    --court-surface: 210 11% 11%;
+    --court-raised: 210 10% 16%;
+    --court-text: 48 16% 95%;
+    --court-muted: 216 7% 68%;
+    --court-border: 216 10% 27%;
+    --court-accent: 43 78% 60%;
+    --court-focus: 43 85% 72%;
+    --court-trim: 356 66% 53%;
+    --court-positive: 148 55% 68%;
+    --court-royal: 227 73% 57%;
+    --background: 210 11% 7%;
+    --foreground: 48 16% 95%;
+    --card: 210 11% 11%;
+    --card-foreground: 48 16% 95%;
+    --popover: 210 11% 11%;
+    --popover-foreground: 48 16% 95%;
+    --primary: 43 78% 60%;
+    --primary-foreground: 210 11% 7%;
+    --secondary: 210 10% 16%;
+    --secondary-foreground: 48 16% 95%;
+    --muted: 210 10% 16%;
+    --muted-foreground: 216 7% 68%;
+    --accent: 210 10% 16%;
+    --accent-foreground: 48 16% 95%;
     --destructive: 356 66% 53%;
     --destructive-foreground: 0 0% 98%;
-    --border: 217 15% 35%;
-    --input: 217 15% 35%;
+    --border: 216 10% 27%;
+    --input: 216 10% 30%;
     --ring: 43 85% 72%;
     --chart-1: 43 78% 60%;
     --chart-2: 227 73% 57%;
     --chart-3: 148 55% 68%;
     --chart-4: 356 66% 53%;
-    --chart-5: 217 24% 76%;
+    --chart-5: 216 7% 68%;
     --radius: 0.75rem;
     --font-heading: 'Bebas Neue', Impact, sans-serif;
     --font-body: ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Bebas Neue', Impact, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    --sidebar-background: 219 49% 10%;
-    --sidebar-foreground: 217 24% 76%;
-    --sidebar-primary: 227 73% 57%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 218 38% 22%;
-    --sidebar-accent-foreground: 220 33% 96%;
-    --sidebar-border: 217 15% 35%;
+    --sidebar-background: 210 11% 7%;
+    --sidebar-foreground: 216 7% 68%;
+    --sidebar-primary: 43 78% 60%;
+    --sidebar-primary-foreground: 210 11% 7%;
+    --sidebar-accent: 210 10% 16%;
+    --sidebar-accent-foreground: 48 16% 95%;
+    --sidebar-border: 216 10% 27%;
     --sidebar-ring: 43 85% 72%;
   }
-
-  .dark {
-    --background: 219 49% 10%;
-    --foreground: 220 33% 96%;
-    --card: 219 39% 17%;
-    --card-foreground: 220 33% 96%;
-    --popover: 218 38% 14%;
-    --popover-foreground: 220 33% 96%;
-    --primary: 227 73% 57%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 218 38% 22%;
-    --secondary-foreground: 220 33% 96%;
-    --muted: 218 38% 22%;
-    --muted-foreground: 217 24% 76%;
-    --accent: 218 38% 22%;
-    --accent-foreground: 220 33% 96%;
-    --destructive: 356 66% 53%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 217 15% 35%;
-    --input: 217 15% 35%;
-    --ring: 43 85% 72%;
-    --chart-1: 43 78% 60%;
-    --chart-2: 227 73% 57%;
-    --chart-3: 148 55% 68%;
-    --chart-4: 356 66% 53%;
-    --chart-5: 217 24% 76%;
-    --sidebar-background: 218 38% 14%;
-    --sidebar-foreground: 217 24% 76%;
-    --sidebar-primary: 227 73% 57%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 218 38% 22%;
-    --sidebar-accent-foreground: 220 33% 96%;
-    --sidebar-border: 217 15% 35%;
-    --sidebar-ring: 43 85% 72%;
-  }
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground font-body; }
 }
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  body {
-    @apply bg-background text-foreground font-body;
-  }
-}
-
-.court-panel {
-  @apply rounded-xl border border-border/60 bg-card shadow-lg;
-}
-.court-kicker {
-  @apply font-display tracking-[0.2em] text-sm;
-  color: hsl(var(--court-accent));
-}
-.court-display {
-  @apply font-display tracking-wide;
-}
+.court-panel { @apply rounded-xl border border-border/70 bg-card; }
+.court-kicker { @apply font-body text-xs font-semibold uppercase tracking-[0.2em]; color: hsl(var(--court-accent)); }
+.court-display { @apply font-display tracking-wide; }
+.studio-workspace { min-width: 0; }
+.studio-workspace main { min-width: 0; }
+.studio-workspace section, .studio-workspace .grid > div { min-width: 0; }
+.studio-workspace button:focus-visible, .studio-workspace a:focus-visible, .studio-workspace input:focus-visible, .studio-workspace select:focus-visible, .studio-workspace summary:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
+.studio-workspace table { border-collapse: separate; border-spacing: 0; }
+.studio-workspace th { padding: 0.65rem 0.5rem; white-space: nowrap; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--card)); position: sticky; top: 0; z-index: 1; font-size: 0.65rem; letter-spacing: 0.08em; }
+.studio-workspace td { padding: 0.65rem 0.5rem; }
+.studio-workspace tbody tr:nth-child(even) { background: hsl(var(--court-raised) / 0.2); }
+.studio-workspace .overflow-x-auto { max-width: 100%; overscroll-behavior-x: contain; }
+.studio-workspace select { min-height: 2.5rem; max-width: 100%; }
+@media (max-width: 639px) { .studio-workspace table { min-width: 28rem; } .studio-workspace .overflow-x-auto::before { content: 'Swipe to view all columns'; display: block; padding: 0.25rem 0; font-size: 0.65rem; color: hsl(var(--muted-foreground)); } }
+@media (prefers-reduced-motion: reduce) { .studio-workspace *, .studio-workspace *::before, .studio-workspace *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }

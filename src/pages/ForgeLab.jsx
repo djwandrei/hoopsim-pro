@@ -1,9 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { Loader2, RotateCcw, Swords } from 'lucide-react';
+import { RotateCcw, Swords } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import StudioShell from '@/components/studio/StudioShell';
-import SeasonSelect from '@/components/studio/SeasonSelect';
+import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
+import SourceStatus from '@/components/studio/SourceStatus';
+import DonorRecipe from '@/components/forge/DonorRecipe';
+
 import useSeasonSource from '@/hooks/useSeasonSource';
 import { simSingleGame } from '@/lib/season/simEngine';
 
@@ -23,11 +26,12 @@ function TeamSelect({ teams, value, onChange, label }) {
 }
 
 export default function ForgeLab() {
-  const { year, setYear, years, league, state, error } = useSeasonSource();
+  const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
   const [codeA, setCodeA] = useState('');
   const [codeB, setCodeB] = useState('');
   const [mix, setMix] = useState(60);
   const [tour, setTour] = useState(null);
+  const [locked, setLocked] = useState(false);
 
   const teams = league?.teams || [];
   const teamA = league ? league.byCode.get(codeA || teams[0]?.code) : null;
@@ -83,32 +87,13 @@ export default function ForgeLab() {
 
   return (
     <StudioShell active="/forge">
-      <header className="border-b border-border/50">
-        <div className="mx-auto max-w-6xl px-4 pb-8 pt-10">
-          <span className="court-kicker inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            SWISHIQ STUDIO
-          </span>
-          <h1 className="court-display mt-2 text-5xl text-foreground">COMPOSITE FORGE</h1>
-          <p className="mt-2 max-w-xl text-muted-foreground">
-            Fuse two rosters into one super team, dial in the blend, then run it through a 30-game league tour.
-          </p>
-        </div>
-      </header>
+      <WorkbenchHeader title="COMPOSITE FORGE" description="Choose two observed team profiles, review the donor recipe, then test a clearly labeled local scenario." steps={['Donors', 'Recipe', 'Tour']} current={tour ? 2 : locked ? 1 : 0} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
-        {state === 'loading' && (
-          <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-card p-8 text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin text-gold" /> Loading the selected season package…
-          </div>
-        )}
-        {state === 'error' && (
-          <div className="rounded-xl border border-trim/50 bg-card p-6 text-sm text-trim">{error}</div>
-        )}
+        <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value); setTour(null); setLocked(false); }} onRetry={retry} disabled={locked} />
         {state === 'ready' && teamA && teamB && composite && (
           <>
             <section className="court-panel p-5">
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <SeasonSelect years={years} year={year} onChange={value => { setYear(value); setTour(null); }} />
+              <fieldset disabled={locked} className="grid gap-4 sm:grid-cols-3">
                 <TeamSelect teams={teams} value={teamA.code} onChange={value => { setCodeA(value); setTour(null); }} label="Roster A" />
                 <TeamSelect teams={teams} value={teamB.code} onChange={value => { setCodeB(value); setTour(null); }} label="Roster B" />
                 <div>
@@ -117,18 +102,19 @@ export default function ForgeLab() {
                     <Slider value={[mix]} min={0} max={100} step={5} onValueChange={([value]) => { setMix(value); setTour(null); }} />
                   </div>
                 </div>
-              </div>
+              </fieldset>
             </section>
+            <DonorRecipe teamA={teamA} teamB={teamB} mix={mix} year={year} locked={locked} onLock={() => setLocked(value => !value)} />
 
             <section className="court-panel p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h2 className="court-display text-3xl text-foreground">{composite.name.toUpperCase()}</h2>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Projected rank by net rating: #{rank} of {league.teams.length + 1}
+                    Conditional profile rank by net rating: #{rank} of {league.teams.length + 1} · {locked ? 'Recipe locked' : 'Lock recipe before running'}
                   </p>
                 </div>
-                <Button onClick={runTour} className="gap-2">
+                <Button onClick={runTour} disabled={!locked} className="gap-2">
                   <Swords className="h-4 w-4" /> Run league tour
                 </Button>
               </div>
@@ -157,7 +143,7 @@ export default function ForgeLab() {
                     <RotateCcw className="h-3.5 w-3.5" /> Re-roll
                   </Button>
                 </div>
-                <div className="mt-3 max-h-96 overflow-y-auto pr-1">
+                <div className="mt-3 max-h-96 overflow-auto pr-1" tabIndex={0} aria-label="League tour results">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="text-xs text-muted-foreground">

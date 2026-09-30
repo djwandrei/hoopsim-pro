@@ -1,10 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
-import { LineChart as LineChartIcon, Loader2 } from 'lucide-react';
+import { LineChart as LineChartIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import StudioShell from '@/components/studio/StudioShell';
-import SeasonSelect from '@/components/studio/SeasonSelect';
+import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
+import SourceStatus from '@/components/studio/SourceStatus';
+import CareerEvidence from '@/components/career/CareerEvidence';
+import WorkspaceEmpty from '@/components/studio/WorkspaceEmpty';
+
 import PlayerPicker from '@/components/studio/PlayerPicker';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import { observedPlayers, perGameStats, per36Stats, projectCareer } from '@/lib/season/labs';
@@ -12,11 +16,12 @@ import { observedPlayers, perGameStats, per36Stats, projectCareer } from '@/lib/
 const round1 = value => Number(value.toFixed(1));
 
 export default function CareerLab() {
-  const { year, setYear, years, source, state, error } = useSeasonSource();
+  const { year, setYear, years, source, state, error, retry } = useSeasonSource();
   const [player, setPlayer] = useState(null);
   const [age, setAge] = useState(24);
   const [span, setSpan] = useState(6);
   const [result, setResult] = useState(null);
+  const [view, setView] = useState('evidence');
 
   const players = useMemo(() => (source ? observedPlayers(source) : []), [source]);
   const gameStats = player ? perGameStats(player) : null;
@@ -40,33 +45,16 @@ export default function CareerLab() {
 
   return (
     <StudioShell active="/career">
-      <header className="border-b border-border/50">
-        <div className="mx-auto max-w-6xl px-4 pb-8 pt-10">
-          <span className="court-kicker inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            SWISHIQ STUDIO
-          </span>
-          <h1 className="court-display mt-2 text-5xl text-foreground">CAREER LAB</h1>
-          <p className="mt-2 max-w-xl text-muted-foreground">
-            Project a player&apos;s future seasons with aging-curve Monte Carlo — median paths and confidence bands for scoring, rebounds and playmaking.
-          </p>
-        </div>
-      </header>
+      <WorkbenchHeader title="CAREER LAB" description="Start with recorded season evidence. Conditional aging scenarios are a separate exploration; validated forecasts remain unavailable." steps={['Player', 'Recorded evidence', 'Local scenario']} current={player ? view === 'scenario' ? 2 : 1 : 0} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
-        {state === 'loading' && (
-          <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-card p-8 text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin text-gold" /> Loading the selected season package…
-          </div>
-        )}
-        {state === 'error' && (
-          <div className="rounded-xl border border-trim/50 bg-card p-6 text-sm text-trim">{error}</div>
-        )}
+        <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value); setPlayer(null); setResult(null); }} onRetry={retry} />
         {state === 'ready' && (
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="space-y-4">
-              <SeasonSelect years={years} year={year} onChange={value => { setYear(value); setPlayer(null); setResult(null); }} />
+              <p className="court-kicker">Player browser</p>
               <PlayerPicker players={players} onSelect={selectPlayer} selectedRef={player?.playerRef} />
-              <div className="court-panel space-y-4 p-4">
+              <div className="court-panel p-4"><p className="text-xs text-muted-foreground">View</p><div className="mt-2 flex flex-wrap gap-2">{[['evidence','Recorded evidence'],['scenario','Local scenario']].map(([key,label]) => <button key={key} type="button" aria-pressed={view === key} onClick={() => setView(key)} className={view === key ? 'rounded-lg bg-gold/10 px-3 py-2 text-xs text-gold' : 'rounded-lg px-3 py-2 text-xs text-muted-foreground hover:bg-raised'}>{label}</button>)}</div></div>
+              {view === 'scenario' && <div className="court-panel space-y-4 p-4">
                 <div>
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>Current age</span>
@@ -86,9 +74,10 @@ export default function CareerLab() {
                   </div>
                 </div>
                 <Button onClick={run} disabled={!player} className="w-full gap-2">
-                  <LineChartIcon className="h-4 w-4" /> Project career
+                  <LineChartIcon className="h-4 w-4" /> Run local scenario
                 </Button>
-              </div>
+                <p className="text-xs text-muted-foreground">User-specified age and generic aging curves. These are conditional assumptions, not recorded biography or a validated forecast.</p>
+              </div>}
             </div>
 
             <div className="space-y-4 lg:col-span-2">
@@ -103,17 +92,18 @@ export default function CareerLab() {
                     </div>
                     {result && (
                       <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs text-goldSoft">
-                        Peak projection: age {result.peak.age} · {result.peak.pts36.p50.toFixed(1)} PTS/36
+                        Local scenario peak: age {result.peak.age} · {result.peak.pts36.p50.toFixed(1)} PTS/36
                       </span>
                     )}
                   </div>
                 </section>
               )}
 
-              {result && (
+              {player && view === 'evidence' && <CareerEvidence player={player} source={source} year={year} />}
+              {result && view === 'scenario' && (
                 <>
                   <section className="court-panel p-5">
-                    <h3 className="court-display text-xl text-foreground">SCORING PATH (PTS PER 36)</h3>
+                    <h3 className="court-display text-xl text-foreground">CONDITIONAL SCORING PATH · PTS / 36</h3>
                     <div className="mt-3">
                       <ResponsiveContainer width="100%" height={260}>
                         <LineChart data={chartData} margin={{ top: 8, right: 12, bottom: 0, left: -12 }}>
@@ -133,7 +123,7 @@ export default function CareerLab() {
                   </section>
 
                   <section className="court-panel p-5">
-                    <h3 className="court-display text-xl text-foreground">PROJECTED SEASONS</h3>
+                    <h3 className="court-display text-xl text-foreground">LOCAL SCENARIO ROWS · NOT A FORECAST</h3>
                     <div className="mt-3 overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
@@ -163,9 +153,7 @@ export default function CareerLab() {
               )}
 
               {!player && (
-                <p className="rounded-xl border border-border/50 bg-card p-8 text-center text-sm text-muted-foreground">
-                  Select a player and set their current age to project a career.
-                </p>
+                <WorkspaceEmpty title="START WITH RECORDED EVIDENCE">Choose a player to review source season stints. Local aging scenarios are kept in a separate view.</WorkspaceEmpty>
               )}
             </div>
           </div>

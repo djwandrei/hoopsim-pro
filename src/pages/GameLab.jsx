@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Loader2, Play, RotateCcw, Swords, Trophy } from 'lucide-react';
+import { Play, RotateCcw, Swords, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import StudioShell from '@/components/studio/StudioShell';
-import SeasonSelect from '@/components/studio/SeasonSelect';
+import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
+import SourceStatus from '@/components/studio/SourceStatus';
+import MatchupReview from '@/components/game/MatchupReview';
+import WorkspaceEmpty from '@/components/studio/WorkspaceEmpty';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import { simSingleGame } from '@/lib/season/simEngine';
 
@@ -64,10 +67,12 @@ function BoxTable({ title, box }) {
 }
 
 export default function GameLab() {
-  const { year, setYear, years, league, state, error } = useSeasonSource();
+  const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
   const [homeCode, setHomeCode] = useState('');
   const [awayCode, setAwayCode] = useState('');
   const [neutral, setNeutral] = useState(false);
+  const [seed, setSeed] = useState(11);
+  const [reviewMode, setReviewMode] = useState(null);
   const [result, setResult] = useState(null);
   const [series, setSeries] = useState(null);
   const [campaign, setCampaign] = useState(() => readStore(CAMPAIGN_STORE, []));
@@ -85,9 +90,9 @@ export default function GameLab() {
 
   const playSingle = () => {
     if (!ready || sameTeams) return;
-    setResult(simSingleGame(league, league.byCode.get(home), league.byCode.get(away), {
-      seed: Math.floor(Math.random() * 4294967296), neutral,
-    }));
+    const game = simSingleGame(league, league.byCode.get(home), league.byCode.get(away), { seed: Number(seed) >>> 0, neutral });
+    setResult({ ...game, replaySeed: Number(seed) >>> 0 });
+    setReviewMode(null);
     setSeries(null);
   };
 
@@ -101,8 +106,8 @@ export default function GameLab() {
     for (let n = 1; hw < 4 && aw < 4; n += 1) {
       const isHome = homeGames.includes(n);
       const game = isHome
-        ? simSingleGame(league, homeTeam, awayTeam, { seed: Math.floor(Math.random() * 4294967296), neutral })
-        : simSingleGame(league, awayTeam, homeTeam, { seed: Math.floor(Math.random() * 4294967296), neutral });
+        ? simSingleGame(league, homeTeam, awayTeam, { seed: (Number(seed) + n - 1) >>> 0, neutral })
+        : simSingleGame(league, awayTeam, homeTeam, { seed: (Number(seed) + n - 1) >>> 0, neutral });
       const hp = isHome ? game.homePts : game.awayPts;
       const ap = isHome ? game.awayPts : game.homePts;
       if (hp > ap) hw += 1; else aw += 1;
@@ -113,7 +118,8 @@ export default function GameLab() {
     }
     const winner = hw > aw ? home : away;
     const loser = winner === home ? away : home;
-    setSeries({ home, away, results, winner, hw, aw });
+    setSeries({ home, away, results, winner, hw, aw, replaySeed: Number(seed) >>> 0 });
+    setReviewMode(null);
     setResult(null);
     saveCampaign([...campaign, {
       label: `${winner} defeated ${loser} ${Math.max(hw, aw)}–${Math.min(hw, aw)}`,
@@ -125,59 +131,43 @@ export default function GameLab() {
 
   return (
     <StudioShell active="/game">
-      <header className="border-b border-border/50">
-        <div className="mx-auto max-w-6xl px-4 pb-8 pt-10">
-          <span className="court-kicker inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            SWISHIQ STUDIO
-          </span>
-          <h1 className="court-display mt-2 text-5xl text-foreground">GAME LAB</h1>
-          <p className="mt-2 max-w-xl text-muted-foreground">
-            Simulate any matchup with full box scores, then run best-of-seven series and keep your campaign record.
-          </p>
-        </div>
-      </header>
+      <WorkbenchHeader title="GAME LAB" description="Set the exact-season matchup, review the supported decisions, then run and replay a seeded local simulation." steps={['Mode & setup', 'Decisions', 'Results & replay']} current={reviewMode ? 1 : result || series ? 2 : 0} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
-        {state === 'loading' && (
-          <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-card p-8 text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin text-gold" /> Loading the selected season package…
-          </div>
-        )}
-        {state === 'error' && (
-          <div className="rounded-xl border border-trim/50 bg-card p-6 text-sm text-trim">{error}</div>
-        )}
+        <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value); setResult(null); setSeries(null); setReviewMode(null); }} onRetry={retry} />
         {ready && (
           <>
             <section className="court-panel p-5">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <SeasonSelect years={years} year={year} onChange={value => { setYear(value); setResult(null); setSeries(null); }} />
-                <TeamSelect teams={teams} value={home} onChange={setHomeCode} label="Home team" />
-                <TeamSelect teams={teams} value={away} onChange={setAwayCode} label="Away team" />
+                <label className="block"><span className="mb-1.5 block text-xs text-muted-foreground">Replay seed</span><input type="number" min={0} max={4294967295} value={seed} onChange={event => { setSeed(event.target.value); setResult(null); setSeries(null); setReviewMode(null); }} className="min-h-10 w-full rounded-md border border-input bg-raised px-3 text-sm" /></label>
+                <TeamSelect teams={teams} value={home} onChange={value => { setHomeCode(value); setResult(null); setSeries(null); setReviewMode(null); }} label="Home team" />
+                <TeamSelect teams={teams} value={away} onChange={value => { setAwayCode(value); setResult(null); setSeries(null); setReviewMode(null); }} label="Away team" />
                 <div className="flex items-end">
                   <div className="flex w-full items-center justify-between rounded-md border border-input bg-raised px-3 py-2">
                     <span className="text-sm text-foreground">Neutral court</span>
-                    <Switch checked={neutral} onCheckedChange={setNeutral} />
+                    <Switch aria-label="Neutral court" checked={neutral} onCheckedChange={value => { setNeutral(value); setResult(null); setSeries(null); setReviewMode(null); }} />
                   </div>
                 </div>
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
-                <Button onClick={playSingle} disabled={sameTeams} className="gap-2">
-                  <Play className="h-4 w-4" /> Simulate game
+                <Button onClick={() => setReviewMode('single')} disabled={sameTeams || seed === '' || !Number.isInteger(Number(seed)) || Number(seed) < 0 || Number(seed) > 4294967295} className="gap-2">
+                  <Play className="h-4 w-4" /> Review single game
                 </Button>
-                <Button onClick={playSeries} disabled={sameTeams} variant="outline" className="gap-2 border-gold/50 text-goldSoft hover:bg-gold/10">
-                  <Swords className="h-4 w-4" /> Play best-of-7 series
+                <Button onClick={() => setReviewMode('series')} disabled={sameTeams || seed === '' || !Number.isInteger(Number(seed)) || Number(seed) < 0 || Number(seed) > 4294967295} variant="outline" className="gap-2 border-gold/50 text-goldSoft hover:bg-gold/10">
+                  <Swords className="h-4 w-4" /> Review best-of-seven
                 </Button>
                 {sameTeams && <span className="self-center text-sm text-trim">Pick two different teams.</span>}
               </div>
             </section>
 
+            {reviewMode && <MatchupReview home={home} away={away} year={year} neutral={neutral} seed={seed} mode={reviewMode} onRun={reviewMode === 'single' ? playSingle : playSeries} onBack={() => setReviewMode(null)} />}
+            {!result && !series && !reviewMode && <WorkspaceEmpty title="SET YOUR MATCHUP">Choose two different teams and a seed. Review the supported inputs before running; games are computed in one step, without live possession controls.</WorkspaceEmpty>}
             {result && (
               <>
                 <section className="court-panel p-6 text-center">
-                  <div className="flex items-center justify-center gap-6">
+                  <div className="flex items-center justify-center gap-3 sm:gap-6">
                     <div>
                       <p className="font-display text-xl tracking-widest text-muted-foreground">{home}</p>
-                      <p className="court-display text-7xl text-foreground">{result.homePts}</p>
+                      <p className="court-display text-5xl text-foreground sm:text-7xl">{result.homePts}</p>
                     </div>
                     <div className="text-center">
                       <p className="font-display text-sm tracking-widest text-gold">{result.ot ? `FINAL/${result.ot}OT` : 'FINAL'}</p>
@@ -185,12 +175,14 @@ export default function GameLab() {
                     </div>
                     <div>
                       <p className="font-display text-xl tracking-widest text-muted-foreground">{away}</p>
-                      <p className="court-display text-7xl text-foreground">{result.awayPts}</p>
+                      <p className="court-display text-5xl text-foreground sm:text-7xl">{result.awayPts}</p>
                     </div>
                   </div>
                   <p className="mt-3 font-mono text-xs text-muted-foreground">
-                    ORTG {result.ortgH.toFixed(1)} vs {result.ortgA.toFixed(1)}
+                    ORTG {result.ortgH.toFixed(1)} vs {result.ortgA.toFixed(1)} · seed {result.replaySeed}
                   </p>
+                  <p className="mt-3 text-xs text-muted-foreground">Modeled final score and player box scores · not observed results.</p>
+                  <Button className="mt-4" variant="outline" onClick={playSingle}><RotateCcw className="h-4 w-4" />Replay same seed</Button>
                 </section>
                 <div className="grid gap-4 lg:grid-cols-2">
                   {homeBox && <BoxTable title={`${home} box score`} box={homeBox} />}
@@ -207,6 +199,8 @@ export default function GameLab() {
                     {series.winner} WIN {Math.max(series.hw, series.aw)}–{Math.min(series.hw, series.aw)}
                   </h3>
                 </div>
+                <p className="mt-2 text-xs text-muted-foreground">Local series simulation · base seed {series.replaySeed} · successive game seeds increment by one.</p>
+                <Button className="mt-3" variant="outline" onClick={playSeries}><RotateCcw className="h-4 w-4" />Replay same series seed</Button>
                 <div className="mt-3 space-y-1">
                   {series.results.map(game => (
                     <div key={game.n} className="flex items-center justify-between rounded-lg bg-raised/60 px-3 py-1.5 text-sm">

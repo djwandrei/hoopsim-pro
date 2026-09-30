@@ -1,14 +1,15 @@
 import React from 'react';
-export default function WorkbenchHeader({ title, description, steps = [], current = 0 }) {
-  return (
-    <header className="border-b border-border/60 bg-canvas">
-      <div className="mx-auto max-w-6xl px-4 py-7 sm:px-6 sm:py-8">
-        <p className="court-kicker text-xs">DJHC / ANALYTICS WORKSPACE</p>
-        <div className="mt-3 flex flex-wrap items-end justify-between gap-5">
-          <div className="min-w-0"><h1 className="font-display text-4xl leading-none tracking-wide text-foreground sm:text-5xl">{title}</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p></div>
-          {steps.length > 0 && <ol aria-label="Workspace stages" className="flex flex-wrap gap-x-4 gap-y-2">{steps.map((step, index) => <li key={step} aria-current={current === index ? 'step' : undefined} className={current === index ? 'flex items-center gap-2 text-xs font-medium text-gold' : 'flex items-center gap-2 text-xs text-muted-foreground'}><span className="font-mono text-[10px]">0{index + 1}</span>{step}</li>)}</ol>}
-        </div>
-      </div>
-    </header>
-  );
+import { useLocation } from 'react-router-dom';
+import { Check, Circle, Loader2 } from 'lucide-react';
+import { WORKBENCHES } from '@/components/studio/workbenches';
+import CourtGraphic from '@/components/studio/CourtGraphic';
+export default function WorkbenchHeader({ title, description, steps = [], current = 0, state, status }) {
+  const { pathname } = useLocation();
+  const toolIndex = WORKBENCHES.findIndex(tool => tool.path === pathname);
+  const tool = WORKBENCHES[toolIndex];
+  const Icon = tool?.icon;
+  const loading = state === 'loading' || state === 'idle';
+  const activeStage = state && state !== 'ready' ? 0 : current;
+  const badge = loading ? 'Loading season' : state === 'error' ? 'Data unavailable' : status || (state === 'ready' ? 'Ready to explore' : null);
+  return <header className="relative overflow-hidden border-b border-border/40 bg-canvas"><CourtGraphic className="absolute -right-20 -top-14 h-80 w-[32rem] opacity-35" /><div className="relative mx-auto max-w-6xl px-4 py-7 sm:px-6 sm:py-9"><div className="flex flex-wrap items-center justify-between gap-3"><p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">DJHC <span className="mx-2 text-gold">/</span> SWISHIQ STUDIO {tool && <span className="ml-2 text-gold">/ 0{toolIndex + 1}</span>}</p>{badge && <span className={state === 'error' ? 'flex items-center gap-2 rounded-full border border-trim/40 bg-trim/10 px-3 py-1.5 text-[10px] text-foreground' : 'flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 text-[10px] text-gold'}>{loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Circle className="h-2 w-2 fill-current" />}{badge}</span>}</div><div className="mt-6 flex items-start gap-4">{Icon && <span className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 sm:flex"><Icon className="h-6 w-6 text-gold" /></span>}<div className="min-w-0"><h1 className="font-display text-4xl leading-none tracking-wide text-foreground sm:text-5xl">{title}</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p></div></div>{steps.length > 0 && <ol aria-label="Workspace progression" className="mt-7 grid gap-2 sm:grid-cols-3">{steps.map((step,index) => <li key={step} aria-current={index === activeStage ? 'step' : undefined} className={index === activeStage ? 'studio-stage border-gold/40 bg-gold/10' : 'studio-stage border-border/30 bg-card/50'}><span className={index <= activeStage ? 'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gold text-canvas' : 'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-border/50 text-muted-foreground'}>{index < activeStage ? <Check className="h-4 w-4" /> : <span className="font-mono text-xs">0{index + 1}</span>}</span><div className="min-w-0"><span className={index === activeStage ? 'block truncate text-xs font-semibold text-gold' : 'block truncate text-xs text-foreground'}>{step}</span><span className="mt-0.5 block text-[9px] uppercase tracking-widest text-muted-foreground">{index < activeStage ? 'Completed' : index === activeStage ? 'Current stage' : 'Up next'}</span></div></li>)}</ol>}</div></header>;
 }

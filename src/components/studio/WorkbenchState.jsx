@@ -1,0 +1,13 @@
+import React from 'react';
+import { Loader2, LockKeyhole, ArrowRight } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { WORKBENCHES } from '@/components/studio/workbenches';
+import CourtGraphic from '@/components/studio/CourtGraphic';
+export default function WorkbenchState({ state }) {
+  const { pathname } = useLocation();
+  const tool = WORKBENCHES.find(item => item.path === pathname);
+  if (state === 'ready' || !tool) return null;
+  const loading = state === 'idle' || state === 'loading';
+  const Icon = tool.icon;
+  return <section className="court-panel overflow-hidden" aria-busy={loading}><div className="grid lg:grid-cols-2"><div className="relative flex min-h-60 items-center justify-center overflow-hidden border-b border-border/50 bg-raised/25 p-8 lg:border-b-0 lg:border-r"><CourtGraphic className="absolute inset-0 h-full w-full opacity-60" /><div className="relative text-center"><span className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl border border-gold/35 bg-canvas"><Icon className="h-9 w-9 text-gold" /></span><p className="mt-5 font-display text-3xl tracking-wide">{tool.title}</p><p className="mt-2 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Your next play starts here</p></div></div><div className="flex flex-col justify-center p-6 sm:p-8"><div className="mb-3 flex items-center gap-2 text-xs text-gold">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LockKeyhole className="h-4 w-4" />}{loading ? 'Preparing your workspace' : 'Waiting for season data'}</div><h2 className="font-display text-3xl">{loading ? 'LOADING THE EVIDENCE' : 'YOUR WORKSPACE IS READY. DATA IS NOT.'}</h2><p className="mt-3 text-sm leading-relaxed text-muted-foreground">{loading ? 'Loading the selected source before enabling player and simulation controls. No results have been generated.' : 'No invented rosters or sample results are shown. Use the source controls above to retry or select another season.'}</p><ol className="mt-6 space-y-3">{tool.flow.split(' → ').map((label,index) => <li key={label} className="flex items-center gap-3 rounded-lg border border-border/40 bg-raised/30 px-3 py-2.5 text-sm"><span className="font-mono text-xs text-gold">0{index + 1}</span><span className="flex-1">{label}</span><ArrowRight className="h-3.5 w-3.5 text-muted-foreground" /></li>)}</ol></div></div></section>;
+}

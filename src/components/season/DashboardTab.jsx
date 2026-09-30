@@ -3,7 +3,7 @@ import FocusCard from '@/components/season/FocusCard';
 import StandingsBoard from '@/components/season/StandingsBoard';
 import ChartsPanel from '@/components/season/ChartsPanel';
 
-const selectCls = 'rounded-md border border-input bg-raised px-3 py-2 text-sm text-foreground';
+const selectCls = 'max-w-full rounded-md border border-input bg-raised px-3 py-2 text-sm text-foreground';
 
 export default function DashboardTab({ summary, league, focus, onFocus, actualMap, repeats }) {
   const row = summary.find(item => item.code === focus);
@@ -21,7 +21,7 @@ export default function DashboardTab({ summary, league, focus, onFocus, actualMa
           <span className="court-kicker text-xs">DASHBOARD</span>
           <span className="text-xs text-muted-foreground">{league.label} · {repeats} replays · {summary.length} teams</span>
         </div>
-        <label className="flex items-center gap-2">
+        <label className="flex min-w-0 flex-wrap items-center gap-2">
           <span className="text-xs text-muted-foreground">Focus team</span>
           <select className={selectCls} value={focus} onChange={event => onFocus(event.target.value)}>
             {league.teams.map(teamItem => <option key={teamItem.code} value={teamItem.code}>{teamItem.name}</option>)}

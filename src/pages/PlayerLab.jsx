@@ -5,6 +5,8 @@ import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
 import PlayerProfileViews from '@/components/players/PlayerProfileViews';
+import PlayerIdentity from '@/components/players/PlayerIdentity';
+import ScenarioBands from '@/components/players/ScenarioBands';
 import WorkspaceEmpty from '@/components/studio/WorkspaceEmpty';
 
 import PlayerPicker from '@/components/studio/PlayerPicker';
@@ -52,28 +54,12 @@ function BandTable({ rows }) {
   );
 }
 
-function ProbChips({ projection }) {
-  const chips = [
-    { label: '20+ PTS', value: projection.p20 },
-    { label: '30+ PTS', value: projection.p30 },
-    { label: 'DOUBLE-DOUBLE', value: projection.pDoubleDouble },
-  ];
-  return (
-    <div className="flex flex-wrap gap-2">
-      {chips.map(chip => (
-        <span key={chip.label} className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs text-goldSoft">
-          {chip.label} · {Math.round(chip.value * 100)}%
-        </span>
-      ))}
-    </div>
-  );
-}
-
 export default function PlayerLab() {
   const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
   const [player, setPlayer] = useState(null);
   const [oppCode, setOppCode] = useState('league');
   const [seed, setSeed] = useState(11);
+  const [view, setView] = useState('profile');
 
   const players = useMemo(() => (source ? observedPlayers(source) : []), [source]);
   const teams = league?.teams || [];
@@ -83,67 +69,42 @@ export default function PlayerLab() {
     [player, opponent, league, seed],
   );
   const gameStats = player ? perGameStats(player) : null;
-  const team = player ? league?.byCode.get(player.teamCode) : null;
 
   return (
     <StudioShell active="/players">
-      <WorkbenchHeader title="PLAYER BLUEPRINT" description="Browse observed player records, compare rates, and keep next-game scenarios separate from the evidence." steps={['Roster', 'Profile', 'Scenario']} current={player ? 1 : 0} />
+      <WorkbenchHeader title="PLAYER BLUEPRINT" description="Browse observed player records, compare rates, and keep next-game scenarios separate from the evidence." steps={['Roster', 'Profile', 'Scenario']} current={player ? view === 'scenario' ? 2 : 1 : 0} state={state} status={player ? view === 'scenario' ? 'Scenario available' : 'Player selected' : 'Choose a player'} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
         <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value); setPlayer(null); }} onRetry={retry} />
         {state === 'ready' && (
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="space-y-4">
               <p className="court-kicker">Observed roster browser</p>
-              <PlayerPicker players={players} onSelect={setPlayer} selectedRef={player?.playerRef} />
+              <PlayerPicker players={players} onSelect={value => { setPlayer(value); setView('profile'); }} selectedRef={player?.playerRef} />
             </div>
 
             <div className="space-y-4 lg:col-span-2">
               {player && gameStats && (
                 <>
-                  <section className="court-panel p-5">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <h2 className="court-display text-3xl text-foreground">{player.name}</h2>
-                        <div className="mt-1 flex flex-wrap gap-2 text-xs">
-                          <span className="rounded-md border border-gold/30 bg-gold/10 px-3 py-1 font-mono text-gold">{player.teamCode}</span>
-                          <span className="rounded-full bg-raised px-2 py-0.5 text-muted-foreground">
-                            {(player.positions || []).join(' / ') || 'Position n/a'}
-                          </span>
-                          {team && (
-                            <span className="rounded-full bg-raised px-2 py-0.5 text-muted-foreground">
-                              ≈ {Math.round(gameStats.pts / Math.max(1, team.ppg) * 100)}% of team scoring
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <div className="w-full sm:w-56">
-                          <TeamSelect teams={teams} value={oppCode} onChange={setOppCode} />
-                        </div>
-                        <Button variant="outline" onClick={() => setSeed(Math.floor(Math.random() * 4294967296))} className="gap-2 border-gold/50 text-goldSoft hover:bg-gold/10">
-                          <Dices className="h-4 w-4" /> Re-roll
-                        </Button>
-                      </div>
-                    </div>
-                  </section>
-                  <PlayerProfileViews player={player} year={year} source={source} />
+                  <PlayerIdentity player={player} year={year} />
+                  <nav aria-label="Player workspace views" className="flex flex-wrap gap-2">{[['profile','Profile & evidence'],['scenario','Next-game scenario']].map(([key,label]) => <button type="button" key={key} aria-pressed={view === key} onClick={() => setView(key)} className={view === key ? 'min-h-10 rounded-lg border border-gold/40 bg-gold/10 px-4 text-xs font-medium text-gold' : 'min-h-10 rounded-lg border border-border/40 bg-card px-4 text-xs text-muted-foreground hover:bg-raised'}>{label}</button>)}</nav>
+                  {view === 'profile' && <PlayerProfileViews player={player} year={year} source={source} />}
+                  {view === 'scenario' && <section className="court-panel flex flex-wrap items-end justify-between gap-3 p-4"><div className="w-full sm:w-64"><TeamSelect teams={teams} value={oppCode} onChange={setOppCode} /></div><Button variant="outline" onClick={() => setSeed(Math.floor(Math.random() * 4294967296))}><Dices className="h-4 w-4" /> Re-roll scenario</Button></section>}
 
-                  {projection && (
+                  {projection && view === 'scenario' && (
                     <section className="court-panel p-5">
                       <h3 className="court-display text-xl text-foreground">
                         LOCAL NEXT-GAME SCENARIO {opponent ? `vs ${opponent.code}` : 'vs league average'}
                       </h3>
                       <p className="mt-2 text-xs text-muted-foreground">2,000 modeled trials · seed {seed} · percentile bands, not a validated forecast.</p>
-                      <div className="mt-3 overflow-x-auto" tabIndex={0} aria-label="Next-game scenario percentile bands">
+                      <ScenarioBands projection={projection} />
+                      <div className="mt-5 overflow-x-auto" tabIndex={0} aria-label="Next-game scenario percentile bands">
                         <BandTable rows={[
                           { label: 'PTS', band: projection.pts },
                           { label: 'REB', band: projection.reb },
                           { label: 'AST', band: projection.ast },
                         ]} />
                       </div>
-                      <div className="mt-4">
-                        <ProbChips projection={projection} />
-                      </div>
+
                     </section>
                   )}
                 </>

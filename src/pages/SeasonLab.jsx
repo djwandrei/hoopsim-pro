@@ -207,7 +207,7 @@ export default function SeasonLab() {
 
   return (
     <StudioShell active="/season">
-      <StudioHero league={league} source={source} sourceState={sourceState} />
+      <StudioHero sourceState={sourceState} running={running} paused={paused} hasResults={Boolean(lastRepeat)} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
         <SourceStatus state={sourceState} source={source} error={sourceError} year={year} onRetry={() => setRetryToken(value => value + 1)} />
         <SetupPanel

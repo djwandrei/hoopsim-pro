@@ -14,6 +14,7 @@ import ChemistryLab from '@/pages/ChemistryLab';
 import ForgeLab from '@/pages/ForgeLab';
 import GameLab from '@/pages/GameLab';
 import CareerLab from '@/pages/CareerLab';
+import SpinRoom from '@/pages/SpinRoom';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -49,6 +50,7 @@ const AuthenticatedApp = () => {
       <Route path="/forge" element={<ForgeLab />} />
       <Route path="/game" element={<GameLab />} />
       <Route path="/career" element={<CareerLab />} />
+      <Route path="/spin" element={<SpinRoom />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

@@ -4,7 +4,7 @@ import {
   ReferenceLine, ScatterChart, Scatter, ZAxis, Cell,
 } from 'recharts';
 
-const tooltipStyle = { backgroundColor: '#19233B', border: '1px solid #6C7A8E', borderRadius: 8, fontSize: 12 };
+const tooltipStyle = { backgroundColor:'hsl(var(--card))', border:'1px solid hsl(var(--border))', color:'hsl(var(--foreground))', borderRadius:10, fontSize:12 };
 
 function WinDistribution({ summary, focusCode, actualWins }) {
   const focus = summary.find(row => row.code === focusCode);
@@ -24,20 +24,20 @@ function WinDistribution({ summary, focusCode, actualWins }) {
   if (!focus) return null;
   return (
     <div className="court-panel p-4">
-      <div className="flex items-baseline justify-between">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="court-display text-2xl text-foreground">WIN DISTRIBUTION · {focusCode}</h3>
         <span className="text-xs text-muted-foreground">{focus.winsList.length} replays · median {focus.wins.toFixed(1)}</span>
       </div>
       <div className="mt-3 h-56">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
-            <CartesianGrid stroke="#6C7A8E33" vertical={false} />
-            <XAxis dataKey="bucket" tick={{ fill: '#B1BED2', fontSize: 10 }} interval={1} />
-            <YAxis tick={{ fill: '#B1BED2', fontSize: 10 }} allowDecimals={false} />
+            <CartesianGrid stroke="hsl(var(--border) / .25)" vertical={false} />
+            <XAxis dataKey="bucket" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} interval={1} />
+            <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} allowDecimals={false} />
             <Tooltip contentStyle={tooltipStyle} cursor={{ fill: '#4169E122' }} />
             {Number.isFinite(actualWins) && <ReferenceLine x={`${Math.floor(actualWins / 4) * 4}–${Math.floor(actualWins / 4) * 4 + 3}`} stroke="#80DBB0" strokeDasharray="4 3" label={{ value: 'Actual', fill: '#80DBB0', fontSize: 10, position: 'top' }} />}
             <ReferenceLine x={`${Math.floor(focus.wins / 4) * 4}–${Math.floor(focus.wins / 4) * 4 + 3}`} stroke="#E9B949" label={{ value: 'Median', fill: '#E9B949', fontSize: 10, position: 'top' }} />
-            <Bar dataKey="wins" fill="#4169E1" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="wins" fill="hsl(var(--court-royal))" radius={[4, 4, 0, 0]} isAnimationActive={false} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -53,16 +53,16 @@ function NetScatter({ summary, focusCode }) {
   }));
   return (
     <div className="court-panel p-4">
-      <div className="flex items-baseline justify-between">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="court-display text-2xl text-foreground">EFFICIENCY MAP</h3>
         <span className="text-xs text-muted-foreground">ORtg ↑ better · DRtg ↓ better · gold = focus team</span>
       </div>
       <div className="mt-3 h-72">
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart margin={{ top: 12, right: 16, left: -12, bottom: 4 }}>
-            <CartesianGrid stroke="#6C7A8E33" />
-            <XAxis type="number" dataKey="ortg" name="ORtg" tick={{ fill: '#B1BED2', fontSize: 10 }} domain={['dataMin - 1', 'dataMax + 1']} />
-            <YAxis type="number" dataKey="drtg" name="DRtg" tick={{ fill: '#B1BED2', fontSize: 10 }} domain={['dataMin - 1', 'dataMax + 1']} reversed />
+            <CartesianGrid stroke="hsl(var(--border) / .25)" />
+            <XAxis type="number" dataKey="ortg" name="ORtg" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} domain={['dataMin - 1', 'dataMax + 1']} />
+            <YAxis type="number" dataKey="drtg" name="DRtg" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} domain={['dataMin - 1', 'dataMax + 1']} reversed />
             <ZAxis dataKey="net" range={[30, 30]} />
             <Tooltip contentStyle={tooltipStyle} />
             <Scatter data={data} shape="circle">

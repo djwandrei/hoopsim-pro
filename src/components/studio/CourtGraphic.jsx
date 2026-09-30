@@ -1,0 +1,4 @@
+import React from 'react';
+export default function CourtGraphic({ className = '' }) {
+  return <svg viewBox="0 0 500 300" fill="none" aria-hidden="true" className={`pointer-events-none text-border/35 ${className}`}><g stroke="currentColor" strokeWidth="1.5"><rect x="12" y="12" width="476" height="276" rx="4" /><path d="M250 12v276M12 100h96v100H12M488 100h-96v100h96M34 132v36m432-36v36" /><circle cx="250" cy="150" r="42" /><circle cx="66" cy="150" r="7" /><circle cx="434" cy="150" r="7" /><path d="M108 115a35 35 0 0 1 0 70M392 115a35 35 0 0 0 0 70M12 45h45c145 0 145 210 0 210H12M488 45h-45c-145 0-145 210 0 210h45" /></g></svg>;
+}

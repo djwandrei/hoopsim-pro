@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Play, RotateCcw, Swords, Trophy } from 'lucide-react';
+import { Play, RotateCcw, Swords } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
 import MatchupReview from '@/components/game/MatchupReview';
+import MatchupVisual from '@/components/game/MatchupVisual';
+import SeriesVisual from '@/components/game/SeriesVisual';
 import WorkspaceEmpty from '@/components/studio/WorkspaceEmpty';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import { simSingleGame } from '@/lib/season/simEngine';
@@ -131,11 +133,12 @@ export default function GameLab() {
 
   return (
     <StudioShell active="/game">
-      <WorkbenchHeader title="GAME LAB" description="Set the exact-season matchup, review the supported decisions, then run and replay a seeded local simulation." steps={['Mode & setup', 'Decisions', 'Results & replay']} current={reviewMode ? 1 : result || series ? 2 : 0} />
+      <WorkbenchHeader title="GAME LAB" description="Set the exact-season matchup, review the supported decisions, then run and replay a seeded local simulation." steps={['Mode & setup', 'Decisions', 'Results & replay']} current={reviewMode ? 1 : result || series ? 2 : 0} state={state} status={reviewMode ? 'Review before running' : result || series ? 'Simulation complete' : 'Set your matchup'} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
         <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value); setResult(null); setSeries(null); setReviewMode(null); }} onRetry={retry} />
         {ready && (
           <>
+            {!result && !series && <MatchupVisual home={league.byCode.get(home)} away={league.byCode.get(away)} neutral={neutral} />}
             <section className="court-panel p-5">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <label className="block"><span className="mb-1.5 block text-xs text-muted-foreground">Replay seed</span><input type="number" min={0} max={4294967295} value={seed} onChange={event => { setSeed(event.target.value); setResult(null); setSeries(null); setReviewMode(null); }} className="min-h-10 w-full rounded-md border border-input bg-raised px-3 text-sm" /></label>
@@ -163,27 +166,8 @@ export default function GameLab() {
             {!result && !series && !reviewMode && <WorkspaceEmpty title="SET YOUR MATCHUP">Choose two different teams and a seed. Review the supported inputs before running; games are computed in one step, without live possession controls.</WorkspaceEmpty>}
             {result && (
               <>
-                <section className="court-panel p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 sm:gap-6">
-                    <div>
-                      <p className="font-display text-xl tracking-widest text-muted-foreground">{home}</p>
-                      <p className="court-display text-5xl text-foreground sm:text-7xl">{result.homePts}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="font-display text-sm tracking-widest text-gold">{result.ot ? `FINAL/${result.ot}OT` : 'FINAL'}</p>
-                      <p className="mt-1 font-mono text-xs text-muted-foreground">{Math.round(result.poss)} poss</p>
-                    </div>
-                    <div>
-                      <p className="font-display text-xl tracking-widest text-muted-foreground">{away}</p>
-                      <p className="court-display text-5xl text-foreground sm:text-7xl">{result.awayPts}</p>
-                    </div>
-                  </div>
-                  <p className="mt-3 font-mono text-xs text-muted-foreground">
-                    ORTG {result.ortgH.toFixed(1)} vs {result.ortgA.toFixed(1)} · seed {result.replaySeed}
-                  </p>
-                  <p className="mt-3 text-xs text-muted-foreground">Modeled final score and player box scores · not observed results.</p>
-                  <Button className="mt-4" variant="outline" onClick={playSingle}><RotateCcw className="h-4 w-4" />Replay same seed</Button>
-                </section>
+                <MatchupVisual home={league.byCode.get(home)} away={league.byCode.get(away)} neutral={neutral} result={result} />
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/40 bg-card px-5 py-3"><p className="text-xs text-muted-foreground">Modeled score and player lines · not observed results.</p><Button variant="outline" onClick={playSingle}><RotateCcw className="h-4 w-4" />Replay same seed</Button></div>
                 <div className="grid gap-4 lg:grid-cols-2">
                   {homeBox && <BoxTable title={`${home} box score`} box={homeBox} />}
                   {awayBox && <BoxTable title={`${away} box score`} box={awayBox} />}
@@ -193,22 +177,10 @@ export default function GameLab() {
 
             {series && (
               <section className="court-panel p-5">
-                <div className="flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-gold" />
-                  <h3 className="court-display text-2xl text-foreground">
-                    {series.winner} WIN {Math.max(series.hw, series.aw)}–{Math.min(series.hw, series.aw)}
-                  </h3>
-                </div>
-                <p className="mt-2 text-xs text-muted-foreground">Local series simulation · base seed {series.replaySeed} · successive game seeds increment by one.</p>
+                <SeriesVisual series={series} />
+                <p className="mt-4 text-xs text-muted-foreground">Local series simulation · base seed {series.replaySeed} · successive game seeds increment by one.</p>
                 <Button className="mt-3" variant="outline" onClick={playSeries}><RotateCcw className="h-4 w-4" />Replay same series seed</Button>
-                <div className="mt-3 space-y-1">
-                  {series.results.map(game => (
-                    <div key={game.n} className="flex items-center justify-between rounded-lg bg-raised/60 px-3 py-1.5 text-sm">
-                      <span className="text-muted-foreground">G{game.n}</span>
-                      <span className="font-mono">{game.home} {game.homePts} — {game.awayPts} {game.away}</span>
-                    </div>
-                  ))}
-                </div>
+
               </section>
             )}
 

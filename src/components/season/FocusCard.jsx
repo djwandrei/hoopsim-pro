@@ -1,4 +1,5 @@
 import React from 'react';
+import TeamMark from '@/components/studio/TeamMark';
 
 const pct = value => `${Math.round((value || 0) * 100)}%`;
 const fmt1 = value => (Number.isFinite(value) ? value.toFixed(1) : '—');
@@ -50,13 +51,10 @@ export default function FocusCard({ team, row, leagueAvg, actualWins }) {
     <section className="court-panel overflow-hidden">
       <div className="border-b border-border/50 bg-raised/40 px-5 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <span className="court-kicker text-xs">FOCUS TEAM · {team.conference}</span>
-            <h3 className="court-display mt-0.5 text-3xl text-foreground">{team.name.toUpperCase()}</h3>
-          </div>
+          <div className="flex min-w-0 items-center gap-4"><TeamMark code={team.code} className="h-16 w-16" /><div className="min-w-0"><span className="court-kicker text-xs">FOCUS TEAM · {team.conference}</span><h3 className="court-display mt-1 text-3xl text-foreground">{team.name.toUpperCase()}</h3></div></div>
           <div className="text-right">
             <div className="font-mono text-3xl text-gold">{wins}<span className="text-lg text-muted-foreground">–{82 - wins}</span></div>
-            <div className="text-xs text-muted-foreground">projected record (median of replays)</div>
+            <div className="text-xs text-muted-foreground">simulated record (median of replays)</div>
           </div>
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">

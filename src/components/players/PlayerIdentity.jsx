@@ -1,0 +1,6 @@
+import React from 'react';
+import TeamMark from '@/components/studio/TeamMark';
+import CourtGraphic from '@/components/studio/CourtGraphic';
+export default function PlayerIdentity({ player, year, children }) {
+  return <section className="court-panel relative overflow-hidden"><CourtGraphic className="absolute right-0 top-0 h-full w-3/4 opacity-35" /><div className="relative flex flex-wrap items-center justify-between gap-5 p-5 sm:p-6"><div className="flex min-w-0 items-center gap-4"><TeamMark code={player.teamCode} className="h-20 w-20" /><div className="min-w-0"><p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">Player dossier / {year}–{String(year + 1).slice(-2)}</p><h2 className="mt-2 font-display text-3xl leading-none sm:text-4xl">{player.name}</h2><div className="mt-3 flex flex-wrap gap-2"><span className="rounded-md border border-gold/30 bg-gold/10 px-2 py-1 font-mono text-[11px] text-gold">{player.teamCode}</span><span className="rounded-md border border-border/60 bg-canvas px-2 py-1 text-[11px] text-muted-foreground">{player.positions?.join(' / ') || 'Position not supplied'}</span><span className="rounded-md border border-positive/30 bg-positive/10 px-2 py-1 text-[11px] text-positive">Observed source</span></div></div></div>{children}</div></section>;
+}

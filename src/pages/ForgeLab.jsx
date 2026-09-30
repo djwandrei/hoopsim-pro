@@ -6,6 +6,8 @@ import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
 import DonorRecipe from '@/components/forge/DonorRecipe';
+import ForgeVisual from '@/components/forge/ForgeVisual';
+import TourVisual from '@/components/forge/TourVisual';
 
 import useSeasonSource from '@/hooks/useSeasonSource';
 import { simSingleGame } from '@/lib/season/simEngine';
@@ -87,7 +89,7 @@ export default function ForgeLab() {
 
   return (
     <StudioShell active="/forge">
-      <WorkbenchHeader title="COMPOSITE FORGE" description="Choose two observed team profiles, review the donor recipe, then test a clearly labeled local scenario." steps={['Donors', 'Recipe', 'Tour']} current={tour ? 2 : locked ? 1 : 0} />
+      <WorkbenchHeader title="COMPOSITE FORGE" description="Choose two observed team profiles, review the donor recipe, then test a clearly labeled local scenario." steps={['Donors', 'Recipe', 'Tour']} current={tour ? 2 : locked ? 1 : 0} state={state} status={tour ? 'Tour complete' : locked ? 'Recipe locked · ready to run' : 'Choose your donors'} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
         <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value); setTour(null); setLocked(false); }} onRetry={retry} disabled={locked} />
         {state === 'ready' && teamA && teamB && composite && (
@@ -104,6 +106,7 @@ export default function ForgeLab() {
                 </div>
               </fieldset>
             </section>
+            <ForgeVisual teamA={teamA} teamB={teamB} mix={mix} composite={composite} locked={locked} />
             <DonorRecipe teamA={teamA} teamB={teamB} mix={mix} year={year} locked={locked} onLock={() => setLocked(value => !value)} />
 
             <section className="court-panel p-5">
@@ -118,19 +121,6 @@ export default function ForgeLab() {
                   <Swords className="h-4 w-4" /> Run league tour
                 </Button>
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {[
-                  ['OFF RTG', composite.off],
-                  ['DEF RTG', composite.def],
-                  ['NET RTG', net],
-                  ['PACE', composite.pace],
-                ].map(([label, value]) => (
-                  <div key={label} className="rounded-lg bg-raised/60 px-3 py-2">
-                    <p className="text-xs text-muted-foreground">{label}</p>
-                    <p className="court-display text-2xl text-foreground">{value.toFixed(1)}</p>
-                  </div>
-                ))}
-              </div>
             </section>
 
             {tour && (
@@ -143,7 +133,8 @@ export default function ForgeLab() {
                     <RotateCcw className="h-3.5 w-3.5" /> Re-roll
                   </Button>
                 </div>
-                <div className="mt-3 max-h-96 overflow-auto pr-1" tabIndex={0} aria-label="League tour results">
+                <TourVisual tour={tour} />
+                <div className="mt-5 max-h-96 overflow-auto pr-1" tabIndex={0} aria-label="League tour results">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="text-xs text-muted-foreground">

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import CareerScenarioChart from '@/components/career/CareerScenarioChart';
 import { LineChart as LineChartIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -7,11 +7,13 @@ import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
 import CareerEvidence from '@/components/career/CareerEvidence';
+import CareerTimeline from '@/components/career/CareerTimeline';
+import PlayerIdentity from '@/components/players/PlayerIdentity';
 import WorkspaceEmpty from '@/components/studio/WorkspaceEmpty';
 
 import PlayerPicker from '@/components/studio/PlayerPicker';
 import useSeasonSource from '@/hooks/useSeasonSource';
-import { observedPlayers, perGameStats, per36Stats, projectCareer } from '@/lib/season/labs';
+import { observedPlayers, perGameStats, projectCareer } from '@/lib/season/labs';
 
 const round1 = value => Number(value.toFixed(1));
 
@@ -25,7 +27,6 @@ export default function CareerLab() {
 
   const players = useMemo(() => (source ? observedPlayers(source) : []), [source]);
   const gameStats = player ? perGameStats(player) : null;
-  const rateStats = player ? per36Stats(player) : null;
 
   const selectPlayer = next => {
     setPlayer(next);
@@ -45,7 +46,7 @@ export default function CareerLab() {
 
   return (
     <StudioShell active="/career">
-      <WorkbenchHeader title="CAREER LAB" description="Start with recorded season evidence. Conditional aging scenarios are a separate exploration; validated forecasts remain unavailable." steps={['Player', 'Recorded evidence', 'Local scenario']} current={player ? view === 'scenario' ? 2 : 1 : 0} />
+      <WorkbenchHeader title="CAREER LAB" description="Start with recorded season evidence. Conditional aging scenarios are a separate exploration; validated forecasts remain unavailable." steps={['Player', 'Recorded evidence', 'Local scenario']} current={player ? view === 'scenario' ? 2 : 1 : 0} state={state} status={result && view === 'scenario' ? 'Scenario complete' : player ? view === 'scenario' ? 'Set your local scenario' : 'Recorded player selected' : 'Choose a player'} />
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
         <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value); setPlayer(null); setResult(null); }} onRetry={retry} />
         {state === 'ready' && (
@@ -82,45 +83,14 @@ export default function CareerLab() {
 
             <div className="space-y-4 lg:col-span-2">
               {player && gameStats && (
-                <section className="court-panel p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <h2 className="court-display text-3xl text-foreground">{player.name}</h2>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {player.teamCode} · baseline {gameStats.mpg.toFixed(1)} MPG · {rateStats.pts.toFixed(1)} / {rateStats.reb.toFixed(1)} / {rateStats.ast.toFixed(1)} per 36
-                      </p>
-                    </div>
-                    {result && (
-                      <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs text-goldSoft">
-                        Local scenario peak: age {result.peak.age} · {result.peak.pts36.p50.toFixed(1)} PTS/36
-                      </span>
-                    )}
-                  </div>
-                </section>
+                <PlayerIdentity player={player} year={year}>{result && view === 'scenario' && <div className="rounded-xl border border-gold/35 bg-canvas p-4"><p className="text-[10px] uppercase tracking-widest text-muted-foreground">Local scenario peak</p><p className="mt-1 font-display text-2xl text-gold">Age {result.peak.age} · {result.peak.pts36.p50.toFixed(1)} PTS / 36</p></div>}</PlayerIdentity>
               )}
 
-              {player && view === 'evidence' && <CareerEvidence player={player} source={source} year={year} />}
+              {player && view === 'evidence' && <><CareerTimeline player={player} source={source} year={year} /><CareerEvidence player={player} source={source} year={year} /></>}
+              {player && view === 'scenario' && !result && <WorkspaceEmpty title="SET THE SCENARIO, THEN RUN">Choose an assumed age and season span on the left. The results will appear here, clearly separated from recorded history.</WorkspaceEmpty>}
               {result && view === 'scenario' && (
                 <>
-                  <section className="court-panel p-5">
-                    <h3 className="court-display text-xl text-foreground">CONDITIONAL SCORING PATH · PTS / 36</h3>
-                    <div className="mt-3">
-                      <ResponsiveContainer width="100%" height={260}>
-                        <LineChart data={chartData} margin={{ top: 8, right: 12, bottom: 0, left: -12 }}>
-                          <CartesianGrid stroke="rgba(108,122,142,0.25)" strokeDasharray="3 3" />
-                          <XAxis dataKey="age" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} stroke="rgba(108,122,142,0.4)" />
-                          <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} stroke="rgba(108,122,142,0.4)" domain={['dataMin - 1', 'dataMax + 1']} />
-                          <Tooltip
-                            contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8, color: 'hsl(var(--foreground))' }}
-                            labelStyle={{ color: 'hsl(var(--court-accent))' }}
-                          />
-                          <Line type="monotone" dataKey="p90" stroke="hsl(var(--muted-foreground))" strokeDasharray="4 4" dot={false} name="P90" />
-                          <Line type="monotone" dataKey="p50" stroke="hsl(var(--court-accent))" strokeWidth={2.5} dot={{ r: 3 }} name="Median" />
-                          <Line type="monotone" dataKey="p10" stroke="hsl(var(--muted-foreground))" strokeDasharray="4 4" dot={false} name="P10" />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </section>
+                  <CareerScenarioChart data={chartData} />
 
                   <section className="court-panel p-5">
                     <h3 className="court-display text-xl text-foreground">LOCAL SCENARIO ROWS · NOT A FORECAST</h3>

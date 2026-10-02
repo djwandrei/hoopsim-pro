@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import PlayerPortrait from '@/components/players/PlayerPortrait';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import WorkspaceEmpty from '@/components/studio/WorkspaceEmpty';
@@ -23,6 +25,7 @@ export default function CareerLab() {
   const { source, players, state, error, retry } = useCareerArchive();
   const [player, setPlayer] = useState(null);
   const [view, setView] = useState('overview');
+  const [pickerOpen, setPickerOpen] = useState(true);
   const seasons = useMemo(() => player ? careerSeasons(player) : [], [player]);
   const { context, status } = usePlayerContext(player?.name || '');
 
@@ -34,12 +37,33 @@ export default function CareerLab() {
           <div className="myna-panel p-4">
             <div className="min-w-0">
               <p className="court-kicker mb-2">Recorded career browser</p>
-              <PlayerPicker
-                players={players}
-                selectedRef={player?.playerRef}
-                onSelect={(value) => {setPlayer(value);setView('overview');}}
-                placeholder="Find a career…"
-                teamFilter="chips" />
+              <button
+                type="button"
+                aria-expanded={pickerOpen}
+                onClick={() => setPickerOpen(open => !open)}
+                className="flex min-h-12 w-full items-center justify-between gap-3 rounded-xl border border-border/60 bg-card px-4 text-left transition-colors hover:border-gold/40"
+              >
+                {player ? (
+                  <span className="flex min-w-0 items-center gap-3">
+                    <PlayerPortrait player={player} className="h-9 w-9" />
+                    <span className="truncate text-sm font-semibold">{player.name}</span>
+                    <span className="shrink-0 font-mono text-xs text-muted-foreground">{player.teamCode}</span>
+                  </span>
+                ) : (
+                  <span className="text-sm font-semibold">Select a player…</span>
+                )}
+                <ChevronDown className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${pickerOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {pickerOpen && (
+                <div className="mt-3">
+                  <PlayerPicker
+                    players={players}
+                    selectedRef={player?.playerRef}
+                    onSelect={(value) => {setPlayer(value);setPickerOpen(false);setView('overview');}}
+                    placeholder="Find a career…"
+                    teamFilter="chips" />
+                </div>
+              )}
             </div>
             {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={(value) => {setPlayer(value);setView('overview');}} />}
           </div>

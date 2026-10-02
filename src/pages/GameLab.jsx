@@ -13,6 +13,8 @@ import GameRecap from '@/components/game/GameRecap';
 import GamePlayFeed from '@/components/game/GamePlayFeed';
 import SeriesBoard from '@/components/game/SeriesBoard';
 import GameMatchupTheme from '@/components/game/GameMatchupTheme';
+import PreGameDisclosure from '@/components/game/PreGameDisclosure';
+import LiveBoxScore from '@/components/game/LiveBoxScore';
 
 export default function GameLab() {
   const { year, setYear, source, league, state } = useSeasonSource();
@@ -21,9 +23,13 @@ export default function GameLab() {
   const [a, setA] = useState('BOS');
   const [b, setB] = useState('LAL');
   const [feedDone, setFeedDone] = useState(false);
+  const [showPreGame, setShowPreGame] = useState(true);
+  const [liveCount, setLiveCount] = useState(0);
 
   useEffect(() => {
     setFeedDone(false);
+    setLiveCount(0);
+    setShowPreGame(!sim.game);
   }, [sim.game]);
 
   useEffect(() => {
@@ -59,7 +65,11 @@ export default function GameLab() {
         <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&
           <div className="space-y-4">
-              {breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: Boolean(sim.game) })}
+              {sim.game ?
+              <PreGameDisclosure home={home} away={away} open={showPreGame} onToggle={() => setShowPreGame(current => !current)}>
+                {breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: true })}
+              </PreGameDisclosure> :
+              breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: false })}
               <GameControls
               seed={sim.seed} onSeedChange={sim.setSeed}
               neutral={sim.neutral} onNeutralChange={sim.setNeutral} />
@@ -67,7 +77,9 @@ export default function GameLab() {
               {sim.game ?
               <GameMatchupTheme homeCode={resultHome.code} awayCode={resultAway.code}>
                   {!feedDone &&
-                  <GamePlayFeed key={sim.game.stamp} game={sim.game} home={resultHome} away={resultAway} onComplete={() => setFeedDone(true)} />}
+                  <GamePlayFeed key={sim.game.stamp} game={sim.game} home={resultHome} away={resultAway} onComplete={() => setFeedDone(true)} onProgress={setLiveCount} />}
+                  {!feedDone &&
+                  <LiveBoxScore events={sim.game.pbp || []} count={liveCount} home={resultHome} away={resultAway} />}
                   {feedDone &&
                   <React.Fragment>
                     <GameRecap game={sim.game} home={resultHome} away={resultAway} />

@@ -9,7 +9,7 @@ const SPEEDS = [300, 140, 60];
 const SPEED_LABELS = ['1x', '2x', '4x'];
 const btn = 'inline-flex items-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-3 py-1.5 text-xs font-semibold text-gold transition-colors hover:bg-gold/20 disabled:opacity-40 disabled:cursor-not-allowed';
 
-export default function GamePlayFeed({ game, home, away, onComplete }) {
+export default function GamePlayFeed({ game, home, away, onComplete, onProgress }) {
   const events = game.pbp || [];
   const [count, setCount] = useState(0);
   const [playing, setPlaying] = useState(true);
@@ -41,6 +41,11 @@ export default function GamePlayFeed({ game, home, away, onComplete }) {
     const el = listRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [count]);
+
+  // Report playback progress so parents can drive live views (box scores).
+  useEffect(() => {
+    onProgress?.(count);
+  }, [count, onProgress]);
 
   if (!events.length) return null;
 

@@ -222,7 +222,7 @@ function buildPbp(home, away, hp, ap, ot, rng) {
   const aTargets = splitPeriods(ap, periods, rng);
   const events = [];
   let hs = 0; let as = 0;
-  const push = (q, clock, side, type, text, pts) => events.push({ q, clock: fmtClock(clock), side, type, text, pts: pts || 0, score: [hs, as] });
+  const push = (q, clock, side, type, text, pts, stat) => events.push({ q, clock: fmtClock(clock), side, type, text, pts: pts || 0, score: [hs, as], stat });
   for (let q = 0; q < periods; q += 1) {
     const label = q < 4 ? `Q${q + 1}` : `OT${q - 3}`;
     let clock = QUARTER_SECONDS;
@@ -239,13 +239,15 @@ function buildPbp(home, away, hp, ap, ot, rng) {
       if (!player) break;
       clock = Math.max(2, clock - (9 + Math.floor(rng() * 17)));
       const r = rng();
-      let scored = 0; let text = ''; let type = 'made';
+      let scored = 0; let text = ''; let type = 'made'; let stat = null;
       if (remain <= 0 || r < 0.09) {
         type = 'to';
         const thief = rng() < 0.3 ? pickPlayer(opp, rng) : null;
+        stat = thief ? { turnover: player.name, steal: thief.name } : { turnover: player.name };
         text = thief ? `${player.name} turns it over — ${thief.name} jumps the lane for ${opp.code}` : `${player.name} loses the handle — turnover, ${opp.code} ball`;
       } else if (remain === 1 || r < 0.24) {
         type = 'ft';
+        stat = { scorer: player.name };
         if (remain === 1 || rng() < 0.4) {
           if (rng() < 0.72) { scored = 1; text = `${player.name} hits 1 of 2 at the line`; }
           else { text = `${player.name} misfires from the stripe`; }
@@ -254,24 +256,28 @@ function buildPbp(home, away, hp, ap, ot, rng) {
         type = 'miss';
         const board = pickPlayer(opp, rng);
         const shot = rng() < 0.42 ? THREE_SHOTS[Math.floor(rng() * THREE_SHOTS.length)] : TWO_SHOTS[Math.floor(rng() * TWO_SHOTS.length)];
+        stat = board ? { rebound: board.name } : null;
         text = `${player.name} misses ${shot}${board ? ` — ${board.name} corrals the board` : ''}`;
       } else if (r < 0.62) {
         const helper = rng() < 0.55 ? pickPlayer(team, rng, player.name) : null;
         scored = 2;
         const dunk = rng() < 0.22;
+        stat = helper ? { scorer: player.name, assist: helper.name } : { scorer: player.name };
         text = dunk ? `${player.name} ${RIM_DUNKS[Math.floor(rng() * RIM_DUNKS.length)]}${helper ? ` off the ${helper.name} feed` : ''}` : `${player.name} finishes ${TWO_SHOTS[Math.floor(rng() * TWO_SHOTS.length)]}${helper ? ` (assist: ${helper.name})` : ''}`;
       } else if (remain >= 3) {
         scored = 3;
         const helper = rng() < 0.6 ? pickPlayer(team, rng, player.name) : null;
+        stat = helper ? { scorer: player.name, assist: helper.name } : { scorer: player.name };
         text = `${player.name} splashes ${THREE_SHOTS[Math.floor(rng() * THREE_SHOTS.length)]}${helper ? ` (assist: ${helper.name})` : ''}`;
       } else {
         scored = 2;
+        stat = { scorer: player.name };
         text = `${player.name} punches in ${TWO_SHOTS[Math.floor(rng() * TWO_SHOTS.length)]}`;
       }
       if (scored) {
         if (side === 'home') { hs += scored; hq -= scored; } else { as += scored; aq -= scored; }
       }
-      push(label, clock, side, type, text, scored);
+      push(label, clock, side, type, text, scored, stat);
     }
     push(label, clock, null, 'period', `End of ${label} — ${home.code} ${hs}, ${away.code} ${as}`);
   }

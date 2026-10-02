@@ -71,7 +71,12 @@ export default function SeasonLab() {
     <StudioShell active="/season">
       <WorkbenchHeader title="SEASON LAB" description="A MyNBA-style league hub: replay the observed season, track standings and the schedule, and dive into your team page." state="ready" status="League hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">
-        <MyNbaHub focusCode={team.code} tab={tab} onTab={setTab}>
+        <MyNbaHub
+          focusCode={team.code}
+          tab={tab}
+          onTab={setTab}
+          teamPicker={{ teams: league.teams, focusCode: team.code, onChange: setFocus }}
+        >
           <LeagueControls
             years={years}
             year={year}

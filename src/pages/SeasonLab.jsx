@@ -13,6 +13,7 @@ import LeagueTeamView from '@/components/season/LeagueTeamView';
 import PlayerStatsLog from '@/components/season/PlayerStatsLog';
 import LeagueLeaders from '@/components/season/LeagueLeaders';
 import LeagueAwards from '@/components/season/LeagueAwards';
+import SeasonSummaryPanel from '@/components/season/SeasonSummaryPanel';
 
 export default function SeasonLab() {
   const { year, setYear, years, source, league, state } = useSeasonSource();
@@ -98,26 +99,31 @@ export default function SeasonLab() {
             hasResults={Boolean(sim.result)}
             championName={championName}
           />
-          {tab === 'hub' && (
-            <div className="space-y-4">
-              <LeagueHero team={team} simRow={simRow} actualRecord={actualRecord} conferenceRank={conferenceRank} />
-              <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} limit={6} />
-              <LeagueLeaders simGames={simGames} />
-              <LeagueAwards simGames={simGames} />
-            </div>
-          )}
-          {tab === 'standings' && (
-            <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} />
-          )}
-          {tab === 'schedule' && (
-            <LeagueSchedule league={league} schedule={source.schedule || []} simGames={simGames} focusCode={team.code} onFocusChange={setFocus} />
-          )}
-          {tab === 'team' && (
-            <LeagueTeamView team={team} simRow={simRow} league={league} actualWins={actualRecord?.w} />
-          )}
-          {tab === 'log' && (
-            <PlayerStatsLog team={team} simGames={simGames} />
-          )}
+          <div key={tab} className="season-view-enter">
+            {tab === 'hub' && (
+              <div className="space-y-4">
+                {summary && (
+                  <SeasonSummaryPanel summary={summary} simGames={simGames} actualRecords={actualRecords} league={league} championCode={sim.result?.champion} onFocusChange={setFocus} />
+                )}
+                <LeagueHero team={team} simRow={simRow} actualRecord={actualRecord} conferenceRank={conferenceRank} />
+                <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} limit={6} />
+                <LeagueLeaders simGames={simGames} />
+                <LeagueAwards simGames={simGames} />
+              </div>
+            )}
+            {tab === 'standings' && (
+              <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} />
+            )}
+            {tab === 'schedule' && (
+              <LeagueSchedule league={league} schedule={source.schedule || []} simGames={simGames} focusCode={team.code} onFocusChange={setFocus} />
+            )}
+            {tab === 'team' && (
+              <LeagueTeamView team={team} simRow={simRow} league={league} actualWins={actualRecord?.w} />
+            )}
+            {tab === 'log' && (
+              <PlayerStatsLog team={team} simGames={simGames} />
+            )}
+          </div>
         </MyNbaHub>
       </main>
     </StudioShell>

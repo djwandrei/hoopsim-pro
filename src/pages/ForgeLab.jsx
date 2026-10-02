@@ -5,19 +5,27 @@ import SourceStatus from '@/components/studio/SourceStatus';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import ForgeBucketDraft from '@/components/forge/ForgeBucketDraft';
 import ForgePickDraft from '@/components/forge/ForgePickDraft';
+import ForgeTeamDraft from '@/components/forge/ForgeTeamDraft';
 
 const DRAFT_MODES = [
-  { key:'wheel', label:'Wheel Draft', hint:'Spin the reels for team & player, then tap a stat chip to assign it' },
-  { key:'pick', label:'Pick & Spin', hint:'Arm a skill chip, spin the reels, keep or respin the offer' },
+  { key:'wheel', label:'Wheel Draft', desc:'Spin the reels for team & player, tap a stat chip to assign it — keep or respin the offered player-season, then the finished build tours the league.' },
+  { key:'pick', label:'Pick & Spin', desc:'Arm a skill chip, spin the reels, then keep the offered value or burn a respin — fill all nine slots to forge the composite.' },
+  { key:'team', label:'Team Forge · 98-0', desc:'Spin for a player every round, choose where they slot into your eight-man rotation, then simulate the season and playoffs — chase the flawless 98-0.' },
 ];
+
+const MODE_STEPS = {
+  wheel: ['Spin team & player', 'Assign a stat chip', 'Forge & tour'],
+  pick: ['Pick the skill', 'Spin team & player', 'Forge & tour'],
+  team: ['Spin for each player', 'Place in the rotation', 'Chase 98-0'],
+};
 
 export default function ForgeLab() {
   const data = useSeasonSource();
   const [mode, setMode] = useState('wheel');
-  const Draft = mode === 'pick' ? ForgePickDraft : ForgeBucketDraft;
+  const Draft = mode === 'pick' ? ForgePickDraft : mode === 'team' ? ForgeTeamDraft : ForgeBucketDraft;
   const active = DRAFT_MODES.find(item => item.key === mode) || DRAFT_MODES[0];
   return <StudioShell active="/forge">
-    <WorkbenchHeader title="COMPOSITE FORGE" description={active.hint + ' — keep or respin the offered player-season, then the finished build tours the league.'} steps={mode === 'pick' ? ['Pick the skill', 'Spin team & player', 'Forge & tour'] : ['Spin team & player', 'Assign a stat chip', 'Forge & tour']} state={data.state} status={data.state === 'ready' ? 'Workbench source ready' : undefined} />
+    <WorkbenchHeader title="COMPOSITE FORGE" description={active.desc} steps={MODE_STEPS[mode]} state={data.state} status={data.state === 'ready' ? 'Workbench source ready' : undefined} />
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6">
       <SourceStatus state={data.state} source={data.source} error={data.error} year={data.year} years={data.years} onYearChange={data.setYear} onRetry={data.retry} />
       {data.state === 'ready' && <div className="flex flex-wrap gap-2" role="tablist" aria-label="Draft mode">

@@ -132,4 +132,8 @@
 .broadcast-ticker { border-block: 1px solid hsl(var(--court-accent) / .22); background: hsl(var(--court-canvas) / .8); padding: .7rem 1rem; }
 .broadcast-ticker__track { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem 2rem; }
 .broadcast-ticker__item { display: inline-flex; align-items: baseline; gap: .5rem; font-size: .65rem; text-transform: uppercase; letter-spacing: .12em; color: hsl(var(--muted-foreground)); }
+.court-panel-hover { @apply transition-all duration-200; }
+.court-panel-hover:hover { transform: translateY(-2px); box-shadow: 0 16px 40px hsl(var(--court-canvas) / 0.4); border-color: hsl(var(--court-accent) / 0.45); }
+.studio-select:focus, .studio-select:focus-visible { border-color: hsl(var(--court-accent) / .6); box-shadow: 0 0 0 3px hsl(var(--court-accent) / .15); }
+.hero-rule { @apply block h-1 w-16 rounded-full; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .4) 60%, transparent); }
 @media (prefers-reduced-motion: reduce) { .studio-workspace *, .studio-workspace *::before, .studio-workspace *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }

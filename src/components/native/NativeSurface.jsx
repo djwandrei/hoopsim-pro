@@ -29,7 +29,7 @@ export default function NativeSurface({ kind,entry,onYearChange,onStateChange })
         await controller.activate?.();
         if(!live)return;
         sync();
-      }catch(failure){if(live){setLoading(false);setError(failure.message || 'Original gameplay could not be loaded.');onStateChange('error');}}
+      }catch(failure){if(live){observer.disconnect();cancelAnimationFrame(frame);setLoading(false);setError(failure.message || 'Original gameplay could not be loaded.');onStateChange('error');}}
     })();
     return()=>{live=false;observer.disconnect();cancelAnimationFrame(frame);controller?.destroy?.();if(!controller?.destroy)controller?.unmount?.();host.dispose();};
   },[kind,entry.packageId,entry.packageVersion,retry]);

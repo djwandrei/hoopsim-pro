@@ -10,8 +10,10 @@ export default function nativeReadiness(host, kind) {
     if (banner.querySelector('[role="alert"]')) return 'error';
     return /\bready\b|\bavailable\b/i.test(banner.querySelector('strong')?.textContent || '') ? 'ready' : 'loading';
   }
+  if(host.panel.querySelector(':scope > .swishiq-advanced-notice--error')) return 'error';
+  if(host.panel.hasAttribute('aria-busy')) return 'loading';
   const state = host.shadow.getElementById('workbenchState')?.dataset.state;
   if (state === 'available' || state === 'ready') return 'ready';
-  if (state === 'unavailable' || state === 'error') return 'error';
+  if (state === 'unavailable' || state === 'error' || state === 'failed') return 'error';
   return 'loading';
 }

@@ -14,6 +14,7 @@ import PlayerStatsLog from '@/components/season/PlayerStatsLog';
 import LeagueLeaders from '@/components/season/LeagueLeaders';
 import LeagueAwards from '@/components/season/LeagueAwards';
 import SeasonSummaryPanel from '@/components/season/SeasonSummaryPanel';
+import '@/components/season/seasonTables.css';
 
 export default function SeasonLab() {
   const { year, setYear, years, source, league, state } = useSeasonSource();
@@ -52,7 +53,7 @@ export default function SeasonLab() {
     return (
       <StudioShell active="/season">
         <WorkbenchHeader title="SEASON LAB" description="A MyNBA-style league hub on the observed season package." state={state} status={state === 'ready' ? 'League hub ready' : undefined} />
-        <main className="mx-auto min-w-0 max-w-7xl px-4 py-6"><WorkbenchState state={state} /></main>
+        <main className="season-lab mx-auto min-w-0 max-w-7xl px-4 py-6"><WorkbenchState state={state} /></main>
       </StudioShell>
     );
   }
@@ -80,7 +81,7 @@ export default function SeasonLab() {
   return (
     <StudioShell active="/season">
       <WorkbenchHeader title="SEASON LAB" description="A MyNBA-style league hub: replay the observed season, track standings and the schedule, and dive into your team page." state="ready" status="League hub ready" />
-      <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">
+      <main className="season-lab mx-auto min-w-0 max-w-7xl px-4 py-6">
         <MyNbaHub
           focusCode={team.code}
           tab={tab}

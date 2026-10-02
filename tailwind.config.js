@@ -68,7 +68,12 @@ module.exports = {
   			goldSoft: 'hsl(var(--court-focus) / <alpha-value>)',
   			trim: 'hsl(var(--court-trim) / <alpha-value>)',
   			positive: 'hsl(var(--court-positive) / <alpha-value>)',
-  			royal: 'hsl(var(--court-royal) / <alpha-value>)'
+  			royal: 'hsl(var(--court-royal) / <alpha-value>)',
+            'table-neutral': {
+                canvas: 'hsl(var(--table-neutral-canvas) / <alpha-value>)',
+                surface: 'hsl(var(--table-neutral-surface) / <alpha-value>)',
+                raised: 'hsl(var(--table-neutral-raised) / <alpha-value>)'
+            }
   		},
   		fontFamily: {
   			heading: ['var(--font-heading)'],

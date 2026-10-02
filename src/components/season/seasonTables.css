@@ -1,0 +1,17 @@
+/* Tables own opaque, unseeded surfaces instead of showing the focused team's panel through them. */
+.dark .season-lab table {
+  --myna-canvas: hsl(var(--table-neutral-canvas));
+  --myna-surface: hsl(var(--table-neutral-surface));
+  --myna-raised: hsl(var(--table-neutral-raised));
+  --court-canvas: var(--table-neutral-canvas);
+  --court-surface: var(--table-neutral-surface);
+  --court-raised: var(--table-neutral-raised);
+  @apply bg-table-neutral-surface;
+}
+.dark .season-lab table :is(thead, tbody, tfoot, tr) { @apply bg-table-neutral-surface !important; }
+.dark .season-lab table th { @apply bg-table-neutral-canvas !important; }
+.dark .season-lab table td { background: inherit !important; }
+.dark .season-lab table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, hsl(var(--table-neutral-raised)) 20%, hsl(var(--table-neutral-surface))) !important;
+}
+.dark .season-lab table tbody tr:hover { @apply bg-table-neutral-raised !important; }

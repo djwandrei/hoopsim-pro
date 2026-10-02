@@ -1,0 +1,43 @@
+import React from 'react';
+import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
+
+const Silhouette = () => (
+  <svg viewBox="0 0 100 100" fill="currentColor" className="h-full w-full" aria-hidden="true">
+    <circle cx="50" cy="26" r="14" />
+    <path d="M50 43c-11 0-18 5-20 14l-6 22h12l3 17h22l3-17h12l-6-22c-2-9-9-14-20-14z" />
+  </svg>
+);
+
+const initials = pick => (pick?.player?.name || '?').split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('');
+
+// BAP-style circular attribute wheel: nine slots around a central silhouette,
+// each segment lighting up as its pick lands and graded by share of the max.
+export default function ForgeBuildWheel({ picks, leagueMax, overall, selectedKey }) {
+  const slice = 360 / SKILLS.length;
+  const segments = SKILLS.map((skill, index) => {
+    const pick = picks[skill.key];
+    const ratio = pick ? Math.min(1, (pick.value || 0) / (leagueMax[skill.key] || 1)) : 0;
+    return { skill, pick, ratio, index };
+  });
+  const gradient = `conic-gradient(from -90deg, ${segments.map(({ pick, ratio, index }) => {
+    const color = pick ? `hsl(var(--court-accent) / ${(0.16 + 0.74 * ratio).toFixed(2)})` : 'hsl(var(--court-raised) / 0.35)';
+    return `${color} ${index * slice}deg ${(index + 1) * slice}deg`;
+  }).join(', ')})`;
+  return <div className="relative mx-auto aspect-square w-full max-w-[19rem]" aria-label="Build attribute wheel">
+    <div className="absolute inset-0 overflow-hidden rounded-full border border-border/25 shadow-[0_0_44px_hsl(var(--court-canvas)/0.55)]" style={{ background: gradient }}>
+      {segments.map(({ skill, pick, ratio, index }) => {
+        const rad = index * slice * Math.PI / 180;
+        const selected = selectedKey === skill.key;
+        return <div key={skill.key} style={{ left:`${50 + 37 * Math.sin(rad)}%`, top:`${50 - 37 * Math.cos(rad)}%` }} className={`absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-center transition-colors ${pick ? 'border-gold/60 bg-canvas/85 text-gold' : 'border-border/30 bg-canvas/70 text-muted-foreground'} ${selected ? 'shadow-[0_0_0_3px_hsl(var(--court-accent)/0.35)] border-gold' : ''}`}>
+          <span className="font-display text-[11px] leading-none tracking-wide">{skill.label}</span>
+          <span className="font-mono text-[9px] leading-none opacity-80">{pick ? `${gradeFor(ratio)} · ${initials(pick)}` : '—'}</span>
+        </div>;
+      })}
+    </div>
+    <div className="absolute inset-[26%] flex flex-col items-center justify-center rounded-full border-2 border-gold/50 bg-canvas shadow-[0_0_30px_hsl(var(--court-accent)/0.2)]">
+      <div className="absolute inset-[12%] text-gold/15"><Silhouette /></div>
+      <span className="relative font-display text-4xl leading-none text-gold">{overall ?? '—'}</span>
+      <span className="relative mt-1 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">OVR</span>
+    </div>
+  </div>;
+}

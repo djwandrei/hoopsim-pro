@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { SKILLS, GROUPS } from '@/components/forge/bapSkills';
 import { buildForgePool, forgeMax, forgeRanks } from '@/components/forge/forgePool';
 import ForgeSkillSelect from '@/components/forge/ForgeSkillSelect';
+import ForgeBuildWheel from '@/components/forge/ForgeBuildWheel';
 import ForgeTeamWheel from '@/components/forge/ForgeTeamWheel';
 import ForgeOvrMeter from '@/components/forge/ForgeOvrMeter';
 import BucketBoard from '@/components/forge/BucketBoard';
@@ -127,6 +128,7 @@ export default function ForgePickDraft({ source, league }) {
       <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,20rem),minmax(0,1fr)]">
         <div className="space-y-3">
           <ForgeSkillSelect picks={picks} selectedKey={selectedKey} onSelect={selectSkill} disabled={spinning} />
+          <ForgeBuildWheel picks={picks} leagueMax={leagueMax} overall={liveOvr} selectedKey={selectedKey} />
           <BucketBoard buckets={SKILLS} picks={picks} activeKey={null} onUndo={undo} complete={false} leagueMax={leagueMax} showGrades={showGrades} />
         </div>
         <div className="space-y-3">
@@ -139,6 +141,7 @@ export default function ForgePickDraft({ source, league }) {
       </div>
     </div>}
     {phase === 'complete' && <div className="space-y-4">
+      <ForgeBuildWheel picks={picks} leagueMax={leagueMax} overall={overall} />
       <BucketBoard buckets={SKILLS} picks={picks} activeKey={null} onUndo={undo} complete leagueMax={leagueMax} showGrades={showGrades} />
       <BucketSummary buckets={SKILLS} picks={picks} overall={overall} leagueMax={leagueMax} onRestart={start} />
       <ForgeLeagueTour league={league} buckets={SKILLS} picks={picks} />

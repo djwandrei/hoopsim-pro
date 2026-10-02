@@ -46,6 +46,7 @@ const PINS = {
 '/tools/swishiq-studio/engine/canonical-v4-descriptive-source-consumer.js':'a1cd8ebc8679b47e1f688be72072d6a8eae1f110bdb66b8fdb7dd8dd4c3350d5',
 '/tools/swishiq-studio/engine/canonical-v4-identity.js':'75255673400de31557142a65038b7996ffc6496291869c4ea463322878bd4baf',
 '/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js':'d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5',
+'/tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js':'3f77681775b95b9fba42454d6ed62c785551cdd7db5a439babfbad9d753352bd',
 '/tools/swishiq-studio/engine/franchise-cpu-rotation.js':'e5449eb414113949344be3bd4f4e9550672714536b149a4268dd7fea8c794a36',
 '/tools/swishiq-studio/engine/canonical-v4-projection-resolver.js':'523b21fccaf59fa59c006ebfc78c39b91d594b3bc63a7155f4c3fcc1a7a3becf',
 '/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js':'7fb5ce6155135ac7ec9d1c7e5f6a7db5c6a78e329415698e86222d0696b7eee0',

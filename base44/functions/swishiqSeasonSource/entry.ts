@@ -1,8 +1,10 @@
-// Studio source relay: current published package data plus pinned native gameplay assets.
+// Studio source relay: the site's current canonical V4 published data plus pinned native gameplay assets.
 import { readStudioNativeAsset } from '../../shared/studioNativeAssets.ts';
 
 const DATA_BASE = 'https://www.djshouseofcards-comics.com/tools/swishiq-studio/data/';
-const REGISTRY_FILE = 'registry.json?v=20260929d&rev=registry-v3-fetch-timeout-v1-20260929d';
+// The site's reviewed canonical V4 release pin. A new site release updates this id.
+const V4_RELEASE = 'v4/releases/v4-site-12ad90dc8710';
+const REGISTRY_FILE = `${V4_RELEASE}/registry.json?v=20261002b`;
 const SCHEDULE_FILE = 'nba-actual-schedules-v1.json?v=20260920c&rev=nba-schedule-source-v2';
 const PLAYER_METADATA_FILE = 'player-metadata.json?v=20260920c&rev=20260919b';
 const PUBLIC_CONTEXT_FILE = 'public-player-context-v2.json?v=20260920c&rev=20260918f';
@@ -21,7 +23,7 @@ const BLUEPRINT_METRIC_KEYS = [
 ];
 const SEASON_ROW_KEYS = ['playerRef', 'displayName', 'teamCode', 'seasonStartYear', 'phase', 'positions', 'playerSeasonRef', 'observed', 'age', 'games', 'starts', 'minutes', 'box', 'metrics'];
 const PUBLIC_SEASON_KEYS = ['seasonStartYear', 'seasonEndYear', 'seasonPhase', 'teamCode', 'sourceTeamCode', 'isMultiTeamAggregate', 'totals', 'advanced', 'provenance'];
-const PER_GAME_KEYS = ['points', 'rebounds', 'assists', 'turnovers', 'steals', 'blocks'];
+const PER_GAME_KEYS = ['points', 'assists', 'rebounds', 'turnovers', 'steals', 'blocks'];
 
 const cache = new Map();
 let publicContextPromise = null;
@@ -56,17 +58,24 @@ function metricValue(metric) {
   return metric?.status === 'available' && Number.isFinite(Number(metric.value)) ? Number(metric.value) : null;
 }
 
+// Canonical V4 records keep identity in `entities`, the season window in `time`,
+// and the observation itself in `values`.
+function rowYear(row) { return Number(row.time?.seasonStartYear); }
+function rowPhase(row) { return row.time?.phase || 'regular'; }
+function rowValues(row) { return row.values || {}; }
+function rowRef(row, key) { return row.entities?.[key] ?? row.values?.[key] ?? null; }
+
 async function publishedPackage(kind, year = null) {
   const registry = await readJson(REGISTRY_FILE, 'The SwishIQ registry');
   const entry = (registry.packages || []).find(item =>
-    item?.status === 'published' && item?.modelId === 'swishiq-v3'
+    item?.status === 'published' && item?.modelId === 'swishiq-canonical-v4'
     && item?.scope?.kind === kind
     && (kind === 'pooled-window' || Number(item.scope.seasonStartYear) === year));
   if (!entry) throw new Error(kind === 'pooled-window'
     ? 'No published pooled-window package.'
     : `No published exact-season package for ${year}.`);
-  const index = await readJson(`${entry.projectionIndexPath}?v=20260929d`, 'The projection index');
-  const packageRoot = entry.projectionIndexPath.split('/').slice(0, -1).join('/');
+  const packageRoot = `${V4_RELEASE}/${String(entry.projectionIndexPath).split('/').slice(0, -1).join('/')}`;
+  const index = await readJson(`${packageRoot}/index.json?v=20261002b`, 'The projection index');
   return { registry, entry, index, packageRoot };
 }
 
@@ -75,7 +84,7 @@ async function packagePart(index, packageRoot, artifactId) {
   if (!descriptor?.path) throw new Error(`The package is missing its ${artifactId} artifact.`);
   return {
     descriptor,
-    value: await readJson(`${packageRoot}/${descriptor.path}?v=20260929d`, `The ${artifactId} artifact`),
+    value: await readJson(`${packageRoot}/${descriptor.path}?v=20261002b`, `The ${artifactId} artifact`),
   };
 }
 
@@ -114,6 +123,68 @@ function publicStatsForYear(context, year, nameSet) {
     .filter(row => row.seasons.length && nameSet.has(normalizeName(row.name)));
 }
 
+// The pooled V4 player-seasons artifact is very large; it is fetched and reduced
+// to the career rows the workbenches consume, and only that reduction is cached.
+let careerCache = null;
+
+async function careerArchive() {
+  if (careerCache) return careerCache;
+  const { registry, entry, index, packageRoot } = await publishedPackage('pooled-window');
+  const [descriptor, metadata] = await Promise.all([packagePart(index, packageRoot, 'player-seasons'), playerMetadata()]);
+  let response;
+  try {
+    response = await fetch(`${DATA_BASE}${packageRoot}/${descriptor.path}?v=20261002b`, { cache: 'no-store' });
+  } catch {
+    throw new Error('The pooled player-seasons artifact could not be reached.');
+  }
+  if (!response.ok) throw new Error(`The pooled player-seasons artifact is unavailable (${response.status}).`);
+  const value = await response.json();
+  const records = (value.records || [])
+    .filter(row => rowValues(row).observed === true && rowPhase(row) === 'regular')
+    .map(row => {
+      const item = rowValues(row);
+      const metrics = item.metrics || {};
+      return {
+        playerRef: rowRef(row, 'playerRef'),
+        displayName: item.displayName,
+        seasonStartYear: Number(row.time?.seasonStartYear),
+        teamCode: item.teamCode,
+        phase: rowPhase(row),
+        observed: item.observed === true,
+        games: Number(item.games) || 0,
+        minutes: Number(item.minutes) || 0,
+        positions: Array.isArray(item.positions) ? item.positions : [],
+        age: item.age ?? null,
+        experience: null,
+        careerMetrics: Object.fromEntries(PER_GAME_KEYS.map(key => [key, metricValue(metrics[`${key}PerGame`])])),
+        headshotPath: headshotFor(metadata, item.displayName),
+      };
+    });
+  careerCache = {
+    registry,
+    entry,
+    descriptor,
+    records,
+  };
+  return careerCache;
+}
+
+function entrySummary(entry, index) {
+  return {
+    packageId: entry.packageId,
+    packageVersion: entry.packageVersion,
+    packageManifestSha256: entry.packageManifestSha256,
+    sourceLockSha256: entry.sourceLockSha256,
+    projectionContentSha256: entry.projectionContentSha256 ?? index.contentSha256 ?? null,
+    modelId: entry.modelId,
+    normalizer: entry.normalizerVersion ?? null,
+    metricsVersion: entry.metricsVersion,
+    scope: entry.scope,
+    status: entry.status,
+    capabilities: index.capabilities || index.capabilitySummary || null,
+  };
+}
+
 export default async function(req) {
   try {
     if (req.method !== 'POST') return Response.json({ error: 'POST only.' }, { status: 405 });
@@ -136,14 +207,9 @@ export default async function(req) {
       });
     }
 
-    // Pooled 2017–26 career archive, rebuilt from the live pooled package.
+    // Pooled 2017–26 career archive, rebuilt from the live pooled V4 package.
     if (body.career === true) {
-      const { registry, entry, index, packageRoot } = await publishedPackage('pooled-window');
-      const [{ descriptor, value }, metadata] = await Promise.all([
-        packagePart(index, packageRoot, 'career-history'),
-        playerMetadata(),
-      ]);
-      const records = (value.records || []).map(row => ({ ...row, headshotPath: headshotFor(metadata, row.displayName) }));
+      const { registry, entry, descriptor, records } = await careerArchive();
       return Response.json({
         registry: {
           format: registry.format,
@@ -151,22 +217,12 @@ export default async function(req) {
           registryRevisionSha256: registry.registryRevisionSha256,
           generatedAt: registry.generatedAt,
         },
-        entry: {
-          packageId: entry.packageId,
-          packageVersion: entry.packageVersion,
-          packageManifestSha256: entry.packageManifestSha256,
-          sourceLockSha256: entry.sourceLockSha256,
-          modelId: entry.modelId,
-          normalizer: entry.normalizer,
-          metricsVersion: entry.metricsVersion,
-          scope: entry.scope,
-          status: entry.status,
-        },
+        entry: entrySummary(entry, { contentSha256: null, capabilities: null }),
         sourceReceipt: {
           copiedAt: new Date().toISOString().slice(0, 10),
           artifactHashesChecked: true,
           artifactSha256: descriptor.sha256,
-          url: DATA_BASE + `${packageRoot}/${descriptor.path}`,
+          url: DATA_BASE + `${descriptor.path}`,
         },
         records,
       });
@@ -184,59 +240,72 @@ export default async function(req) {
       packagePart(index, packageRoot, 'team-styles'),
       packagePart(index, packageRoot, 'roster-memberships'),
       packagePart(index, packageRoot, 'player-seasons'),
-      packagePart(index, packageRoot, 'players'),
+      packagePart(index, packageRoot, 'player-entities'),
       playerMetadata(),
       publicContext(),
       readJson(SCHEDULE_FILE, 'The NBA schedule artifact'),
     ]);
 
     const styles = (teamStylesPart.value.records || [])
-      .filter(row => Number(row.seasonStartYear) === year)
-      .map(row => ({
-        teamCode: row.teamCode,
-        phase: row.phase || 'regular',
-        games: Number.isSafeInteger(row.metrics?.pointsPerGame?.denominator) ? row.metrics.pointsPerGame.denominator : null,
-        metrics: Object.fromEntries(METRIC_KEYS.map(key => [key, metricValue(row.metrics?.[key])])),
-      }));
+      .filter(row => rowYear(row) === year)
+      .map(row => {
+        const metrics = rowValues(row).metrics || {};
+        return {
+          teamCode: rowValues(row).teamCode || row.entities?.teamCode,
+          phase: rowPhase(row),
+          games: Number.isSafeInteger(metrics.pointsPerGame?.denominator) ? metrics.pointsPerGame.denominator : null,
+          metrics: Object.fromEntries(METRIC_KEYS.map(key => [key, metricValue(metrics[key])])),
+        };
+      });
 
     const players = (playersPart.value.records || []).map(row => ({
-      playerRef: row.playerRef,
-      displayName: row.displayName,
-      positions: Array.isArray(row.positions) ? row.positions : [],
+      playerRef: rowRef(row, 'playerRef'),
+      displayName: rowValues(row).displayName,
+      positions: Array.isArray(rowValues(row).positions) ? rowValues(row).positions : [],
     }));
 
     const playerSeasons = (playerSeasonsPart.value.records || [])
-      .filter(row => Number(row.seasonStartYear) === year && row.phase === 'regular' && row.observed === true)
-      .map(row => ({
-        playerRef: row.playerRef,
-        name: row.displayName,
-        teamCode: row.teamCode,
-        positions: Array.isArray(row.positions) ? row.positions : [],
-        games: Number(row.games) || 0,
-        minutes: Number(row.minutes) || 0,
-        points: Number(row.box?.points) || 0,
-        rebounds: Number(row.box?.rebounds) || 0,
-        assists: Number(row.box?.assists) || 0,
-        turnovers: Number(row.box?.turnovers) || 0,
-        steals: Number(row.box?.steals) || 0,
-        blocks: Number(row.box?.blocks) || 0,
-        headshotPath: headshotFor(metadata, row.displayName),
-      }));
+      .filter(row => rowYear(row) === year && rowPhase(row) === 'regular' && rowValues(row).observed === true)
+      .map(row => {
+        const item = rowValues(row);
+        const box = item.box || {};
+        return {
+          playerRef: rowRef(row, 'playerRef'),
+          name: item.displayName,
+          teamCode: item.teamCode,
+          positions: Array.isArray(item.positions) ? item.positions : [],
+          games: Number(item.games) || 0,
+          minutes: Number(item.minutes) || 0,
+          points: Number(box.points) || 0,
+          rebounds: Number(box.rebounds) || 0,
+          assists: Number(box.assists) || 0,
+          turnovers: Number(box.turnovers) || 0,
+          steals: Number(box.steals) || 0,
+          blocks: Number(box.blocks) || 0,
+          headshotPath: headshotFor(metadata, item.displayName),
+        };
+      });
 
     const memberships = (membershipsPart.value.records || [])
-      .filter(row => Number(row.seasonStartYear) === year && row.phase === 'regular')
-      .map(row => ({ playerRef: row.playerRef, name: row.displayName, teamCode: row.teamCode, positions: Array.isArray(row.positions) ? row.positions : [] }));
+      .filter(row => rowYear(row) === year && rowPhase(row) === 'regular')
+      .map(row => {
+        const item = rowValues(row);
+        return { playerRef: rowRef(row, 'playerRef'), name: item.displayName, teamCode: item.teamCode, positions: Array.isArray(item.positions) ? item.positions : [] };
+      });
 
     const blueprintRows = (playerSeasonsPart.value.records || [])
-      .filter(row => Number(row.seasonStartYear) === year)
-      .map(row => ({
-        ...Object.fromEntries(SEASON_ROW_KEYS.map(key => [key, row[key]])),
-        headshotPath: headshotFor(metadata, row.displayName),
-        metrics: Object.fromEntries(BLUEPRINT_METRIC_KEYS.map(key => {
-          const metric = row.metrics?.[key];
-          return [key, { status: metric?.status || 'unavailable', value: Number.isFinite(Number(metric?.value)) ? Number(metric.value) : null }];
-        })),
-      }));
+      .filter(row => rowYear(row) === year)
+      .map(row => {
+        const item = rowValues(row);
+        return {
+          ...Object.fromEntries(SEASON_ROW_KEYS.map(key => [key, key === 'metrics' ? null : key === 'playerRef' ? rowRef(row, 'playerRef') : key === 'seasonStartYear' ? rowYear(row) : key === 'phase' ? rowPhase(row) : key === 'playerSeasonRef' ? row.entities?.playerSeasonRef ?? null : item[key] ?? null])),
+          headshotPath: headshotFor(metadata, item.displayName),
+          metrics: Object.fromEntries(BLUEPRINT_METRIC_KEYS.map(key => {
+            const metric = item.metrics?.[key];
+            return [key, { status: metric?.status || 'unavailable', value: Number.isFinite(Number(metric?.value)) ? Number(metric.value) : null }];
+          })),
+        };
+      });
 
     const playerNameSet = new Set(players.map(row => normalizeName(row.displayName)));
     const publicStats = publicStatsForYear(context, year, playerNameSet);
@@ -258,19 +327,7 @@ export default async function(req) {
         registryRevisionSha256: registry.registryRevisionSha256,
         generatedAt: registry.generatedAt,
       },
-      entry: {
-        packageId: entry.packageId,
-        packageVersion: entry.packageVersion,
-        packageManifestSha256: entry.packageManifestSha256,
-        sourceLockSha256: entry.sourceLockSha256,
-        projectionContentSha256: entry.projectionContentSha256,
-        modelId: entry.modelId,
-        normalizer: entry.normalizer,
-        metricsVersion: entry.metricsVersion,
-        scope: entry.scope,
-        status: entry.status,
-        capabilities: index.capabilities || null,
-      },
+      entry: entrySummary(entry, index),
       teamStyles: styles,
       playerSeasons,
       memberships,

@@ -16,7 +16,7 @@ export default function BucketBoard({ buckets, picks, activeKey, onUndo, complet
       const pick = picks[bucket.key];
       const active = !complete && !pick && activeKey === bucket.key;
       const grade = pick && leagueMax?.[bucket.key] ? gradeFor(pick.value / leagueMax[bucket.key]) : null;
-      return <div key={bucket.key} className={`flex items-center gap-3 border-b border-border/15 px-3 py-2.5 last:border-b-0 transition-colors ${pick ? 'bg-gold/5' : active ? 'bg-gold/10' : 'bg-canvas/20'}`}>
+      return <div key={`${bucket.key}:${pick ? pick.player.playerRef : 'open'}`} className={`${pick ? 'slot-pop ' : ''}flex items-center gap-3 border-b border-border/15 px-3 py-2.5 last:border-b-0 transition-colors ${pick ? 'bg-gold/5' : active ? 'bg-gold/10' : 'bg-canvas/20'}`}>
         <div className="w-28 shrink-0">
           <p className={`text-[10px] font-semibold uppercase tracking-wider ${pick || active ? 'text-gold' : 'text-muted-foreground'}`}>{bucket.label}</p>
           <p className="font-mono text-[9px] text-muted-foreground">{bucket.metric}</p>

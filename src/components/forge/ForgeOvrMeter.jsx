@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { gradeFor } from '@/components/forge/bapSkills';
 
 // Live OVR meter while the build is still in progress.
@@ -6,7 +7,7 @@ export default function ForgeOvrMeter({ overall, filled, total, showGrades }) {
   const grade = overall == null ? null : gradeFor(overall / 100);
   return <div className="flex items-center gap-4 rounded-xl border border-border/25 bg-raised/40 p-3">
     <div className="shrink-0 text-center">
-      <p className="font-display text-4xl leading-none text-gold">{overall == null ? '—' : overall}</p>
+      <motion.p key={overall == null ? 'none' : overall} initial={{ scale:1.3, opacity:.3 }} animate={{ scale:1, opacity:1 }} transition={{ type:'spring', stiffness:320, damping:18 }} className="font-display text-4xl leading-none text-gold">{overall == null ? '—' : overall}</motion.p>
       <p className="mt-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">{showGrades && grade ? `OVR · ${grade}` : 'OVR'}</p>
     </div>
     <div className="min-w-0 flex-1">

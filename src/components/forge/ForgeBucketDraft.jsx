@@ -162,7 +162,7 @@ export default function ForgeBucketDraft({ source, league }) {
         <div><p className="court-kicker">Bucket draft · {group}</p><h2 className="mt-1 font-display text-2xl">ROLL · LOCK · SPIN · KEEP</h2><p className="mt-1 text-xs text-muted-foreground">Roll a skill and lock it, then the final spin lands team and player. {SKILLS.length - filled} of {SKILLS.length} slots open.</p></div>
         <button type="button" onClick={() => setShowGrades(value => !value)} className="flex min-h-9 items-center gap-2 rounded-lg border border-border/30 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold">{showGrades ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}{showGrades ? 'Grades on' : 'Grades off'}</button>
       </div>
-      <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,21rem),minmax(0,1fr)]">
+      <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,23rem),minmax(0,1fr)]">
         <div className="space-y-3">
           <BuildWheel skills={SKILLS} picks={picks} activeKey={rolledKey} leagueMax={leagueMax} rotation={rotation} spinning={rolling} onSpin={() => (rolledKey || rolling ? undefined : roll())} showGrades={showGrades} />
           <div className="grid grid-cols-2 gap-2">
@@ -175,12 +175,14 @@ export default function ForgeBucketDraft({ source, league }) {
           {lockedSkill ? <>
             <p className="text-xs text-muted-foreground"><span className="font-semibold text-gold">{lockedSkill.label}</span> locked · spin the wheel for the donor team and player.</p>
             <ForgeTeamWheel teams={wheelTeams} rotation={teamRotation} spinning={teamSpinning} onSpin={spinTeam} landedCode={activeTeam?.code || null} />
-            {offer ? <ForgeOfferCard offer={offer} skill={lockedSkill} leagueMax={leagueMax} onKeep={keep} onRespin={respinPlayer} respins={respins} showGrades={showGrades} />
+            {offer ? <ForgeOfferCard key={offer.playerRef} offer={offer} skill={lockedSkill} leagueMax={leagueMax} onKeep={keep} onRespin={respinPlayer} respins={respins} showGrades={showGrades} />
               : <div className="flex items-center gap-3 rounded-xl border border-dashed border-border/30 bg-canvas/30 p-5 text-sm text-muted-foreground">{teamSpinning ? <><Loader2 className="h-5 w-5 animate-spin text-gold" />The wheel is choosing the team and player…</> : <>Spin the wheel to offer a player from the landed team.</>}</div>}
           </>
             : <div className="flex items-center gap-3 rounded-xl border border-dashed border-border/30 bg-canvas/30 p-5 text-sm text-muted-foreground">Roll the attribute wheel, lock a skill, and the final spin for team and player unlocks.</div>}
-          <BucketBoard buckets={SKILLS} picks={picks} activeKey={lockedKey || rolledKey} onUndo={undo} complete={false} leagueMax={leagueMax} showGrades={showGrades} />
         </div>
+      </div>
+      <div className="mt-5">
+        <BucketBoard buckets={SKILLS} picks={picks} activeKey={lockedKey || rolledKey} onUndo={undo} complete={false} leagueMax={leagueMax} showGrades={showGrades} />
       </div>
     </div>}
     {phase === 'complete' && <div className="space-y-4">

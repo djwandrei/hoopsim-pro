@@ -137,3 +137,12 @@
 .studio-select:focus, .studio-select:focus-visible { border-color: hsl(var(--court-accent) / .6); box-shadow: 0 0 0 3px hsl(var(--court-accent) / .15); }
 .hero-rule { @apply block h-1 w-16 rounded-full; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .4) 60%, transparent); }
 @media (prefers-reduced-motion: reduce) { .studio-workspace *, .studio-workspace *::before, .studio-workspace *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+/* Forge wheel + draft-card motion */
+.wheel-chip-active { animation: studio-chip-pulse 1.4s ease-in-out infinite; }
+@keyframes studio-chip-pulse { 0%,100% { box-shadow: 0 0 0 0 hsl(var(--court-accent) / .4); } 50% { box-shadow: 0 0 0 7px hsl(var(--court-accent) / 0); } }
+.wheel-chip-landed { animation: studio-chip-pop .4s cubic-bezier(.2,.8,.3,1.2); }
+@keyframes studio-chip-pop { from { transform: translate(-50%,-50%) scale(.55); opacity:0; } to { transform: translate(-50%,-50%) scale(1); opacity:1; } }
+.wheel-spinning { animation: studio-wheel-glow 1s ease-in-out infinite; }
+@keyframes studio-wheel-glow { 0%,100% { box-shadow: 0 0 22px hsl(var(--court-accent) / .15); } 50% { box-shadow: 0 0 46px hsl(var(--court-accent) / .45); } }
+.slot-pop { animation: studio-rise .28s ease-out; }
+@keyframes studio-rise { from { transform: translateY(8px); opacity:0; } to { transform: translateY(0); opacity:1; } }

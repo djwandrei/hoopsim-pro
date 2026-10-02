@@ -2,7 +2,7 @@ import React from 'react';
 import { Image } from '@/components/ui/image';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
 
-const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/97546ab83_generated_image.png';
+const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/b207e0f44_generated_image.png';
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {
@@ -32,8 +32,8 @@ export default function ForgeStage({ mode, picks, leagueMax, reveal, selectedKey
   return <section aria-label="Build stage" className="relative flex flex-1 flex-col self-stretch items-center justify-center">
     <div className="relative z-10 flex flex-1 items-center justify-center px-4 py-6">
       <div className="relative h-72 w-full max-w-xs sm:h-96 sm:max-w-sm">
-        <div aria-hidden="true" className="absolute -inset-8" style={{ background: 'radial-gradient(58% 50% at 50% 40%, hsl(var(--court-royal) / 0.32), transparent 72%), radial-gradient(75% 55% at 50% 100%, hsl(var(--court-accent) / 0.15), transparent 72%)' }} />
-        <Image src={SILHOUETTE} alt="" fittingType="fit" className="absolute inset-0 h-full w-full opacity-95 [mask-image:radial-gradient(78%_78%_at_50%_45%,black_52%,transparent_98%)]" />
+        <div aria-hidden="true" className="absolute -inset-8" style={{ background: 'radial-gradient(50% 46% at 50% 44%, hsl(var(--court-royal) / 0.35), transparent 72%), radial-gradient(70% 52% at 50% 100%, hsl(var(--court-accent) / 0.12), transparent 72%)' }} />
+        <Image src={SILHOUETTE} alt="" fittingType="fit" className="absolute inset-0 h-full w-full opacity-95 mix-blend-screen" />
         {SKILLS.map((skill) => {
           const layout = CHIP_LAYOUT[skill.key] || { side: 'left', top: 50 };
           const pick = picks[skill.key];

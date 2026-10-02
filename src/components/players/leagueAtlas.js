@@ -4,6 +4,20 @@ export const SCATTER_LABEL = key => SCATTER_METRICS.find(([k]) => k === key)?.[1
 const PCT_METRICS = new Set(['fg','three','ft','ts','efg','ftr','threeRate']);
 export const scatterText = (key,value) => !Number.isFinite(value) ? '—' : PCT_METRICS.has(key) ? `${(value*100).toFixed(1)}%` : value.toFixed(1);
 export const scatterTick = (key,value) => !Number.isFinite(value) ? '' : PCT_METRICS.has(key) ? `${Math.round(value*100)}%` : Number.isInteger(value) ? String(value) : value.toFixed(1);
+export const scatterDomain = (key,values) => {
+  const finite = values.filter(Number.isFinite);
+  if (!finite.length) return undefined;
+  const min = Math.min(...finite), max = Math.max(...finite);
+  const span = Math.max(max - min, 0.01);
+  const pad = span * 0.12;
+  if (PCT_METRICS.has(key)) {
+    const lo = Math.max(0, min - pad);
+    const hi = Math.min(1, max + pad);
+    return [Math.round(lo * 200) / 200, Math.round(hi * 200) / 200];
+  }
+  const step = span >= 30 ? 2 : 1;
+  return [Math.floor((min - pad) / step) * step, Math.ceil((max + pad) / step) * step];
+};
 export function buildLeagueAtlas(rows) {
   const pools = new Map();
   const poolFor = key => {

@@ -119,4 +119,9 @@
 .swishiq-spin-room__history-item { border-radius: .5rem; padding: .75rem; background: hsl(var(--court-raised) / .4); }
 .swishiq-spin-room__history-hashes { display: grid; gap: .2rem; color: hsl(var(--muted-foreground)); }
 @media (max-width: 639px) { .swishiq-spin-room__body { grid-template-columns: 1fr; } .swishiq-spin-room__wheel { width: 12rem; } .swishiq-spin-room__receipt-facts { grid-template-columns: 1fr; } }
+.broadcast-ticker { overflow: hidden; border-block: 1px solid hsl(var(--court-accent) / .22); background: hsl(var(--court-canvas) / .8); padding: .55rem 0; }
+.broadcast-ticker__track { display: inline-flex; white-space: nowrap; animation: broadcast-scroll 32s linear infinite; }
+.broadcast-ticker:hover .broadcast-ticker__track { animation-play-state: paused; }
+.broadcast-ticker__item { display: inline-flex; align-items: baseline; gap: .5rem; margin-right: 2.75rem; font-size: .65rem; text-transform: uppercase; letter-spacing: .16em; color: hsl(var(--muted-foreground)); }
+@keyframes broadcast-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .studio-workspace *, .studio-workspace *::before, .studio-workspace *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }

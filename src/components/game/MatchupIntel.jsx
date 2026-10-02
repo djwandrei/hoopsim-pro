@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { ArrowLeftRight, Dices } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
-import { seasonLabel } from '@/lib/season/simEngine';
+import MatchupRadar from '@/components/game/MatchupRadar';
+import MatchupTable from '@/components/game/MatchupTable';
+import MatchupMeetings from '@/components/game/MatchupMeetings';
 
 const Bar = ({ label, value, average, invert }) => {
   const delta = value - average;
@@ -14,7 +17,13 @@ export default function MatchupIntel({ source, league, year }) {
   const [b, setB] = useState(league.teams[1]?.code || '');
   const teamA = league.byCode.get(a) || league.teams[0];
   const teamB = league.byCode.get(b) || league.teams[1];
-  const meetings = (source.schedule || []).filter(game => game.actual && ((game.home === teamA.code && game.away === teamB.code) || (game.home === teamB.code && game.away === teamA.code))).slice(0, 6);
+  const swap = () => { setA(b);setB(a); };
+  const randomize = () => {
+    const first = Math.floor(Math.random() * league.teams.length);
+    let second = Math.floor(Math.random() * (league.teams.length - 1));
+    if (second >= first) second += 1;
+    setA(league.teams[first].code);setB(league.teams[second].code);
+  };
   const edges = [
     ['Shooting', teamA.efg - teamB.oppEfg, teamB.efg - teamA.oppEfg],
     ['Rebounding', teamA.orb + teamA.drb, teamB.orb + teamB.drb],
@@ -34,18 +43,18 @@ export default function MatchupIntel({ source, league, year }) {
         <label className="block text-xs text-muted-foreground">Team A<select value={a} onChange={event => setA(event.target.value)} className="studio-select mt-1.5">{league.teams.map(team => <option key={team.code} value={team.code}>{team.name}</option>)}</select></label>
         <label className="block text-xs text-muted-foreground">Team B<select value={b} onChange={event => setB(event.target.value)} className="studio-select mt-1.5">{league.teams.map(team => <option key={team.code} value={team.code}>{team.name}</option>)}</select></label>
       </div>
-    </div>
-    <div className="court-panel p-4">
-      <div className="grid grid-cols-2 gap-3">{side(teamA, 'A')}{side(teamB, 'B')}</div>
-      <div className="mt-4 rounded-xl border border-border/25 bg-canvas/30 p-3">
-        <p className="court-kicker">Observed edges</p>
-        <ul className="mt-2 space-y-1.5">{edges.map(([label, valueA, valueB]) => { const leader = valueA === valueB ? null : valueA > valueB ? teamA : teamB; return <li key={label} className="flex items-center justify-between gap-2 text-[11px]"><span className="text-muted-foreground">{label}</span><span className={leader ? 'font-semibold text-gold' : 'text-muted-foreground'}>{leader ? `${leader.code} leads` : 'Even'}</span></li>; })}</ul>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <button type="button" onClick={swap} className="flex min-h-10 items-center justify-center gap-2 rounded-lg border border-border/30 text-[11px] font-semibold text-gold hover:bg-raised"><ArrowLeftRight className="h-3.5 w-3.5" />Swap sides</button>
+        <button type="button" onClick={randomize} className="flex min-h-10 items-center justify-center gap-2 rounded-lg border border-border/30 text-[11px] font-semibold text-gold hover:bg-raised"><Dices className="h-3.5 w-3.5" />Random pairing</button>
       </div>
     </div>
+    <div className="court-panel p-4"><div className="grid grid-cols-2 gap-3">{side(teamA, 'A')}{side(teamB, 'B')}</div></div>
+    <MatchupRadar teamA={teamA} teamB={teamB} league={league} />
+    <MatchupTable teamA={teamA} teamB={teamB} />
     <div className="court-panel p-4">
-      <p className="court-kicker">Observed meetings</p>
-      <h3 className="mt-1 font-display text-xl">{seasonLabel(year)}</h3>
-      {meetings.length ? <ul className="mt-3 space-y-1.5">{meetings.map((game, index) => <li key={index} className="flex items-center justify-between gap-2 rounded-lg border border-border/25 bg-canvas/30 px-2.5 py-2 font-mono text-[11px]"><span className="text-muted-foreground">{game.at || 'Date not supplied'}</span><span>{game.away} {game.actual.away} @ {game.home} {game.actual.home}</span></li>)}</ul> : <p className="mt-3 text-[11px] text-muted-foreground">No observed meetings between these two teams in the package schedule.</p>}
+      <p className="court-kicker">Observed edges</p>
+      <ul className="mt-2 space-y-1.5">{edges.map(([label, valueA, valueB]) => { const leader = valueA === valueB ? null : valueA > valueB ? teamA : teamB; return <li key={label} className="flex items-center justify-between gap-2 rounded-lg border border-border/25 bg-canvas/30 px-2.5 py-2 text-[11px]"><span className="text-muted-foreground">{label}</span><span className={leader ? 'font-semibold text-gold' : 'text-muted-foreground'}>{leader ? `${leader.code} leads` : 'Even'}</span></li>; })}</ul>
     </div>
+    <MatchupMeetings source={source} teamA={teamA} teamB={teamB} year={year} />
   </section>;
 }

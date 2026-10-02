@@ -89,8 +89,8 @@ export default function GameRecap({ game, home, away }) {
               {rows.map(row => (
                 <tr key={row.label}>
                   <td className="myna-muted">{row.label}</td>
-                  <td data-team-side="away" className={`text-right myna-mono ${row.winH === false ? 'matchup-side-cell' : ''}`}>{row.a}</td>
-                  <td data-team-side="home" className={`text-right myna-mono ${row.winH === true ? 'matchup-side-cell' : ''}`}>{row.h}</td>
+                  <td data-team-side="away" className={`text-right myna-mono ${row.winH === false ? 'matchup-side-cell' : ''}`}>{row.winH === false && <span aria-hidden className="mr-1 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: 'var(--matchup-away-color)' }} />}{row.a}</td>
+                  <td data-team-side="home" className={`text-right myna-mono ${row.winH === true ? 'matchup-side-cell' : ''}`}>{row.winH === true && <span aria-hidden className="mr-1 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: 'var(--matchup-home-color)' }} />}{row.h}</td>
                 </tr>
               ))}
             </tbody>

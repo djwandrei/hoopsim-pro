@@ -19,6 +19,7 @@ export default function GameBoxScore({ game }) {
     ? numeric(y[sort.key]) - numeric(x[sort.key])
     : numeric(x[sort.key]) - numeric(y[sort.key]));
   const totals = lines.reduce((acc, line) => ({ min: acc.min + line.min, pts: acc.pts + line.pts, reb: acc.reb + line.reb, ast: acc.ast + line.ast, stl: acc.stl + line.stl, blk: acc.blk + line.blk }), { min: 0, pts: 0, reb: 0, ast: 0, stl: 0, blk: 0 });
+  const maxPts = Math.max(1, ...lines.map(line => line.pts || 0));
   const sortHead = (key, label) => (
     <th className="px-2 py-1 text-right">
       <button type="button" onClick={() => setSort(current => ({ key, dir: current.key === key && current.dir === 'desc' ? 'asc' : 'desc' }))} className="transition-colors hover:text-[var(--myna-accent)]">{label}{sort.key === key ? (sort.dir === 'desc' ? ' ▾' : ' ▴') : ''}</button>
@@ -61,7 +62,12 @@ export default function GameBoxScore({ game }) {
                 <td className="px-2 py-1.5 text-left font-medium">{line.name}</td>
                 <td className="px-2 py-1.5 text-left myna-muted">{(line.positions || []).join('/') || '—'}</td>
                 <td className={`${cell} myna-mono`}>{line.min}</td>
-                <td className={`${cell} myna-mono font-semibold`} style={{ color: line.pts >= 20 ? 'var(--team-ink)' : undefined }}>{line.pts}</td>
+                <td className={`${cell} myna-mono font-semibold`} style={{ color: line.pts >= 20 ? 'var(--team-ink)' : undefined }}>
+                  <span className="relative inline-flex min-w-10 items-center justify-end">
+                    <span aria-hidden className="absolute inset-y-0.5 right-0 rounded" style={{ width: `${Math.max(8, Math.round(line.pts / maxPts * 100))}%`, background: 'color-mix(in srgb, var(--team-primary) 22%, transparent)' }} />
+                    <span className="relative">{line.pts}</span>
+                  </span>
+                </td>
                 <td className={`${cell} myna-mono`}>{line.reb}</td>
                 <td className={`${cell} myna-mono`}>{line.ast}</td>
                 <td className={`${cell} myna-mono myna-muted`}>{line.stl}</td>

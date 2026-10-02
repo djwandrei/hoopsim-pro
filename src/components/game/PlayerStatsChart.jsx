@@ -24,8 +24,8 @@ const STATS = [
   { key: 'ast', label: 'AST', title: 'TOP PLAYMAKERS ON THE BOARD' },
 ];
 
-// Top 10 players from both rosters for the selected stat — bars take the
-// player's team color, and users switch between points, rebounds, assists.
+// Top 10 players from both rosters for the selected stat — sorted horizontal
+// bars in each player's team color, easiest to read name-to-bar.
 export default function PlayerStatsChart({ teamA, teamB }) {
   const { mode = 'dark' } = useCourtTheme() || {};
   const [stat, setStat] = useState('pts');
@@ -47,6 +47,7 @@ export default function PlayerStatsChart({ teamA, teamB }) {
       pB: paletteForTeam(teamB.code),
     };
   }, [teamA, teamB, mode, stat, statConfig]);
+  const height = Math.max(10, data.length) * 30 + 24;
   return (
     <section className="myna-panel p-4" aria-label="Player stats">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -69,16 +70,16 @@ export default function PlayerStatsChart({ teamA, teamB }) {
         <span className="flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: pA.primary }} />{teamA.code} players</span>
         <span className="flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: pB.primary }} />{teamB.code} players</span>
       </div>
-      <div className="mt-2 h-80" role="img" aria-label={`Bar chart of top ${statConfig.label.toLowerCase()} across both teams, colored by team`}>
+      <div className="mt-2" style={{ height }} role="img" aria-label={`Horizontal bar chart of top ${statConfig.label.toLowerCase()} across both teams, colored by team`}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 8, right: 8, left: -14, bottom: 4 }}>
-            <CartesianGrid stroke="hsl(var(--border) / .3)" vertical={false} />
-            <XAxis dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} interval={0} angle={-45} textAnchor="end" height={58} />
-            <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
+          <BarChart data={data} layout="vertical" margin={{ top: 4, right: 36, left: 8, bottom: 0 }}>
+            <CartesianGrid horizontal={false} stroke="hsl(var(--border) / .3)" />
+            <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="name" width={80} interval={0} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <Tooltip content={tip} cursor={{ fill: 'hsl(var(--court-accent) / .08)' }} />
-            <Bar dataKey="value" isAnimationActive={false} radius={[3, 3, 0, 0]} maxBarSize={30}>
+            <Bar dataKey="value" isAnimationActive={false} barSize={16} radius={[0, 4, 4, 0]}>
               {data.map((row, index) => <Cell key={index} fill={row.teamColor} stroke={row.teamInk} />)}
-              <LabelList dataKey="value" position="top" style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9, fontFamily: 'var(--font-mono)' }} />
+              <LabelList dataKey="value" position="right" formatter={value => Number(value).toFixed(1)} style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9, fontFamily: 'var(--font-mono)' }} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

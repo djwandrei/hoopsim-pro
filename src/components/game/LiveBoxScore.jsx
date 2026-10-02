@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import TeamMark from '@/components/studio/TeamMark';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { teamThemeVars } from '@/components/game/matchupTheme';
 
@@ -9,7 +10,7 @@ function TeamLiveTable({ code, lines, mode }) {
   return (
     <section className="myna-panel p-3" data-team-theme={code} style={teamThemeVars(code, mode)} aria-label={`Live box score for ${code}`}>
       <div className="flex items-center justify-between">
-        <p className="myna-display text-lg">{code}</p>
+        <p className="myna-display flex items-center gap-2 text-lg"><TeamMark code={code} name={code} className="h-7 w-7" />{code}</p>
         <p className="myna-mono text-xs myna-muted">{totals.pts} PTS</p>
       </div>
       <table className="mt-1 w-full text-xs">

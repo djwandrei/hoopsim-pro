@@ -105,7 +105,7 @@ export default function PlayerStatsLog({ team, simGames }) {
                       <td key={stat} className="myna-mono px-2 py-3 text-xs">
                         {statIndex === 0 ? (
                           <span className="relative inline-flex min-w-16 items-center justify-end">
-                            <span aria-hidden className="absolute inset-y-0.5 right-0 rounded" style={{ width: `${Math.max(10, Math.round(player.avgs.pts / maxPts * 100))}%`, background: 'color-mix(in srgb, var(--myna-accent) 12%, transparent)' }} />
+                            <span aria-hidden className="absolute inset-y-0.5 right-0 rounded" style={{ width: `${Math.max(10, Math.round(player.avgs.pts / maxPts * 100))}%`, background: 'linear-gradient(90deg, color-mix(in srgb, var(--myna-accent) 55%, transparent), color-mix(in srgb, var(--myna-accent) 16%, transparent))' }} />
                             <span className="relative" style={{ color: 'var(--myna-accent)', fontWeight: 700 }}>{player.avgs[stat].toFixed(1)}</span>
                           </span>
                         ) : player.avgs[stat].toFixed(1)}
@@ -167,7 +167,7 @@ export default function PlayerStatsLog({ team, simGames }) {
                           const isHigh = (row[stat] || 0) === focusPlayer.highs[stat] && (row[stat] || 0) > 0;
                           return isHigh ? (
                             <td key={stat} className="px-2 py-3 text-center">
-                              <span className="myna-mono inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in srgb, var(--myna-accent) 20%, transparent)', color: 'var(--myna-accent)' }}>{row[stat]}</span>
+                              <span className="myna-mono inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in srgb, var(--myna-accent) 28%, transparent)', color: 'var(--myna-accent)' }}>{row[stat]}</span>
                             </td>
                           ) : (
                             <td key={stat} className="myna-mono px-2 py-3 text-xs">{row[stat]}</td>

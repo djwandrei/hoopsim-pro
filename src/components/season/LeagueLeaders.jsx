@@ -66,9 +66,9 @@ export default function LeagueLeaders({ simGames }) {
               <tbody>
                 {boards[stat].map((player, index) => {
                   const value = mode === 'avg' ? player[stat].toFixed(1) : String(Math.round(player.totals[stat]));
-                  const medal = index < 3 && !dark ? MEDALS[index] : null;
+                  const medal = index < 3 ? MEDALS[index] : null;
                   return (
-                    <tr key={player.name} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]" style={medal ? { background: medal.bg } : undefined}>
+                    <tr key={player.name} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]" style={medal && !dark ? { background: medal.bg } : undefined}>
                       <td className="px-3 py-2">
                         <span
                           className="myna-mono inline-flex h-5.5 w-5.5 min-w-5 items-center justify-center rounded-full border text-[10px] font-bold"
@@ -83,7 +83,7 @@ export default function LeagueLeaders({ simGames }) {
                       </td>
                       <td className="myna-mono py-2.5 pr-3 text-right text-sm font-bold" style={index === 0 ? { color: 'var(--myna-accent)' } : undefined}>
                         <span className="relative inline-flex min-w-16 items-center justify-end">
-                          {maxValueOf(stat) > 0 && <span aria-hidden className="absolute inset-y-0.5 right-0 rounded" style={{ width: `${Math.max(10, Math.round((mode === 'avg' ? player[stat] : player.totals[stat]) / maxValueOf(stat) * 100))}%`, background: 'color-mix(in srgb, var(--myna-accent) 12%, transparent)' }} />}
+                          {maxValueOf(stat) > 0 && <span aria-hidden className="absolute inset-y-0.5 right-0 rounded" style={{ width: `${Math.max(10, Math.round((mode === 'avg' ? player[stat] : player.totals[stat]) / maxValueOf(stat) * 100))}%`, background: 'linear-gradient(90deg, color-mix(in srgb, var(--myna-accent) 55%, transparent), color-mix(in srgb, var(--myna-accent) 16%, transparent))' }} />}
                           <span className="relative">{value}</span>
                         </span>
                       </td>

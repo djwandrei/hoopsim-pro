@@ -6,7 +6,7 @@ import { teamThemeVars } from '@/components/game/matchupTheme';
 function Half({ team, pts, won, label, side }) {
   const { mode = 'dark' } = useCourtTheme() || {};
   return (
-    <div data-team-theme={team.code} className={`relative p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={teamThemeVars(team.code, mode)}>
+    <div data-team-theme={team.code} className={`relative p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ ...teamThemeVars(team.code, mode), background: won ? 'color-mix(in srgb, var(--team-primary) 9%, transparent)' : undefined }}>
       {won && <span className="myna-mono absolute right-3 top-3 rounded-full border px-2 py-0.5 text-[9px] tracking-[0.18em]" style={{ borderColor: 'var(--team-primary)', color: 'var(--team-ink)' }}>WINNER</span>}
       <TeamMark code={team.code} name={team.name} className="mx-auto h-16 w-16" />
       <p className="myna-display mt-2 text-lg" style={{ color: won ? 'var(--myna-accent)' : 'var(--myna-text)' }}>{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>

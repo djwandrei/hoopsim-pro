@@ -17,20 +17,20 @@ export default function SeasonCockpit({ source, league }) {
   const avg = (list, key) => list.reduce((sum, team) => sum + team[key], 0) / (list.length || 1);
   const signed = (value) => `${value > 0 ? '+' : ''}${value.toFixed(1)}`;
   return <section aria-label="Season cockpit" className="space-y-4">
-    <div className="court-panel p-4 hidden">
-      <p className="court-kicker">Season cockpit</p>
-      <h2 className="mt-1 font-display text-2xl">{league.label} · OBSERVED PACKAGE</h2>
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <MetricTile label="Teams" value={league.teams.length} detail={`${eastTeams.length} East · ${westTeams.length} West`} />
-        <MetricTile label="Scheduled games" value={schedule.length.toLocaleString()} detail="Source replay schedule" tone="royal" />
-        <MetricTile label="Observed results" value={observed.toLocaleString()} detail="Actuals carried in the package" tone="positive" />
-        <MetricTile label="Actuals coverage" value={`${coverage}%`} detail="Share of schedule with real scores" />
-      </div>
-      <div className="mt-2 grid grid-cols-2 gap-2">
-        <MetricTile label="East avg net" value={signed(avg(eastTeams, 'net'))} detail="Published team metrics" tone="royal" />
-        <MetricTile label="West avg net" value={signed(avg(westTeams, 'net'))} detail="Published team metrics" tone="positive" />
-      </div>
-    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    
     <div className="court-panel p-4">
       <p className="court-kicker">Observed efficiency board</p>
       <h3 className="mt-1 font-display text-xl">TOP TEAMS BY RATING</h3>

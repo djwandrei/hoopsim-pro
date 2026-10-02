@@ -159,6 +159,7 @@
 .forge-reel-sub { font-size:.55rem; color:hsl(var(--muted-foreground)); text-transform:uppercase; letter-spacing:.1em; line-height:1.1; }
 .forge-reel-fade { position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(hsl(var(--court-canvas) / .92), transparent 24%, transparent 76%, hsl(var(--court-canvas) / .92)); }
 .forge-reel--spinning .forge-reel-track { filter:blur(1.5px); }
+.forge-reel--winding .forge-reel-track { filter:blur(4px); }
 .forge-stage-chip { position:absolute; z-index:5; display:flex; align-items:center; gap:.45rem; min-height:1.9rem; padding:.28rem .65rem; border-radius:.35rem; font-family:var(--font-display); font-size:.78rem; letter-spacing:.09em; text-transform:uppercase; }
 .forge-stage-chip--filled { background:linear-gradient(90deg, hsl(var(--court-accent) / .95), hsl(var(--court-focus) / .9)); color:hsl(var(--court-canvas)); box-shadow:0 6px 16px hsl(var(--court-accent) / .3); }
 .forge-stage-chip--live { border:1px solid hsl(var(--court-accent) / .65); background:hsl(var(--court-accent) / .1); color:hsl(var(--court-accent)); }

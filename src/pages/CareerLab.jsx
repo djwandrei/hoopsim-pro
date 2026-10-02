@@ -30,23 +30,18 @@ export default function CareerLab() {
     <StudioShell active="/career">
       <WorkbenchHeader title="CAREER LAB" description="A MyNBA-style career hub on the real site's pooled 2017–26 archive. Explore season changes, team stints and source-backed biography—without invented forecasts." steps={['Find a player', 'Recorded career path', 'History & biography']} current={player ? view === 'overview' ? 1 : 2 : 0} state={state} status={player ? `${seasons.length} recorded seasons` : 'Browse the pooled archive'} />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">
-        <MyNbaHub focusCode={player?.teamCode} tab={view} onTab={setView} tabs={CAREER_TABS}>
+        <MyNbaHub focusCode="djhc" tab={view} onTab={setView} tabs={CAREER_TABS}>
           <div className="myna-panel p-4">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div className="min-w-[16rem] flex-1">
-                <p className="court-kicker mb-2">Recorded career browser</p>
-                <PlayerPicker
-                  players={players}
-                  selectedRef={player?.playerRef}
-                  onSelect={(value) => {setPlayer(value);setView('overview');}}
-                  placeholder="Find a career…"
-                  teamFilter="chips" />
-              </div>
-              {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={value => { setPlayer(value); setView('overview'); }} />}
-              
-
-              
+            <div className="min-w-0">
+              <p className="court-kicker mb-2">Recorded career browser</p>
+              <PlayerPicker
+                players={players}
+                selectedRef={player?.playerRef}
+                onSelect={(value) => {setPlayer(value);setView('overview');}}
+                placeholder="Find a career…"
+                teamFilter="chips" />
             </div>
+            {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={value => { setPlayer(value); setView('overview'); }} />}
           </div>
           <CareerArchiveStatus source={source} state={state} error={error} retry={retry} />
           {!player ?

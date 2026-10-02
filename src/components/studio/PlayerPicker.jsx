@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import { perGameStats } from '@/lib/season/labs';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
@@ -7,11 +7,21 @@ import TeamMark from '@/components/studio/TeamMark';
 export default function PlayerPicker({ players, onSelect, selectedRef, placeholder = 'Filter players…', teamFilter = 'dropdown' }) {
   const [query, setQuery] = useState('');
   const [team, setTeam] = useState('all');
+  const [season, setSeason] = useState('all');
   const [sort, setSort] = useState('minutes');
   const [limit, setLimit] = useState(50);
   const q = query.trim().toLowerCase();
-  const teamCodes = [...new Set(players.map(p => p.teamCode))].sort();
-  const filtered = players.filter(p => (team === 'all' || p.teamCode === team) && (!q || `${p.name} ${p.teamCode}`.toLowerCase().includes(q))).sort((a,b) => sort === 'name' ? a.name.localeCompare(b.name) : Number(b[sort]) - Number(a[sort]));
+  const teamCodes = useMemo(() => [...new Set(players.map(p => p.teamCode))].sort(), [players]);
+  const seasonOptions = useMemo(() => {
+    const years = new Set();
+    for (const p of players) for (const row of p.rows || []) if (Number.isFinite(row.seasonStartYear)) years.add(row.seasonStartYear);
+    return [...years].sort((a, b) => b - a).map(year => [year, `${year}–${String(year + 1).slice(-2)}`]);
+  }, [players]);
+  const filtered = players
+    .filter(p => (team === 'all' || p.teamCode === team)
+      && (season === 'all' || (p.rows || []).some(row => row.seasonStartYear === Number(season)))
+      && (!q || `${p.name} ${p.teamCode}`.toLowerCase().includes(q)))
+    .sort((a, b) => sort === 'name' ? a.name.localeCompare(b.name) : Number(b[sort]) - Number(a[sort]));
   const matches = filtered.slice(0, limit);
   const chip = active => `flex min-h-8 items-center gap-1.5 rounded-lg border px-2 text-[11px] transition-colors ${active ? 'border-gold/40 bg-gold/10 text-gold' : 'border-border/50 text-muted-foreground hover:border-gold/30'}`;
   return (
@@ -39,7 +49,10 @@ export default function PlayerPicker({ players, onSelect, selectedRef, placehold
               </button>
             ))}
           </div>
-          <label className="mt-3 block text-[10px] text-muted-foreground">Sort by<select value={sort} onChange={event => setSort(event.target.value)} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="minutes">Source minutes</option><option value="points">Total points</option><option value="name">Player name</option></select></label>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <label className="text-[10px] text-muted-foreground">Season<select value={season} onChange={event => { setSeason(event.target.value); setLimit(50); }} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="all">All seasons</option>{seasonOptions.map(([year, label]) => <option key={year} value={year}>{label}</option>)}</select></label>
+            <label className="text-[10px] text-muted-foreground">Sort by<select value={sort} onChange={event => setSort(event.target.value)} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="minutes">Source minutes</option><option value="points">Total points</option><option value="name">Player name</option></select></label>
+          </div>
         </>
       ) : (
         <div className="mt-3 grid grid-cols-2 gap-2"><label className="text-[10px] text-muted-foreground">Team<select value={team} onChange={event => { setTeam(event.target.value); setLimit(50); }} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="all">All teams</option>{teamCodes.map(code => <option key={code} value={code}>{code}</option>)}</select></label><label className="text-[10px] text-muted-foreground">Sort by<select value={sort} onChange={event => setSort(event.target.value)} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="minutes">Source minutes</option><option value="points">Total points</option><option value="name">Player name</option></select></label></div>

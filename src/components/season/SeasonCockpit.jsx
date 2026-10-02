@@ -6,18 +6,18 @@ import SeedPicture from '@/components/season/SeedPicture';
 
 export default function SeasonCockpit({ source, league }) {
   const schedule = source.schedule || [];
-  const observed = schedule.filter(game => game.actual).length;
+  const observed = schedule.filter((game) => game.actual).length;
   const coverage = schedule.length ? Math.round(observed / schedule.length * 100) : 0;
-  const eastTeams = league.teams.filter(team => team.conference === 'EAST');
-  const westTeams = league.teams.filter(team => team.conference === 'WEST');
+  const eastTeams = league.teams.filter((team) => team.conference === 'EAST');
+  const westTeams = league.teams.filter((team) => team.conference === 'WEST');
   const [boardSort, setBoardSort] = useState('net');
   const SORTS = [['net', 'NET'], ['off', 'OFF'], ['def', 'DEF'], ['pace', 'PACE']];
   const board = [...league.teams].sort((a, b) => boardSort === 'def' ? a.def - b.def : b[boardSort] - a[boardSort]).slice(0, 8);
-  const maxBoard = Math.max(...league.teams.map(team => Math.abs(team[boardSort])), 0.1);
+  const maxBoard = Math.max(...league.teams.map((team) => Math.abs(team[boardSort])), 0.1);
   const avg = (list, key) => list.reduce((sum, team) => sum + team[key], 0) / (list.length || 1);
-  const signed = value => `${value > 0 ? '+' : ''}${value.toFixed(1)}`;
+  const signed = (value) => `${value > 0 ? '+' : ''}${value.toFixed(1)}`;
   return <section aria-label="Season cockpit" className="space-y-4">
-    <div className="court-panel p-4">
+    <div className="court-panel p-4 hidden">
       <p className="court-kicker">Season cockpit</p>
       <h2 className="mt-1 font-display text-2xl">{league.label} · OBSERVED PACKAGE</h2>
       <div className="mt-4 grid grid-cols-2 gap-2">

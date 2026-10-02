@@ -22,3 +22,9 @@ export const gradeFor = ratio => {
   if (share >= 0.64) return 'B+'; if (share >= 0.55) return 'B'; if (share >= 0.46) return 'C+';
   if (share >= 0.37) return 'C'; if (share >= 0.28) return 'D'; return 'F';
 };
+
+// Build-A-Bucket's Guard / Big split, mapped to the source's G / F / C codes.
+export const GROUPS = [
+  { key:'Guard', codes:['G'], hint:'G' },
+  { key:'Big', codes:['F','C'], hint:'F · C' },
+];

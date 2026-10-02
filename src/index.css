@@ -137,6 +137,9 @@
 .studio-select:focus, .studio-select:focus-visible { border-color: hsl(var(--court-accent) / .6); box-shadow: 0 0 0 3px hsl(var(--court-accent) / .15); }
 .hero-rule { @apply block h-1 w-16 rounded-full; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .4) 60%, transparent); }
 @media (prefers-reduced-motion: reduce) { .studio-workspace *, .studio-workspace *::before, .studio-workspace *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+/* Slimmed studio footer: drop the basketball artwork band above the footer */
+.site-footer::before, body.court-themed .site-footer::before { display: none !important; }
+.site-footer .footer-inner { padding-top: 2.4rem !important; }
 /* Forge wheel + draft-card motion */
 .wheel-chip-active { animation: studio-chip-pulse 1.4s ease-in-out infinite; }
 @keyframes studio-chip-pulse { 0%,100% { box-shadow: 0 0 0 0 hsl(var(--court-accent) / .4); } 50% { box-shadow: 0 0 0 7px hsl(var(--court-accent) / 0); } }

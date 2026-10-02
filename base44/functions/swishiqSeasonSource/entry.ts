@@ -1,3 +1,5 @@
+import { readStudioNativeAsset } from '../../shared/studioNativeAssets.ts';
+
 const DATA_BASE = 'https://www.djshouseofcards-comics.com/tools/swishiq-studio/data/';
 const REGISTRY_FILE = 'registry.json?v=20260929d&rev=registry-v3-fetch-timeout-v1-20260929d';
 const SCHEDULE_FILE = 'nba-actual-schedules-v1.json?v=20260920c&rev=nba-schedule-source-v2';
@@ -35,6 +37,7 @@ export default async function(req) {
     if (req.method !== 'POST') return Response.json({ error: 'POST only.' }, { status: 405 });
     let body = {};
     try { body = await req.json(); } catch { body = {}; }
+    if (typeof body.assetPath === 'string') return Response.json(await readStudioNativeAsset(body.assetPath));
     const year = Number(body.seasonStartYear);
     if (!SUPPORTED_YEARS.includes(year)) {
       return Response.json({ error: `Season ${body.seasonStartYear || '(missing)'} is not published. Supported: 2017–2025 start years.` }, { status: 400 });

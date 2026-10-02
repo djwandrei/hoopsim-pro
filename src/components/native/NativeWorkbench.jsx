@@ -1,0 +1,12 @@
+import React, { useState } from 'react';
+import StudioShell from '@/components/studio/StudioShell';
+import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
+import SourceStatus from '@/components/studio/SourceStatus';
+import useSeasonSource from '@/hooks/useSeasonSource';
+import NativeSurface from '@/components/native/NativeSurface';
+const TOOLS={chemistry:{path:'/chemistry',title:'CHEMISTRY LAB',description:'Compare a pair’s full-season profiles, play the comparison challenge, and explore verified shared-floor and exact-five combinations.',steps:['Pair profiles','Compare & challenge','Observed combinations']},composite:{path:'/forge',title:'COMPOSITE FORGE',description:'Build a player from real player-season skill donors, review the recipe and its source evidence, and save or replay your build.',steps:['Player examples','Choose skill donors','Build & review']},game:{path:'/game',title:'GAME LAB',description:'Play the original single-game, series and challenge modes with real-season inputs, adaptive trials, seeded replays and campaign progression.',steps:['Matchup & mode','Make your call','Results & replay']},season:{path:'/season',title:'SEASON LAB',description:'Replay the observed schedule, review the fixed 16-team postseason, and explore the original season-history and franchise controls where supported.',steps:['Season setup','Replay & decisions','Standings & history']}};
+export default function NativeWorkbench({ kind }) {
+  const data=useSeasonSource(),[nativeState,setNativeState]=useState('loading');
+  const tool=TOOLS[kind],state=data.state==='ready'?nativeState:data.state;
+  return <StudioShell active={tool.path}><WorkbenchHeader title={tool.title} description={tool.description} state={state} status={state==='ready'?'Original gameplay connected':undefined} /><main className="mx-auto min-w-0 max-w-6xl space-y-5 px-4 py-6"><SourceStatus state={data.state} source={data.source} error={data.error} year={data.year} years={data.years} onYearChange={data.setYear} onRetry={data.retry} />{data.state==='ready'&&<NativeSurface key={`${kind}:${data.source.entry.packageVersion}`} kind={kind} entry={data.source.entry} onYearChange={data.setYear} onStateChange={setNativeState} />}</main></StudioShell>;
+}

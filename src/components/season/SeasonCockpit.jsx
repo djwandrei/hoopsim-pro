@@ -2,7 +2,7 @@ import React from 'react';
 import MetricTile from '@/components/studio/MetricTile';
 import TeamMark from '@/components/studio/TeamMark';
 
-export default function SeasonCockpit({ source, league, year }) {
+export default function SeasonCockpit({ source, league }) {
   const schedule = source.schedule || [];
   const observed = schedule.filter(game => game.actual).length;
   const coverage = schedule.length ? Math.round(observed / schedule.length * 100) : 0;

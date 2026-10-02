@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { buildPlayerAverages } from '@/lib/season/playerAverages';
 
 const CATEGORIES = [['pts', 'POINTS'], ['reb', 'REBOUNDS'], ['ast', 'ASSISTS']];
 const goldHeader = { color: 'hsl(var(--court-accent))', background: 'hsl(var(--court-surface))' };
@@ -7,29 +8,7 @@ const topThree = { background: 'color-mix(in srgb, hsl(var(--court-accent)) 12%,
 // League leaders board: per-game averages across every simulated game, top 3 highlighted in gold.
 export default function LeagueLeaders({ simGames }) {
   const boards = useMemo(() => {
-    const players = new Map();
-    for (const g of simGames || []) {
-      for (const side of ['boxHome', 'boxAway']) {
-        const code = side === 'boxHome' ? g.home : g.away;
-        for (const line of g[side]?.lines || []) {
-          const rec = players.get(line.name) || { name: line.name, team: code, gp: 0, totals: { pts: 0, reb: 0, ast: 0 } };
-          rec.gp += 1;
-          rec.totals.pts += line.pts || 0;
-          rec.totals.reb += line.reb || 0;
-          rec.totals.ast += line.ast || 0;
-          players.set(line.name, rec);
-        }
-      }
-    }
-    const ranked = [...players.values()]
-      .map(rec => ({
-        name: rec.name,
-        team: rec.team,
-        gp: rec.gp,
-        pts: rec.gp ? rec.totals.pts / rec.gp : 0,
-        reb: rec.gp ? rec.totals.reb / rec.gp : 0,
-        ast: rec.gp ? rec.totals.ast / rec.gp : 0,
-      }));
+    const ranked = buildPlayerAverages(simGames);
     return Object.fromEntries(CATEGORIES.map(([stat]) => [stat, [...ranked].sort((a, b) => b[stat] - a[stat]).slice(0, 5)]));
   }, [simGames]);
 

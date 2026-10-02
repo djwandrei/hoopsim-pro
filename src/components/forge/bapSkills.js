@@ -28,3 +28,12 @@ export const GROUPS = [
   { key:'Guard', codes:['G'], hint:'G' },
   { key:'Big', codes:['F','C'], hint:'F · C' },
 ];
+
+// Tone bucket for a grade letter, mapped to the court palette tokens.
+export const gradeTone = ratio => {
+  const share = Math.max(0, Math.min(1, Number(ratio) || 0));
+  if (share >= 0.72) return 'positive';
+  if (share >= 0.46) return 'royal';
+  if (share >= 0.28) return 'gold';
+  return 'trim';
+};

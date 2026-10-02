@@ -7,8 +7,8 @@ import ForgeBucketDraft from '@/components/forge/ForgeBucketDraft';
 import ForgePickDraft from '@/components/forge/ForgePickDraft';
 
 const DRAFT_MODES = [
-  { key:'wheel', label:'Wheel Draft', hint:'The wheel rolls each skill — lock it, then spin for team & player' },
-  { key:'pick', label:'Pick & Spin', hint:'You pick the skill, spin for team & player' },
+  { key:'wheel', label:'Wheel Draft', hint:'Spin the reels for team & player, then tap a stat chip to assign it' },
+  { key:'pick', label:'Pick & Spin', hint:'Arm a skill chip, spin the reels, keep or respin the offer' },
 ];
 
 export default function ForgeLab() {
@@ -17,7 +17,7 @@ export default function ForgeLab() {
   const Draft = mode === 'pick' ? ForgePickDraft : ForgeBucketDraft;
   const active = DRAFT_MODES.find(item => item.key === mode) || DRAFT_MODES[0];
   return <StudioShell active="/forge">
-    <WorkbenchHeader title="COMPOSITE FORGE" description={active.hint + ' — keep or respin the offered player-season, then the finished build tours the league.'} steps={mode === 'pick' ? ['Pick the skill', 'Spin team & player', 'Forge & tour'] : ['Roll & lock the skill', 'Spin team & player', 'Forge & tour']} state={data.state} status={data.state === 'ready' ? 'Workbench source ready' : undefined} />
+    <WorkbenchHeader title="COMPOSITE FORGE" description={active.hint + ' — keep or respin the offered player-season, then the finished build tours the league.'} steps={mode === 'pick' ? ['Pick the skill', 'Spin team & player', 'Forge & tour'] : ['Spin team & player', 'Assign a stat chip', 'Forge & tour']} state={data.state} status={data.state === 'ready' ? 'Workbench source ready' : undefined} />
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6">
       <SourceStatus state={data.state} source={data.source} error={data.error} year={data.year} years={data.years} onYearChange={data.setYear} onRetry={data.retry} />
       {data.state === 'ready' && <div className="flex flex-wrap gap-2" role="tablist" aria-label="Draft mode">

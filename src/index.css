@@ -146,3 +146,21 @@
 @keyframes studio-wheel-glow { 0%,100% { box-shadow: 0 0 22px hsl(var(--court-accent) / .15); } 50% { box-shadow: 0 0 46px hsl(var(--court-accent) / .45); } }
 .slot-pop { animation: studio-rise .28s ease-out; }
 @keyframes studio-rise { from { transform: translateY(8px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+/* Forge reel draft (Build-A-Bucket layout) */
+.forge-reel-label { display:block; width:max-content; margin:0 auto 4px; border:1px solid hsl(var(--court-accent) / .4); border-radius:.4rem; background:hsl(var(--court-accent) / .12); color:hsl(var(--court-accent)); font-family:var(--font-mono); font-size:.55rem; letter-spacing:.14em; text-transform:uppercase; padding:.15rem .55rem; }
+.forge-reel-window { position:relative; overflow:hidden; border-radius:.75rem; border:1px solid hsl(var(--border) / .35); background:hsl(var(--court-canvas) / .6); }
+.forge-reel-selector { position:absolute; left:4px; right:4px; top:50%; height:44px; transform:translateY(-50%); border-top:1px solid hsl(var(--court-accent) / .5); border-bottom:1px solid hsl(var(--court-accent) / .5); background:hsl(var(--court-accent) / .07); pointer-events:none; z-index:1; }
+.forge-reel-track { will-change:transform; }
+.forge-reel-row { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem; text-align:center; }
+.forge-reel-primary { font-family:var(--font-display); font-size:.95rem; letter-spacing:.04em; color:hsl(var(--foreground)); line-height:1.05; }
+.forge-reel-sub { font-size:.55rem; color:hsl(var(--muted-foreground)); text-transform:uppercase; letter-spacing:.1em; line-height:1.1; }
+.forge-reel-fade { position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(hsl(var(--court-canvas) / .92), transparent 24%, transparent 76%, hsl(var(--court-canvas) / .92)); }
+.forge-reel--spinning .forge-reel-track { filter:blur(1.5px); }
+.forge-stage-chip { position:absolute; z-index:5; display:flex; align-items:center; gap:.45rem; min-height:1.9rem; padding:.28rem .65rem; border-radius:.35rem; font-family:var(--font-display); font-size:.78rem; letter-spacing:.09em; text-transform:uppercase; }
+.forge-stage-chip--filled { background:linear-gradient(90deg, hsl(var(--court-accent) / .95), hsl(var(--court-focus) / .9)); color:hsl(var(--court-canvas)); box-shadow:0 6px 16px hsl(var(--court-accent) / .3); }
+.forge-stage-chip--live { border:1px solid hsl(var(--court-accent) / .65); background:hsl(var(--court-accent) / .1); color:hsl(var(--court-accent)); }
+.forge-stage-chip--live:hover { background:hsl(var(--court-accent) / .22); }
+.forge-stage-chip--armed { border:1px solid hsl(var(--court-accent) / .55); background:hsl(var(--court-accent) / .08); color:hsl(var(--court-accent)); }
+.forge-stage-chip--open { border:1px dashed hsl(var(--border) / .5); background:hsl(var(--court-canvas) / .35); color:hsl(var(--muted-foreground) / .85); }
+.forge-stage-chip-val { font-family:var(--font-mono); font-size:.6rem; letter-spacing:0; text-transform:none; }
+.forge-stage-chip-grade { display:inline-flex; align-items:center; justify-content:center; min-width:1rem; height:1rem; padding:0 .2rem; border:1px solid currentColor; border-radius:999px; font-family:var(--font-mono); font-size:.55rem; }

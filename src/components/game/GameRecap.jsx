@@ -1,6 +1,5 @@
 import React from 'react';
 import { Crown } from 'lucide-react';
-import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 const pct = v => `${(v * 100).toFixed(1)}%`;
 const tri = (x, y) => (x > y ? true : x < y ? false : null);
@@ -12,7 +11,6 @@ export default function GameRecap({ game, home, away }) {
   const winner = homeWon ? home : away;
   const wPts = homeWon ? game.homePts : game.awayPts;
   const lPts = homeWon ? game.awayPts : game.homePts;
-  const palette = paletteForTeam(winner.code);
   const otLabel = game.ot ? ` (${game.ot === 1 ? 'OT' : `${game.ot}OT`})` : '';
 
   const topFor = box => (box?.lines || []).slice()
@@ -35,7 +33,7 @@ export default function GameRecap({ game, home, away }) {
 
   return (
     <section className="court-panel overflow-hidden" aria-label="Post-game recap">
-      <div className="p-5" style={{ background: `linear-gradient(115deg, ${palette.primary}33, transparent 65%)` }}>
+      <div className="p-5" style={{ background: 'linear-gradient(115deg, hsl(var(--court-accent) / 0.18), transparent 65%)' }}>
         <span className="court-kicker">Post-game recap</span>
         <h2 className="court-display mt-1 text-3xl">{winner.name} take it {wPts}–{lPts}{otLabel}</h2>
         <span className="hero-rule mt-2" />
@@ -50,11 +48,10 @@ export default function GameRecap({ game, home, away }) {
 
       <div className="grid gap-4 border-t border-border/25 p-5 md:grid-cols-2">
         {[['away', away, game.boxAway], ['home', home, game.boxHome]].map(([side, team, box]) => {
-          const tp = paletteForTeam(team.code);
           return (
             <div key={side} className="rounded-xl border border-border/25 bg-raised/30 p-4">
               <header className="flex items-center gap-2">
-                <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: tp.primary }} />
+                <span className={`h-3 w-3 shrink-0 rounded-full ${side === 'away' ? 'bg-royal' : 'bg-gold'}`} />
                 <span className="myna-display truncate text-base">{team.name}</span>
                 <span className="myna-muted ml-auto hidden shrink-0 text-[10px] tracking-[0.2em] sm:block">TOP PERFORMERS</span>
               </header>

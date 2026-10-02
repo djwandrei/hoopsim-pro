@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 const AXES = [['pts', 'PTS'], ['reb', 'REB'], ['ast', 'AST'], ['stl', 'STL'], ['blk', 'BLK']];
 const selectClass = 'w-full min-h-9 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-2 py-1.5 text-xs text-[var(--myna-text)]';
@@ -17,8 +16,8 @@ export default function PlayerDuelRadar({ teamA, teamB }) {
   useEffect(() => { setAIdx(0); setBIdx(0); }, [teamA.code, teamB.code]);
   const pA = pool.a[Math.min(aIdx, Math.max(pool.a.length - 1, 0))];
   const pB = pool.b[Math.min(bIdx, Math.max(pool.b.length - 1, 0))];
-  const cA = paletteForTeam(teamA.code).primary;
-  const cB = paletteForTeam(teamB.code).primary;
+  const cA = 'hsl(var(--court-royal))';
+  const cB = 'hsl(var(--court-accent))';
   const data = useMemo(() => {
     if (!pA || !pB) return [];
     return AXES.map(([key, label]) => {

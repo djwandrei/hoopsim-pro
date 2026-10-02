@@ -48,9 +48,9 @@ export default function GameLab() {
 
   return (
     <StudioShell active="/game">
-      <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: pick the board, review the intel and charts, and sim single games and 7-game series with team-colored scoreboards and box scores." state="ready" status="Matchup hub ready" />
+      <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: pick the board, review the intel and charts, and sim single games and 7-game series with palette-driven scoreboards and box scores." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">
-        <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
+        <MyNbaHub tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&
           <div className="space-y-4">
               {breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: Boolean(sim.game) })}
@@ -70,7 +70,7 @@ export default function GameLab() {
                   </React.Fragment>}
                 </React.Fragment> :
 
-            <section className="myna-panel p-6 text-center text-xs myna-muted">Set a seed, then sim the game — the live play-by-play feed, team-colored scoreboard and full box score land here.</section>
+            <section className="myna-panel p-6 text-center text-xs myna-muted">Set a seed, then sim the game — the live play-by-play feed, scoreboard and full box score land here.</section>
             }
             </div>
           }

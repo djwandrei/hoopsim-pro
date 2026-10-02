@@ -1,6 +1,6 @@
 import { Users, FlaskConical, Swords, Zap, CalendarRange, LineChart, Disc3 } from 'lucide-react';
 export const WORKBENCHES = [
-  { path: '/players', icon: Users, title: 'Player Blueprint', tag: 'PROFILE & COMPARE', description: 'Compare four exact-season profiles, explore real portraits and awards, and play the scouting challenge.', flow: 'Roster → Compare → Scout' },
+  { path: '/players', icon: Users, title: 'Player Blueprint', tag: 'ATLAS & DOSSIERS', description: 'Scope the interactive league charts, then pin players to open their full observed dossiers.', flow: 'Atlas → Scope → Dossier', children: [{ path: '/players', title: 'League Atlas' }, { path: '/players/dossier', title: 'Player Dossier' }] },
   { path: '/chemistry', icon: FlaskConical, title: 'Chemistry Lab', tag: 'PAIR & LINEUP ANALYSIS', description: 'Compare a pair, play the challenge, and explore real shared-floor and exact-five combinations.', flow: 'Pair → Challenge → Combinations' },
   { path: '/forge', icon: Swords, title: 'Composite Forge', tag: 'BUILD & REVIEW', description: 'Choose real player-season skill donors, build your player, and save or replay the source-backed recipe.', flow: 'Player examples → Skills → Build' },
   { path: '/game', icon: Zap, title: 'Game Lab', tag: 'MATCHUP SIMULATION', description: 'Play the original single-game, series and campaign challenges with adaptive trials and seeded replay.', flow: 'Matchup → Make your call → Replay' },

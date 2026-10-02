@@ -6,7 +6,7 @@ import { WORKBENCHES } from '@/components/studio/workbenches';
 import CourtGraphic from '@/components/studio/CourtGraphic';
 export default function WorkbenchHeader({ title, description, steps = [], current = 0, state, status }) {
   const { pathname } = useLocation();
-  const toolIndex = WORKBENCHES.findIndex(tool => tool.path === pathname);
+  const toolIndex = WORKBENCHES.findIndex(tool => pathname === tool.path || pathname.startsWith(`${tool.path}/`));
   const tool = WORKBENCHES[toolIndex];
   const Icon = tool?.icon;
   const loading = state === 'loading' || state === 'idle';

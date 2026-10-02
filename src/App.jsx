@@ -45,7 +45,7 @@ const AuthenticatedApp = () => {
       {/* Add your page Route elements here */}
       <Route path="/" element={<StudioHome />} />
       <Route path="/season" element={<SeasonLab />} />
-      <Route path="/players" element={<PlayerLab />} />
+      <Route path="/players/*" element={<PlayerLab />} />
       <Route path="/chemistry" element={<ChemistryLab />} />
       <Route path="/forge" element={<ForgeLab />} />
       <Route path="/game" element={<GameLab />} />

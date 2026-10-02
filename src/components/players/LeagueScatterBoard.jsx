@@ -5,14 +5,14 @@ function ScatterTip({ active, payload }) {
   if (!active || !payload?.length) return null;
   const point = payload[0].payload;
   const [ , , xLabel, yLabel ] = SCATTER_PAIRS[point.pairIndex] || [];
-  return <div className="rounded-lg border border-border/50 bg-card px-3 py-2 text-xs shadow-lg"><p className="font-semibold text-foreground">{point.name} · {point.team}</p><p className="mt-1 font-mono text-gold">{Number(point.x).toFixed(1)} {xLabel} · {Number(point.y).toFixed(1)} {yLabel}</p><p className="mt-0.5 text-[10px] text-muted-foreground">{point.gp} games observed</p></div>;
+  return <div className="rounded-lg border border-border/50 bg-card px-3 py-2 text-xs shadow-lg"><p className="font-semibold text-foreground">{point.name} · {point.team}</p>{point.season && <p className="text-[10px] text-muted-foreground">{point.season}</p>}<p className="mt-1 font-mono text-gold">{Number(point.x).toFixed(1)} {xLabel} · {Number(point.y).toFixed(1)} {yLabel}</p><p className="mt-0.5 text-[10px] text-muted-foreground">{point.gp} games observed</p></div>;
 }
 export default function LeagueScatterBoard({ rows, atlas, selected, onSelect }) {
   const [pairIndex,setPairIndex] = useState(0);
   const [minimum,setMinimum] = useState(10);
   const [xKey,yKey,xLabel,yLabel] = SCATTER_PAIRS[pairIndex];
   const chosen = useMemo(() => new Set(selected.map(player => player.id)),[selected]);
-  const points = useMemo(() => rows.filter(row => row.stats.gp >= minimum && Number.isFinite(row.stats[xKey]) && Number.isFinite(row.stats[yKey])).map(row => ({ id:row.id,name:row.name,team:row.teamCode,gp:row.stats.gp,x:row.stats[xKey],y:row.stats[yKey],row,pairIndex })),[rows,minimum,xKey,yKey,pairIndex]);
+  const points = useMemo(() => rows.filter(row => row.stats.gp >= minimum && Number.isFinite(row.stats[xKey]) && Number.isFinite(row.stats[yKey])).map(row => ({ id:row.id,name:row.name,team:row.teamCode,gp:row.stats.gp,x:row.stats[xKey],y:row.stats[yKey],row,pairIndex,season:row.seasonLabel })),[rows,minimum,xKey,yKey,pairIndex]);
   const main = points.filter(point => !chosen.has(point.id));
   const highlighted = points.filter(point => chosen.has(point.id));
   const medianX = atlas?.median(xKey), medianY = atlas?.median(yKey);

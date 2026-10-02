@@ -125,19 +125,21 @@ export default function ForgePickDraft({ source, league }) {
         <div><p className="court-kicker">Pick &amp; spin draft · {group}</p><h2 className="mt-1 font-display text-2xl">PICK · SPIN · BUILD</h2><p className="mt-1 text-xs text-muted-foreground">Pick a skill, spin for the donor team, keep or respin the offered player. {SKILLS.length - filled} of {SKILLS.length} slots open.</p></div>
         <button type="button" onClick={() => setShowGrades(value => !value)} className="flex min-h-9 items-center gap-2 rounded-lg border border-border/30 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold">{showGrades ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}{showGrades ? 'Grades on' : 'Grades off'}</button>
       </div>
-      <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,20rem),minmax(0,1fr)]">
+      <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,23rem),minmax(0,1fr)]">
         <div className="space-y-3">
           <ForgeSkillSelect picks={picks} selectedKey={selectedKey} onSelect={selectSkill} disabled={spinning} />
           <ForgeBuildWheel picks={picks} leagueMax={leagueMax} overall={liveOvr} selectedKey={selectedKey} />
-          <BucketBoard buckets={SKILLS} picks={picks} activeKey={null} onUndo={undo} complete={false} leagueMax={leagueMax} showGrades={showGrades} />
         </div>
         <div className="space-y-3">
           <ForgeOvrMeter overall={liveOvr} filled={filled} total={SKILLS.length} showGrades={showGrades} />
           {selectedSkill ? <p className="text-xs text-muted-foreground"><span className="font-semibold text-gold">{selectedSkill.label}</span> selected · {activeTeam ? `landed ${activeTeam.code} — the offer is in` : spinning ? 'spinning for a team…' : 'spin the wheel for a donor team'}</p> : <p className="text-xs text-muted-foreground">Pick a skill on the left to arm the wheel.</p>}
           <ForgeTeamWheel teams={wheelTeams} rotation={rotation} spinning={spinning} onSpin={spinTeam} disabled={!selectedSkill || Boolean(selectedSkill && picks[selectedKey])} landedCode={activeTeam?.code || null} />
-          {offer ? <ForgeOfferCard offer={offer} skill={selectedSkill} leagueMax={leagueMax} onKeep={keep} onRespin={respinPlayer} respins={respins} showGrades={showGrades} />
+          {offer ? <ForgeOfferCard key={offer.playerRef} offer={offer} skill={selectedSkill} leagueMax={leagueMax} onKeep={keep} onRespin={respinPlayer} respins={respins} showGrades={showGrades} />
             : <div className="flex items-center gap-3 rounded-xl border border-dashed border-border/30 bg-canvas/30 p-5 text-sm text-muted-foreground">{spinning ? <><Loader2 className="h-5 w-5 animate-spin text-gold" />The wheel is choosing a team…</> : <><Users className="h-5 w-5 text-gold" />{selectedSkill ? 'Spin for a team to draw a player.' : 'Pick a skill, then spin for a team.'}</>}</div>}
         </div>
+      </div>
+      <div className="mt-5">
+        <BucketBoard buckets={SKILLS} picks={picks} activeKey={selectedKey} onUndo={undo} complete={false} leagueMax={leagueMax} showGrades={showGrades} />
       </div>
     </div>}
     {phase === 'complete' && <div className="space-y-4">

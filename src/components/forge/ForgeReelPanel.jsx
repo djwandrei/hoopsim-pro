@@ -14,6 +14,7 @@ const TONE_CHIP = {
 // Left panel of the Build-A-Bucket layout: grades toggle, TEAM / PLAYER reels,
 // the spin or respin controls, the revealed player card, and the skills list.
 export default function ForgeReelPanel({
+  armedSkill = null,
   showGrades, onToggleGrades, teamItems, playerItems, teamSpin, playerSpin, spinning,
   reveal, revealNote, onSpin, spinDisabled, onRespinTeam, onRespinPlayer,
   teamRespins, playerRespins, picks, leagueMax,
@@ -37,7 +38,7 @@ export default function ForgeReelPanel({
         <span>Respin player</span><span className="font-mono text-[9px] opacity-80">{playerRespins} left</span>
       </button>
     </div> : <button type="button" onClick={onSpin} disabled={spinning || spinDisabled} className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg bg-primary text-sm font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40">
-      {spinning ? 'Spinning…' : 'Spin'}
+      {spinning ? 'Spinning…' : armedSkill ? `Spin for ${armedSkill.label}` : 'Spin'}
     </button>}
     {reveal && <div className="mt-3 flex items-center gap-3 rounded-xl border border-border/30 bg-raised/50 p-2.5">
       <PlayerPortrait player={reveal} className="h-12 w-12" />

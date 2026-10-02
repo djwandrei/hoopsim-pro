@@ -6,6 +6,15 @@ import { SKILLS } from '@/components/forge/bapSkills';
 // Wide roster board for the Pick variant: the landed team's full roster as a
 // stat table — click any row to select that player, then place them on the board.
 export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) {
+  const [sort, setSort] = React.useState({ key:'pts', dir:'desc' });
+  const value = player => sort.key === 'name' ? (player.name || '') : sort.key === 'pos' ? (player.positions?.[0] || '') : Number(player[sort.key]) || 0;
+  const sorted = React.useMemo(() => [...roster].sort((a, b) => {
+    const first = value(a); const second = value(b);
+    const compared = typeof first === 'string' ? first.localeCompare(second) : first - second;
+    return sort.dir === 'asc' ? compared : -compared;
+  }), [roster, sort, sort.key, sort.dir]);
+  const toggleSort = key => setSort(current => ({ key, dir: current.key === key && current.dir === 'desc' ? 'asc' : 'desc' }));
+  const head = (key, label, extra = '') => <th onClick={() => toggleSort(key)} className={`cursor-pointer select-none transition-colors hover:text-gold ${extra}`}>{label}{sort.key === key ? (sort.dir === 'desc' ? ' ▾' : ' ▴') : ''}</th>;
   return <section aria-label="Roster board" className="court-panel flex h-full flex-col p-4">
     <header className="flex flex-wrap items-center justify-between gap-2">
       <div>
@@ -17,11 +26,11 @@ export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) 
     {team ? <div className="mt-3 min-h-0 flex-1 overflow-y-auto">
       <table className="w-full text-sm">
         <thead><tr>
-          <th className="text-left">Player</th><th>Pos</th><th>G</th><th>PTS</th>
-          {SKILLS.map(skill => <th key={skill.key}>{skill.metric}</th>)}
+          {head('name','Player','text-left')}{head('pos','Pos')}{head('games','G')}{head('pts','PTS')}
+          {SKILLS.map(skill => head(skill.key, skill.metric))}
         </tr></thead>
         <tbody>
-          {roster.map(player => <tr key={player.playerRef} onClick={() => onPick(player)} className={`cursor-pointer transition-colors ${selectedRef === player.playerRef ? 'bg-gold/10' : 'hover:bg-gold/5'}`}>
+          {sorted.map(player => <tr key={player.playerRef} onClick={() => onPick(player)} className={`cursor-pointer transition-colors ${selectedRef === player.playerRef ? 'bg-gold/10 ring-1 ring-inset ring-gold/50' : 'hover:bg-gold/5'}`}>
             <td className="text-left"><span className="flex items-center gap-2"><PlayerPortrait player={player} className="h-7 w-7 shrink-0" /><span className="truncate text-xs font-bold">{player.name}</span></span></td>
             <td className="text-center font-mono text-[10px]">{player.positions?.[0] || '—'}</td>
             <td className="text-center font-mono text-xs">{player.games}</td>

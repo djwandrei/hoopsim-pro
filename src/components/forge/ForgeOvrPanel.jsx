@@ -20,8 +20,7 @@ export default function ForgeOvrPanel({ picks, overall, leagueMax, showGrades, o
         <motion.span key={overall ?? 'none'} initial={{ scale:1.25, opacity:.4 }} animate={{ scale:1, opacity:1 }} transition={{ type:'spring', stiffness:320, damping:18 }} className="font-display text-3xl leading-none text-gold">{overall ?? '–'}</motion.span>
       </div>
       <p className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground">OVR</p>
-      <p className="mt-3 text-xs text-muted-foreground">{remaining} attributes remaining</p>
-      <span className="mt-2 rounded-md border border-gold/40 bg-gold/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-gold">{remaining} slots remaining</span>
+      <span className="mt-3 rounded-md border border-gold/40 bg-gold/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-gold">{remaining} slots remaining</span>
     </div>
     <div className="mt-4 space-y-1.5">
       {SKILLS.map(skill => {

@@ -164,6 +164,7 @@
 .forge-stage-chip--live { border:1px solid hsl(var(--court-accent) / .65); background:hsl(var(--court-accent) / .1); color:hsl(var(--court-accent)); }
 .forge-stage-chip--live:hover { background:hsl(var(--court-accent) / .22); }
 .forge-stage-chip--armed { border:1px solid hsl(var(--court-accent) / .55); background:hsl(var(--court-accent) / .08); color:hsl(var(--court-accent)); }
+.forge-stage-chip--best { border:1px solid hsl(var(--court-positive) / .8); background:hsl(var(--court-positive) / .12); color:hsl(var(--court-positive)); box-shadow:0 0 16px hsl(var(--court-positive) / .3); }
 .forge-stage-chip--open { border:1px dashed hsl(var(--border) / .5); background:hsl(var(--court-canvas) / .35); color:hsl(var(--muted-foreground) / .85); }
 .forge-stage-chip-val { font-family:var(--font-mono); font-size:.6rem; letter-spacing:0; text-transform:none; }
 .forge-stage-chip-grade { display:inline-flex; align-items:center; justify-content:center; min-width:1rem; height:1rem; padding:0 .2rem; border:1px solid currentColor; border-radius:999px; font-family:var(--font-mono); font-size:.55rem; }

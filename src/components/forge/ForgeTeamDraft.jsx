@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Loader2, Play } from 'lucide-react';
+import PlayerPortrait from '@/components/players/PlayerPortrait';
 import { buildForgePool, forgeMax } from '@/components/forge/forgePool';
 import { simulateForgeSeason } from '@/components/forge/forgeTeamSim';
 import ForgeTeamSpinPanel from '@/components/forge/ForgeTeamSpinPanel';
@@ -106,15 +107,17 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
     const next = { ...picks, [slotKey]: { player: reveal } };
     setPicks(next);
     setReveal(null);
-    if (TEAM_SLOTS.every(slot => next[slot.key])) {
-      setPhase('simulating');
-      timer.current = window.setTimeout(() => {
-        const sim = simulateForgeSeason({ league, pool: allPool, leagueMax, picks: next, slots: TEAM_SLOTS, seed: Math.floor(Math.random() * 2 ** 31) });
-        setResult(sim);
-        setPhase('complete');
-        if (sim.perfect) confetti({ particleCount: 240, spread: 100, origin: { y: 0.55 }, colors: ['#E9B949','#3E63DD','#D63A4B'] });
-      }, 900);
-    }
+    if (TEAM_SLOTS.every(slot => next[slot.key])) setPhase('ready');
+  };
+
+  const runSeason = nextPicks => {
+    setPhase('simulating');
+    timer.current = window.setTimeout(() => {
+      const sim = simulateForgeSeason({ league, pool: allPool, leagueMax, picks: nextPicks, slots: TEAM_SLOTS, seed: Math.floor(Math.random() * 2 ** 31) });
+      setResult(sim);
+      setPhase('complete');
+      if (sim.perfect) confetti({ particleCount: 240, spread: 100, origin: { y: 0.55 }, colors: ['#E9B949','#3E63DD','#D63A4B'] });
+    }, 900);
   };
 
   const undo = slotKey => {
@@ -124,15 +127,7 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
     setResult(null);
   };
 
-  const rerun = () => {
-    setPhase('simulating');
-    timer.current = window.setTimeout(() => {
-      const sim = simulateForgeSeason({ league, pool: allPool, leagueMax, picks, slots: TEAM_SLOTS, seed: Math.floor(Math.random() * 2 ** 31) });
-      setResult(sim);
-      setPhase('complete');
-      if (sim.perfect) confetti({ particleCount: 240, spread: 100, origin: { y: 0.55 }, colors: ['#E9B949','#3E63DD','#D63A4B'] });
-    }, 900);
-  };
+  const rerun = () => runSeason(picks);
 
   const reset = () => {
     setPicks({});
@@ -153,8 +148,8 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
   return <section aria-label="Team forge game" className="space-y-4">
     {phase === 'setup' && <div className="court-panel court-panel-hover p-6">
       <div className="mx-auto max-w-xl text-center">
-        <p className="court-kicker">98-0 chase</p>
-        <h2 className="mt-1 font-display text-3xl">SPIN · PLACE · CHASE 98-0</h2>
+        <p className="bcast-kicker">98-0 chase</p>
+        <h2 className="broadcast-gradient-text mt-1 font-display text-3xl">SPIN · PLACE · CHASE 98-0</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{pickMode ? 'Spin the reel for a random team, then choose any player from their roster and tap an open rotation spot to place them.' : 'Spin the reels for a random team and player, then tap any open rotation spot to place them.'} Fill the five starter slots and three bench spots — then simulate the full 82-game season and playoff bracket. A flawless regular season plus a perfect title run is <span className="font-semibold text-gold">98-0</span>. {pickMode ? 'Two team respins per draft.' : 'Two team respins and three player respins per draft.'}</p>
       </div>
       <div className="mx-auto mt-4 grid max-w-lg grid-cols-5 gap-1.5">
@@ -179,9 +174,27 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
         />}
         {pickMode
           ? <ForgeRosterBoard team={activeTeam} roster={activeTeam ? available(activeTeam.code) : []} selectedRef={reveal ? reveal.playerRef : null} onPick={selectPlayer} />
-          : <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} spinning={spinning} onAssign={assign} onUndo={undo} />}
+          : <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} onUndo={undo} />}
       </div>
       {!pickMode && <ForgePlayerShowcase player={reveal} note={revealNote} />}
+    </div>}
+    {phase === 'ready' && <div className="court-panel relative overflow-hidden p-6">
+      <span className="bcast-watermark" aria-hidden="true">LOCKED</span>
+      <div className="relative text-center">
+        <p className="bcast-kicker">Roster complete</p>
+        <h2 className="mt-1 font-display text-3xl">REVIEW YOUR ROTATION</h2>
+        <p className="mt-2 text-sm text-muted-foreground">All eight spots are filled. Release anyone to rearrange, or lock in and run the 82-game season plus playoff bracket.</p>
+        <div className="mx-auto mt-4 grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4">
+          {TEAM_SLOTS.map(slot => <div key={slot.key} className="flex items-center gap-2 rounded-xl border border-border/25 bg-raised/40 p-2 text-left">
+            <PlayerPortrait player={picks[slot.key].player} className="h-9 w-9" />
+            <div className="min-w-0"><p className="truncate text-[11px] font-bold leading-tight">{picks[slot.key].player.name}</p><p className="font-mono text-[9px] text-muted-foreground">{slot.label}</p></div>
+          </div>)}
+        </div>
+        <div className="mt-5 flex flex-wrap justify-center gap-2">
+          <button type="button" onClick={() => runSeason(picks)} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:bg-goldSoft"><Play className="h-4 w-4" />Simulate the season</button>
+          <button type="button" onClick={() => setPhase('drafting')} className="inline-flex min-h-11 items-center rounded-lg border border-border/30 px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold">Adjust rotation</button>
+        </div>
+      </div>
     </div>}
     {phase === 'simulating' && <div className="court-panel p-10 text-center">
       <Loader2 className="mx-auto h-8 w-8 animate-spin text-gold" />

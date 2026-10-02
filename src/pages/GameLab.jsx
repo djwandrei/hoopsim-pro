@@ -35,7 +35,9 @@ export default function GameLab() {
 
   const home = league.byCode.get(a) || league.teams[0];
   const away = league.byCode.get(b) || league.teams[1];
-  const breakdown = <MatchupBreakdown league={league} source={source} year={year} a={a} b={b} onA={setA} onB={setB} teamA={home} teamB={away} />;
+  const breakdown = simProps => (
+    <MatchupBreakdown league={league} source={source} year={year} a={a} b={b} onA={setA} onB={setB} teamA={home} teamB={away} {...simProps} />
+  );
 
   return (
     <StudioShell active="/game">
@@ -44,12 +46,10 @@ export default function GameLab() {
         <MyNbaHub focusCode={home.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&
           <div className="space-y-4">
-              {breakdown}
+              {breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: Boolean(sim.game) })}
               <GameControls
               seed={sim.seed} onSeedChange={sim.setSeed}
-              neutral={sim.neutral} onNeutralChange={sim.setNeutral}
-              onRunGame={() => sim.runGame(league, home, away)}
-              hasGame={Boolean(sim.game)} />
+              neutral={sim.neutral} onNeutralChange={sim.setNeutral} />
             
               {sim.game ?
             <React.Fragment>
@@ -63,7 +63,7 @@ export default function GameLab() {
           }
           {tab === 'series' &&
           <div className="space-y-4">
-              {breakdown}
+              {breakdown({})}
               <GameControls
               seed={sim.seed} onSeedChange={sim.setSeed}
               neutral={sim.neutral} onNeutralChange={sim.setNeutral}

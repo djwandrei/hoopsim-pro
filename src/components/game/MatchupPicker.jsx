@@ -13,7 +13,7 @@ const sideChip = team => (
   </div>
 );
 
-export default function MatchupPicker({ league, a, b, onA, onB }) {
+export default function MatchupPicker({ league, a, b, onA, onB, onSimGame, hasGame }) {
   const swap = () => { onA(b); onB(a); };
   const randomize = () => {
     const first = Math.floor(Math.random() * league.teams.length);
@@ -43,6 +43,11 @@ export default function MatchupPicker({ league, a, b, onA, onB }) {
         <button type="button" onClick={randomize} className="flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[var(--myna-border)] text-[11px] font-semibold tracking-[0.12em] text-[var(--myna-accent)] transition-colors hover:bg-[var(--myna-raised)]"><Dices className="h-3.5 w-3.5" />RANDOM PAIRING</button>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2">{sideChip(teamA)}{sideChip(teamB)}</div>
+      {onSimGame && (
+        <button type="button" onClick={onSimGame} className="myna-accent mt-4 flex w-full min-h-12 items-center justify-center gap-2 rounded-lg text-[12px] font-semibold tracking-[0.18em] transition-opacity hover:opacity-90">
+          {hasGame ? 'SIM NEW GAME' : 'SIM GAME'}
+        </button>
+      )}
     </section>
   );
 }

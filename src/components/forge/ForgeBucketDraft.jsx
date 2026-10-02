@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Eye, EyeOff, Lock, Loader2, Play, RefreshCcw } from 'lucide-react';
+import { Eye, EyeOff, Lock, Loader2, RefreshCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { SKILLS, GROUPS } from '@/components/forge/bapSkills';
@@ -11,14 +11,13 @@ import ForgeOvrMeter from '@/components/forge/ForgeOvrMeter';
 import BucketBoard from '@/components/forge/BucketBoard';
 import BucketSummary from '@/components/forge/BucketSummary';
 import ForgeLeagueTour from '@/components/forge/ForgeLeagueTour';
-import { Image } from '@/components/ui/image';
+import ForgeSetupPanel from '@/components/forge/ForgeSetupPanel';
 
 // Wheel draft, strictly single-player keep-and-respin: the wheel rolls an
 // attribute, you lock the roll (or re-roll freely), then the final spin lands
 // a donor team and offers ONE player-season from that roster — keep it or burn
 // one of three respins. Nine attributes, then the composite tours the league.
 const RESPIN_COUNT = 3;
-const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/d00d11c89_generated_image.png';
 
 export default function ForgeBucketDraft({ source, league }) {
   const allPool = useMemo(() => buildForgePool(source), [source]);
@@ -137,20 +136,7 @@ export default function ForgeBucketDraft({ source, league }) {
   const overall = useMemo(() => (filled >= SKILLS.length ? liveOvr : null), [liveOvr, filled]);
 
   return <section aria-label="Bucket draft game" className="space-y-4">
-    {phase === 'setup' && <div className="court-panel court-panel-hover p-6">
-      <div className="relative mx-auto max-w-xl text-center">
-        <div className="absolute inset-x-10 top-4 bottom-12 rounded-full" style={{ background:'radial-gradient(circle, hsl(var(--court-accent) / 0.14), transparent 70%)' }} />
-        <Image src={SILHOUETTE} alt="" fittingType="fit" className="relative mx-auto w-52" />
-        <p className="court-kicker relative mt-3">Bucket draft</p>
-        <h2 className="relative mt-1 font-display text-3xl">FORGE A PLAYER FROM REAL SEASONS</h2>
-        <p className="relative mt-3 text-sm leading-relaxed text-muted-foreground">Roll the wheel for an attribute, lock the skill, then the final spin lands a team and offers one player-season — keep it or respin. {pool.length} {group.toLowerCase()} seasons in the pool.</p>
-      </div>
-      <div className="mt-4 flex justify-center gap-2">
-        {GROUPS.map(item => <button key={item.key} type="button" onClick={() => setGroup(item.key)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${group === item.key ? 'border-gold/60 bg-gold/10 text-gold' : 'border-border/30 text-muted-foreground hover:border-gold/40'}`}>{item.key} <span className="font-mono opacity-70">{item.hint}</span></button>)}
-      </div>
-      <div className="mt-4 flex flex-wrap justify-center gap-2">{SKILLS.map((skill, index) => <span key={skill.key} className={`rounded-lg border px-3 py-1.5 text-[11px] ${index % 4 === 0 ? 'border-gold/30 text-gold' : index % 4 === 1 ? 'border-royal/40 text-royal' : index % 4 === 2 ? 'border-trim/30 text-trim' : 'border-positive/30 text-positive'}`}>{skill.label} <span className="font-mono opacity-80">{skill.metric}</span></span>)}</div>
-      <div className="mt-5 text-center"><button type="button" onClick={start} disabled={!pool.length} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:translate-y-px hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40"><Play className="h-4 w-4" />Start drafting</button></div>
-    </div>}
+    {phase === 'setup' && <ForgeSetupPanel kicker="Bucket draft" title="FORGE A PLAYER FROM REAL SEASONS" intro={`Roll the wheel for an attribute, lock the skill, then the final spin lands a team and offers one player-season — keep it or burn one of ${RESPIN_COUNT} respins.`} group={group} onGroup={setGroup} poolCount={pool.length} onStart={start} />}
     {phase === 'drafting' && <div className="court-panel p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div><p className="court-kicker">Bucket draft · {group}</p><h2 className="mt-1 font-display text-2xl">ROLL · LOCK · SPIN · KEEP</h2><p className="mt-1 text-xs text-muted-foreground">Roll a skill and lock it, then the final spin lands team and player. {SKILLS.length - filled} of {SKILLS.length} slots open.</p></div>
@@ -180,6 +166,7 @@ export default function ForgeBucketDraft({ source, league }) {
       </div>
     </div>}
     {phase === 'complete' && <div className="space-y-4">
+      <ForgeBuildWheel picks={picks} leagueMax={leagueMax} overall={overall} />
       <BucketBoard buckets={SKILLS} picks={picks} activeKey={null} onUndo={undo} complete leagueMax={leagueMax} showGrades={showGrades} />
       <BucketSummary buckets={SKILLS} picks={picks} overall={overall} leagueMax={leagueMax} onRestart={start} />
       <ForgeLeagueTour league={league} buckets={SKILLS} picks={picks} />

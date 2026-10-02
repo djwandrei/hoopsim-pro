@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Eye, EyeOff, Loader2, Play, Users } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Users } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { SKILLS, GROUPS } from '@/components/forge/bapSkills';
@@ -12,6 +12,7 @@ import BucketBoard from '@/components/forge/BucketBoard';
 import BucketSummary from '@/components/forge/BucketSummary';
 import ForgeLeagueTour from '@/components/forge/ForgeLeagueTour';
 import ForgeOfferCard from '@/components/forge/ForgeOfferCard';
+import ForgeSetupPanel from '@/components/forge/ForgeSetupPanel';
 
 // Second draft mode: the player selects the skill, spins the wheel for the
 // donor team, then keeps or respins the offered player from that roster.
@@ -111,15 +112,7 @@ export default function ForgePickDraft({ source, league }) {
   const overall = useMemo(() => (filled >= SKILLS.length ? liveOvr : null), [liveOvr, filled]);
 
   return <section aria-label="Pick and spin draft game" className="space-y-4">
-    {phase === 'setup' && <div className="court-panel court-panel-hover p-6">
-      <p className="court-kicker">Pick &amp; spin draft</p>
-      <h2 className="mt-1 font-display text-3xl">PICK THE SKILL · SPIN FOR THE TEAM</h2>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">You choose which attribute to draft next, spin the wheel for a donor team, and the wheel offers one player from that roster — keep them or burn one of {RESPIN_COUNT} respins. Fill all nine slots to forge the composite and tour the league.</p>
-      <div className="mt-4 flex gap-2">
-        {GROUPS.map(item => <button key={item.key} type="button" onClick={() => setGroup(item.key)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${group === item.key ? 'border-gold/60 bg-gold/10 text-gold' : 'border-border/30 text-muted-foreground hover:border-gold/40'}`}>{item.key} <span className="font-mono opacity-70">{item.hint}</span></button>)}
-      </div>
-      <button type="button" onClick={start} disabled={!pool.length} className="mt-5 flex min-h-11 items-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:translate-y-px hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40"><Play className="h-4 w-4" />Start drafting</button>
-    </div>}
+    {phase === 'setup' && <ForgeSetupPanel kicker="Pick & spin draft" title="PICK THE SKILL · SPIN FOR THE TEAM" intro={`You choose which attribute to draft next, spin the wheel for a donor team, and the wheel offers one player from that roster — keep them or burn one of ${RESPIN_COUNT} respins. Fill all nine slots to forge the composite and tour the league.`} group={group} onGroup={setGroup} poolCount={pool.length} onStart={start} respinNote={`3 respins per skill`} />}
     {phase === 'drafting' && <div className="court-panel p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div><p className="court-kicker">Pick &amp; spin draft · {group}</p><h2 className="mt-1 font-display text-2xl">PICK · SPIN · BUILD</h2><p className="mt-1 text-xs text-muted-foreground">Pick a skill, spin for the donor team, keep or respin the offered player. {SKILLS.length - filled} of {SKILLS.length} slots open.</p></div>

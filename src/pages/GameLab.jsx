@@ -70,7 +70,7 @@ export default function GameLab() {
                   </React.Fragment>}
                 </React.Fragment> :
 
-            <section className="myna-panel p-4 text-xs myna-muted hidden">Set a seed, then sim the game to see the team-colored scoreboard and full box score.</section>
+            <section className="myna-panel p-6 text-center text-xs myna-muted">Set a seed, then sim the game — the live play-by-play feed, team-colored scoreboard and full box score land here.</section>
             }
             </div>
           }

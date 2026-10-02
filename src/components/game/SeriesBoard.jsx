@@ -15,6 +15,7 @@ export default function SeriesBoard({ league, series }) {
           <div className="min-w-0">
             <p className="myna-accent-text flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em]"><Trophy className="h-3.5 w-3.5" />SERIES RESULT</p>
             <h3 className="myna-display mt-1 text-2xl sm:text-3xl">{winner?.name.toUpperCase() || winnerCode} WIN THE SERIES</h3>
+            <p className="myna-muted mt-1 text-[10px] tracking-[0.2em]">2-2-1-1-1 FORMAT · CLINCHED IN GAME {series.games.length}</p>
           </div>
         </div>
         <div className="myna-mono text-right text-4xl">
@@ -35,6 +36,7 @@ export default function SeriesBoard({ league, series }) {
                 {item.host} <span className={hostWon ? 'font-bold text-[var(--myna-accent)]' : 'myna-muted'}>{item.hostPts}</span>
               </span>
               {item.ot > 0 && <span className="myna-muted text-[10px] font-semibold">OT{item.ot > 1 ? item.ot : ''}</span>}
+              <span className="myna-mono shrink-0 rounded-md bg-gold/10 px-1.5 py-0.5 text-[10px] text-gold">+{Math.abs(item.hostPts - item.visitorPts)}</span>
             </li>
           );
         })}

@@ -9,7 +9,7 @@ export default function SeriesBoard({ league, series }) {
   const palette = paletteForTeam(winnerCode);
   return (
     <section className="myna-panel overflow-hidden" aria-label="Series result">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-5" style={{ background: `linear-gradient(115deg, ${palette.primary}40, transparent 70%)` }}>
+      <div className="broadcast-in-l flex flex-wrap items-center justify-between gap-4 p-5" style={{ background: `linear-gradient(115deg, ${palette.primary}40, transparent 70%)` }}>
         <div className="flex min-w-0 items-center gap-4">
           <TeamMark code={winnerCode} name={winner?.name} className="h-16 w-16 rounded-2xl border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
           <div className="min-w-0">
@@ -27,7 +27,7 @@ export default function SeriesBoard({ league, series }) {
         {series.games.map(item => {
           const hostWon = item.hostPts > item.visitorPts;
           return (
-            <li key={item.game} className="flex items-center gap-3 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3 py-2">
+            <li key={item.game} className="broadcast-in-r flex items-center gap-3 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3 py-2" style={{ animationDelay: `${item.game * 70}ms` }}>
               <span className="myna-mono myna-muted text-[11px]">G{item.game}</span>
               <span className="myna-mono min-w-0 flex-1 text-xs">
                 {item.visitor} <span className={hostWon ? 'myna-muted' : 'font-bold text-[var(--myna-accent)]'}>{item.visitorPts}</span>

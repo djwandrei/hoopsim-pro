@@ -11,7 +11,7 @@ export default function GameBoxScore({ game }) {
   const palette = paletteForTeam(team);
   const lines = (side === 'home' ? game.boxHome : game.boxAway)?.lines || [];
   return (
-    <section className="myna-panel p-4" aria-label="Box score">
+    <section key={`${game.home}-${game.away}-${game.homePts}-${game.awayPts}`} className="myna-panel p-4" aria-label="Box score">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.2em]">BOX SCORE</p>
@@ -44,7 +44,7 @@ export default function GameBoxScore({ game }) {
           </thead>
           <tbody>
             {lines.map((line, index) => (
-              <tr key={index} className="border-t border-[var(--myna-border)]">
+              <tr key={index} className="border-t border-[var(--myna-border)] broadcast-in-r" style={{ animationDelay: `${index * 55}ms` }}>
                 <td className="px-2 py-1.5 text-left font-medium">{line.name}</td>
                 <td className="px-2 py-1.5 text-left myna-muted">{(line.positions || []).join('/') || '—'}</td>
                 <td className={`${cell} myna-mono`}>{line.min}</td>

@@ -2,10 +2,10 @@ import React from 'react';
 import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
-function Half({ team, pts, won, label }) {
+function Half({ team, pts, won, label, side }) {
   const palette = paletteForTeam(team.code);
   return (
-    <div className="p-5 text-center" style={{ background: won ? `linear-gradient(160deg, ${palette.primary}55, transparent 80%)` : 'transparent' }}>
+    <div className={`p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ background: won ? `linear-gradient(160deg, ${palette.primary}55, transparent 80%)` : 'transparent' }}>
       <TeamMark code={team.code} name={team.name} className="mx-auto h-14 w-14 rounded-2xl border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
       <p className="myna-mono mt-2 text-5xl">{pts}</p>
       <p className="myna-display mt-1 text-lg">{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
@@ -19,10 +19,10 @@ export default function GameScoreboard({ league, game }) {
   if (!home || !away) return null;
   const homeWon = game.homePts > game.awayPts;
   return (
-    <section className="myna-panel overflow-hidden" aria-label="Game scoreboard">
+    <section key={`${game.home}-${game.away}-${game.homePts}-${game.awayPts}`} className="myna-panel overflow-hidden" aria-label="Game scoreboard">
       <div className="grid grid-cols-2 border-b border-[var(--myna-border)]">
-        <Half team={away} pts={game.awayPts} won={!homeWon} label="AWAY" />
-        <Half team={home} pts={game.homePts} won={homeWon} label="HOME" />
+        <Half team={away} pts={game.awayPts} won={!homeWon} label="AWAY" side="away" />
+        <Half team={home} pts={game.homePts} won={homeWon} label="HOME" side="home" />
       </div>
       <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 p-3 text-[11px] myna-muted">
         <span className="font-semibold tracking-[0.15em]">{game.ot ? (game.ot === 1 ? 'OT' : `${game.ot}OT`) : 'REGULATION'}</span>

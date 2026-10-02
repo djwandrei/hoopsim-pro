@@ -54,3 +54,15 @@ body.court-themed .game-matchup-theme .court-team-picker__panel,
 body.court-themed .game-matchup-theme .court-team-picker__option { color: var(--myna-text) !important; background: var(--myna-surface) !important; }
 body.court-themed .game-matchup-theme .court-team-picker__panel :is(strong, .court-team-picker__team, .court-team-picker__option-code, .court-team-picker__option-copy) { color: var(--myna-text) !important; }
 body.court-themed .game-matchup-theme .court-team-picker__option:is(:hover, :focus-visible, .is-selected) { background: var(--myna-raised) !important; }
+
+/* Box-score totals row: light-mode team tint only; neutral in dark mode. */
+.studio-workspace .game-matchup-theme .matchup-totals-row { background: color-mix(in srgb, var(--team-primary) 12%, transparent); }
+
+/* Dark mode: tables stay neutral — strip every team-color background tint
+   from headers and highlighted cells (applies app-wide). Identity stays in
+   the colored underline and text ink, never in a background fill. */
+body.dark-mode .studio-workspace .game-matchup-theme table th { background: var(--myna-surface); }
+body.dark-mode .studio-workspace .game-matchup-theme table th[data-team-side] { background: var(--myna-surface); border-bottom-color: var(--side-primary); }
+body.dark-mode .studio-workspace .game-matchup-theme [data-team-theme] table th { background: var(--myna-surface); border-bottom-color: var(--team-primary); }
+body.dark-mode .studio-workspace .game-matchup-theme .matchup-side-cell { background: transparent; }
+body.dark-mode .studio-workspace .game-matchup-theme .matchup-totals-row { background: var(--myna-raised); }

@@ -75,11 +75,11 @@ export default function GamePlayFeed({ game, home, away, onComplete, onProgress 
       </div>
 
       <div className="my-3 flex items-center justify-center gap-4">
-        <span className="myna-display text-xl" style={{ color: 'var(--matchup-away-color)' }}>{away.code}</span>
-        <span className="myna-mono text-4xl font-semibold" style={{ color: 'var(--matchup-away-color)' }}>{score[1]}</span>
-        <span className="myna-muted text-xs tracking-[0.2em]">{current ? `${current.q} · ${live ? current.clock : 'FINAL'}` : 'PREGAME'}</span>
-        <span className="myna-mono text-4xl font-semibold" style={{ color: 'var(--matchup-home-color)' }}>{score[0]}</span>
-        <span className="myna-display text-xl" style={{ color: 'var(--matchup-home-color)' }}>{home.code}</span>
+        <span className="myna-display text-2xl" style={{ color: 'var(--matchup-away-color)' }}>{away.code}</span>
+        <span className="myna-mono text-5xl font-bold" style={{ color: 'var(--matchup-away-color)' }}>{score[1]}</span>
+        <span className="myna-mono myna-muted rounded-full border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3 py-1 text-[10px] tracking-[0.2em]">{current ? `${current.q} · ${live ? current.clock : 'FINAL'}` : 'PREGAME'}</span>
+        <span className="myna-mono text-5xl font-bold" style={{ color: 'var(--matchup-home-color)' }}>{score[0]}</span>
+        <span className="myna-display text-2xl" style={{ color: 'var(--matchup-home-color)' }}>{home.code}</span>
       </div>
       <div className="myna-bar"><span style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${awayPalette.primary}, ${homePalette.primary})` }} /></div>
 

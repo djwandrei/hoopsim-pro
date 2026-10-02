@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, LabelList, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { teamThemeVars } from '@/components/game/matchupTheme';
@@ -76,8 +76,9 @@ export default function PlayerStatsChart({ teamA, teamB }) {
             <XAxis dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} interval={0} angle={-45} textAnchor="end" height={58} />
             <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
             <Tooltip content={tip} cursor={{ fill: 'hsl(var(--court-accent) / .08)' }} />
-            <Bar dataKey="value" isAnimationActive={false} radius={[3, 3, 0, 0]}>
+            <Bar dataKey="value" isAnimationActive={false} radius={[3, 3, 0, 0]} maxBarSize={30}>
               {data.map((row, index) => <Cell key={index} fill={row.teamColor} stroke={row.teamInk} />)}
+              <LabelList dataKey="value" position="top" style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9, fontFamily: 'var(--font-mono)' }} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

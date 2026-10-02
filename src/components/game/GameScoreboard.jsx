@@ -6,10 +6,11 @@ import { teamThemeVars } from '@/components/game/matchupTheme';
 function Half({ team, pts, won, label, side }) {
   const { mode = 'dark' } = useCourtTheme() || {};
   return (
-    <div data-team-theme={team.code} className={`p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ ...teamThemeVars(team.code, mode), boxShadow: won ? 'inset 0 -3px 0 var(--team-secondary)' : undefined }}>
-      <TeamMark code={team.code} name={team.name} className="mx-auto h-20 w-20" />
-      <p className="myna-mono mt-2 text-5xl" style={{ color: 'var(--myna-accent)' }}>{pts}</p>
-      <p className="myna-display mt-1 text-lg" style={{ color: 'var(--myna-accent)' }}>{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
+    <div data-team-theme={team.code} className={`relative p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={teamThemeVars(team.code, mode)}>
+      {won && <span className="myna-mono absolute right-3 top-3 rounded-full border px-2 py-0.5 text-[9px] tracking-[0.18em]" style={{ borderColor: 'var(--team-primary)', color: 'var(--team-ink)' }}>WINNER</span>}
+      <TeamMark code={team.code} name={team.name} className="mx-auto h-16 w-16" />
+      <p className="myna-display mt-2 text-lg" style={{ color: won ? 'var(--myna-accent)' : 'var(--myna-text)' }}>{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
+      <p className="myna-mono mt-1 text-5xl font-semibold" style={{ color: won ? 'var(--myna-accent)' : 'var(--myna-muted)' }}>{pts}</p>
     </div>
   );
 }
@@ -59,10 +60,10 @@ export default function GameScoreboard({ league, game }) {
           </table>
         </div>
       )}
-      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 p-3 text-[11px] myna-muted">
+      <div className="flex flex-wrap items-center justify-center gap-2 p-3 text-[11px] myna-muted">
         <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>{game.ot ? (game.ot === 1 ? 'FINAL · OT' : `FINAL · ${game.ot}OT`) : 'FINAL'}</span>
-        <span>POSS {Math.round(game.poss)}</span>
-        <span className="myna-mono">ORTG {away.code} {game.ortgA.toFixed(1)} · {home.code} {game.ortgH.toFixed(1)}</span>
+        <span className="myna-mono rounded-md border border-[var(--myna-border)] px-2 py-0.5">POSS {Math.round(game.poss)}</span>
+        <span className="myna-mono rounded-md border border-[var(--myna-border)] px-2 py-0.5">ORTG {away.code} {game.ortgA.toFixed(1)} · {home.code} {game.ortgH.toFixed(1)}</span>
       </div>
     </section>
   );

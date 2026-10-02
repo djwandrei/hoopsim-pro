@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, Cell, LabelList, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { actualStandings } from '@/lib/season/simEngine';
 
 const tip = ({ active, payload, teamA, teamB }) => {
@@ -40,8 +40,9 @@ export default function WinDistributionChart({ source, league, teamA, teamB }) {
             <XAxis dataKey="code" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} interval={0} angle={-60} textAnchor="end" height={52} />
             <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
             <Tooltip content={props => tip({ ...props, teamA, teamB })} cursor={{ fill: 'hsl(var(--court-accent) / .08)' }} />
-            <Bar dataKey="wins" isAnimationActive={false} radius={[3, 3, 0, 0]}>
+            <Bar dataKey="wins" isAnimationActive={false} radius={[3, 3, 0, 0]} maxBarSize={26}>
               {data.map(row => <Cell key={row.code} fill={fillFor(row.code)} stroke={row.code === teamA.code ? 'var(--matchup-home-color)' : row.code === teamB.code ? 'var(--matchup-away-color)' : 'var(--myna-border)'} />)}
+              <LabelList dataKey="wins" position="top" style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9, fontFamily: 'var(--font-mono)' }} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

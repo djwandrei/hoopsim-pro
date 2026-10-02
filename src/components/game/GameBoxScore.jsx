@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TeamMark from '@/components/studio/TeamMark';
+
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { teamThemeVars } from '@/components/game/matchupTheme';
 
@@ -28,7 +29,7 @@ export default function GameBoxScore({ game }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.2em]">BOX SCORE</p>
-          <h3 className="myna-display mt-1 text-2xl">{side === 'home' ? 'HOME' : 'AWAY'} ROTATION</h3>
+          <h3 className="myna-display mt-1 text-2xl">{team} · {side === 'home' ? 'HOME' : 'AWAY'} ROTATION</h3>
         </div>
         <div className="flex gap-1 rounded-xl border border-[var(--myna-border)] bg-[var(--myna-canvas)] p-1">
           {[['away', game.away], ['home', game.home]].map(([key, code]) => (
@@ -37,6 +38,7 @@ export default function GameBoxScore({ game }) {
               data-team-theme={code}
               style={{ ...teamThemeVars(code, mode), background: side === key ? 'var(--team-primary)' : 'var(--myna-canvas)', color: side === key ? 'var(--team-on-primary)' : 'var(--team-ink)' }}
             >
+              <TeamMark code={code} name={code} className="h-5 w-5" />
               {code}
             </button>
           ))}
@@ -70,7 +72,7 @@ export default function GameBoxScore({ game }) {
           </tbody>
           {lines.length > 0 && (
             <tfoot>
-              <tr className="border-t-2 border-[var(--myna-border)]" style={{ background: 'color-mix(in srgb, var(--team-primary) 14%, transparent)' }}>
+              <tr className="matchup-totals-row border-t-2 border-[var(--myna-border)]">
                 <td className="px-2 py-1.5 text-left text-[10px] font-bold uppercase tracking-[0.15em]">Team totals</td>
                 <td />
                 <td className={`${cell} myna-mono font-bold`}>{totals.min}</td>

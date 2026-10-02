@@ -41,9 +41,9 @@ export default function CareerLab() {
                   placeholder="Find a career…" />
                 
               </div>
-              <p className="myna-muted max-w-md text-xs leading-relaxed hidden">
-                The career window is pooled independently of the exact-season selection in other workbenches. Seasons outside 2017–26 are not inferred.
-              </p>
+              
+
+              
             </div>
           </div>
           <CareerArchiveStatus source={source} state={state} error={error} retry={retry} />

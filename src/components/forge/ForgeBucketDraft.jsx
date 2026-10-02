@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Dices, Loader2, Play } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 import BucketBoard from '@/components/forge/BucketBoard';
 import BucketCandidates from '@/components/forge/BucketCandidates';
@@ -61,7 +62,14 @@ export default function ForgeBucketDraft({ source, league }) {
   const [candidates, setCandidates] = useState([]);
   const [spinning, setSpinning] = useState(false);
   const [rerolls, setRerolls] = useState(1);
+  const [flicker,setFlicker] = useState(null);
   const timer = useRef(null);
+
+  useEffect(() => {
+    if (!spinning) { setFlicker(null); return undefined; }
+    const id = window.setInterval(() => setFlicker(teams[Math.floor(Math.random() * teams.length)]), 90);
+    return () => window.clearInterval(id);
+  }, [spinning,teams]);
 
   const spin = () => {
     window.clearTimeout(timer.current);
@@ -87,7 +95,11 @@ export default function ForgeBucketDraft({ source, league }) {
   const pickPlayer = player => {
     const next = { ...picks, [order[round].key]: { player, value: player[order[round].key] || 0 } };
     setPicks(next);
-    if (round + 1 >= SKILLS.length) { setPhase('complete'); setCandidates([]); setSpunTeam(null); return; }
+    if (round + 1 >= SKILLS.length) {
+      setPhase('complete'); setCandidates([]); setSpunTeam(null);
+      confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 }, colors: ['#E9B949','#3E63DD','#D63A4B'] });
+      return;
+    }
     setRound(round + 1);
   };
   const undo = key => {
@@ -111,8 +123,8 @@ export default function ForgeBucketDraft({ source, league }) {
       <p className="court-kicker">Bucket draft · Build-A-Bucket cycle</p>
       <h2 className="mt-1 font-display text-3xl">FORGE A PLAYER FROM REAL SEASONS</h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">Eight original forge skills, one wheel run. Each round the wheel draws an open skill and a random NBA team — draft a card from that roster and their observed grade fills the skill. One team reroll per build. Finish the board to forge the composite and tour the league.</p>
-      <div className="mt-4 flex flex-wrap gap-2">{SKILLS.map(skill => <span key={skill.key} className="rounded-lg border border-border/30 bg-canvas/30 px-3 py-1.5 text-[11px] text-muted-foreground">{skill.label} <span className="font-mono text-gold">{skill.metric}</span></span>)}</div>
-      <button type="button" onClick={start} className="mt-5 flex min-h-11 items-center gap-2 rounded-lg bg-primary px-6 text-sm font-semibold text-primary-foreground"><Play className="h-4 w-4" />Start drafting</button>
+      <div className="mt-4 flex flex-wrap gap-2">{SKILLS.map(skill => <span key={skill.key} className="rounded-lg border border-border/30 bg-canvas/30 px-3 py-1.5 text-[11px] text-muted-foreground transition-colors hover:border-gold/40">{skill.label} <span className="font-mono text-gold">{skill.metric}</span></span>)}</div>
+      <button type="button" onClick={start} className="mt-5 flex min-h-11 items-center gap-2 rounded-lg bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:translate-y-px hover:bg-goldSoft"><Play className="h-4 w-4" />Start drafting</button>
     </div>}
     {phase === 'drafting' && <>
       <div className="court-panel p-4">
@@ -123,9 +135,10 @@ export default function ForgeBucketDraft({ source, league }) {
             <button type="button" onClick={rerollTeam} disabled={!rerolls || spinning} className="flex min-h-10 items-center gap-2 rounded-lg border border-input px-3 text-xs text-foreground hover:border-gold/40 hover:text-gold disabled:opacity-40 disabled:hover:border-input disabled:hover:text-foreground"><Dices className="h-3.5 w-3.5" />Reroll team · {rerolls} left</button>
           </div>
         </div>
+        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-raised"><div className="h-full rounded-full bg-gold transition-all duration-300" style={{ width:`${filled / SKILLS.length * 100}%` }} /></div>
         <div className="mt-4 grid items-center gap-4 lg:grid-cols-[minmax(0,18rem),1fr]">
-          <div className="flex items-center gap-3 rounded-xl border border-gold/30 bg-canvas/40 px-4 py-3">
-            <TeamMark code={spinning ? 'SQ' : spunTeam || 'SQ'} className={`h-14 w-14 ${spinning ? 'animate-pulse' : ''}`} />
+          <div className="flex items-center gap-3 rounded-xl border border-gold/30 bg-canvas/40 px-4 py-3 shadow-[0_0_28px_hsl(var(--court-accent)/0.1)]">
+            <TeamMark code={spinning ? (flicker || 'SQ') : spunTeam || 'SQ'} className="h-14 w-14" />
             <div className="min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Wheel skill</p>
               <p className="font-display text-xl leading-tight text-gold">{activeSkill?.label || '—'} <span className="font-mono text-xs">{activeSkill?.metric}</span></p>

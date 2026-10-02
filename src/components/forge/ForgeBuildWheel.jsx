@@ -1,12 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
+import { Image } from '@/components/ui/image';
 
+const SILHOUETTE_LIGHT = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/93f540ea1_basketball-silhouette-000000-xl.png';
+const SILHOUETTE_DARK = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/cbc7c68c8_basketball-silhouette-outline-lg.png';
 const Silhouette = () => (
-  <svg viewBox="0 0 100 100" fill="currentColor" className="h-full w-full" aria-hidden="true">
-    <circle cx="50" cy="26" r="14" />
-    <path d="M50 43c-11 0-18 5-20 14l-6 22h12l3 17h22l3-17h12l-6-22c-2-9-9-14-20-14z" />
-  </svg>
+  <>
+    <Image src={SILHOUETTE_LIGHT} alt="" fittingType="fit" className="h-full w-full opacity-15 dark:hidden" />
+    <Image src={SILHOUETTE_DARK} alt="" fittingType="fit" className="hidden h-full w-full opacity-25 [filter:invert(1)] dark:block" />
+  </>
 );
 
 const initials = pick => (pick?.player?.name || '?').split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('');

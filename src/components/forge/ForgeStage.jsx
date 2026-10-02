@@ -2,9 +2,10 @@ import React from 'react';
 import { Image } from '@/components/ui/image';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
 
-// Flat black background + gold figure: mix-blend-screen erases the black so the
-// silhouette floats directly over the canvas between the panels.
-const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/b178740f7_generated_image.png';
+// User-provided silhouette art: filled black mark for light mode, thin outline
+// for dark mode (inverted to light lines so it reads on the dark canvas).
+const SILHOUETTE_LIGHT = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/93f540ea1_basketball-silhouette-000000-xl.png';
+const SILHOUETTE_DARK = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/cbc7c68c8_basketball-silhouette-outline-lg.png';
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {
@@ -36,7 +37,8 @@ export default function ForgeStage({ mode, picks, leagueMax, reveal, selectedKey
     <div className="relative z-10 flex w-full min-w-0 flex-1 items-center justify-center px-4 py-6">
       <div className="relative h-72 w-full max-w-xs sm:h-96 sm:max-w-sm">
         <div aria-hidden="true" className="absolute -inset-8" style={{ background: 'radial-gradient(50% 46% at 50% 44%, hsl(var(--court-royal) / 0.35), transparent 72%), radial-gradient(70% 52% at 50% 100%, hsl(var(--court-accent) / 0.12), transparent 72%)' }} />
-        <Image src={SILHOUETTE} alt="" fittingType="fit" className="absolute inset-0 h-full w-full opacity-95 mix-blend-screen" />
+        <Image src={SILHOUETTE_LIGHT} alt="" fittingType="fit" className="absolute inset-0 h-full w-full dark:hidden" />
+        <Image src={SILHOUETTE_DARK} alt="" fittingType="fit" className="absolute inset-0 hidden h-full w-full dark:block [filter:invert(1)]" />
         {SKILLS.map((skill) => {
           const layout = CHIP_LAYOUT[skill.key] || { side: 'left', top: 50 };
           const pick = picks[skill.key];

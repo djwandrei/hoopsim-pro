@@ -3,6 +3,7 @@ import { RotateCcw, Trophy } from 'lucide-react';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
 import TeamMark from '@/components/studio/TeamMark';
 import MetricTile from '@/components/studio/MetricTile';
+import { gradeFor } from '@/components/forge/bapSkills';
 export default function BucketSummary({ buckets, picks, overall, leagueMax, onRestart }) {
   const sorted = [...buckets].sort((a, b) => (picks[b.key].value / leagueMax[b.key]) - (picks[a.key].value / leagueMax[a.key]));
   return <section className="court-panel p-5" aria-label="Completed build summary">
@@ -11,7 +12,7 @@ export default function BucketSummary({ buckets, picks, overall, leagueMax, onRe
       <button type="button" onClick={onRestart} className="flex min-h-10 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 text-xs font-semibold text-gold transition-colors hover:bg-gold/20"><RotateCcw className="h-3.5 w-3.5" />Draft a new player</button>
     </header>
     <div className="mt-4 grid gap-3 sm:grid-cols-3">
-      <MetricTile label="Build OVR" value={overall} detail="Weighted pool percentile" tone="positive" />
+      <MetricTile label="Build OVR" value={overall} detail={`Pool-max share · grade ${gradeFor(overall / 100)}`} tone="positive" />
       <MetricTile label="Buckets filled" value={buckets.length} detail="Real player-season donors" />
       <MetricTile label="Top contributor" value={picks[sorted[0].key].player.name.split(' ').slice(-1)[0]} detail={`${sorted[0].label} · ${sorted[0].value.toFixed(1)} ${sorted[0].metric}`} tone="royal" />
     </div>

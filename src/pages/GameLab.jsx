@@ -34,7 +34,7 @@ export default function GameLab() {
 
   if (state !== 'ready' || !league) {
     return (
-      <StudioShell active="/game" followTeam={league?.byCode.get(a)?.code || a}>
+      <StudioShell active="/game" followTeam="djhc">
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
         <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub on the observed season package." state={state} status={state === 'ready' ? 'Matchup hub ready' : undefined} />
         <main className="mx-auto min-w-0 max-w-7xl px-4 py-6"><WorkbenchState state={state} /></main>
@@ -52,7 +52,7 @@ export default function GameLab() {
   );
 
   return (
-    <StudioShell active="/game" followTeam={league?.byCode.get(a)?.code || a}>
+    <StudioShell active="/game" followTeam="djhc">
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
       <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: pick the board, review the intel and charts, and sim single games and 7-game series with team-colored scoreboards and box scores." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">

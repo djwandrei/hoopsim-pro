@@ -67,7 +67,7 @@ export default function LeagueControls({
           onClick={onRun}
           disabled={running}
           className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-5 text-[11px] font-bold tracking-[0.18em] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
-          style={{ background: 'linear-gradient(115deg, var(--myna-accent), var(--myna-hi))', color: 'var(--myna-on-accent)', boxShadow: '0 6px 18px color-mix(in srgb, var(--myna-accent) 30%, transparent)' }}
+          style={{ background: 'linear-gradient(115deg, var(--myna-accent), var(--myna-action-end, var(--myna-hi)))', color: 'var(--myna-on-accent)', boxShadow: '0 6px 18px color-mix(in srgb, var(--myna-accent) 30%, transparent)' }}
         >
           {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
           {running ? 'Simulating…' : hasResults ? 'Run new replay' : 'Run season replay'}

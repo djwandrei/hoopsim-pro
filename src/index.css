@@ -173,7 +173,7 @@
 /* MyNBA-style league hub — themed live by the focused team's palette */
 .myna { background: var(--myna-canvas); color: var(--myna-text); border: 1px solid var(--myna-border); border-radius: 1rem; }
 .myna-panel { background: var(--myna-surface); border: 1px solid var(--myna-border); border-radius: 1rem; }
-.myna-hero { background: linear-gradient(115deg, var(--myna-primary) 0%, var(--myna-canvas) 60%); }
+.myna-hero { background: linear-gradient(115deg, var(--myna-hero-start, var(--myna-primary)) 0%, var(--myna-canvas) 60%); }
 .myna-accent { background: var(--myna-accent); color: var(--myna-on-accent); }
 .myna-accent-text { color: var(--myna-accent); }
 .myna-muted { color: var(--myna-muted); }

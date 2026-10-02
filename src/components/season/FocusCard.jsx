@@ -60,7 +60,7 @@ export default function FocusCard({ team, row, leagueAvg, actualWins }) {
           </div>
         </div>
         <div className="text-right">
-          <div className="myna-display text-3xl leading-none" style={{ color: palette.highlight }}>{wins}<span className="myna-muted text-lg">–{82 - wins}</span></div>
+          <div className="myna-display text-3xl leading-none" style={{ color: 'var(--myna-accent)' }}>{wins}<span className="myna-muted text-lg">–{82 - wins}</span></div>
           <div className="myna-muted mt-1 text-[10px] uppercase tracking-[0.16em]">simulated record (median)</div>
         </div>
       </header>

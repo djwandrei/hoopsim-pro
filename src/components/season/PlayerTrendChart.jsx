@@ -13,15 +13,17 @@ export default function PlayerTrendChart({ rows }) {
           <div className="mt-2 h-52">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data} margin={{ top: 8, right: 6, bottom: 0, left: -22 }}>
-                <XAxis dataKey="game" tick={{ fontSize: 9, fill: '#8FA0BC' }} stroke="#2A3450" />
-                <YAxis tick={{ fontSize: 9, fill: '#8FA0BC' }} stroke="#2A3450" domain={['dataMin - 3', 'dataMax + 3']} />
+                <XAxis dataKey="game" tick={{ fontSize: 9, fill: 'var(--myna-muted)' }} stroke="var(--myna-border)" />
+                <YAxis tick={{ fontSize: 9, fill: 'var(--myna-muted)' }} stroke="var(--myna-border)" domain={['dataMin - 3', 'dataMax + 3']} />
                 <Tooltip
-                  contentStyle={{ background: '#0C1326', border: '1px solid rgba(233,185,73,.4)', borderRadius: 8, fontSize: 11 }}
+                  contentStyle={{ background: 'var(--myna-surface)', color: 'var(--myna-text)', border: '1px solid var(--myna-border)', borderRadius: 8, fontSize: 11 }}
+                  labelStyle={{ color: 'var(--myna-muted)' }}
+                  itemStyle={{ color: 'var(--myna-accent)' }}
                   labelFormatter={value => `Game ${value}`}
                   formatter={value => [value, 'PTS']}
                 />
-                <ReferenceLine y={avg} stroke="#8FA0BC" strokeDasharray="4 4" strokeOpacity={0.7} />
-                <Line type="monotone" dataKey="pts" stroke="#E9B949" strokeWidth={2} dot={{ r: 2.5, fill: '#E9B949' }} activeDot={{ r: 4 }} />
+                <ReferenceLine y={avg} stroke="var(--myna-muted)" strokeDasharray="4 4" strokeOpacity={0.7} />
+                <Line type="monotone" dataKey="pts" stroke="var(--myna-accent)" strokeWidth={2} dot={{ r: 2.5, fill: 'var(--myna-accent)' }} activeDot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>

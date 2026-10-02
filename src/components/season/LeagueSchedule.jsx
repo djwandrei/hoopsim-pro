@@ -108,7 +108,7 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
                           <span
                             className="inline-flex h-6 min-w-8 items-center justify-center rounded-md px-1.5 font-mono text-[10px] font-bold"
                             style={outcome.won
-                              ? { background: focusPalette.primary, color: focusPalette.highlight }
+                              ? { background: focusPalette.primary, color: 'var(--team-on-primary)' }
                               : { border: '1px solid var(--myna-border)', color: 'var(--myna-muted)' }}
                           >
                             {outcome.won ? 'W' : 'L'}

@@ -56,45 +56,6 @@
 .game-matchup-theme select { accent-color: var(--side-primary, var(--myna-accent)); }
 .game-matchup-theme .myna-bar > span { background: linear-gradient(90deg, var(--matchup-away-primary), var(--matchup-home-primary)); }
 
-/* The imported site chrome has fixed navy/gold rules; override only Game Lab. */
-.studio-workspace.matchup-workspace { --brand-blue: var(--djhc-court-team-primary); --brand-blue-dark: var(--djhc-court-canvas); --brand-gold: var(--djhc-court-accent); }
-body.court-themed .matchup-workspace .site-header.fan-suite-header {
-  color: var(--djhc-court-text);
-  border-color: var(--djhc-court-team-edge);
-  background: linear-gradient(110deg, color-mix(in srgb, var(--djhc-court-team-primary) 24%, var(--djhc-court-canvas)), var(--djhc-court-canvas));
-}
-body.court-themed .matchup-workspace .site-header.fan-suite-header :is(.brand-script, .brand-kicker, .home-header-utility__icon, .fan-suite-team-mark__fallback) { color: var(--djhc-court-text); }
-body.court-themed .matchup-workspace .site-header.fan-suite-header :is(.home-header-utility__icon, .nav-toggle, .theme-toggle, .fan-suite-team-mark) {
-  color: var(--djhc-court-text) !important;
-  border-color: var(--djhc-court-team-edge);
-  background: var(--djhc-court-raised) !important;
-}
-body.court-themed .matchup-workspace .site-header.fan-suite-header .site-nav {
-  color: var(--djhc-court-text) !important;
-  border-color: var(--djhc-court-team-edge);
-  background: var(--djhc-court-surface) !important;
-}
-body.court-themed .matchup-workspace .site-header.fan-suite-header .site-nav .primary-nav__link {
-  color: var(--djhc-court-text) !important;
-  border-color: var(--djhc-court-team-edge) !important;
-  background: color-mix(in srgb, var(--djhc-court-team-primary) 18%, var(--djhc-court-surface)) !important;
-}
-.studio-workspace.matchup-workspace > aside {
-  border-color: var(--djhc-court-team-edge);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--djhc-court-team-primary) 15%, var(--djhc-court-surface)), var(--djhc-court-surface));
-}
-.studio-workspace.matchup-workspace .footer.site-footer {
-  color: var(--djhc-court-text);
-  border-color: var(--djhc-court-team-edge);
-  background: linear-gradient(115deg, color-mix(in srgb, var(--djhc-court-team-primary) 18%, var(--djhc-court-canvas)), var(--djhc-court-canvas)) !important;
-}
-.studio-workspace.matchup-workspace .footer.site-footer :is(.brand-script, .brand-kicker, .footer-brand p, .footer-link-group a) { color: var(--djhc-court-text); }
-.studio-workspace.matchup-workspace .footer.site-footer .footer-link-group strong { color: var(--djhc-court-accent); }
-.studio-workspace.matchup-workspace .footer.site-footer .footer-link-group::before,
-.studio-workspace.matchup-workspace .footer.site-footer .footer-brand::before,
-.studio-workspace.matchup-workspace .footer.site-footer::after { background: var(--djhc-court-team-primary); }
-body.court-themed .matchup-workspace .site-header.fan-suite-header .theme-toggle__icon { background: var(--djhc-court-accent); }
-body.court-themed .matchup-workspace .site-header.fan-suite-header .theme-toggle__icon::after { background: var(--djhc-court-raised); }
 body.court-themed .game-matchup-theme .court-team-picker__panel,
 body.court-themed .game-matchup-theme .court-team-picker__option { color: var(--myna-text) !important; background: var(--myna-surface) !important; }
 body.court-themed .game-matchup-theme .court-team-picker__panel :is(strong, .court-team-picker__team, .court-team-picker__option-code, .court-team-picker__option-copy) { color: var(--myna-text) !important; }

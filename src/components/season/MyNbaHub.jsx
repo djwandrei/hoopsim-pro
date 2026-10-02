@@ -1,7 +1,7 @@
 import React from 'react';
 import { mix, paletteForTeam, themeFor } from '@/components/djhc/basketballPalettes';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
-import { matchupThemeVars } from '@/components/game/matchupTheme';
+import { matchupThemeVars, teamThemeVars } from '@/components/game/matchupTheme';
 
 const SEASON_TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM'], ['log', 'PLAYER LOG']];
 const GAME_TABS = [['matchup', 'MATCHUP'], ['game', 'GAME'], ['series', 'SERIES']];
@@ -13,8 +13,11 @@ export default function MyNbaHub({ focusCode, awayCode, tab, onTab, tabs = SEASO
   const { mode = 'dark' } = useCourtTheme() || {};
   const palette = paletteForTeam(focusCode);
   const awayPalette = awayCode ? paletteForTeam(awayCode) : null;
-  const theme = themeFor(palette, 'dark');
+  const theme = themeFor(palette, mode);
   const vars = {
+    ...teamThemeVars(focusCode, mode),
+    '--myna-hero-start': mode === 'light' ? mix(theme.canvas, palette.primary, 0.12) : palette.primary,
+    '--myna-action-end': mode === 'light' ? mix(theme.accent, palette.highlight, 0.12) : palette.highlight,
     '--myna-canvas': awayPalette ? mix(theme.canvas, awayPalette.primary, 0.07) : theme.canvas,
     '--myna-surface': awayPalette ? mix(theme.surface, awayPalette.primary, 0.08) : theme.surface,
     '--myna-raised': theme.raised,
@@ -24,8 +27,8 @@ export default function MyNbaHub({ focusCode, awayCode, tab, onTab, tabs = SEASO
     '--myna-accent': theme.accent,
     '--myna-on-accent': theme.onAccent,
     '--myna-primary': palette.primary,
-    '--myna-hi': palette.highlight,
-    '--myna-trim': palette.trim,
+    '--myna-hi': mode === 'light' ? themeFor({ ...palette, primary: palette.highlight }, mode).accent : palette.highlight,
+    '--myna-trim': mode === 'light' ? themeFor({ ...palette, primary: palette.trim }, mode).accent : palette.trim,
     '--myna-primary-away': awayPalette?.primary,
     '--myna-hi-away': awayPalette?.highlight,
     '--myna-trim-away': awayPalette?.trim,

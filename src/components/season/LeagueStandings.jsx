@@ -91,7 +91,7 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                             <span className="inline-block h-6 w-1 rounded-full" style={{ background: teamColor }} />
                             <TeamMark code={entry.team.code} name={entry.team.name} className="h-7 w-7 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)]" />
                             <span className="myna-mono text-xs">{entry.team.code}</span>
-                            {isFocus && <span className="rounded px-1.5 py-0.5 text-[8px] font-bold tracking-[0.14em]" style={{ background: teamColor, color: '#0b1020' }}>YOU</span>}
+                            {isFocus && <span className="rounded px-1.5 py-0.5 text-[8px] font-bold tracking-[0.14em]" style={{ background: teamColor, color: 'var(--team-on-primary)' }}>YOU</span>}
                           </button>
                         </td>
                         <td className={`${cell} myna-mono font-bold`}>{entry.wins}</td>

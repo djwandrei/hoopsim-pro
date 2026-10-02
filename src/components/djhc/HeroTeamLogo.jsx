@@ -5,6 +5,6 @@ import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 export default function HeroTeamLogo() {
   const {palette}=useCourtTheme();
   const slug=palette.team.toLowerCase().replace(/\s+/g,'-');
-  const src=palette.id==='djhc'?STUDIO_EMBLEM:`/studio-assets/nba-logos/modern-opaque/${slug}.png`;
-  return <Image src={src} alt={palette.id==='djhc'?'SwishIQ Studio emblem from DJHC':`${palette.team} opaque modern logo`} fittingType="fit" className="hidden h-44 w-44 shrink-0 object-contain lg:block" />;
+  const src=palette.id==='djhc'?STUDIO_EMBLEM:`/studio-assets/nba-logos/modern-opaque/${slug}.png?v=full-opacity`;
+  return <Image src={src} alt={palette.id==='djhc'?'SwishIQ Studio emblem from DJHC':`${palette.team} full-opacity modern logo with a transparent background`} fittingType="fit" className="hidden h-44 w-44 shrink-0 object-contain opacity-100 lg:block" />;
 }

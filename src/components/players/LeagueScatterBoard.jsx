@@ -12,9 +12,9 @@ function ScatterTip({ active, payload }) {
 const makeShape = (desktop, tone) => function AvatarShape(props) {
   const { cx,cy,payload } = props;
   const url = desktop && playerAsset(payload.row?.headshotPath);
-  const r = tone === 'accent' ? 13 : 11;
+  const r = tone === 'accent' ? 20 : 16;
   const clip = `scatter-clip-${payload.pkey}`;
-  if (!url) return <circle cx={cx} cy={cy} r={tone === 'accent' ? 7 : 5} fill={tone === 'accent' ? 'hsl(var(--court-accent))' : 'hsl(var(--court-royal) / .55)'} stroke={tone === 'accent' ? 'hsl(var(--foreground))' : 'none'} className="cursor-pointer" />;
+  if (!url) return <circle cx={cx} cy={cy} r={tone === 'accent' ? 8 : 6} fill={tone === 'accent' ? 'hsl(var(--court-accent))' : 'hsl(var(--court-royal) / .55)'} stroke={tone === 'accent' ? 'hsl(var(--foreground))' : 'none'} className="cursor-pointer" />;
   return <g className="cursor-pointer">
     <clipPath id={clip}><circle cx={cx} cy={cy} r={r} /></clipPath>
     {tone === 'accent' && <circle cx={cx} cy={cy} r={r + 2.5} fill="none" stroke="hsl(var(--court-accent))" strokeWidth="1.5" />}

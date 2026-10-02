@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
-import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 
 const cell = 'px-2.5 py-3 text-right';
 
 // Pinned roster from the season package: observed per-game rates, sortable by any stat.
 export default function TeamRosterTable({ team, actualWins }) {
   const palette = paletteForTeam(team.code);
-  const dark = ((useCourtTheme() || {}).mode) === 'dark';
   const [sort, setSort] = useState({ key: 'mpg', dir: 'desc' });
   const valueOf = (player, key) => (key === 'mpg' ? player.minutes / Math.max(1, player.games) : player[key]);
   const roster = [...(team.roster || [])].sort((a, b) => {
@@ -61,7 +59,7 @@ export default function TeamRosterTable({ team, actualWins }) {
                   <td className={`${cell} myna-mono myna-muted`}>{player.games}</td>
                   <td className={`${cell} myna-mono`}>
                     <span className="inline-flex items-center justify-end gap-1.5">
-                      {!dark && <span className="inline-block h-1 w-10 overflow-hidden rounded-full bg-[var(--myna-raised)]"><span className="block h-full rounded-full" style={{ width: `${Math.round((mpg / maxMpg) * 100)}%`, background: palette.primary }} /></span>}
+                      <span className="inline-block h-1 w-10 overflow-hidden rounded-full bg-[var(--myna-raised)]"><span className="block h-full rounded-full" style={{ width: `${Math.round((mpg / maxMpg) * 100)}%`, background: palette.primary }} /></span>
                       {mpg.toFixed(1)}
                     </span>
                   </td>

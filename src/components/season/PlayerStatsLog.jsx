@@ -3,14 +3,12 @@ import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import PlayerTrendChart from '@/components/season/PlayerTrendChart';
 import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
-import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 
 const STATS = [['pts', 'PTS'], ['reb', 'REB'], ['ast', 'AST'], ['stl', 'STL'], ['blk', 'BLK']];
 
 // Historical player stats log: every simulated game line for the focused team,
 // with sortable per-player averages and accent-chipped career-high cells.
 export default function PlayerStatsLog({ team, simGames }) {
-  const dark = ((useCourtTheme() || {}).mode) === 'dark';
   const log = useMemo(() => {
     const players = new Map();
     const games = [];
@@ -169,7 +167,7 @@ export default function PlayerStatsLog({ team, simGames }) {
                           const isHigh = (row[stat] || 0) === focusPlayer.highs[stat] && (row[stat] || 0) > 0;
                           return isHigh ? (
                             <td key={stat} className="px-2 py-3 text-center">
-                              <span className="myna-mono inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-bold" style={{ ...(dark ? {} : { background: 'color-mix(in srgb, var(--myna-accent) 20%, transparent)' }), color: 'var(--myna-accent)' }}>{row[stat]}</span>
+                              <span className="myna-mono inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in srgb, var(--myna-accent) 20%, transparent)', color: 'var(--myna-accent)' }}>{row[stat]}</span>
                             </td>
                           ) : (
                             <td key={stat} className="myna-mono px-2 py-3 text-xs">{row[stat]}</td>

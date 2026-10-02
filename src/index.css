@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lobster+Two:wght@700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -68,7 +68,7 @@
 .studio-workspace input, .studio-workspace select { color-scheme: dark; }
 .studio-workspace input:disabled, .studio-workspace select:disabled { opacity: .55; cursor: not-allowed; }
 .studio-workspace main > .grid { align-items: start; }
-.studio-workspace main > .grid > .space-y-4:first-child { position: sticky; top: 1rem; }
+.studio-workspace main > .grid > .space-y-4:first-child { position: sticky; top: calc(var(--djhc-header-h, 0px) + 1rem); }
 @media (max-width: 1023px) { .studio-workspace main > .grid > .space-y-4:first-child { position: static; } }
 .studio-stage { @apply flex min-w-0 items-center gap-3 rounded-xl border px-4 py-3; }
 .studio-control-label { @apply mb-2 block text-xs font-medium text-muted-foreground; }

@@ -25,7 +25,7 @@ export default function NativeWorkbench({ kind, sidecar, collapsibleSidecar=fals
           <button type="button" aria-pressed={!showSidecar} onClick={()=>setShowSidecar(false)} className={chip(!showSidecar)}><PanelLeftOpen className="h-3.5 w-3.5" />Focus on board</button>
         </div>}
         <div className={`grid items-start gap-5 ${hasSidecar&&showSidecar?'lg:grid-cols-[19.5rem_minmax(0,1fr)]':''}`}>
-          {hasSidecar&&showSidecar&&<aside className="order-2 min-w-0 self-start space-y-5 lg:order-1 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">{sidecar({source:data.source,league:data.league,year:data.year,setYear:data.setYear})}</aside>}
+          {hasSidecar&&showSidecar&&<aside className="order-2 min-w-0 self-start space-y-5 lg:order-1 lg:sticky lg:top-[calc(var(--djhc-header-h,0px)+1rem)] lg:max-h-[calc(100vh-var(--djhc-header-h,0px)-2rem)] lg:overflow-y-auto">{sidecar({source:data.source,league:data.league,year:data.year,setYear:data.setYear})}</aside>}
           <div className="order-1 min-w-0 lg:order-2"><NativeSurface key={`${kind}:${data.source.entry.packageVersion}`} kind={kind} entry={data.source.entry} onYearChange={data.setYear} onStateChange={setNativeState} /></div>
         </div>
       </React.Fragment>}

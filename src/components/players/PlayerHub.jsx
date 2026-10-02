@@ -11,7 +11,7 @@ export default function PlayerHub({ roster, phaseRows, phase, onPhaseChange, sel
     <div className="space-y-5 p-4">
       <PlayerHubSidebar rows={roster} phase={phase} onPhaseChange={onPhaseChange} selected={selected} onToggle={onToggle} onClear={onClear} />
       <div className="min-w-0 space-y-5">
-        {selected.length ? selected.map(player => <BlueprintPlayerCard key={`${player.id}:${phase}`} player={player} atlas={atlas} onRemove={onToggle} />) : <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border/30 p-10 text-center"><MousePointerClick className="h-8 w-8 text-gold" /><p className="font-display text-xl tracking-wide text-foreground">No player pinned yet</p><p className="max-w-sm text-xs leading-relaxed text-muted-foreground">Search the player index and pin up to four dossiers at once, or pin straight from the League Atlas scatter and leader board.</p></div>}
+        {selected.length ? selected.map(player => <BlueprintPlayerCard key={`${player.id}:${phase}`} player={player} atlas={atlas} onRemove={onToggle} />) : <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border/30 p-10 text-center"><span className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/5"><MousePointerClick className="h-6 w-6 text-gold" /></span><p className="font-display text-xl tracking-wide text-foreground">No player pinned yet</p><p className="max-w-sm text-xs leading-relaxed text-muted-foreground">Search the player index and pin up to four dossiers at once, or pin straight from the League Atlas scatter and leader board.</p></div>}
       </div>
     </div>
   </section>;

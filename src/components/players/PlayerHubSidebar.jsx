@@ -56,12 +56,12 @@ export default function PlayerHubSidebar({ rows, phase, onPhaseChange, selected,
         <tbody>
           {visible.map(row => {
             const active = selectedIds.has(row.id);
-            return <tr key={row.id} aria-pressed={active} onClick={() => onToggle(row)} className={`cursor-pointer transition-colors ${active ? 'bg-gold/10' : 'hover:bg-raised/50'}`}>
+            return <tr key={row.id} aria-pressed={active} onClick={() => onToggle(row)} className={`cursor-pointer transition-colors ${active ? 'bg-gold/10' : 'hover:bg-raised/50'}`} title={`Pin ${row.name} to the dossier`}>
               <td><span className="flex items-center gap-2.5"><PlayerPortrait player={row} className="h-12 w-12 shrink-0" /><span className={`truncate text-xs font-semibold ${active ? 'text-gold' : 'text-foreground'}`}>{row.name}</span></span></td>
               <td className="text-xs text-muted-foreground">{row.teamCode}</td>
               <td className="text-xs text-muted-foreground">{row.positions.join('/')}</td>
               {COLUMNS.map(([key]) => <td key={key} className="text-right font-mono text-[11px] tabular-nums text-foreground">{statText(key,row.stats[key])}</td>)}
-              <td className="text-right"><button type="button" onClick={event => { event.stopPropagation();onToggle(row); }} className={`rounded-lg border px-2.5 py-1 text-[10px] uppercase tracking-widest ${active ? 'border-gold/60 bg-gold/10 text-gold' : 'border-border/25 text-muted-foreground hover:border-gold/35 hover:text-foreground'}`}>{active ? 'Pinned' : 'Pin'}</button></td>
+              <td className="text-right"><button type="button" onClick={event => { event.stopPropagation();onToggle(row); }} className={`rounded-lg border px-2.5 py-1 text-[10px] uppercase tracking-widest transition-colors ${active ? 'border-gold/60 bg-gold/10 text-gold' : 'border-border/25 text-muted-foreground hover:border-gold/35 hover:text-foreground'}`}>{active ? 'Pinned' : 'Pin'}</button></td>
             </tr>;
           })}
           {!filtered.length && <tr><td colSpan={7} className="py-6 text-center text-xs text-muted-foreground">No players match that search.</td></tr>}

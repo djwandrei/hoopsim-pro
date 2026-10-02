@@ -5,7 +5,7 @@ export const PINS = {
 '/tools/swishiq-studio/simulation-session-ui.js':'2e8296fa24d45652453fae4673a5287a50cda42a9bf5dd8d2701f5906d3fe5f8',
 '/tools/swishiq-studio/game-lab.js':'3cfeed5aacc57162ec7070b4b99c8cb50a90b335ce5988c76425e92eee6b570d',
 '/tools/swishiq-studio/season-lab.js':'d8124963319f7aaacb0510a564fde319fbf53154fe4f5e696ebd7b781be3f947',
-'/tools/swishiq-studio/chemistry-lab.js':'da602e9b1f2a28f93f871b70cc4f06a0968fa1e1f3f6ee9e1f7bb77636fbd32a',
+'/tools/swishiq-studio/chemistry-lab.js':'bd8ce12cd5dbc4aec5a8ab896c8cc8a21253cd61e7cc77a0262c1b3e84705349',
 '/tools/swishiq-studio/advanced-labs.js':'b72f1b43803c3312083299947da4043415e336cac744111afef4bb11a630dfc1',
 '/tools/swishiq-studio/engine/game-lab-evaluation.js':'01ecbe66fe28823aae1212a848a3eb35e4b1a938a9ade6f2868d3c79f1376022',
 '/tools/result-visuals.js':'a92079689f46f911ad883c201cc78c670987ef4c8aee1504278d13cbd1c01255',

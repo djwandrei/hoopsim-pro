@@ -1,0 +1,17 @@
+import React from 'react';
+import { CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from 'recharts';
+export default function LeagueScatter({ league }) {
+  const data = league.teams.map(team => ({ ...team, x: team.off, y: team.def }));
+  const Tip = ({ active, payload }) => {
+    if (!active || !payload?.length) return null;
+    const team = payload[0].payload;
+    return <div className="max-w-52 rounded-lg border border-border/40 bg-card p-3 text-xs shadow-xl"><p className="font-semibold">{team.name}</p><p className="mt-1 font-mono text-gold">OFF {team.off.toFixed(1)} · DEF {team.def.toFixed(1)}</p><p className="mt-1 font-mono text-muted-foreground">NET {team.net > 0 ? '+' : ''}{team.net.toFixed(1)} · PACE {team.pace.toFixed(1)}</p></div>;
+  };
+  return <section className="court-panel p-4">
+    <p className="court-kicker">League map</p>
+    <h3 className="mt-1 font-display text-xl">OFFENSE VS DEFENSE</h3>
+    <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">Published ratings from the package. Dashed lines mark the league averages; the lower-right quadrant is elite on both ends.</p>
+    <div className="mt-3 flex items-center gap-3 text-[10px] text-muted-foreground"><span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-gold" />East</span><span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-royal" />West</span></div>
+    <div className="mt-2 h-56" role="img" aria-label="Scatter plot of offensive rating versus defensive rating for every team"><ResponsiveContainer width="100%" height="100%"><ScatterChart margin={{ top: 8, right: 8, bottom: 18, left: -18 }}><CartesianGrid stroke="hsl(var(--border) / .2)" strokeDasharray="3 3" /><XAxis type="number" dataKey="x" domain={['dataMin - 1', 'dataMax + 1']} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} tickLine={false} axisLine={false} label={{ value: 'Off rating →', position: 'insideBottom', offset: -10, fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} /><YAxis type="number" dataKey="y" domain={['dataMin - 1', 'dataMax + 1']} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} tickLine={false} axisLine={false} label={{ value: 'Def rating (lower better)', angle: -90, position: 'insideLeft', offset: 20, fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} /><ZAxis range={[70, 71]} /><ReferenceLine x={league.offAvg} stroke="hsl(var(--border) / .6)" strokeDasharray="4 4" /><ReferenceLine y={league.defAvg} stroke="hsl(var(--border) / .6)" strokeDasharray="4 4" /><Tooltip content={<Tip />} cursor={{ strokeDasharray: '3 3' }} /><Scatter data={data.filter(team => team.conference === 'EAST')} fill="hsl(var(--primary))" isAnimationActive={false}>{data.filter(team => team.conference === 'EAST').map(team => <Cell key={team.code} fill="hsl(var(--primary))" stroke="hsl(var(--card))" strokeWidth={2} />)} </Scatter><Scatter data={data.filter(team => team.conference === 'WEST')} fill="hsl(var(--chart-2))" isAnimationActive={false}>{data.filter(team => team.conference === 'WEST').map(team => <Cell key={team.code} fill="hsl(var(--chart-2))" stroke="hsl(var(--card))" strokeWidth={2} />)}</Scatter></ScatterChart></ResponsiveContainer></div>
+  </section>;
+}

@@ -56,5 +56,23 @@ const nativeWorkbenchSkin = `
 .studio-native :is(.swishiq-builder-donor-card,.swishiq-chemistry-lab__view-choice):has(input:checked){border-color:var(--studio-gold);background:color-mix(in srgb,var(--studio-gold) 9%,var(--studio-surface))}
 .studio-native :is(.swishiq-composite-result-summary--prominent strong,.swishiq-builder-hud strong){color:var(--studio-gold)}
 .studio-native .swishiq-composite-result-summary--prominent strong{font-family:var(--font-display);font-weight:400;font-size:1.5rem}
+.studio-native .sl-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--studio-gold) 10%,var(--studio-surface)),var(--studio-surface));border:1px solid color-mix(in srgb,var(--studio-gold) 22%,transparent)}
+.studio-native .sl-view-nav{border-radius:.75rem;padding:.25rem;gap:.25rem;background:color-mix(in srgb,var(--studio-canvas) 60%,transparent);border:1px solid color-mix(in srgb,var(--studio-line) 40%,transparent)}
+.studio-native .sl-view-tab{border-radius:.6rem;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.studio-native .sl-view-tab:hover{color:var(--studio-gold)}
+.studio-native .sl-view-tab[aria-selected="true"]{background:color-mix(in srgb,var(--studio-gold) 12%,transparent);border-color:color-mix(in srgb,var(--studio-gold) 40%,transparent);color:var(--studio-gold)}
+.studio-native .sl-card{transition:border-color .2s ease,box-shadow .2s ease}
+.studio-native .sl-card:hover{border-color:color-mix(in srgb,var(--studio-gold) 30%,transparent)}
+.studio-native .sl-control{color-scheme:dark}
+.studio-native .sl-control:focus-visible{outline:2px solid var(--studio-gold);outline-offset:2px}
+.studio-native .sl-metric-strip strong,.studio-native .sl-dashboard-grid strong{font-variant-numeric:tabular-nums}
+.studio-native .sl-score-comparison strong{font-family:var(--font-display);font-weight:400;font-size:1.6rem;color:var(--studio-gold)}
+.studio-native .sl-history-item{transition:border-color .2s ease,background .2s ease}
+.studio-native .sl-history-item:hover{border-color:color-mix(in srgb,var(--studio-gold) 35%,transparent);background:color-mix(in srgb,var(--studio-gold) 5%,var(--studio-surface))}
+.studio-native .sl-setup-empty{border-style:dashed}
+.studio-native .sl-source-panel :is(code,dd){font-family:var(--font-mono);overflow-wrap:anywhere}
+.studio-native .sl-dashboard-grid,.studio-native .sl-setup-grid{align-items:start}
+.studio-native .sl-workflow{gap:.5rem}
+.studio-native .sl-stage-dot{transition:background .2s ease,box-shadow .2s ease}
 `;
 export default nativeWorkbenchSkin;

@@ -388,7 +388,7 @@ function simSeries(higher, lower, bestOf, rng, options) {
       homePts: game.homePts, awayPts: game.awayPts,
     });
   }
-  return { winner: hw > lw ? higher : lower, loser: hw > lw ? lower : higher, results };
+  return { winner: hw > lw ? higher : lower, loser: hw > lw ? lower : higher, higher, lower, results };
 }
 
 function bracketPairs(count) {
@@ -409,11 +409,12 @@ function simulatePlayoffs(league, standings, rng, { defenseWeight }) {
   const reach = {};
   const rounds = [];
   const conferenceChamps = [];
+  let playIn = [];
   const conferenceRows = { EAST: standings.filter(row => row.conference === 'EAST'), WEST: standings.filter(row => row.conference === 'WEST') };
   if (Object.values(conferenceRows).some(rows => rows.length < 2)) return null;
   for (const conference of ['EAST', 'WEST']) {
     const rows = standings.filter(row => row.conference === conference).slice(0, 10)
-      .map(row => ({ ...row, team: league.byCode.get(row.code) }));
+      .map((row, index) => ({ ...row, seed: index + 1, team: league.byCode.get(row.code) }));
     let bracketSeeds;
     if (rows.length >= 10) {
       const seed7 = rows[6]; const seed8 = rows[7]; const seed9 = rows[8]; const seed10 = rows[9];
@@ -427,6 +428,11 @@ function simulatePlayoffs(league, standings, rng, { defenseWeight }) {
       for (const row of [seed7, seed8, seed9, seed10]) reach[row.code] = 'playIn';
       reach[w78.code] = 'r1';
       reach[seed8Winner.code] = 'r1';
+      playIn = [
+        { home: seed7.code, homeSeed: 7, away: seed8.code, awaySeed: 8, homePts: g1.homePts, awayPts: g1.awayPts, winner: w78.code, label: 'Seeds 7 vs 8 — winner advances to the first round' },
+        { home: seed9.code, homeSeed: 9, away: seed10.code, awaySeed: 10, homePts: g2.homePts, awayPts: g2.awayPts, winner: w910.code, label: 'Seeds 9 vs 10 — winner stays alive' },
+        { home: l78.code, homeSeed: seed7.code === l78.code ? 7 : 8, away: w910.code, awaySeed: seed9.code === w910.code ? 9 : 10, homePts: g3.homePts, awayPts: g3.awayPts, winner: seed8Winner.code, label: 'Play-in final — winner takes the last bracket seed' },
+      ];
       bracketSeeds = [...rows.slice(0, 6), w78, seed8Winner];
     } else {
       bracketSeeds = rows.slice(0, 8);
@@ -442,20 +448,20 @@ function simulatePlayoffs(league, standings, rng, { defenseWeight }) {
       const winners = [];
       for (let i = 0; i < survivors.length; i += 2) {
         const series = simSeries(survivors[i], survivors[i + 1], 7, rng, options);
-        seriesLog.push({ round: name, higher: series.winner.code, lower: series.loser.code, games: series.results, winner: series.winner.code });
+        seriesLog.push({ round: name, higher: series.higher.code, lower: series.lower.code, higherSeed: series.higher.seed, lowerSeed: series.lower.seed, winner: series.winner.code, games: series.results });
         reach[series.loser.code] = reachNames[Math.min(roundIndex, reachNames.length - 1)];
         winners.push(series.winner);
       }
       survivors = winners;
       roundIndex += 1;
     }
-    rounds.push({ conference, series: seriesLog });
+    rounds.push({ conference, playIn, series: seriesLog });
     conferenceChamps.push(survivors[0]);
   }
   const finals = simSeries(conferenceChamps[0], conferenceChamps[1], 7, rng, options);
   reach[finals.loser.code] = 'finals';
   reach[finals.winner.code] = 'champion';
-  return { rounds, finals: { higher: finals.winner.code, lower: finals.loser.code, games: finals.results, winner: finals.winner.code }, champion: finals.winner.code, reach };
+  return { rounds, finals: { higher: finals.higher.code, lower: finals.lower.code, higherSeed: finals.higher.seed, lowerSeed: finals.lower.seed, games: finals.results, winner: finals.winner.code }, champion: finals.winner.code, reach };
 }
 
 export function actualStandings(source) {

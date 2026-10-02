@@ -19,6 +19,7 @@ export default function useSeasonSim() {
     setProgress(0);
     let agg = null;
     let lastGames = [];
+    let lastBracket = null;
     let champion = null;
     let done = 0;
     const chunk = repeats <= 10 ? 1 : repeats <= 25 ? 2 : 5;
@@ -30,6 +31,7 @@ export default function useSeasonSim() {
           agg = aggregateRepeats(agg, replay);
           lastGames = replay.games.map(({ at, home, away, homePts, awayPts, ot, actual, boxHome, boxAway }) => ({ at, home, away, homePts, awayPts, ot, actual, boxHome, boxAway }));
           if (replay.bracket?.champion) champion = replay.bracket.champion;
+          lastBracket = replay.bracket || lastBracket;
         }
         setProgress(done / repeats);
         if (done < repeats) setTimeout(step, 0);
@@ -37,7 +39,7 @@ export default function useSeasonSim() {
       };
       step();
     });
-    setResult({ summary: summarizeAggregate(agg), games: lastGames, champion, repeats });
+    setResult({ summary: summarizeAggregate(agg), games: lastGames, champion, repeats, bracket: lastBracket });
     setRunning(false);
   }, [setup]);
 

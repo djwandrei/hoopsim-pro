@@ -10,6 +10,7 @@ import LeagueHero from '@/components/season/LeagueHero';
 import LeagueStandings from '@/components/season/LeagueStandings';
 import LeagueSchedule from '@/components/season/LeagueSchedule';
 import LeagueTeamView from '@/components/season/LeagueTeamView';
+import PlayoffBracket from '@/components/season/PlayoffBracket';
 import PlayerStatsLog from '@/components/season/PlayerStatsLog';
 import LeagueLeaders from '@/components/season/LeagueLeaders';
 import LeagueAwards from '@/components/season/LeagueAwards';
@@ -114,6 +115,9 @@ export default function SeasonLab() {
             )}
             {tab === 'standings' && (
               <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} />
+            )}
+            {tab === 'bracket' && (
+              <PlayoffBracket bracket={sim.result?.bracket} onFocusChange={setFocus} />
             )}
             {tab === 'schedule' && (
               <LeagueSchedule league={league} schedule={source.schedule || []} simGames={simGames} focusCode={team.code} onFocusChange={setFocus} />

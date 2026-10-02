@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { paletteForTeam, mix } from '@/components/djhc/basketballPalettes';
+import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { teamThemeVars } from '@/components/game/matchupTheme';
 
@@ -11,55 +11,73 @@ const tip = ({ active, payload, label }) => {
   return (
     <div className="rounded-lg border border-border/50 bg-card px-3 py-2 text-xs shadow-lg">
       <p className="font-semibold text-foreground">{label}</p>
-      <p className="mt-1 font-mono" style={{ color }}>PTS {Number(row?.pts).toFixed(1)}</p>
-      <p className="font-mono" style={{ color }}>REB {Number(row?.reb).toFixed(1)}</p>
-      <p className="font-mono" style={{ color }}>AST {Number(row?.ast).toFixed(1)}</p>
+      <p className="mt-1 font-mono" style={{ color }}>{row?.statLabel} {Number(row?.value).toFixed(1)}</p>
     </div>
   );
 };
 
 const lastName = name => (name || '').split(' ').slice(-1)[0] || '—';
 
-// Top scorers from both rosters — bars take the player's team color, with
-// the official secondary for rebounds and a palette blend for assists.
+const STATS = [
+  { key: 'pts', label: 'PTS', title: 'TOP SCORERS ON THE BOARD' },
+  { key: 'reb', label: 'REB', title: 'TOP REBOUNDERS ON THE BOARD' },
+  { key: 'ast', label: 'AST', title: 'TOP PLAYMAKERS ON THE BOARD' },
+];
+
+// Top 10 players from both rosters for the selected stat — bars take the
+// player's team color, and users switch between points, rebounds, assists.
 export default function PlayerStatsChart({ teamA, teamB }) {
   const { mode = 'dark' } = useCourtTheme() || {};
+  const [stat, setStat] = useState('pts');
+  const statConfig = STATS.find(s => s.key === stat);
   const { data, pA, pB } = useMemo(() => {
     const combined = [
       ...(teamA.roster || []).map(player => ({ ...player, team: teamA.code })),
       ...(teamB.roster || []).map(player => ({ ...player, team: teamB.code })),
-    ].sort((x, y) => y.pts - x.pts).slice(0, 10);
+    ].sort((x, y) => y[stat] - x[stat]).slice(0, 10);
     return {
-      data: combined.map(player => ({ name: lastName(player.name), teamColor: paletteForTeam(player.team).primary, teamSecondary: paletteForTeam(player.team).highlight, teamInk: teamThemeVars(player.team, mode)['--team-ink'], pts: player.pts, reb: player.reb, ast: player.ast })),
+      data: combined.map(player => ({
+        name: lastName(player.name),
+        teamColor: paletteForTeam(player.team).primary,
+        teamInk: teamThemeVars(player.team, mode)['--team-ink'],
+        value: player[stat],
+        statLabel: statConfig.label,
+      })),
       pA: paletteForTeam(teamA.code),
       pB: paletteForTeam(teamB.code),
     };
-  }, [teamA, teamB, mode]);
+  }, [teamA, teamB, mode, stat, statConfig]);
   return (
     <section className="myna-panel p-4" aria-label="Player stats">
-      <p className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.2em]">PLAYER STATS</p>
-      <h3 className="myna-display mt-1 text-2xl">TOP SCORERS ON THE BOARD</h3>
-      <p className="mt-1 text-xs myna-muted">The 10 highest scorers across both rosters, per game — each player's bars carry their team's color.</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.2em]">PLAYER STATS</p>
+          <h3 className="myna-display mt-1 text-2xl">{statConfig.title}</h3>
+          <p className="mt-1 text-xs myna-muted">The 10 best {statConfig.label.toLowerCase()} per game across both rosters — each bar carries the player's team color.</p>
+        </div>
+        <div className="flex gap-1 rounded-xl border border-[var(--myna-border)] bg-[var(--myna-canvas)] p-1">
+          {STATS.map(option => (
+            <button key={option.key} type="button" aria-pressed={stat === option.key} onClick={() => setStat(option.key)}
+              className={`min-h-8 rounded-lg px-3 font-mono text-[11px] font-bold transition-colors ${stat === option.key ? 'bg-[var(--myna-accent)] text-[var(--myna-on-accent)]' : 'text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] myna-muted">
         <span className="flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: pA.primary }} />{teamA.code} players</span>
         <span className="flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: pB.primary }} />{teamB.code} players</span>
-        <span>· PTS = primary · REB = secondary · AST = blend</span>
       </div>
-      <div className="mt-2 h-80" role="img" aria-label="Bar chart of top scorers across both teams, colored by team">
+      <div className="mt-2 h-80" role="img" aria-label={`Bar chart of top ${statConfig.label.toLowerCase()} across both teams, colored by team`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 8, right: 8, left: -14, bottom: 4 }}>
             <CartesianGrid stroke="hsl(var(--border) / .3)" vertical={false} />
             <XAxis dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} interval={0} angle={-45} textAnchor="end" height={58} />
             <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
             <Tooltip content={tip} cursor={{ fill: 'hsl(var(--court-accent) / .08)' }} />
-            <Bar dataKey="pts" isAnimationActive={false} radius={[3, 3, 0, 0]}>
+            <Bar dataKey="value" isAnimationActive={false} radius={[3, 3, 0, 0]}>
               {data.map((row, index) => <Cell key={index} fill={row.teamColor} stroke={row.teamInk} />)}
-            </Bar>
-            <Bar dataKey="reb" isAnimationActive={false} radius={[3, 3, 0, 0]}>
-              {data.map((row, index) => <Cell key={index} fill={row.teamSecondary} stroke={row.teamInk} />)}
-            </Bar>
-            <Bar dataKey="ast" isAnimationActive={false} radius={[3, 3, 0, 0]}>
-              {data.map((row, index) => <Cell key={index} fill={mix(row.teamColor, row.teamSecondary, .5)} stroke={row.teamInk} />)}
             </Bar>
           </BarChart>
         </ResponsiveContainer>

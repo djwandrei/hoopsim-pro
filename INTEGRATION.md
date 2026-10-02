@@ -27,8 +27,7 @@ Copy everything from `dist/` into your site so that:
 - `/tools/swishiq-studio/assets/...` (hashed JS/CSS bundles) are served as-is.
 - `/tools/swishiq-studio/djhc-chrome.css` — shared chrome stylesheet (if your
   site already serves one, it can be skipped/overwritten).
-- `dist/studio-source/` is an unused offline data snapshot — it can be skipped
-  entirely when copying (do not deploy it).
+`dist/` contains only the app itself — no offline data snapshots.
 - `/tools/swishiq-studio/studio-assets/forge/` — two silhouette images used by
   the Forge workbench. Copy them into your site's asset tree (e.g.
   `/assets/forge/`) only if you relocate them; see §5.

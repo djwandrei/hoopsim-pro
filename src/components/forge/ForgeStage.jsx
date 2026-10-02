@@ -1,11 +1,12 @@
 import React from 'react';
 import { Image } from '@/components/ui/image';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
+import { forgeSilhouette } from '@/components/studio/teamAssets';
 
 // User-provided silhouette art: filled black mark for light mode, thin outline
 // for dark mode (inverted to light lines so it reads on the dark canvas).
-const SILHOUETTE_LIGHT = '/studio-assets/forge/basketball-silhouette-light.png';
-const SILHOUETTE_DARK = '/studio-assets/forge/basketball-silhouette-dark.png';
+const SILHOUETTE_LIGHT = forgeSilhouette('light');
+const SILHOUETTE_DARK = forgeSilhouette('dark');
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {

@@ -3,8 +3,9 @@ import { motion } from 'framer-motion';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
 import { Image } from '@/components/ui/image';
 
-const SILHOUETTE_LIGHT = '/studio-assets/forge/basketball-silhouette-light.png';
-const SILHOUETTE_DARK = '/studio-assets/forge/basketball-silhouette-dark.png';
+import { forgeSilhouette } from '@/components/studio/teamAssets';
+const SILHOUETTE_LIGHT = forgeSilhouette('light');
+const SILHOUETTE_DARK = forgeSilhouette('dark');
 const Silhouette = () => (
   <>
     <Image src={SILHOUETTE_LIGHT} alt="" fittingType="fit" className="h-full w-full opacity-15 dark:hidden" />

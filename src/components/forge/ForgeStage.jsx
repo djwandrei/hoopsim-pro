@@ -2,7 +2,7 @@ import React from 'react';
 import { Image } from '@/components/ui/image';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
 
-const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/d00d11c89_generated_image.png';
+const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/97546ab83_generated_image.png';
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {
@@ -35,7 +35,7 @@ export default function ForgeStage({ mode, picks, leagueMax, reveal, selectedKey
     </p>
     <div className="relative z-10 flex flex-1 items-center justify-center px-4 py-6">
       <div className="relative h-72 w-full max-w-xs sm:h-96 sm:max-w-sm">
-        <Image src={SILHOUETTE} alt="" fittingType="fit" className="absolute inset-0 h-full w-full opacity-80" />
+        <Image src={SILHOUETTE} alt="" fittingType="fit" className="absolute inset-0 h-full w-full opacity-90 [mask-image:radial-gradient(78%_78%_at_50%_45%,black_52%,transparent_98%)]" />
         {SKILLS.map(skill => {
           const layout = CHIP_LAYOUT[skill.key] || { side:'left', top:50 };
           const pick = picks[skill.key];

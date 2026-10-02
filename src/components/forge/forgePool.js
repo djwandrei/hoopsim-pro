@@ -13,6 +13,8 @@ export function buildForgePool(source) {
         positions: row.positions || [], headshotPath: row.headshotPath || null,
         games: row.games, minutes: row.minutes,
         pts: value(m.pointsPerGame), ast: value(m.assistsPerGame), reb: value(m.reboundsPerGame), mpg: value(m.minutesPerGame),
+        stl: value(m.stealsPerGame), blk: value(m.blocksPerGame),
+        fg: value(m.fieldGoalPercentage), tpp: value(m.threePointPercentage),
       };
       for (const skill of SKILLS) {
         player[skill.key] = skill.key === 'perimeterD'

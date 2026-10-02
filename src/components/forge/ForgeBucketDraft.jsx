@@ -4,6 +4,7 @@ import { Dices, Play } from 'lucide-react';
 import BucketBoard from '@/components/forge/BucketBoard';
 import BucketCandidates from '@/components/forge/BucketCandidates';
 import BucketSummary from '@/components/forge/BucketSummary';
+import ForgeLeagueTour from '@/components/forge/ForgeLeagueTour';
 
 const BUCKETS = [
   { key: 'pts', label: 'Scoring', metric: 'PPG', weight: 0.28, hint: 'Points per game' },
@@ -59,7 +60,7 @@ export default function ForgeBucketDraft({ league }) {
     {phase === 'setup' && <div className="court-panel p-6">
       <p className="court-kicker">Bucket draft</p>
       <h2 className="mt-1 font-display text-3xl">BUILD A PLAYER FROM REAL SEASONS</h2>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">Fill all six buckets with real player-season donors. Each round draws four cards — target a slot, pick a card, and their observed rate fills the bucket. Complete the board for your build's OVR.</p>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">Fill all six buckets with real player-season donors. Each round draws four cards — target a slot, pick a card, and their observed rate fills the bucket. Complete the board to forge the composite and tour the league.</p>
       <div className="mt-4 flex flex-wrap gap-2">{BUCKETS.map(bucket => <span key={bucket.key} className="rounded-lg border border-border/30 bg-canvas/30 px-3 py-1.5 text-[11px] text-muted-foreground">{bucket.label} <span className="font-mono text-gold">{bucket.metric}</span> · weight {Math.round(bucket.weight * 100)}%</span>)}</div>
       <button type="button" onClick={start} className="mt-5 flex min-h-11 items-center gap-2 rounded-lg bg-primary px-6 text-sm font-semibold text-primary-foreground"><Play className="h-4 w-4" />Start drafting</button>
     </div>}
@@ -79,6 +80,7 @@ export default function ForgeBucketDraft({ league }) {
     {phase === 'complete' && <div className="space-y-4">
       <BucketBoard buckets={BUCKETS} picks={picks} activeKey={null} onActivate={() => {}} onUndo={undo} complete />
       <BucketSummary buckets={BUCKETS} picks={picks} overall={overall} leagueMax={leagueMax} onRestart={start} />
+      <ForgeLeagueTour league={league} buckets={BUCKETS} picks={picks} />
     </div>}
   </section>;
 }

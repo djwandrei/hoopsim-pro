@@ -72,7 +72,7 @@ export default function GamePlayFeed({ game, home, away, onComplete }) {
         <span className="myna-mono text-4xl font-semibold">{score[0]}</span>
         <span className="myna-display text-xl" style={{ color: homePalette.primary }}>{home.code}</span>
       </div>
-      <div className="myna-bar"><span style={{ width: `${pct}%`, background: 'linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-royal)))' }} /></div>
+      <div className="myna-bar"><span style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${awayPalette.primary}, ${homePalette.primary})` }} /></div>
 
       <div ref={listRef} className="mt-3 h-64 space-y-1.5 overflow-y-auto pr-1">
         {visible.map((event, i) => {

@@ -50,7 +50,7 @@ export default function GameLab() {
     <StudioShell active="/game">
       <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: pick the board, review the intel and charts, and sim single games and 7-game series with team-colored scoreboards and box scores." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">
-        <MyNbaHub focusCode={home.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
+        <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&
           <div className="space-y-4">
               {breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: Boolean(sim.game) })}

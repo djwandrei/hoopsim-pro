@@ -2,7 +2,9 @@ import React from 'react';
 import { Image } from '@/components/ui/image';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
 
-const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/b207e0f44_generated_image.png';
+// Flat black background + gold figure: mix-blend-screen erases the black so the
+// silhouette floats directly over the canvas between the panels.
+const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/b178740f7_generated_image.png';
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {

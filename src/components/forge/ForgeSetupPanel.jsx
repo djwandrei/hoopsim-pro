@@ -1,17 +1,12 @@
 import React from 'react';
 import { Play } from 'lucide-react';
 import { SKILLS, GROUPS } from '@/components/forge/bapSkills';
-import { Image } from '@/components/ui/image';
-
-const SILHOUETTE = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/b207e0f44_generated_image.png';
 
 // Shared Build-A-Bucket-style setup screen used by both Forge draft modes:
-// silhouette hero, Guard/Big toggle, the nine skill chips, and the start action.
+// Guard/Big toggle, the nine skill chips, and the start action.
 export default function ForgeSetupPanel({ kicker, title, intro, group, onGroup, poolCount, onStart, respinNote }) {
   return <div className="court-panel court-panel-hover p-6">
     <div className="relative mx-auto max-w-xl text-center">
-      <div className="absolute inset-x-10 top-4 bottom-12 rounded-full" style={{ background:'radial-gradient(circle, hsl(var(--court-accent) / 0.14), transparent 70%)' }} />
-      <Image src={SILHOUETTE} alt="" fittingType="fit" className="relative mx-auto h-64 w-52 mix-blend-screen" />
       <p className="bcast-kicker relative mt-3">{kicker}</p>
       <h2 className="broadcast-gradient-text relative mt-1 font-display text-3xl">{title}</h2>
       <p className="relative mt-3 text-sm leading-relaxed text-muted-foreground">{intro}</p>

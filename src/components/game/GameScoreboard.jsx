@@ -7,8 +7,8 @@ function Half({ team, pts, won, label, side }) {
   return (
     <div className={`p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ background: won ? `linear-gradient(160deg, ${palette.primary}55, transparent 80%)` : 'transparent' }}>
       <TeamMark code={team.code} name={team.name} className="mx-auto h-14 w-14 rounded-2xl border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
-      <p className="myna-mono mt-2 text-5xl">{pts}</p>
-      <p className="myna-display mt-1 text-lg">{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
+      <p className="myna-mono mt-2 text-5xl" style={{ color: palette.highlight }}>{pts}</p>
+      <p className="myna-display mt-1 text-lg" style={{ color: palette.highlight }}>{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
     </div>
   );
 }

@@ -1,16 +1,19 @@
 import React from 'react';
-import { paletteForTeam, themeFor } from '@/components/djhc/basketballPalettes';
+import { mix, paletteForTeam, themeFor } from '@/components/djhc/basketballPalettes';
 
 const SEASON_TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM'], ['log', 'PLAYER LOG']];
 const GAME_TABS = [['matchup', 'MATCHUP'], ['game', 'GAME'], ['series', 'SERIES']];
 
-// MyNBA-style league hub shell: every panel is themed by the focused team's palette.
-export default function MyNbaHub({ focusCode, tab, onTab, tabs = SEASON_TABS, teamPicker, children }) {
+// MyNBA-style league hub shell: every panel is themed by the focused team's
+// palette. When an opposing team is supplied (Game Lab), the canvas blends
+// both teams' colors and away-side accents are exposed as extra variables.
+export default function MyNbaHub({ focusCode, awayCode, tab, onTab, tabs = SEASON_TABS, teamPicker, children }) {
   const palette = paletteForTeam(focusCode);
+  const awayPalette = awayCode ? paletteForTeam(awayCode) : null;
   const theme = themeFor(palette, 'dark');
   const vars = {
-    '--myna-canvas': theme.canvas,
-    '--myna-surface': theme.surface,
+    '--myna-canvas': awayPalette ? mix(theme.canvas, awayPalette.primary, 0.07) : theme.canvas,
+    '--myna-surface': awayPalette ? mix(theme.surface, awayPalette.primary, 0.08) : theme.surface,
     '--myna-raised': theme.raised,
     '--myna-text': theme.text,
     '--myna-muted': theme.muted,
@@ -20,6 +23,9 @@ export default function MyNbaHub({ focusCode, tab, onTab, tabs = SEASON_TABS, te
     '--myna-primary': palette.primary,
     '--myna-hi': palette.highlight,
     '--myna-trim': palette.trim,
+    '--myna-primary-away': awayPalette?.primary,
+    '--myna-hi-away': awayPalette?.highlight,
+    '--myna-trim-away': awayPalette?.trim,
   };
   return (
     <section className="myna space-y-4 p-4 sm:p-5" style={vars} aria-label="League hub">

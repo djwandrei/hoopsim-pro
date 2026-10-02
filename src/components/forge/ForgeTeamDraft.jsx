@@ -179,9 +179,9 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
         />}
         {pickMode
           ? <ForgeRosterBoard team={activeTeam} roster={activeTeam ? available(activeTeam.code) : []} selectedRef={reveal ? reveal.playerRef : null} onPick={selectPlayer} />
-          : <ForgePlayerShowcase player={reveal} note={revealNote} />}
+          : <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} spinning={spinning} onAssign={assign} onUndo={undo} />}
       </div>
-      <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} spinning={spinning} onAssign={assign} onUndo={undo} />
+      {!pickMode && <ForgePlayerShowcase player={reveal} note={revealNote} />}
     </div>}
     {phase === 'simulating' && <div className="court-panel p-10 text-center">
       <Loader2 className="mx-auto h-8 w-8 animate-spin text-gold" />

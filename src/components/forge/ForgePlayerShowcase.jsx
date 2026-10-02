@@ -19,15 +19,19 @@ export default function ForgePlayerShowcase({ player, note }) {
       <p className="court-kicker">Player showcase</p>
       <p className="mt-2 max-w-sm text-sm text-muted-foreground">Spin the reels — the revealed player's full stat line lands here.</p>
     </div>}
-    {player && <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-5">
-      {SKILLS.map(skill => <div key={skill.key} className="rounded-xl border border-border/25 bg-raised/40 px-3 py-2.5 text-center">
-        <p className="font-display text-xl leading-tight">{skill.fmt(player[skill.key])}</p>
-        <p className="mt-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">{skill.label} · {skill.metric}</p>
-      </div>)}
-      <div className="rounded-xl border border-border/25 bg-raised/40 px-3 py-2.5 text-center">
-        <p className="font-display text-xl leading-tight">{player.games}</p>
-        <p className="mt-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">Games · GP</p>
-      </div>
-    </div>}
+    {player && <table className="mt-4 w-full text-center">
+      <thead>
+        <tr>
+          {SKILLS.map(skill => <th key={skill.key}>{skill.label}<span className="block text-[8px] font-normal normal-case tracking-normal opacity-70">{skill.metric}</span></th>)}
+          <th>GP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {SKILLS.map(skill => <td key={skill.key} className="font-display text-lg leading-tight">{skill.fmt(player[skill.key])}</td>)}
+          <td className="font-display text-lg leading-tight">{player.games}</td>
+        </tr>
+      </tbody>
+    </table>}
   </section>;
 }

@@ -35,6 +35,13 @@ const COPY = {
   },
 };
 
+export const MODE_STEPS = {
+  wheel: ['Spin team & player', 'Assign a stat chip', 'Forge & tour'],
+  pick: ['Pick the skill', 'Spin team & player', 'Forge & tour'],
+  team: ['Spin for each player', 'Place in the rotation', 'Chase 98-0'],
+  teamPick: ['Spin for a team', 'Pick any roster player', 'Chase 98-0'],
+};
+
 export default function ForgeDraftGame({ source, league, mode }) {
   const copy = COPY[mode] || COPY.wheel;
   const allPool = useMemo(() => buildForgePool(source), [source]);
@@ -149,7 +156,7 @@ export default function ForgeDraftGame({ source, league, mode }) {
     : `${openSkills.length} slots open · tap a lit chip`;
 
   return <section aria-label="Forge draft game" className="space-y-4">
-    {phase === 'setup' && <ForgeSetupPanel kicker={copy.kicker} title={copy.title} intro={copy.intro} group={group} onGroup={setGroup} poolCount={pool.length} onStart={start} />}
+    {phase === 'setup' && <ForgeSetupPanel kicker={copy.kicker} title={copy.title} intro={copy.intro} group={group} onGroup={setGroup} poolCount={pool.length} onStart={start} steps={MODE_STEPS[mode]} />}
     {phase === 'drafting' && <div className="space-y-4">
       <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,13.5rem)] xl:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,15rem)]">
       <ForgeReelPanel
@@ -173,8 +180,10 @@ export default function ForgeDraftGame({ source, league, mode }) {
       <ForgePlayerShowcase player={reveal} note={revealNote} />
     </div>}
     {phase === 'complete' && <div className="space-y-4">
-      <ForgeBuildWheel picks={picks} leagueMax={leagueMax} overall={overall} />
-      <BucketBoard buckets={SKILLS} picks={picks} activeKey={null} onUndo={undo} complete leagueMax={leagueMax} showGrades={showGrades} />
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,22rem),minmax(0,1fr)]">
+        <div className="court-panel p-5"><p className="bcast-kicker">Attribute wheel</p><div className="mt-3"><ForgeBuildWheel picks={picks} leagueMax={leagueMax} overall={overall} /></div></div>
+        <BucketBoard buckets={SKILLS} picks={picks} activeKey={null} onUndo={undo} complete leagueMax={leagueMax} showGrades={showGrades} />
+      </div>
       <BucketSummary buckets={SKILLS} picks={picks} overall={overall} leagueMax={leagueMax} onRestart={start} />
       <ForgeLeagueTour league={league} buckets={SKILLS} picks={picks} />
     </div>}

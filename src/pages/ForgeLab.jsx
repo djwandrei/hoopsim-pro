@@ -6,6 +6,7 @@ import useSeasonSource from '@/hooks/useSeasonSource';
 import ForgeBucketDraft from '@/components/forge/ForgeBucketDraft';
 import ForgePickDraft from '@/components/forge/ForgePickDraft';
 import ForgeTeamDraft from '@/components/forge/ForgeTeamDraft';
+import { MODE_STEPS } from '@/components/forge/ForgeDraftGame';
 
 const DRAFT_MODES = [
   { key:'wheel', label:'Wheel Draft', desc:'Spin the reels for team & player, tap a stat chip to assign it — keep or respin the offered player-season, then the finished build tours the league.' },
@@ -13,13 +14,6 @@ const DRAFT_MODES = [
   { key:'team', label:'Team Forge · 98-0', desc:'Spin for a player every round, choose where they slot into your eight-man rotation, then simulate the season and playoffs — chase the flawless 98-0.' },
   { key:'teamPick', label:'Team Forge · Pick', desc:'Spin for a random team, then choose any player from their roster for your rotation — fill all eight spots and simulate the chase for the flawless 98-0.' },
 ];
-
-const MODE_STEPS = {
-  wheel: ['Spin team & player', 'Assign a stat chip', 'Forge & tour'],
-  pick: ['Pick the skill', 'Spin team & player', 'Forge & tour'],
-  team: ['Spin for each player', 'Place in the rotation', 'Chase 98-0'],
-  teamPick: ['Spin for a team', 'Pick any roster player', 'Chase 98-0'],
-};
 
 export default function ForgeLab() {
   const data = useSeasonSource();

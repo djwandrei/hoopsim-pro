@@ -20,9 +20,9 @@ function buildRows(league, summary, actualRecords, conference) {
 // Seed zones: 1–6 playoffs, 7–10 play-in, everything else lottery.
 const zoneOf = index => (index < 6 ? 'playoff' : index < 10 ? 'playin' : 'lottery');
 const ZONE_STYLE = {
-  playoff: { badgeBorder: 'var(--myna-accent)', tint: 'color-mix(in srgb, var(--myna-accent) 7%, transparent)', label: 'Playoff', dot: 'var(--myna-accent)' },
-  playin: { badgeBorder: 'var(--myna-hi)', tint: 'color-mix(in srgb, var(--myna-hi) 6%, transparent)', label: 'Play-in', dot: 'var(--myna-hi)' },
-  lottery: { badgeBorder: 'var(--myna-border)', tint: 'transparent', label: 'Lottery', dot: 'var(--myna-border)' },
+  playoff: { badgeBorder: 'var(--myna-accent)', tint: 'color-mix(in srgb, var(--myna-accent) 7%, transparent)', label: 'Playoff', dot: 'var(--myna-accent)', detail: 'Seeds 1–6 · automatic berth' },
+  playin: { badgeBorder: 'var(--myna-hi)', tint: 'color-mix(in srgb, var(--myna-hi) 6%, transparent)', label: 'Play-in', dot: 'var(--myna-hi)', detail: 'Seeds 7–10 · play-in tournament' },
+  lottery: { badgeBorder: 'var(--myna-border)', tint: 'transparent', label: 'Lottery', dot: 'var(--myna-border)', detail: 'Seeds 11+ · lottery odds' },
 };
 const ZONE_FILTERS = [['all', 'All'], ['playoff', 'Playoffs'], ['playin', 'Play-in'], ['lottery', 'Lottery']];
 
@@ -48,7 +48,7 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
             <div className="flex flex-wrap items-center gap-3 border-y border-[var(--myna-border)] bg-[var(--myna-canvas)] px-4 py-1.5">
               {['playoff', 'playin'].map(zoneKey => (
                 <span key={zoneKey} className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.16em] myna-muted">
-                  <span className="inline-block h-2 w-2 rounded-full border" style={{ borderColor: ZONE_STYLE[zoneKey].dot }} />
+                  <span className="inline-block h-2 w-2 rounded-full" style={{ background: ZONE_STYLE[zoneKey].dot }} />
                   {ZONE_STYLE[zoneKey].label}
                 </span>
               ))}
@@ -82,16 +82,25 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                     const teamColor = paletteForTeam(entry.team.code).primary;
                     const isFocus = entry.team.code === focusCode;
                     const netSigned = entry.net > 0 ? '+' : '';
+                    const zoneBreak = index > 0 && shown[index - 1].zone !== zoneKey;
                     return (
+                      <React.Fragment key={entry.team.code}>
+                      {zoneBreak && <tr className="border-t-2" style={{ borderColor: style.badgeBorder }}>
+                        <td colSpan={hasSim ? 8 : 6} className="px-2.5 py-1">
+                          <span className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.22em]" style={{ color: style.badgeBorder }}>
+                            <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: style.badgeBorder }} />
+                            {style.label} cutoff · {style.detail}
+                          </span>
+                        </td>
+                      </tr>}
                       <tr
-                        key={entry.team.code}
                         className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]"
                         style={{ background: isFocus ? `color-mix(in srgb, ${teamColor} 14%, ${style.tint})` : style.tint }}
                       >
-                        <td className={`${cell} text-center`} style={isFocus ? { boxShadow: `inset 3px 0 0 ${teamColor}` } : undefined} title={style.label}>
+                        <td className={`${cell} text-center`} style={{ boxShadow: `inset 3px 0 0 ${isFocus ? teamColor : style.badgeBorder}` }} title={style.label}>
                           <span
                             className="myna-mono inline-flex h-6 w-6 items-center justify-center rounded-full border text-[10px] font-bold"
-                            style={{ borderColor: style.badgeBorder, color: zoneKey === 'lottery' ? 'var(--myna-muted)' : style.badgeBorder }}
+                            style={{ borderColor: style.badgeBorder, background: `color-mix(in srgb, ${style.badgeBorder} 12%, transparent)`, color: zoneKey === 'lottery' ? 'var(--myna-muted)' : style.badgeBorder }}
                           >
                             {rows.indexOf(entry) + 1}
                           </span>
@@ -116,6 +125,7 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                         {hasSim && <td className={`${cell} myna-mono`}>{Math.round((entry.row?.playoff || 0) * 100)}%</td>}
                         {hasSim && <td className={`${cell} myna-mono`}>{Math.round((entry.row?.title || 0) * 100)}%</td>}
                       </tr>
+                      </React.Fragment>
                     );
                   })}
                 </tbody>

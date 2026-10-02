@@ -44,9 +44,12 @@ export default function ForgeReelPanel({
       {filled.map(skill => {
         const pick = picks[skill.key];
         const ratio = leagueMax[skill.key] ? pick.value / leagueMax[skill.key] : 0;
-        return <div key={skill.key} className="slot-pop flex items-center gap-2 rounded-lg border border-border/20 bg-canvas/40 px-2.5 py-1.5">
-          <span className="flex-1 text-[10px] font-semibold uppercase tracking-wider">{skill.label}</span>
-          <span className={`flex h-6 min-w-6 items-center justify-center rounded-full border px-1 font-mono text-[10px] font-bold ${TONE_CHIP[gradeTone(ratio)]}`}>{showGrades ? gradeFor(ratio) : skill.fmt(pick.value)}</span>
+        return <div key={skill.key} className="slot-pop rounded-lg border border-border/20 bg-canvas/40 px-2.5 py-1.5">
+          <div className="flex items-center gap-2">
+            <span className="flex-1 text-[10px] font-semibold uppercase tracking-wider">{skill.label}</span>
+            <span className={`flex h-6 min-w-6 items-center justify-center rounded-full border px-1 font-mono text-[10px] font-bold ${TONE_CHIP[gradeTone(ratio)]}`}>{showGrades ? gradeFor(ratio) : skill.fmt(pick.value)}</span>
+          </div>
+          <div className="mt-1 h-1 overflow-hidden rounded-full bg-canvas/70"><span className="block h-full rounded-full bg-gold" style={{ width: `${Math.max(3, Math.round(ratio * 100))}%` }} /></div>
         </div>;
       })}
       {!filled.length && <p className="px-1 py-2 text-center text-[10px] leading-relaxed text-muted-foreground">No skills locked yet — spin the reels.</p>}

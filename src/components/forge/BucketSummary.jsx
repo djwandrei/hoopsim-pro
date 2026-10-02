@@ -24,6 +24,7 @@ export default function BucketSummary({ buckets, picks, overall, leagueMax, onRe
         <PlayerPortrait player={pick.player} className="h-10 w-10 shrink-0" />
         <div className="min-w-0 w-40 shrink-0"><p className="truncate text-xs font-semibold">{pick.player.name}</p><p className="flex items-center gap-1 text-[10px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-7 w-7" />{pick.player.teamCode}</p></div>
         <div className="min-w-0 flex-1"><div className="flex items-center justify-between text-[10px] text-muted-foreground"><span>{bucket.label} · {bucket.metric}</span><span className="font-mono">{bucket.fmt(pick.value)} · {pct}% of pool max</span></div><div className="mt-1 h-2 overflow-hidden rounded-full bg-canvas/60"><div className="h-full rounded-full bg-gradient-to-r from-gold/60 to-gold" style={{ width: `${Math.max(4, pct)}%` }} /></div></div>
+        <span className="shrink-0 rounded-md border border-gold/30 bg-gold/10 px-1.5 py-0.5 font-mono text-[10px] font-bold text-gold">{gradeFor(pick.value / leagueMax[bucket.key])}</span>
       </div>;
     })}</div>
     <p className="mt-4 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground"><Trophy className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />A casual draft game over observed player-season rows — the OVR is a weighted share of pool maxima, not a scouting grade or a validated forecast.</p>

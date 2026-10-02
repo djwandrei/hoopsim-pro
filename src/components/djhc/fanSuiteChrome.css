@@ -8,3 +8,9 @@ body.court-themed[data-fan-tools-navigation='true'] .site-header.fan-suite-heade
 .studio-workspace > .footer.site-footer { z-index:40; }
 .site-nav-backdrop[hidden] { display:none !important; }
 .fan-suite-team-mark[hidden] { display:none !important; }
+/* Studio hero team mark — exact site contract: one opaque decorative logo
+   layer behind the copy, rotated, faded per viewport. */
+.studio-palette-hero.swishiq-hero { isolation:isolate; }
+.swishiq-hero__team-logo { position:absolute; z-index:0; top:-18%; left:clamp(0rem,4vw,3rem); width:min(38vw,24rem); height:140%; object-fit:contain; opacity:.58; pointer-events:none; transform:rotate(-8deg) translateX(-8%); }
+@media (max-width:760px) { .swishiq-hero__team-logo { top:-8%; left:clamp(.25rem,4vw,1.25rem); width:min(38vw,14rem); height:112%; opacity:.46; } }
+@media (max-width:340px) { .swishiq-hero__team-logo { top:3%; left:.5rem; width:min(12rem,58vw); height:94%; transform:rotate(-4deg); } }

@@ -3,6 +3,7 @@ export const SCATTER_METRICS = [['pts','PPG'],['ast','APG'],['reb','RPG'],['stl'
 export const SCATTER_LABEL = key => SCATTER_METRICS.find(([k]) => k === key)?.[1] || key;
 const PCT_METRICS = new Set(['fg','three','ft','ts','efg','ftr','threeRate']);
 export const scatterText = (key,value) => !Number.isFinite(value) ? '—' : PCT_METRICS.has(key) ? `${(value*100).toFixed(1)}%` : value.toFixed(1);
+export const scatterTick = (key,value) => !Number.isFinite(value) ? '' : PCT_METRICS.has(key) ? `${Math.round(value*100)}%` : Number.isInteger(value) ? String(value) : value.toFixed(1);
 export function buildLeagueAtlas(rows) {
   const pools = new Map();
   const poolFor = key => {

@@ -23,7 +23,7 @@ export default function ChemistryLab() {
     <div className="space-y-4 lg:col-span-2"><LineupCourt lineup={lineup} team={team} onRemove={toggle} />
     <nav aria-label="Chemistry analysis views" className="flex flex-wrap gap-2">{[['comparison','Player comparison'],['observed','Observed lineup']].map(([key,label]) => <button type="button" key={key} aria-pressed={view === key} onClick={() => setView(key)} className={view === key ? 'rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs text-gold' : 'rounded-lg border border-border px-4 py-2 text-xs text-muted-foreground'}>{label}</button>)}</nav>
     {view === 'comparison' && (lineup.length ? <LineupEvidence lineup={lineup} year={year} /> : <WorkspaceEmpty title="COMPARE THE EVIDENCE">Select up to five player profiles. Individual statistics do not establish shared-lineup performance.</WorkspaceEmpty>)}
-    {view === 'observed' && <WorkspaceEmpty title="OBSERVED LINEUP DATA NOT SUPPLIED">This source has player and roster records, but no exact-five shared possessions or minutes. Coverage and denominators are unavailable, not zero.</WorkspaceEmpty>}
+    {view === 'observed' && <WorkspaceEmpty title="ORIGINAL LINEUP EXPLORER NOT YET PORTED">The real site publishes observed-combination artifacts, but this version’s current display snapshot does not load them yet. No substitute chemistry score or invented lineup result is shown.</WorkspaceEmpty>}
     </div></div>}
   </main></StudioShell>;
 }

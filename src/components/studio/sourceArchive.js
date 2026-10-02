@@ -4,7 +4,7 @@ export async function readArchive(file, expectedHash) {
   const key = `${file}:${expectedHash || ''}`;
   if (requests.has(key)) return requests.get(key);
   const request = (async () => {
-    const response = await fetch(`${ROOT}${file}?v=20261002-core1`, { cache:'force-cache' });
+    const response = await fetch(`${ROOT}${file}?v=20261002-core2`, { cache:'force-cache' });
     if (!response.ok) throw new Error('The published Studio archive could not be loaded.');
     const bytes = await response.arrayBuffer();
     if (expectedHash) {

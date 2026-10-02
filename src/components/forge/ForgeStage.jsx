@@ -29,10 +29,7 @@ export default function ForgeStage({ mode, picks, leagueMax, reveal, selectedKey
     }
     return best;
   })();
-  return <section aria-label="Build stage" className="relative flex min-h-[24rem] flex-col self-stretch overflow-hidden rounded-2xl border border-border/25 lg:min-h-[32rem]" style={{ background: 'radial-gradient(130% 80% at 50% -10%, hsl(var(--court-royal) / 0.22), transparent 60%), radial-gradient(90% 55% at 50% 105%, hsl(var(--court-accent) / 0.14), transparent 65%), hsl(var(--court-canvas))' }}>
-    <p className="relative z-10 pt-4 text-center font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground hidden">
-      {mode === 'pick' ? 'Tap a chip to arm · spin · tap again to keep' : 'Spin the reels · tap a lit chip to take that stat'}
-    </p>
+  return <section aria-label="Build stage" className="relative flex flex-1 flex-col self-stretch items-center justify-center">
     <div className="relative z-10 flex flex-1 items-center justify-center px-4 py-6">
       <div className="relative h-72 w-full max-w-xs sm:h-96 sm:max-w-sm">
         <Image src={SILHOUETTE} alt="" fittingType="fit" className="absolute inset-0 h-full w-full opacity-90 [mask-image:radial-gradient(78%_78%_at_50%_45%,black_52%,transparent_98%)]" />

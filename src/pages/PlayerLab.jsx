@@ -3,14 +3,9 @@ import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
 import WorkspaceEmpty from '@/components/studio/WorkspaceEmpty';
-import BlueprintRoster from '@/components/players/BlueprintRoster';
-import BlueprintPlayerCard from '@/components/players/BlueprintPlayerCard';
-import BlueprintComparison from '@/components/players/BlueprintComparison';
-import ScoutChallenge from '@/components/players/ScoutChallenge';
-import { buildBlueprintRows } from '@/components/players/blueprintModel';
-import BlueprintSelectionRail from '@/components/players/BlueprintSelectionRail';
-import BlueprintControls from '@/components/players/BlueprintControls';
 import LeagueAtlas from '@/components/players/LeagueAtlas';
+import PlayerHub from '@/components/players/PlayerHub';
+import { buildBlueprintRows } from '@/components/players/blueprintModel';
 import { buildLeagueAtlas } from '@/components/players/leagueAtlas';
 import useSeasonSource from '@/hooks/useSeasonSource';
 
@@ -18,13 +13,10 @@ export default function PlayerLab() {
   const { year,setYear,years,source,state,error,retry } = useSeasonSource();
   const [selectedIds,setSelectedIds] = useState([]);
   const [phase,setPhase] = useState('regular');
-  const [view,setView] = useState('profiles');
   const roster = useMemo(() => source ? buildBlueprintRows(source,'regular') : [],[source]);
   const atlas = useMemo(() => buildLeagueAtlas(roster),[roster]);
   const phaseRows = useMemo(() => source ? buildBlueprintRows(source,phase) : [],[source,phase]);
   const selected = selectedIds.map(id => phaseRows.find(row => row.id === id) || (roster.find(row => row.id === id) && { ...roster.find(row => row.id === id),phase,available:false,stats:{},totals:{},statsSource:'No observed record for this phase' })).filter(Boolean);
-  const activeView = selected.length < 2 || (view === 'scout' && phase !== 'regular') ? view === 'atlas' ? 'atlas' : 'profiles' : view;
   const toggle = row => setSelectedIds(current => current.includes(row.id) ? current.filter(id => id !== row.id) : current.some(id => id.startsWith(`${row.playerRef}:`)) ? current.map(id => id.startsWith(`${row.playerRef}:`) ? row.id : id) : current.length < 4 ? [...current,row.id] : current);
-  const signature = `${year}:${phase}:${selectedIds.join('|')}`;
-  return <StudioShell active="/players"><WorkbenchHeader title="PLAYER BLUEPRINT" description="Explore the real site's exact-season player profiles, compare up to four players, then put your scouting instincts to the test." steps={['Scouting board','Profiles & comparison','League atlas','Scout challenge']} current={selected.length ? activeView === 'scout' ? 3 : activeView === 'atlas' ? 2 : 1 : 0} state={state} status={selected.length ? `${selected.length} player${selected.length > 1 ? 's' : ''} selected` : 'Choose up to four players'} /><main className="mx-auto max-w-6xl space-y-5 px-4 py-6"><SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value);setSelectedIds([]);setView('profiles'); }} onRetry={retry} phase={phase} />{state === 'ready' && <><BlueprintSelectionRail players={selected} onRemove={toggle}/><BlueprintRoster rows={roster} selected={selected} onSelect={toggle} /><BlueprintControls phase={phase} onPhaseChange={setPhase} count={selected.length} view={activeView} onViewChange={setView} onClear={()=>setSelectedIds([])}/>{!selected.length ? <WorkspaceEmpty title="BUILD YOUR SCOUTING BOARD">Choose players above. Review their real portraits, sixteen observed stat panels, biographies and trophy cases, or compare two to four in the scouting challenge.</WorkspaceEmpty> : activeView === 'atlas' ? <LeagueAtlas rows={roster} atlas={atlas} selected={selected} onSelect={toggle} /> : activeView === 'comparison' ? <BlueprintComparison players={selected} atlas={atlas} /> : activeView === 'scout' ? <ScoutChallenge key={signature} players={selected} /> : <div className={selected.length === 1 ? 'grid gap-5' : 'grid gap-5 lg:grid-cols-2'}>{selected.map(player => <BlueprintPlayerCard key={`${player.id}:${phase}`} player={player} atlas={atlas} onRemove={toggle} />)}</div>}</>}</main></StudioShell>;
+  return <StudioShell active="/players"><WorkbenchHeader title="PLAYER BLUEPRINT" description="A season-long analytics hub: read the league at a glance in the atlas, then pin any player to open their full observed dossier." state={state} status={selected.length ? `${selected.length} player${selected.length > 1 ? 's' : ''} pinned` : 'Pin players from the index or atlas'} /><main className="mx-auto max-w-6xl space-y-5 px-4 py-6"><SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={value => { setYear(value);setSelectedIds([]); }} onRetry={retry} phase={phase} />{state === 'ready' && <><LeagueAtlas rows={roster} atlas={atlas} selected={selected} onSelect={toggle} /><PlayerHub roster={roster} phaseRows={phaseRows} phase={phase} onPhaseChange={setPhase} selected={selected} onToggle={toggle} onClear={() => setSelectedIds([])} atlas={atlas} /></>}{state !== 'ready' && <WorkspaceEmpty title="LEAGUE SOURCE NEEDED">Load a verified season source above to unlock the league atlas and the player dossier explorer.</WorkspaceEmpty>}</main></StudioShell>;
 }

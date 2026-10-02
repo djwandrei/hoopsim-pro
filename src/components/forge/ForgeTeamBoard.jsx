@@ -2,36 +2,40 @@ import React from 'react';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
 import TeamMark from '@/components/studio/TeamMark';
 
-// Rotation board: a starting five row above a bench unit row. After a spin,
-// open slots light up — matching positions glow solid as a suggested fit.
-export default function ForgeTeamBoard({ slots, picks, reveal, revealPositions = [], spinning, onAssign, onUndo }) {
+// Depth chart: one clean row per rotation slot — position tag, player, role
+// notes — with the starting five above the bench unit. After a spin, open
+// slots light up; matching positions glow as a suggested fit.
+export default function ForgeTeamBoard({ slots, picks, reveal, revealPositions = [], spinning, onAssign }) {
   const filled = slots.filter(slot => picks[slot.key]).length;
-  const starters = slots.filter(slot => slot.starter);
-  const bench = slots.filter(slot => !slot.starter);
 
-  const slotButton = slot => {
+  const slotRow = slot => {
     const pick = picks[slot.key];
     const live = Boolean(reveal) && !pick && !spinning;
     const fit = live && revealPositions.includes(slot.key);
-    if (pick) return <div key={slot.key} className="slot-pop flex w-full flex-col items-center gap-1 rounded-xl border border-gold/25 bg-gradient-to-b from-raised/60 to-canvas/40 p-2.5">
-      <span className="self-start rounded-md border border-gold/30 bg-gold/10 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.15em] text-gold">{slot.label} · {slot.minutes} MIN</span>
-      <PlayerPortrait player={pick.player} className="h-14 w-14" />
-      <span className="w-full truncate text-center text-[11px] font-bold leading-tight">{pick.player.name}</span>
-      <span className="flex items-center gap-1 font-mono text-[9px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-3.5 w-3.5" />{pick.player.teamCode} · {pick.player.pts?.toFixed(1)}p</span>
+    if (pick) return <div key={slot.key} className="slot-pop flex items-center gap-3 rounded-lg border border-border/30 bg-raised/40 px-2.5 py-2">
+      <span className="w-12 shrink-0 rounded-md border border-gold/25 bg-gold/10 py-1 text-center font-mono text-[9px] font-semibold uppercase tracking-wider text-gold">{slot.label}</span>
+      <PlayerPortrait player={pick.player} className="h-9 w-9" />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[12px] font-semibold leading-tight">{pick.player.name}</p>
+        <p className="flex items-center gap-1 font-mono text-[9px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-3 w-3" />{pick.player.teamCode} · {pick.player.pts?.toFixed(1)} PPG</p>
+      </div>
+      <span className="shrink-0 rounded-md border border-border/25 bg-canvas/60 px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">{slot.minutes} min</span>
     </div>;
-    return <button key={slot.key} type="button" disabled={!live} onClick={() => onAssign(slot.key)} className={`flex min-h-28 w-full flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed p-2.5 transition-colors ${fit ? 'cursor-pointer border-gold/70 bg-gold/15 shadow-[0_0_16px_rgba(233,185,73,0.2)]' : live ? 'cursor-pointer border-gold/60 bg-gold/5 wheel-chip-active' : 'cursor-default border-border/40 bg-canvas/30'}`}>
-      <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">{slot.label}</span>
-      {live ? <span className="rounded-md border border-gold/60 bg-gold/10 px-2 py-1 text-center text-[10px] font-semibold uppercase tracking-wider text-gold">{fit ? '★ Fit — place here' : 'Place here'}</span>
-        : <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground/60">{slot.minutes} min · open</span>}
+    return <button key={slot.key} type="button" disabled={!live} onClick={() => onAssign(slot.key)}
+      className={`flex min-h-14 w-full items-center gap-3 rounded-lg border border-dashed px-2.5 py-2 text-left transition-colors ${fit ? 'cursor-pointer border-gold/70 bg-gold/10 shadow-[0_0_14px_rgba(233,185,73,0.16)]' : live ? 'cursor-pointer border-gold/50 bg-gold/5 wheel-chip-active' : 'cursor-default border-border/30 bg-canvas/20'}`}>
+      <span className={`w-12 shrink-0 rounded-md border py-1 text-center font-mono text-[9px] font-semibold uppercase tracking-wider ${fit || live ? 'border-gold/40 bg-gold/10 text-gold' : 'border-border/25 text-muted-foreground'}`}>{slot.label}</span>
+      <p className={`min-w-0 flex-1 text-[11px] font-semibold uppercase tracking-wider ${fit || live ? 'text-gold' : 'text-muted-foreground/60'}`}>{fit ? '★ Suggested fit — place here' : live ? 'Place here' : 'Open'}</p>
+      <span className="shrink-0 rounded-md border border-border/25 bg-canvas/40 px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-muted-foreground/70">{slot.minutes} min</span>
     </button>;
   };
 
-  const section = (label, list, grid) => <React.Fragment>
+  const section = (label, list) => <React.Fragment>
     <div className="mt-4 flex items-center gap-2">
       <span className="court-kicker">{label}</span>
       <span className="h-px flex-1 bg-gradient-to-r from-gold/40 to-transparent" />
+      <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">{list.filter(slot => picks[slot.key]).length}/{list.length}</span>
     </div>
-    <div className={`mt-2 ${grid}`}>{list.map(slotButton)}</div>
+    <div className="mt-2 grid gap-1.5">{list.map(slotRow)}</div>
   </React.Fragment>;
 
   return <section aria-label="Rotation board" className="court-panel relative overflow-hidden p-4">
@@ -39,12 +43,12 @@ export default function ForgeTeamBoard({ slots, picks, reveal, revealPositions =
     <header className="relative flex flex-wrap items-center justify-between gap-2">
       <div>
         <p className="bcast-kicker">Team forge</p>
-        <h2 className="broadcast-gradient-text mt-0.5 font-display text-2xl tracking-wide">ROTATION BOARD</h2>
+        <h2 className="broadcast-gradient-text mt-0.5 font-display text-2xl tracking-wide">DEPTH CHART</h2>
       </div>
       <span className="rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-gold">{filled}/{slots.length} rostered</span>
     </header>
-    {section('Starting five', starters, 'grid grid-cols-2 gap-2 sm:grid-cols-5')}
-    {section('Bench unit', bench, 'grid grid-cols-1 gap-2 sm:grid-cols-3')}
-    <p className="relative mt-3 text-center text-[10px] text-muted-foreground">Starters log heavy minutes in the sim — your best players belong up top. When a landed player's position matches a slot, it glows as a suggested fit. Rostered spots are locked until the build completes.</p>
+    {section('Starting five', slots.filter(slot => slot.starter))}
+    {section('Bench unit', slots.filter(slot => !slot.starter))}
+    <p className="relative mt-4 text-[10px] leading-relaxed text-muted-foreground">Starters log heavy minutes in the sim — your best players belong up top. When a landed player's position matches a slot, it glows as a suggested fit. Rostered spots are locked until the build completes.</p>
   </section>;
 }

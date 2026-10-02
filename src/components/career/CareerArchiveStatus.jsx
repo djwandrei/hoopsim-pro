@@ -2,7 +2,7 @@ import React from 'react';
 import { Database, Loader2 } from 'lucide-react';
 import WorkbenchState from '@/components/studio/WorkbenchState';
 export default function CareerArchiveStatus({ source, state, error, retry }) {
-  return <><section className="court-panel flex flex-wrap items-center justify-between gap-4 px-5 py-4">
+  return <><section className="court-panel flex flex-wrap items-center justify-between gap-4 px-5 py-4 hidden">
     <div className="flex items-start gap-3">
       <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-gold/30 bg-gold/10">
         {state === 'loading' ? <Loader2 className="h-4 w-4 animate-spin text-gold" /> : <Database className="h-4 w-4 text-gold" />}

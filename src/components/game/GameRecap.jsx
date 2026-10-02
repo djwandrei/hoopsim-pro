@@ -38,7 +38,7 @@ export default function GameRecap({ game, home, away }) {
 
   return (
     <section className="court-panel overflow-hidden" data-team-theme={winner.code} style={teamThemeVars(winner.code, mode)} aria-label="Post-game recap">
-      <div className="p-5" style={{ background: `linear-gradient(115deg, ${palette.primary}10, transparent 65%)` }}>
+      <div className="p-5">
         <span className="court-kicker">Post-game recap</span>
         <h2 className="court-display mt-1 text-3xl">{winner.name} take it {wPts}–{lPts}{otLabel}</h2>
         <span className="hero-rule mt-2" />

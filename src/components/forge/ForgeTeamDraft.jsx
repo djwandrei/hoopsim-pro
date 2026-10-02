@@ -165,12 +165,14 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
           activeTeam={activeTeam}
           onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')}
           teamRespins={teamRespins} filled={filled} total={TEAM_SLOTS.length}
+          pending={Boolean(reveal)}
         /> : <ForgeTeamSpinPanel
           teamItems={wheelTeams} playerItems={playerItems}
           teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning}
           onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
           teamRespins={teamRespins} playerRespins={playerRespins}
           filled={filled} total={TEAM_SLOTS.length}
+          pending={Boolean(reveal)}
         />}
         {pickMode
           ? <div className="space-y-4">

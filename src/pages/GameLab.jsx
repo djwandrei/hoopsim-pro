@@ -12,6 +12,7 @@ import GameBoxScore from '@/components/game/GameBoxScore';
 import GameRecap from '@/components/game/GameRecap';
 import GamePlayFeed from '@/components/game/GamePlayFeed';
 import SeriesBoard from '@/components/game/SeriesBoard';
+import GameMatchupTheme from '@/components/game/GameMatchupTheme';
 
 export default function GameLab() {
   const { year, setYear, source, league, state } = useSeasonSource();
@@ -33,21 +34,26 @@ export default function GameLab() {
 
   if (state !== 'ready' || !league) {
     return (
-      <StudioShell active="/game">
+      <StudioShell active="/game" followTeam={league?.byCode.get(a)?.code || a}>
+        <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
         <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub on the observed season package." state={state} status={state === 'ready' ? 'Matchup hub ready' : undefined} />
         <main className="mx-auto min-w-0 max-w-7xl px-4 py-6"><WorkbenchState state={state} /></main>
+      </GameMatchupTheme>
       </StudioShell>);
 
   }
 
   const home = league.byCode.get(a) || league.teams[0];
   const away = league.byCode.get(b) || league.teams[1];
+  const resultHome = league.byCode.get(sim.game?.home) || home;
+  const resultAway = league.byCode.get(sim.game?.away) || away;
   const breakdown = simProps => (
     <MatchupBreakdown league={league} source={source} year={year} a={a} b={b} onA={setA} onB={setB} teamA={home} teamB={away} {...simProps} />
   );
 
   return (
-    <StudioShell active="/game">
+    <StudioShell active="/game" followTeam={league?.byCode.get(a)?.code || a}>
+        <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
       <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: pick the board, review the intel and charts, and sim single games and 7-game series with team-colored scoreboards and box scores." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">
         <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
@@ -59,16 +65,16 @@ export default function GameLab() {
               neutral={sim.neutral} onNeutralChange={sim.setNeutral} />
             
               {sim.game ?
-            <React.Fragment>
+              <GameMatchupTheme homeCode={resultHome.code} awayCode={resultAway.code}>
                   {!feedDone &&
-                  <GamePlayFeed key={sim.game.stamp} game={sim.game} home={home} away={away} onComplete={() => setFeedDone(true)} />}
+                  <GamePlayFeed key={sim.game.stamp} game={sim.game} home={resultHome} away={resultAway} onComplete={() => setFeedDone(true)} />}
                   {feedDone &&
                   <React.Fragment>
-                    <GameRecap game={sim.game} home={home} away={away} />
+                    <GameRecap game={sim.game} home={resultHome} away={resultAway} />
                     <GameScoreboard league={league} game={sim.game} />
                     <GameBoxScore game={sim.game} />
                   </React.Fragment>}
-                </React.Fragment> :
+                  </GameMatchupTheme> :
 
             <section className="myna-panel p-6 text-center text-xs myna-muted">Set a seed, then sim the game — the live play-by-play feed, team-colored scoreboard and full box score land here.</section>
             }
@@ -92,6 +98,7 @@ export default function GameLab() {
           }
         </MyNbaHub>
       </main>
-    </StudioShell>);
+    </GameMatchupTheme>
+      </StudioShell>);
 
 }

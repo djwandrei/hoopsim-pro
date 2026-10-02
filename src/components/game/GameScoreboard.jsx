@@ -1,14 +1,15 @@
 import React from 'react';
 import TeamMark from '@/components/studio/TeamMark';
-import { paletteForTeam } from '@/components/djhc/basketballPalettes';
+import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
+import { teamThemeVars } from '@/components/game/matchupTheme';
 
 function Half({ team, pts, won, label, side }) {
-  const palette = paletteForTeam(team.code);
+  const { mode = 'dark' } = useCourtTheme() || {};
   return (
-    <div className={`p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ background: won ? `linear-gradient(160deg, ${palette.primary}55, transparent 80%)` : 'transparent' }}>
+    <div data-team-theme={team.code} className={`p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ ...teamThemeVars(team.code, mode), boxShadow: won ? 'inset 0 -3px 0 var(--team-secondary)' : undefined }}>
       <TeamMark code={team.code} name={team.name} className="mx-auto h-14 w-14 rounded-2xl border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
-      <p className="myna-mono mt-2 text-5xl" style={{ color: palette.highlight }}>{pts}</p>
-      <p className="myna-display mt-1 text-lg" style={{ color: palette.highlight }}>{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
+      <p className="myna-mono mt-2 text-5xl" style={{ color: 'var(--myna-accent)' }}>{pts}</p>
+      <p className="myna-display mt-1 text-lg" style={{ color: 'var(--myna-accent)' }}>{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
     </div>
   );
 }
@@ -47,12 +48,12 @@ export default function GameScoreboard({ league, game }) {
               <tr className="border-t border-[var(--myna-border)]">
                 <td className="px-2 py-1.5 text-left font-semibold">{away.code}</td>
                 {lineScore.map(row => <td key={row.q} className="myna-mono px-2 py-1.5">{row.a}</td>)}
-                <td className="myna-mono px-2 py-1.5 font-bold" style={{ color: homeWon ? undefined : paletteForTeam(away.code).primary }}>{game.awayPts}</td>
+                <td className="myna-mono px-2 py-1.5 font-bold" style={{ color: 'var(--matchup-away-color)' }}>{game.awayPts}</td>
               </tr>
               <tr className="border-t border-[var(--myna-border)]">
                 <td className="px-2 py-1.5 text-left font-semibold">{home.code}</td>
                 {lineScore.map(row => <td key={row.q} className="myna-mono px-2 py-1.5">{row.h}</td>)}
-                <td className="myna-mono px-2 py-1.5 font-bold" style={{ color: homeWon ? paletteForTeam(home.code).primary : undefined }}>{game.homePts}</td>
+                <td className="myna-mono px-2 py-1.5 font-bold" style={{ color: 'var(--matchup-home-color)' }}>{game.homePts}</td>
               </tr>
             </tbody>
           </table>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TeamMark from '@/components/studio/TeamMark';
-import { paletteForTeam } from '@/components/djhc/basketballPalettes';
+import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
+import { teamThemeVars } from '@/components/game/matchupTheme';
 
 const cell = 'px-2 py-1.5 text-right';
 
@@ -8,7 +9,7 @@ export default function GameBoxScore({ game }) {
   const [side, setSide] = useState('home');
   useEffect(() => { setSide('home'); }, [game]);
   const team = side === 'home' ? game.home : game.away;
-  const palette = paletteForTeam(team);
+  const { mode = 'dark' } = useCourtTheme() || {};
   const lines = (side === 'home' ? game.boxHome : game.boxAway)?.lines || [];
   const [sort, setSort] = useState({ key: 'pts', dir: 'desc' });
   useEffect(() => { setSort({ key: 'pts', dir: 'desc' }); }, [game]);
@@ -23,7 +24,7 @@ export default function GameBoxScore({ game }) {
     </th>
   );
   return (
-    <section key={`${game.home}-${game.away}-${game.homePts}-${game.awayPts}`} className="myna-panel p-4" aria-label="Box score">
+    <section key={`${game.home}-${game.away}-${game.homePts}-${game.awayPts}`} className="myna-panel p-4" data-team-theme={team} style={teamThemeVars(team, mode)} aria-label="Box score">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.2em]">BOX SCORE</p>
@@ -33,7 +34,8 @@ export default function GameBoxScore({ game }) {
           {[['away', game.away], ['home', game.home]].map(([key, code]) => (
             <button key={key} type="button" aria-pressed={side === key} onClick={() => setSide(key)}
               className={`min-h-9 rounded-lg px-4 font-mono text-[11px] font-bold transition-colors ${side === key ? '' : 'text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`}
-              style={side === key ? { background: paletteForTeam(code).primary, color: paletteForTeam(code).highlight } : undefined}
+              data-team-theme={code}
+              style={{ ...teamThemeVars(code, mode), background: side === key ? 'var(--team-primary)' : 'var(--myna-canvas)', color: side === key ? 'var(--team-on-primary)' : 'var(--team-ink)' }}
             >
               {code}
             </button>
@@ -57,7 +59,7 @@ export default function GameBoxScore({ game }) {
                 <td className="px-2 py-1.5 text-left font-medium">{line.name}</td>
                 <td className="px-2 py-1.5 text-left myna-muted">{(line.positions || []).join('/') || '—'}</td>
                 <td className={`${cell} myna-mono`}>{line.min}</td>
-                <td className={`${cell} myna-mono font-semibold`} style={{ color: line.pts >= 20 ? palette.primary : undefined }}>{line.pts}</td>
+                <td className={`${cell} myna-mono font-semibold`} style={{ color: line.pts >= 20 ? 'var(--team-ink)' : undefined }}>{line.pts}</td>
                 <td className={`${cell} myna-mono`}>{line.reb}</td>
                 <td className={`${cell} myna-mono`}>{line.ast}</td>
                 <td className={`${cell} myna-mono myna-muted`}>{line.stl}</td>
@@ -68,11 +70,11 @@ export default function GameBoxScore({ game }) {
           </tbody>
           {lines.length > 0 && (
             <tfoot>
-              <tr className="border-t-2 border-[var(--myna-border)]" style={{ background: `${palette.primary}14` }}>
+              <tr className="border-t-2 border-[var(--myna-border)]" style={{ background: 'color-mix(in srgb, var(--team-primary) 14%, transparent)' }}>
                 <td className="px-2 py-1.5 text-left text-[10px] font-bold uppercase tracking-[0.15em]">Team totals</td>
                 <td />
                 <td className={`${cell} myna-mono font-bold`}>{totals.min}</td>
-                <td className={`${cell} myna-mono font-bold`} style={{ color: palette.primary }}>{totals.pts}</td>
+                <td className={`${cell} myna-mono font-bold`} style={{ color: 'var(--team-ink)' }}>{totals.pts}</td>
                 <td className={`${cell} myna-mono font-bold`}>{totals.reb}</td>
                 <td className={`${cell} myna-mono font-bold`}>{totals.ast}</td>
                 <td className={`${cell} myna-mono font-bold`}>{totals.stl}</td>

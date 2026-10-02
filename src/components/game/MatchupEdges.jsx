@@ -34,16 +34,16 @@ export default function MatchupEdges({ teamA, teamB }) {
               <div className="flex items-center justify-between gap-2 text-[11px]">
                 <span className="myna-muted">{edge.label}</span>
                 {leader
-                  ? <span className={edge.neutral ? 'myna-muted' : 'font-semibold text-[var(--myna-accent)]'}>{leader.code} {edge.neutral ? 'faster' : 'leads'} · {leaderValue}</span>
+                  ? <span data-team-side={leader === teamA ? 'home' : 'away'} className={edge.neutral ? 'myna-muted' : 'font-semibold matchup-side-text'}>{leader.code} {edge.neutral ? 'faster' : 'leads'} · {leaderValue}</span>
                   : <span className="myna-muted">Even</span>}
               </div>
               <div className="mt-1.5 flex h-2 overflow-hidden rounded-full" style={{ background: 'var(--myna-raised)' }}>
                 <span style={{ width: `${50 + swing}%`, background: pA.primary }} />
-                <span className="ml-auto" style={{ width: `${50 - swing}%`, background: pB.primary }} />
+                <span className="ml-auto" style={{ width: `${50 - swing}%`, background: pA.primary === pB.primary ? pB.highlight : pB.primary }} />
               </div>
               <div className="mt-1 flex justify-between text-[10px]">
-                <span style={{ color: pA.primary }}>{teamA.code} {edge.fmt(edge.a)}</span>
-                <span style={{ color: pB.primary }}>{edge.fmt(edge.b)} {teamB.code}</span>
+                <span style={{ color: 'var(--matchup-home-color)' }}>{teamA.code} {edge.fmt(edge.a)}</span>
+                <span style={{ color: 'var(--matchup-away-color)' }}>{edge.fmt(edge.b)} {teamB.code}</span>
               </div>
             </div>
           );

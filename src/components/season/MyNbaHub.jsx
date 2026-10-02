@@ -1,5 +1,7 @@
 import React from 'react';
 import { mix, paletteForTeam, themeFor } from '@/components/djhc/basketballPalettes';
+import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
+import { matchupThemeVars } from '@/components/game/matchupTheme';
 
 const SEASON_TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM'], ['log', 'PLAYER LOG']];
 const GAME_TABS = [['matchup', 'MATCHUP'], ['game', 'GAME'], ['series', 'SERIES']];
@@ -8,6 +10,7 @@ const GAME_TABS = [['matchup', 'MATCHUP'], ['game', 'GAME'], ['series', 'SERIES'
 // palette. When an opposing team is supplied (Game Lab), the canvas blends
 // both teams' colors and away-side accents are exposed as extra variables.
 export default function MyNbaHub({ focusCode, awayCode, tab, onTab, tabs = SEASON_TABS, teamPicker, children }) {
+  const { mode = 'dark' } = useCourtTheme() || {};
   const palette = paletteForTeam(focusCode);
   const awayPalette = awayCode ? paletteForTeam(awayCode) : null;
   const theme = themeFor(palette, 'dark');
@@ -26,6 +29,7 @@ export default function MyNbaHub({ focusCode, awayCode, tab, onTab, tabs = SEASO
     '--myna-primary-away': awayPalette?.primary,
     '--myna-hi-away': awayPalette?.highlight,
     '--myna-trim-away': awayPalette?.trim,
+    ...(awayPalette ? matchupThemeVars(focusCode, awayCode, mode) : {}),
   };
   return (
     <section className="myna space-y-4 p-4 sm:p-5" style={vars} aria-label="League hub">

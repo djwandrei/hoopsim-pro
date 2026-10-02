@@ -18,7 +18,8 @@ export default function PlayerDuelRadar({ teamA, teamB }) {
   const pA = pool.a[Math.min(aIdx, Math.max(pool.a.length - 1, 0))];
   const pB = pool.b[Math.min(bIdx, Math.max(pool.b.length - 1, 0))];
   const cA = paletteForTeam(teamA.code).primary;
-  const cB = paletteForTeam(teamB.code).primary;
+  const awayPalette = paletteForTeam(teamB.code);
+  const cB = cA === awayPalette.primary ? awayPalette.highlight : awayPalette.primary;
   const data = useMemo(() => {
     if (!pA || !pB) return [];
     return AXES.map(([key, label]) => {
@@ -33,8 +34,8 @@ export default function PlayerDuelRadar({ teamA, teamB }) {
     return (
       <div className="rounded-lg border border-border/50 bg-card px-3 py-2 text-xs shadow-lg">
         <p className="font-semibold text-foreground">{point.axis}</p>
-        <p className="mt-1 font-mono" style={{ color: cA }}>{pA.name} {point.rawA.toFixed(1)}</p>
-        <p className="font-mono" style={{ color: cB }}>{pB.name} {point.rawB.toFixed(1)}</p>
+        <p className="mt-1 font-mono" style={{ color: 'var(--matchup-home-color)' }}>{pA.name} {point.rawA.toFixed(1)}</p>
+        <p className="font-mono" style={{ color: 'var(--matchup-away-color)' }}>{pB.name} {point.rawB.toFixed(1)}</p>
       </div>
     );
   };
@@ -44,15 +45,15 @@ export default function PlayerDuelRadar({ teamA, teamB }) {
       <h3 className="myna-display mt-1 text-2xl">ONE ON ONE</h3>
       <p className="mt-1 text-xs myna-muted">Pick one player per team; each spoke is scaled 0–100 across both rosters, so a wider wedge is the edge.</p>
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
-        <label className="block">
-          <span className="myna-muted mb-1 block text-[10px] font-semibold uppercase tracking-[0.15em]">{teamA.code}</span>
-          <select className={selectClass} value={Math.min(aIdx, Math.max(pool.a.length - 1, 0))} onChange={e => setAIdx(Number(e.target.value))}>
+        <label data-team-side="home" className="block">
+          <span className="matchup-side-text mb-1 block text-[10px] font-semibold uppercase tracking-[0.15em]">{teamA.code}</span>
+          <select className={`${selectClass} matchup-side-surface`} value={Math.min(aIdx, Math.max(pool.a.length - 1, 0))} onChange={e => setAIdx(Number(e.target.value))}>
             {pool.a.map((p, i) => <option key={p.playerRef} value={i}>{p.name} · {p.pts.toFixed(1)} PPG</option>)}
           </select>
         </label>
-        <label className="block">
-          <span className="myna-muted mb-1 block text-[10px] font-semibold uppercase tracking-[0.15em]">{teamB.code}</span>
-          <select className={selectClass} value={Math.min(bIdx, Math.max(pool.b.length - 1, 0))} onChange={e => setBIdx(Number(e.target.value))}>
+        <label data-team-side="away" className="block">
+          <span className="matchup-side-text mb-1 block text-[10px] font-semibold uppercase tracking-[0.15em]">{teamB.code}</span>
+          <select className={`${selectClass} matchup-side-surface`} value={Math.min(bIdx, Math.max(pool.b.length - 1, 0))} onChange={e => setBIdx(Number(e.target.value))}>
             {pool.b.map((p, i) => <option key={p.playerRef} value={i}>{p.name} · {p.pts.toFixed(1)} PPG</option>)}
           </select>
         </label>
@@ -69,8 +70,8 @@ export default function PlayerDuelRadar({ teamA, teamB }) {
               <RadarChart data={data} outerRadius="72%">
                 <PolarGrid stroke="hsl(var(--border) / .3)" />
                 <PolarAngleAxis dataKey="axis" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
-                <Radar name={pA.name} dataKey="a" stroke={cA} fill={cA} fillOpacity={0.25} isAnimationActive={false} />
-                <Radar name={pB.name} dataKey="b" stroke={cB} fill={cB} fillOpacity={0.25} isAnimationActive={false} />
+                <Radar name={pA.name} dataKey="a" stroke="var(--matchup-home-color)" fill={cA} fillOpacity={0.25} isAnimationActive={false} />
+                <Radar name={pB.name} dataKey="b" stroke="var(--matchup-away-color)" fill={cB} fillOpacity={0.25} isAnimationActive={false} />
                 <Tooltip content={tip} />
               </RadarChart>
             </ResponsiveContainer>

@@ -2,18 +2,18 @@ import React, { useMemo } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { actualStandings } from '@/lib/season/simEngine';
 
-const tip = ({ active, payload }) => {
+const tip = ({ active, payload, teamA, teamB }) => {
   if (!active || !payload?.length) return null;
   const row = payload[0].payload;
   return (
     <div className="rounded-lg border border-border/50 bg-card px-3 py-2 text-xs shadow-lg">
       <p className="font-semibold text-foreground">{row.name}</p>
-      <p className="mt-1 font-mono text-gold">{row.wins} wins · {row.losses} losses</p>
+      <p data-team-side={row.code === teamA.code ? 'home' : row.code === teamB.code ? 'away' : undefined} className="mt-1 font-mono matchup-side-text">{row.wins} wins · {row.losses} losses</p>
     </div>
   );
 };
 
-// Observed team win distribution across the league, with the picked matchup highlighted gold/royal.
+// Observed team wins; selected teams carry their official matchup colors.
 export default function WinDistributionChart({ source, league, teamA, teamB }) {
   const data = useMemo(() => {
     const wins = actualStandings(source);
@@ -27,7 +27,7 @@ export default function WinDistributionChart({ source, league, teamA, teamB }) {
       .map(team => ({ code: team.code, name: team.name, wins: wins.get(team.code) || 0, losses: Math.max(0, (played.get(team.code) || 0) - (wins.get(team.code) || 0)) }))
       .sort((x, y) => y.wins - x.wins);
   }, [source, league]);
-  const fillFor = code => (code === teamA.code ? 'hsl(var(--court-accent))' : code === teamB.code ? 'hsl(var(--court-royal))' : 'hsl(var(--court-canvas))');
+  const fillFor = code => (code === teamA.code ? 'var(--matchup-home-chart)' : code === teamB.code ? 'var(--matchup-away-chart)' : 'var(--myna-raised)');
   return (
     <section className="myna-panel p-4" aria-label="Win distribution">
       <p className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.2em]">WIN DISTRIBUTION</p>
@@ -39,9 +39,9 @@ export default function WinDistributionChart({ source, league, teamA, teamB }) {
             <CartesianGrid stroke="hsl(var(--border) / .3)" vertical={false} />
             <XAxis dataKey="code" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} interval={0} angle={-60} textAnchor="end" height={52} />
             <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
-            <Tooltip content={tip} cursor={{ fill: 'hsl(var(--court-accent) / .08)' }} />
+            <Tooltip content={props => tip({ ...props, teamA, teamB })} cursor={{ fill: 'hsl(var(--court-accent) / .08)' }} />
             <Bar dataKey="wins" isAnimationActive={false} radius={[3, 3, 0, 0]}>
-              {data.map(row => <Cell key={row.code} fill={fillFor(row.code)} />)}
+              {data.map(row => <Cell key={row.code} fill={fillFor(row.code)} stroke={row.code === teamA.code ? 'var(--matchup-home-color)' : row.code === teamB.code ? 'var(--matchup-away-color)' : 'var(--myna-border)'} />)}
             </Bar>
           </BarChart>
         </ResponsiveContainer>

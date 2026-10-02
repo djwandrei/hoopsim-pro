@@ -3,6 +3,7 @@ import { Play, Pause, SkipForward } from 'lucide-react';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { teamThemeVars } from '@/components/game/matchupTheme';
+import WinProbabilityChart from '@/components/game/WinProbabilityChart';
 
 const SPEEDS = [300, 140, 60];
 const SPEED_LABELS = ['1x', '2x', '4x'];
@@ -76,6 +77,10 @@ export default function GamePlayFeed({ game, home, away, onComplete }) {
         <span className="myna-display text-xl" style={{ color: 'var(--matchup-home-color)' }}>{home.code}</span>
       </div>
       <div className="myna-bar"><span style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${awayPalette.primary}, ${homePalette.primary})` }} /></div>
+
+      <div className="mt-3">
+        <WinProbabilityChart events={events} count={count} homeCode={home.code} awayCode={away.code} />
+      </div>
 
       <div ref={listRef} className="mt-3 h-64 space-y-1.5 overflow-y-auto pr-1">
         {visible.map((event, i) => {

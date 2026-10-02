@@ -34,13 +34,14 @@ export default function BlueprintPlayerCard({ player, onRemove, atlas }) {
       <div className="absolute inset-0 bg-gradient-to-br from-canvas/70 via-surface/80 to-raised/90" aria-hidden="true" />
       {logo && <Image src={logo} alt="" aria-hidden="true" fittingType="fit" className="absolute -left-6 top-1/2 h-64 w-64 -translate-y-1/2 opacity-20 object-contain" />}
       <div className="relative flex items-center justify-end gap-2 p-4">
-        <span className="rounded-full border border-gold/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[.2em] text-gold">Player profile</span>
+        <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>Player profile</span>
         {onRemove && <button type="button" onClick={() => onRemove(player)} aria-label={`Remove ${player.name}`} className="rounded-lg border border-border/30 p-2 text-muted-foreground transition-colors hover:border-trim/40 hover:text-foreground"><X className="h-4 w-4" /></button>}
       </div>
       <div className="relative flex items-end gap-5 pl-5 pr-5">
         <PlayerPortrait key={player.headshotPath || player.playerRef} player={player} frameless className="h-44 w-40 shrink-0 rounded-t-2xl sm:h-52 sm:w-44" />
         <div className="min-w-0 flex-1 pb-4">
           <h2 className="font-display text-4xl uppercase leading-[0.9] sm:text-5xl">{player.name}</h2>
+          <span className="hero-rule mt-3" aria-hidden="true"></span>
           <p className="mt-2 text-xs text-muted-foreground">{player.teamCode} · {teamName} · {player.positions.join(' / ')}</p>
           {details && <p className="mt-1 text-[11px] text-muted-foreground">Player details · {details}</p>}
         </div>

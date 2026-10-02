@@ -16,7 +16,7 @@ export default function AtlasScopeBar({ scope,onScope,roster,selected,careerPool
     const active = scope.careerRef ? careerPool.players.find(player => player.playerRef === scope.careerRef) : null;
     return active && !filtered.some(player => player.playerRef === active.playerRef) ? [active,...filtered] : filtered;
   },[careerPool.players,careerTeam,careerPos,scope.careerRef]);
-  const chip = key => scope.mode === key ? 'min-h-10 rounded-lg border border-gold/40 bg-gold/15 px-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold' : 'min-h-10 rounded-lg border border-transparent px-4 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:bg-raised hover:text-foreground';
+  const chip = key => scope.mode === key ? 'min-h-10 rounded-lg border border-gold/40 bg-gradient-to-r from-gold/15 to-royal/10 px-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold shadow-[0_0_18px_rgba(233,185,73,0.12)]' : 'min-h-10 rounded-lg border border-transparent px-4 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:bg-raised hover:text-foreground';
   return <section className="court-panel p-5">
     <div className="flex flex-wrap items-start justify-between gap-4">
       <div><p className="court-kicker">Chart scope</p>

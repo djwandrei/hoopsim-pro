@@ -9,7 +9,7 @@ export default function ScoutChallenge({ players }) {
   const [focus,setFocus] = useState(null), [choice,setChoice] = useState(null), [revealed,setRevealed] = useState(false), [completed,setCompleted] = useState([]), [score,setScore] = useState(0), [best,setBest] = useState(0), [runs,setRuns] = useState(0);
   const round = rounds.find(item => item.key === focus);
   const done = completed.length === rounds.length;
-  if (!rounds.length) return null;
+  if (!rounds.length) return <section className="court-panel p-6"><p className="court-kicker">Scout challenge</p><h2 className="mt-2 font-display text-2xl">MORE OBSERVED RECORDS NEEDED</h2><p className="mt-3 text-sm leading-relaxed text-muted-foreground">Choose at least two players with supplied regular-season scoring, assists or rebounds. Missing statistics cannot be used as challenge answers.</p></section>;
   const reveal = () => { if (!round || choice === null || revealed) return; const pick = round.choices.find(item => item.index === choice);setScore(value => value+Number(pick.value === round.bestValue));setRevealed(true); };
   const next = () => { const checked = [...completed,focus];setCompleted(checked);setFocus(null);setChoice(null);setRevealed(false);if(checked.length === rounds.length){setBest(value => Math.max(value,score));setRuns(value => value+1);} };
   const replay = () => { setCompleted([]);setFocus(null);setChoice(null);setRevealed(false);setScore(0); };

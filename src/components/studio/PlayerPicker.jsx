@@ -19,7 +19,7 @@ export default function PlayerPicker({ players, onSelect, selectedRef, placehold
         <input
           className="w-full bg-transparent text-sm text-foreground outline-none"
           value={query}
-          onChange={event => setQuery(event.target.value)}
+          onChange={event => { setQuery(event.target.value);setLimit(50); }}
           placeholder={placeholder}
           aria-label="Search observed players"
         />

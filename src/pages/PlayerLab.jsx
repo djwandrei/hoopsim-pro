@@ -7,7 +7,9 @@ import BlueprintRoster from '@/components/players/BlueprintRoster';
 import BlueprintPlayerCard from '@/components/players/BlueprintPlayerCard';
 import BlueprintComparison from '@/components/players/BlueprintComparison';
 import ScoutChallenge from '@/components/players/ScoutChallenge';
-import { buildBlueprintRows, PHASES } from '@/components/players/blueprintModel';
+import { buildBlueprintRows } from '@/components/players/blueprintModel';
+import BlueprintSelectionRail from '@/components/players/BlueprintSelectionRail';
+import BlueprintControls from '@/components/players/BlueprintControls';
 import useSeasonSource from '@/hooks/useSeasonSource';
 
 export default function PlayerLab() {

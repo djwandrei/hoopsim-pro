@@ -5,6 +5,7 @@ export default function nativeHost(element,kind,entry,onYearChange) {
   const canvas=document.createElement('div');canvas.className='studio-native court-themed fan-tools-page swishiq-studio-page dark-mode';shadow.append(canvas);
   const scope=document.createElement('div');scope.id='studioApp';scope.className='swishiq-app-shell';canvas.append(scope);
   const controls=document.createElement('div');controls.hidden=true;
+  for(const id of ['workbenchState','workspaceTitle','workspaceDescription','seasonLabSourceState','seasonLabSourceNote']){const status=document.createElement('span');status.id=id;status.dataset.state='checking';controls.append(status);}
   const tabs=document.createElement('nav');tabs.className='swishiq-tabs';const tab=document.createElement('button');tab.dataset.workbench=kind;tab.setAttribute('aria-pressed','true');tabs.append(tab);controls.append(tabs);
   const select=document.createElement('select');select.id='packageSelect';const option=document.createElement('option');option.value=`${entry.packageId}|${entry.packageVersion}|regular`;option.textContent=entry.packageId;select.append(option);controls.append(select);scope.append(controls);
   const panel=document.createElement('section');panel.id=`${kind}LabPanel`;panel.className='swishiq-native-panel';scope.append(panel);

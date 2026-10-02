@@ -1,20 +1,20 @@
 .game-matchup-theme { min-width: 0; color: hsl(var(--foreground)); }
 .game-matchup-theme .studio-palette-hero,
 .game-matchup-theme .myna {
-  background: linear-gradient(115deg, color-mix(in srgb, var(--matchup-home-primary) 15%, var(--myna-canvas)), var(--myna-canvas) 48%, color-mix(in srgb, var(--matchup-away-primary) 15%, var(--myna-canvas)));
+  background: linear-gradient(115deg, color-mix(in srgb, var(--matchup-home-primary) 6%, var(--myna-canvas)), var(--myna-canvas) 45%, color-mix(in srgb, var(--matchup-away-primary) 6%, var(--myna-canvas)));
 }
 .game-matchup-theme :is(.myna-panel, .court-panel) {
   position: relative;
   color: var(--myna-text);
   border-color: color-mix(in srgb, var(--matchup-home-primary) 20%, var(--myna-border));
-  background: linear-gradient(115deg, color-mix(in srgb, var(--matchup-home-primary) 16%, var(--myna-surface)), var(--myna-surface) 48%, color-mix(in srgb, var(--matchup-away-primary) 16%, var(--myna-surface)));
+  background: linear-gradient(115deg, color-mix(in srgb, var(--matchup-home-primary) 7%, var(--myna-surface)), var(--myna-surface) 45%, color-mix(in srgb, var(--matchup-away-primary) 7%, var(--myna-surface)));
 }
 /* No top gradient strips on Game Lab panels */
 .game-matchup-theme :is(.myna-panel, .court-panel)::before { display: none; }
 .game-matchup-theme [data-team-theme] {
   color: var(--myna-text);
   border-color: color-mix(in srgb, var(--team-primary) 45%, var(--myna-border));
-  background: linear-gradient(120deg, color-mix(in srgb, var(--team-primary) 18%, var(--myna-surface)), var(--myna-surface) 75%);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--team-primary) 8%, var(--myna-surface)), var(--myna-surface) 65%);
 }
 .game-matchup-theme [data-team-side='home'] { --side-primary: var(--matchup-home-primary); --side-secondary: var(--matchup-home-secondary); --side-ink: var(--matchup-home-color); }
 .game-matchup-theme [data-team-side='away'] { --side-primary: var(--matchup-away-primary); --side-secondary: var(--matchup-away-secondary); --side-ink: var(--matchup-away-color); }
@@ -30,7 +30,7 @@
 }
 .studio-workspace .game-matchup-theme table th {
   color: var(--myna-muted);
-  background: linear-gradient(110deg, color-mix(in srgb, var(--matchup-home-primary) 12%, var(--myna-surface)), color-mix(in srgb, var(--matchup-away-primary) 12%, var(--myna-surface)));
+  background: linear-gradient(110deg, color-mix(in srgb, var(--matchup-home-primary) 5%, var(--myna-surface)), color-mix(in srgb, var(--matchup-away-primary) 5%, var(--myna-surface)));
   border-bottom-color: var(--myna-accent);
 }
 .studio-workspace .game-matchup-theme table th[data-team-side] {

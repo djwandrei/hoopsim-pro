@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import PlayerTrendChart from '@/components/season/PlayerTrendChart';
 
 const STATS = [['pts', 'PTS'], ['reb', 'REB'], ['ast', 'AST'], ['stl', 'STL'], ['blk', 'BLK']];
 const gold = { color: 'var(--myna-accent)', background: 'color-mix(in srgb, var(--myna-accent) 14%, transparent)', fontWeight: 700 };
@@ -102,8 +103,10 @@ export default function PlayerStatsLog({ team, simGames }) {
               </select>
             </label>
           </header>
-          <p className="myna-muted mb-2 text-[11px]">Gold cells mark this player's career high in each stat.</p>
-          <div className="overflow-x-auto">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_16rem]">
+            <div>
+              <p className="myna-muted mb-2 text-[11px]">Gold cells mark this player's career high in each stat.</p>
+              <div className="overflow-x-auto">
             <table>
               <thead>
                 <tr>
@@ -127,6 +130,9 @@ export default function PlayerStatsLog({ team, simGames }) {
                 ))}
               </tbody>
             </table>
+              </div>
+            </div>
+            <PlayerTrendChart rows={rows} />
           </div>
         </div>
       )}

@@ -11,6 +11,7 @@ import LeagueStandings from '@/components/season/LeagueStandings';
 import LeagueSchedule from '@/components/season/LeagueSchedule';
 import LeagueTeamView from '@/components/season/LeagueTeamView';
 import PlayerStatsLog from '@/components/season/PlayerStatsLog';
+import LeagueLeaders from '@/components/season/LeagueLeaders';
 
 export default function SeasonLab() {
   const { year, setYear, years, source, league, state } = useSeasonSource();
@@ -94,6 +95,7 @@ export default function SeasonLab() {
             <div className="space-y-4">
               <LeagueHero team={team} simRow={simRow} actualRecord={actualRecord} conferenceRank={conferenceRank} />
               <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} limit={6} />
+              <LeagueLeaders simGames={simGames} />
             </div>
           )}
           {tab === 'standings' && (

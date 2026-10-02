@@ -9,18 +9,12 @@
   border-color: color-mix(in srgb, var(--matchup-home-primary) 20%, var(--myna-border));
   background: linear-gradient(115deg, color-mix(in srgb, var(--matchup-home-primary) 16%, var(--myna-surface)), var(--myna-surface) 48%, color-mix(in srgb, var(--matchup-away-primary) 16%, var(--myna-surface)));
 }
-.game-matchup-theme :is(.myna-panel, .court-panel)::before {
-  content: ''; position: absolute; top: 0; left: 12px; right: 12px; height: 2px;
-  border-radius: 999px; pointer-events: none;
-  background: linear-gradient(90deg, var(--matchup-home-primary), var(--matchup-home-secondary) 35%, var(--matchup-away-secondary) 65%, var(--matchup-away-primary));
-}
+/* No top gradient strips on Game Lab panels */
+.game-matchup-theme :is(.myna-panel, .court-panel)::before { display: none; }
 .game-matchup-theme [data-team-theme] {
   color: var(--myna-text);
   border-color: color-mix(in srgb, var(--team-primary) 45%, var(--myna-border));
   background: linear-gradient(120deg, color-mix(in srgb, var(--team-primary) 18%, var(--myna-surface)), var(--myna-surface) 75%);
-}
-.game-matchup-theme :is(.myna-panel, .court-panel)[data-team-theme]::before {
-  background: linear-gradient(90deg, var(--team-primary), var(--team-secondary), var(--team-primary));
 }
 .game-matchup-theme [data-team-side='home'] { --side-primary: var(--matchup-home-primary); --side-secondary: var(--matchup-home-secondary); --side-ink: var(--matchup-home-color); }
 .game-matchup-theme [data-team-side='away'] { --side-primary: var(--matchup-away-primary); --side-secondary: var(--matchup-away-secondary); --side-ink: var(--matchup-away-color); }

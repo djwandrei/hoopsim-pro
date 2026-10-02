@@ -1,11 +1,22 @@
-import { contrast, hslChannels, mix, paletteForTeam, themeFor } from '@/components/djhc/basketballPalettes';
+import { contrast, hslChannels, luminance, mix, paletteForTeam, themeFor } from '@/components/djhc/basketballPalettes';
+
+// Minimum color distance required between the two sides' accents so that
+// similar team palettes (e.g. two red clubs, two black clubs) stay legible.
+const SIDES_CONTRAST = 1.3;
 
 const channels = values => Object.fromEntries(Object.entries(values).map(([key, value]) => [`--${key}`, hslChannels(value)]));
-const mynaVars = (palette, theme) => ({
+
+// Light mode renders on white surfaces: raw highlight/trim colors like
+// #FFFFFF or #C4CED4 vanish, so swap in readable accents for those roles.
+const readableSeed = (palette, seed, mode) => (
+  mode === 'light' ? themeFor({ ...palette, primary: seed, highlight: seed }, mode).accent : seed
+);
+const mynaVars = (palette, theme, mode = 'dark') => ({
   '--myna-canvas': theme.canvas, '--myna-surface': theme.surface, '--myna-raised': theme.raised,
   '--myna-text': theme.text, '--myna-muted': theme.muted, '--myna-border': theme.border,
   '--myna-accent': theme.accent, '--myna-on-accent': theme.onAccent,
-  '--myna-primary': palette.primary, '--myna-hi': palette.highlight, '--myna-trim': palette.trim,
+  '--myna-primary': palette.primary, '--myna-hi': readableSeed(palette, palette.highlight, mode),
+  '--myna-trim': readableSeed(palette, palette.trim, mode),
 });
 const roleVars = theme => channels({
   background: theme.canvas, foreground: theme.text, card: theme.surface, 'card-foreground': theme.text,
@@ -18,10 +29,27 @@ const roleVars = theme => channels({
   'court-accent': theme.accent, 'court-focus': theme.focus, 'court-trim': theme.trim, 'court-positive': theme.positive,
 });
 
+const inkFor = (palette, seed, mode) => themeFor({ ...palette, primary: seed, highlight: seed }, mode).accent;
+const seeds = palette => [palette.primary, palette.highlight, palette.trim];
+
+// Resolve one side's color against the other: try each of the team's colors,
+// then push the closest match apart toward white/black until distinct.
+function distinguish(candidates, anchor) {
+  const scored = candidates.map(color => ({ color, score: contrast(anchor, color) }));
+  const best = scored.reduce((top, item) => item.score > top.score ? item : top, scored[0]);
+  if (best.score >= SIDES_CONTRAST) return best.color;
+  let color = best.color, steps = 0;
+  while (contrast(anchor, color) < SIDES_CONTRAST && steps < 8) {
+    const target = luminance(color) > luminance(anchor) ? '#FFFFFF' : '#000000';
+    color = mix(color, target, .3); steps += 1;
+  }
+  return color;
+}
+
 export function teamThemeVars(code, mode = 'dark') {
   const palette = paletteForTeam(code), theme = themeFor(palette, mode);
-  const ink = themeFor({ ...palette, highlight: palette.primary }, mode).accent;
-  return { ...roleVars(theme), ...mynaVars(palette, theme),
+  const ink = inkFor(palette, palette.primary, mode);
+  return { ...roleVars(theme), ...mynaVars(palette, theme, mode),
     '--court-royal': hslChannels(palette.primary), '--team-primary': palette.primary,
     '--team-secondary': palette.highlight, '--team-ink': ink,
     '--team-on-primary': contrast(palette.primary, '#FFFFFF') > contrast(palette.primary, '#111827') ? '#FFFFFF' : '#111827',
@@ -33,15 +61,22 @@ export function matchupThemeVars(homeCode, awayCode, mode = 'dark') {
   const base = themeFor(home, mode), opponent = themeFor(away, mode);
   const theme = { ...base, canvas: mix(base.canvas, opponent.canvas, .5),
     surface: mix(base.surface, opponent.surface, .5), raised: mix(base.raised, opponent.raised, .5) };
-  const homeInk = themeFor({ ...home, highlight: home.primary }, mode).accent;
-  const awayInk = themeFor({ ...away, highlight: away.primary }, mode).accent;
-  return { ...roleVars(theme), ...mynaVars(home, theme), '--court-royal': hslChannels(away.primary),
+  const homeInk = inkFor(home, home.primary, mode);
+  const homeChart = home.primary;
+  // When both teams share similar colors, fall back through the away team's
+  // secondary/trim colors — then push the color apart — for every role that
+  // sits home-vs-away on screen.
+  const awayInk = distinguish(seeds(away).map(seed => inkFor(away, seed, mode)), homeInk);
+  const awayChart = distinguish(seeds(away), homeChart);
+  return { ...roleVars(theme), ...mynaVars(home, theme, mode), '--court-royal': hslChannels(away.primary),
     '--matchup-home-primary': home.primary, '--matchup-home-secondary': home.highlight,
     '--matchup-away-primary': away.primary, '--matchup-away-secondary': away.highlight,
     '--matchup-home-color': homeInk, '--matchup-away-color': awayInk,
     '--matchup-away-accent': opponent.accent,
-    '--matchup-home-chart': home.primary,
-    '--matchup-away-chart': home.primary === away.primary ? away.highlight : away.primary,
-    '--myna-primary-away': away.primary, '--myna-hi-away': away.highlight, '--myna-trim-away': away.trim,
+    '--matchup-home-chart': homeChart,
+    '--matchup-away-chart': awayChart,
+    '--myna-primary-away': away.primary,
+    '--myna-hi-away': readableSeed(away, away.highlight, mode),
+    '--myna-trim-away': readableSeed(away, away.trim, mode),
   };
 }

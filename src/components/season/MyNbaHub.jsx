@@ -26,12 +26,6 @@ export default function MyNbaHub({ focusCode, awayCode, tab, onTab, tabs = SEASO
     '--myna-border': theme.border,
     '--myna-accent': theme.accent,
     '--myna-on-accent': theme.onAccent,
-    '--myna-primary': palette.primary,
-    '--myna-hi': mode === 'light' ? themeFor({ ...palette, primary: palette.highlight }, mode).accent : palette.highlight,
-    '--myna-trim': mode === 'light' ? themeFor({ ...palette, primary: palette.trim }, mode).accent : palette.trim,
-    '--myna-primary-away': awayPalette?.primary,
-    '--myna-hi-away': awayPalette?.highlight,
-    '--myna-trim-away': awayPalette?.trim,
     ...(awayPalette ? matchupThemeVars(focusCode, awayCode, mode) : {}),
   };
   return (

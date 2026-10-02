@@ -56,10 +56,10 @@ export default function PlayerStatsChart({ teamA, teamB }) {
               {data.map((row, index) => <Cell key={index} fill={row.teamColor} stroke={row.teamInk} />)}
             </Bar>
             <Bar dataKey="reb" isAnimationActive={false} radius={[3, 3, 0, 0]}>
-              {data.map((row, index) => <Cell key={index} fill={row.teamSecondary} />)}
+              {data.map((row, index) => <Cell key={index} fill={row.teamSecondary} stroke={row.teamInk} />)}
             </Bar>
             <Bar dataKey="ast" isAnimationActive={false} radius={[3, 3, 0, 0]}>
-              {data.map((row, index) => <Cell key={index} fill={mix(row.teamColor, row.teamSecondary, .5)} />)}
+              {data.map((row, index) => <Cell key={index} fill={mix(row.teamColor, row.teamSecondary, .5)} stroke={row.teamInk} />)}
             </Bar>
           </BarChart>
         </ResponsiveContainer>

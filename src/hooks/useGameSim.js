@@ -11,8 +11,8 @@ export default function useGameSim() {
 
   const runGame = useCallback((league, home, away) => {
     if (!league || !home || !away) return;
-    const result = simSingleGame(league, home, away, { seed: Number(seed) || 1, neutral });
-    setGame({ ...result, home: home.code, away: away.code });
+    const result = simSingleGame(league, home, away, { seed: Number(seed) || 1, neutral, log: true });
+    setGame({ ...result, home: home.code, away: away.code, stamp: Date.now() });
   }, [seed, neutral]);
 
   const runSeries = useCallback((league, home, away) => {

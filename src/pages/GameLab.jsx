@@ -9,6 +9,8 @@ import MatchupBreakdown from '@/components/game/MatchupBreakdown';
 import GameControls from '@/components/game/GameControls';
 import GameScoreboard from '@/components/game/GameScoreboard';
 import GameBoxScore from '@/components/game/GameBoxScore';
+import GameRecap from '@/components/game/GameRecap';
+import GamePlayFeed from '@/components/game/GamePlayFeed';
 import SeriesBoard from '@/components/game/SeriesBoard';
 
 export default function GameLab() {
@@ -17,6 +19,11 @@ export default function GameLab() {
   const [tab, setTab] = useState('game');
   const [a, setA] = useState('BOS');
   const [b, setB] = useState('LAL');
+  const [feedDone, setFeedDone] = useState(false);
+
+  useEffect(() => {
+    setFeedDone(false);
+  }, [sim.game]);
 
   useEffect(() => {
     if (!league) return;
@@ -53,8 +60,14 @@ export default function GameLab() {
             
               {sim.game ?
             <React.Fragment>
-                  <GameScoreboard league={league} game={sim.game} />
-                  <GameBoxScore game={sim.game} />
+                  {!feedDone &&
+                  <GamePlayFeed key={sim.game.stamp} game={sim.game} home={home} away={away} onComplete={() => setFeedDone(true)} />}
+                  {feedDone &&
+                  <React.Fragment>
+                    <GameRecap game={sim.game} home={home} away={away} />
+                    <GameScoreboard league={league} game={sim.game} />
+                    <GameBoxScore game={sim.game} />
+                  </React.Fragment>}
                 </React.Fragment> :
 
             <section className="myna-panel p-4 text-xs myna-muted hidden">Set a seed, then sim the game to see the team-colored scoreboard and full box score.</section>

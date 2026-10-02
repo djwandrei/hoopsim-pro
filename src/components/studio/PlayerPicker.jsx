@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { perGameStats } from '@/lib/season/labs';
+import PlayerPortrait from '@/components/players/PlayerPortrait';
 
 export default function PlayerPicker({ players, onSelect, selectedRef, placeholder = 'Filter players…' }) {
   const [query, setQuery] = useState('');
@@ -38,7 +39,7 @@ export default function PlayerPicker({ players, onSelect, selectedRef, placehold
                 selectedRef === p.playerRef ? 'bg-gold/10 text-gold ring-1 ring-gold/30' : 'text-foreground hover:bg-raised'
               }`}
             >
-              <span className="truncate">{p.name}</span>
+              <PlayerPortrait key={p.headshotPath || p.playerRef} player={p} className="h-10 w-10" /><span className="min-w-0 flex-1 truncate">{p.name}</span>
               <span className="shrink-0 font-mono text-xs text-muted-foreground">
                 {p.teamCode} · {stats.mpg.toFixed(1)} MPG
               </span>

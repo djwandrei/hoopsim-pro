@@ -1,0 +1,9 @@
+import React from 'react';
+export default function PlayerBio({ player, context, status }) {
+  const year = player.seasonStartYear;
+  const profiles = context?.nba?.profiles || [];
+  const bio = profiles.find(row => Number.isFinite(row.ageBySeason?.[String(year)])) || profiles[0] || context?.nba?.roster;
+  const age = Number.isFinite(bio?.ageBySeason?.[String(year)]) ? bio.ageBySeason[String(year)] : Number.isFinite(player.age) ? player.age : null;
+  const fields = [['Listed position',player.positions.join(' / ')],['Season age',age],['Height',bio?.height?.display],['Weight',Number.isFinite(bio?.weightPounds) ? `${bio.weightPounds} lb` : null],['Jersey',bio?.jerseyNumber ? `#${bio.jerseyNumber}` : null],['College / school',bio?.college],['Country',bio?.country],['Birth date',bio?.birthDate],['Birthplace',typeof bio?.birthplace === 'string' ? bio.birthplace : null],['NBA start year',bio?.nbaStartYear],['Source identity',player.playerRef]];
+  return <div className="mt-4"><p className="text-xs text-muted-foreground">{status === 'loading' ? 'Loading source-backed player details…' : 'Published biography context. Physical details are not a season-specific forecast.'}</p><dl className="mt-4 grid gap-4 sm:grid-cols-2">{fields.map(([label,value]) => <div key={label}><dt className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</dt><dd className="mt-1 break-words text-sm">{value ?? 'Not supplied'}</dd></div>)}</dl>{bio?.source?.url?.startsWith('https://') && <a href={bio.source.url} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block text-xs text-gold underline underline-offset-4">View biography source</a>}</div>;
+}

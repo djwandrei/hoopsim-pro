@@ -1,0 +1,6 @@
+import React from 'react';
+import { Trophy } from 'lucide-react';
+export default function TrophyCase({ context, status }) {
+  const awards = (context?.espn?.awards || []).filter(row => row.award).sort((a,b) => a.seasonStartYear-b.seasonStartYear || a.award.localeCompare(b.award));
+  return <section className="mt-5 border-t border-border/30 pt-4"><div className="flex items-center justify-between"><h3 className="font-display text-xl">TROPHY CASE</h3><Trophy className="h-4 w-4 text-gold" /></div>{awards.length ? <ul className="mt-3 grid max-h-60 gap-2 overflow-y-auto sm:grid-cols-2">{awards.map((award,i) => <li key={`${award.award}-${award.seasonStartYear}-${i}`} className="flex items-center gap-3 rounded-xl border border-gold/20 bg-gold/5 p-3"><Trophy className="h-5 w-5 shrink-0 text-gold" /><div><p className="text-xs font-medium">{award.award}</p><p className="mt-1 text-[10px] text-muted-foreground">{award.seasonStartYear}–{String(award.seasonEndYear || award.seasonStartYear+1).slice(-2)} · {award.source?.provider || 'Published award history'}</p></div></li>)}</ul> : <p className="mt-3 text-xs text-muted-foreground">{status === 'loading' ? 'Loading published award records…' : 'No public award records are supplied for this player.'}</p>}</section>;
+}

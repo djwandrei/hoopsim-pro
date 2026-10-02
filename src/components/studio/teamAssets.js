@@ -1,4 +1,5 @@
-const ROOT = 'https://www.djshouseofcards-comics.com/assets/nba-logos/';
+const ROOT = '/studio-assets/nba-logos/';
 const FILES = { ATL:'retro-opaque/atlanta-hawks', BKN:'brooklyn-nets', BOS:'boston-celtics', CHA:'retro-opaque/charlotte-hornets', CHI:'chicago-bulls', CLE:'retro-opaque/cleveland-cavaliers', DAL:'dallas-mavericks', DEN:'retro-opaque/denver-nuggets', DET:'retro-opaque/detroit-pistons', GSW:'golden-state-warriors', HOU:'retro-opaque/houston-rockets', IND:'indiana-pacers', LAC:'los-angeles-clippers', LAL:'los-angeles-lakers', MEM:'retro-opaque/memphis-grizzlies', MIA:'miami-heat', MIL:'milwaukee-bucks', MIN:'retro-opaque/minnesota-timberwolves', NOP:'new-orleans-pelicans', NYK:'new-york-knicks', OKC:'oklahoma-city-thunder', ORL:'retro-opaque/orlando-magic', PHI:'philadelphia-76ers', PHX:'retro-opaque/phoenix-suns', POR:'portland-trail-blazers', SAC:'sacramento-kings', SAS:'retro-opaque/san-antonio-spurs', TOR:'retro-opaque/toronto-raptors', UTA:'retro-opaque/utah-jazz', WAS:'retro-opaque/washington-wizards' };
 export const teamAsset = code => FILES[code] ? `${ROOT}${FILES[code]}.png` : null;
-export const STUDIO_EMBLEM = 'https://www.djshouseofcards-comics.com/assets/games/swishiq-studio-emblem-20260913.png';
+export const STUDIO_EMBLEM = '/studio-assets/games/swishiq-studio-emblem-20260913.png';
+export const playerAsset = path => /^\/assets\/player-headshots\/(nba|nba-no-background)\/[a-z0-9._-]+\.(webp|png|jpg|jpeg)$/i.test(path || '') ? `https://www.djshouseofcards-comics.com${path}` : null;

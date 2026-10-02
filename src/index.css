@@ -57,7 +57,14 @@
   * { @apply border-border outline-ring/50; }
   body { @apply bg-background text-foreground font-body; }
 }
-.court-panel { @apply rounded-2xl border border-border/35 bg-card; box-shadow: 0 8px 24px hsl(var(--court-canvas) / 0.18); }
+.court-panel { @apply rounded-2xl border border-border/30 bg-card; box-shadow: 0 8px 24px hsl(var(--court-canvas) / 0.16); }
+.studio-select { @apply min-h-11 w-full rounded-lg border border-input bg-raised/40 px-3 py-2 text-sm text-foreground; }
+.studio-workspace fieldset:disabled { opacity: .6; }
+.studio-workspace input[type="checkbox"] { accent-color: hsl(var(--court-accent)); }
+.studio-workspace summary { min-height: 1.5rem; }
+.studio-workspace ::-webkit-scrollbar { width: .45rem; height: .45rem; }
+.studio-workspace ::-webkit-scrollbar-thumb { background: hsl(var(--border) / .4); border-radius: 1rem; }
+.studio-workspace ::-webkit-scrollbar-track { background: hsl(var(--court-canvas) / .3); }
 .studio-workspace input, .studio-workspace select { color-scheme: dark; }
 .studio-workspace input:disabled, .studio-workspace select:disabled { opacity: .55; cursor: not-allowed; }
 .studio-workspace main > .grid { align-items: start; }

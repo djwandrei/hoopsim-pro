@@ -21,7 +21,7 @@ export function observedPlayers(source) {
       prev.turnovers += row.turnovers; prev.steals += row.steals; prev.blocks += row.blocks;
     } else {
       byRef.set(row.playerRef, {
-        playerRef: row.playerRef, name: row.name, teamCode: row.teamCode, positions: row.positions || [],
+        playerRef: row.playerRef, name: row.name, teamCode: row.teamCode, positions: row.positions || [], headshotPath:row.headshotPath || null,
         games: row.games, minutes: row.minutes, points: row.points, rebounds: row.rebounds,
         assists: row.assists, turnovers: row.turnovers, steals: row.steals, blocks: row.blocks,
       });

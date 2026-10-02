@@ -1,20 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { createSpinRoom } from '@/components/spin/createSpinRoom';
 import { buildSeededPool, spinSeededPool } from '@/components/spin/engine/seededPool';
-import { normalizeModelPackageRef, stableHash } from '@/components/spin/engine/scenarioContract';
-import { observedPlayers } from '@/lib/season/labs';
-const OPTIONS = [{ value:'eligible', label:'All eligible players', eligibility:{ requireObserved:true } }, ...['guard','wing','forward','big','center'].map(role => ({ value:role,label:role.charAt(0).toUpperCase()+role.slice(1),eligibility:{ roles:[role],requireObserved:true } }))];
+import { stableHash } from '@/components/spin/engine/scenarioContract';
+import siteSpinContext from '@/components/spin/siteSpinContext';
 export default function SpinMount({ source, year, excluded, onSelection, onPool }) {
   const root = useRef(null);
-  const settings = useRef({ seed:'studio-11',role:'eligible' });
+  const settings = useRef({ seed:null,role:'all' });
   useEffect(() => {
     const refs = [...excluded].sort();
     const excludedSet = new Set(refs);
-    const entry = source.entry || {};
-    let packageRef;
+    let context;
     try {
-      if (entry.scope && (entry.scope.kind !== 'exact-season' || entry.scope.seasonStartYears?.length !== 1 || Number(entry.scope.seasonStartYears[0]) !== year || !entry.scope.phases?.includes('regular'))) throw new Error('Spin Room requires the selected exact-season regular-season package.');
-      packageRef = normalizeModelPackageRef({ ...entry, registryVersion:source.registry?.registryVersion || null, registryRevisionSha256:source.registry?.registryRevisionSha256 || null, scope:{ kind:'exact-season',seasonStartYears:[year],phases:['regular'] } });
+      context = siteSpinContext(source,year);
     } catch (error) {
       onPool({ status:'unavailable',reason:error.message }); onSelection(null);
       root.current.textContent = error.message;
@@ -22,9 +19,10 @@ export default function SpinMount({ source, year, excluded, onSelection, onPool 
       return;
     }
     root.current.removeAttribute('role');
-    const entries = observedPlayers(source).filter(player => !excludedSet.has(player.playerRef)).map(player => ({ ...player,seasonStartYear:year,phase:'regular',observed:true,adapterExcludedPlayerRefs:refs }));
+    const entries = context.entries.filter(player => !excludedSet.has(player.playerRef));
+    const options = context.options;
     let starting = true;
-    const controller = createSpinRoom({ root:root.current, entries, packageRef, seed:settings.current.seed, eligibilityOptions:[OPTIONS.find(option => option.value === settings.current.role) || OPTIONS[0], ...OPTIONS.filter(option => option.value !== settings.current.role)], uniquePlayerKey:'playerRef',
+    const controller = createSpinRoom({ root:root.current,entries,packageRef:context.packageRef,seed:settings.current.seed === null ? context.seed : settings.current.seed,eligibilityOptions:[options.find(option => option.value === settings.current.role) || options[0],...options.filter(option => option.value !== settings.current.role)],uniquePlayerKey:'playerRef',
       buildSeededPool:input => {
         const result = buildSeededPool(input);
         if (result.status === 'ready') result.receipt = { ...result.receipt,adapterVersion:'djhc-spin-exclusions-v1',excludedPlayerRefs:refs,exclusionsHash:stableHash(refs) };
@@ -32,7 +30,7 @@ export default function SpinMount({ source, year, excluded, onSelection, onPool 
         return result;
       },
       spinSeededPool,
-      onSelection:payload => { onSelection({ ...payload,excludedPlayerRefs:refs,exclusionsHash:stableHash(refs) }); },
+      onSelection:payload => { const image = source.playerSeasons.find(player => player.playerRef === payload.entry.playerRef)?.headshotPath;onSelection({ ...payload,displayPlayer:{ ...payload.entry,name:payload.entry.displayName,headshotPath:image },excludedPlayerRefs:refs,exclusionsHash:stableHash(refs) }); },
     });
     const form = root.current.querySelector('form');
     const button = root.current.querySelector('.swishiq-spin-room__spin');

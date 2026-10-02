@@ -88,7 +88,7 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                       <tr
                         key={entry.team.code}
                         className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]"
-                        style={dark ? undefined : { background: isFocus ? `color-mix(in srgb, ${teamColor} 14%, ${style.tint})` : style.tint }}
+                        style={{ background: isFocus ? `color-mix(in srgb, ${teamColor} 14%, ${style.tint})` : style.tint }}
                       >
                         <td className={`${cell} text-center`} style={isFocus ? { boxShadow: `inset 3px 0 0 ${teamColor}` } : undefined} title={style.label}>
                           <span
@@ -108,7 +108,7 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                         </td>
                         <td className={`${cell} myna-mono font-bold`}>
                           <span className="inline-flex items-center justify-end gap-1.5">
-                            <span className="inline-block h-1 w-10 overflow-hidden rounded-full bg-[var(--myna-raised)]"><span className="block h-full rounded-full" style={{ width: `${Math.round(entry.wins / 82 * 100)}%`, background: teamColor }} /></span>
+                            {!dark && <span className="inline-block h-1 w-10 overflow-hidden rounded-full bg-[var(--myna-raised)]"><span className="block h-full rounded-full" style={{ width: `${Math.round(entry.wins / 82 * 100)}%`, background: teamColor }} /></span>}
                             {entry.wins}
                           </span>
                         </td>

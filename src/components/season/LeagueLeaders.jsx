@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import { buildPlayerAverages } from '@/lib/season/playerAverages';
-import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 
 const CATEGORIES = [['pts', 'POINTS'], ['reb', 'REBOUNDS'], ['ast', 'ASSISTS']];
 const MODES = [['avg', 'Per Game'], ['totals', 'Season Totals']];
@@ -13,7 +12,6 @@ const MEDALS = [
 // League leaders board: toggleable per-game averages vs season totals, top 3 medal-ringed.
 export default function LeagueLeaders({ simGames }) {
   const [mode, setMode] = useState('avg');
-  const dark = ((useCourtTheme() || {}).mode) === 'dark';
   const boards = useMemo(() => {
     const ranked = buildPlayerAverages(simGames);
     return Object.fromEntries(CATEGORIES.map(([stat]) => [stat, [...ranked].sort((a, b) => (mode === 'avg' ? b[stat] - a[stat] : b.totals[stat] - a.totals[stat])).slice(0, 5)]));
@@ -66,7 +64,7 @@ export default function LeagueLeaders({ simGames }) {
               <tbody>
                 {boards[stat].map((player, index) => {
                   const value = mode === 'avg' ? player[stat].toFixed(1) : String(Math.round(player.totals[stat]));
-                  const medal = index < 3 && !dark ? MEDALS[index] : null;
+                  const medal = index < 3 ? MEDALS[index] : null;
                   return (
                     <tr key={player.name} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]" style={medal ? { background: medal.bg } : undefined}>
                       <td className="px-3 py-2">

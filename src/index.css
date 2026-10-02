@@ -182,6 +182,17 @@
 .myna-bar { height: .4rem; overflow: hidden; border-radius: 999px; background: var(--myna-raised); }
 .myna-bar > span { display: block; height: 100%; border-radius: 999px; }
 
+/* Studio sidebar is pinned to its dark palette in both site modes */
+.studio-sidebar { background-color: hsl(222 40% 16.5%) !important; border-color: hsl(215 14% 49% / .6) !important; color-scheme: dark; }
+.studio-sidebar .bg-card { background-color: hsl(222 40% 16.5%) !important; }
+.studio-sidebar [class*="bg-raised"] { background-color: hsl(221 37% 22%) !important; }
+.studio-sidebar [class*="border-border"] { border-color: hsl(215 14% 49% / .35) !important; }
+.studio-sidebar [class*="border-gold"] { border-color: hsl(43 78% 60% / .4) !important; }
+.studio-sidebar [class*="bg-gold"] { background-color: hsl(43 78% 60% / .1) !important; }
+.studio-sidebar [class*="text-gold"] { color: hsl(43 78% 60%) !important; }
+.studio-sidebar [class*="text-muted-foreground"] { color: hsl(216 27% 76%) !important; }
+.studio-sidebar [class*="text-foreground"] { color: hsl(220 38% 97%) !important; }
+
 /* Broadcast-feed slide-in: stat lines and win outcomes ride in like a lower-third graphic */
 @keyframes broadcast-in-left { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes broadcast-in-right { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }

@@ -8,7 +8,7 @@ export default function StudioNavigation({ active, collapsed = false, onToggle }
   const { pathname } = useLocation();
   const items = [{ path: '/', title: 'Studio overview', icon: LayoutGrid }, ...WORKBENCHES];
   return (
-    <aside className={`border-b border-border/60 bg-card lg:fixed lg:bottom-0 lg:left-0 lg:top-[var(--djhc-header-h,0px)] lg:z-30 lg:flex lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r ${collapsed ? 'hidden lg:w-16' : 'lg:w-56'}`}>
+    <aside className={`studio-sidebar border-b border-border/60 bg-card lg:fixed lg:bottom-0 lg:left-0 lg:top-[var(--djhc-header-h,0px)] lg:z-30 lg:flex lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r ${collapsed ? 'hidden lg:w-16' : 'lg:w-56'}`}>
       <div className="flex items-center justify-between gap-2 px-4 py-5 lg:px-4 lg:py-6">
         <Link to="/" aria-label="SwishIQ Studio overview" className="flex items-center gap-3"><Image src={STUDIO_EMBLEM} alt="" fittingType="fit" className="h-12 w-12 shrink-0 object-contain" />{!collapsed && <span><span className="block font-display text-2xl leading-none tracking-wide text-foreground">SWISHIQ</span><span className="mt-1 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.24em] text-muted-foreground"><span className="h-1.5 w-1.5 rounded-full bg-gold" />DJHC · Studio</span></span>}</Link>
         {!collapsed && <button type="button" onClick={onToggle} className="hidden items-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold hover:bg-gold/20 lg:inline-flex"><ChevronsLeft className="h-4 w-4" />Collapse</button>}

@@ -164,3 +164,15 @@
 .forge-stage-chip--open { border:1px dashed hsl(var(--border) / .5); background:hsl(var(--court-canvas) / .35); color:hsl(var(--muted-foreground) / .85); }
 .forge-stage-chip-val { font-family:var(--font-mono); font-size:.6rem; letter-spacing:0; text-transform:none; }
 .forge-stage-chip-grade { display:inline-flex; align-items:center; justify-content:center; min-width:1rem; height:1rem; padding:0 .2rem; border:1px solid currentColor; border-radius:999px; font-family:var(--font-mono); font-size:.55rem; }
+
+/* MyNBA-style league hub — themed live by the focused team's palette */
+.myna { background: var(--myna-canvas); color: var(--myna-text); border: 1px solid var(--myna-border); border-radius: 1rem; }
+.myna-panel { background: var(--myna-surface); border: 1px solid var(--myna-border); border-radius: 1rem; }
+.myna-hero { background: linear-gradient(115deg, var(--myna-primary) 0%, var(--myna-canvas) 60%); }
+.myna-accent { background: var(--myna-accent); color: var(--myna-on-accent); }
+.myna-accent-text { color: var(--myna-accent); }
+.myna-muted { color: var(--myna-muted); }
+.myna-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.myna-display { font-family: var(--font-display); letter-spacing: .04em; }
+.myna-bar { height: .4rem; overflow: hidden; border-radius: 999px; background: var(--myna-raised); }
+.myna-bar > span { display: block; height: 100%; border-radius: 999px; }

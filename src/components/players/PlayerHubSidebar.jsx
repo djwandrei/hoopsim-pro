@@ -57,7 +57,7 @@ export default function PlayerHubSidebar({ rows, phase, onPhaseChange, selected,
           {visible.map(row => {
             const active = selectedIds.has(row.id);
             return <tr key={row.id} aria-pressed={active} onClick={() => onToggle(row)} className={`cursor-pointer transition-colors ${active ? 'bg-gold/10' : 'hover:bg-raised/50'}`}>
-              <td><span className="flex items-center gap-2.5"><PlayerPortrait player={row} className="h-8 w-8 rounded-lg shrink-0" /><span className={`truncate text-xs font-semibold ${active ? 'text-gold' : 'text-foreground'}`}>{row.name}</span></span></td>
+              <td><span className="flex items-center gap-2.5"><PlayerPortrait player={row} className="h-12 w-12 shrink-0" /><span className={`truncate text-xs font-semibold ${active ? 'text-gold' : 'text-foreground'}`}>{row.name}</span></span></td>
               <td className="text-xs text-muted-foreground">{row.teamCode}</td>
               <td className="text-xs text-muted-foreground">{row.positions.join('/')}</td>
               {COLUMNS.map(([key]) => <td key={key} className="text-right font-mono text-[11px] tabular-nums text-foreground">{statText(key,row.stats[key])}</td>)}

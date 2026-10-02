@@ -1,7 +1,5 @@
 import React from 'react';
 import ForgeReel from '@/components/forge/ForgeReel';
-import PlayerPortrait from '@/components/players/PlayerPortrait';
-import TeamMark from '@/components/studio/TeamMark';
 import { SKILLS, gradeFor, gradeTone } from '@/components/forge/bapSkills';
 
 const TONE_CHIP = {
@@ -16,7 +14,7 @@ const TONE_CHIP = {
 export default function ForgeReelPanel({
   armedSkill = null,
   showGrades, onToggleGrades, teamItems, playerItems, teamSpin, playerSpin, spinning,
-  reveal, revealNote, onSpin, spinDisabled, onRespinTeam, onRespinPlayer,
+  reveal, onSpin, spinDisabled, onRespinTeam, onRespinPlayer,
   teamRespins, playerRespins, picks, leagueMax,
 }) {
   const landed = Boolean(reveal);
@@ -40,15 +38,6 @@ export default function ForgeReelPanel({
       <button type="button" onClick={onRespinPlayer} disabled={!playerRespins || spinning} className="flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-lg border border-gold/40 bg-gold/10 px-1 text-[10px] font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/20 disabled:cursor-not-allowed disabled:opacity-40">
         <span>Respin player</span><span className="font-mono text-[9px] opacity-80">{playerRespins} left</span>
       </button>
-    </div>}
-    {reveal && <div className="mt-3 flex items-center gap-3 rounded-xl border border-border/30 bg-raised/50 p-2.5">
-      <PlayerPortrait player={reveal} className="h-12 w-12" />
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-bold leading-tight">{reveal.name}</p>
-        <p className="flex items-center gap-1 text-[10px] text-muted-foreground"><TeamMark code={reveal.teamCode} className="h-4 w-4" />{reveal.teamCode}</p>
-        {revealNote && <p className="mt-0.5 truncate font-mono text-[10px] text-gold">{revealNote}</p>}
-      </div>
-      {reveal.positions?.[0] && <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-royal/50 bg-royal/15 font-mono text-[10px] text-royal">{reveal.positions[0]}</span>}
     </div>}
     <p className="mt-4 text-center font-mono text-[9px] uppercase tracking-[0.25em] text-gold">Skills</p>
     <div className="mt-2 space-y-1.5">

@@ -11,6 +11,7 @@ import ForgeBuildWheel from '@/components/forge/ForgeBuildWheel';
 import BucketBoard from '@/components/forge/BucketBoard';
 import BucketSummary from '@/components/forge/BucketSummary';
 import ForgeLeagueTour from '@/components/forge/ForgeLeagueTour';
+import ForgePlayerShowcase from '@/components/forge/ForgePlayerShowcase';
 
 // Build-A-Bucket-style reel draft, shared by both Forge modes:
 // TEAM / PLAYER reels on the left, silhouette stage with attribute chips in
@@ -149,13 +150,14 @@ export default function ForgeDraftGame({ source, league, mode }) {
 
   return <section aria-label="Forge draft game" className="space-y-4">
     {phase === 'setup' && <ForgeSetupPanel kicker={copy.kicker} title={copy.title} intro={copy.intro} group={group} onGroup={setGroup} poolCount={pool.length} onStart={start} />}
-    {phase === 'drafting' && <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,13.5rem)] xl:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,15rem)]">
+    {phase === 'drafting' && <div className="space-y-4">
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,13.5rem)] xl:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,15rem)]">
       <ForgeReelPanel
         armedSkill={selectedSkill}
         showGrades={showGrades} onToggleGrades={() => setShowGrades(value => !value)}
         teamItems={wheelTeams} playerItems={playerItems}
         teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning}
-        reveal={reveal} revealNote={revealNote}
+        reveal={reveal}
         onSpin={requestSpin} spinDisabled={mode === 'pick' && !selectedKey}
         onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
         teamRespins={teamRespins} playerRespins={playerRespins}
@@ -167,6 +169,8 @@ export default function ForgeDraftGame({ source, league, mode }) {
         onSelect={selectSkill} onAssign={assign} showGrades={showGrades}
       />
       <ForgeOvrPanel picks={picks} overall={liveOvr} leagueMax={leagueMax} showGrades={showGrades} onUndo={undo} />
+      </div>
+      <ForgePlayerShowcase player={reveal} note={revealNote} />
     </div>}
     {phase === 'complete' && <div className="space-y-4">
       <ForgeBuildWheel picks={picks} leagueMax={leagueMax} overall={overall} />

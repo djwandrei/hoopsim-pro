@@ -10,6 +10,7 @@ import LeagueHero from '@/components/season/LeagueHero';
 import LeagueStandings from '@/components/season/LeagueStandings';
 import LeagueSchedule from '@/components/season/LeagueSchedule';
 import LeagueTeamView from '@/components/season/LeagueTeamView';
+import PlayerStatsLog from '@/components/season/PlayerStatsLog';
 
 export default function SeasonLab() {
   const { year, setYear, years, source, league, state } = useSeasonSource();
@@ -103,6 +104,9 @@ export default function SeasonLab() {
           )}
           {tab === 'team' && (
             <LeagueTeamView team={team} simRow={simRow} league={league} actualWins={actualRecord?.w} />
+          )}
+          {tab === 'log' && (
+            <PlayerStatsLog team={team} simGames={simGames} />
           )}
         </MyNbaHub>
       </main>

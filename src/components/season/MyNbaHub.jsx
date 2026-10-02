@@ -1,7 +1,7 @@
 import React from 'react';
 import { paletteForTeam, themeFor } from '@/components/djhc/basketballPalettes';
 
-const SEASON_TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM']];
+const SEASON_TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM'], ['log', 'PLAYER LOG']];
 const GAME_TABS = [['matchup', 'MATCHUP'], ['game', 'GAME'], ['series', 'SERIES']];
 
 // MyNBA-style league hub shell: every panel is themed by the focused team's palette.

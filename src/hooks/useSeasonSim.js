@@ -28,7 +28,7 @@ export default function useSeasonSim() {
         for (; done < stop; done += 1) {
           const replay = runRepeat(league, schedule, { seed: seedBase + done, playoffs: setup.playoffs, defenseWeight });
           agg = aggregateRepeats(agg, replay);
-          lastGames = replay.games.map(({ at, home, away, homePts, awayPts, ot, actual }) => ({ at, home, away, homePts, awayPts, ot, actual }));
+          lastGames = replay.games.map(({ at, home, away, homePts, awayPts, ot, actual, boxHome, boxAway }) => ({ at, home, away, homePts, awayPts, ot, actual, boxHome, boxAway }));
           if (replay.bracket?.champion) champion = replay.bracket.champion;
         }
         setProgress(done / repeats);

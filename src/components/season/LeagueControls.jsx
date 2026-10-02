@@ -7,59 +7,86 @@ const BLEND_OPTIONS = [
   ['0.65', 'Own offense +'],
   ['0.35', 'Opp defense +'],
 ];
-const fieldCls = 'min-h-10 w-full rounded-lg border border-[var(--myna-border)] bg-[var(--myna-raised)] px-3 text-xs text-[var(--myna-text)]';
+const fieldCls = 'min-h-10 w-full rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3 text-xs text-[var(--myna-text)] transition-colors hover:border-[var(--myna-muted)] focus:border-[var(--myna-accent)] focus:outline-none';
+const labelCls = 'myna-muted mb-1.5 block text-[9px] font-bold uppercase tracking-[0.22em]';
 
+// Broadcast replay console: season, replays, scoring mix, playoffs and the run action.
 export default function LeagueControls({
   years, year, onYearChange, setup, onSetupChange,
   onRun, running, progress, hasResults, championName,
 }) {
+  const pct = Math.round((progress || 0) * 100);
   return (
-    <section className="myna-panel p-4" aria-label="Season replay controls">
-      <div className="flex flex-wrap items-end gap-3">
-        <label className="block w-32">
-          <span className="myna-muted mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em]">Season</span>
-          <select className={fieldCls} value={year} onChange={event => onYearChange(Number(event.target.value))} disabled={running}>
+    <section className="myna-panel p-4 sm:p-5" aria-label="Season replay controls">
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="inline-block h-8 w-1 rounded-full" style={{ background: 'linear-gradient(180deg, var(--myna-accent), transparent)' }} />
+          <div>
+            <p className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.22em]">Replay console</p>
+            <h3 className="myna-display mt-0.5 text-xl">Season Replay</h3>
+          </div>
+        </div>
+        <span
+          className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.18em]"
+          style={running
+            ? { borderColor: 'var(--myna-accent)', color: 'var(--myna-accent)' }
+            : hasResults
+              ? { borderColor: 'var(--myna-border)', color: 'var(--myna-text)' }
+              : { borderColor: 'var(--myna-border)', color: 'var(--myna-muted)' }}
+        >
+          <span className={`inline-block h-1.5 w-1.5 rounded-full ${running ? 'animate-pulse' : ''}`} style={{ background: running ? 'var(--myna-accent)' : 'var(--myna-muted)' }} />
+          {running ? `RUNNING · ${pct}%` : hasResults ? 'RESULTS READY' : 'READY'}
+        </span>
+      </header>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[9rem_8rem_12rem_auto_auto] lg:items-end">
+        <label className="block">
+          <span className={labelCls}>Season</span>
+          <select className={fieldCls} value={year} onChange={event => onYearChange(Number(event.target.value))} disabled={running} aria-label="Season">
             {years.map(value => <option key={value} value={value}>{value}–{String(value + 1).slice(-2)}</option>)}
           </select>
         </label>
-        <label className="block w-28">
-          <span className="myna-muted mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em]">Replays</span>
-          <select className={fieldCls} value={setup.repeats} onChange={event => onSetupChange({ ...setup, repeats: Number(event.target.value) })} disabled={running}>
+        <label className="block">
+          <span className={labelCls}>Replays</span>
+          <select className={fieldCls} value={setup.repeats} onChange={event => onSetupChange({ ...setup, repeats: Number(event.target.value) })} disabled={running} aria-label="Replays">
             {[1, 2, 5, 10, 25, 50, 100].map(value => <option key={value} value={value}>{value}×</option>)}
           </select>
         </label>
-        <label className="block w-40">
-          <span className="myna-muted mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em]">Scoring mix</span>
-          <select className={fieldCls} value={setup.blend} onChange={event => onSetupChange({ ...setup, blend: event.target.value })} disabled={running}>
+        <label className="block">
+          <span className={labelCls}>Scoring mix</span>
+          <select className={fieldCls} value={setup.blend} onChange={event => onSetupChange({ ...setup, blend: event.target.value })} disabled={running} aria-label="Scoring mix">
             {BLEND_OPTIONS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </label>
-        <div className="flex min-h-10 items-center gap-2 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-raised)] px-3">
+        <label className="flex min-h-10 items-center gap-2 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3">
           <span className="text-xs">Playoffs</span>
           <Switch aria-label="Include playoffs" checked={setup.playoffs} onCheckedChange={checked => onSetupChange({ ...setup, playoffs: checked })} disabled={running} />
-        </div>
+        </label>
         <button
           type="button"
           onClick={onRun}
           disabled={running}
-          className="myna-accent inline-flex min-h-10 items-center gap-2 rounded-lg px-5 text-[11px] font-semibold tracking-[0.15em] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-5 text-[11px] font-bold tracking-[0.18em] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+          style={{ background: 'linear-gradient(115deg, var(--myna-accent), var(--myna-hi))', color: 'var(--myna-on-accent)', boxShadow: '0 6px 18px color-mix(in srgb, var(--myna-accent) 30%, transparent)' }}
         >
           {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
           {running ? 'Simulating…' : hasResults ? 'Run new replay' : 'Run season replay'}
         </button>
       </div>
+
       {running && (
-        <div className="mt-3" role="status" aria-live="polite">
+        <div className="mt-4" role="status" aria-live="polite">
           <div className="flex justify-between text-[11px] myna-muted">
             <span>Replaying the schedule…</span>
-            <span className="myna-mono">{Math.round(progress * 100)}%</span>
+            <span className="myna-mono">{pct}%</span>
           </div>
-          <div className="myna-bar mt-1"><span style={{ width: `${Math.round(progress * 100)}%`, background: 'var(--myna-accent)' }} /></div>
+          <div className="myna-bar mt-1.5"><span className="transition-all" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--myna-accent), var(--myna-hi))' }} /></div>
         </div>
       )}
+
       {hasResults && !running && (
-        <p className="mt-3 flex items-center gap-2 text-[11px] myna-muted">
-          <Trophy className="h-3.5 w-3.5" />
+        <p className="mt-4 flex items-center gap-2 rounded-lg border px-3 py-2 text-[11px] myna-muted" style={{ borderColor: 'color-mix(in srgb, var(--myna-accent) 35%, transparent)', background: 'color-mix(in srgb, var(--myna-accent) 7%, transparent)' }}>
+          <Trophy className="h-3.5 w-3.5" style={{ color: 'var(--myna-accent)' }} />
           {championName
             ? <>Replay champion: <span className="myna-accent-text font-semibold">{championName}</span> · median standings across {setup.repeats} replays.</>
             : <>Median standings across {setup.replays ?? setup.repeats} replays · playoffs off.</>}

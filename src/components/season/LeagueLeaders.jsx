@@ -3,18 +3,13 @@ import { buildPlayerAverages } from '@/lib/season/playerAverages';
 
 const CATEGORIES = [['pts', 'POINTS'], ['reb', 'REBOUNDS'], ['ast', 'ASSISTS']];
 const MODES = [['avg', 'Per Game'], ['totals', 'Season Totals']];
-const goldHeader = { color: 'hsl(var(--court-accent))', background: 'hsl(var(--court-surface))' };
+const MEDALS = [
+  { border: 'hsl(var(--court-accent))', bg: 'color-mix(in srgb, hsl(var(--court-accent)) 16%, transparent)' },
+  { border: 'hsl(var(--court-focus))', bg: 'color-mix(in srgb, hsl(var(--court-focus)) 10%, transparent)' },
+  { border: 'hsl(var(--court-trim))', bg: 'color-mix(in srgb, hsl(var(--court-trim)) 10%, transparent)' },
+];
 
-// Contiguous gold ring around a highlighted row's cells (tables use separated borders).
-function rowRing(cellIndex, cellCount) {
-  const g = 'hsl(var(--court-accent) / .55)';
-  let shadow = `inset 0 1px 0 ${g}, inset 0 -1px 0 ${g}`;
-  if (cellIndex === 0) shadow = `inset 1px 0 0 ${g}, ${shadow}`;
-  if (cellIndex === cellCount - 1) shadow += `, inset -1px 0 0 ${g}`;
-  return { boxShadow: shadow };
-}
-
-// League leaders board: toggleable per-game averages vs season totals, top 3 gold-ringed.
+// League leaders board: toggleable per-game averages vs season totals, top 3 medal-ringed.
 export default function LeagueLeaders({ simGames }) {
   const [mode, setMode] = useState('avg');
   const boards = useMemo(() => {
@@ -25,56 +20,65 @@ export default function LeagueLeaders({ simGames }) {
   if (!(simGames || []).length) {
     return (
       <div className="myna-panel p-6 text-center">
-        <p className="myna-muted text-xs">Run a season replay from the controls above to crown league leaders.</p>
+        <p className="myna-muted text-xs">Run a season replay from the replay console to crown league leaders.</p>
       </div>
     );
   }
 
+  const header = { color: 'var(--myna-accent)', background: 'var(--myna-canvas)' };
   return (
-    <section className="myna-panel p-4" aria-label="League leaders">
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="myna-display text-lg">League Leaders</h3>
-        <div className="flex rounded-lg border border-[var(--myna-border)] bg-[var(--myna-raised)] p-0.5" role="group" aria-label="Leaderboard mode">
+    <section className="myna-panel overflow-hidden" aria-label="League leaders">
+      <header className="flex flex-wrap items-center justify-between gap-2 px-4 pb-3 pt-4">
+        <div>
+          <p className="myna-accent-text text-[10px] font-bold uppercase tracking-[0.22em]">Statistical crowns</p>
+          <h3 className="myna-display mt-0.5 text-2xl">LEAGUE LEADERS</h3>
+        </div>
+        <div className="flex rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] p-0.5" role="group" aria-label="Leaderboard mode">
           {MODES.map(([id, label]) => (
             <button
               key={id}
               type="button"
               onClick={() => setMode(id)}
               aria-pressed={mode === id}
-              className={`rounded-md px-3 py-1 text-[11px] font-semibold uppercase tracking-wide transition-colors ${mode === id ? '' : 'text-[var(--myna-muted)] hover:text-[var(--myna-text)]'}`}
-              style={mode === id ? { background: 'hsl(var(--court-accent))', color: 'hsl(var(--court-canvas))' } : undefined}
+              className={`rounded-md px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${mode === id ? '' : 'text-[var(--myna-muted)] hover:text-[var(--myna-text)]'}`}
+              style={mode === id ? { background: 'var(--myna-accent)', color: 'var(--myna-on-accent)' } : undefined}
             >
               {label}
             </button>
           ))}
         </div>
       </header>
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-px border-t border-[var(--myna-border)] bg-[var(--myna-border)] md:grid-cols-3">
         {CATEGORIES.map(([stat, label]) => (
-          <div key={stat} className="overflow-hidden rounded-xl border border-[var(--myna-border)]">
-            <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em]" style={goldHeader}>{label}</div>
+          <div key={stat} className="bg-[var(--myna-surface)]">
+            <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em]" style={header}>{label}</div>
             <table className="w-full">
               <thead>
-                <tr>
-                  <th className="text-left">#</th>
-                  <th className="text-left">Player</th>
-                  <th>{stat.toUpperCase() + (mode === 'avg' ? ' PG' : ' TOT')}</th>
+                <tr className="myna-muted text-[9px] uppercase tracking-[0.14em]">
+                  <th className="px-3 py-1.5 text-left">Rank</th>
+                  <th className="py-1.5 text-left">Player</th>
+                  <th className="px-3 py-1.5 text-right">{stat.toUpperCase() + (mode === 'avg' ? ' PG' : ' TOT')}</th>
                 </tr>
               </thead>
               <tbody>
                 {boards[stat].map((player, index) => {
                   const value = mode === 'avg' ? player[stat].toFixed(1) : String(Math.round(player.totals[stat]));
-                  const cells = [
-                    <td key="rank" className="myna-mono text-xs font-bold" style={{ color: index < 3 ? 'hsl(var(--court-accent))' : undefined }}>{index + 1}</td>,
-                    <td key="player" className="text-xs">
-                      <span className="font-semibold">{player.name}</span>
-                      <span className="myna-muted ml-1 text-[10px]">{player.team}</span>
-                    </td>,
-                    <td key="value" className="myna-mono text-xs">{value}</td>,
-                  ];
+                  const medal = index < 3 ? MEDALS[index] : null;
                   return (
-                    <tr key={player.name} style={index < 3 ? { background: 'color-mix(in srgb, hsl(var(--court-accent)) 10%, transparent)' } : undefined}>
-                      {cells.map((cell, cellIndex) => (index < 3 ? <React.Fragment key={cell.key}>{React.cloneElement(cell, { style: { ...cell.props.style, ...rowRing(cellIndex, 3) } })}</React.Fragment> : cell))}
+                    <tr key={player.name} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]" style={medal ? { background: medal.bg } : undefined}>
+                      <td className="px-3 py-2">
+                        <span
+                          className="myna-mono inline-flex h-5.5 w-5.5 min-w-5 items-center justify-center rounded-full border text-[10px] font-bold"
+                          style={medal ? { borderColor: medal.border, color: medal.border } : { borderColor: 'var(--myna-border)', color: 'var(--myna-muted)' }}
+                        >
+                          {index + 1}
+                        </span>
+                      </td>
+                      <td className="py-2 text-xs">
+                        <span className="font-semibold">{player.name}</span>
+                        <span className="myna-mono ml-1.5 rounded border border-[var(--myna-border)] px-1 text-[9px] myna-muted">{player.team}</span>
+                      </td>
+                      <td className="myna-mono py-2 pr-3 text-right text-sm font-bold" style={index === 0 ? { color: 'var(--myna-accent)' } : undefined}>{value}</td>
                     </tr>
                   );
                 })}

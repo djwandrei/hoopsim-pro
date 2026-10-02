@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import PlayerTrendChart from '@/components/season/PlayerTrendChart';
+import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 const STATS = [['pts', 'PTS'], ['reb', 'REB'], ['ast', 'AST'], ['stl', 'STL'], ['blk', 'BLK']];
-const gold = { color: 'var(--myna-accent)', background: 'color-mix(in srgb, var(--myna-accent) 14%, transparent)', fontWeight: 700 };
 
 // Historical player stats log: every simulated game line for the focused team,
-// with per-player averages and gold-highlighted career-high cells.
+// with per-player averages and accent-chipped career-high cells.
 export default function PlayerStatsLog({ team, simGames }) {
   const log = useMemo(() => {
     const players = new Map();
@@ -48,88 +48,114 @@ export default function PlayerStatsLog({ team, simGames }) {
     return (
       <div className="myna-panel p-6 text-center">
         <p className="myna-muted text-xs">
-          No player lines yet — run a season replay from the hub to start building the stats log.
+          No player lines yet — run a season replay from the console to start building the stats log.
         </p>
       </div>
     );
   }
 
+  const teamPalette = paletteForTeam(team.code);
+  const headCell = 'px-2.5 py-2 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
+
   return (
     <section className="space-y-4" aria-label="Player stats log">
-      <div className="myna-panel p-4">
-        <header className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="myna-display text-lg">{team.code} Player Averages</h3>
-          <p className="myna-muted text-[11px]">Across {log.games.length} simulated games</p>
+      <div className="myna-panel overflow-hidden">
+        <header className="flex flex-wrap items-baseline justify-between gap-2 px-4 pb-3 pt-4">
+          <div>
+            <p className="myna-accent-text text-[10px] font-bold uppercase tracking-[0.22em]">Player log</p>
+            <h3 className="myna-display mt-0.5 text-2xl">{team.code} PLAYER AVERAGES</h3>
+          </div>
+          <p className="myna-muted text-[11px]">Across {log.games.length} simulated games · select a row to open the game log</p>
         </header>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto border-t border-[var(--myna-border)]">
           <table className="w-full">
             <thead>
               <tr>
-                <th className="text-left">Player</th>
-                <th>GP</th>
-                <th>MPG</th>
-                {STATS.map(([stat, label]) => <th key={stat}>{label + (stat === 'pts' ? 'G' : 'PG')}</th>)}
+                <th className={`${headCell} text-left`}>Player</th>
+                <th className={headCell}>GP</th>
+                <th className={headCell}>MPG</th>
+                {STATS.map(([stat, label]) => <th key={stat} className={headCell}>{label + (stat === 'pts' ? 'G' : 'PG')}</th>)}
               </tr>
             </thead>
             <tbody>
-              {log.averages.map(player => (
-                <tr key={player.name} className="cursor-pointer transition-colors" onClick={() => setSelected(player.name)}>
-                  <td className="text-xs font-semibold">{player.name}</td>
-                  <td className="myna-mono text-xs">{player.gp}</td>
-                  <td className="myna-mono text-xs">{player.avgMin.toFixed(1)}</td>
-                  {STATS.map(([stat]) => (
-                    <td key={stat} className="myna-mono text-xs">{player.avgs[stat].toFixed(1)}</td>
-                  ))}
-                </tr>
-              ))}
+              {log.averages.map(player => {
+                const isFocus = focusPlayer?.name === player.name;
+                return (
+                  <tr
+                    key={player.name}
+                    className="cursor-pointer border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]"
+                    onClick={() => setSelected(player.name)}
+                    style={isFocus ? { background: `color-mix(in srgb, ${teamPalette.primary} 14%, transparent)`, boxShadow: `inset 3px 0 0 ${teamPalette.primary}` } : undefined}
+                  >
+                    <td className="px-2.5 py-2 text-xs font-semibold">{player.name}</td>
+                    <td className="myna-mono px-2 py-2 text-xs">{player.gp}</td>
+                    <td className="myna-mono px-2 py-2 text-xs">{player.avgMin.toFixed(1)}</td>
+                    {STATS.map(([stat], statIndex) => (
+                      <td key={stat} className="myna-mono px-2 py-2 text-xs" style={statIndex === 0 ? { color: 'var(--myna-accent)', fontWeight: 700 } : undefined}>{player.avgs[stat].toFixed(1)}</td>
+                    ))}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
 
       {focusPlayer && (
-        <div className="myna-panel p-4">
-          <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <h3 className="myna-display text-lg">Game Log — {focusPlayer.name}</h3>
-            <label className="flex items-center gap-2">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.15em] myna-muted">Player</span>
+        <div className="myna-panel overflow-hidden">
+          <header className="flex flex-wrap items-center justify-between gap-3 px-4 pb-3 pt-4">
+            <div>
+              <p className="myna-accent-text text-[10px] font-bold uppercase tracking-[0.22em]">Game-by-game</p>
+              <h3 className="myna-display mt-0.5 text-2xl">GAME LOG — {focusPlayer.name.toUpperCase()}</h3>
+            </div>
+            <label className="flex items-center gap-2 rounded-xl border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3 py-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em] myna-muted">Player</span>
               <select
                 value={focusPlayer.name}
                 onChange={event => setSelected(event.target.value)}
-                className="min-h-9 rounded-lg bg-[var(--myna-raised)] px-2 text-xs text-[var(--myna-text)]"
+                className="min-h-9 rounded-lg bg-[var(--myna-raised)] px-2 text-xs font-semibold text-[var(--myna-text)]"
                 aria-label="Select player"
               >
                 {log.averages.map(player => <option key={player.name} value={player.name}>{player.name}</option>)}
               </select>
             </label>
           </header>
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
+          <div className="grid gap-4 border-t border-[var(--myna-border)] p-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
             <div>
-              <p className="myna-muted mb-2 text-[11px]">Gold cells mark this player's career high in each stat.</p>
-              <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <th className="text-left">Game</th>
-                  <th className="text-left">Opp</th>
-                  <th>MIN</th>
-                  {STATS.map(([stat, label]) => <th key={stat}>{label}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map(row => (
-                  <tr key={`${row.gameNo}-${row.name}`}>
-                    <td className="myna-mono text-xs">#{row.gameNo}</td>
-                    <td className="text-xs">{row.homeGame ? 'vs' : '@'} {row.opponent}</td>
-                    <td className="myna-mono text-xs">{row.min}</td>
-                    {STATS.map(([stat]) => {
-                      const isHigh = (row[stat] || 0) === focusPlayer.highs[stat] && (row[stat] || 0) > 0;
-                      return <td key={stat} className="myna-mono text-xs" style={isHigh ? gold : undefined}>{row[stat]}</td>;
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              <p className="myna-muted mb-2 text-[11px]">Accent chips mark this player's career high in each stat.</p>
+              <div className="max-h-[28rem] overflow-y-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th className={`${headCell} text-left`}>Game</th>
+                      <th className={`${headCell} text-left`}>Opp</th>
+                      <th className={headCell}>MIN</th>
+                      {STATS.map(([stat, label]) => <th key={stat} className={headCell}>{label}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map(row => (
+                      <tr key={`${row.gameNo}-${row.name}`} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]">
+                        <td className="myna-mono px-2.5 py-2 text-xs">{row.gameNo}</td>
+                        <td className="px-2 py-2 text-xs">
+                          <span className="myna-mono myna-muted mr-1">{row.homeGame ? 'vs' : '@'}</span>
+                          <span className="font-semibold">{row.opponent}</span>
+                        </td>
+                        <td className="myna-mono px-2 py-2 text-xs">{row.min}</td>
+                        {STATS.map(([stat]) => {
+                          const isHigh = (row[stat] || 0) === focusPlayer.highs[stat] && (row[stat] || 0) > 0;
+                          return isHigh ? (
+                            <td key={stat} className="px-2 py-2 text-center">
+                              <span className="myna-mono inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in srgb, var(--myna-accent) 20%, transparent)', color: 'var(--myna-accent)' }}>{row[stat]}</span>
+                            </td>
+                          ) : (
+                            <td key={stat} className="myna-mono px-2 py-2 text-xs">{row[stat]}</td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
             <PlayerTrendChart rows={rows} />

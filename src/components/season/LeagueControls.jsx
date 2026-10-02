@@ -13,8 +13,6 @@ export default function LeagueControls({
   years, year, onYearChange, setup, onSetupChange,
   onRun, running, progress, hasResults, championName,
 }) {
-  const seedValue = Number(setup.seed);
-  const seedOk = Number.isInteger(seedValue) && seedValue >= 0 && seedValue <= 4294967295;
   return (
     <section className="myna-panel p-4" aria-label="Season replay controls">
       <div className="flex flex-wrap items-end gap-3">
@@ -36,14 +34,6 @@ export default function LeagueControls({
             {BLEND_OPTIONS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </label>
-        <label className="block w-32">
-          <span className="myna-muted mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em]">Seed</span>
-          <input
-            type="number" min={0} max={4294967295} value={setup.seed} disabled={running}
-            onChange={event => onSetupChange({ ...setup, seed: event.target.value })}
-            className={fieldCls}
-          />
-        </label>
         <div className="flex min-h-10 items-center gap-2 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-raised)] px-3">
           <span className="text-xs">Playoffs</span>
           <Switch aria-label="Include playoffs" checked={setup.playoffs} onCheckedChange={checked => onSetupChange({ ...setup, playoffs: checked })} disabled={running} />
@@ -51,7 +41,7 @@ export default function LeagueControls({
         <button
           type="button"
           onClick={onRun}
-          disabled={running || !seedOk}
+          disabled={running}
           className="myna-accent inline-flex min-h-10 items-center gap-2 rounded-lg px-5 text-[11px] font-semibold tracking-[0.15em] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}

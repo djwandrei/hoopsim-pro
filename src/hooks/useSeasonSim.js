@@ -5,7 +5,7 @@ import { runRepeat, aggregateRepeats, summarizeAggregate } from '@/lib/season/si
 const BLEND_WEIGHT = { '0.5': 0.8, '0.65': 0.35, '0.35': 1.1 };
 
 export default function useSeasonSim() {
-  const [setup, setSetup] = useState({ repeats: 10, blend: '0.5', playoffs: true, seed: '2026' });
+  const [setup, setSetup] = useState({ repeats: 10, blend: '0.5', playoffs: true });
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState(null);
@@ -13,7 +13,7 @@ export default function useSeasonSim() {
   const run = useCallback(async (league, schedule) => {
     if (!league || !schedule?.length) return;
     const repeats = setup.repeats;
-    const seedBase = Number(setup.seed) || 0;
+    const seedBase = Math.floor(Math.random() * 4294960000);
     const defenseWeight = BLEND_WEIGHT[setup.blend] ?? 0.8;
     setRunning(true);
     setProgress(0);

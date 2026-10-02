@@ -57,14 +57,14 @@ export default function ForgeTeamResult({ result, onRerun, onNewDraft }) {
           <tbody>
             {near.map((row, index) => <tr key={row.code} className={row.code === 'FRG' ? 'bg-gold/10' : ''}>
               <td className="text-left font-mono text-xs">{index + 1}</td>
-              <td className="text-left text-xs"><span className="flex items-center gap-1.5"><TeamMark code={row.code} className="h-4 w-4" />{row.code === 'FRG' ? 'Forge Legends' : row.name}</span></td>
+              <td className="text-left text-xs"><span className="flex items-center gap-1.5"><TeamMark code={row.code} className="h-6 w-6" />{row.code === 'FRG' ? 'Forge Legends' : row.name}</span></td>
               <td className="text-center font-mono text-xs">{row.wins}</td>
               <td className="text-center font-mono text-xs">{row.losses}</td>
               <td className="text-center font-mono text-xs">{row.winPct.toFixed(3).slice(1)}</td>
               <td className="text-center font-mono text-xs">{row.ortg.toFixed(1)}</td>
               <td className="text-center font-mono text-xs">{row.drtg.toFixed(1)}</td>
             </tr>)}
-            {showForge && <tr className="bg-gold/10"><td className="text-left font-mono text-xs">{standings.findIndex(row => row.code === 'FRG') + 1}</td><td className="text-left text-xs"><span className="flex items-center gap-1.5"><TeamMark code="FRG" className="h-4 w-4" />Forge Legends</span></td><td className="text-center font-mono text-xs">{forgeRow.wins}</td><td className="text-center font-mono text-xs">{forgeRow.losses}</td><td className="text-center font-mono text-xs">{forgeRow.winPct.toFixed(3).slice(1)}</td><td className="text-center font-mono text-xs">{forgeRow.ortg.toFixed(1)}</td><td className="text-center font-mono text-xs">{forgeRow.drtg.toFixed(1)}</td></tr>}
+            {showForge && <tr className="bg-gold/10"><td className="text-left font-mono text-xs">{standings.findIndex(row => row.code === 'FRG') + 1}</td><td className="text-left text-xs"><span className="flex items-center gap-1.5"><TeamMark code="FRG" className="h-6 w-6" />Forge Legends</span></td><td className="text-center font-mono text-xs">{forgeRow.wins}</td><td className="text-center font-mono text-xs">{forgeRow.losses}</td><td className="text-center font-mono text-xs">{forgeRow.winPct.toFixed(3).slice(1)}</td><td className="text-center font-mono text-xs">{forgeRow.ortg.toFixed(1)}</td><td className="text-center font-mono text-xs">{forgeRow.drtg.toFixed(1)}</td></tr>}
           </tbody>
         </table>
       </div>

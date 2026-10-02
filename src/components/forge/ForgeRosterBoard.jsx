@@ -21,7 +21,7 @@ export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) 
         <p className="court-kicker">Player list</p>
         <h2 className="mt-0.5 font-display text-2xl tracking-wide">{team ? team.name : 'AWAITING SPIN'}</h2>
       </div>
-      {team && <span className="flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-gold"><TeamMark code={team.code} className="h-4 w-4" />{team.code}</span>}
+      {team && <span className="flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-gold"><TeamMark code={team.code} className="h-6 w-6" />{team.code}</span>}
     </header>
     {team ? <div className="mt-3 max-h-72 overflow-y-auto">
       <table className="w-full text-sm">

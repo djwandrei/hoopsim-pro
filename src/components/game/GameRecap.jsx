@@ -15,7 +15,6 @@ export default function GameRecap({ game, home, away }) {
   const winner = homeWon ? home : away;
   const wPts = homeWon ? game.homePts : game.awayPts;
   const lPts = homeWon ? game.awayPts : game.homePts;
-  const palette = paletteForTeam(winner.code);
   const otLabel = game.ot ? ` (${game.ot === 1 ? 'OT' : `${game.ot}OT`})` : '';
 
   const topFor = box => (box?.lines || []).slice()
@@ -37,7 +36,7 @@ export default function GameRecap({ game, home, away }) {
   ];
 
   return (
-    <section className="court-panel overflow-hidden" data-team-theme={winner.code} style={teamThemeVars(winner.code, mode)} aria-label="Post-game recap">
+    <section className="court-panel overflow-hidden" aria-label="Post-game recap">
       <div className="p-5">
         <span className="court-kicker">Post-game recap</span>
         <h2 className="court-display mt-1 text-3xl">{winner.name} take it {wPts}–{lPts}{otLabel}</h2>

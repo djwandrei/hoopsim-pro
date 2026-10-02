@@ -7,7 +7,7 @@ function Half({ team, pts, won, label, side }) {
   const { mode = 'dark' } = useCourtTheme() || {};
   return (
     <div data-team-theme={team.code} className={`p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ ...teamThemeVars(team.code, mode), boxShadow: won ? 'inset 0 -3px 0 var(--team-secondary)' : undefined }}>
-      <TeamMark code={team.code} name={team.name} className="mx-auto h-14 w-14 rounded-2xl border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
+      <TeamMark code={team.code} name={team.name} className="mx-auto h-20 w-20" />
       <p className="myna-mono mt-2 text-5xl" style={{ color: 'var(--myna-accent)' }}>{pts}</p>
       <p className="myna-display mt-1 text-lg" style={{ color: 'var(--myna-accent)' }}>{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
     </div>

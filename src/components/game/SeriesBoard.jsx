@@ -12,7 +12,7 @@ export default function SeriesBoard({ league, series }) {
     <section className="myna-panel overflow-hidden" data-team-theme={winnerCode} style={{ ...matchupThemeVars(series.home, series.away, mode), ...teamThemeVars(winnerCode, mode) }} aria-label="Series result">
       <div className="broadcast-in-l flex flex-wrap items-center justify-between gap-4 p-5">
         <div className="flex min-w-0 items-center gap-4">
-          <TeamMark code={winnerCode} name={winner?.name} className="h-16 w-16 rounded-2xl border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
+          <TeamMark code={winnerCode} name={winner?.name} className="h-20 w-20" />
           <div className="min-w-0">
             <p className="myna-accent-text flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em]"><Trophy className="h-3.5 w-3.5" />SERIES RESULT</p>
             <h3 className="myna-display mt-1 text-2xl sm:text-3xl">{winner?.name.toUpperCase() || winnerCode} WIN THE SERIES</h3>

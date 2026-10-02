@@ -17,7 +17,7 @@ export default function ForgeTeamBoard({ slots, picks, reveal, revealPositions =
       <PlayerPortrait player={pick.player} className="h-9 w-9" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-[12px] font-semibold leading-tight">{pick.player.name}</p>
-        <p className="flex items-center gap-1 font-mono text-[9px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-3 w-3" />{pick.player.teamCode} · {pick.player.pts?.toFixed(1)} PPG</p>
+        <p className="flex items-center gap-1 font-mono text-[9px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-5 w-5" />{pick.player.teamCode} · {pick.player.pts?.toFixed(1)} PPG</p>
       </div>
       <span className="shrink-0 rounded-md border border-border/25 bg-canvas/60 px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">{slot.minutes} min</span>
     </div>;

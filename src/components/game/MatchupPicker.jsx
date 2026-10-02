@@ -5,7 +5,7 @@ import TeamMark from '@/components/studio/TeamMark';
 const fieldCls = 'min-h-10 w-full rounded-lg border border-[var(--myna-border)] bg-[var(--myna-raised)] px-3 text-xs text-[var(--myna-text)]';
 const sideChip = (team, side) => (
   <div data-team-side={side} className="matchup-side-surface flex items-center gap-2 rounded-lg border px-3 py-2">
-    <TeamMark code={team.code} name={team.name} className="h-8 w-8 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
+    <TeamMark code={team.code} name={team.name} className="h-12 w-12" />
     <div className="min-w-0">
       <p className="matchup-side-text truncate text-xs font-semibold">{team.name}</p>
       <p className="myna-mono myna-muted text-[10px]">NET {team.net > 0 ? '+' : ''}{team.net.toFixed(1)}</p>

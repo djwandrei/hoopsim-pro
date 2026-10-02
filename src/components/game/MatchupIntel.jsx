@@ -30,7 +30,7 @@ export default function MatchupIntel({ source, league, year }) {
     ['Ball control', teamB.oppTov - teamA.tov, teamA.oppTov - teamB.tov],
   ];
   const side = team => <div className="min-w-0 rounded-xl border border-border/25 bg-canvas/30 p-3">
-    <div className="flex items-center gap-2.5"><TeamMark code={team.code} name={team.name} className="h-10 w-10" /><div className="min-w-0"><p className="truncate text-xs font-semibold">{team.name}</p><p className="font-mono text-[10px] text-muted-foreground">NET {team.net > 0 ? '+' : ''}{team.net.toFixed(1)}</p></div></div>
+    <div className="flex items-center gap-2.5"><TeamMark code={team.code} name={team.name} className="h-14 w-14" /><div className="min-w-0"><p className="truncate text-xs font-semibold">{team.name}</p><p className="font-mono text-[10px] text-muted-foreground">NET {team.net > 0 ? '+' : ''}{team.net.toFixed(1)}</p></div></div>
     <div className="mt-3 space-y-2.5"><Bar label="Offense" value={team.off} average={league.offAvg} /><Bar label="Defense" value={team.def} average={league.defAvg} invert /><Bar label="Pace" value={team.pace} average={99} /></div>
     <p className="mt-2 truncate text-[10px] text-muted-foreground">{team.roster[0] ? `Leads minutes: ${team.roster[0].name}` : 'No roster rows in package'}</p>
   </div>;

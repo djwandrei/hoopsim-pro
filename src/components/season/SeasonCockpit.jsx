@@ -38,7 +38,7 @@ export default function SeasonCockpit({ source, league }) {
       <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">Published team metrics from the package — not simulated standings.{boardSort === 'def' ? ' Lower defensive rating is better.' : ''}</p>
       <ol className="mt-3 space-y-1.5">{board.map((team, index) => <li key={team.code} className="flex items-center gap-2 rounded-lg border border-border/25 bg-canvas/30 px-2.5 py-2 transition-colors hover:border-gold/40">
         <span className="font-mono text-[11px] text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
-        <TeamMark code={team.code} name={team.name} className="h-8 w-8" />
+        <TeamMark code={team.code} name={team.name} className="h-12 w-12" />
         <span className="min-w-0 flex-1"><span className="block truncate text-xs font-semibold">{team.name}</span><span className="block font-mono text-[10px] text-muted-foreground">OFF {team.off.toFixed(1)} · DEF {team.def.toFixed(1)} · PACE {team.pace.toFixed(1)}</span></span>
         <span className="flex w-16 shrink-0 items-center justify-end gap-1.5"><span className="h-1.5 rounded-full bg-gold/70" style={{ width: `${Math.max(4, Math.abs(team[boardSort]) / maxBoard * 44)}px` }} /><span className="font-mono text-xs text-gold">{boardSort === 'net' ? signed(team.net) : team[boardSort].toFixed(1)}</span></span>
       </li>)}</ol>

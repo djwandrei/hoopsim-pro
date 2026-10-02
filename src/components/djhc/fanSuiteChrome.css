@@ -8,3 +8,9 @@ body.court-themed[data-fan-tools-navigation='true'] .site-header.fan-suite-heade
 .studio-workspace > .footer.site-footer { z-index:40; }
 .site-nav-backdrop[hidden] { display:none !important; }
 .fan-suite-team-mark[hidden] { display:none !important; }
+/* Standalone team marks: no logo-only tile or inset padding. */
+body.court-themed .site-header.fan-suite-header .fan-suite-team-mark,
+body.court-themed[data-fan-tools-navigation='true'] .site-header.fan-suite-header .fan-suite-team-mark {
+  display:grid; place-items:center; width:clamp(3rem,4.5vw,4.5rem); height:clamp(3rem,4.5vw,4.5rem);
+  padding:0; overflow:visible; border:0; border-radius:0; background:transparent; box-shadow:none; object-fit:contain;
+}

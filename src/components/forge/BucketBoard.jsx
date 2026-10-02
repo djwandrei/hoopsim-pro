@@ -23,7 +23,7 @@ export default function BucketBoard({ buckets, picks, activeKey, onUndo, complet
         </div>
         {pick ? <div className="flex min-w-0 flex-1 items-center gap-2.5">
           <PlayerPortrait player={pick.player} className="h-9 w-9 shrink-0" />
-          <div className="min-w-0 flex-1"><p className="truncate text-xs font-semibold">{pick.player.name}</p><p className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-4 w-4" />{pick.player.teamCode}</p></div>
+          <div className="min-w-0 flex-1"><p className="truncate text-xs font-semibold">{pick.player.name}</p><p className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-6 w-6" />{pick.player.teamCode}</p></div>
           <p className="shrink-0 font-display text-xl leading-none text-gold">{bucket.fmt(pick.value)}</p>
           <span className={`w-8 shrink-0 rounded-md border py-0.5 text-center font-mono text-xs ${showGrades && grade ? 'border-gold/30 bg-gold/10 text-gold' : 'border-border/20 text-muted-foreground'}`}>{showGrades && grade ? grade : '·'}</span>
           {!complete && <button type="button" aria-label={`Release ${pick.player.name} from ${bucket.label}`} onClick={() => onUndo(bucket.key)} className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-raised hover:text-trim"><X className="h-3.5 w-3.5" /></button>}

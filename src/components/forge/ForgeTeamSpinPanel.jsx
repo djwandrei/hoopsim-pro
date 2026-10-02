@@ -1,15 +1,14 @@
 import React from 'react';
 import ForgeReel from '@/components/forge/ForgeReel';
-import PlayerPortrait from '@/components/players/PlayerPortrait';
 import TeamMark from '@/components/studio/TeamMark';
 
-// Left panel of the Team Forge: TEAM / PLAYER reels, spin + respin controls,
-// and the revealed player waiting to be placed in the rotation.
+// Left panel of the Team Forge: TEAM / PLAYER reels and the spin or respin
+// controls only — the revealed player lives in the wide showcase beside it.
 export default function ForgeTeamSpinPanel({
-  teamItems, playerItems, teamSpin, playerSpin, spinning, reveal, revealNote,
+  teamItems, playerItems, teamSpin, playerSpin, spinning,
   onSpin, onRespinTeam, onRespinPlayer, teamRespins, playerRespins, filled, total,
 }) {
-  const landed = Boolean(reveal);
+  const landed = Boolean(teamSpin?.targetKey) && !spinning;
   return <aside className="court-panel p-3" aria-label="Spin panel">
     <p className="text-center font-mono text-[9px] uppercase tracking-[0.25em] text-gold">Roster {filled}/{total}</p>
     <div className="mt-3 grid grid-cols-2 gap-2">
@@ -27,15 +26,6 @@ export default function ForgeTeamSpinPanel({
     </div> : <button type="button" onClick={onSpin} disabled={spinning} className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg bg-primary text-sm font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40">
       {spinning ? 'Spinning…' : 'Spin'}
     </button>}
-    {reveal && <div className="mt-3 flex items-center gap-3 rounded-xl border border-border/30 bg-raised/50 p-2.5">
-      <PlayerPortrait player={reveal} className="h-12 w-12" />
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-bold leading-tight">{reveal.name}</p>
-        <p className="flex items-center gap-1 text-[10px] text-muted-foreground"><TeamMark code={reveal.teamCode} className="h-4 w-4" />{reveal.teamCode} · {reveal.pts?.toFixed(1)} PTS · {reveal.ast?.toFixed(1)} AST · {reveal.reb?.toFixed(1)} REB</p>
-        {revealNote && <p className="mt-0.5 truncate font-mono text-[10px] text-gold">{revealNote}</p>}
-      </div>
-      {reveal.positions?.[0] && <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-royal/50 bg-royal/15 font-mono text-[10px] text-royal">{reveal.positions[0]}</span>}
-    </div>}
-    <p className="mt-4 text-center text-[10px] leading-relaxed text-muted-foreground">Spin lands on a random team and player — tap any open rotation spot to place them. Respins are shared across the whole draft.</p>
+    <p className="mt-4 text-center text-[10px] leading-relaxed text-muted-foreground">Spin lands on a random team and player — their full stat line lands in the showcase. Tap any open rotation spot to place them. Respins are shared across the whole draft.</p>
   </aside>;
 }

@@ -149,7 +149,7 @@ export default function ForgeDraftGame({ source, league, mode }) {
 
   return <section aria-label="Forge draft game" className="space-y-4">
     {phase === 'setup' && <ForgeSetupPanel kicker={copy.kicker} title={copy.title} intro={copy.intro} group={group} onGroup={setGroup} poolCount={pool.length} onStart={start} />}
-    {phase === 'drafting' && <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,19rem),minmax(0,1fr)] xl:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,15rem)]">
+    {phase === 'drafting' && <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,13.5rem)] xl:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,15rem)]">
       <ForgeReelPanel
         armedSkill={selectedSkill}
         showGrades={showGrades} onToggleGrades={() => setShowGrades(value => !value)}

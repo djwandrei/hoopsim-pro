@@ -84,6 +84,7 @@ verified against reviewed SHA-256 pins **in the browser** before execution:
   so a site update can never silently change gameplay.
 - **When your site updates the studio's modules, refresh the pins**: fetch
   each pinned file, compute SHA-256, and update the map.
+- All pins were last verified against the live site on 2026-10-02.
 
 ## 5. Assets the app expects on your site
 

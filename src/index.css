@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lobster+Two:wght@700&display=swap');
-@import url('/djhc-chrome.css');
+/* djhc-chrome.css is linked from index.html instead of imported here: the
+   standalone site build deploys it under the studio root, and Vite rewrites
+   the index.html link with the build base (a root-absolute CSS @import would
+   404 on the site). */
 @import '@/components/djhc/teamPalette.css';
 @import '@/components/djhc/fanSuiteChrome.css';
 @tailwind base;

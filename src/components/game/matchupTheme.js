@@ -48,12 +48,11 @@ function distinguish(candidates, anchor) {
 
 export function teamThemeVars(code, mode = 'dark') {
   const palette = paletteForTeam(code), theme = themeFor(palette, mode);
-  // Stat highlights paint text in a team color: pick whichever of the team's
-  // three colors contrasts best with the current mode's surface, and only
-  // walk it toward a readable tone when the raw color is too dim.
+  // Stat highlights paint text in the team's primary color: only walk it
+  // toward a readable tone when the raw primary is too dim — never swap to
+  // the team's secondary/trim colors.
   const surface = theme.surface;
-  const bestSeed = seeds(palette).reduce((best, seed) => contrast(seed, surface) > contrast(best, surface) ? seed : best);
-  const ink = contrast(bestSeed, surface) >= 4.5 ? bestSeed : inkFor(palette, bestSeed, mode);
+  const ink = contrast(palette.primary, surface) >= 4.5 ? palette.primary : inkFor(palette, palette.primary, mode);
   return { ...roleVars(theme), ...mynaVars(palette, theme, mode),
     '--court-royal': hslChannels(palette.primary), '--team-primary': palette.primary,
     '--team-secondary': palette.highlight, '--team-ink': ink,

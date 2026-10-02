@@ -1,6 +1,7 @@
 import base44 from "@base44/vite-plugin"
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import { fileURLToPath, URL } from 'node:url'
 
 // Standalone site export: VITE_STANDALONE=true builds the app for the DJHC
 // site under /tools/swishiq-studio/ with no Base44 runtime. The Base44 plugin
@@ -10,6 +11,10 @@ const standalone = process.env.VITE_STANDALONE === 'true';
 // https://vite.dev/config/
 export default defineConfig({
   base: standalone ? '/tools/swishiq-studio/' : '/',
+  resolve: { alias: {
+    '@': fileURLToPath(new URL('./src', import.meta.url)),
+    '@pins': fileURLToPath(new URL('./base44/shared/studioNativeAssets.ts', import.meta.url)),
+  } },
   plugins: [
     ...(standalone ? [] : [base44({
       // Support for legacy code that imports the base44 SDK with @/integrations, @/entities, etc.

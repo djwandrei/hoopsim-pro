@@ -1,5 +1,5 @@
 import { STANDALONE, SITE_ORIGIN } from '@/lib/deployConfig';
-import { PINS as STUDIO_ASSET_PINS } from '../../base44/shared/studioNativeAssets';
+import { PINS as STUDIO_ASSET_PINS } from '@pins';
 export const ORIGINAL_ORIGIN = SITE_ORIGIN;
 export const ORIGINAL_STUDIO = `${ORIGINAL_ORIGIN}/tools/swishiq-studio/`;
 const requests = new Map();

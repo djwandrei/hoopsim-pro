@@ -32,13 +32,15 @@ const roleVars = theme => channels({
 const inkFor = (palette, seed, mode) => themeFor({ ...palette, primary: seed, highlight: seed }, mode).accent;
 const seeds = palette => [palette.primary, palette.highlight, palette.trim];
 
-// Resolve one side's color against the other: try each of the team's colors,
-// then push the closest match apart toward white/black until distinct.
+// Resolve one side's color against the other: keep the team's primary unless
+// it sits too close to the opponent's color — then fall through the team's
+// other colors in order, and finally push the primary apart toward
+// white/black until distinct.
 function distinguish(candidates, anchor) {
-  const scored = candidates.map(color => ({ color, score: contrast(anchor, color) }));
-  const best = scored.reduce((top, item) => item.score > top.score ? item : top, scored[0]);
-  if (best.score >= SIDES_CONTRAST) return best.color;
-  let color = best.color, steps = 0;
+  for (const candidate of candidates) {
+    if (contrast(anchor, candidate) >= SIDES_CONTRAST) return candidate;
+  }
+  let color = candidates[0], steps = 0;
   while (contrast(anchor, color) < SIDES_CONTRAST && steps < 8) {
     const target = luminance(color) > luminance(anchor) ? '#FFFFFF' : '#000000';
     color = mix(color, target, .3); steps += 1;

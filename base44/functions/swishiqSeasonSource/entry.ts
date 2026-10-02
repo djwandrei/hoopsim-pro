@@ -1,3 +1,4 @@
+// Studio source relay: published package data plus pinned native gameplay assets.
 import { readStudioNativeAsset } from '../../shared/studioNativeAssets.ts';
 
 const DATA_BASE = 'https://www.djshouseofcards-comics.com/tools/swishiq-studio/data/';

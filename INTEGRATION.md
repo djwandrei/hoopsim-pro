@@ -103,5 +103,8 @@ verified against reviewed SHA-256 pins **in the browser** before execution:
 - The Base44 data relay: replaced by in-browser source building
   (`src/lib/season/seasonSourceCore.js`) and direct same-origin loading
   (`src/components/native/nativeTransport.js`).
+- The Base44 SDK itself: aliased to a no-op stub (`src/lib/base44SdkStub.js`)
+  in the standalone build, so no Base44 runtime ships in the site bundle —
+  verified by scanning the built JS for SDK code.
 - The route base name and logo/asset paths switch automatically via
   `src/lib/deployConfig.js` — no code edits needed at integration time.

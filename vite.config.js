@@ -11,10 +11,14 @@ const standalone = process.env.VITE_STANDALONE === 'true';
 // https://vite.dev/config/
 export default defineConfig({
   base: standalone ? '/tools/swishiq-studio/' : '/',
-  resolve: { alias: {
-    '@': fileURLToPath(new URL('./src', import.meta.url)),
-    '@pins': fileURLToPath(new URL('./base44/shared/studioNativeAssets.ts', import.meta.url)),
-  } },
+  resolve: { alias: [
+    // Standalone build: stub the Base44 SDK entirely — it must never ship to
+    // the site (AuthContext statically imports the client, which would pull
+    // the whole SDK into the bundle otherwise).
+    ...(standalone ? [{ find: '@base44/sdk', replacement: fileURLToPath(new URL('./src/lib/base44SdkStub.js', import.meta.url)) }] : []),
+    { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+    { find: '@pins', replacement: fileURLToPath(new URL('./base44/shared/studioNativeAssets.ts', import.meta.url)) },
+  ] },
   plugins: [
     ...(standalone ? [] : [base44({
       // Support for legacy code that imports the base44 SDK with @/integrations, @/entities, etc.

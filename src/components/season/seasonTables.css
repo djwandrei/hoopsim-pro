@@ -8,11 +8,11 @@
   --court-raised: var(--table-neutral-raised);
   @apply bg-table-neutral-surface;
 }
-.dark .season-lab table :is(thead, tbody, tfoot) { @apply bg-table-neutral-surface !important; }
+.dark .season-lab table :is(thead, tbody, tfoot, tr) { @apply bg-table-neutral-surface !important; }
 .dark .season-lab table th { @apply bg-table-neutral-canvas !important; }
-/* Rows stay transparent over the neutral table surface so per-row team-color
-   highlights (focus rows, zone tints) still show through in dark mode. */
+/* Neutral cells and rows; nested team markers, bars, badges and selection borders retain their colors. */
+.dark .season-lab table td { background: inherit !important; }
 .dark .season-lab table tbody tr:nth-child(even) {
-  background: color-mix(in srgb, hsl(var(--table-neutral-raised)) 20%, hsl(var(--table-neutral-surface)));
+  background: color-mix(in srgb, hsl(var(--table-neutral-raised)) 20%, hsl(var(--table-neutral-surface))) !important;
 }
-.dark .season-lab table tbody tr:hover { @apply bg-table-neutral-raised; }
+.dark .season-lab table tbody tr:hover { @apply bg-table-neutral-raised !important; }

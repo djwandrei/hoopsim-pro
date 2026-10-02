@@ -96,9 +96,9 @@ export default function PlayerStatsLog({ team, simGames }) {
                     key={player.name}
                     className="cursor-pointer border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]"
                     onClick={() => setSelected(player.name)}
-                    style={isFocus ? { background: `color-mix(in srgb, ${teamPalette.primary} 14%, transparent)`, boxShadow: `inset 3px 0 0 ${teamPalette.primary}` } : undefined}
+                    style={isFocus ? { background: `color-mix(in srgb, ${teamPalette.primary} 14%, transparent)` } : undefined}
                   >
-                    <td className="px-2.5 py-3 text-xs font-semibold">{player.name}</td>
+                    <td className="px-2.5 py-3 text-xs font-semibold" style={isFocus ? { boxShadow: `inset 3px 0 0 ${teamPalette.primary}` } : undefined}>{player.name}</td>
                     <td className="myna-mono px-2 py-3 text-xs">{player.gp}</td>
                     <td className="myna-mono px-2 py-3 text-xs">{player.avgMin.toFixed(1)}</td>
                     {STATS.map(([stat], statIndex) => (

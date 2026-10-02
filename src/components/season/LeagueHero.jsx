@@ -46,7 +46,7 @@ export default function LeagueHero({ team, simRow, actualRecord, conferenceRank 
       <span aria-hidden className="pointer-events-none absolute -bottom-6 right-2 select-none font-display leading-none opacity-[0.07]" style={{ fontSize: 'clamp(5rem, 12vw, 9rem)' }}>{team.code}</span>
       <div className="relative flex flex-wrap items-center justify-between gap-5 p-5 sm:p-6">
         <div className="flex min-w-0 items-center gap-4">
-          <TeamMark code={team.code} name={team.name} className="h-20 w-20 shrink-0 rounded-2xl" />
+          <TeamMark code={team.code} name={team.name} className="h-20 w-20 shrink-0" bare />
           <div className="min-w-0">
             <p className="myna-accent-text text-[10px] font-bold uppercase tracking-[0.22em]">{team.conference} Conference · Seed {conferenceRank || '—'}</p>
             <h3 className="myna-display mt-1 text-3xl sm:text-4xl">{team.name.toUpperCase()}</h3>

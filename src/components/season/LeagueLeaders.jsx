@@ -51,7 +51,7 @@ export default function LeagueLeaders({ simGames }) {
       <div className="grid gap-px border-t border-[var(--myna-border)] bg-[var(--myna-border)] md:grid-cols-3">
         {CATEGORIES.map(([stat, label]) => (
           <div key={stat} className="bg-[var(--myna-surface)]">
-            <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em]" style={header}>{label}</div>
+            <div className="px-3 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em]" style={header}>{label}</div>
             <table className="w-full">
               <thead>
                 <tr className="myna-muted text-[9px] uppercase tracking-[0.14em]">
@@ -74,11 +74,11 @@ export default function LeagueLeaders({ simGames }) {
                           {index + 1}
                         </span>
                       </td>
-                      <td className="py-2 text-xs">
+                      <td className="py-2.5 text-xs">
                         <span className="font-semibold">{player.name}</span>
                         <span className="myna-mono ml-1.5 rounded border border-[var(--myna-border)] px-1 text-[9px] myna-muted">{player.team}</span>
                       </td>
-                      <td className="myna-mono py-2 pr-3 text-right text-sm font-bold" style={index === 0 ? { color: 'var(--myna-accent)' } : undefined}>{value}</td>
+                      <td className="myna-mono py-2.5 pr-3 text-right text-sm font-bold" style={index === 0 ? { color: 'var(--myna-accent)' } : undefined}>{value}</td>
                     </tr>
                   );
                 })}

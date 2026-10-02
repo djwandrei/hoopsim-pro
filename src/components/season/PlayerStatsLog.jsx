@@ -55,7 +55,7 @@ export default function PlayerStatsLog({ team, simGames }) {
   }
 
   const teamPalette = paletteForTeam(team.code);
-  const headCell = 'px-2.5 py-2 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
+  const headCell = 'px-2.5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
 
   return (
     <section className="space-y-4" aria-label="Player stats log">
@@ -87,11 +87,11 @@ export default function PlayerStatsLog({ team, simGames }) {
                     onClick={() => setSelected(player.name)}
                     style={isFocus ? { background: `color-mix(in srgb, ${teamPalette.primary} 14%, transparent)`, boxShadow: `inset 3px 0 0 ${teamPalette.primary}` } : undefined}
                   >
-                    <td className="px-2.5 py-2 text-xs font-semibold">{player.name}</td>
-                    <td className="myna-mono px-2 py-2 text-xs">{player.gp}</td>
-                    <td className="myna-mono px-2 py-2 text-xs">{player.avgMin.toFixed(1)}</td>
+                    <td className="px-2.5 py-3 text-xs font-semibold">{player.name}</td>
+                    <td className="myna-mono px-2 py-3 text-xs">{player.gp}</td>
+                    <td className="myna-mono px-2 py-3 text-xs">{player.avgMin.toFixed(1)}</td>
                     {STATS.map(([stat], statIndex) => (
-                      <td key={stat} className="myna-mono px-2 py-2 text-xs" style={statIndex === 0 ? { color: 'var(--myna-accent)', fontWeight: 700 } : undefined}>{player.avgs[stat].toFixed(1)}</td>
+                      <td key={stat} className="myna-mono px-2 py-3 text-xs" style={statIndex === 0 ? { color: 'var(--myna-accent)', fontWeight: 700 } : undefined}>{player.avgs[stat].toFixed(1)}</td>
                     ))}
                   </tr>
                 );
@@ -136,20 +136,20 @@ export default function PlayerStatsLog({ team, simGames }) {
                   <tbody>
                     {rows.map(row => (
                       <tr key={`${row.gameNo}-${row.name}`} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]">
-                        <td className="myna-mono px-2.5 py-2 text-xs">{row.gameNo}</td>
-                        <td className="px-2 py-2 text-xs">
+                        <td className="myna-mono px-2.5 py-3 text-xs">{row.gameNo}</td>
+                        <td className="px-2 py-3 text-xs">
                           <span className="myna-mono myna-muted mr-1">{row.homeGame ? 'vs' : '@'}</span>
                           <span className="font-semibold">{row.opponent}</span>
                         </td>
-                        <td className="myna-mono px-2 py-2 text-xs">{row.min}</td>
+                        <td className="myna-mono px-2 py-3 text-xs">{row.min}</td>
                         {STATS.map(([stat]) => {
                           const isHigh = (row[stat] || 0) === focusPlayer.highs[stat] && (row[stat] || 0) > 0;
                           return isHigh ? (
-                            <td key={stat} className="px-2 py-2 text-center">
+                            <td key={stat} className="px-2 py-3 text-center">
                               <span className="myna-mono inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in srgb, var(--myna-accent) 20%, transparent)', color: 'var(--myna-accent)' }}>{row[stat]}</span>
                             </td>
                           ) : (
-                            <td key={stat} className="myna-mono px-2 py-2 text-xs">{row[stat]}</td>
+                            <td key={stat} className="myna-mono px-2 py-3 text-xs">{row[stat]}</td>
                           );
                         })}
                       </tr>

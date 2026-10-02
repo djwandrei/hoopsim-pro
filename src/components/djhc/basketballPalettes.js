@@ -60,6 +60,14 @@ export function themeFor(palette,mode='dark') {
   const backgrounds=[canvas,surface,raised],accent=readable(dark ? palette.highlight : palette.primary,backgrounds);
   return {canvas,surface,raised,text:readable(dark ? '#F4F6FA':'#172238',backgrounds,7),muted:readable(dark ? '#B1BED2':'#536177',backgrounds),border:readable(dark ? '#5A6980':'#8491A6',backgrounds,3),accent,onAccent:contrast('#FFFFFF',accent)>contrast('#111827',accent)?'#FFFFFF':'#111827',focus:readable(dark ? '#F4D37C':'#2449A4',backgrounds,3),trim:palette.trim,positive:readable(dark ? '#80DBB0':'#176444',backgrounds),warning:readable(dark ? '#F4D37C':'#80520D',backgrounds),error:readable(dark ? '#FFA9B4':'#AA263F',backgrounds)};
 }
+// Team-colored text that stays readable on both themes: resolve the team's
+// primary through themeFor's accent (which walks toward black/white until it
+// hits the contrast target) — e.g. Brooklyn's black primary never renders as
+// invisible black-on-dark text.
+export function readableTeamInk(code, mode = 'dark') {
+  const palette = paletteForTeam(code);
+  return themeFor({ ...palette, highlight: palette.primary }, mode).accent;
+}
 export function hslChannels(hex) {
   const [r,g,b]=rgb(hex).map(value=>value/255),max=Math.max(r,g,b),min=Math.min(r,g,b),delta=max-min,light=(max+min)/2;
   let hue=0,saturation=0;

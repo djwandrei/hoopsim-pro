@@ -53,7 +53,7 @@ export default function FocusCard({ team, row, leagueAvg, actualWins }) {
       <span aria-hidden className="pointer-events-none absolute -bottom-6 right-2 select-none font-display leading-none opacity-[0.07]" style={{ fontSize: 'clamp(4.5rem, 10vw, 8rem)' }}>{team.code}</span>
       <header className="flex flex-wrap items-center justify-between gap-3 px-5 py-4" style={{ background: `linear-gradient(115deg, ${palette.primary}33, transparent 70%)` }}>
         <div className="flex min-w-0 items-center gap-4">
-          <TeamMark code={team.code} name={team.name} className="h-16 w-16 shrink-0 rounded-2xl" />
+          <TeamMark code={team.code} name={team.name} className="h-16 w-16 shrink-0" bare />
           <div className="min-w-0">
             <span className="myna-accent-text text-[10px] font-bold uppercase tracking-[0.22em]">Focus team · {team.conference}</span>
             <h3 className="myna-display mt-1 text-3xl">{team.name.toUpperCase()}</h3>

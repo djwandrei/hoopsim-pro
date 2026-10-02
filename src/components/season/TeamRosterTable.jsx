@@ -1,7 +1,7 @@
 import React from 'react';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
-const cell = 'px-2.5 py-2 text-right';
+const cell = 'px-2.5 py-3 text-right';
 
 // Pinned roster from the season package: observed per-game rates, sorted by minutes.
 export default function TeamRosterTable({ team, actualWins }) {
@@ -9,7 +9,7 @@ export default function TeamRosterTable({ team, actualWins }) {
   const roster = [...(team.roster || [])].sort((a, b) => b.minutes / Math.max(1, b.games) - a.minutes / Math.max(1, a.games));
   const maxMpg = Math.max(1, ...roster.map(player => player.minutes / Math.max(1, player.games)));
   const topScorer = [...roster].sort((a, b) => b.pts - a.pts)[0];
-  const headCell = 'px-2.5 py-2 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
+  const headCell = 'px-2.5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
   return (
     <section className="myna-panel overflow-hidden" aria-label={`${team.name} roster`}>
       <header className="flex flex-wrap items-baseline justify-between gap-2 px-4 pb-3 pt-4">
@@ -40,8 +40,8 @@ export default function TeamRosterTable({ team, actualWins }) {
               const isTopScorer = topScorer && player.playerRef === topScorer.playerRef;
               return (
                 <tr key={player.playerRef} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]" style={{ boxShadow: `inset 2px 0 0 ${palette.primary}` }}>
-                  <td className="px-2.5 py-2 text-left font-semibold">{player.name}</td>
-                  <td className="px-2.5 py-2 text-left">
+                  <td className="px-2.5 py-3 text-left font-semibold">{player.name}</td>
+                  <td className="px-2.5 py-3 text-left">
                     {(player.positions || []).length
                       ? <span className="myna-mono rounded border border-[var(--myna-border)] px-1.5 py-0.5 text-[9px] font-bold tracking-[0.08em] myna-muted">{player.positions.join('/')}</span>
                       : <span className="myna-muted">—</span>}

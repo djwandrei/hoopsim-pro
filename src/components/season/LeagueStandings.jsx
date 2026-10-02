@@ -27,7 +27,7 @@ const ZONE_STYLE = {
 
 export default function LeagueStandings({ league, summary, actualRecords, focusCode, onFocusChange, limit }) {
   const hasSim = Boolean(summary);
-  const cell = 'px-2.5 py-2.5 text-right';
+  const cell = 'px-2.5 py-3 text-right';
   return (
     <div className="grid gap-4 xl:grid-cols-2">
       {['EAST', 'WEST'].map(conference => {
@@ -55,14 +55,14 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
               <table className="w-full text-xs">
                 <thead>
                   <tr className="myna-muted text-[10px] uppercase tracking-[0.14em]">
-                    <th className="px-2 py-2 text-center">Seed</th>
-                    <th className="px-2 py-2 text-left">Team</th>
-                    <th className="px-2 py-2 text-right">W</th>
-                    <th className="px-2 py-2 text-right">L</th>
-                    <th className="px-2 py-2 text-right">PCT</th>
-                    <th className="px-2 py-2 text-right">NET</th>
-                    {hasSim && <th className="px-2 py-2 text-right">PO%</th>}
-                    {hasSim && <th className="px-2 py-2 text-right">TITLE%</th>}
+                    <th className="px-2 py-2.5 text-center">Seed</th>
+                    <th className="px-2 py-2.5 text-left">Team</th>
+                    <th className="px-2 py-2.5 text-right">W</th>
+                    <th className="px-2 py-2.5 text-right">L</th>
+                    <th className="px-2 py-2.5 text-right">PCT</th>
+                    <th className="px-2 py-2.5 text-right">NET</th>
+                    {hasSim && <th className="px-2 py-2.5 text-right">PO%</th>}
+                    {hasSim && <th className="px-2 py-2.5 text-right">TITLE%</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -86,10 +86,10 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                             {index + 1}
                           </span>
                         </td>
-                        <td className="px-2 py-2.5">
+                        <td className="px-2 py-3">
                           <button type="button" onClick={() => onFocusChange(entry.team.code)} title={entry.team.name} className="flex min-h-8 items-center gap-2 rounded-md px-1 transition-colors hover:bg-[var(--myna-raised)]">
                             <span className="inline-block h-6 w-1 rounded-full" style={{ background: teamColor }} />
-                            <TeamMark code={entry.team.code} name={entry.team.name} className="h-7 w-7 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)]" />
+                            <TeamMark code={entry.team.code} name={entry.team.name} className="h-7 w-7" bare />
                             <span className="myna-mono text-xs">{entry.team.code}</span>
                             {isFocus && <span className="rounded px-1.5 py-0.5 text-[8px] font-bold tracking-[0.14em]" style={{ background: teamColor, color: 'var(--team-on-primary)' }}>YOU</span>}
                           </button>
@@ -107,7 +107,7 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
               </table>
             </div>
             {limit && rows.length > limit && (
-              <p className="myna-muted border-t border-[var(--myna-border)] px-4 py-2 text-[10px]">Showing top {limit} — the full table lives on the Standings tab.</p>
+              <p className="myna-muted border-t border-[var(--myna-border)] px-4 py-2.5 text-[10px]">Showing top {limit} — the full table lives on the Standings tab.</p>
             )}
           </section>
         );

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import TeamMark from '@/components/studio/TeamMark';
-import { paletteForTeam } from '@/components/djhc/basketballPalettes';
+import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPalettes';
+import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 
 const PAGE = 12;
 
@@ -17,6 +18,7 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
   const fmtDate = at => (at ? moment(at).format('MMM D') : 'TBD');
   const fmtMonth = at => (at ? moment(at).format('MMMM YYYY').toUpperCase() : 'TBD');
 
+  const { mode = 'dark' } = useCourtTheme() || {};
   const focusPalette = paletteForTeam(focusCode);
   const chip = active => `min-h-8 rounded-lg px-3 text-[10px] font-bold tracking-[0.16em] transition-colors ${active ? 'myna-accent' : 'text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`;
 
@@ -45,7 +47,7 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
       </header>
 
       {record && (
-        <div className="flex flex-wrap items-center gap-3 border-y border-[var(--myna-border)] bg-[var(--myna-canvas)] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em]">
+        <div className="flex flex-wrap items-center gap-3 border-y border-[var(--myna-border)] bg-[var(--myna-canvas)] px-4 py-3 text-[10px] font-bold uppercase tracking-[0.16em]">
           <span className="myna-muted">Record in listed games</span>
           <span className="myna-mono rounded-md px-2 py-0.5" style={{ background: 'color-mix(in srgb, var(--myna-accent) 16%, transparent)', color: 'var(--myna-accent)' }}>{record.w}–{record.l}</span>
           <span className="myna-muted">Replay score in accent · actual score dimmed</span>
@@ -57,12 +59,12 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
         <table className="w-full text-xs">
           <thead>
             <tr className="myna-muted text-[10px] uppercase tracking-[0.14em]">
-              <th className="px-4 py-2 text-left">Date</th>
-              <th className="px-2 py-2 text-left">Matchup</th>
-              <th className="px-2 py-2 text-right">Replay</th>
-              <th className="px-2 py-2 text-right">Actual</th>
-              <th className="px-2 py-2 text-center">OT</th>
-              {scope === 'team' && <th className="px-4 py-2 text-right">Result</th>}
+              <th className="px-4 py-3 text-left">Date</th>
+              <th className="px-2 py-3 text-left">Matchup</th>
+              <th className="px-2 py-3 text-right">Replay</th>
+              <th className="px-2 py-3 text-right">Actual</th>
+              <th className="px-2 py-3 text-center">OT</th>
+              {scope === 'team' && <th className="px-4 py-3 text-right">Result</th>}
             </tr>
           </thead>
           <tbody>
@@ -79,8 +81,8 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
               const prevMonth = index > 0 ? fmtMonth(visible[index - 1].at) : null;
               const teamButton = (code, side) => (
                 <button type="button" onClick={() => onFocusChange(code)} title={league.byCode.get(code)?.name} className={`flex min-h-8 items-center gap-1.5 rounded-md px-1 transition-colors hover:bg-[var(--myna-raised)] ${side === 'away' ? 'flex-row-reverse' : ''}`}>
-                  <TeamMark code={code} name={league.byCode.get(code)?.name} className="h-6 w-6 rounded-md border border-[var(--myna-border)] bg-[var(--myna-canvas)]" />
-                  <span className="myna-mono text-xs font-bold" style={{ color: code === (simWinner || actualWinner) ? paletteForTeam(code).primary : undefined }}>{code}</span>
+                  <TeamMark code={code} name={league.byCode.get(code)?.name} className="h-6 w-6" bare />
+                  <span className="myna-mono text-xs font-bold" style={code === (simWinner || actualWinner) ? { color: readableTeamInk(code, mode) } : undefined}>{code}</span>
                 </button>
               );
               return (
@@ -91,7 +93,7 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
                     </tr>
                   )}
                   <tr className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]">
-                    <td className="myna-mono px-4 py-2 text-[11px] myna-muted">{fmtDate(game.at)}</td>
+                    <td className="myna-mono px-4 py-3 text-[11px] myna-muted">{fmtDate(game.at)}</td>
                     <td className="px-2 py-2">
                       <span className="flex min-w-0 items-center gap-1.5">
                         {teamButton(game.away, 'away')}
@@ -99,11 +101,11 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
                         {teamButton(game.home, 'home')}
                       </span>
                     </td>
-                    <td className="myna-mono px-2 py-2 text-right font-semibold" style={{ color: sim ? 'var(--myna-accent)' : undefined }}>{sim ? `${sim.awayPts}–${sim.homePts}` : '—'}</td>
-                    <td className="myna-mono px-2 py-2 text-right myna-muted">{actual ? `${actual.away}–${actual.home}` : '—'}</td>
-                    <td className="px-2 py-2 text-center">{game.ot > 0 ? <span className="myna-mono rounded border border-[var(--myna-border)] px-1.5 py-0.5 text-[9px] font-bold">OT{game.ot > 1 ? game.ot : ''}</span> : <span className="myna-muted">·</span>}</td>
+                    <td className="myna-mono px-2 py-3 text-right font-semibold" style={{ color: sim ? 'var(--myna-accent)' : undefined }}>{sim ? `${sim.awayPts}–${sim.homePts}` : '—'}</td>
+                    <td className="myna-mono px-2 py-3 text-right myna-muted">{actual ? `${actual.away}–${actual.home}` : '—'}</td>
+                    <td className="px-2 py-3 text-center">{game.ot > 0 ? <span className="myna-mono rounded border border-[var(--myna-border)] px-1.5 py-0.5 text-[9px] font-bold">OT{game.ot > 1 ? game.ot : ''}</span> : <span className="myna-muted">·</span>}</td>
                     {scope === 'team' && (
-                      <td className="px-4 py-2 text-right">
+                      <td className="px-4 py-3 text-right">
                         {outcome ? (
                           <span
                             className="inline-flex h-6 min-w-8 items-center justify-center rounded-md px-1.5 font-mono text-[10px] font-bold"

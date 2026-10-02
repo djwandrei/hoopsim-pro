@@ -24,6 +24,12 @@ export default function SeasonLab() {
     if (league && !league.byCode.has(focus)) setFocus(league.teams[0]?.code || 'BOS');
   }, [league, focus]);
 
+  // The site-wide team palette follows the season focus team automatically.
+  useEffect(() => {
+    const code = league?.byCode.has(focus) ? focus : league?.teams?.[0]?.code;
+    if (code) window.dispatchEvent(new CustomEvent('djhc-court-team-follow', { detail: code }));
+  }, [league, focus]);
+
   const actualRecords = useMemo(() => {
     const map = new Map();
     for (const game of source?.schedule || []) {

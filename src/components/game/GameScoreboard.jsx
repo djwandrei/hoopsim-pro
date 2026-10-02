@@ -1,12 +1,14 @@
 import React from 'react';
 import TeamMark from '@/components/studio/TeamMark';
+import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 function Half({ team, pts, won, label, side }) {
+  const palette = paletteForTeam(team.code);
   return (
-    <div className={`p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ background: won ? 'linear-gradient(160deg, hsl(var(--court-accent) / 0.28), transparent 80%)' : 'transparent' }}>
+    <div className={`p-5 text-center ${side === 'away' ? 'broadcast-in-l' : 'broadcast-in-r'}`} style={{ background: won ? `linear-gradient(160deg, ${palette.primary}55, transparent 80%)` : 'transparent' }}>
       <TeamMark code={team.code} name={team.name} className="mx-auto h-14 w-14 rounded-2xl border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
-      <p className="myna-mono mt-2 text-5xl">{pts}</p>
-      <p className="myna-display mt-1 text-lg">{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
+      <p className="myna-mono mt-2 text-5xl" style={{ color: palette.highlight }}>{pts}</p>
+      <p className="myna-display mt-1 text-lg" style={{ color: palette.highlight }}>{team.code}<span className="myna-muted text-[10px] tracking-[0.2em]"> · {label}</span></p>
     </div>
   );
 }
@@ -45,12 +47,12 @@ export default function GameScoreboard({ league, game }) {
               <tr className="border-t border-[var(--myna-border)]">
                 <td className="px-2 py-1.5 text-left font-semibold">{away.code}</td>
                 {lineScore.map(row => <td key={row.q} className="myna-mono px-2 py-1.5">{row.a}</td>)}
-                <td className={`myna-mono px-2 py-1.5 font-bold${homeWon ? '' : ' text-gold'}`}>{game.awayPts}</td>
+                <td className="myna-mono px-2 py-1.5 font-bold" style={{ color: homeWon ? undefined : paletteForTeam(away.code).primary }}>{game.awayPts}</td>
               </tr>
               <tr className="border-t border-[var(--myna-border)]">
                 <td className="px-2 py-1.5 text-left font-semibold">{home.code}</td>
                 {lineScore.map(row => <td key={row.q} className="myna-mono px-2 py-1.5">{row.h}</td>)}
-                <td className={`myna-mono px-2 py-1.5 font-bold${homeWon ? ' text-gold' : ''}`}>{game.homePts}</td>
+                <td className="myna-mono px-2 py-1.5 font-bold" style={{ color: homeWon ? paletteForTeam(home.code).primary : undefined }}>{game.homePts}</td>
               </tr>
             </tbody>
           </table>

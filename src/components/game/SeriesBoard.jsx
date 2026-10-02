@@ -1,13 +1,15 @@
 import React from 'react';
 import { Trophy } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
+import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 export default function SeriesBoard({ league, series }) {
   const winnerCode = series.homeWins === 4 ? series.home : series.away;
   const winner = league.byCode.get(winnerCode);
+  const palette = paletteForTeam(winnerCode);
   return (
     <section className="myna-panel overflow-hidden" aria-label="Series result">
-      <div className="broadcast-in-l flex flex-wrap items-center justify-between gap-4 p-5" style={{ background: 'linear-gradient(115deg, hsl(var(--court-accent) / 0.22), transparent 70%)' }}>
+      <div className="broadcast-in-l flex flex-wrap items-center justify-between gap-4 p-5" style={{ background: `linear-gradient(115deg, ${palette.primary}40, transparent 70%)` }}>
         <div className="flex min-w-0 items-center gap-4">
           <TeamMark code={winnerCode} name={winner?.name} className="h-16 w-16 rounded-2xl border border-[var(--myna-border)] bg-[var(--myna-raised)]" />
           <div className="min-w-0">

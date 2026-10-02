@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Play, Pause, SkipForward } from 'lucide-react';
+import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 const SPEEDS = [300, 140, 60];
 const SPEED_LABELS = ['1x', '2x', '4x'];
@@ -12,6 +13,8 @@ export default function GamePlayFeed({ game, home, away, onComplete }) {
   const [speedIdx, setSpeedIdx] = useState(0);
   const listRef = useRef(null);
   const doneRef = useRef(false);
+  const homePalette = paletteForTeam(home.code);
+  const awayPalette = paletteForTeam(away.code);
 
   useEffect(() => {
     if (!events.length && !doneRef.current) { doneRef.current = true; onComplete?.(); }
@@ -63,22 +66,23 @@ export default function GamePlayFeed({ game, home, away, onComplete }) {
       </div>
 
       <div className="my-3 flex items-center justify-center gap-4">
-        <span className="myna-display text-xl">{away.code}</span>
+        <span className="myna-display text-xl" style={{ color: awayPalette.primary }}>{away.code}</span>
         <span className="myna-mono text-4xl font-semibold">{score[1]}</span>
         <span className="myna-muted text-xs tracking-[0.2em]">{current ? `${current.q} · ${live ? current.clock : 'FINAL'}` : 'PREGAME'}</span>
         <span className="myna-mono text-4xl font-semibold">{score[0]}</span>
-        <span className="myna-display text-xl">{home.code}</span>
+        <span className="myna-display text-xl" style={{ color: homePalette.primary }}>{home.code}</span>
       </div>
-      <div className="myna-bar"><span style={{ width: `${pct}%`, background: 'linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-royal)))' }} /></div>
+      <div className="myna-bar"><span style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${awayPalette.primary}, ${homePalette.primary})` }} /></div>
 
       <div ref={listRef} className="mt-3 h-64 space-y-1.5 overflow-y-auto pr-1">
         {visible.map((event, i) => {
           const isHome = event.side === 'home';
+          const palette = event.side ? (isHome ? homePalette : awayPalette) : null;
           const newest = i === visible.length - 1;
           return (
             <div key={count - visible.length + i} className={`flex items-center gap-2 rounded-lg border border-border/25 bg-canvas/50 px-2.5 py-1.5 text-xs ${newest && event.side ? (isHome ? 'broadcast-in-l' : 'broadcast-in-r') : ''}`}>
               <span className="myna-mono w-14 shrink-0 text-[10px] myna-muted">{event.q} {event.clock}</span>
-              <span className="h-6 w-1 shrink-0 rounded-full bg-gold" />
+              <span className="h-6 w-1 shrink-0 rounded-full" style={{ background: palette ? palette.primary : 'hsl(var(--court-accent))' }} />
               <span className="min-w-0 flex-1 truncate" title={event.text} style={event.type === 'period' || event.type === 'final' ? { color: 'hsl(var(--court-accent))' } : undefined}>{event.text}</span>
               {event.pts > 0 && <span className="myna-mono shrink-0 rounded-md bg-gold/15 px-1.5 py-0.5 text-[10px] text-gold">+{event.pts} · {event.score[1]}–{event.score[0]}</span>}
             </div>

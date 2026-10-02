@@ -12,12 +12,12 @@ export default function MatchupBreakdown({ league, source, year, a, b, onA, onB,
   return (
     <div className="space-y-4">
       <MatchupPicker league={league} a={a} b={b} onA={onA} onB={onB} onSimGame={onSimGame} hasGame={hasGame} />
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         <MatchupRadar teamA={teamA} teamB={teamB} league={league} />
         <MatchupEdges teamA={teamA} teamB={teamB} />
       </div>
       <MatchupTable teamA={teamA} teamB={teamB} />
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         <WinDistributionChart source={source} league={league} teamA={teamA} teamB={teamB} />
         <PlayerStatsChart teamA={teamA} teamB={teamB} />
       </div>

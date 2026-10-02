@@ -4,7 +4,7 @@ export async function readArchive(file, expectedHash) {
   const key = `${file}:${expectedHash || ''}`;
   if (requests.has(key)) return requests.get(key);
   const request = (async () => {
-    const response = await fetch(`${ROOT}${file}?v=20261002`, { cache:'force-cache' });
+    const response = await fetch(`${ROOT}${file}?v=20261002-core1`, { cache:'force-cache' });
     if (!response.ok) throw new Error('The published Studio archive could not be loaded.');
     const bytes = await response.arrayBuffer();
     if (expectedHash) {
@@ -27,7 +27,8 @@ export async function loadPlayerContext(name) {
   return entry ? readArchive(entry.path,entry.sha256) : null;
 }
 export async function loadCareerArchive() {
-  const value = await readArchive('career.json');
+  const manifest = await readArchive('snapshot.json');
+  const value = await readArchive('career.json',manifest.career.snapshotSha256);
   if (value.entry?.scope?.kind !== 'pooled-window' || !Array.isArray(value.records)) throw new Error('The pooled career archive is not available.');
   return value;
 }

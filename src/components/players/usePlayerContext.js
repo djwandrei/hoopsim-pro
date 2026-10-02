@@ -5,7 +5,8 @@ export default function usePlayerContext(name) {
   const [status,setStatus] = useState('loading');
   useEffect(() => {
     let active = true;
-    setContext(null);setStatus('loading');
+    setContext(null);setStatus(name ? 'loading' : 'unavailable');
+    if (!name) return () => { active = false; };
     loadPlayerContext(name).then(value => { if (active) { setContext(value);setStatus(value ? 'ready' : 'unavailable'); } }, () => { if (active) setStatus('unavailable'); });
     return () => { active = false; };
   },[name]);

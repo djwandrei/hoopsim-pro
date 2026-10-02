@@ -55,17 +55,17 @@ export default function CareerLab() {
               {view === 'overview' &&
             <div className="myna-panel p-4">
                   <RecordedCareerChart key={player.playerRef} seasons={seasons} />
-                  <details className="court-panel mt-4 p-4 text-xs hidden">
-                    <summary className="cursor-pointer text-gold">Career archive source receipt</summary>
-                    <dl className="mt-3 space-y-3 break-all">
-                      {[['Package', source.entry.packageId], ['Version', source.entry.packageVersion], ['Original career artifact SHA-256', source.sourceReceipt.artifactSha256], ['Package manifest SHA-256', source.entry.packageManifestSha256], ['Copied', source.sourceReceipt.copiedAt]].map(([label, value]) =>
-                  <div key={label}>
-                          <dt className="text-muted-foreground">{label}</dt>
-                          <dd className="mt-1 font-mono">{value}</dd>
-                        </div>
-                  )}
-                    </dl>
-                  </details>
+                  
+
+
+
+
+
+
+
+
+
+              
                 </div>}
               {view === 'history' &&
             <div className="myna-panel p-4"><RecordedCareerTable seasons={seasons} /></div>}

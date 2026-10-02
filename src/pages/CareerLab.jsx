@@ -13,6 +13,7 @@ import RecordedCareerChart from '@/components/career/RecordedCareerChart';
 import RecordedCareerTable from '@/components/career/RecordedCareerTable';
 import { careerSeasons } from '@/components/career/careerHistoryModel';
 import CareerSummary from '@/components/career/CareerSummary';
+import CareerSpotlight from '@/components/career/CareerSpotlight';
 import MyNbaHub from '@/components/season/MyNbaHub';
 
 const CAREER_TABS = [['overview', 'CAREER PATH'], ['history', 'SEASON LEDGER'], ['bio', 'BIO & AWARDS']];
@@ -39,8 +40,8 @@ export default function CareerLab() {
                   selectedRef={player?.playerRef}
                   onSelect={(value) => {setPlayer(value);setView('overview');}}
                   placeholder="Find a career…" />
-                
               </div>
+              {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={value => { setPlayer(value); setView('overview'); }} />}
               
 
               
@@ -72,13 +73,10 @@ export default function CareerLab() {
                 </div>}
               {view === 'history' &&
             <div className="myna-panel p-4"><RecordedCareerTable seasons={seasons} /></div>}
-              {view === 'bio' &&
-            <div className="myna-panel p-4">
-                  <p className="court-kicker">Bio & awards</p>
-                  <h2 className="mt-1 font-display text-2xl">BIOGRAPHY & AWARD HISTORY</h2>
-                  <PlayerBio player={{ ...player, seasonStartYear: player.latestYear }} context={context} status={status} />
-                  <TrophyCase context={context} status={status} />
-                </div>}
+              {view === 'bio' && <div className="grid gap-4 lg:grid-cols-2">
+                <div className="myna-panel p-4"><p className="court-kicker">Bio & awards</p><h2 className="mt-1 font-display text-2xl">BIOGRAPHY</h2><PlayerBio player={{ ...player, seasonStartYear: player.latestYear }} context={context} status={status} /></div>
+                <div className="myna-panel p-4"><p className="court-kicker">Published honors</p><h2 className="mt-1 font-display text-2xl">AWARDS</h2><TrophyCase context={context} status={status} /></div>
+              </div>}
             </div>
           }
         </MyNbaHub>

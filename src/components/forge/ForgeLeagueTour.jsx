@@ -37,10 +37,11 @@ export default function ForgeLeagueTour({ league, buckets, picks }) {
     return { wins, losses, avgMargin: rows.reduce((sum, row) => sum + row.margin, 0) / (rows.length || 1), rows };
   }, [league, composite]);
 
-  return <section className="court-panel p-5" aria-label="Composite league tour">
-    <header className="flex flex-wrap items-center justify-between gap-3">
-      <div><p className="court-kicker">Forge output</p><h3 className="mt-1 font-display text-2xl">COMPOSITE TOURS THE LEAGUE</h3><p className="mt-1 text-xs text-muted-foreground">The forged profile blends each donor's team ratings by bucket weight, then plays one neutral-court game against every {league.label} team.</p></div>
-      <span className="rounded-full border border-gold/30 bg-gold/10 px-3 py-1.5 text-[11px] font-semibold text-gold" role="status">{tour.wins}–{tour.losses} vs the league</span>
+  return <section className="court-panel relative overflow-hidden p-5" aria-label="Composite league tour">
+    <span className="bcast-watermark" aria-hidden="true">CMP</span>
+    <header className="relative flex flex-wrap items-center justify-between gap-3">
+      <div><p className="bcast-kicker">Forge output</p><h3 className="mt-1 font-display text-2xl">COMPOSITE TOURS THE LEAGUE</h3><p className="mt-1 text-xs text-muted-foreground">The forged profile blends each donor's team ratings by bucket weight, then plays one neutral-court game against every {league.label} team.</p></div>
+      <span className="bcast-lowerthird" role="status"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>{tour.wins}–{tour.losses} vs the league</span>
     </header>
     <div className="mt-4 grid gap-3 sm:grid-cols-4">
       <MetricTile label="Offensive rating" value={composite.off.toFixed(1)} detail="points / 100 possessions" />

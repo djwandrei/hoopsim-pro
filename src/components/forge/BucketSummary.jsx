@@ -6,9 +6,10 @@ import MetricTile from '@/components/studio/MetricTile';
 import { gradeFor } from '@/components/forge/bapSkills';
 export default function BucketSummary({ buckets, picks, overall, leagueMax, onRestart }) {
   const sorted = [...buckets].sort((a, b) => (picks[b.key].value / leagueMax[b.key]) - (picks[a.key].value / leagueMax[a.key]));
-  return <section className="court-panel p-5" aria-label="Completed build summary">
-    <header className="flex flex-wrap items-center justify-between gap-3">
-      <div><p className="court-kicker">Build complete</p><h3 className="mt-1 font-display text-3xl">YOUR COMPOSITE PLAYER</h3></div>
+  return <section className="court-panel relative overflow-hidden p-5" aria-label="Completed build summary">
+    <span className="bcast-watermark" aria-hidden="true">FORGED</span>
+    <header className="relative flex flex-wrap items-center justify-between gap-3">
+      <div><p className="bcast-kicker">Build complete</p><h3 className="broadcast-gradient-text mt-1 font-display text-3xl">YOUR COMPOSITE PLAYER</h3></div>
       <button type="button" onClick={onRestart} className="flex min-h-10 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 text-xs font-semibold text-gold transition-colors hover:bg-gold/20"><RotateCcw className="h-3.5 w-3.5" />Draft a new player</button>
     </header>
     <div className="mt-4 grid gap-3 sm:grid-cols-3">

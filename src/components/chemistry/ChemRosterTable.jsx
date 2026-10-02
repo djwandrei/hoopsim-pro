@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
-import { formatMetric, formatTotal, rosterMetricValue } from './chemistryFormat';
+import { formatMetric, rosterMetricValue } from './chemistryFormat';
 
 const COLUMNS = [
   { key: 'team', label: 'Team', access: row => row.teamCode },

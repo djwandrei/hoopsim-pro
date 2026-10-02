@@ -32,7 +32,9 @@ export default function ChemPairView({ dataset, chem }) {
   const compare = () => {
     const first = rowById.get(pickedIds.a);
     const second = rowById.get(pickedIds.b);
-    if (first && second) setResult({ first, second });
+    if (!first || !second) return;
+    setResult({ first, second });
+    requestAnimationFrame(() => document.getElementById('chem-pair-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   };
   const playerOptions = filtered.slice(0, 150);
   const first = result && rowById.get(result.first.playerSeasonRef || '') || result?.first;
@@ -77,7 +79,7 @@ export default function ChemPairView({ dataset, chem }) {
       {playerOptions.length < filtered.length && <p className="mt-3 text-xs text-muted-foreground">Showing 150 of {filtered.length.toLocaleString()} matching players — narrow the filters to see more.</p>}
     </section>
     <ChemRosterTable rows={filtered} onPick={pick} pickedIds={pickedIds} />
-    {first && second && <div className="space-y-5" ref={node => { if (node && result) node.scrollIntoView?.({ behavior: 'smooth', block: 'start' }); }}>
+    {first && second && <div id="chem-pair-result" className="space-y-5">
       <ChemPairProfile first={first} second={second} dataset={dataset} chem={chem} />
       <ChemChallenge first={first} second={second} chem={chem} />
     </div>}

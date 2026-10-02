@@ -14,9 +14,9 @@ export function careerSeasons(player) {
   player.rows.forEach(row => {
     const season = map.get(row.seasonStartYear) || { year:row.seasonStartYear,games:0,minutes:0,ptsTotal:0,rebTotal:0,astTotal:0,teams:[],rows:[] };
     season.games += row.games;season.minutes += row.minutes;
-    for (const [total,key] of [['ptsTotal','points'],['rebTotal','rebounds'],['astTotal','assists']]) if (Number.isFinite(row.careerMetrics?.[key])) season[total] += row.careerMetrics[key]*row.games;
+    for (const [total,key] of [['ptsTotal','points'],['rebTotal','rebounds'],['astTotal','assists']]) { if (Number.isFinite(row.careerMetrics?.[key])) season[total] += row.careerMetrics[key]*row.games; else season[`${total}Missing`]=true; }
     if (!season.teams.includes(row.teamCode)) season.teams.push(row.teamCode);
     season.rows.push(row);map.set(row.seasonStartYear,season);
   });
-  return [...map.values()].sort((a,b) => a.year-b.year).map(row => ({ ...row,label:`${row.year}–${String(row.year+1).slice(-2)}`,pts:row.ptsTotal/row.games,reb:row.rebTotal/row.games,ast:row.astTotal/row.games }));
+  return [...map.values()].sort((a,b) => a.year-b.year).map(row => ({ ...row,label:`${row.year}–${String(row.year+1).slice(-2)}`,pts:row.ptsTotalMissing?null:row.ptsTotal/row.games,reb:row.rebTotalMissing?null:row.rebTotal/row.games,ast:row.astTotalMissing?null:row.astTotal/row.games }));
 }

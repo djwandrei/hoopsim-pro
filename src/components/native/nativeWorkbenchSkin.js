@@ -1,7 +1,7 @@
 const nativeWorkbenchSkin = `
 .studio-native :is(.game-lab-view,.season-lab-view){width:100%;max-width:none;margin:0;padding:0;color-scheme:dark}
-.studio-native .game-lab-view{--gl-ink:var(--studio-ink);--gl-muted:var(--studio-muted);--gl-surface:var(--studio-surface);--gl-raised:var(--studio-raised);--gl-canvas:var(--studio-canvas);--gl-line:var(--studio-line);--gl-gold:var(--studio-gold);--gl-blue:var(--studio-gold);--gl-danger:var(--court-trim)}
-.studio-native .season-lab-view{--sl-ink:var(--studio-ink);--sl-muted:var(--studio-muted);--sl-surface:var(--studio-surface);--sl-raised:var(--studio-raised);--sl-canvas:var(--studio-canvas);--sl-line:var(--studio-line);--sl-gold:var(--studio-gold);--sl-blue:var(--studio-gold);--sl-green:var(--court-positive);--sl-red:var(--court-trim)}
+.studio-native .game-lab-view{--gl-ink:var(--studio-ink);--gl-muted:var(--studio-muted);--gl-surface:var(--studio-surface);--gl-raised:var(--studio-raised);--gl-canvas:var(--studio-canvas);--gl-line:var(--studio-line);--gl-gold:var(--studio-gold);--gl-blue:var(--studio-blue);--gl-danger:var(--court-trim)}
+.studio-native .season-lab-view{--sl-ink:var(--studio-ink);--sl-muted:var(--studio-muted);--sl-surface:var(--studio-surface);--sl-raised:var(--studio-raised);--sl-canvas:var(--studio-canvas);--sl-line:var(--studio-line);--sl-gold:var(--studio-gold);--sl-blue:var(--studio-blue);--sl-green:var(--court-positive);--sl-red:var(--court-trim)}
 .studio-native :is(.gl-hero,.sl-hero){display:none}
 .studio-native :is(.gl-panel,.sl-source-panel,.sl-results-shell,.sl-setup-empty,.sl-card,.swishiq-chemistry-lab__result-card,.swishiq-composite-source-card){background:var(--studio-surface);color:var(--studio-ink);border:1px solid var(--studio-line);border-radius:1rem;box-shadow:var(--studio-shadow)}
 .studio-native :is(.gl-section-heading h2,.sl-section-heading h2,.sl-card h3){font-size:1.6rem;margin-bottom:.3rem}

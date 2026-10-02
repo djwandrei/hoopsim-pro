@@ -164,7 +164,7 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
       <div className="mt-5 text-center"><button type="button" onClick={start} disabled={!allPool.length} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:translate-y-px hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40"><Play className="h-4 w-4" />Start the draft</button></div>
     </div>}
     {phase === 'drafting' && <div className="space-y-4">
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,19rem),minmax(0,1fr)]">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,19rem),minmax(0,1fr)]">
         {pickMode ? <ForgeTeamPickPanel
           teamItems={wheelTeams} teamSpin={teamSpin} spinning={spinning}
           activeTeam={activeTeam}

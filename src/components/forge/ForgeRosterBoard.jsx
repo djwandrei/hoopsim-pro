@@ -6,7 +6,7 @@ import { SKILLS } from '@/components/forge/bapSkills';
 // Wide roster board for the Pick variant: the landed team's full roster as a
 // stat table — click any row to select that player, then place them on the board.
 export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) {
-  return <section aria-label="Roster board" className="court-panel p-4">
+  return <section aria-label="Roster board" className="court-panel flex h-full flex-col p-4">
     <header className="flex flex-wrap items-center justify-between gap-2">
       <div>
         <p className="court-kicker">Player list</p>
@@ -14,7 +14,7 @@ export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) 
       </div>
       {team && <span className="flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-gold"><TeamMark code={team.code} className="h-4 w-4" />{team.code}</span>}
     </header>
-    {team ? <div className="mt-3 max-h-[28rem] overflow-y-auto">
+    {team ? <div className="mt-3 min-h-0 flex-1 overflow-y-auto">
       <table className="w-full text-sm">
         <thead><tr>
           <th className="text-left">Player</th><th>Pos</th><th>G</th><th>PTS</th>
@@ -31,6 +31,6 @@ export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) 
           {!roster.length && <tr><td colSpan={4 + SKILLS.length} className="text-center text-xs text-muted-foreground">Every player here is already drafted — respin the team.</td></tr>}
         </tbody>
       </table>
-    </div> : <p className="py-10 text-center text-sm text-muted-foreground">Spin the reel to pull up a team's roster.</p>}
+    </div> : <p className="flex flex-1 items-center justify-center py-10 text-center text-sm text-muted-foreground">Spin the reel to pull up a team's roster.</p>}
   </section>;
 }

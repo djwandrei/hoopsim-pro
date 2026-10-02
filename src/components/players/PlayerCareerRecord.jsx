@@ -5,8 +5,8 @@ const avg = value => Number.isFinite(value) ? value.toFixed(1) : '—';
 const pct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : '—';
 
 function Tile({ label, value, sub }) {
-  return <div className="rounded-xl border border-border/25 bg-canvas/35 px-3 py-3">
-    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{label}</p>
+  return <div className="rounded-xl border border-border/25 bg-canvas/35 px-3 py-3 transition-colors hover:border-gold/35">
+    <p className="text-[10px] font-semibold uppercase tracking-widest text-gold/80">{label}</p>
     <p className="mt-1 font-display text-3xl text-foreground">{value}</p>
     <p className="text-[10px] text-muted-foreground">{sub}</p>
   </div>;
@@ -50,7 +50,7 @@ export default function PlayerCareerRecord({ context, status }) {
     <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">{career.map(([label,value,sub]) => <Tile key={label} label={label} value={value} sub={sub} />)}</div>
     <p className="mt-4 text-xs font-semibold text-foreground">Team history</p>
     <div className="mt-2 flex flex-wrap gap-1.5">
-      {records.map(record => <span key={record.season} className="rounded-full border border-border/30 px-2.5 py-1 text-[10px] text-muted-foreground">{record.season} · {record.teams}</span>)}
+      {records.map(record => <span key={record.season} className="rounded-full border border-border/30 px-2.5 py-1 text-[10px] text-muted-foreground transition-colors hover:border-gold/35 hover:text-foreground">{record.season} · {record.teams}</span>)}
     </div>
     <p className="mt-4 text-xs font-semibold text-foreground">Year-by-year career regular-season stats</p>
     <div className="mt-2 overflow-x-auto rounded-xl border border-border/25">

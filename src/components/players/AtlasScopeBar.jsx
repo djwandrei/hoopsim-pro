@@ -5,7 +5,7 @@ import SeasonSelect from '@/components/studio/SeasonSelect';
 
 export default function AtlasScopeBar({ scope,onScope,roster,selected,careerPool,season }) {
   const teams = useMemo(() => [...new Set(roster.map(row => row.teamCode))].sort(),[roster]);
-  const chip = key => scope.mode === key ? 'min-h-10 rounded-lg border border-gold/30 bg-gold/10 px-4 text-xs font-semibold text-gold' : 'min-h-10 rounded-lg border border-transparent px-4 text-xs font-medium text-muted-foreground transition-colors hover:bg-raised hover:text-foreground';
+  const chip = key => scope.mode === key ? 'min-h-10 rounded-lg border border-gold/40 bg-gold/15 px-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold' : 'min-h-10 rounded-lg border border-transparent px-4 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:bg-raised hover:text-foreground';
   return <section className="court-panel p-5">
     <div className="flex flex-wrap items-start justify-between gap-4">
       <div><p className="court-kicker">Chart scope</p>

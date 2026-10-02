@@ -23,7 +23,7 @@ export default function PlayerHubSidebar({ rows, phase, onPhaseChange, selected,
   return <div className="flex flex-col gap-3 rounded-2xl border border-border/35 bg-card p-4 shadow-[0_8px_24px_hsl(var(--background)/0.2)]">
     <div className="flex items-center justify-between gap-2">
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">Player index</p>
-      <p className="text-[10px] text-muted-foreground">{filtered.length} players · {selected.length}/4 pinned</p>
+      <p className="flex items-center gap-1.5 text-[10px] text-muted-foreground"><span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-gold">{filtered.length}</span>players<span className="rounded-full border border-border/30 px-2 py-0.5">{selected.length}/4 pinned</span></p>
     </div>
     <label className="relative block">
       <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -41,7 +41,7 @@ export default function PlayerHubSidebar({ rows, phase, onPhaseChange, selected,
         {PHASES.map(([key,label]) => <option key={key} value={key}>{label}</option>)}
       </select>
     </div>
-    <button type="button" onClick={() => { onClear();setQuery(''); }} disabled={!selected.length} className="flex shrink-0 items-center gap-1 self-start rounded-lg border border-border/30 px-2.5 py-2 text-[10px] text-muted-foreground hover:text-foreground disabled:opacity-40">Clear <X className="h-3 w-3" /></button>
+    <button type="button" onClick={() => { onClear();setQuery(''); }} disabled={!selected.length} className="flex shrink-0 items-center gap-1 self-start rounded-lg border border-border/30 px-2.5 py-2 text-[10px] text-muted-foreground transition-colors hover:border-trim/40 hover:text-foreground disabled:opacity-40">Clear <X className="h-3 w-3" /></button>
     <div className="max-h-[28rem] overflow-y-auto pr-1">
       <table className="w-full">
         <thead>
@@ -67,7 +67,7 @@ export default function PlayerHubSidebar({ rows, phase, onPhaseChange, selected,
           {!filtered.length && <tr><td colSpan={7} className="py-6 text-center text-xs text-muted-foreground">No players match that search.</td></tr>}
         </tbody>
       </table>
-      {filtered.length > limit && <button type="button" onClick={() => setLimit(current => current + PAGE)} className="mt-2 w-full rounded-lg border border-border/25 py-2 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground">Show more ({filtered.length - limit})</button>}
+      {filtered.length > limit && <button type="button" onClick={() => setLimit(current => current + PAGE)} className="mt-2 w-full rounded-lg border border-border/25 py-2 text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:border-gold/35 hover:text-foreground">Show more ({filtered.length - limit})</button>}
     </div>
   </div>;
 }

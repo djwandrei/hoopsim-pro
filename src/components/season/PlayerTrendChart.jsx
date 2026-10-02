@@ -10,7 +10,7 @@ export default function PlayerTrendChart({ rows }) {
       <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--myna-muted)]">Recent form</p>
       {data.length ? (
         <>
-          <div className="mt-2 h-40">
+          <div className="mt-2 h-52">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data} margin={{ top: 8, right: 6, bottom: 0, left: -22 }}>
                 <XAxis dataKey="game" tick={{ fontSize: 9, fill: '#8FA0BC' }} stroke="#2A3450" />

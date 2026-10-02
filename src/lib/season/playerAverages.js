@@ -21,5 +21,6 @@ export function buildPlayerAverages(simGames) {
     pts: rec.gp ? rec.totals.pts / rec.gp : 0,
     reb: rec.gp ? rec.totals.reb / rec.gp : 0,
     ast: rec.gp ? rec.totals.ast / rec.gp : 0,
+    totals: { pts: rec.totals.pts, reb: rec.totals.reb, ast: rec.totals.ast },
   }));
 }

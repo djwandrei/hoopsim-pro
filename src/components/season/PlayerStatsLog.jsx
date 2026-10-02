@@ -62,7 +62,7 @@ export default function PlayerStatsLog({ team, simGames }) {
           <p className="myna-muted text-[11px]">Across {log.games.length} simulated games</p>
         </header>
         <div className="overflow-x-auto">
-          <table>
+          <table className="w-full">
             <thead>
               <tr>
                 <th className="text-left">Player</th>
@@ -103,11 +103,11 @@ export default function PlayerStatsLog({ team, simGames }) {
               </select>
             </label>
           </header>
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_16rem]">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
             <div>
               <p className="myna-muted mb-2 text-[11px]">Gold cells mark this player's career high in each stat.</p>
               <div className="overflow-x-auto">
-            <table>
+            <table className="w-full">
               <thead>
                 <tr>
                   <th className="text-left">Game</th>

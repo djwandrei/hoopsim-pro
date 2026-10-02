@@ -218,22 +218,22 @@ async function careerArchive() {
     const item = rowValues(row);
     if (item.observed !== true || rowPhase(row) !== 'regular') return;
     const metrics = item.metrics || {};
-      return {
-        playerRef: rowRef(row, 'playerRef'),
-        displayName: item.displayName,
-        seasonStartYear: Number(row.time?.seasonStartYear),
-        teamCode: item.teamCode,
-        phase: rowPhase(row),
-        observed: item.observed === true,
-        games: Number(item.games) || 0,
-        minutes: Number(item.minutes) || 0,
-        positions: Array.isArray(item.positions) ? item.positions : [],
-        age: item.age ?? null,
-        experience: null,
-        careerMetrics: Object.fromEntries(PER_GAME_KEYS.map(key => [key, metricValue(metrics[`${key}PerGame`])])),
-        headshotPath: headshotFor(metadata, item.displayName),
-      };
+    records.push({
+      playerRef: rowRef(row, 'playerRef'),
+      displayName: item.displayName,
+      seasonStartYear: Number(row.time?.seasonStartYear),
+      teamCode: item.teamCode,
+      phase: rowPhase(row),
+      observed: item.observed === true,
+      games: Number(item.games) || 0,
+      minutes: Number(item.minutes) || 0,
+      positions: Array.isArray(item.positions) ? item.positions : [],
+      age: item.age ?? null,
+      experience: null,
+      careerMetrics: Object.fromEntries(PER_GAME_KEYS.map(key => [key, metricValue(metrics[`${key}PerGame`])])),
+      headshotPath: headshotFor(metadata, item.displayName),
     });
+  });
   careerCache = {
     registry,
     entry,

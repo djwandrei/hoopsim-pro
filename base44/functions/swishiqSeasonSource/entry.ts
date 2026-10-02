@@ -181,10 +181,11 @@ async function streamCanonicalRecords(response, onRecord) {
         continue;
       }
       if (char === '{' || char === '[') {
+        const openDepth = depth;
         depth += 1;
         if (capturing) capture += char;
-        else if (depth === 3 && sawRecords) { capturing = true; capture = char; }
-        else if (depth === 1 && char === '[' && pendingKey === 'records') sawRecords = true;
+        else if (openDepth === 2 && char === '{' && sawRecords) { capturing = true; capture = char; }
+        else if (openDepth === 1 && char === '[' && pendingKey === 'records') sawRecords = true;
         continue;
       }
       if (char === '}' || char === ']') {

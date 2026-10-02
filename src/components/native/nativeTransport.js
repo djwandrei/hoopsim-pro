@@ -4,11 +4,25 @@ export const ORIGINAL_STUDIO = `${ORIGINAL_ORIGIN}/tools/swishiq-studio/`;
 const requests = new Map();
 const waiters = [];
 let active = 0;
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function relay(path) {
-  if (active >= 5) await new Promise(resolve => waiters.push(resolve));
+  if (active >= 3) await new Promise(resolve => waiters.push(resolve));
   active += 1;
-  try { const response=await base44.functions.invoke('swishiqSeasonSource',{assetPath:path});if(response.data.error)throw new Error(response.data.error);return response.data; }
-  finally { active -= 1;waiters.shift()?.(); }
+  let lastError;
+  try {
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      if (attempt) await sleep(500 * attempt);
+      try {
+        const response=await base44.functions.invoke('swishiqSeasonSource',{assetPath:path});
+        if(response.data.error)throw new Error(response.data.error);
+        return response.data;
+      } catch (error) {
+        if (String(error?.message).includes('not an approved public Studio asset')) throw error;
+        lastError = error;
+      }
+    }
+  } finally { active -= 1;waiters.shift()?.(); }
+  throw lastError;
 }
 export function originalAsset(input, base = ORIGINAL_STUDIO) {
   const url = new URL(String(input),base);

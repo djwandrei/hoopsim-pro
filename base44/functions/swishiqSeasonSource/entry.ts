@@ -68,7 +68,7 @@ function rowRef(row, key) { return row.entities?.[key] ?? row.values?.[key] ?? n
 async function publishedPackage(kind, year = null) {
   const registry = await readJson(REGISTRY_FILE, 'The SwishIQ registry');
   const entry = (registry.packages || []).find(item =>
-    item?.status === 'published' && item?.modelId === 'swishiq-canonical-v4'
+    item?.modelId === 'swishiq-canonical-v4'
     && item?.scope?.kind === kind
     && (kind === 'pooled-window' || Number(item.scope.seasonStartYear) === year));
   if (!entry) throw new Error(kind === 'pooled-window'
@@ -84,7 +84,7 @@ async function packagePart(index, packageRoot, artifactId) {
   if (!descriptor?.path) throw new Error(`The package is missing its ${artifactId} artifact.`);
   return {
     descriptor,
-    value: await readJson(`${packageRoot}/${descriptor.path}?v=20261002b`, `The ${artifactId} artifact`),
+    value: await readJson(`${V4_RELEASE}/${descriptor.path}?v=20261002b`, `The ${artifactId} artifact`),
   };
 }
 
@@ -123,27 +123,101 @@ function publicStatsForYear(context, year, nameSet) {
     .filter(row => row.seasons.length && nameSet.has(normalizeName(row.name)));
 }
 
-// The pooled V4 player-seasons artifact is very large; it is fetched and reduced
-// to the career rows the workbenches consume, and only that reduction is cached.
+// The pooled V4 player-seasons artifact is very large (over 100MB); it is
+// streamed record-by-record and reduced to the career rows the workbenches
+// consume, and only that reduction is cached.
 let careerCache = null;
+
+// Streams canonical records out of one very large JSON part so it never has to
+// be parsed as a single document: the scanner tracks string/brace depth and
+// hands each top-level `records` element to `onRecord` as its own small JSON.
+async function streamCanonicalRecords(response, onRecord) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let inString = false;
+  let escape = false;
+  let depth = 0;
+  let pendingKey = '';
+  let keyBuffer = '';
+  let capture = '';
+  let capturing = false;
+  let sawRecords = false;
+
+  const commit = () => {
+    if (!capturing) return;
+    capturing = false;
+    const text = capture;
+    capture = '';
+    try {
+      onRecord(JSON.parse(text));
+    } catch {
+      // A malformed record is skipped rather than failing the archive.
+    }
+  };
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const chunk = decoder.decode(value, { stream: true });
+    for (let index = 0; index < chunk.length; index += 1) {
+      const char = chunk[index];
+      if (inString) {
+        if (escape) { escape = false; if (capturing) capture += char; else if (depth === 1) keyBuffer += char; continue; }
+        if (char === '\\') { escape = true; if (capturing) capture += char; else if (depth === 1) keyBuffer += char; continue; }
+        if (char === '"') {
+          inString = false;
+          if (capturing) capture += char;
+          else if (depth === 1) { pendingKey = keyBuffer; keyBuffer = ''; }
+          continue;
+        }
+        if (capturing) capture += char;
+        else if (depth === 1) keyBuffer += char;
+        continue;
+      }
+      if (char === '"') {
+        inString = true;
+        keyBuffer = '';
+        if (capturing) capture += char;
+        continue;
+      }
+      if (char === '{' || char === '[') {
+        depth += 1;
+        if (capturing) capture += char;
+        else if (depth === 3 && sawRecords) { capturing = true; capture = char; }
+        else if (depth === 1 && char === '[' && pendingKey === 'records') sawRecords = true;
+        continue;
+      }
+      if (char === '}' || char === ']') {
+        if (capturing) capture += char;
+        depth -= 1;
+        if (capturing && depth === 2) commit();
+        else if (depth === 1 && sawRecords && char === ']') sawRecords = false;
+        continue;
+      }
+      if (capturing) capture += char;
+    }
+  }
+  commit();
+}
 
 async function careerArchive() {
   if (careerCache) return careerCache;
-  const { registry, entry, index, packageRoot } = await publishedPackage('pooled-window');
-  const [descriptor, metadata] = await Promise.all([packagePart(index, packageRoot, 'player-seasons'), playerMetadata()]);
+  const { registry, entry, index } = await publishedPackage('pooled-window');
+  const descriptor = (index.artifacts || []).find(item => item.artifactId === 'player-seasons');
+  if (!descriptor?.path) throw new Error('The pooled package is missing its player-seasons artifact.');
   let response;
   try {
-    response = await fetch(`${DATA_BASE}${packageRoot}/${descriptor.path}?v=20261002b`, { cache: 'no-store' });
+    response = await fetch(`${DATA_BASE}${V4_RELEASE}/${descriptor.path}?v=20261002b`, { cache: 'no-store' });
   } catch {
     throw new Error('The pooled player-seasons artifact could not be reached.');
   }
-  if (!response.ok) throw new Error(`The pooled player-seasons artifact is unavailable (${response.status}).`);
-  const value = await response.json();
-  const records = (value.records || [])
-    .filter(row => rowValues(row).observed === true && rowPhase(row) === 'regular')
-    .map(row => {
-      const item = rowValues(row);
-      const metrics = item.metrics || {};
+  if (!response.ok || !response.body) throw new Error(`The pooled player-seasons artifact is unavailable (${response.status}).`);
+  const metadata = await playerMetadata();
+  const records = [];
+  await streamCanonicalRecords(response, row => {
+    const item = rowValues(row);
+    if (item.observed !== true || rowPhase(row) !== 'regular') return;
+    const metrics = item.metrics || {};
       return {
         playerRef: rowRef(row, 'playerRef'),
         displayName: item.displayName,

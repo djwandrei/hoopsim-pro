@@ -1,4 +1,5 @@
 import React from 'react';
+import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 const pct = v => `${(v * 100).toFixed(1)}%`;
 
@@ -16,8 +17,8 @@ export default function MatchupEdges({ teamA, teamB }) {
     { label: 'Net rating', a: teamA.net, b: teamB.net, better: 'max', scale: 12, fmt: v => v.toFixed(1) },
     { label: 'Pace', a: teamA.pace, b: teamB.pace, better: 'max', scale: 6, fmt: v => v.toFixed(1), neutral: true },
   ];
-  const pA = 'hsl(var(--court-royal))';
-  const pB = 'hsl(var(--court-accent))';
+  const pA = paletteForTeam(teamA.code);
+  const pB = paletteForTeam(teamB.code);
   return (
     <section className="myna-panel p-4" aria-label="Observed edges">
       <p className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.2em]">OBSERVED EDGES</p>
@@ -37,12 +38,12 @@ export default function MatchupEdges({ teamA, teamB }) {
                   : <span className="myna-muted">Even</span>}
               </div>
               <div className="mt-1.5 flex h-2 overflow-hidden rounded-full" style={{ background: 'var(--myna-raised)' }}>
-                <span style={{ width: `${50 + swing}%`, background: pA }} />
-                <span className="ml-auto" style={{ width: `${50 - swing}%`, background: pB }} />
+                <span style={{ width: `${50 + swing}%`, background: pA.primary }} />
+                <span className="ml-auto" style={{ width: `${50 - swing}%`, background: pB.primary }} />
               </div>
               <div className="mt-1 flex justify-between text-[10px]">
-                <span style={{ color: pA }}>{teamA.code} {edge.fmt(edge.a)}</span>
-                <span style={{ color: pB }}>{edge.fmt(edge.b)} {teamB.code}</span>
+                <span style={{ color: pA.primary }}>{teamA.code} {edge.fmt(edge.a)}</span>
+                <span style={{ color: pB.primary }}>{edge.fmt(edge.b)} {teamB.code}</span>
               </div>
             </div>
           );

@@ -4,6 +4,7 @@ import { Loader2, Play } from 'lucide-react';
 import { buildForgePool, forgeMax } from '@/components/forge/forgePool';
 import { simulateForgeSeason } from '@/components/forge/forgeTeamSim';
 import ForgeTeamSpinPanel from '@/components/forge/ForgeTeamSpinPanel';
+import ForgeTeamPickPanel from '@/components/forge/ForgeTeamPickPanel';
 import ForgeTeamBoard from '@/components/forge/ForgeTeamBoard';
 import ForgeTeamResult from '@/components/forge/ForgeTeamResult';
 
@@ -24,7 +25,7 @@ const SPIN_MS = 1250;
 
 // Team Forge · 98-0: spin for a player every round, choose where they slot
 // into the eight-man rotation, then simulate the season and chase perfection.
-export default function ForgeTeamDraft({ source, league }) {
+export default function ForgeTeamDraft({ source, league, pickMode = false }) {
   const allPool = useMemo(() => buildForgePool(source), [source]);
   const leagueMax = useMemo(() => forgeMax(allPool), [allPool]);
   const [phase, setPhase] = useState('setup');
@@ -64,12 +65,21 @@ export default function ForgeTeamDraft({ source, league }) {
     if (spinning) return;
     if (spend === 'team' && !teamRespins) return;
     if (spend === 'player' && !playerRespins) return;
+    if (pickMode && spend === 'player') return;
     let team = activeTeam;
     const needTeam = freshTeam || spend === 'team' || !team || !available(team.code).length;
     if (needTeam) {
       const options = wheelTeams.filter(item => available(item.code).length);
       if (!options.length) return;
       team = options[Math.floor(Math.random() * options.length)];
+    }
+    if (pickMode) {
+      setActiveTeam(team);
+      setReveal(null);
+      setTeamSpin(value => ({ token:value.token + 1, targetKey:team.code }));
+      setSpinning(true);
+      timer.current = window.setTimeout(() => setSpinning(false), SPIN_MS);
+      return;
     }
     const roster = available(team.code);
     const player = roster[Math.floor(Math.random() * roster.length)];
@@ -81,6 +91,10 @@ export default function ForgeTeamDraft({ source, league }) {
     setPlayerSpin(value => ({ token:value.token + 1, targetKey:player.playerRef }));
     setSpinning(true);
     timer.current = window.setTimeout(() => { setSpinning(false); setReveal(player); }, SPIN_MS);
+  };
+
+  const selectPlayer = player => {
+    if (!spinning) setReveal(player);
   };
 
   const filled = TEAM_SLOTS.filter(slot => picks[slot.key]).length;
@@ -139,7 +153,7 @@ export default function ForgeTeamDraft({ source, league }) {
       <div className="mx-auto max-w-xl text-center">
         <p className="court-kicker">98-0 chase</p>
         <h2 className="mt-1 font-display text-3xl">SPIN · PLACE · CHASE 98-0</h2>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">Spin the reels for a random team and player, then tap any open rotation spot to place them. Fill the five starter slots and three bench spots — then simulate the full 82-game season and playoff bracket. A flawless regular season plus a perfect title run is <span className="font-semibold text-gold">98-0</span>. Two team respins and three player respins per draft.</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{pickMode ? 'Spin the reel for a random team, then choose any player from their roster and tap an open rotation spot to place them.' : 'Spin the reels for a random team and player, then tap any open rotation spot to place them.'} Fill the five starter slots and three bench spots — then simulate the full 82-game season and playoff bracket. A flawless regular season plus a perfect title run is <span className="font-semibold text-gold">98-0</span>. {pickMode ? 'Two team respins per draft.' : 'Two team respins and three player respins per draft.'}</p>
       </div>
       <div className="mx-auto mt-4 grid max-w-lg grid-cols-5 gap-1.5">
         {TEAM_SLOTS.map(slot => <span key={slot.key} className={`rounded-lg border px-1 py-1.5 text-center font-mono text-[10px] ${slot.starter ? 'border-gold/30 text-gold' : 'border-border/30 text-muted-foreground'}`}>{slot.label}</span>)}
@@ -148,14 +162,21 @@ export default function ForgeTeamDraft({ source, league }) {
       <div className="mt-5 text-center"><button type="button" onClick={start} disabled={!allPool.length} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:translate-y-px hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40"><Play className="h-4 w-4" />Start the draft</button></div>
     </div>}
     {phase === 'drafting' && <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,19rem),minmax(0,1fr)]">
-      <ForgeTeamSpinPanel
+      {pickMode ? <ForgeTeamPickPanel
+        teamItems={wheelTeams} teamSpin={teamSpin} spinning={spinning}
+        activeTeam={activeTeam} roster={activeTeam ? available(activeTeam.code) : []}
+        selectedRef={reveal ? reveal.playerRef : null}
+        onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')}
+        teamRespins={teamRespins} filled={filled} total={TEAM_SLOTS.length}
+        onPick={selectPlayer}
+      /> : <ForgeTeamSpinPanel
         teamItems={wheelTeams} playerItems={playerItems}
         teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning}
         reveal={reveal} revealNote={revealNote}
         onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
         teamRespins={teamRespins} playerRespins={playerRespins}
         filled={filled} total={TEAM_SLOTS.length}
-      />
+      />}
       <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} spinning={spinning} onAssign={assign} onUndo={undo} />
     </div>}
     {phase === 'simulating' && <div className="court-panel p-10 text-center">

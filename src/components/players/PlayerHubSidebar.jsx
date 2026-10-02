@@ -25,23 +25,23 @@ export default function PlayerHubSidebar({ rows, phase, onPhaseChange, selected,
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">Player index</p>
       <p className="text-[10px] text-muted-foreground">{filtered.length} players · {selected.length}/4 pinned</p>
     </div>
-    <div className="flex flex-nowrap items-center gap-2">
-      <label className="relative w-40 shrink-0">
-        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-        <input value={query} onChange={event => { setQuery(event.target.value);setLimit(PAGE); }} placeholder="Search name or team" className="w-full rounded-lg border border-input bg-raised/40 py-2 pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground" />
-      </label>
-      <select value={team} onChange={event => { setTeam(event.target.value);setLimit(PAGE); }} className="studio-select w-24 shrink-0" aria-label="Filter by team">
-        <option value="">All</option>
+    <label className="relative block">
+      <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+      <input value={query} onChange={event => { setQuery(event.target.value);setLimit(PAGE); }} placeholder="Search name or team" className="w-full rounded-lg border border-input bg-raised/40 py-2 pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground" />
+    </label>
+    <div className="grid grid-cols-3 items-center gap-2">
+      <select value={team} onChange={event => { setTeam(event.target.value);setLimit(PAGE); }} className="studio-select min-w-0" aria-label="Filter by team">
+        <option value="">All teams</option>
         {teams.map(code => <option key={code} value={code}>{code}</option>)}
       </select>
-      <select value={sort} onChange={event => setSort(event.target.value)} className="studio-select w-28 shrink-0" aria-label="Sort players">
+      <select value={sort} onChange={event => setSort(event.target.value)} className="studio-select min-w-0" aria-label="Sort players">
         {SORTS.map(([key,label]) => <option key={key} value={key}>{label}</option>)}
       </select>
-      <select value={phase} onChange={event => onPhaseChange(event.target.value)} className="studio-select w-32 shrink-0" aria-label="Season type">
+      <select value={phase} onChange={event => onPhaseChange(event.target.value)} className="studio-select min-w-0" aria-label="Season type">
         {PHASES.map(([key,label]) => <option key={key} value={key}>{label}</option>)}
       </select>
-      <button type="button" onClick={() => { onClear();setQuery(''); }} disabled={!selected.length} className="flex shrink-0 items-center gap-1 rounded-lg border border-border/30 px-2.5 py-2 text-[10px] text-muted-foreground hover:text-foreground disabled:opacity-40">Clear <X className="h-3 w-3" /></button>
     </div>
+    <button type="button" onClick={() => { onClear();setQuery(''); }} disabled={!selected.length} className="flex shrink-0 items-center gap-1 self-start rounded-lg border border-border/30 px-2.5 py-2 text-[10px] text-muted-foreground hover:text-foreground disabled:opacity-40">Clear <X className="h-3 w-3" /></button>
     <div className="max-h-[28rem] overflow-y-auto pr-1">
       <table className="w-full">
         <thead>

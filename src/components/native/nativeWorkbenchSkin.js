@@ -36,5 +36,25 @@ const nativeWorkbenchSkin = `
 .studio-native :is(.swishiq-composite-controls,.swishiq-composite-results,.swishiq-composite-round){min-width:0;max-width:100%}
 @container(min-width:58rem){.studio-native .gl-workbench-grid{grid-template-columns:minmax(20rem,.9fr) minmax(0,1.1fr)}.studio-native .sl-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @container(max-width:36rem){.studio-native :is(.sl-workflow,.gl-phase-rail,.gl-result-grid,.sl-metric-strip){grid-template-columns:minmax(0,1fr)}.studio-native :is(.gl-scoreboard,.sl-score-comparison){padding:.8rem}.studio-native :is(.gl-panel,.sl-source-panel,.sl-results-shell){padding:1rem}}
+.studio-native :is(button,.swishiq-builder-action,.sl-button,.button-primary,.button-secondary,.gl-button-primary,.gl-button-secondary){transition:background .2s ease,border-color .2s ease,filter .2s ease}
+.studio-native :is(.gl-button-primary,.sl-button:not(.sl-button--secondary):not(.sl-button--quiet),.button-primary,.swishiq-builder-action--primary):hover{filter:brightness(1.08)}
+.studio-native :is(.gl-button-secondary,.sl-button--secondary,.button-secondary,.swishiq-builder-action--quiet):hover{border-color:color-mix(in srgb,var(--studio-gold) 45%,transparent);color:var(--studio-gold)}
+.studio-native input,.studio-native select,.studio-native textarea{color-scheme:dark}
+.studio-native :is(input,select,textarea):focus-visible{outline:2px solid var(--studio-gold);outline-offset:2px}
+.studio-native :is(button,a):focus-visible{outline:2px solid var(--studio-gold);outline-offset:3px}
+.studio-native th,.studio-native td{font-variant-numeric:tabular-nums}
+.studio-native th{font-family:var(--font-mono);font-weight:500;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--studio-muted)}
+.studio-native tbody tr{transition:background .15s ease}
+.studio-native table{border-collapse:separate;border-spacing:0}
+.studio-native table th{position:sticky;top:0;z-index:1;background:var(--studio-surface)}
+.studio-native ::-webkit-scrollbar{width:.45rem;height:.45rem}
+.studio-native ::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--studio-line) 60%,transparent);border-radius:1rem}
+.studio-native ::-webkit-scrollbar-track{background:transparent}
+.studio-native :is(.swishiq-chemistry-combination,.swishiq-composite-donor-card,.swishiq-composite-source-card,.swishiq-chemistry-lab__view-choice){transition:border-color .2s ease,background .2s ease,box-shadow .2s ease}
+.studio-native :is(.swishiq-chemistry-combination,.swishiq-composite-donor-card,.swishiq-composite-source-card):hover{border-color:color-mix(in srgb,var(--studio-gold) 45%,transparent);box-shadow:0 6px 18px color-mix(in srgb,var(--studio-canvas) 70%,transparent)}
+.studio-native .swishiq-chemistry-lab__view-choice:hover{border-color:color-mix(in srgb,var(--studio-gold) 35%,transparent)}
+.studio-native :is(.swishiq-builder-donor-card,.swishiq-chemistry-lab__view-choice):has(input:checked){border-color:var(--studio-gold);background:color-mix(in srgb,var(--studio-gold) 9%,var(--studio-surface))}
+.studio-native :is(.swishiq-composite-result-summary--prominent strong,.swishiq-builder-hud strong){color:var(--studio-gold)}
+.studio-native .swishiq-composite-result-summary--prominent strong{font-family:var(--font-display);font-weight:400;font-size:1.5rem}
 `;
 export default nativeWorkbenchSkin;

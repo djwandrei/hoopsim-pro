@@ -13,12 +13,12 @@ export default function ForgeTeamBoard({ slots, picks, reveal, revealPositions =
     const pick = picks[slot.key];
     const live = Boolean(reveal) && !pick && !spinning;
     const fit = live && revealPositions.includes(slot.key);
-    if (pick) return <button key={slot.key} type="button" onClick={() => onUndo(slot.key)} title="Release player" className="slot-pop flex w-full flex-col items-center gap-1 rounded-xl border border-gold/25 bg-gradient-to-b from-raised/60 to-canvas/40 p-2.5 transition-colors hover:border-trim/60">
+    if (pick) return <div key={slot.key} className="slot-pop flex w-full flex-col items-center gap-1 rounded-xl border border-gold/25 bg-gradient-to-b from-raised/60 to-canvas/40 p-2.5">
       <span className="self-start rounded-md border border-gold/30 bg-gold/10 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.15em] text-gold">{slot.label} · {slot.minutes} MIN</span>
       <PlayerPortrait player={pick.player} className="h-14 w-14" />
       <span className="w-full truncate text-center text-[11px] font-bold leading-tight">{pick.player.name}</span>
       <span className="flex items-center gap-1 font-mono text-[9px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-3.5 w-3.5" />{pick.player.teamCode} · {pick.player.pts?.toFixed(1)}p</span>
-    </button>;
+    </div>;
     return <button key={slot.key} type="button" disabled={!live} onClick={() => onAssign(slot.key)} className={`flex min-h-28 w-full flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed p-2.5 transition-colors ${fit ? 'cursor-pointer border-gold/70 bg-gold/15 shadow-[0_0_16px_rgba(233,185,73,0.2)]' : live ? 'cursor-pointer border-gold/60 bg-gold/5 wheel-chip-active' : 'cursor-default border-border/40 bg-canvas/30'}`}>
       <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">{slot.label}</span>
       {live ? <span className="rounded-md border border-gold/60 bg-gold/10 px-2 py-1 text-center text-[10px] font-semibold uppercase tracking-wider text-gold">{fit ? '★ Fit — place here' : 'Place here'}</span>
@@ -45,6 +45,6 @@ export default function ForgeTeamBoard({ slots, picks, reveal, revealPositions =
     </header>
     {section('Starting five', starters, 'grid grid-cols-2 gap-2 sm:grid-cols-5')}
     {section('Bench unit', bench, 'grid grid-cols-1 gap-2 sm:grid-cols-3')}
-    <p className="relative mt-3 text-center text-[10px] text-muted-foreground">Starters log heavy minutes in the sim — your best players belong up top. When a landed player's position matches a slot, it glows as a suggested fit. Tap a filled spot to release them.</p>
+    <p className="relative mt-3 text-center text-[10px] text-muted-foreground">Starters log heavy minutes in the sim — your best players belong up top. When a landed player's position matches a slot, it glows as a suggested fit. Rostered spots are locked until the build completes.</p>
   </section>;
 }

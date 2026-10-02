@@ -1,0 +1,10 @@
+/* Required shell rule from fan-tools.css: the Menu drawer is the fan-suite
+   navigation surface at every viewport; the legacy destination rail is hidden. */
+body.court-themed .site-header.fan-suite-header .fan-suite-nav {
+  grid-area:nav; position:static; display:block; width:100%; min-width:0; max-width:none;
+  margin:0; padding:0; overflow:hidden; border:0; background:transparent; box-shadow:none;
+}
+body.court-themed[data-fan-tools-navigation='true'] .site-header.fan-suite-header .fan-suite-nav { display:none !important; }
+.studio-workspace > .footer.site-footer { z-index:40; }
+.site-nav-backdrop[hidden] { display:none !important; }
+.fan-suite-team-mark[hidden] { display:none !important; }

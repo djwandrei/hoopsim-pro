@@ -34,9 +34,9 @@ function WinDistribution({ summary, focusCode, actualWins }) {
             <CartesianGrid stroke="hsl(var(--border) / .25)" vertical={false} />
             <XAxis dataKey="bucket" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} interval={1} />
             <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} allowDecimals={false} />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: '#4169E122' }} />
-            {Number.isFinite(actualWins) && <ReferenceLine x={`${Math.floor(actualWins / 4) * 4}–${Math.floor(actualWins / 4) * 4 + 3}`} stroke="#80DBB0" strokeDasharray="4 3" label={{ value: 'Actual', fill: '#80DBB0', fontSize: 10, position: 'top' }} />}
-            <ReferenceLine x={`${Math.floor(focus.wins / 4) * 4}–${Math.floor(focus.wins / 4) * 4 + 3}`} stroke="#E9B949" label={{ value: 'Median', fill: '#E9B949', fontSize: 10, position: 'top' }} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'hsl(var(--court-royal) / .13)' }} />
+            {Number.isFinite(actualWins) && <ReferenceLine x={`${Math.floor(actualWins / 4) * 4}–${Math.floor(actualWins / 4) * 4 + 3}`} stroke="hsl(var(--court-positive))" strokeDasharray="4 3" label={{ value: 'Actual', fill: 'hsl(var(--court-positive))', fontSize: 10, position: 'top' }} />}
+            <ReferenceLine x={`${Math.floor(focus.wins / 4) * 4}–${Math.floor(focus.wins / 4) * 4 + 3}`} stroke="hsl(var(--court-accent))" label={{ value: 'Median', fill: 'hsl(var(--court-accent))', fontSize: 10, position: 'top' }} />
             <Bar dataKey="wins" fill="hsl(var(--court-royal))" radius={[4, 4, 0, 0]} isAnimationActive={false} />
           </BarChart>
         </ResponsiveContainer>
@@ -55,7 +55,7 @@ function NetScatter({ summary, focusCode }) {
     <div className="court-panel p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="court-display text-2xl text-foreground">EFFICIENCY MAP</h3>
-        <span className="text-xs text-muted-foreground">ORtg ↑ better · DRtg ↓ better · gold = focus team</span>
+        <span className="text-xs text-muted-foreground">ORtg ↑ better · DRtg ↓ better · accent = focus team</span>
       </div>
       <div className="mt-3 h-72">
         <ResponsiveContainer width="100%" height="100%">
@@ -67,7 +67,7 @@ function NetScatter({ summary, focusCode }) {
             <Tooltip contentStyle={tooltipStyle} />
             <Scatter data={data} shape="circle">
               {data.map(entry => (
-                <Cell key={entry.code} fill={entry.focus ? '#E9B949' : '#4169E1'} stroke={entry.focus ? '#F4D37C' : 'none'} strokeWidth={2} />
+                <Cell key={entry.code} fill={entry.focus ? 'hsl(var(--court-accent))' : 'hsl(var(--court-royal))'} stroke={entry.focus ? 'hsl(var(--court-focus))' : 'none'} strokeWidth={2} />
               ))}
             </Scatter>
           </ScatterChart>

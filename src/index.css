@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lobster+Two:wght@700&display=swap');
+@import url('/djhc-chrome.css');
+@import '@/components/djhc/teamPalette.css';
+@import '@/components/djhc/fanSuiteChrome.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -65,7 +68,7 @@
 .studio-workspace ::-webkit-scrollbar { width: .45rem; height: .45rem; }
 .studio-workspace ::-webkit-scrollbar-thumb { background: hsl(var(--border) / .4); border-radius: 1rem; }
 .studio-workspace ::-webkit-scrollbar-track { background: hsl(var(--court-canvas) / .3); }
-.studio-workspace input, .studio-workspace select { color-scheme: dark; }
+.studio-workspace input, .studio-workspace select { color-scheme: inherit; }
 .studio-workspace input:disabled, .studio-workspace select:disabled { opacity: .55; cursor: not-allowed; }
 .studio-workspace main > .grid { align-items: start; }
 .studio-workspace main > .grid > .space-y-4:first-child { position: sticky; top: calc(var(--djhc-header-h, 0px) + 1rem); }

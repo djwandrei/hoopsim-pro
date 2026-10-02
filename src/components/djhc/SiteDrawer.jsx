@@ -1,0 +1,6 @@
+import React from 'react';
+import { Image } from '@/components/ui/image';
+import { FAN_TOOLS } from '@/components/djhc/siteNavigation';
+export default function SiteDrawer({open,navRef,onClose}) {
+  return <nav ref={navRef} id="siteNav" aria-label="Primary navigation" className={`site-nav${open?' open':''}`} hidden={!open}><div className="site-nav__mobile-header"><span className="site-nav__eyebrow">Navigate the collection</span><strong className="site-nav__mobile-title">SwishIQ Studio</strong><p>Move between fan tools, games, and SwishIQ workbenches.</p></div><ul className="primary-nav__list">{FAN_TOOLS.map(item=><li key={item.path} className="primary-nav__item"><a href={item.href} className={`primary-nav__link${item.label==='SwishIQ Studio'?' active':''}`} data-fan-tools-primary="true" aria-current={item.label==='SwishIQ Studio'?'page':undefined} onClick={onClose}><Image src={item.emblem} alt="" className="fan-tools-primary__emblem" fittingType="fit" /><span className="fan-tools-primary__label">{item.label}</span></a></li>)}</ul></nav>;
+}

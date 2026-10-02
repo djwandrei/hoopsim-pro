@@ -1,0 +1,4 @@
+import React from 'react';
+export default function PaletteIdentity({palette}) {
+  return <span className="court-team-identity" aria-hidden="true"><span className="court-team-identity__swatch" aria-hidden="true" /><span className="court-team-identity__copy"><small className="court-team-identity__eyebrow">Team palette</small><strong className="court-team-identity__name" data-court-palette-name="">{palette.name}</strong><span className="court-team-identity__team" data-court-team-name="">{palette.team}</span></span><span className="court-team-identity__chips" aria-hidden="true"><span className="court-team-identity__chip court-team-identity__chip--primary" /><span className="court-team-identity__chip court-team-identity__chip--highlight" /><span className="court-team-identity__chip court-team-identity__chip--trim" /></span></span>;
+}

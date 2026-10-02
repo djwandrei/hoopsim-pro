@@ -1,0 +1,7 @@
+import React, { useState } from 'react';
+import { palettes } from '@/components/djhc/basketballPalettes';
+export default function PaletteOptions({palette,onSelect}) {
+  const [search,setSearch]=useState('');
+  const query=search.trim().toLowerCase();
+  return <><label className="court-team-picker__search">Search teams<input type="search" placeholder="Search teams…" autoComplete="off" value={search} onChange={event=>setSearch(event.target.value)} /></label><div className="court-team-picker__options" role="listbox" aria-label="Team palettes">{palettes.map(option=><button key={option.id} type="button" role="option" data-team-id={option.id} className={`court-team-picker__option${option.id===palette.id?' is-selected':''}`} aria-label={`${option.team} · ${option.name}`} aria-selected={option.id===palette.id} hidden={!!query&&!`${option.id} ${option.team}`.toLowerCase().includes(query)} onClick={()=>onSelect(option.id)}><span className="court-team-picker__option-swatch" aria-hidden="true" style={{'--option-primary':option.primary,'--option-highlight':option.highlight}} /><strong className="court-team-picker__option-code">{option.id.toUpperCase()}</strong><span className="court-team-picker__option-copy">{option.team}</span><span className="court-team-picker__option-check" aria-hidden="true">{option.id===palette.id?'✓':''}</span></button>)}</div></>;
+}

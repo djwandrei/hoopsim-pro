@@ -15,7 +15,7 @@ export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) 
   }), [roster, sort, sort.key, sort.dir]);
   const toggleSort = key => setSort(current => ({ key, dir: current.key === key && current.dir === 'desc' ? 'asc' : 'desc' }));
   const head = (key, label, extra = '') => <th onClick={() => toggleSort(key)} className={`cursor-pointer select-none transition-colors hover:text-gold ${extra}`}>{label}{sort.key === key ? (sort.dir === 'desc' ? ' ▾' : ' ▴') : ''}</th>;
-  return <section aria-label="Roster board" className="court-panel flex h-full flex-col p-4">
+  return <section aria-label="Roster board" className="court-panel p-4">
     <header className="flex flex-wrap items-center justify-between gap-2">
       <div>
         <p className="court-kicker">Player list</p>
@@ -23,7 +23,7 @@ export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) 
       </div>
       {team && <span className="flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-gold"><TeamMark code={team.code} className="h-4 w-4" />{team.code}</span>}
     </header>
-    {team ? <div className="mt-3 min-h-0 flex-1 overflow-y-auto">
+    {team ? <div className="mt-3 max-h-72 overflow-y-auto">
       <table className="w-full text-sm">
         <thead><tr>
           {head('name','Player','text-left')}{head('pos','Pos')}{head('games','G')}{head('pts','PTS')}
@@ -40,6 +40,6 @@ export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) 
           {!roster.length && <tr><td colSpan={4 + SKILLS.length} className="text-center text-xs text-muted-foreground">Every player here is already drafted — respin the team.</td></tr>}
         </tbody>
       </table>
-    </div> : <p className="flex flex-1 items-center justify-center py-10 text-center text-sm text-muted-foreground">Spin the reel to pull up a team's roster.</p>}
+    </div> : <p className="py-10 text-center text-sm text-muted-foreground">Spin the reel to pull up a team's roster.</p>}
   </section>;
 }

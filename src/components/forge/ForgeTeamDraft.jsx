@@ -173,8 +173,11 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
           filled={filled} total={TEAM_SLOTS.length}
         />}
         {pickMode
-          ? <ForgeRosterBoard team={activeTeam} roster={activeTeam ? available(activeTeam.code) : []} selectedRef={reveal ? reveal.playerRef : null} onPick={selectPlayer} />
-          : <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} onUndo={undo} />}
+          ? <div className="space-y-4">
+              <ForgeRosterBoard team={activeTeam} roster={activeTeam ? available(activeTeam.code) : []} selectedRef={reveal ? reveal.playerRef : null} onPick={selectPlayer} />
+              <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} />
+            </div>
+          : <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} />}
       </div>
       {!pickMode && <ForgePlayerShowcase player={reveal} note={revealNote} />}
     </div>}

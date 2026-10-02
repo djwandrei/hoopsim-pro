@@ -41,7 +41,7 @@ export default function CareerLab() {
                 placeholder="Find a career…"
                 teamFilter="chips" />
             </div>
-            {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={value => { setPlayer(value); setView('overview'); }} />}
+            {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={(value) => {setPlayer(value);setView('overview');}} />}
           </div>
           <CareerArchiveStatus source={source} state={state} error={error} retry={retry} />
           {!player ?
@@ -55,7 +55,7 @@ export default function CareerLab() {
               {view === 'overview' &&
             <div className="myna-panel p-4">
                   <RecordedCareerChart key={player.playerRef} seasons={seasons} />
-                  <details className="court-panel mt-4 p-4 text-xs">
+                  <details className="court-panel mt-4 p-4 text-xs hidden">
                     <summary className="cursor-pointer text-gold">Career archive source receipt</summary>
                     <dl className="mt-3 space-y-3 break-all">
                       {[['Package', source.entry.packageId], ['Version', source.entry.packageVersion], ['Original career artifact SHA-256', source.sourceReceipt.artifactSha256], ['Package manifest SHA-256', source.entry.packageManifestSha256], ['Copied', source.sourceReceipt.copiedAt]].map(([label, value]) =>

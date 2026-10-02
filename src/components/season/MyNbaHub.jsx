@@ -1,10 +1,11 @@
 import React from 'react';
 import { paletteForTeam, themeFor } from '@/components/djhc/basketballPalettes';
 
-const TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM']];
+const SEASON_TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM']];
+const GAME_TABS = [['matchup', 'MATCHUP'], ['game', 'GAME'], ['series', 'SERIES']];
 
 // MyNBA-style league hub shell: every panel is themed by the focused team's palette.
-export default function MyNbaHub({ focusCode, tab, onTab, children }) {
+export default function MyNbaHub({ focusCode, tab, onTab, tabs = SEASON_TABS, children }) {
   const palette = paletteForTeam(focusCode);
   const theme = themeFor(palette, 'dark');
   const vars = {
@@ -23,7 +24,7 @@ export default function MyNbaHub({ focusCode, tab, onTab, children }) {
   return (
     <section className="myna space-y-4 p-4 sm:p-5" style={vars} aria-label="League hub">
       <nav aria-label="Hub tabs" className="flex gap-1 overflow-x-auto rounded-xl border border-[var(--myna-border)] bg-[var(--myna-canvas)] p-1">
-        {TABS.map(([key, label]) => (
+        {tabs.map(([key, label]) => (
           <button
             key={key}
             type="button"

@@ -29,8 +29,9 @@ export default function ForgeStage({ mode, picks, leagueMax, reveal, selectedKey
     }
     return best;
   })();
-  return <section aria-label="Build stage" className="relative flex flex-1 flex-col self-stretch items-center justify-center">
-    <div className="relative z-10 flex flex-1 items-center justify-center px-4 py-6">
+  return <section aria-label="Build stage" className="relative flex min-w-0 flex-1 flex-col self-stretch items-center justify-center">
+    {/* Absolute artwork and chips need a full-width parent to avoid shrink-to-fit collapse. */}
+    <div className="relative z-10 flex w-full min-w-0 flex-1 items-center justify-center px-4 py-6">
       <div className="relative h-72 w-full max-w-xs sm:h-96 sm:max-w-sm">
         <div aria-hidden="true" className="absolute -inset-8" style={{ background: 'radial-gradient(50% 46% at 50% 44%, hsl(var(--court-royal) / 0.35), transparent 72%), radial-gradient(70% 52% at 50% 100%, hsl(var(--court-accent) / 0.12), transparent 72%)' }} />
         <Image src={SILHOUETTE} alt="" fittingType="fit" className="absolute inset-0 h-full w-full opacity-95 mix-blend-screen" />

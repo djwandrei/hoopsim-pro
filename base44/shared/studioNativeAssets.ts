@@ -1,5 +1,5 @@
 const ORIGIN = 'https://www.djshouseofcards-comics.com';
-const PINS = {
+export const PINS = {
 '/tools/swishiq-studio/react-game-lab-bridge.js':'17c39e639014f922f1d8299c984160d09019cf5595748c8defe3b8666d5d05c6',
 '/tools/swishiq-studio/react-season-lab-bridge.js':'0644b00f6924fead5dadb0df6f9a184f7f5f5f3433f1efb7f187e24ceae08c5e',
 '/tools/swishiq-studio/simulation-session-ui.js':'2e8296fa24d45652453fae4673a5287a50cda42a9bf5dd8d2701f5906d3fe5f8',

@@ -4,8 +4,8 @@ import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
 
 // User-provided silhouette art: filled black mark for light mode, thin outline
 // for dark mode (inverted to light lines so it reads on the dark canvas).
-const SILHOUETTE_LIGHT = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/93f540ea1_basketball-silhouette-000000-xl.png';
-const SILHOUETTE_DARK = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/cbc7c68c8_basketball-silhouette-outline-lg.png';
+const SILHOUETTE_LIGHT = '/studio-assets/forge/basketball-silhouette-light.png';
+const SILHOUETTE_DARK = '/studio-assets/forge/basketball-silhouette-dark.png';
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {

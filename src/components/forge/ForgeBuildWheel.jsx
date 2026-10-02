@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
 import { Image } from '@/components/ui/image';
 
-const SILHOUETTE_LIGHT = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/93f540ea1_basketball-silhouette-000000-xl.png';
-const SILHOUETTE_DARK = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/cbc7c68c8_basketball-silhouette-outline-lg.png';
+const SILHOUETTE_LIGHT = '/studio-assets/forge/basketball-silhouette-light.png';
+const SILHOUETTE_DARK = '/studio-assets/forge/basketball-silhouette-dark.png';
 const Silhouette = () => (
   <>
     <Image src={SILHOUETTE_LIGHT} alt="" fittingType="fit" className="h-full w-full opacity-15 dark:hidden" />

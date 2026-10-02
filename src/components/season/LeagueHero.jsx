@@ -1,11 +1,12 @@
 import React from 'react';
+import { Shield, Star, Trophy } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
 
-function OddsBar({ label, value, color }) {
+function OddsBar({ label, value, color, icon: Icon }) {
   return (
     <div>
       <div className="flex items-baseline justify-between text-[11px]">
-        <span className="myna-muted font-semibold uppercase tracking-[0.14em]">{label}</span>
+        <span className="myna-muted flex items-center gap-1.5 font-semibold uppercase tracking-[0.14em]">{Icon && <Icon className="h-3 w-3" />}{label}</span>
         <span className="myna-mono font-bold">{Math.round((value || 0) * 100)}%</span>
       </div>
       <div className="myna-bar mt-1.5"><span style={{ width: `${Math.min(100, (value || 0) * 100)}%`, background: color, boxShadow: `0 0 10px ${color}` }} /></div>
@@ -15,7 +16,7 @@ function OddsBar({ label, value, color }) {
 
 function Tile({ label, value }) {
   return (
-    <div className="bg-[var(--myna-surface)] p-3.5" style={{ boxShadow: 'inset 0 2px 0 var(--myna-primary)' }}>
+    <div className="rounded-lg border border-[var(--myna-border)] bg-[var(--myna-surface)] p-3.5" style={{ boxShadow: 'inset 0 2px 0 var(--myna-primary)' }}>
       <div className="myna-muted text-[9px] font-bold uppercase tracking-[0.22em]">{label}</div>
       <div className="myna-mono mt-1 text-xl font-semibold">{value}</div>
     </div>
@@ -73,9 +74,9 @@ export default function LeagueHero({ team, simRow, actualRecord, conferenceRank 
       </div>
       {simRow && (
         <div className="relative grid gap-5 border-t border-[var(--myna-border)] p-5 sm:grid-cols-3">
-          <OddsBar label="Playoff odds" value={simRow.playoff} color="var(--myna-accent)" />
-          <OddsBar label="Conference finals" value={simRow.confFinals} color="var(--myna-hi)" />
-          <OddsBar label="Title odds" value={simRow.title} color="var(--myna-trim)" />
+          <OddsBar label="Playoff odds" value={simRow.playoff} color="var(--myna-accent)" icon={Shield} />
+          <OddsBar label="Conference finals" value={simRow.confFinals} color="var(--myna-hi)" icon={Star} />
+          <OddsBar label="Title odds" value={simRow.title} color="var(--myna-trim)" icon={Trophy} />
         </div>
       )}
       {actualRecord && (

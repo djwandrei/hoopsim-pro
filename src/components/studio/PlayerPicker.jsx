@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { perGameStats } from '@/lib/season/labs';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
+import TeamMark from '@/components/studio/TeamMark';
 
-export default function PlayerPicker({ players, onSelect, selectedRef, placeholder = 'Filter players…' }) {
+export default function PlayerPicker({ players, onSelect, selectedRef, placeholder = 'Filter players…', teamFilter = 'dropdown' }) {
   const [query, setQuery] = useState('');
   const [team, setTeam] = useState('all');
   const [sort, setSort] = useState('minutes');
@@ -12,6 +13,7 @@ export default function PlayerPicker({ players, onSelect, selectedRef, placehold
   const teamCodes = [...new Set(players.map(p => p.teamCode))].sort();
   const filtered = players.filter(p => (team === 'all' || p.teamCode === team) && (!q || `${p.name} ${p.teamCode}`.toLowerCase().includes(q))).sort((a,b) => sort === 'name' ? a.name.localeCompare(b.name) : Number(b[sort]) - Number(a[sort]));
   const matches = filtered.slice(0, limit);
+  const chip = active => `flex min-h-8 items-center gap-1.5 rounded-lg border px-2 text-[11px] transition-colors ${active ? 'border-gold/40 bg-gold/10 text-gold' : 'border-border/50 text-muted-foreground hover:border-gold/30'}`;
   return (
     <div className="rounded-xl border border-border/60 bg-card p-4">
       <div className="flex items-center gap-2 rounded-md border border-input bg-raised px-3 py-2">
@@ -24,7 +26,24 @@ export default function PlayerPicker({ players, onSelect, selectedRef, placehold
           aria-label="Search observed players"
         />
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-2"><label className="text-[10px] text-muted-foreground">Team<select value={team} onChange={event => { setTeam(event.target.value); setLimit(50); }} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="all">All teams</option>{teamCodes.map(code => <option key={code} value={code}>{code}</option>)}</select></label><label className="text-[10px] text-muted-foreground">Sort by<select value={sort} onChange={event => setSort(event.target.value)} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="minutes">Source minutes</option><option value="points">Total points</option><option value="name">Player name</option></select></label></div>
+      {teamFilter === 'chips' ? (
+        <>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            <button type="button" onClick={() => { setTeam('all'); setLimit(50); }} aria-pressed={team === 'all'} className={chip(team === 'all')}>
+              <span className="font-semibold">All teams</span>
+            </button>
+            {teamCodes.map(code => (
+              <button key={code} type="button" onClick={() => { setTeam(code); setLimit(50); }} aria-pressed={team === code} className={chip(team === code)}>
+                <TeamMark code={code} className="h-5 w-5" />
+                <span className="font-mono">{code}</span>
+              </button>
+            ))}
+          </div>
+          <label className="mt-3 block text-[10px] text-muted-foreground">Sort by<select value={sort} onChange={event => setSort(event.target.value)} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="minutes">Source minutes</option><option value="points">Total points</option><option value="name">Player name</option></select></label>
+        </>
+      ) : (
+        <div className="mt-3 grid grid-cols-2 gap-2"><label className="text-[10px] text-muted-foreground">Team<select value={team} onChange={event => { setTeam(event.target.value); setLimit(50); }} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="all">All teams</option>{teamCodes.map(code => <option key={code} value={code}>{code}</option>)}</select></label><label className="text-[10px] text-muted-foreground">Sort by<select value={sort} onChange={event => setSort(event.target.value)} className="mt-1 block w-full rounded-md border border-input bg-raised px-2 text-xs text-foreground"><option value="minutes">Source minutes</option><option value="points">Total points</option><option value="name">Player name</option></select></label></div>
+      )}
       <p className="mt-3 text-[10px] text-muted-foreground" role="status">{filtered.length} observed player profiles</p>
       <div className="mt-3 max-h-96 space-y-1 overflow-y-auto pr-1">
         {matches.map(p => {

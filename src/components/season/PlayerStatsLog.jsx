@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import PlayerTrendChart from '@/components/season/PlayerTrendChart';
+import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 const STATS = [['pts', 'PTS'], ['reb', 'REB'], ['ast', 'AST'], ['stl', 'STL'], ['blk', 'BLK']];
 
 // Historical player stats log: every simulated game line for the focused team,
-// with per-player averages and accent-chipped career-high cells.
+// with sortable per-player averages and accent-chipped career-high cells.
 export default function PlayerStatsLog({ team, simGames }) {
   const log = useMemo(() => {
     const players = new Map();
@@ -35,12 +37,12 @@ export default function PlayerStatsLog({ team, simGames }) {
         avgMin: rec.gp ? rec.min / rec.gp : 0,
         avgs: Object.fromEntries(STATS.map(([stat]) => [stat, rec.gp ? rec.totals[stat] / rec.gp : 0])),
         highs: rec.highs,
-      }))
-      .sort((a, b) => b.avgs.pts - a.avgs.pts);
+      }));
     return { averages, games };
   }, [simGames, team.code]);
 
   const [selected, setSelected] = useState(null);
+  const [sort, setSort] = useState({ key: 'pts', dir: 'desc' });
   const focusPlayer = log.averages.find(p => p.name === selected) || log.averages[0] || null;
   const rows = focusPlayer ? log.games.filter(row => row.name === focusPlayer.name) : [];
 
@@ -54,8 +56,15 @@ export default function PlayerStatsLog({ team, simGames }) {
     );
   }
 
+  const valueOf = (player, key) => (key === 'gp' ? player.gp : key === 'mpg' ? player.avgMin : player.avgs[key]);
+  const sortedAverages = [...log.averages].sort((a, b) => sort.key === 'name'
+    ? a.name.localeCompare(b.name) * (sort.dir === 'asc' ? 1 : -1)
+    : (valueOf(b, sort.key) - valueOf(a, sort.key)) * (sort.dir === 'asc' ? 1 : -1));
+  const changeSort = key => setSort(current => ({ key, dir: current.key === key ? (current.dir === 'desc' ? 'asc' : 'desc') : 'desc' }));
   const teamPalette = paletteForTeam(team.code);
   const headCell = 'px-2.5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
+  const sortIcon = key => sort.key === key ? (sort.dir === 'desc' ? <ArrowDown className="h-3 w-3 text-[var(--myna-accent)]" /> : <ArrowUp className="h-3 w-3 text-[var(--myna-accent)]" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />;
+  const maxPts = Math.max(...log.averages.map(player => player.avgs.pts), 1);
 
   return (
     <section className="space-y-4" aria-label="Player stats log">
@@ -71,14 +80,16 @@ export default function PlayerStatsLog({ team, simGames }) {
           <table className="w-full">
             <thead>
               <tr>
-                <th className={`${headCell} text-left`}>Player</th>
-                <th className={headCell}>GP</th>
-                <th className={headCell}>MPG</th>
-                {STATS.map(([stat, label]) => <th key={stat} className={headCell}>{label + (stat === 'pts' ? 'G' : 'PG')}</th>)}
+                <th className={`${headCell} text-left`}>
+                  <button type="button" onClick={() => changeSort('name')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">Player{sortIcon('name')}</button>
+                </th>
+                <th className={headCell}><button type="button" onClick={() => changeSort('gp')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">GP{sortIcon('gp')}</button></th>
+                <th className={headCell}><button type="button" onClick={() => changeSort('mpg')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">MPG{sortIcon('mpg')}</button></th>
+                {STATS.map(([stat, label]) => <th key={stat} className={headCell}><button type="button" onClick={() => changeSort(stat)} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">{label + (stat === 'pts' ? 'G' : 'PG')}{sortIcon(stat)}</button></th>)}
               </tr>
             </thead>
             <tbody>
-              {log.averages.map(player => {
+              {sortedAverages.map(player => {
                 const isFocus = focusPlayer?.name === player.name;
                 return (
                   <tr
@@ -91,7 +102,14 @@ export default function PlayerStatsLog({ team, simGames }) {
                     <td className="myna-mono px-2 py-3 text-xs">{player.gp}</td>
                     <td className="myna-mono px-2 py-3 text-xs">{player.avgMin.toFixed(1)}</td>
                     {STATS.map(([stat], statIndex) => (
-                      <td key={stat} className="myna-mono px-2 py-3 text-xs" style={statIndex === 0 ? { color: 'var(--myna-accent)', fontWeight: 700 } : undefined}>{player.avgs[stat].toFixed(1)}</td>
+                      <td key={stat} className="myna-mono px-2 py-3 text-xs">
+                        {statIndex === 0 ? (
+                          <span className="relative inline-flex min-w-16 items-center justify-end">
+                            <span aria-hidden className="absolute inset-y-0.5 right-0 rounded" style={{ width: `${Math.max(10, Math.round(player.avgs.pts / maxPts * 100))}%`, background: 'color-mix(in srgb, var(--myna-accent) 12%, transparent)' }} />
+                            <span className="relative" style={{ color: 'var(--myna-accent)', fontWeight: 700 }}>{player.avgs[stat].toFixed(1)}</span>
+                          </span>
+                        ) : player.avgs[stat].toFixed(1)}
+                      </td>
                     ))}
                   </tr>
                 );
@@ -138,8 +156,11 @@ export default function PlayerStatsLog({ team, simGames }) {
                       <tr key={`${row.gameNo}-${row.name}`} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]">
                         <td className="myna-mono px-2.5 py-3 text-xs">{row.gameNo}</td>
                         <td className="px-2 py-3 text-xs">
-                          <span className="myna-mono myna-muted mr-1">{row.homeGame ? 'vs' : '@'}</span>
-                          <span className="font-semibold">{row.opponent}</span>
+                          <span className="flex items-center gap-1.5">
+                            <TeamMark code={row.opponent} name={row.opponent} className="h-6 w-6" bare />
+                            <span className="myna-mono myna-muted">{row.homeGame ? 'vs' : '@'}</span>
+                            <span className="font-semibold">{row.opponent}</span>
+                          </span>
                         </td>
                         <td className="myna-mono px-2 py-3 text-xs">{row.min}</td>
                         {STATS.map(([stat]) => {

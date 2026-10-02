@@ -5,23 +5,17 @@ import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPal
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 
 const PAGE = 12;
+const RESULT_FILTERS = [['all', 'All'], ['won', 'Wins'], ['lost', 'Losses']];
 
 export default function LeagueSchedule({ league, schedule, simGames, focusCode, onFocusChange }) {
   const [scope, setScope] = useState('team');
+  const [result, setResult] = useState('all');
   const [page, setPage] = useState(0);
-  useEffect(() => { setPage(0); }, [scope, focusCode]);
+  useEffect(() => { setPage(0); }, [scope, focusCode, result]);
   const rows = schedule.map((game, index) => ({ ...game, sim: simGames?.[index] ?? null }));
   const filtered = scope === 'team'
     ? rows.filter(game => game.home === focusCode || game.away === focusCode)
     : rows;
-  const visible = filtered.slice(0, (page + 1) * PAGE);
-  const fmtDate = at => (at ? moment(at).format('MMM D') : 'TBD');
-  const fmtMonth = at => (at ? moment(at).format('MMMM YYYY').toUpperCase() : 'TBD');
-
-  const { mode = 'dark' } = useCourtTheme() || {};
-  const focusPalette = paletteForTeam(focusCode);
-  const chip = active => `min-h-8 rounded-lg px-3 text-[10px] font-bold tracking-[0.16em] transition-colors ${active ? 'myna-accent' : 'text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`;
-
   const outcomeOf = game => {
     const sim = game.sim;
     const actual = game.actual;
@@ -29,6 +23,17 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
     if (actual) return { won: (actual.home > actual.away ? game.home : game.away) === focusCode, from: 'ACTUAL' };
     return null;
   };
+  const scoped = scope === 'team' && result !== 'all'
+    ? filtered.filter(game => { const outcome = outcomeOf(game); return outcome && (result === 'won' ? outcome.won : !outcome.won); })
+    : filtered;
+  const visible = scoped.slice(0, (page + 1) * PAGE);
+  const fmtDate = at => (at ? moment(at).format('MMM D') : 'TBD');
+  const fmtMonth = at => (at ? moment(at).format('MMMM YYYY').toUpperCase() : 'TBD');
+
+  const { mode = 'dark' } = useCourtTheme() || {};
+  const focusPalette = paletteForTeam(focusCode);
+  const chip = active => `min-h-8 rounded-lg px-3 text-[10px] font-bold tracking-[0.16em] transition-colors ${active ? 'myna-accent' : 'text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`;
+
   const record = scope === 'team'
     ? filtered.reduce((acc, game) => { const outcome = outcomeOf(game); if (outcome) acc[outcome.won ? 'w' : 'l'] += 1; return acc; }, { w: 0, l: 0 })
     : null;
@@ -50,8 +55,13 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
         <div className="flex flex-wrap items-center gap-3 border-y border-[var(--myna-border)] bg-[var(--myna-canvas)] px-4 py-3 text-[10px] font-bold uppercase tracking-[0.16em]">
           <span className="myna-muted">Record in listed games</span>
           <span className="myna-mono rounded-md px-2 py-0.5" style={{ background: 'color-mix(in srgb, var(--myna-accent) 16%, transparent)', color: 'var(--myna-accent)' }}>{record.w}–{record.l}</span>
-          <span className="myna-muted">Replay score in accent · actual score dimmed</span>
-          <span className="ml-auto myna-muted">{filtered.length} games</span>
+          <div className="flex gap-0.5 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] p-0.5">
+            {RESULT_FILTERS.map(([id, label]) => (
+              <button key={id} type="button" aria-pressed={result === id} onClick={() => setResult(id)} className={`rounded-md px-2 py-1 text-[9px] font-bold uppercase tracking-[0.14em] transition-colors ${result === id ? 'myna-accent' : 'text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`}>{label}</button>
+            ))}
+          </div>
+          <span className="myna-muted hidden md:inline">Replay score in accent · actual score dimmed</span>
+          <span className="ml-auto myna-muted">{scoped.length} games</span>
         </div>
       )}
 
@@ -126,9 +136,9 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
         </table>
       </div>
 
-      {filtered.length > visible.length && (
+      {scoped.length > visible.length && (
         <button type="button" onClick={() => setPage(current => current + 1)} className="m-3 min-h-10 w-[calc(100%-1.5rem)] rounded-lg border border-[var(--myna-border)] text-[11px] font-bold tracking-[0.18em] transition-colors hover:bg-[var(--myna-raised)]">
-          LOAD MORE ({filtered.length - visible.length} left)
+          LOAD MORE ({scoped.length - visible.length} left)
         </button>
       )}
     </section>

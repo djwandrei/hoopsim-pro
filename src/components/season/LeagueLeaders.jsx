@@ -24,6 +24,7 @@ export default function LeagueLeaders({ simGames }) {
       </div>
     );
   }
+  const maxValueOf = stat => boards[stat]?.[0] ? (mode === 'avg' ? boards[stat][0][stat] : boards[stat][0].totals[stat]) : 0;
 
   const header = { color: 'var(--myna-accent)', background: 'var(--myna-canvas)' };
   return (
@@ -78,7 +79,12 @@ export default function LeagueLeaders({ simGames }) {
                         <span className="font-semibold">{player.name}</span>
                         <span className="myna-mono ml-1.5 rounded border border-[var(--myna-border)] px-1 text-[9px] myna-muted">{player.team}</span>
                       </td>
-                      <td className="myna-mono py-2.5 pr-3 text-right text-sm font-bold" style={index === 0 ? { color: 'var(--myna-accent)' } : undefined}>{value}</td>
+                      <td className="myna-mono py-2.5 pr-3 text-right text-sm font-bold" style={index === 0 ? { color: 'var(--myna-accent)' } : undefined}>
+                        <span className="relative inline-flex min-w-16 items-center justify-end">
+                          {maxValueOf(stat) > 0 && <span aria-hidden className="absolute inset-y-0.5 right-0 rounded" style={{ width: `${Math.max(10, Math.round((mode === 'avg' ? player[stat] : player.totals[stat]) / maxValueOf(stat) * 100))}%`, background: 'color-mix(in srgb, var(--myna-accent) 12%, transparent)' }} />}
+                          <span className="relative">{value}</span>
+                        </span>
+                      </td>
                     </tr>
                   );
                 })}

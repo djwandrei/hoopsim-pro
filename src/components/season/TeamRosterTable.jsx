@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 const cell = 'px-2.5 py-3 text-right';
 
-// Pinned roster from the season package: observed per-game rates, sorted by minutes.
+// Pinned roster from the season package: observed per-game rates, sortable by any stat.
 export default function TeamRosterTable({ team, actualWins }) {
   const palette = paletteForTeam(team.code);
-  const roster = [...(team.roster || [])].sort((a, b) => b.minutes / Math.max(1, b.games) - a.minutes / Math.max(1, a.games));
+  const [sort, setSort] = useState({ key: 'mpg', dir: 'desc' });
+  const valueOf = (player, key) => (key === 'mpg' ? player.minutes / Math.max(1, player.games) : player[key]);
+  const roster = [...(team.roster || [])].sort((a, b) => {
+    if (sort.key === 'name') return a.name.localeCompare(b.name) * (sort.dir === 'asc' ? 1 : -1);
+    return (valueOf(b, sort.key) - valueOf(a, sort.key)) * (sort.dir === 'asc' ? 1 : -1);
+  });
   const maxMpg = Math.max(1, ...roster.map(player => player.minutes / Math.max(1, player.games)));
-  const topScorer = [...roster].sort((a, b) => b.pts - a.pts)[0];
+  const changeSort = key => setSort(current => ({ key, dir: current.key === key ? (current.dir === 'desc' ? 'asc' : 'desc') : 'desc' }));
   const headCell = 'px-2.5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
+  const sortIcon = key => sort.key === key ? (sort.dir === 'desc' ? <ArrowDown className="h-3 w-3 text-[var(--myna-accent)]" /> : <ArrowUp className="h-3 w-3 text-[var(--myna-accent)]" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />;
+  const headButton = (key, label, alignRight = true) => (
+    <button type="button" onClick={() => changeSort(key)} className={`inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)] ${alignRight ? '' : ''}`}>{label}{sortIcon(key)}</button>
+  );
   return (
     <section className="myna-panel overflow-hidden" aria-label={`${team.name} roster`}>
       <header className="flex flex-wrap items-baseline justify-between gap-2 px-4 pb-3 pt-4">
@@ -17,27 +27,27 @@ export default function TeamRosterTable({ team, actualWins }) {
           <p className="myna-accent-text text-[10px] font-bold uppercase tracking-[0.22em]">Depth chart</p>
           <h3 className="myna-display mt-0.5 text-2xl">{team.name.toUpperCase()} ROSTER</h3>
         </div>
-        <span className="myna-muted text-[10px]">Observed per-game rates from the season package{Number.isFinite(actualWins) ? ` · actual record ${actualWins}–${82 - actualWins}` : ''}</span>
+        <span className="myna-muted text-[10px]">Observed per-game rates from the season package{Number.isFinite(actualWins) ? ` · actual record ${actualWins}–${82 - actualWins}` : ''} · click a column to sort</span>
       </header>
       <div className="overflow-x-auto border-t border-[var(--myna-border)]">
         <table className="w-full text-xs">
           <thead>
             <tr>
-              <th className={`${headCell} text-left`}>Player</th>
+              <th className={`${headCell} text-left`}>{headButton('name', 'Player')}</th>
               <th className={`${headCell} text-left`}>Pos</th>
-              <th className={headCell}>GP</th>
-              <th className={`${headCell} text-right`}>MPG</th>
-              <th className={headCell}>PTS</th>
-              <th className={headCell}>REB</th>
-              <th className={headCell}>AST</th>
-              <th className={headCell}>STL</th>
-              <th className={headCell}>BLK</th>
+              <th className={headCell}>{headButton('games', 'GP')}</th>
+              <th className={`${headCell} text-right`}>{headButton('mpg', 'MPG')}</th>
+              <th className={headCell}>{headButton('pts', 'PTS')}</th>
+              <th className={headCell}>{headButton('reb', 'REB')}</th>
+              <th className={headCell}>{headButton('ast', 'AST')}</th>
+              <th className={headCell}>{headButton('stl', 'STL')}</th>
+              <th className={headCell}>{headButton('blk', 'BLK')}</th>
             </tr>
           </thead>
           <tbody>
             {roster.map(player => {
               const mpg = player.minutes / Math.max(1, player.games);
-              const isTopScorer = topScorer && player.playerRef === topScorer.playerRef;
+              const isTopScorer = sort.key === 'pts' && sort.dir === 'desc' && roster[0] && player.playerRef === roster[0].playerRef;
               return (
                 <tr key={player.playerRef} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]" style={{ boxShadow: `inset 2px 0 0 ${palette.primary}` }}>
                   <td className="px-2.5 py-3 text-left font-semibold">{player.name}</td>

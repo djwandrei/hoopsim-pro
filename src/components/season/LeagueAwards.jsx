@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Trophy, Flame, Mountain, Zap } from 'lucide-react';
 import { buildPlayerAverages } from '@/lib/season/playerAverages';
+import TeamMark from '@/components/studio/TeamMark';
 
 const AWARD_DEFS = [
   { id: 'mvp', label: 'Most Valuable Player', icon: Trophy, score: p => p.pts + p.reb * 0.8 + p.ast * 0.8, detail: p => `${p.pts.toFixed(1)} / ${p.reb.toFixed(1)} / ${p.ast.toFixed(1)}` },
@@ -33,7 +34,10 @@ export default function LeagueAwards({ simGames }) {
                 <Icon className="h-4.5 w-4.5" />
               </div>
               <p className="text-center text-[9px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--myna-accent)' }}>{label}</p>
-              <p className="myna-display mt-1.5 text-center text-xl leading-tight">{winner.name}</p>
+              <div className="mt-1.5 flex items-center justify-center gap-2">
+                <TeamMark code={winner.team} className="h-8 w-8" />
+                <p className="myna-display text-xl leading-tight">{winner.name}</p>
+              </div>
               <p className="mt-0.5 text-center text-[11px] myna-muted">
                 <span className="myna-mono rounded border border-[var(--myna-border)] px-1">{winner.team}</span> · {winner.gp} GP
               </p>

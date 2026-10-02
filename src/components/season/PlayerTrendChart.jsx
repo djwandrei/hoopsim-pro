@@ -22,7 +22,7 @@ export default function PlayerTrendChart({ rows }) {
                   labelFormatter={value => `Game ${value}`}
                   formatter={value => [value, 'PTS']}
                 />
-                <ReferenceLine y={avg} stroke="var(--myna-muted)" strokeDasharray="4 4" strokeOpacity={0.7} />
+                <ReferenceLine y={avg} stroke="var(--myna-muted)" strokeDasharray="4 4" strokeOpacity={0.7} label={{ value: `${avg.toFixed(1)} PPG avg`, position: 'insideTopRight', fontSize: 9, fill: 'var(--myna-muted)' }} />
                 <Line type="monotone" dataKey="pts" stroke="var(--myna-accent)" strokeWidth={2} dot={{ r: 2.5, fill: 'var(--myna-accent)' }} activeDot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>

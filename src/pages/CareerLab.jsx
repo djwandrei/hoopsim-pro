@@ -39,7 +39,8 @@ export default function CareerLab() {
                   players={players}
                   selectedRef={player?.playerRef}
                   onSelect={(value) => {setPlayer(value);setView('overview');}}
-                  placeholder="Find a career…" />
+                  placeholder="Find a career…"
+                  teamFilter="chips" />
               </div>
               {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={value => { setPlayer(value); setView('overview'); }} />}
               

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Play, Trophy } from 'lucide-react';
+import { Calendar, Gauge, Loader2, Play, Repeat, Trophy } from 'lucide-react';
 
 const BLEND_OPTIONS = [
   ['0.5', 'Balanced'],
@@ -41,19 +41,19 @@ export default function LeagueControls({
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[9rem_8rem_12rem_auto_auto] lg:items-end">
         <label className="block">
-          <span className={labelCls}>Season</span>
+          <span className={labelCls}><Calendar className="mr-1 inline h-3 w-3" />Season</span>
           <select className={fieldCls} value={year} onChange={event => onYearChange(Number(event.target.value))} disabled={running} aria-label="Season">
             {years.map(value => <option key={value} value={value}>{value}–{String(value + 1).slice(-2)}</option>)}
           </select>
         </label>
         <label className="block">
-          <span className={labelCls}>Replays</span>
+          <span className={labelCls}><Repeat className="mr-1 inline h-3 w-3" />Replays</span>
           <select className={fieldCls} value={setup.repeats} onChange={event => onSetupChange({ ...setup, repeats: Number(event.target.value) })} disabled={running} aria-label="Replays">
             {[1, 2, 5, 10, 25, 50, 100].map(value => <option key={value} value={value}>{value}×</option>)}
           </select>
         </label>
         <label className="block">
-          <span className={labelCls}>Scoring mix</span>
+          <span className={labelCls}><Gauge className="mr-1 inline h-3 w-3" />Scoring mix</span>
           <select className={fieldCls} value={setup.blend} onChange={event => onSetupChange({ ...setup, blend: event.target.value })} disabled={running} aria-label="Scoring mix">
             {BLEND_OPTIONS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>

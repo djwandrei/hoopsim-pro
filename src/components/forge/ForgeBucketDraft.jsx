@@ -4,7 +4,7 @@ import confetti from 'canvas-confetti';
 
 import { SKILLS, GROUPS } from '@/components/forge/bapSkills';
 import { buildForgePool, forgeMax, forgeRanks } from '@/components/forge/forgePool';
-import BuildWheel from '@/components/forge/BuildWheel';
+import ForgeBuildWheel from '@/components/forge/ForgeBuildWheel';
 import ForgeTeamWheel from '@/components/forge/ForgeTeamWheel';
 import ForgeOfferCard from '@/components/forge/ForgeOfferCard';
 import ForgeOvrMeter from '@/components/forge/ForgeOvrMeter';
@@ -31,7 +31,6 @@ export default function ForgeBucketDraft({ source, league }) {
   const [activeTeam, setActiveTeam] = useState(null);
   const [offer, setOffer] = useState(null);
   const [rolling, setRolling] = useState(false);
-  const [rotation, setRotation] = useState(0);
   const [teamSpinning, setTeamSpinning] = useState(false);
   const [teamRotation, setTeamRotation] = useState(0);
   const [respins, setRespins] = useState(RESPIN_COUNT);
@@ -68,11 +67,6 @@ export default function ForgeBucketDraft({ source, league }) {
     if (!open.length || !pool.length) return;
     const target = open[Math.floor(Math.random() * open.length)];
     setRolledKey(null); setOffer(null); setActiveTeam(null); setRolling(true);
-    const chipAngle = SKILLS.indexOf(target) * (360 / SKILLS.length);
-    const current = ((rotation % 360) + 360) % 360;
-    let delta = (360 - chipAngle - current) % 360;
-    if (delta < 0) delta += 360;
-    setRotation(rotation + 1440 + delta + (Math.random() * 20 - 10));
     rollTimer.current = window.setTimeout(() => { setRolling(false); setRolledKey(target.key); }, 1000);
   };
   useEffect(() => () => { window.clearTimeout(rollTimer.current); window.clearTimeout(teamTimer.current); }, []);
@@ -164,11 +158,11 @@ export default function ForgeBucketDraft({ source, league }) {
       </div>
       <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,23rem),minmax(0,1fr)]">
         <div className="space-y-3">
-          <BuildWheel skills={SKILLS} picks={picks} activeKey={rolledKey} leagueMax={leagueMax} rotation={rotation} spinning={rolling} onSpin={() => (rolledKey || rolling ? undefined : roll())} showGrades={showGrades} />
-          <div className="grid grid-cols-2 gap-2">
-            <button type="button" onClick={lockRoll} disabled={!rolledKey || rolling || Boolean(lockedKey)} className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40"><Lock className="h-4 w-4" />{rolledSkill && !lockedKey ? `Lock · ${rolledSkill.label}` : 'Lock roll'}</button>
-            <button type="button" onClick={reroll} disabled={!rolledKey || rolling || Boolean(lockedKey)} className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border/40 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:cursor-not-allowed disabled:opacity-40"><RefreshCcw className="h-4 w-4" />Re-roll</button>
-          </div>
+          <ForgeBuildWheel picks={picks} leagueMax={leagueMax} overall={liveOvr} selectedKey={lockedKey || rolledKey} spinning={rolling} />
+          {lockedKey ? null : rolledKey ? <div className="grid grid-cols-2 gap-2">
+            <button type="button" onClick={lockRoll} disabled={rolling} className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40"><Lock className="h-4 w-4" />{rolledSkill ? `Lock · ${rolledSkill.label}` : 'Lock roll'}</button>
+            <button type="button" onClick={reroll} disabled={rolling} className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border/40 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:cursor-not-allowed disabled:opacity-40"><RefreshCcw className="h-4 w-4" />Re-roll</button>
+          </div> : <button type="button" onClick={roll} disabled={rolling} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40">{rolling ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}{rolling ? 'Rolling…' : 'Roll the skill'}</button>}
           <ForgeOvrMeter overall={liveOvr} filled={filled} total={SKILLS.length} showGrades={showGrades} />
         </div>
         <div className="space-y-3">

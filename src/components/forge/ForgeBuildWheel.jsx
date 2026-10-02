@@ -13,7 +13,7 @@ const initials = pick => (pick?.player?.name || '?').split(/\s+/).filter(Boolean
 
 // BAP-style circular attribute wheel: nine slots around a central silhouette,
 // each segment lighting up as its pick lands and graded by share of the max.
-export default function ForgeBuildWheel({ picks, leagueMax, overall, selectedKey }) {
+export default function ForgeBuildWheel({ picks, leagueMax, overall, selectedKey, spinning = false }) {
   const slice = 360 / SKILLS.length;
   const segments = SKILLS.map((skill, index) => {
     const pick = picks[skill.key];
@@ -24,7 +24,7 @@ export default function ForgeBuildWheel({ picks, leagueMax, overall, selectedKey
     const color = pick ? `hsl(var(--court-accent) / ${(0.16 + 0.74 * ratio).toFixed(2)})` : 'hsl(var(--court-raised) / 0.35)';
     return `${color} ${index * slice}deg ${(index + 1) * slice}deg`;
   }).join(', ')})`;
-  return <div className="relative mx-auto aspect-square w-full max-w-[21rem]" aria-label="Build attribute wheel">
+  return <div className={`relative mx-auto aspect-square w-full max-w-[21rem] ${spinning ? 'wheel-spinning' : ''}`} aria-label="Build attribute wheel">
     <div className="absolute inset-0 overflow-hidden rounded-full border border-border/25 shadow-[0_0_44px_hsl(var(--court-canvas)/0.55)]" style={{ background: gradient }}>
       {segments.map(({ skill, pick, ratio, index }) => {
         const rad = index * slice * Math.PI / 180;

@@ -21,7 +21,7 @@ export default function GameLab() {
   useEffect(() => {
     if (!league) return;
     if (!league.byCode.has(a)) setA(league.teams[0]?.code || 'BOS');
-    if (!league.byCode.has(b) || b === a) setB(league.teams.find(team => team.code !== a)?.code || 'LAL');
+    if (!league.byCode.has(b) || b === a) setB(league.teams.find((team) => team.code !== a)?.code || 'LAL');
   }, [league, a, b]);
 
   if (state !== 'ready' || !league) {
@@ -29,8 +29,8 @@ export default function GameLab() {
       <StudioShell active="/game">
         <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub on the observed season package." state={state} status={state === 'ready' ? 'Matchup hub ready' : undefined} />
         <main className="mx-auto min-w-0 max-w-7xl px-4 py-6"><WorkbenchState state={state} /></main>
-      </StudioShell>
-    );
+      </StudioShell>);
+
   }
 
   const home = league.byCode.get(a) || league.teams[0];
@@ -42,43 +42,43 @@ export default function GameLab() {
       <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: pick the board, review the intel and charts, and sim single games and 7-game series with team-colored scoreboards and box scores." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">
         <MyNbaHub focusCode={home.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
-          {tab === 'game' && (
-            <div className="space-y-4">
+          {tab === 'game' &&
+          <div className="space-y-4">
               {breakdown}
               <GameControls
-                seed={sim.seed} onSeedChange={sim.setSeed}
-                neutral={sim.neutral} onNeutralChange={sim.setNeutral}
-                onRunGame={() => sim.runGame(league, home, away)}
-                hasGame={Boolean(sim.game)}
-              />
-              {sim.game ? (
-                <React.Fragment>
+              seed={sim.seed} onSeedChange={sim.setSeed}
+              neutral={sim.neutral} onNeutralChange={sim.setNeutral}
+              onRunGame={() => sim.runGame(league, home, away)}
+              hasGame={Boolean(sim.game)} />
+            
+              {sim.game ?
+            <React.Fragment>
                   <GameScoreboard league={league} game={sim.game} />
                   <GameBoxScore game={sim.game} />
-                </React.Fragment>
-              ) : (
-                <section className="myna-panel p-4 text-xs myna-muted">Set a seed, then sim the game to see the team-colored scoreboard and full box score.</section>
-              )}
+                </React.Fragment> :
+
+            <section className="myna-panel p-4 text-xs myna-muted hidden">Set a seed, then sim the game to see the team-colored scoreboard and full box score.</section>
+            }
             </div>
-          )}
-          {tab === 'series' && (
-            <div className="space-y-4">
+          }
+          {tab === 'series' &&
+          <div className="space-y-4">
               {breakdown}
               <GameControls
-                seed={sim.seed} onSeedChange={sim.setSeed}
-                neutral={sim.neutral} onNeutralChange={sim.setNeutral}
-                onRunSeries={() => sim.runSeries(league, home, away)}
-                hasSeries={Boolean(sim.series)}
-              />
-              {sim.series ? (
-                <SeriesBoard league={league} series={sim.series} />
-              ) : (
-                <section className="myna-panel p-4 text-xs myna-muted">Sim a 7-game series between the picked teams — home court follows the 2-2-1-1-1 format with {home.code} hosting.</section>
-              )}
+              seed={sim.seed} onSeedChange={sim.setSeed}
+              neutral={sim.neutral} onNeutralChange={sim.setNeutral}
+              onRunSeries={() => sim.runSeries(league, home, away)}
+              hasSeries={Boolean(sim.series)} />
+            
+              {sim.series ?
+            <SeriesBoard league={league} series={sim.series} /> :
+
+            <section className="myna-panel p-4 text-xs myna-muted">Sim a 7-game series between the picked teams — home court follows the 2-2-1-1-1 format with {home.code} hosting.</section>
+            }
             </div>
-          )}
+          }
         </MyNbaHub>
       </main>
-    </StudioShell>
-  );
+    </StudioShell>);
+
 }

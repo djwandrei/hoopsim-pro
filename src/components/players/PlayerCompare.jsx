@@ -1,58 +1,61 @@
 import React, { useState } from 'react';
+import { GitCompare } from 'lucide-react';
+import CourtGraphic from '@/components/studio/CourtGraphic';
+import PlayerCompareIndex from '@/components/players/PlayerCompareIndex';
+import ComparePlayerCard from '@/components/players/ComparePlayerCard';
 import { BLUEPRINT_STATS, statText } from '@/components/players/blueprintModel';
 
 const INVERT = new Set(['tov']);
-const selectClass = 'min-h-11 w-full rounded-lg border border-input bg-raised/40 px-3 py-2 text-sm text-foreground';
 
-// Side-by-side comparison of two picked players across every tracked stat;
-// the leader in each row is highlighted, with turnovers rewarding the lower value.
+// Head-to-head comparison built in the dossier's visual language:
+// a workbench header with court graphic, a player index with A/B slots,
+// a pair of profile cards, then a full side-by-side stat table.
 export default function PlayerCompare({ roster }) {
-  const [aId, setAId] = useState('');
-  const [bId, setBId] = useState('');
-  const a = roster.find(row => row.id === aId) || roster[0] || null;
-  const b = roster.find(row => row.id === bId) || roster[1] || null;
+  const [picked,setPicked] = useState({ a:null,b:null });
+  const players = { a: roster.find(row => row.id === picked.a) || null, b: roster.find(row => row.id === picked.b) || null };
+  const assign = (slot,id) => setPicked(current => ({ ...current,[slot]: current[slot] === id ? null : id }));
+  const onClear = () => setPicked({ a:null,b:null });
+  const slotPanel = slot => players[slot] ? <ComparePlayerCard player={players[slot]} slot={slot} /> :
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border/30 p-10 text-center">
+      <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/5"><GitCompare className="h-6 w-6 text-gold" /></span>
+      <p className="font-display text-xl tracking-wide">No player {slot.toUpperCase()} yet</p>
+      <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">Assign a player from the index using the {slot.toUpperCase()} button next to their row.</p>
+    </div>;
   const leader = key => {
-    const va = a?.stats?.[key], vb = b?.stats?.[key];
+    const va = players.a?.stats?.[key], vb = players.b?.stats?.[key];
     if (!Number.isFinite(va) || !Number.isFinite(vb) || va === vb) return null;
     return (INVERT.has(key) ? va < vb : va > vb) ? 'a' : 'b';
   };
-  return (
-    <section className="space-y-4">
-      <div className="court-panel p-5">
-        <p className="court-kicker">Head to head</p>
-        <h2 className="court-display mt-1 text-2xl">PLAYER COMPARISON</h2>
-        <p className="mt-1 text-xs text-muted-foreground">Pick any two players; the leader in each stat is highlighted in gold. Turnovers reward the lower number.</p>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <label className="block">
-            <span className="studio-control-label">Player A</span>
-            <select className={selectClass} value={a?.id || ''} onChange={e => setAId(e.target.value)}>
-              {roster.map(row => <option key={row.id} value={row.id}>{row.name} ({row.teamCode})</option>)}
-            </select>
-          </label>
-          <label className="block">
-            <span className="studio-control-label">Player B</span>
-            <select className={selectClass} value={b?.id || ''} onChange={e => setBId(e.target.value)}>
-              {roster.map(row => <option key={row.id} value={row.id}>{row.name} ({row.teamCode})</option>)}
-            </select>
-          </label>
-        </div>
+  return <section className="rounded-2xl border border-border/35 bg-card shadow-[0_8px_24px_hsl(var(--background)/0.2)]">
+    <header className="relative overflow-hidden border-b border-border/30 p-4">
+      <CourtGraphic className="absolute -right-10 -top-10 h-44 w-64 opacity-10" />
+      <div className="relative">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">Player comparison</p>
+        <h2 className="mt-1 font-display text-2xl tracking-wide">Head-to-head stat comparison</h2>
       </div>
-      {a && b ?
+    </header>
+    <div className="space-y-5 p-4">
+      <PlayerCompareIndex rows={roster} picked={picked} onAssign={assign} onClear={onClear} />
+      <div className="grid min-w-0 gap-5 lg:grid-cols-2">
+        {slotPanel('a')}
+        {slotPanel('b')}
+      </div>
+      {players.a && players.b ?
         <div className="court-panel overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr>
                 <th className="text-left">Stat</th>
-                <th className="text-right">{a.name} <span className="text-gold">({a.teamCode})</span></th>
-                <th className="text-right">{b.name} <span className="text-gold">({b.teamCode})</span></th>
+                <th className="text-right">{players.a.name} <span className="text-gold">({players.a.teamCode})</span></th>
+                <th className="text-right">{players.b.name} <span className="text-gold">({players.b.teamCode})</span></th>
               </tr>
             </thead>
             <tbody>
               {BLUEPRINT_STATS.map(([key,label,group]) => {
                 const leaderKey = leader(key);
                 const cell = side => {
-                  const player = side === 'a' ? a : b;
-                  return <td className={`text-right ${leaderKey === side ? 'font-semibold text-gold' : ''}`}>{statText(key,player?.stats?.[key])}</td>;
+                  const player = players[side];
+                  return <td className={`text-right ${leaderKey === side ? 'font-semibold text-gold' : ''}`}>{statText(key,player.stats[key])}</td>;
                 };
                 return (
                   <tr key={key}>
@@ -65,8 +68,10 @@ export default function PlayerCompare({ roster }) {
             </tbody>
           </table>
         </div> :
-        <div className="court-panel p-5 text-xs text-muted-foreground">Select two players to compare their observed season lines.</div>
-      }
-    </section>
-  );
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border/30 p-8 text-center">
+          <p className="font-display text-xl tracking-wide">Pick both players</p>
+          <p className="max-w-sm text-xs leading-relaxed text-muted-foreground">The full side-by-side stat table appears once both slots are assigned. Turnovers reward the lower number.</p>
+        </div>}
+    </div>
+  </section>;
 }

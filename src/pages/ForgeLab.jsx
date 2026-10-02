@@ -1,3 +1,4 @@
 import React from 'react';
 import NativeWorkbench from '@/components/native/NativeWorkbench';
-export default function ForgeLab() { return <NativeWorkbench kind="composite" />; }
+import DonorBoard from '@/components/forge/DonorBoard';
+export default function ForgeLab() { return <NativeWorkbench kind="composite" sidecar={({ source }) => <DonorBoard source={source} />} />; }

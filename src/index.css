@@ -230,7 +230,7 @@
 
 /* === Dark mode: every table stays neutral — no team-color background tint === */
 body.dark-mode .studio-workspace th { background: hsl(222 40% 16.5%); }
-body.dark-mode .studio-workspace tbody tr:nth-child(even) { background: transparent; }
+body.dark-mode .studio-workspace tbody tr { background: transparent !important; }
 
 /* === Season Lab: smooth view transitions between tabs === */
 @keyframes season-view-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

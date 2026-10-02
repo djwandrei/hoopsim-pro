@@ -37,52 +37,52 @@ export default function CareerLab() {
                 <PlayerPicker
                   players={players}
                   selectedRef={player?.playerRef}
-                  onSelect={value => { setPlayer(value); setView('overview'); }}
-                  placeholder="Find a career…"
-                />
+                  onSelect={(value) => {setPlayer(value);setView('overview');}}
+                  placeholder="Find a career…" />
+                
               </div>
-              <p className="myna-muted max-w-md text-xs leading-relaxed">
+              <p className="myna-muted max-w-md text-xs leading-relaxed hidden">
                 The career window is pooled independently of the exact-season selection in other workbenches. Seasons outside 2017–26 are not inferred.
               </p>
             </div>
           </div>
           <CareerArchiveStatus source={source} state={state} error={error} retry={retry} />
-          {!player ? (
-            <WorkspaceEmpty title="FOLLOW THE RECORDED JOURNEY">Select a player to see the original archive's season-by-season rates, team changes and published award records.</WorkspaceEmpty>
-          ) : (
-            <div className="space-y-4">
+          {!player ?
+          <WorkspaceEmpty title="FOLLOW THE RECORDED JOURNEY">Select a player to see the original archive's season-by-season rates, team changes and published award records.</WorkspaceEmpty> :
+
+          <div className="space-y-4">
               <div className="grid gap-4 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
                 <div className="myna-panel"><PlayerIdentity player={player} year={player.latestYear} /></div>
                 <div className="myna-panel p-4"><CareerSummary seasons={seasons} /></div>
               </div>
               {view === 'overview' &&
-                <div className="myna-panel p-4">
+            <div className="myna-panel p-4">
                   <RecordedCareerChart key={player.playerRef} seasons={seasons} />
                   <details className="court-panel mt-4 p-4 text-xs">
                     <summary className="cursor-pointer text-gold">Career archive source receipt</summary>
                     <dl className="mt-3 space-y-3 break-all">
-                      {[['Package', source.entry.packageId], ['Version', source.entry.packageVersion], ['Original career artifact SHA-256', source.sourceReceipt.artifactSha256], ['Package manifest SHA-256', source.entry.packageManifestSha256], ['Copied', source.sourceReceipt.copiedAt]].map(([label, value]) => (
-                        <div key={label}>
+                      {[['Package', source.entry.packageId], ['Version', source.entry.packageVersion], ['Original career artifact SHA-256', source.sourceReceipt.artifactSha256], ['Package manifest SHA-256', source.entry.packageManifestSha256], ['Copied', source.sourceReceipt.copiedAt]].map(([label, value]) =>
+                  <div key={label}>
                           <dt className="text-muted-foreground">{label}</dt>
                           <dd className="mt-1 font-mono">{value}</dd>
                         </div>
-                      ))}
+                  )}
                     </dl>
                   </details>
                 </div>}
               {view === 'history' &&
-                <div className="myna-panel p-4"><RecordedCareerTable seasons={seasons} /></div>}
+            <div className="myna-panel p-4"><RecordedCareerTable seasons={seasons} /></div>}
               {view === 'bio' &&
-                <div className="myna-panel p-4">
+            <div className="myna-panel p-4">
                   <p className="court-kicker">Bio & awards</p>
                   <h2 className="mt-1 font-display text-2xl">BIOGRAPHY & AWARD HISTORY</h2>
                   <PlayerBio player={{ ...player, seasonStartYear: player.latestYear }} context={context} status={status} />
                   <TrophyCase context={context} status={status} />
                 </div>}
             </div>
-          )}
+          }
         </MyNbaHub>
       </main>
-    </StudioShell>
-  );
+    </StudioShell>);
+
 }

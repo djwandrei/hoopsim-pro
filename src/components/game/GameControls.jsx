@@ -6,7 +6,7 @@ const btn = 'inline-flex min-h-10 items-center gap-2 rounded-lg px-5 text-[11px]
 
 export default function GameControls({ seed, onSeedChange, neutral, onNeutralChange, onRunGame, onRunSeries, busy, hasGame, hasSeries }) {
   return (
-    <section className="myna-panel p-4" aria-label="Game simulation controls">
+    <section className="myna-panel p-4 hidden" aria-label="Game simulation controls">
       <div className="flex flex-wrap items-end gap-3">
         <label className="block w-32">
           <span className="myna-muted mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em] hidden">Seed</span>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
-import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 
 function buildRows(league, summary, actualRecords, conference) {
   const rows = league.teams
@@ -29,7 +28,6 @@ const ZONE_FILTERS = [['all', 'All'], ['playoff', 'Playoffs'], ['playin', 'Play-
 
 export default function LeagueStandings({ league, summary, actualRecords, focusCode, onFocusChange, limit }) {
   const [zone, setZone] = useState('all');
-  const dark = ((useCourtTheme() || {}).mode) === 'dark';
   const hasSim = Boolean(summary);
   const cell = 'px-2.5 py-3 text-right';
   const chip = active => `min-h-8 rounded-lg border px-2.5 text-[9px] font-bold uppercase tracking-[0.16em] transition-colors ${active ? 'myna-accent' : 'border-[var(--myna-border)] text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`;
@@ -88,7 +86,7 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                       <tr
                         key={entry.team.code}
                         className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]"
-                        style={dark ? undefined : { background: isFocus ? `color-mix(in srgb, ${teamColor} 14%, ${style.tint})` : style.tint }}
+                        style={{ background: isFocus ? `color-mix(in srgb, ${teamColor} 14%, ${style.tint})` : style.tint }}
                       >
                         <td className={`${cell} text-center`} style={isFocus ? { boxShadow: `inset 3px 0 0 ${teamColor}` } : undefined} title={style.label}>
                           <span

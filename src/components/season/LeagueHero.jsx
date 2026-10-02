@@ -52,8 +52,8 @@ export default function LeagueHero({ team, simRow, actualRecord, conferenceRank 
           </div>
         </div>
         <div className="text-right">
-          <div className="myna-mono text-4xl">{wins}<span className="myna-muted text-xl">–{losses}</span></div>
-          <div className="myna-muted mt-1 text-[10px] font-semibold uppercase tracking-[0.18em]">Record</div>
+          <div className="myna-display text-6xl leading-none">{wins}<span className="myna-muted text-3xl">–{losses}</span></div>
+          <div className="myna-muted mt-1 flex items-center justify-end gap-2 text-[10px] font-semibold uppercase tracking-[0.18em]"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--myna-accent)]"></span>Record</div>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-px border-t border-[var(--myna-border)] bg-[var(--myna-border)] sm:grid-cols-4">

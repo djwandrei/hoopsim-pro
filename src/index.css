@@ -186,3 +186,31 @@
 .broadcast-in-l { animation: broadcast-in-left .45s cubic-bezier(.2,.8,.3,1) both; }
 .broadcast-in-r { animation: broadcast-in-right .45s cubic-bezier(.2,.8,.3,1) both; }
 @media (prefers-reduced-motion: reduce) { .broadcast-in-l, .broadcast-in-r { animation-duration: 0.01ms !important; } }
+
+/* === Premium broadcast polish layer === */
+.court-panel { position: relative; }
+.court-panel::before { content: ''; position: absolute; top: 0; left: 12px; right: 12px; height: 2px; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent) / .9), hsl(var(--court-royal) / .55) 42%, transparent 82%); pointer-events: none; }
+.court-panel-hover:hover::before { background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .6) 45%, transparent 85%); box-shadow: 0 0 18px hsl(var(--court-accent) / .35); }
+
+.bcast-watermark { position: absolute; right: 1.5rem; bottom: -1.6rem; z-index: 0; font-family: var(--font-display); font-size: clamp(5rem, 12vw, 9rem); line-height: 1; letter-spacing: .04em; color: hsl(var(--court-accent) / .07); pointer-events: none; user-select: none; }
+.bcast-kicker { display: inline-flex; align-items: center; gap: .7rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.bcast-kicker::before, .bcast-kicker::after { content: ''; height: 1px; width: 1.4rem; background: linear-gradient(90deg, transparent, hsl(var(--court-accent) / .7)); }
+.bcast-kicker::after { background: linear-gradient(90deg, hsl(var(--court-accent) / .7), transparent); }
+.bcast-lowerthird { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid hsl(var(--court-accent) / .3); border-radius: .4rem; background: linear-gradient(120deg, hsl(var(--court-accent) / .14), hsl(var(--court-royal) / .08) 70%, transparent); padding: .45rem .8rem; font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.bcast-lowerthird__bar { display: inline-block; height: .85rem; width: 3px; border-radius: 2px; background: hsl(var(--court-accent)); box-shadow: 0 0 8px hsl(var(--court-accent) / .6); }
+.broadcast-gradient-text { background: linear-gradient(115deg, hsl(var(--foreground)) 30%, hsl(var(--court-focus)) 78%, hsl(var(--court-accent))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.bcast-statline { display: flex; align-items: baseline; gap: .45rem; font-variant-numeric: tabular-nums; }
+.bcast-divider { height: 1px; background: linear-gradient(90deg, hsl(var(--court-accent) / .4), hsl(var(--border) / .3) 55%, transparent); }
+
+/* Broadcast stat tiles */
+.metric-tile { position: relative; overflow: hidden; min-width: 0; border-radius: .75rem; border: 1px solid hsl(var(--border) / .35); background: linear-gradient(160deg, hsl(var(--court-raised) / .45), hsl(var(--card)) 55%); padding: 1rem; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.metric-tile::after { content: ''; position: absolute; top: 0; right: 0; height: 100%; width: 3px; background: linear-gradient(180deg, hsl(var(--court-accent) / .7), transparent 70%); }
+.metric-tile:hover { border-color: hsl(var(--court-accent) / .45); box-shadow: 0 10px 28px hsl(var(--court-canvas) / .45); transform: translateY(-2px); }
+
+/* Broadcast table treatment: lower-third headers + hover rows */
+.studio-workspace thead th { background: linear-gradient(180deg, hsl(var(--court-surface)), hsl(var(--court-canvas) / .55)); border-bottom: 2px solid hsl(var(--court-accent) / .45); padding-top: .8rem; padding-bottom: .8rem; }
+.studio-workspace thead th:first-child { border-left: 2px solid hsl(var(--court-accent) / .35); border-top-left-radius: .4rem; }
+.studio-workspace tbody tr { transition: background-color .15s ease; }
+.studio-workspace tbody tr:hover { background: hsl(var(--court-accent) / .06); }
+.studio-workspace tbody tr:hover td:first-child { color: hsl(var(--court-focus)); }
+.studio-workspace td { transition: color .15s ease; }

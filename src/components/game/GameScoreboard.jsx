@@ -25,7 +25,7 @@ export default function GameScoreboard({ league, game }) {
         <Half team={home} pts={game.homePts} won={homeWon} label="HOME" side="home" />
       </div>
       <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 p-3 text-[11px] myna-muted">
-        <span className="font-semibold tracking-[0.15em]">{game.ot ? (game.ot === 1 ? 'OT' : `${game.ot}OT`) : 'REGULATION'}</span>
+        <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>{game.ot ? (game.ot === 1 ? 'FINAL · OT' : `FINAL · ${game.ot}OT`) : 'FINAL'}</span>
         <span>POSS {Math.round(game.poss)}</span>
         <span className="myna-mono">ORTG {away.code} {game.ortgA.toFixed(1)} · {home.code} {game.ortgH.toFixed(1)}</span>
       </div>

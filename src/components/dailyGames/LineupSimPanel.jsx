@@ -4,6 +4,7 @@ import { simSingleGame, TEAM_NAMES } from '@/lib/season/simEngine';
 import { teamAsset } from '@/components/studio/teamAssets';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
 import GameSummary from '@/components/dailyGames/GameSummary';
+import BoxScore from '@/components/dailyGames/BoxScore';
 import LiveScoreboard from '@/components/dailyGames/LiveScoreboard';
 
 // Model a five-man squad as a team profile for the sim engine. The five are
@@ -54,45 +55,6 @@ export function lineupTeam(league, players, code, name, overrides = {}) {
   };
 }
 
-const BOX_COLUMNS = [['MIN', 'min'], ['PTS', 'pts'], ['REB', 'reb'], ['AST', 'ast'], ['STL', 'stl'], ['BLK', 'blk']];
-
-function BoxTable({ title, box, teamStats, teamPoints }) {
-  return (
-    <div>
-      <p className="dg-sim__meta mb-1">{title}</p>
-      <div className="overflow-x-auto">
-        <table>
-          <thead>
-            <tr>
-              <th>Player</th>
-              {BOX_COLUMNS.map(([label]) => <th key={label}>{label}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {box.lines.map(line => (
-              <tr key={line.name}>
-                <td className="truncate">{line.name}</td>
-                {BOX_COLUMNS.map(([label, key]) => <td key={key}>{line[key]}</td>)}
-              </tr>
-            ))}
-            {teamStats && (
-              <tr>
-                <td className="font-semibold">Team</td>
-                <td>240</td>
-                <td>{teamPoints ?? '—'}</td>
-                <td>{teamStats.reb ?? '—'}</td>
-                <td>{teamStats.ast ?? '—'}</td>
-                <td>{teamStats.stl ?? '—'}</td>
-                <td>{teamStats.blk ?? '—'}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
 export default function LineupSimPanel({ league, squads = [], lineupLabel = 'Your lineup', courtPalette = null, scoreboardOverlay = false }) {
   const [squadId, setSquadId] = useState('');
   const [opponentCode, setOpponentCode] = useState('');
@@ -105,7 +67,6 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
   const squad = squads.find(entry => entry.id === squadId) || squads[0] || null;
   const opponent = squadsAvailable ? (league.teams.find(team => team.code === opponentCode) || league.teams[0]) : null;
   const ready = Boolean(squad?.players?.length === 5 && opponent);
-  const oppLogo = opponent ? teamAsset(opponent.code) : null;
 
   // Every run draws a fresh seed, so "Tip off" and "Re-simulate" both produce
   // a brand-new draw — no separate new-draw button needed.
@@ -187,11 +148,11 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
             </div>
           )}
           {playbackDone && <div className="dg-flow-in space-y-4" ref={scoreboardOverlay ? summaryRef : undefined}>
-            <GameSummary label={squad.label || lineupLabel} opponent={opponent} opponentLogo={oppLogo} result={result} />
-            <BoxTable title={`${squad.label || lineupLabel} — box score`} box={result.boxHome} teamStats={result.statsHome} teamPoints={result.homePts} />
+            <GameSummary label={squad.label || lineupLabel} homeCode={squad.code} awayCode={opponent.code} opponent={opponent} result={result} />
+            <BoxScore title={`${squad.label || lineupLabel} — box score`} code={squad.code} box={result.boxHome} teamStats={result.statsHome} teamPoints={result.homePts} />
             <details>
               <summary className="cursor-pointer text-xs font-semibold uppercase tracking-widest text-gold">{opponent.name} box score</summary>
-              <div className="mt-2"><BoxTable title={opponent.name} box={result.boxAway} teamStats={result.statsAway} teamPoints={result.awayPts} /></div>
+              <div className="mt-2"><BoxScore title={opponent.name} code={opponent.code} box={result.boxAway} teamStats={result.statsAway} teamPoints={result.awayPts} /></div>
             </details>
             <details>
               <summary className="cursor-pointer text-xs font-semibold uppercase tracking-widest text-gold">Play-by-play</summary>

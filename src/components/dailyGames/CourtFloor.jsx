@@ -81,7 +81,13 @@ export default function CourtFloor({ teamCode }) {
         <path d={courtArc(25, 47, 6, Math.PI, Math.PI * 2)} />
         {[7, 8, 11, 14].flatMap(depth => [17, 33].map(x => <polyline key={`${x}-${depth}`} points={courtPoints([[x, depth], [x + (x === 17 ? -1 : 1), depth]])} />))}
       </g>
-      {logo && <image href={logo} x={center.x - 28} y={centerY - 28} width="56" height="56" preserveAspectRatio="xMidYMid meet" opacity=".95" />}
+      {/* Painted-on-court logo: squashed into the floor's perspective so it
+          reads as printed paint, with the wood gloss overlay passing over it. */}
+      {logo && (
+        <g transform={`translate(${center.x} ${centerY}) scale(1 .58)`} opacity=".82">
+          <image href={logo} x="-32" y="-32" width="64" height="64" preserveAspectRatio="xMidYMid meet" />
+        </g>
+      )}
       <polygon points={courtRect(0, 0, 50, 47)} fill={`url(#gloss-${id})`} />
       <ellipse cx={hoopGlow.x} cy={hoopGlow.y + 34} rx="240" ry="130" fill={`url(#spot-${id})`} />
       <path d={courtArc(25, 47, 6.55, Math.PI, Math.PI * 2)} fill="none" stroke="hsl(var(--court-accent) / .45)" strokeWidth="2.6" />

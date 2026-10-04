@@ -303,12 +303,16 @@ export default function FixTheFive() {
             }
               {completedCount === challenges.length &&
             <>
-                  <div ref={resultsRef} className="space-y-4">
-                    {challenges.map((challenge) => outcomes[challenge.challengeId] ?
-                <div key={challenge.challengeId} className="dg-reveal">
-                        <GamePointsBoard outcome={outcomes[challenge.challengeId]} contextTitle={`${challenge.title} · ${challenge.teamCode}`} />
-                      </div> :
-                null)}
+                  <div ref={resultsRef} className="dg-results">
+                    <div className="dg-results__head">
+                      <span className="bcast-kicker">Board verified</span>
+                      <span className="dg-badge">{completedCount}/{challenges.length} swaps scored</span>
+                    </div>
+                    <div className="dg-results__list">
+                      {challenges.map((challenge) => outcomes[challenge.challengeId] ?
+                    <GamePointsBoard key={challenge.challengeId} outcome={outcomes[challenge.challengeId]} contextTitle={`${challenge.title} · ${challenge.teamCode}`} /> :
+                    null)}
+                    </div>
                   </div>
                   {completedCount === challenges.length && simSquads.length > 0 &&
               <LineupSimPanel league={league} squads={simSquads} lineupLabel="The fixed five" scoreboardOverlay />

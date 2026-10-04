@@ -126,7 +126,7 @@ export default function DraftNight() {
   }, [board, outcome, pending, persist, picks, rounds]);
 
   const undoRound = useCallback(round => {
-    if (outcome) return;
+    if (outcome || pending) return;
     interacted.current = true;
     const nextPicks = { ...picks };
     delete nextPicks[round.roundId];
@@ -252,7 +252,7 @@ export default function DraftNight() {
                           <span className="dg-lock__team">R{round.roundNumber} · {round.teamCode}</span>
                           <span className="dg-lock__player block truncate">{candidate?.displayName}</span>
                         </span>
-                        <button type="button" onClick={() => undoRound(round)} className="dg-lock__undo">Undo</button>
+                        <button type="button" onClick={() => undoRound(round)} disabled={pending} className="dg-lock__undo">Undo</button>
                       </li>
                     );
                   })}

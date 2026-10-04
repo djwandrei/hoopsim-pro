@@ -158,7 +158,12 @@ export default function FixTheFive() {
   }, [board, persist]);
 
   const total = Object.values(outcomes).reduce((sum, outcome) => sum + gamePointsForOutcome(outcome).total, 0);
-  const maxTotal = challenges.length * 10;
+  // Boards published under the earlier point rule max a decision at fewer
+  // points, so the ceiling follows each outcome's own passport, not a constant.
+  const maxTotal = challenges.reduce((sum, challenge) => {
+    const passportMax = outcomes[challenge.challengeId]?.resultPassport?.gamePoints?.max;
+    return sum + (Number.isInteger(passportMax) ? passportMax : 10);
+  }, 0);
   const activeChallenge = challenges[activeIndex];
   const outgoing = activeChallenge ?
   activeChallenge.lineup.find((player) => player.playerRef === activeChallenge.removePlayerRef) :

@@ -181,8 +181,8 @@ export default function DraftNight() {
         <BoardStatusPanel state={statusState} error={error} onRetry={() => loadBoard(seed)} />
         {statusState === 'ready' && presentation && (
           <>
-            <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} />
             <HowToPlay
+              controls={<BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />}
               steps={[
                 'Draft one player per round — each round belongs to a different team, so pick with role fit in mind.',
                 'Compare candidates by their stat tiles: gold tiles (PPG, RPG, APG) carry the most scoring weight, and the per-36 chips show true pace-adjusted output.',

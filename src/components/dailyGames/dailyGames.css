@@ -127,18 +127,25 @@
 .dg-court__marker { --portrait-width: clamp(2.1rem, 11cqw, 7.2rem); --ds: 1; position: absolute; display: grid; justify-items: center; width: max-content; margin: 0; transform: translate(-50%, -100%); }
 .dg-court__portrait { position: relative; display: block; width: calc(var(--portrait-width) * var(--ds)); height: calc(var(--portrait-width) * var(--ds) * .8); padding: 0; border: 0; border-radius: 0; background: none; object-fit: contain; object-position: center bottom; filter: drop-shadow(0 4px 3px hsl(var(--court-canvas) / .55)); }
 .dg-court__initials { display: grid; place-items: center; width: calc(var(--portrait-width) * var(--ds)); height: calc(var(--portrait-width) * var(--ds) * .8); font-family: var(--font-display); font-size: calc(var(--portrait-width) * var(--ds) * .38); color: hsl(var(--court-text)); text-shadow: 0 2px 6px hsl(var(--court-canvas)); }
+/* Mini container: each player's portrait, name, and stat line sit in one
+   compact card anchored at their court spot instead of floating freely. */
+.dg-court__card { max-width: 11.5rem; border: 1px solid hsl(var(--border) / .5); border-radius: .6rem; background: linear-gradient(180deg, hsl(var(--court-surface) / .92), hsl(var(--court-canvas) / .96)); padding: .4rem .5rem .5rem; box-shadow: 0 8px 16px hsl(var(--court-canvas) / .5); backdrop-filter: blur(3px); }
+.dg-court__card .dg-court__name, .dg-court__card .dg-court__stat, .dg-court__card .dg-court__pos { border: 0; background: none; box-shadow: none; }
+.dg-court__card .dg-court__name { padding: .1rem .2rem 0; }
+.dg-court__card .dg-court__stat { padding: .05rem .25rem; }
 .dg-court__shadow { position: absolute; left: 50%; bottom: -.45rem; transform: translateX(-50%); width: calc(var(--portrait-width) * var(--ds) * .85); height: calc(var(--portrait-width) * var(--ds) * .17); border-radius: 50%; background: radial-gradient(ellipse, hsl(0 0% 0% / .5), transparent 72%); pointer-events: none; }
 .dg-court__ring { position: absolute; bottom: -.6rem; left: 50%; transform: translateX(-50%); width: calc(var(--portrait-width) * var(--ds) * 1.1); height: calc(var(--portrait-width) * var(--ds) * .26); border: 1.5px dashed hsl(var(--court-trim-ink) / .75); border-radius: 50%; pointer-events: none; }
 .dg-court__marker--in .dg-court__ring { border-color: hsl(var(--court-accent) / .85); border-style: solid; box-shadow: 0 0 12px hsl(var(--court-accent) / .35); }
-.dg-court__caption { position: absolute; top: calc(100% + .2rem); display: grid; justify-items: center; gap: .18rem; width: max-content; max-width: 11.5rem; text-align: center; }
+.dg-court__caption { display: grid; justify-items: center; gap: .18rem; width: 100%; text-align: center; }
 .dg-court__plate { display: inline-flex; align-items: center; gap: .22rem; max-width: 100%; }
 .dg-court__pos { display: inline-flex; align-items: center; border: 1px solid hsl(var(--court-accent) / .55); border-radius: .3rem; background: hsl(var(--court-accent) / .14); padding: .05rem .38rem; font-family: var(--font-display); font-size: clamp(.46rem, 1cqw, .64rem); letter-spacing: .08em; color: hsl(var(--court-accent)); }
 .dg-court__stat { display: inline-flex; align-items: baseline; gap: .18rem; border: 1px solid hsl(var(--border) / .5); border-radius: .3rem; background: hsl(var(--court-canvas) / .88); padding: .05rem .38rem; font-family: var(--font-mono); font-size: clamp(.42rem, .95cqw, .58rem); color: hsl(var(--court-text)); white-space: nowrap; }
 .dg-court__stat b { font-weight: 700; color: hsl(var(--court-focus)); }
 body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { background: hsl(var(--court-canvas) / .95); }
 .dg-court__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 1px solid hsl(var(--border) / .5); border-radius: .35rem; background: hsl(var(--court-canvas) / .88); padding: .12rem .45rem; font-size: clamp(.54rem, 1.3cqw, .8rem); font-weight: 700; line-height: 1.2; color: hsl(var(--court-text)); }
-.dg-court__marker--out .dg-court__name { border-color: hsl(var(--court-trim) / .7); }
-.dg-court__marker--in .dg-court__name { border-color: hsl(var(--court-accent) / .7); box-shadow: 0 0 10px hsl(var(--court-accent) / .35); }
+.dg-court__marker--out .dg-court__card { border-color: hsl(var(--court-trim) / .8); }
+.dg-court__marker--in .dg-court__card { border-color: hsl(var(--court-accent) / .8); box-shadow: 0 8px 16px hsl(var(--court-canvas) / .5), 0 0 14px hsl(var(--court-accent) / .3); }
+.dg-court__marker--out .dg-court__name { color: hsl(var(--court-trim-ink)); }
 .dg-court__sub { font-size: clamp(.42rem, .9cqw, .58rem); line-height: 1.2; color: hsl(var(--court-muted)); text-shadow: 0 1px 3px hsl(var(--court-canvas)); }
 .dg-court__tag { border: 1px solid hsl(var(--border) / .5); border-radius: .3rem; background: hsl(var(--court-canvas) / .88); padding: .06rem .38rem; font-size: clamp(.42rem, .9cqw, .55rem); font-weight: 800; line-height: 1.3; letter-spacing: .08em; text-transform: uppercase; }
 .dg-court__tag--out { color: hsl(var(--court-trim-ink)); border-color: hsl(var(--court-trim-ink) / .55); }
@@ -572,7 +579,10 @@ body.dark-mode .dg-card__name { text-shadow: 0 1px 3px hsl(223 24% 5.7% / .8); }
 body:not(.dark-mode) .dg-court__portrait { filter: drop-shadow(0 5px 4px hsl(20 30% 15% / .35)); }
 body:not(.dark-mode) .dg-duel__shot { filter: drop-shadow(0 4px 8px hsl(0 0% 20% / .28)); }
 body:not(.dark-mode) .dg-duel__band { background: linear-gradient(150deg, hsl(var(--court-surface) / .95), hsl(var(--court-raised)) 78%); }
-body:not(.dark-mode) .dg-court__name, body:not(.dark-mode) .dg-court__tag, body:not(.dark-mode) .dg-court__badge { background: hsl(var(--court-canvas) / .95); }
+body:not(.dark-mode) .dg-court__tag, body:not(.dark-mode) .dg-court__badge { background: hsl(var(--court-canvas) / .95); }
+body:not(.dark-mode) .dg-court__card { border-color: hsl(218 16% 74%); background: linear-gradient(180deg, hsl(0 0% 100% / .96), hsl(220 26% 95% / .97)); box-shadow: 0 8px 16px hsl(20 30% 15% / .2); }
+body:not(.dark-mode) .dg-court__card .dg-court__name, body:not(.dark-mode) .dg-court__card .dg-court__stat { color: hsl(222 32% 14%); }
+body:not(.dark-mode) .dg-court__initials { color: hsl(222 32% 14%); text-shadow: none; }
 
 /* === Light-mode scoreboard: the jumbotron follows the theme instead of always
    rendering its dark arena palette === */

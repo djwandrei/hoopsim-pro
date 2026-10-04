@@ -485,8 +485,7 @@ export async function loadSwishIQDailyBoard({ gameKind, dailySeed, family = '', 
 
 export async function assertSwishIQDailyGamePublicBoard(value, { expectedGameKind = '', expectedDailySeed = '' } = {}) {
   if (!object(value) || !object(value.packageRef) || !object(value.packageRef.scope)) fail('SwishIQ daily board is invalid.');
-  const phase = text(value.packageRef.phase, 'Board phase', null, 40).toLowerCase();
-  const proof = await loadSwishIqExactPackageProof({ packageRef: packageExpectation(value.packageRef), phase });
+  const proof = await loadSwishIqExactPackageProof({ packageRef: value.packageRef });
   assertV3DailyPackageProof(proof);
   const board = await normalizeBoard(value, proof);
   if (expectedGameKind && board.gameKind !== expectedGameKind) fail('SwishIQ daily board does not match this game.');
@@ -494,22 +493,6 @@ export async function assertSwishIQDailyGamePublicBoard(value, { expectedGameKin
   const frozen = deepFreeze(board);
   validatedBoards.add(frozen);
   return frozen;
-}
-
-function packageExpectation(packageRef) {
-  return {
-    packageId: packageRef.packageId,
-    packageVersion: packageRef.packageVersion,
-    packageManifestSha256: packageRef.packageManifestSha256,
-    sourceLockSha256: packageRef.sourceLockSha256,
-    registryVersion: packageRef.registryVersion,
-    registryRevisionSha256: packageRef.registryRevisionSha256,
-    projectionContentSha256: packageRef.projectionContentSha256,
-    modelId: packageRef.modelId,
-    normalizer: packageRef.normalizer,
-    metricsVersion: packageRef.metricsVersion,
-    scope: packageRef.scope,
-  };
 }
 
 export function isSwishIQDailyBoardV4(board) {

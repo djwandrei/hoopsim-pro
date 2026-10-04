@@ -188,8 +188,8 @@ export default function FixTheFive() {
               label={pending ? 'Revealing' : completedCount === challenges.length ? 'Verified' : 'Locked picks'}
             />
             <div className="min-w-0 space-y-5">
-              <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} />
               <HowToPlay
+                controls={<BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />}
                 steps={[
                   'Read the outgoing starter\u2019s tape first — the reference row under the court is the player you are replacing.',
                   'Compare each candidate by their stat tiles. Green deltas mean they out-produce the outgoing player; red means they fall short.',
@@ -200,7 +200,7 @@ export default function FixTheFive() {
               />
               {activeChallenge && (
                 <>
-                  <section className="dg-board-hero" aria-label={activeChallenge.title}>
+                  <section key={activeChallenge.challengeId} className="dg-board-hero dg-flow-in" aria-label={activeChallenge.title}>
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div className="min-w-0">
                         <span className="bcast-kicker">Swap {activeIndex + 1} of {challenges.length} · blind pick</span>
@@ -213,9 +213,7 @@ export default function FixTheFive() {
                     </div>
                     <p className="dg-board-hero__prompt text-muted-foreground">{activeChallenge.prompt}</p>
                   </section>
-                  <div className="space-y-3">
-                    <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
-                    <TapeReference player={outgoing} />
+                  <div key={activeChallenge.challengeId} className="dg-flow-in space-y-3">
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       {activeChallenge.candidates.map(candidate => (
                         <TapeDuelCard
@@ -229,12 +227,14 @@ export default function FixTheFive() {
                         />
                       ))}
                     </div>
+                    <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
+                    <TapeReference player={outgoing} />
                   </div>
                 </>
               )}
               {pending && revealLabel && <p className="dg-reveal-status" role="status">{revealLabel}</p>}
               {allPicked && completedCount < challenges.length && (
-                <section className="dg-lock" aria-label="Reveal the board">
+                <section className="dg-lock dg-flow-in" aria-label="Reveal the board">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <span className="bcast-kicker">All five calls made</span>
@@ -265,7 +265,9 @@ export default function FixTheFive() {
                 <>
                   <div className="space-y-4">
                     {challenges.map(challenge => outcomes[challenge.challengeId] ? (
-                      <GamePointsBoard key={challenge.challengeId} outcome={outcomes[challenge.challengeId]} contextTitle={`${challenge.title} · ${challenge.teamCode}`} />
+                      <div key={challenge.challengeId} className="dg-reveal">
+                        <GamePointsBoard outcome={outcomes[challenge.challengeId]} contextTitle={`${challenge.title} · ${challenge.teamCode}`} />
+                      </div>
                     ) : null)}
                   </div>
                   {completedCount === challenges.length && simSquads.length > 0 && (

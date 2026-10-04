@@ -21,6 +21,7 @@ export default function CourtHoop() {
       })}
       {[9.4, 8.8, 8.2].map(height => <path key={height} d={courtArc(25, 5.25, .52 + (height - 8.2) * .21, 0, Math.PI * 2, height)} fill="none" stroke="hsl(var(--court-line) / .6)" strokeWidth=".9" />)}
       <path d={courtArc(25, 5.25, .9, 0, Math.PI * 2, 10)} fill="none" stroke="hsl(var(--court-canvas) / .65)" strokeWidth="5" />
+      <path d={courtArc(25, 5.25, .9, 0, Math.PI * 2, 10)} fill="none" stroke="hsl(var(--court-rim) / .3)" strokeWidth="8" />
       <path d={courtArc(25, 5.25, .9, 0, Math.PI * 2, 10)} fill="none" stroke="hsl(var(--court-rim))" strokeWidth="3" />
     </g>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { AlertTriangle, CircleOff, Loader2, RefreshCcw } from 'lucide-react';
 
 const COPY = {
@@ -21,10 +22,18 @@ export default function BoardStatusPanel({ state, error, onRetry }) {
         <h2 className="font-display text-xl tracking-wide">{copy.title}</h2>
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{error ? `${copy.detail} (${error.message})` : copy.detail}</p>
       </div>
-      {onRetry && isError && (
-        <button type="button" onClick={onRetry} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gold hover:bg-gold/20">
-          <RefreshCcw className="h-3.5 w-3.5" /> Retry
-        </button>
+      {isError && (
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          {onRetry && (
+            <button type="button" onClick={onRetry} className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gold hover:bg-gold/20">
+              <RefreshCcw className="h-3.5 w-3.5" /> Retry
+            </button>
+          )}
+          {/* Mirrors the live page's unavailable state, which links back to the studio hub */}
+          <Link to="/" className="inline-flex items-center gap-2 rounded-lg border border-border/40 bg-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground hover:border-gold/40 hover:text-gold">
+            Open SwishIQ Studio
+          </Link>
+        </div>
       )}
     </section>
   );

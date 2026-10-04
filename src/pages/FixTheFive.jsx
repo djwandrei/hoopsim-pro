@@ -14,6 +14,7 @@ import StepRail from '@/components/dailyGames/StepRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
 import useDailyGameBoard from '@/hooks/useDailyGameBoard';
+import usePageMeta from '@/hooks/usePageMeta';
 import { revealSwishIQDailyGame, revealNoticeFor, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
 import { createRunStore } from '@/lib/dailyGames/runStorage';
 import '@/components/dailyGames/dailyGames.css';
@@ -27,6 +28,12 @@ export default function FixTheFive() {
   const [pending, setPending] = useState(false);
   const [revealLabel, setRevealLabel] = useState('');
   const [resultsOpen, setResultsOpen] = useState(true);
+  // Site-facing title and description for this exact page, like the live
+  // /tools/fix-the-five/ page serves.
+  usePageMeta({
+    title: "Fix the Five | DJ's House of Cards",
+    description: 'Fix the Five daily game: repair a blind starting five with verified swaps, scored against the SwishIQ evaluator on the DJHC court.',
+  });
   // Flow glue: after a pick, undo, or reveal, follow the run to the step the
   // visitor just unlocked — but never steal the scroll on a fresh load.
   const swapRef = useRef(null);

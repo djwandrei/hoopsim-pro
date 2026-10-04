@@ -819,6 +819,14 @@ export function swishIQDailyGameErrorKind(error) {
   return 'verification-error';
 }
 
+// The two game pages share one reveal-failure notice: an evaluator outage and
+// an unavailable result both refuse to invent a substitute score.
+export function revealNoticeFor(error) {
+  return swishIQDailyGameErrorKind(error) === 'evaluator-unavailable'
+    ? 'The exact-season evaluator is unavailable; no Game Points or substitute score was used.'
+    : 'This board result is unavailable. No substitute score was used.';
+}
+
 export const gamePointsForOutcome = outcome => {
   const points = outcome?.resultPassport?.gamePoints;
   if (!points) return { total: 0, max: 0 };

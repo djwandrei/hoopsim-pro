@@ -16,7 +16,7 @@ import StepRail from '@/components/dailyGames/StepRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
 import useDailyGameBoard from '@/hooks/useDailyGameBoard';
-import { revealSwishIQDailyGame, swishIQDailyGameErrorKind, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
+import { revealSwishIQDailyGame, revealNoticeFor, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
 import { createRunStore } from '@/lib/dailyGames/runStorage';
 import '@/components/dailyGames/dailyGames.css';
 
@@ -99,10 +99,7 @@ export default function FixTheFive() {
         persist(board.dailySeed, selections, nextOutcomes);
       }
     } catch (revealError) {
-      const kind = swishIQDailyGameErrorKind(revealError);
-      setNotice(kind === 'evaluator-unavailable' ?
-      'The exact-season evaluator is unavailable; no Game Points or substitute score was used.' :
-      'This board result is unavailable. No substitute score was used.');
+      setNotice(revealNoticeFor(revealError));
     } finally {
       setPending(false);setRevealLabel('');
     }

@@ -15,7 +15,7 @@ import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import useDailyGameBoard from '@/hooks/useDailyGameBoard';
-import { revealSwishIQDailyGame, swishIQDailyGameErrorKind, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
+import { revealSwishIQDailyGame, revealNoticeFor, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
 import { createRunStore } from '@/lib/dailyGames/runStorage';
 import '@/components/dailyGames/dailyGames.css';
 
@@ -101,10 +101,7 @@ export default function DraftNight() {
       setOutcome(result);
       persist(board.dailySeed, picks, result);
     } catch (revealError) {
-      const kind = swishIQDailyGameErrorKind(revealError);
-      setNotice(kind === 'evaluator-unavailable'
-        ? 'The exact-season evaluator is unavailable; no Game Points or substitute score was used.'
-        : 'This board result is unavailable. No substitute score was used.');
+      setNotice(revealNoticeFor(revealError));
     } finally {
       setPending(false);
     }
@@ -116,14 +113,14 @@ export default function DraftNight() {
     persist(board.dailySeed, {}, null);
   }, [board, persist]);
 
+  // The picked roster already resolves every pick to its candidate in round
+  // order, so the sim squad reuses it instead of re-searching the rounds.
   const simSquads = useMemo(() => (outcome ? [{
     id: 'draft',
     label: presentation?.deck?.title || 'Your draft five',
     code: 'FIVE',
-    players: orderedPicks
-      .map(entry => rounds.flatMap(round => round.candidates).find(candidate => candidate.playerRef === entry.playerRef))
-      .filter(Boolean),
-  }] : []), [outcome, presentation, orderedPicks, rounds]);
+    players: draftRoster,
+  }] : []), [outcome, presentation, draftRoster]);
   const points = gamePointsForOutcome(outcome);
 
   useEffect(() => {
@@ -148,7 +145,7 @@ export default function DraftNight() {
         steps={['Five draft rounds', 'Lock the draft', 'Verified summary']}
         current={outcome ? 2 : allPicked ? 1 : 0}
         state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}
-        status={pending ? 'Evaluating your draft…' : outcome ? 'Draft verified' : status === 'ready' ? 'Board verified' : null}
+        status={pending ? 'Evaluating your draft…' : outcome ? 'Draft verified' : status === 'ready' ? 'Blind run in progress' : null}
       />
       <main className="mx-auto max-w-6xl space-y-4 px-4 py-4">
         <BoardStatusPanel state={status} error={error} onRetry={() => loadBoard(seed)} />

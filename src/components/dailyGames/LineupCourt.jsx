@@ -4,13 +4,13 @@ import CourtFloor from '@/components/dailyGames/CourtFloor';
 import CourtPlayerMarker from '@/components/dailyGames/CourtPlayerMarker';
 import { allocateCourtSlots, projectCourt } from '@/components/dailyGames/courtGeometry';
 
-export default function LineupCourt({ lineup = [], removedPlayerRef, incomingPlayer, incomingLabel = 'Incoming', slim = false }) {
+export default function LineupCourt({ lineup = [], removedPlayerRef, incomingPlayer, incomingLabel = 'Incoming', slim = false, palette = null }) {
   const players = lineup.slice(0, 5);
   const slots = allocateCourtSlots(players);
   const teamCode = players.find((player) => player.teamCode)?.teamCode || '';
   return (
     <div className={`dg-court ${slim ? 'dg-court--slim' : ''}`} role="group" aria-label="Starting five on a perspective basketball court">
-      <CourtFloor teamCode={teamCode} />
+      <CourtFloor teamCode={teamCode} palette={palette} />
       {players.map((player, index) => {
         const swapped = player.playerRef === removedPlayerRef;
         const replacement = swapped && incomingPlayer;

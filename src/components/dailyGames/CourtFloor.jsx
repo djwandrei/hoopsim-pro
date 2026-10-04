@@ -9,12 +9,14 @@ import { teamLogo } from '@/components/djhc/siteNavigation';
 // center circle carrying the team logo, wordmarks on the aprons, and a team
 // stripe on the sideline boards. Very dark primaries (Brooklyn, San Antonio)
 // lighten to the trim color so the key still reads against the hardwood.
-export default function CourtFloor({ teamCode }) {
+export default function CourtFloor({ teamCode, palette: paletteProp = null }) {
   const id = useId().replace(/:/g, '');
   const cornerAngle = Math.acos(22 / 23.75);
   const cornerDepth = 5.25 + Math.sqrt(23.75 ** 2 - 22 ** 2);
   const hoopGlow = projectCourt(25, 9, 0);
-  const palette = paletteForTeam(teamCode);
+  // An explicit palette wins: cross-team boards (e.g. Draft Night) theme the
+  // floor from the site's selected team instead of any single player's team.
+  const palette = paletteProp || paletteForTeam(teamCode);
   const logo = teamLogo(palette);
   const djhc = palette.id === 'djhc';
   const apronInk = luminance(palette.primary) > .32 ? '#10131B' : '#FFFFFF';

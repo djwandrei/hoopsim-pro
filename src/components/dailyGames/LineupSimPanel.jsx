@@ -93,7 +93,7 @@ function BoxTable({ title, box, teamStats, teamPoints }) {
   );
 }
 
-export default function LineupSimPanel({ league, squads = [], lineupLabel = 'Your lineup' }) {
+export default function LineupSimPanel({ league, squads = [], lineupLabel = 'Your lineup', courtPalette = null }) {
   const [squadId, setSquadId] = useState('');
   const [opponentCode, setOpponentCode] = useState('');
   const [seed, setSeed] = useState(7);
@@ -163,7 +163,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
         )}
       </div>
       {!squadsAvailable && <p className="dg-sim__note mt-3">League ratings are still loading — the sim unlocks as soon as the season source is ready.</p>}
-      {squad?.players?.length === 5 && <div className="mt-4"><LineupCourt lineup={squad.players} slim /></div>}
+      {squad?.players?.length === 5 && <div className="mt-4"><LineupCourt lineup={squad.players} slim palette={courtPalette} /></div>}
       {result && (
         <div className="dg-sim__body mt-4 space-y-4">
           <div ref={summaryRef}>

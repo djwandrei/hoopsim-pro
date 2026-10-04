@@ -14,6 +14,7 @@ import { bestFitFor, deskNeeds, pickedRoster } from '@/components/dailyGames/dra
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
 import useSeasonSource from '@/hooks/useSeasonSource';
+import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import {
   loadSwishIQDailyBoard,
   revealSwishIQDailyGame,
@@ -27,6 +28,14 @@ import '@/components/dailyGames/dailyGames.css';
 
 const STORAGE_KEY = 'swishiq-studio-draft-night';
 const STORAGE_VERSION = 1;
+
+// Rendered inside GameShell's CourtThemeProvider, so it can read the team the
+// visitor picked in the palette picker and theme the sim court from it — the
+// draft roster mixes teams, so no single player's team can own the floor.
+function DraftSimPanel(props) {
+  const { palette } = useCourtTheme();
+  return <LineupSimPanel {...props} courtPalette={palette} />;
+}
 
 function emptyStore() {
   return { version: STORAGE_VERSION, runs: {} };
@@ -195,7 +204,7 @@ export default function DraftNight() {
               <DraftDesk rounds={rounds} picks={picks} roster={draftRoster} needs={needs} fit={fit} activeRound={activeRound} onSelectRound={jumpToRound} complete={allPicked} />
             )}
             {outcome && <div className="dg-reveal"><GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} /></div>}
-            {outcome && simSquads.length > 0 && <LineupSimPanel league={league} squads={simSquads} lineupLabel="Your draft five" />}
+            {outcome && simSquads.length > 0 && <DraftSimPanel league={league} squads={simSquads} lineupLabel="Your draft five" />}
             {!outcome && allPicked && (
               <section className="dg-lock dg-flow-in" aria-label="Lock the draft">
                 <div className="flex flex-wrap items-center justify-between gap-3">

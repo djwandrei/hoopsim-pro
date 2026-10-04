@@ -16,6 +16,8 @@ import ForgeLab from '@/pages/ForgeLab';
 import GameLab from '@/pages/GameLab';
 import CareerLab from '@/pages/CareerLab';
 import SpinRoom from '@/pages/SpinRoom';
+import FixTheFive from '@/pages/FixTheFive';
+import DraftNight from '@/pages/DraftNight';
 
 // Public studio: no login gate — every route is open. On the site the router
 // lives under /tools/swishiq-studio/ so existing site links keep working.
@@ -35,6 +37,8 @@ function App() {
             <Route path="/game" element={<GameLab />} />
             <Route path="/career" element={<CareerLab />} />
             <Route path="/spin" element={<SpinRoom />} />
+            <Route path="/fix-the-five" element={<FixTheFive />} />
+            <Route path="/draft-night" element={<DraftNight />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
           <Toaster />

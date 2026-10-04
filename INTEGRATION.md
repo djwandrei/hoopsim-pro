@@ -46,6 +46,8 @@ under the studio root (all other files are served statically):
 | `/tools/swishiq-studio/game/` | Game Lab |
 | `/tools/swishiq-studio/career/` | Career Lab |
 | `/tools/swishiq-studio/spin/` | Spin Room |
+| `/tools/swishiq-studio/fix-the-five/` | Fix the Five (daily game) |
+| `/tools/swishiq-studio/draft-night/` | Draft Night (daily game) |
 
 The previous studio page at `/tools/swishiq-studio/` is fully replaced, so
 every existing site link that points there keeps working.

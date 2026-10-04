@@ -69,6 +69,12 @@ module.exports = {
   			trim: 'hsl(var(--court-trim) / <alpha-value>)',
   			positive: 'hsl(var(--court-positive) / <alpha-value>)',
   			royal: 'hsl(var(--court-royal) / <alpha-value>)',
+            'court-wood-light': 'hsl(var(--court-wood-light) / <alpha-value>)',
+            'court-wood': 'hsl(var(--court-wood) / <alpha-value>)',
+            'court-wood-dark': 'hsl(var(--court-wood-dark) / <alpha-value>)',
+            'court-line': 'hsl(var(--court-line) / <alpha-value>)',
+            'court-rim': 'hsl(var(--court-rim) / <alpha-value>)',
+            'court-glass': 'hsl(var(--court-glass) / <alpha-value>)',
             'table-neutral': {
                 canvas: 'hsl(var(--table-neutral-canvas) / <alpha-value>)',
                 surface: 'hsl(var(--table-neutral-surface) / <alpha-value>)',

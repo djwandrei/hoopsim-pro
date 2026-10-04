@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Play, RefreshCcw } from 'lucide-react';
 import { simSingleGame } from '@/lib/season/simEngine';
 import { teamAsset } from '@/components/studio/teamAssets';
+import LineupCourt from '@/components/dailyGames/LineupCourt';
 
 // Model a five-man squad as a team profile for the sim engine. Offense is
 // modeled from the five players' observed per-game rates; defense is held at
@@ -143,6 +144,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
         )}
       </div>
       {!squadsAvailable && <p className="dg-sim__note mt-3">League ratings are still loading — the sim unlocks as soon as the season source is ready.</p>}
+      {squad?.players?.length === 5 && <div className="mt-4"><LineupCourt lineup={squad.players} slim /></div>}
       {result && (
         <div className="dg-sim__body mt-4 space-y-4">
           <div className="dg-sim__score">

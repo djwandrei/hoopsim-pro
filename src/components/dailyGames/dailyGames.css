@@ -628,3 +628,65 @@ body:not(.dark-mode) .dg-steprail__dot.is-active,
 body:not(.dark-mode) .dg-live__badge--live,
 body:not(.dark-mode) .dg-depth__flag--in { box-shadow: 0 0 0 1px hsl(33 72% 30% / .12); }
 body:not(.dark-mode) .dg-court__stat b { color: hsl(28 74% 24%); }
+
+/* === Game summary rework: logos, quarter line, and head-to-head stat duel === */
+.dg-summary__mid { display: grid; justify-items: center; gap: .2rem; }
+.dg-summary__poss { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.dg-summary__logo { height: 2.1rem; width: 2.1rem; object-fit: contain; flex-shrink: 0; }
+.dg-summary__quarters { margin-top: 1rem; border: 1px solid hsl(var(--border) / .3); border-radius: .7rem; overflow: hidden; background: hsl(var(--court-canvas) / .45); }
+.dg-summary__qhead span { padding: .4rem .3rem; font-family: var(--font-mono); font-size: .55rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; text-align: center; color: hsl(var(--muted-foreground)); border-bottom: 1px solid hsl(var(--border) / .3); }
+.dg-summary__qrow span { padding: .4rem .3rem; font-family: var(--font-mono); font-size: .8rem; font-variant-numeric: tabular-nums; text-align: center; color: hsl(var(--court-text)); border-bottom: 1px solid hsl(var(--border) / .15); }
+.dg-summary__qrow:last-child span { border-bottom: 0; }
+.dg-summary__qteam { font-size: .6rem !important; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; text-align: left !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dg-summary__qfinal { color: hsl(var(--court-accent)); font-weight: 700; }
+.dg-summary__duels { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .35rem .8rem; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid hsl(var(--border) / .3); }
+.dg-summary__duel { display: grid; grid-template-columns: 1fr 5.6rem 1fr; align-items: center; gap: .4rem; }
+.dg-summary__duel-val { font-family: var(--font-mono); font-size: .82rem; font-variant-numeric: tabular-nums; color: hsl(var(--court-text)); }
+.dg-summary__duel-val:last-child { text-align: right; }
+.dg-summary__duel-val.is-leader { color: hsl(var(--court-accent)); font-weight: 700; }
+.dg-summary__duel-label { text-align: center; font-family: var(--font-mono); font-size: .52rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+
+/* === Box score redesign: team-colored header, leaders, totals, shooting strip === */
+.dg-box { position: relative; overflow: hidden; border: 1px solid hsl(var(--border) / .35); border-radius: 1rem; background: linear-gradient(165deg, hsl(var(--court-surface) / .45), hsl(var(--court-canvas) / .9)); padding: .85rem 1rem .95rem; box-shadow: 0 8px 24px hsl(var(--court-canvas) / .16); }
+.dg-box::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--dg-team, hsl(var(--court-accent))), transparent 85%); opacity: .9; }
+.dg-box__head { display: flex; align-items: center; gap: .55rem; }
+.dg-box__logo { height: 1.5rem; width: 1.5rem; object-fit: contain; flex-shrink: 0; }
+.dg-box__title { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: .04em; color: hsl(var(--foreground)); }
+.dg-box__pts { margin-left: auto; border: 1px solid hsl(var(--court-accent) / .35); border-radius: 999px; background: hsl(var(--court-accent) / .08); padding: .2rem .6rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .12em; color: hsl(var(--court-accent)); white-space: nowrap; }
+.dg-box__scroll { margin-top: .55rem; overflow-x: auto; }
+.dg-box table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.dg-box th { padding: .4rem .55rem; font-family: var(--font-mono); font-size: .55rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; text-align: right; color: hsl(var(--muted-foreground)); border-bottom: 1px solid hsl(var(--border) / .4); white-space: nowrap; }
+.dg-box th:first-child { text-align: left; }
+.dg-box td { padding: .42rem .55rem; font-family: var(--font-mono); font-size: .78rem; font-variant-numeric: tabular-nums; text-align: right; color: hsl(var(--court-text)); border-top: 1px solid hsl(var(--border) / .14); white-space: nowrap; }
+.dg-box tbody tr:first-child td { border-top: 0; }
+.dg-box td:first-child { text-align: left; max-width: 13rem; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-display); font-size: .98rem; letter-spacing: .04em; }
+.dg-box__pos { margin-left: .35rem; font-family: var(--font-mono); font-size: .5rem; letter-spacing: .1em; color: hsl(var(--muted-foreground)); }
+.dg-box__lead { color: hsl(var(--court-accent)); font-weight: 700; }
+.dg-box tfoot td { border-top: 2px solid hsl(var(--court-accent) / .45); font-weight: 700; }
+.dg-box tfoot td:first-child { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.dg-box__strip { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; margin-top: .6rem; padding-top: .55rem; border-top: 1px solid hsl(var(--border) / .25); font-family: var(--font-mono); font-size: .6rem; letter-spacing: .06em; color: hsl(var(--muted-foreground)); }
+.dg-box__strip b { color: hsl(var(--foreground)); font-weight: 600; }
+
+/* Light-mode ink for the reworked summary and box score */
+body:not(.dark-mode) .dg-summary__pts,
+body:not(.dark-mode) .dg-summary__performer-name,
+body:not(.dark-mode) .dg-box__title,
+body:not(.dark-mode) .dg-box td,
+body:not(.dark-mode) .dg-box__strip b,
+body:not(.dark-mode) .dg-summary__duel-val { color: hsl(222 32% 14%); }
+body:not(.dark-mode) .dg-summary__duel-val.is-leader,
+body:not(.dark-mode) .dg-box__lead,
+body:not(.dark-mode) .dg-box__pts,
+body:not(.dark-mode) .dg-box tfoot td:first-child,
+body:not(.dark-mode) .dg-summary__qfinal { color: hsl(33 72% 30%); }
+body:not(.dark-mode) .dg-summary__poss,
+body:not(.dark-mode) .dg-summary__duel-label,
+body:not(.dark-mode) .dg-box th,
+body:not(.dark-mode) .dg-box__pos,
+body:not(.dark-mode) .dg-box__strip { color: hsl(218 24% 36%); }
+body:not(.dark-mode) .dg-box { background: linear-gradient(165deg, hsl(220 26% 96%), hsl(222 22% 92%)); }
+body:not(.dark-mode) .dg-box td,
+body:not(.dark-mode) .dg-box th { border-color: hsl(218 16% 82%); }
+body:not(.dark-mode) .dg-box tfoot td { border-top-color: hsl(33 60% 62%); }
+body:not(.dark-mode) .dg-summary__quarters { background: hsl(0 0% 100% / .8); border-color: hsl(218 16% 82%); }
+body:not(.dark-mode) .dg-summary__duels { border-top-color: hsl(218 16% 82%); }

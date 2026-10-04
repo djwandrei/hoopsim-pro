@@ -48,7 +48,7 @@
 .dg-card.is-selected::before { height: 4px; background: linear-gradient(90deg, hsl(var(--court-accent)), var(--dg-team, hsl(var(--court-accent))) 60%, transparent); }
 .dg-card.is-disabled { opacity: .45; filter: saturate(.6); }
 .dg-card__head { display: flex; align-items: center; gap: .65rem; }
-.dg-card__headshot { flex-shrink: 0; height: 7rem; width: 7rem; object-fit: contain; filter: drop-shadow(0 4px 10px hsl(var(--court-canvas) / .6)) drop-shadow(0 0 12px color-mix(in srgb, var(--dg-team, hsl(var(--court-accent))) 30%, transparent)); }
+.dg-card__headshot { flex-shrink: 0; height: 7.6rem; width: 6.6rem; object-fit: cover; object-position: center bottom; filter: drop-shadow(0 4px 10px hsl(var(--court-canvas) / .6)) drop-shadow(0 0 12px color-mix(in srgb, var(--dg-team, hsl(var(--court-accent))) 30%, transparent)); }
 .dg-card__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-display); font-size: 1.25rem; letter-spacing: .05em; color: hsl(var(--foreground)); }
 .dg-card__meta { display: inline-flex; align-items: center; gap: .4rem; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; }
 .dg-card__logo { height: 1.5rem; width: 1.5rem; flex-shrink: 0; object-fit: contain; }
@@ -193,9 +193,9 @@
 .dg-duel.is-disabled { opacity: .45; filter: saturate(.6); }
 .dg-duel__band { position: relative; overflow: hidden; border-bottom: 1px solid hsl(var(--border) / .3); background: linear-gradient(150deg, hsl(var(--court-surface) / .85), hsl(var(--court-canvas)) 78%); }
 .dg-duel__band::after { content: ''; position: absolute; inset: 0; background: radial-gradient(90% 130% at 100% 0%, hsl(var(--court-royal) / .16), transparent 62%); pointer-events: none; }
-.dg-duel__band-row { position: relative; display: flex; align-items: flex-end; gap: .6rem; padding: .55rem .8rem 0; }
+.dg-duel__band-row { position: relative; display: flex; align-items: flex-end; gap: .6rem; padding: .4rem .8rem 0; }
 .dg-duel__logo-bg { position: absolute; left: -.9rem; top: 50%; transform: translateY(-50%); height: 7.5rem; width: 7.5rem; object-fit: contain; opacity: .16; pointer-events: none; }
-.dg-duel__shot { flex-shrink: 0; height: 8.6rem; width: 7.2rem; object-fit: contain; object-position: center bottom; filter: drop-shadow(0 4px 8px hsl(var(--court-canvas) / .6)); }
+.dg-duel__shot { flex-shrink: 0; height: 8.6rem; width: 7.9rem; object-fit: cover; object-position: center bottom; filter: drop-shadow(0 4px 8px hsl(var(--court-canvas) / .6)); }
 .dg-duel__band-text { min-width: 0; flex: 1; padding-bottom: .55rem; }
 .dg-duel__name { font-family: var(--font-display); font-size: 1.65rem; line-height: .95; letter-spacing: .03em; text-transform: uppercase; color: hsl(var(--foreground)); }
 .dg-duel__rule { display: block; width: 2.6rem; margin-top: .25rem; }
@@ -246,6 +246,28 @@
 .dg-sim__go:disabled { opacity: .4; cursor: not-allowed; }
 .dg-sim__again { border: 1px solid hsl(var(--court-accent) / .4); background: hsl(var(--court-accent) / .1); color: hsl(var(--court-accent)); }
 .dg-sim__again:hover { background: hsl(var(--court-accent) / .22); }
+/* Game summary: the final-score screen after a simulated game */
+.dg-summary { border: 1px solid hsl(var(--court-accent) / .45); border-radius: 1rem; background: linear-gradient(135deg, hsl(var(--court-accent) / .08), hsl(var(--court-royal) / .05) 45%, hsl(var(--card)) 80%); padding: 1.3rem 1.4rem; }
+.dg-summary__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; }
+.dg-summary__verdict { display: inline-flex; align-items: center; gap: .5rem; margin-top: .5rem; font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .03em; text-transform: uppercase; }
+.dg-summary__verdict--win { color: hsl(var(--court-positive)); }
+.dg-summary__verdict--loss { color: hsl(var(--court-trim-ink)); }
+.dg-summary__final { align-self: center; border: 1px solid hsl(var(--court-accent) / .4); border-radius: 999px; background: hsl(var(--court-accent) / .08); padding: .3rem .8rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .18em; color: hsl(var(--court-accent)); }
+.dg-summary__score { display: flex; align-items: center; justify-content: center; gap: 1.4rem; margin-top: .6rem; }
+.dg-summary__side { display: grid; justify-items: center; gap: .25rem; min-width: 7rem; text-align: center; }
+.dg-summary__pts { font-family: var(--font-display); font-size: clamp(2.4rem, 6vw, 3.2rem); line-height: 1; color: hsl(var(--foreground)); }
+.dg-summary__name { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--muted-foreground)); text-align: center; }
+.dg-summary__ratings { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin-top: 1rem; }
+.dg-summary__ratings > div { border: 1px solid hsl(var(--border) / .3); border-radius: .55rem; background: hsl(var(--court-canvas) / .5); padding: .5rem .6rem; text-align: center; }
+.dg-summary__ratings dt { font-size: .5rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.dg-summary__ratings dd { margin-top: .15rem; font-family: var(--font-mono); font-size: .85rem; color: hsl(var(--foreground)); }
+.dg-summary__top { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid hsl(var(--border) / .3); }
+.dg-summary__top ul { display: grid; gap: .35rem; margin-top: .5rem; }
+.dg-summary__performer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem; border: 1px solid hsl(var(--border) / .25); border-radius: .5rem; background: hsl(var(--court-canvas) / .4); padding: .45rem .65rem; }
+.dg-summary__performer-name { font-family: var(--font-display); font-size: .95rem; letter-spacing: .04em; }
+.dg-summary__line { font-family: var(--font-mono); font-size: .62rem; color: hsl(var(--court-accent)); }
+@media (max-width: 479px) { .dg-summary__score { gap: .7rem; } .dg-summary__side { min-width: 5.5rem; } .dg-summary__ratings { grid-template-columns: 1fr; } }
+
 .dg-sim__score { display: flex; align-items: center; justify-content: center; gap: 1.25rem; }
 .dg-sim__team { display: grid; justify-items: center; gap: .3rem; text-align: center; min-width: 6rem; }
 .dg-sim__pts { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; color: hsl(var(--foreground)); }

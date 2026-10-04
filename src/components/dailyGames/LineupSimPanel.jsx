@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Play, RefreshCcw } from 'lucide-react';
 import { simSingleGame } from '@/lib/season/simEngine';
 import { teamAsset } from '@/components/studio/teamAssets';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
+import GameSummary from '@/components/dailyGames/GameSummary';
 
 // Model a five-man squad as a team profile for the sim engine. Offense is
 // modeled from the five players' observed per-game rates; defense is held at
@@ -24,7 +25,11 @@ export function lineupTeam(league, players, code, name) {
   const benchMinutes = Math.max(0, 240 - onCourtMinutes);
   const pace = avg('pace');
   const benchPtsPerMin = (avg('off') * pace) / 4800;
-  const teamPpg = roster.reduce((sum, player) => sum + player.pts, 0) + benchMinutes * benchPtsPerMin;
+  // Efficiency credit: rebounding and playmaking convert into extra
+  // possessions and are folded into the projected scoring.
+  const possessionValue = avg('off') / 112;
+  const efficiencyBonus = roster.reduce((sum, player) => sum + 0.12 * player.reb + 0.18 * player.ast, 0) * possessionValue;
+  const teamPpg = roster.reduce((sum, player) => sum + player.pts, 0) + benchMinutes * benchPtsPerMin + efficiencyBonus;
   const off = Math.round((teamPpg * 100) / pace);
   const def = Math.round(avg('def'));
   return {
@@ -93,6 +98,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
   const [opponentCode, setOpponentCode] = useState('');
   const [seed, setSeed] = useState(7);
   const [result, setResult] = useState(null);
+  const summaryRef = useRef(null);
   const squadsAvailable = Boolean(league?.teams?.length);
   const squad = squads.find(entry => entry.id === squadId) || squads[0] || null;
   const opponent = squadsAvailable ? (league.teams.find(team => team.code === opponentCode) || league.teams[0]) : null;
@@ -109,15 +115,18 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
     setSeed(next);
     run(next);
   };
+  useEffect(() => {
+    if (result && summaryRef.current) summaryRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [result]);
 
   return (
     <section className="dg-sim" aria-label="Simulate a game with the lineup">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <span className="bcast-kicker">Extra run</span>
-          <h3 className="mt-2 font-display text-2xl tracking-wide">Simulate a game with the five</h3>
+          <span className="bcast-kicker">Simulation step</span>
+          <h3 className="mt-2 font-display text-2xl tracking-wide">Play the game with your five</h3>
         </div>
-        <p className="dg-sim__note max-w-md">Offense is modeled from the five players' observed scoring rates; defense is held at the league average. Every simulated line is a model estimate, never observed performance.</p>
+        <p className="dg-sim__note max-w-md">The final score is built from your five players' efficiency — per-game scoring plus rebound and assist credit — against the opponent's ratings. Every simulated line is a model estimate, never observed performance.</p>
       </div>
       <div className="dg-sim__controls mt-4">
         {squads.length > 1 && (
@@ -147,16 +156,8 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
       {squad?.players?.length === 5 && <div className="mt-4"><LineupCourt lineup={squad.players} slim /></div>}
       {result && (
         <div className="dg-sim__body mt-4 space-y-4">
-          <div className="dg-sim__score">
-            <div className="dg-sim__team">
-              <span className="dg-sim__pts">{result.homePts}</span>
-              <span className="dg-sim__meta">{squad.label || lineupLabel}</span>
-            </div>
-            <span className="dg-sim__meta">{result.ot ? `${result.ot}OT` : 'FINAL'}</span>
-            <div className="dg-sim__team">
-              <span className="dg-sim__pts">{result.awayPts}</span>
-              <span className="dg-sim__meta inline-flex items-center gap-1">{oppLogo && <img src={oppLogo} alt="" className="h-3.5 w-3.5 object-contain" />}{opponent.name}</span>
-            </div>
+          <div ref={summaryRef}>
+            <GameSummary label={squad.label || lineupLabel} opponent={opponent} opponentLogo={oppLogo} result={result} />
           </div>
           <BoxTable title={`${squad.label || lineupLabel} — box score`} box={result.boxHome} teamStats={result.statsHome} teamPoints={result.homePts} />
           <details>

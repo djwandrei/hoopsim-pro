@@ -4,6 +4,7 @@ import { simSingleGame } from '@/lib/season/simEngine';
 import { teamAsset } from '@/components/studio/teamAssets';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
 import GameSummary from '@/components/dailyGames/GameSummary';
+import LiveScoreboard from '@/components/dailyGames/LiveScoreboard';
 
 // Model a five-man squad as a team profile for the sim engine. Offense is
 // modeled from the five players' observed per-game rates; defense is held at
@@ -98,6 +99,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
   const [opponentCode, setOpponentCode] = useState('');
   const [seed, setSeed] = useState(7);
   const [result, setResult] = useState(null);
+  const [playbackDone, setPlaybackDone] = useState(false);
   const summaryRef = useRef(null);
   const squadsAvailable = Boolean(league?.teams?.length);
   const squad = squads.find(entry => entry.id === squadId) || squads[0] || null;
@@ -109,6 +111,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
     if (!ready) return;
     const home = lineupTeam(league, squad.players, squad.code || 'FIVE', squad.label || lineupLabel);
     setResult(simSingleGame(league, home, opponent, { seed: nextSeed, neutral: true, log: true }));
+    setPlaybackDone(false);
   };
   const rerun = () => {
     const next = seed + 1;
@@ -157,24 +160,27 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
       {result && (
         <div className="dg-sim__body mt-4 space-y-4">
           <div ref={summaryRef}>
-            <GameSummary label={squad.label || lineupLabel} opponent={opponent} opponentLogo={oppLogo} result={result} />
+            <LiveScoreboard homeCode={squad.code} awayCode={opponent.code} result={result} onComplete={() => setPlaybackDone(true)} />
           </div>
-          <BoxTable title={`${squad.label || lineupLabel} — box score`} box={result.boxHome} teamStats={result.statsHome} teamPoints={result.homePts} />
-          <details>
-            <summary className="cursor-pointer text-xs font-semibold uppercase tracking-widest text-gold">{opponent.name} box score</summary>
-            <div className="mt-2"><BoxTable title={opponent.name} box={result.boxAway} teamStats={result.statsAway} teamPoints={result.awayPts} /></div>
-          </details>
-          <details>
-            <summary className="cursor-pointer text-xs font-semibold uppercase tracking-widest text-gold">Play-by-play</summary>
-            <div className="dg-sim__feed mt-2">
-              {result.pbp.map((event, index) => (
-                <div key={index} className="dg-sim__feed-event">
-                  <span className="dg-sim__feed-clock">{event.q} {event.clock}</span>
-                  <span className="min-w-0 flex-1">{event.text}</span>
-                </div>
-              ))}
-            </div>
-          </details>
+          {playbackDone && <>
+            <GameSummary label={squad.label || lineupLabel} opponent={opponent} opponentLogo={oppLogo} result={result} />
+            <BoxTable title={`${squad.label || lineupLabel} — box score`} box={result.boxHome} teamStats={result.statsHome} teamPoints={result.homePts} />
+            <details>
+              <summary className="cursor-pointer text-xs font-semibold uppercase tracking-widest text-gold">{opponent.name} box score</summary>
+              <div className="mt-2"><BoxTable title={opponent.name} box={result.boxAway} teamStats={result.statsAway} teamPoints={result.awayPts} /></div>
+            </details>
+            <details>
+              <summary className="cursor-pointer text-xs font-semibold uppercase tracking-widest text-gold">Play-by-play</summary>
+              <div className="dg-sim__feed mt-2">
+                {result.pbp.map((event, index) => (
+                  <div key={index} className="dg-sim__feed-event">
+                    <span className="dg-sim__feed-clock">{event.q} {event.clock}</span>
+                    <span className="min-w-0 flex-1">{event.text}</span>
+                  </div>
+                ))}
+              </div>
+            </details>
+          </>}
         </div>
       )}
     </section>

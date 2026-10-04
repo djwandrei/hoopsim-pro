@@ -19,8 +19,8 @@ export default function CourtFloor({ teamCode }) {
   const djhc = palette.id === 'djhc';
   const apronInk = luminance(palette.primary) > .32 ? '#10131B' : '#FFFFFF';
   const key = luminance(palette.primary) < .07 ? (palette.trim || palette.highlight) : palette.primary;
-  const center = projectCourt(25, 44, 0);
-  const centerY = center.y + 8;
+  const center = projectCourt(25, 47, 0);
+  const centerY = center.y;
   const baseline = projectCourt(25, 48.4, 0);
   const apronEdge = mix(palette.primary, '#000000', .35);
   const wordmark = djhc ? 'DJHC COURT' : palette.team.toUpperCase();
@@ -81,11 +81,15 @@ export default function CourtFloor({ teamCode }) {
         <path d={courtArc(25, 47, 6, Math.PI, Math.PI * 2)} />
         {[7, 8, 11, 14].flatMap(depth => [17, 33].map(x => <polyline key={`${x}-${depth}`} points={courtPoints([[x, depth], [x + (x === 17 ? -1 : 1), depth]])} />))}
       </g>
-      {/* Painted-on-court logo: squashed into the floor's perspective so it
-          reads as printed paint, with the wood gloss overlay passing over it. */}
+      {/* Painted-on-court logo: centered exactly on the half-court line and
+          squashed into the floor's perspective, clipped to this side of the
+          line so it reads as printed paint cut in half at midcourt. */}
+      <clipPath id={`halfcut-${id}`}><rect x="0" y="0" width="1000" height={centerY} /></clipPath>
       {logo && (
-        <g transform={`translate(${center.x} ${centerY}) scale(1 .58)`} opacity=".82">
-          <image href={logo} x="-32" y="-32" width="64" height="64" preserveAspectRatio="xMidYMid meet" />
+        <g clipPath={`url(#halfcut-${id})`}>
+          <g transform={`translate(${center.x} ${centerY}) scale(1 .58)`} opacity=".85">
+            <image href={logo} x="-44" y="-44" width="88" height="88" preserveAspectRatio="xMidYMid meet" />
+          </g>
         </g>
       )}
       <polygon points={courtRect(0, 0, 50, 47)} fill={`url(#gloss-${id})`} />

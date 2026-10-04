@@ -168,7 +168,6 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
       {!squadsAvailable && <p className="dg-sim__note mt-3">League ratings are still loading — the sim unlocks as soon as the season source is ready.</p>}
       {squad?.players?.length === 5 && (scoreboardOverlay ? (
         <div className="dg-court-stage mt-4">
-          <LineupCourt lineup={squad.players} slim palette={courtPalette} />
           {result && (
             <div className="dg-court-jumbo">
               <LiveScoreboard
@@ -180,6 +179,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
                 onComplete={() => setPlaybackDone(true)} />
             </div>
           )}
+          <LineupCourt lineup={squad.players} slim palette={courtPalette} />
         </div>
       ) : <div className="mt-4"><LineupCourt lineup={squad.players} slim palette={courtPalette} /></div>)}
       {result && (

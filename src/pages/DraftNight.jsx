@@ -9,6 +9,8 @@ import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
 import CardCycler from '@/components/dailyGames/CardCycler';
 import HowToPlay from '@/components/dailyGames/HowToPlay';
 import ProgressRail from '@/components/dailyGames/ProgressRail';
+import DraftDesk from '@/components/dailyGames/DraftDesk';
+import { bestFitFor, deskNeeds, pickedRoster } from '@/components/dailyGames/draftDesk';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
 import useSeasonSource from '@/hooks/useSeasonSource';
@@ -94,6 +96,14 @@ export default function DraftNight() {
   const pickCount = rounds.filter(round => picks[round.roundId]).length;
   const allPicked = rounds.length > 0 && pickCount === rounds.length;
   const orderedPicks = useMemo(() => rounds.map(round => ({ roundId: round.roundId, playerRef: picks[round.roundId] })).filter(pickEntry => pickEntry.playerRef), [rounds, picks]);
+  const draftRoster = useMemo(() => pickedRoster(rounds, picks), [rounds, picks]);
+  const needs = useMemo(() => deskNeeds(rounds, draftRoster), [rounds, draftRoster]);
+  const activeRound = rounds[activeIndex] || null;
+  const fit = useMemo(() => (activeRound && !outcome ? bestFitFor(activeRound.candidates, needs, draftRoster) : null), [activeRound, needs, draftRoster, outcome]);
+  const jumpToRound = useCallback(round => {
+    if (pending || outcome || picks[round.roundId]) return;
+    setActiveIndex(rounds.findIndex(entry => entry.roundId === round.roundId));
+  }, [outcome, pending, picks, rounds]);
 
   const choose = useCallback((round, candidate) => {
     if (pending || outcome || picks[round.roundId]) return;
@@ -181,6 +191,9 @@ export default function DraftNight() {
               <p className="dg-board-hero__prompt text-muted-foreground">{presentation.deck.prompt}</p>
             </div>
             <ProgressRail steps={rounds.map(round => round.roundId)} current={Math.min(activeIndex, Math.max(rounds.length - 1, 0))} completed={picks} labelFor={(key) => rounds.find(round => round.roundId === key)?.title || key} />
+            {!outcome && (
+              <DraftDesk rounds={rounds} picks={picks} roster={draftRoster} needs={needs} fit={fit} activeRound={activeRound} onSelectRound={jumpToRound} complete={allPicked} />
+            )}
             {outcome && <GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} />}
             {outcome && simSquads.length > 0 && <LineupSimPanel league={league} squads={simSquads} lineupLabel="Your draft five" />}
             {!outcome && allPicked && (
@@ -230,6 +243,7 @@ export default function DraftNight() {
                         selected={picks[round.roundId] === candidate.playerRef}
                         disabled={pending || Boolean(outcome)}
                         ctaLabel="Draft him"
+                        fitNote={fit?.candidate?.playerRef === candidate.playerRef ? fit.reasons.join(' · ') : null}
                         onSelect={() => choose(round, candidate)}
                       />
                     )}

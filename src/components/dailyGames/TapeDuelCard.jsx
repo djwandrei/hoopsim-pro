@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, ArrowDownRight, Check, Lock } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Check, Crosshair, Lock } from 'lucide-react';
 import { Image } from '@/components/ui/image';
 import { playerAsset, teamAsset } from '@/components/studio/teamAssets';
 import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPalettes';
@@ -19,7 +19,7 @@ function per36(player, key) {
 
 // Blueprint-faithful player card: identity band with the portrait seated on
 // its edge, a divided per-game strip, and delta chips — no bar charts.
-export default function TapeDuelCard({ player, reference = null, selected = false, disabled = false, ctaLabel = 'Swap in', onSelect }) {
+export default function TapeDuelCard({ player, reference = null, selected = false, disabled = false, ctaLabel = 'Swap in', fitNote = null, onSelect }) {
   const logo = teamAsset(player.teamCode);
   const palette = paletteForTeam(player.teamCode);
   const { mode } = useCourtTheme();
@@ -54,6 +54,7 @@ export default function TapeDuelCard({ player, reference = null, selected = fals
           </div>
           <span className={`dg-duel__radio ${selected ? 'is-on' : ''}`} aria-hidden="true">{selected && <Check className="h-3 w-3" />}</span>
         </div>
+        {fitNote && <span className="dg-fit-note"><Crosshair className="h-2.5 w-2.5" />Best fit · {fitNote}</span>}
       </header>
       <dl className="dg-duel__strip">
         {STRIP_STATS.map(([label, key]) => (

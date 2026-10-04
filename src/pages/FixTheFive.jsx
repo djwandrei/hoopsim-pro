@@ -6,6 +6,7 @@ import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
 import HowToPlay from '@/components/dailyGames/HowToPlay';
+import LineupViewToggle from '@/components/dailyGames/LineupViewToggle';
 import CardCycler from '@/components/dailyGames/CardCycler';
 import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
 import SwapBriefing from '@/components/dailyGames/SwapBriefing';
@@ -192,7 +193,12 @@ export default function FixTheFive() {
           
             <div className="min-w-0 space-y-3">
               <HowToPlay
-              controls={<BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />}
+              controls={
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <LineupViewToggle value={lineupView} onChange={setLineupView} />
+                  <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />
+                </div>
+              }
               steps={[
               'Read the outgoing starter\u2019s tape first — the reference row under the court is the player you are replacing.',
               'Compare each candidate by their stat tiles. Green deltas mean they out-produce the outgoing player; red means they fall short.',
@@ -217,20 +223,6 @@ export default function FixTheFive() {
                     
                   </section>
                   <div className="dg-flow-in space-y-3">
-                    <div className="flex justify-center">
-                      <div className="inline-flex rounded-lg border border-border/40 bg-canvas/60 p-0.5" role="tablist" aria-label="Lineup view">
-                        {[['court', 'Court'], ['depth', 'Depth chart']].map(([value, label]) => (
-                          <button
-                            key={value}
-                            type="button"
-                            role="tab"
-                            aria-selected={lineupView === value}
-                            onClick={() => setLineupView(value)}
-                            className={`h-11 px-4 rounded-md font-mono text-[0.6rem] font-semibold uppercase tracking-[0.14em] transition-colors ${lineupView === value ? 'bg-gold text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-                          >{label}</button>
-                        ))}
-                      </div>
-                    </div>
                     {lineupView === 'court'
                       ? <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
                       : <DepthChart lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} incomingPlayer={activeChallenge.incomingPlayer} incomingLabel="Incoming" />}

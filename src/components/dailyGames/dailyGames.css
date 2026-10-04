@@ -307,7 +307,7 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-depth__legend { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
 .dg-depth__kicker { font-family: var(--font-mono); font-size: .5rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: hsl(var(--court-trim-ink)); }
 .dg-depth__rows { display: grid; }
-.dg-depth__row { position: relative; display: grid; grid-template-columns: 2.9rem 5.4rem minmax(0, 1fr) auto; align-items: center; gap: .8rem; padding: .25rem 1.25rem; border-bottom: 1px solid hsl(var(--border) / .18); transition: background .2s ease; }
+.dg-depth__row { position: relative; display: grid; grid-template-columns: 2.9rem 5.4rem minmax(0, 1fr) auto; align-items: center; gap: .8rem; padding: .1rem 1.25rem; border-bottom: 1px solid hsl(var(--border) / .18); transition: background .2s ease; }
 .dg-depth__row:last-child { border-bottom: 0; }
 .dg-depth__row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--dg-team, hsl(var(--court-accent))), transparent 90%); opacity: .55; }
 .dg-depth__row:hover { background: hsl(var(--court-accent) / .05); }
@@ -319,7 +319,7 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-depth__row.is-outgoing .dg-depth__name { color: hsl(var(--court-trim-ink)); }
 .dg-depth__pos { display: grid; place-items: center; height: 2rem; width: 2rem; border-radius: .45rem; border: 1px solid hsl(var(--court-accent) / .45); background: hsl(var(--court-accent) / .1); font-family: var(--font-display); font-size: .8rem; letter-spacing: .06em; color: hsl(var(--court-accent)); }
 .dg-depth__shot { display: grid; place-items: center; }
-.dg-depth__portrait { height: 5.2rem; width: 5.4rem; object-fit: contain; object-position: center bottom; filter: drop-shadow(0 3px 5px hsl(var(--court-canvas) / .55)); }
+.dg-depth__portrait { height: 4.8rem; width: 5.4rem; object-fit: contain; object-position: center bottom; filter: drop-shadow(0 3px 5px hsl(var(--court-canvas) / .55)); }
 .dg-depth__initials { display: grid; place-items: center; height: 4.4rem; width: 4.4rem; border-radius: 50%; border: 1px solid hsl(var(--border) / .4); background: hsl(var(--court-raised) / .6); font-family: var(--font-display); font-size: 1.35rem; color: hsl(var(--muted-foreground)); }
 .dg-depth__identity { display: grid; gap: .15rem; min-width: 0; }
 .dg-depth__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-display); font-size: 1.15rem; letter-spacing: .04em; color: hsl(var(--foreground)); }
@@ -348,8 +348,8 @@ body:not(.dark-mode) .dg-depth__portrait { filter: drop-shadow(0 3px 4px hsl(20 
 @media (max-width: 639px) {
   .dg-depth__cols { display: none; }
   .dg-depth__totals { grid-template-columns: 1fr auto; padding: .6rem .8rem; }
-  .dg-depth__row { grid-template-columns: 2.2rem 3.6rem minmax(0, 1fr); padding: .3rem .8rem; }
-  .dg-depth__portrait { height: 4.4rem; width: 3.6rem; }
+  .dg-depth__row { grid-template-columns: 2.2rem 3.6rem minmax(0, 1fr); padding: .15rem .8rem; }
+  .dg-depth__portrait { height: 4.2rem; width: 3.6rem; }
   .dg-depth__stats { grid-column: 2 / 4; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .dg-depth__stats--totals { grid-column: auto; }
   .dg-depth__flag { position: static; grid-column: 1 / 4; justify-self: start; }

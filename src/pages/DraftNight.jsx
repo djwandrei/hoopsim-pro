@@ -152,10 +152,10 @@ export default function DraftNight() {
         {statusState === 'ready' && presentation && (
           <>
             <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} />
-            <div className="court-panel p-5">
+            <div className="dg-board-hero">
               <span className="bcast-kicker">Tonight's board</span>
-              <h2 className="mt-2 font-display text-2xl tracking-wide">{presentation.deck.title}</h2>
-              <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted-foreground">{presentation.deck.prompt}</p>
+              <h2 className="dg-board-hero__title font-display tracking-wide">{presentation.deck.title}</h2>
+              <p className="dg-board-hero__prompt text-muted-foreground">{presentation.deck.prompt}</p>
             </div>
             <ProgressRail steps={rounds.map(round => round.roundId)} current={Math.min(activeIndex, Math.max(rounds.length - 1, 0))} completed={picks} labelFor={(key) => rounds.find(round => round.roundId === key)?.title || key} />
             {outcome && <GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} />}

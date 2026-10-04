@@ -177,14 +177,17 @@ export default function FixTheFive() {
             )}
             {activeChallenge && (
               <section className="space-y-4" aria-label={activeChallenge.title}>
-                <div className="court-panel p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h2 className="font-display text-2xl tracking-wide">{activeChallenge.title}</h2>
+                <div className="dg-board-hero">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <span className="bcast-kicker">Swap {activeIndex + 1} of {challenges.length}</span>
+                      <h2 className="dg-board-hero__title font-display tracking-wide">{activeChallenge.title}</h2>
+                    </div>
                     <span className="dg-challenge__chip">
                       Outgoing: {activeChallenge.lineup.find(player => player.playerRef === activeChallenge.removePlayerRef)?.displayName}
                     </span>
                   </div>
-                  <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted-foreground">{activeChallenge.prompt}</p>
+                  <p className="dg-board-hero__prompt text-muted-foreground">{activeChallenge.prompt}</p>
                   <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,340px)_1fr]">
                     <LineupCourt lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} incomingPlayer={activeChallenge.candidates.find(candidate => candidate.playerRef === selections[activeChallenge.challengeId])} />
                     <div className="grid content-start gap-3 sm:grid-cols-2 xl:grid-cols-3">

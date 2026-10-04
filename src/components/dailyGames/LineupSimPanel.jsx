@@ -167,19 +167,16 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
       </div>
       {!squadsAvailable && <p className="dg-sim__note mt-3">League ratings are still loading — the sim unlocks as soon as the season source is ready.</p>}
       {squad?.players?.length === 5 && (scoreboardOverlay ? (
-        <div className="dg-court-stage mt-4">
+        <div className="mt-4">
           {result && (
-            <div className="dg-court-jumbo">
-              <LiveScoreboard
-                homeCode={squad.code}
-                awayCode={opponent.code}
-                homeName={TEAM_NAMES[squad.code] || squad.label || lineupLabel}
-                awayName={opponent.name}
-                result={result}
-                onComplete={() => setPlaybackDone(true)} />
-            </div>
+            <LiveScoreboard
+              homeCode={squad.code}
+              awayCode={opponent.code}
+              homeName={TEAM_NAMES[squad.code] || squad.label || lineupLabel}
+              awayName={opponent.name}
+              result={result}
+              onComplete={() => setPlaybackDone(true)} />
           )}
-          <LineupCourt lineup={squad.players} slim palette={courtPalette} />
         </div>
       ) : <div className="mt-4"><LineupCourt lineup={squad.players} slim palette={courtPalette} /></div>)}
       {result && (

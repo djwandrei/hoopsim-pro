@@ -305,8 +305,7 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-depth { max-width: 66rem; margin-inline: auto; border: 1px solid hsl(var(--border) / .35); border-radius: 1rem; background: linear-gradient(165deg, hsl(var(--court-surface) / .55), hsl(var(--court-canvas) / .9)); box-shadow: 0 8px 24px hsl(var(--court-canvas) / .18); overflow: hidden; }
 .dg-depth__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; padding: .65rem 1.1rem .45rem; border-bottom: 1px solid hsl(var(--border) / .25); }
 .dg-depth__legend { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
-.dg-depth__ref { padding: .7rem 1.1rem; border-bottom: 1px solid hsl(var(--border) / .25); background: hsl(var(--court-canvas) / .35); }
-.dg-depth__ref .dg-ref { border-radius: .7rem; box-shadow: none; }
+.dg-depth__kicker { font-family: var(--font-mono); font-size: .5rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: hsl(var(--court-trim-ink)); }
 .dg-depth__rows { display: grid; }
 .dg-depth__row { position: relative; display: grid; grid-template-columns: 2.9rem 3.7rem minmax(0, 1fr) auto; align-items: center; gap: .8rem; padding: .6rem 1.25rem; border-bottom: 1px solid hsl(var(--border) / .18); transition: background .2s ease; }
 .dg-depth__row:last-child { border-bottom: 0; }
@@ -315,7 +314,7 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-depth__row.is-incoming::before, .dg-depth__row.is-outgoing::before { width: 5px; opacity: 1; }
 .dg-depth__row.is-incoming { background: hsl(var(--court-accent) / .1); }
 .dg-depth__row.is-incoming::before { background: linear-gradient(180deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .4)); }
-.dg-depth__row.is-outgoing { background: hsl(var(--court-trim) / .12); }
+.dg-depth__row.is-outgoing { background: linear-gradient(120deg, hsl(var(--court-trim) / .14), hsl(var(--court-trim) / .04) 45%, hsl(var(--card)) 82%); box-shadow: inset 0 0 24px hsl(var(--court-trim) / .05); }
 .dg-depth__row.is-outgoing::before { background: linear-gradient(180deg, hsl(var(--court-trim)), hsl(var(--court-trim) / .4)); }
 .dg-depth__row.is-outgoing .dg-depth__name { color: hsl(var(--court-trim-ink)); }
 .dg-depth__pos { display: grid; place-items: center; height: 2rem; width: 2rem; border-radius: .45rem; border: 1px solid hsl(var(--court-accent) / .45); background: hsl(var(--court-accent) / .1); font-family: var(--font-display); font-size: .8rem; letter-spacing: .06em; color: hsl(var(--court-accent)); }
@@ -344,7 +343,7 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-depth__row:where(:nth-child(even)) { background: hsl(var(--court-canvas) / .35); }
 body:not(.dark-mode) .dg-depth { background: linear-gradient(165deg, hsl(var(--court-surface) / .92), hsl(var(--court-raised) / .55)); }
 body:not(.dark-mode) .dg-depth__row.is-incoming { background: hsl(var(--court-accent) / .12); }
-body:not(.dark-mode) .dg-depth__row.is-outgoing { background: hsl(var(--court-trim) / .1); }
+body:not(.dark-mode) .dg-depth__row.is-outgoing { background: linear-gradient(120deg, hsl(var(--court-trim) / .12), hsl(var(--court-trim) / .03) 45%, hsl(var(--card)) 82%); }
 body:not(.dark-mode) .dg-depth__portrait { filter: drop-shadow(0 3px 4px hsl(20 30% 15% / .3)); }
 @media (max-width: 639px) {
   .dg-depth__cols { display: none; }

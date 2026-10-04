@@ -5,7 +5,6 @@ import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPal
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { statDisplay, statNumber } from '@/lib/dailyGames/boardHydration';
 import { roleOf, primaryRoles, sortLineup } from '@/components/dailyGames/lineupRoles';
-import TapeReference from '@/components/dailyGames/TapeReference';
 
 const STAT_COLUMNS = [['MPG', 'minutes'], ['PPG', 'points'], ['RPG', 'rebounds'], ['APG', 'assists']];
 const TOTAL_COLUMNS = [['PPG', 'points'], ['RPG', 'rebounds'], ['APG', 'assists']];
@@ -16,7 +15,6 @@ const TOTAL_COLUMNS = [['PPG', 'points'], ['RPG', 'rebounds'], ['APG', 'assists'
 export default function DepthChart({ lineup = [], removedPlayerRef = null, incomingPlayer = null, incomingLabel = 'Incoming' }) {
   const { mode } = useCourtTheme();
   const five = sortLineup(lineup.slice(0, 5));
-  const outgoingPlayer = removedPlayerRef ? five.find(player => player.playerRef === removedPlayerRef) || null : null;
   const totalsFrom = five.map(player => (player.playerRef === removedPlayerRef && incomingPlayer ? incomingPlayer : player));
   const totals = TOTAL_COLUMNS.map(([label, key]) => {
     const values = totalsFrom.map(player => statNumber(player, key)).filter(value => value !== null);
@@ -38,11 +36,6 @@ export default function DepthChart({ lineup = [], removedPlayerRef = null, incom
         <span className="bcast-kicker">Depth chart</span>
         <span className="dg-depth__legend">Rotation depth 1–5 · red = removing · gold = incoming</span>
       </header>
-      {outgoingPlayer &&
-        <div className="dg-depth__ref">
-          <TapeReference player={outgoingPlayer} />
-        </div>
-      }
       <div className="dg-depth__cols" aria-hidden="true">
         <span>Pos</span>
         <span className="dg-depth__spacer" />
@@ -73,6 +66,7 @@ export default function DepthChart({ lineup = [], removedPlayerRef = null, incom
                   : <span className="dg-depth__initials" aria-hidden="true">{initials}</span>}
               </span>
               <span className="dg-depth__identity">
+                {outgoing && <span className="dg-depth__kicker">Outgoing — replaced by your pick</span>}
                 <span className="dg-depth__name">{player.displayName}</span>
                 <span className="dg-depth__meta" style={{ color: ink }}>
                   {logo && <img src={logo} alt="" aria-hidden="true" className="dg-depth__logo" />}

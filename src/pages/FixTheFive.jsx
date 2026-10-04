@@ -199,19 +199,21 @@ export default function FixTheFive() {
                 note="Your picks save in this browser — refresh anytime and the run picks up where you left off."
               />
               {activeChallenge && (
-                <section className="dg-board-hero" aria-label={activeChallenge.title}>
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <span className="bcast-kicker">Swap {activeIndex + 1} of {challenges.length} · blind pick</span>
-                      <h2 className="dg-board-hero__title font-display tracking-wide">{activeChallenge.title}</h2>
+                <>
+                  <section className="dg-board-hero" aria-label={activeChallenge.title}>
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <span className="bcast-kicker">Swap {activeIndex + 1} of {challenges.length} · blind pick</span>
+                        <h2 className="dg-board-hero__title font-display tracking-wide">{activeChallenge.title}</h2>
+                      </div>
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className="dg-challenge__chip">Outgoing: {outgoing?.displayName}</span>
+                        <span className="dg-badge">Locked {pickCount}/{challenges.length}</span>
+                      </span>
                     </div>
-                    <span className="flex flex-wrap items-center gap-2">
-                      <span className="dg-challenge__chip">Outgoing: {outgoing?.displayName}</span>
-                      <span className="dg-badge">Locked {pickCount}/{challenges.length}</span>
-                    </span>
-                  </div>
-                  <p className="dg-board-hero__prompt text-muted-foreground">{activeChallenge.prompt}</p>
-                  <div className="mt-4 grid gap-3">
+                    <p className="dg-board-hero__prompt text-muted-foreground">{activeChallenge.prompt}</p>
+                  </section>
+                  <div className="space-y-3">
                     <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
                     <TapeReference player={outgoing} />
                     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -228,7 +230,7 @@ export default function FixTheFive() {
                       ))}
                     </div>
                   </div>
-                </section>
+                </>
               )}
               {pending && revealLabel && <p className="dg-reveal-status" role="status">{revealLabel}</p>}
               {allPicked && completedCount < challenges.length && (

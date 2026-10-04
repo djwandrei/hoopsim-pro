@@ -5,7 +5,7 @@ import { Info } from 'lucide-react';
 export default function HowToPlay({ steps = [], note }) {
   if (!steps.length) return null;
   return (
-    <details className="dg-howto" open aria-label="How to play">
+    <details className="dg-howto" aria-label="How to play">
       <summary className="bcast-kicker"><Info className="h-3.5 w-3.5 shrink-0" />How this run works</summary>
       <ol className="dg-howto__steps">
         {steps.map((step, index) => (

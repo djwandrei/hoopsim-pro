@@ -4,7 +4,7 @@ import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
-import CandidateCard from '@/components/dailyGames/CandidateCard';
+import TapeDuelCard, { tapeMaxes } from '@/components/dailyGames/TapeDuelCard';
 import ProgressRail from '@/components/dailyGames/ProgressRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
@@ -198,11 +198,12 @@ export default function DraftNight() {
                   <p className="mt-1 text-xs text-muted-foreground">{round.prompt}</p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     {round.candidates.map(candidate => (
-                      <CandidateCard
+                      <TapeDuelCard
                         key={candidate.playerRef}
                         player={candidate}
-                        outgoing={null}
-                        compact
+                        scale={tapeMaxes(round.candidates)}
+                        selected={picks[round.roundId] === candidate.playerRef}
+                        disabled={pending || Boolean(outcome)}
                         ctaLabel="Draft him"
                         onSelect={() => choose(round, candidate)}
                       />

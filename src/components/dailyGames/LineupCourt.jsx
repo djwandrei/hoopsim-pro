@@ -65,12 +65,12 @@ function CourtMarker({ x, y, player, tone = 'starter', tag, sub }) {
   );
 }
 
-export default function LineupCourt({ lineup, removedPlayerRef, incomingPlayer, incomingLabel = 'Incoming' }) {
+export default function LineupCourt({ lineup, removedPlayerRef, incomingPlayer, incomingLabel = 'Incoming', slim = false }) {
   const slots = allocateSlots(lineup);
   const placed = lineup.map((player, index) => ({ ...player, _x: slots[index].x, _y: slots[index].y }));
   const removed = placed.find(player => player.playerRef === removedPlayerRef);
   return (
-    <div className="dg-court">
+    <div className={`dg-court ${slim ? 'dg-court--slim' : ''}`}>
       <span className="dg-court__badge"><Ban className="h-2.5 w-2.5 text-trim" /> marked swap</span>
       <svg className="dg-court__lines" viewBox="0 0 100 94" preserveAspectRatio="none" aria-hidden="true">
         <g stroke="hsl(43 78% 60% / .3)" strokeWidth=".5" fill="none">

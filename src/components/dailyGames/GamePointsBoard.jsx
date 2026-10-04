@@ -1,8 +1,11 @@
 import React from 'react';
 import { Award, ShieldCheck, Trophy } from 'lucide-react';
 import { decisionProofStatus } from '@/lib/dailyGames/resultPassportCore';
+import { teamAsset } from '@/components/studio/teamAssets';
+import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
-export default function GamePointsBoard({ outcome, contextTitle }) {
+export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
+  const teamLogo = teamCode ? teamAsset(teamCode) : null;
   const passport = outcome?.resultPassport;
   const decision = passport?.decision;
   const gamePoints = passport?.gamePoints;
@@ -14,7 +17,7 @@ export default function GamePointsBoard({ outcome, contextTitle }) {
   const scale = bestValue != null ? Math.max(Math.abs(selectedValue), Math.abs(bestValue)) || 1 : 1;
   const widthFor = value => `${Math.min(100, (Math.abs(value) / scale) * 100).toFixed(1)}%`;
   return (
-    <section className="dg-result dg-reveal" aria-label="Verified result">
+    <section className="dg-result dg-reveal" aria-label="Verified result" style={teamCode ? { '--dg-team': paletteForTeam(teamCode)?.primary } : undefined}>
       <span className="dg-result__watermark" aria-hidden="true">{gamePoints ? `${gamePoints.total}` : '—'}</span>
       <span className="bcast-kicker">Verified result</span>
       <div className="dg-result__hero mt-4">
@@ -27,6 +30,12 @@ export default function GamePointsBoard({ outcome, contextTitle }) {
           </div>
         )}
         <div className="min-w-0">
+          {teamCode && (
+            <span className="dg-result__club">
+              {teamLogo && <img className="dg-result__logo" src={teamLogo} alt="" />}
+              <span className="dg-result__code">{teamCode}</span>
+            </span>
+          )}
           <h3 className="dg-result__rank">
             {decision ? `Rank ${decision.rank} of ${decision.optionCount}` : 'Result unavailable'}
           </h3>

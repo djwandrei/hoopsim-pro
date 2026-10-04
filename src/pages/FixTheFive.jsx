@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, Lock, Sparkles } from 'lucide-react';
+import { AlertTriangle, ChevronDown, Lock, Sparkles, Trophy } from 'lucide-react';
 import GameShell from '@/components/dailyGames/GameShell';
 import LineupSimPanel from '@/components/dailyGames/LineupSimPanel';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
@@ -60,6 +60,7 @@ export default function FixTheFive() {
   const [pending, setPending] = useState(false);
   const [revealLabel, setRevealLabel] = useState('');
   const [notice, setNotice] = useState('');
+  const [resultsOpen, setResultsOpen] = useState(true);
   const { year, setYear, source, league } = useSeasonSource();
 
   const persist = useCallback((nextSeed, nextSelections, nextOutcomes) => {
@@ -304,15 +305,20 @@ export default function FixTheFive() {
               {completedCount === challenges.length &&
             <>
                   <div ref={resultsRef} className="dg-results">
-                    <div className="dg-results__head">
-                      <span className="bcast-kicker">Board verified</span>
-                      <span className="dg-badge">{completedCount}/{challenges.length} swaps scored</span>
-                    </div>
+                    <button type="button" className="dg-results__toggle" aria-expanded={resultsOpen} onClick={() => setResultsOpen(value => !value)}>
+                      <span className="flex items-center gap-2"><Trophy className="h-4 w-4 text-gold" /><span className="bcast-kicker">Board verified</span></span>
+                      <span className="flex items-center gap-2">
+                        <span className="dg-badge">{completedCount}/{challenges.length} swaps scored</span>
+                        <ChevronDown className={`dg-results__chevron h-4 w-4 ${resultsOpen ? '' : 'is-closed'}`} />
+                      </span>
+                    </button>
+                    {resultsOpen &&
                     <div className="dg-results__list">
                       {challenges.map((challenge) => outcomes[challenge.challengeId] ?
-                    <GamePointsBoard key={challenge.challengeId} outcome={outcomes[challenge.challengeId]} contextTitle={`${challenge.title} · ${challenge.teamCode}`} /> :
+                    <GamePointsBoard key={challenge.challengeId} outcome={outcomes[challenge.challengeId]} contextTitle={`${challenge.title} · ${challenge.teamCode}`} teamCode={challenge.teamCode} /> :
                     null)}
                     </div>
+                    }
                   </div>
                   {completedCount === challenges.length && simSquads.length > 0 &&
               <LineupSimPanel league={league} squads={simSquads} lineupLabel="The fixed five" scoreboardOverlay />

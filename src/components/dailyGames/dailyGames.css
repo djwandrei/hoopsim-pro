@@ -633,8 +633,16 @@ body:not(.dark-mode) .dg-court__stat b { color: hsl(28 74% 24%); }
 
 /* Verified results: one shared container for every scored decision */
 .dg-results { border: 1px solid hsl(var(--court-accent) / .45); border-radius: 1rem; background: linear-gradient(135deg, hsl(var(--court-accent) / .08), hsl(var(--court-royal) / .05) 45%, hsl(var(--card)) 80%); padding: 1.25rem 1.4rem; scroll-margin-top: calc(var(--djhc-header-h, 0px) + 1rem); }
-.dg-results__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; padding-bottom: .7rem; border-bottom: 1px solid hsl(var(--court-accent) / .3); }
+.dg-results__toggle { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; width: 100%; border: 0; background: none; padding: 0 0 .7rem; border-bottom: 1px solid hsl(var(--court-accent) / .3); cursor: pointer; text-align: left; }
+.dg-results__chevron { color: hsl(var(--muted-foreground)); transition: transform .2s ease, color .2s ease; }
+.dg-results__toggle:hover .dg-results__chevron { color: hsl(var(--court-accent)); }
+.dg-results__chevron.is-closed { transform: rotate(-90deg); }
 .dg-results__list > .dg-result { border: 0; background: none; box-shadow: none; padding: 1.15rem .1rem; }
+.dg-results__list > .dg-result::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; border-radius: 999px; background: linear-gradient(90deg, var(--dg-team, hsl(var(--court-accent))), transparent 85%); opacity: .9; }
+.dg-result__club { display: inline-flex; align-items: center; gap: .45rem; margin-bottom: .35rem; }
+.dg-result__logo { height: 2rem; width: 2rem; object-fit: contain; }
+.dg-result__code { border: 1px solid hsl(var(--court-accent) / .35); border-radius: 999px; background: hsl(var(--court-accent) / .08); padding: .15rem .55rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--foreground)); }
+body:not(.dark-mode) .dg-result__code { border-color: hsl(218 16% 74%); background: hsl(0 0% 100% / .7); color: hsl(222 32% 14%); }
 .dg-results__list > .dg-result + .dg-result { border-top: 1px solid hsl(var(--border) / .3); }
 
 /* Flow glue: auto-scrolled sections keep breathing room under sticky chrome */

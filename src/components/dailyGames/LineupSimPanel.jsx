@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Play, RefreshCcw } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { simSingleGame, TEAM_NAMES } from '@/lib/season/simEngine';
 import { teamAsset } from '@/components/studio/teamAssets';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
@@ -98,8 +98,6 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
   const [opponentCode, setOpponentCode] = useState('');
   // Every run draws a fresh seed, so no two simulations of the same matchup
   // replay identical results.
-  const freshSeed = () => 1 + Math.floor(Math.random() * 999999);
-  const [seed, setSeed] = useState(freshSeed);
   const [result, setResult] = useState(null);
   const [playbackDone, setPlaybackDone] = useState(false);
   const summaryRef = useRef(null);
@@ -109,8 +107,11 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
   const ready = Boolean(squad?.players?.length === 5 && opponent);
   const oppLogo = opponent ? teamAsset(opponent.code) : null;
 
-  const run = (nextSeed = seed) => {
+  // Every run draws a fresh seed, so "Tip off" and "Re-simulate" both produce
+  // a brand-new draw — no separate new-draw button needed.
+  const run = () => {
     if (!ready) return;
+    const nextSeed = 1 + Math.floor(Math.random() * 999999);
     const home = lineupTeam(league, squad.players, squad.code || 'FIVE', squad.label || lineupLabel);
     // The opponent is modeled as just its starting five — the same five-man
     // model, carrying the real team's pace, defense, and four-factor rates.
@@ -122,11 +123,6 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
     });
     setResult(simSingleGame(league, home, away, { seed: nextSeed, neutral: true, log: true }));
     setPlaybackDone(false);
-  };
-  const rerun = () => {
-    const next = freshSeed();
-    setSeed(next);
-    run(next);
   };
   useEffect(() => {
     if (result && summaryRef.current) summaryRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -159,11 +155,6 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
         <button type="button" className="dg-sim__go" disabled={!ready} onClick={() => run()}>
           <Play className="h-3.5 w-3.5" /> {result ? 'Re-simulate' : 'Tip off'}
         </button>
-        {result && (
-          <button type="button" className="dg-sim__again" onClick={rerun}>
-            <RefreshCcw className="h-3.5 w-3.5" /> New draw
-          </button>
-        )}
       </div>
       {!squadsAvailable && <p className="dg-sim__note mt-3">League ratings are still loading — the sim unlocks as soon as the season source is ready.</p>}
       {squad?.players?.length === 5 && (scoreboardOverlay ? (

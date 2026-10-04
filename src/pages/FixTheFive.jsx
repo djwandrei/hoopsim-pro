@@ -6,11 +6,9 @@ import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
 import HowToPlay from '@/components/dailyGames/HowToPlay';
-import LineupViewToggle from '@/components/dailyGames/LineupViewToggle';
 import CardCycler from '@/components/dailyGames/CardCycler';
 import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
 import SwapBriefing from '@/components/dailyGames/SwapBriefing';
-import LineupCourt from '@/components/dailyGames/LineupCourt';
 import DepthChart from '@/components/dailyGames/DepthChart';
 import StepRail from '@/components/dailyGames/StepRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
@@ -26,7 +24,6 @@ export default function FixTheFive() {
   const [selections, setSelections] = useState({});
   const [outcomes, setOutcomes] = useState({});
   const [activeIndex, setActiveIndex] = useState(0);
-  const [lineupView, setLineupView] = useState('court');
   const [pending, setPending] = useState(false);
   const [revealLabel, setRevealLabel] = useState('');
   const [resultsOpen, setResultsOpen] = useState(true);
@@ -171,12 +168,11 @@ export default function FixTheFive() {
               defaultOpen={pickCount + completedCount === 0}
               controls={
                 <div className="flex flex-wrap items-center justify-end gap-2">
-                  <LineupViewToggle value={lineupView} onChange={setLineupView} />
                   <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />
                 </div>
               }
               steps={[
-              'Read the outgoing starter\u2019s tape first — the reference row under the court is the player you are replacing.',
+              'Read the outgoing starter\u2019s tape first — the reference row in the depth chart is the player you are replacing.',
               'Compare each candidate by their stat tiles. Green deltas mean they out-produce the outgoing player; red means they fall short.',
               'Lock all five swaps blind — scores stay hidden and nothing is evaluated until the board is locked.',
               'Reveal once to score every swap against the verified evaluator. A perfect swap earns 10 Game Points; exact estimates score in tiers.']
@@ -199,9 +195,7 @@ export default function FixTheFive() {
                     
                   </section>
                   <div className="dg-flow-in space-y-3">
-                    {lineupView === 'court'
-                      ? <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
-                      : <DepthChart lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} incomingPlayer={activeChallenge.incomingPlayer} incomingLabel="Incoming" />}
+                    <DepthChart lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} incomingPlayer={activeChallenge.incomingPlayer} incomingLabel="Incoming" />
                     <SwapBriefing challenge={activeChallenge} />
                     <CardCycler
                       items={activeChallenge.candidates}

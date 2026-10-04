@@ -488,6 +488,12 @@ body:not(.dark-mode) .dg-depth__portrait { filter: drop-shadow(0 3px 4px hsl(20 
 body:not(.dark-mode) .dg-desk__need strong { color: hsl(218 24% 24%); }
 @media (max-width: 1023px) { .dg-desk { grid-template-columns: 1fr; } }
 
+/* Draft Night: the sim scoreboard rides over the court like an arena jumbotron */
+.dg-court-stage { position: relative; }
+.dg-court-jumbo { position: absolute; top: -1.1rem; left: 50%; transform: translateX(-50%); z-index: 30; width: min(90%, 30rem); filter: drop-shadow(0 18px 32px hsl(var(--court-canvas) / .6)); }
+.dg-court-jumbo .dg-live { box-shadow: 0 18px 40px hsl(var(--court-canvas) / .65), 0 0 0 1px hsl(var(--court-accent) / .18); }
+@media (max-width: 639px) { .dg-court-jumbo { top: -0.8rem; width: min(94%, 22rem); } }
+
 /* Best-fit flag on candidate cards */
 .dg-fit-note { display: inline-flex; align-items: center; gap: .3rem; margin-top: .3rem; width: max-content; max-width: 100%; border: 1px solid hsl(var(--court-accent) / .45); border-radius: 999px; background: hsl(var(--court-accent) / .12); padding: .1rem .5rem; font-family: var(--font-mono); font-size: .5rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: hsl(var(--court-accent)); }
 body:not(.dark-mode) .dg-fit-note { color: hsl(33 72% 30%); }

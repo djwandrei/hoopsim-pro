@@ -34,7 +34,7 @@ const STORAGE_VERSION = 1;
 // draft roster mixes teams, so no single player's team can own the floor.
 function DraftSimPanel(props) {
   const { palette } = useCourtTheme();
-  return <LineupSimPanel {...props} courtPalette={palette} />;
+  return <LineupSimPanel {...props} courtPalette={palette} scoreboardOverlay />;
 }
 
 function emptyStore() {

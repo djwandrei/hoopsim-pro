@@ -93,7 +93,7 @@ function BoxTable({ title, box, teamStats, teamPoints }) {
   );
 }
 
-export default function LineupSimPanel({ league, squads = [], lineupLabel = 'Your lineup', courtPalette = null }) {
+export default function LineupSimPanel({ league, squads = [], lineupLabel = 'Your lineup', courtPalette = null, scoreboardOverlay = false }) {
   const [squadId, setSquadId] = useState('');
   const [opponentCode, setOpponentCode] = useState('');
   // Every run draws a fresh seed, so no two simulations of the same matchup
@@ -166,19 +166,36 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
         )}
       </div>
       {!squadsAvailable && <p className="dg-sim__note mt-3">League ratings are still loading — the sim unlocks as soon as the season source is ready.</p>}
-      {squad?.players?.length === 5 && <div className="mt-4"><LineupCourt lineup={squad.players} slim palette={courtPalette} /></div>}
+      {squad?.players?.length === 5 && (scoreboardOverlay ? (
+        <div className="dg-court-stage mt-4">
+          <LineupCourt lineup={squad.players} slim palette={courtPalette} />
+          {result && (
+            <div className="dg-court-jumbo">
+              <LiveScoreboard
+                homeCode={squad.code}
+                awayCode={opponent.code}
+                homeName={TEAM_NAMES[squad.code] || squad.label || lineupLabel}
+                awayName={opponent.name}
+                result={result}
+                onComplete={() => setPlaybackDone(true)} />
+            </div>
+          )}
+        </div>
+      ) : <div className="mt-4"><LineupCourt lineup={squad.players} slim palette={courtPalette} /></div>)}
       {result && (
         <div className="dg-sim__body mt-4 space-y-4">
-          <div ref={summaryRef}>
-            <LiveScoreboard
-              homeCode={squad.code}
-              awayCode={opponent.code}
-              homeName={TEAM_NAMES[squad.code] || squad.label || lineupLabel}
-              awayName={opponent.name}
-              result={result}
-              onComplete={() => setPlaybackDone(true)} />
-          </div>
-          {playbackDone && <div className="dg-flow-in space-y-4">
+          {!scoreboardOverlay && (
+            <div ref={summaryRef}>
+              <LiveScoreboard
+                homeCode={squad.code}
+                awayCode={opponent.code}
+                homeName={TEAM_NAMES[squad.code] || squad.label || lineupLabel}
+                awayName={opponent.name}
+                result={result}
+                onComplete={() => setPlaybackDone(true)} />
+            </div>
+          )}
+          {playbackDone && <div className="dg-flow-in space-y-4" ref={scoreboardOverlay ? summaryRef : undefined}>
             <GameSummary label={squad.label || lineupLabel} opponent={opponent} opponentLogo={oppLogo} result={result} />
             <BoxTable title={`${squad.label || lineupLabel} — box score`} box={result.boxHome} teamStats={result.statsHome} teamPoints={result.homePts} />
             <details>

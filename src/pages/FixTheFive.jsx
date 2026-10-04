@@ -8,7 +8,6 @@ import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
 import HowToPlay from '@/components/dailyGames/HowToPlay';
 import CardCycler from '@/components/dailyGames/CardCycler';
 import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
-import TapeReference from '@/components/dailyGames/TapeReference';
 import SwapBriefing from '@/components/dailyGames/SwapBriefing';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
 import DepthChart from '@/components/dailyGames/DepthChart';
@@ -235,7 +234,6 @@ export default function FixTheFive() {
                     {lineupView === 'court'
                       ? <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
                       : <DepthChart lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} incomingPlayer={activeChallenge.incomingPlayer} incomingLabel="Incoming" />}
-                    <TapeReference player={outgoing} />
                     <SwapBriefing challenge={activeChallenge} />
                     <CardCycler
                       items={activeChallenge.candidates}

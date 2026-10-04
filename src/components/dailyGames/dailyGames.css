@@ -305,6 +305,8 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-depth { max-width: 66rem; margin-inline: auto; border: 1px solid hsl(var(--border) / .35); border-radius: 1rem; background: linear-gradient(165deg, hsl(var(--court-surface) / .55), hsl(var(--court-canvas) / .9)); box-shadow: 0 8px 24px hsl(var(--court-canvas) / .18); overflow: hidden; }
 .dg-depth__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; padding: .65rem 1.1rem .45rem; border-bottom: 1px solid hsl(var(--border) / .25); }
 .dg-depth__legend { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.dg-depth__ref { padding: .7rem 1.1rem; border-bottom: 1px solid hsl(var(--border) / .25); background: hsl(var(--court-canvas) / .35); }
+.dg-depth__ref .dg-ref { border-radius: .7rem; box-shadow: none; }
 .dg-depth__rows { display: grid; }
 .dg-depth__row { position: relative; display: grid; grid-template-columns: 2.9rem 3.7rem minmax(0, 1fr) auto; align-items: center; gap: .8rem; padding: .6rem 1.25rem; border-bottom: 1px solid hsl(var(--border) / .18); transition: background .2s ease; }
 .dg-depth__row:last-child { border-bottom: 0; }

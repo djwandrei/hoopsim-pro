@@ -7,9 +7,10 @@ import { allocateCourtSlots, projectCourt } from '@/components/dailyGames/courtG
 export default function LineupCourt({ lineup = [], removedPlayerRef, incomingPlayer, incomingLabel = 'Incoming', slim = false }) {
   const players = lineup.slice(0, 5);
   const slots = allocateCourtSlots(players);
+  const teamCode = players.find(player => player.teamCode)?.teamCode || '';
   return (
     <div className={`dg-court ${slim ? 'dg-court--slim' : ''}`} role="group" aria-label="Starting five on a perspective basketball court">
-      <CourtFloor />
+      <CourtFloor teamCode={teamCode} />
       {players.map((player, index) => {
         const swapped = player.playerRef === removedPlayerRef;
         const replacement = swapped && incomingPlayer;

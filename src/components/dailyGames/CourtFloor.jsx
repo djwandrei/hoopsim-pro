@@ -1,12 +1,23 @@
 import React, { useId } from 'react';
 import CourtHoop from '@/components/dailyGames/CourtHoop';
 import { courtArc, courtRect, courtPoints, projectCourt } from '@/components/dailyGames/courtGeometry';
+import { paletteForTeam, luminance } from '@/components/djhc/basketballPalettes';
+import { teamLogo } from '@/components/djhc/siteNavigation';
 
-export default function CourtFloor() {
+// Team-themed floor, following the classic NBA court-design formula: a
+// team-colored apron around the boundary, team-primary paint, a highlight
+// center circle carrying the team logo, and a vertical wordmark on each apron.
+export default function CourtFloor({ teamCode }) {
   const id = useId().replace(/:/g, '');
   const cornerAngle = Math.acos(22 / 23.75);
   const cornerDepth = 5.25 + Math.sqrt(23.75 ** 2 - 22 ** 2);
   const hoopGlow = projectCourt(25, 9, 0);
+  const palette = paletteForTeam(teamCode);
+  const logo = teamLogo(palette);
+  const apronInk = luminance(palette.primary) > .32 ? '#10131B' : '#FFFFFF';
+  const center = projectCourt(25, 44, 0);
+  const centerY = center.y + 8;
+  const wordmark = palette.team === 'djhc' ? 'DJHC COURT' : palette.team.toUpperCase();
   return (
     <svg className="dg-court__lines" viewBox="0 0 1000 600" aria-hidden="true">
       <defs>
@@ -28,7 +39,12 @@ export default function CourtFloor() {
       {Array.from({ length: 5 }, (_, i) => (
         <polygon key={i} points={courtPoints([[2 + i * 10, -4.6], [10 + i * 10, -4.6], [10 + i * 10, -.4], [2 + i * 10, -.4]])} fill="hsl(var(--court-canvas) / .5)" />
       ))}
-      <polygon points={courtPoints([[0, 47], [50, 47], [50, 48.1], [0, 48.1]])} fill="hsl(var(--court-wood-dark))" />
+      {/* Team apron: colored surround wrapping the boundary, like the classic designs */}
+      <polygon points={courtPoints([[-2.6, 0], [52.6, 0], [52.6, 49.6], [-2.6, 49.6]])} fill={palette.primary} />
+      <polygon points={courtPoints([[-2.6, 0], [0, 0], [0, 47], [-2.6, 47]])} fill={palette.highlight} opacity=".28" />
+      <polygon points={courtPoints([[50, 0], [52.6, 0], [52.6, 47], [50, 47]])} fill={palette.highlight} opacity=".28" />
+      <text transform={`rotate(-90 ${courtPoints([[-1.3, 24]]).split(',')[0]} 330)`} x="0" y="0" textAnchor="middle" fill={apronInk} fontFamily="var(--font-display)" fontSize="30" letterSpacing="6" opacity=".92">{wordmark}</text>
+      <text transform={`rotate(90 ${courtPoints([[51.3, 24]]).split(',')[0]} 330)`} x="0" y="0" textAnchor="middle" fill={apronInk} fontFamily="var(--font-display)" fontSize="30" letterSpacing="6" opacity=".92">{wordmark}</text>
       <polygon points={courtRect(0, 0, 50, 47)} fill={`url(#wood-${id})`} stroke="hsl(var(--court-wood-dark))" strokeWidth="14" strokeLinejoin="round" />
       <g stroke="hsl(var(--court-wood-dark) / .42)" strokeWidth=".8">
         {Array.from({ length: 25 }, (_, i) => <polygon key={i} points={courtRect(i * 2, 0, i * 2 + 2, 47)} fill={i % 3 ? 'none' : 'hsl(var(--court-wood-light) / .17)'} />)}
@@ -38,8 +54,11 @@ export default function CourtFloor() {
       <ellipse cx="760" cy="420" rx="170" ry="80" fill="hsl(0 0% 100% / .03)" />
       <polygon points={courtPoints([[6, 22], [9.5, 15], [13.5, 15], [10, 22]])} fill="hsl(0 0% 100% / .045)" />
       <polygon points={courtPoints([[31, 32], [34, 26], [37, 26], [34, 32]])} fill="hsl(0 0% 100% / .035)" />
-      <polygon points={courtRect(17, 0, 33, 19)} fill="hsl(var(--court-canvas) / .36)" />
+      {/* Team paint: the key is filled in the team's primary color */}
+      <polygon points={courtRect(17, 0, 33, 19)} fill={palette.primary} opacity=".94" />
       <polygon points={courtPoints([[19, 0], [25, 0], [38, 47], [25, 47]])} fill="hsl(var(--court-line) / .08)" />
+      {/* Team center circle at half court, carrying the team logo */}
+      <path d={courtArc(25, 47, 6, Math.PI, Math.PI * 2)} fill={palette.highlight} opacity=".92" />
       <polygon points={courtRect(0, 40, 50, 47)} fill="hsl(var(--court-canvas) / .3)" />
       <g fill="none" stroke="hsl(var(--court-line) / .92)" strokeWidth="2.2" strokeLinejoin="round">
         <polygon points={courtRect(0, 0, 50, 47)} />
@@ -53,6 +72,7 @@ export default function CourtFloor() {
         <path d={courtArc(25, 47, 6, Math.PI, Math.PI * 2)} />
         {[7, 8, 11, 14].flatMap(depth => [17, 33].map(x => <polyline key={`${x}-${depth}`} points={courtPoints([[x, depth], [x + (x === 17 ? -1 : 1), depth]])} />))}
       </g>
+      {logo && <image href={logo} x={center.x - 28} y={centerY - 28} width="56" height="56" preserveAspectRatio="xMidYMid meet" opacity=".95" />}
       <polygon points={courtRect(0, 0, 50, 47)} fill={`url(#gloss-${id})`} />
       <ellipse cx={hoopGlow.x} cy={hoopGlow.y + 34} rx="240" ry="130" fill={`url(#spot-${id})`} />
       <path d={courtArc(25, 47, 6.55, Math.PI, Math.PI * 2)} fill="none" stroke="hsl(var(--court-accent) / .45)" strokeWidth="2.6" />

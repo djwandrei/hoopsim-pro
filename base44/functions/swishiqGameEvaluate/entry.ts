@@ -12,10 +12,20 @@ export default async function(req) {
       return new Response(null, { status: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' } });
     }
     if (req.method !== 'POST') return Response.json({ error: 'POST only.' }, { status: 405 });
-    const url = secrets.get('SWISHIQ_EVALUATOR_URL');
+    const rawUrl = secrets.get('SWISHIQ_EVALUATOR_URL');
     const key = secrets.get('SWISHIQ_EVALUATOR_KEY');
-    if (!url || !key) {
+    if (!rawUrl || !key) {
       return Response.json({ error: 'The SwishIQ game evaluator is not configured yet. Add SWISHIQ_EVALUATOR_URL and SWISHIQ_EVALUATOR_KEY in the app dashboard Secrets page.' }, { status: 503 });
+    }
+    // Accept either the full function URL or the bare Supabase project URL.
+    const EVALUATOR_PATH = '/functions/v1/swishiq-game-evaluate';
+    let url;
+    try {
+      const parsed = new URL(rawUrl.trim());
+      if (parsed.pathname === '/' || parsed.pathname === '') parsed.pathname = EVALUATOR_PATH;
+      url = parsed.href;
+    } catch {
+      return Response.json({ error: 'SWISHIQ_EVALUATOR_URL is not a valid URL.' }, { status: 503 });
     }
     const request = await req.json();
     const response = await fetch(url, {

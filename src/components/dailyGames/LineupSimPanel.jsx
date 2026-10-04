@@ -96,7 +96,10 @@ function BoxTable({ title, box, teamStats, teamPoints }) {
 export default function LineupSimPanel({ league, squads = [], lineupLabel = 'Your lineup', courtPalette = null }) {
   const [squadId, setSquadId] = useState('');
   const [opponentCode, setOpponentCode] = useState('');
-  const [seed, setSeed] = useState(7);
+  // Every run draws a fresh seed, so no two simulations of the same matchup
+  // replay identical results.
+  const freshSeed = () => 1 + Math.floor(Math.random() * 999999);
+  const [seed, setSeed] = useState(freshSeed);
   const [result, setResult] = useState(null);
   const [playbackDone, setPlaybackDone] = useState(false);
   const summaryRef = useRef(null);
@@ -121,7 +124,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
     setPlaybackDone(false);
   };
   const rerun = () => {
-    const next = seed + 1;
+    const next = freshSeed();
     setSeed(next);
     run(next);
   };

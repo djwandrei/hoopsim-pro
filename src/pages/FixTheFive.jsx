@@ -216,7 +216,7 @@ export default function FixTheFive() {
                   <div className="space-y-3">
                     <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
                     <TapeReference player={outgoing} />
-                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       {activeChallenge.candidates.map(candidate => (
                         <TapeDuelCard
                           key={candidate.playerRef}

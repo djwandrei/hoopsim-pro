@@ -13,11 +13,14 @@ export default function LineupCourt({ lineup = [], removedPlayerRef, incomingPla
       {players.map((player, index) => {
         const swapped = player.playerRef === removedPlayerRef;
         const replacement = swapped && incomingPlayer;
+        // Perspective scale: players nearer the camera render larger.
+        const scale = 0.8 + ((1 / (1.48 - 0.48 * slots[index].depth / 47)) - 0.676) * 0.87;
         return (
           <CourtPlayerMarker
             key={player.playerRef}
             player={replacement || player}
             point={projectCourt(slots[index].x, slots[index].depth)}
+            scale={scale}
             tone={swapped ? replacement ? 'in' : 'out' : 'starter'}
             tag={swapped ? replacement ? incomingLabel : 'Outgoing' : null}
             sub={replacement ? player.displayName : null}

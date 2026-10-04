@@ -10,6 +10,7 @@ import CardCycler from '@/components/dailyGames/CardCycler';
 import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
 import TapeReference from '@/components/dailyGames/TapeReference';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
+import DepthChart from '@/components/dailyGames/DepthChart';
 import StepRail from '@/components/dailyGames/StepRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
@@ -54,6 +55,7 @@ export default function FixTheFive() {
   const [selections, setSelections] = useState({});
   const [outcomes, setOutcomes] = useState({});
   const [activeIndex, setActiveIndex] = useState(0);
+  const [lineupView, setLineupView] = useState('court');
   const [pending, setPending] = useState(false);
   const [revealLabel, setRevealLabel] = useState('');
   const [notice, setNotice] = useState('');
@@ -215,7 +217,23 @@ export default function FixTheFive() {
                     
                   </section>
                   <div key={activeChallenge.challengeId} className="dg-flow-in space-y-3">
-                    <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
+                    <div className="flex justify-center">
+                      <div className="inline-flex rounded-lg border border-border/40 bg-canvas/60 p-0.5" role="tablist" aria-label="Lineup view">
+                        {[['court', 'Court'], ['depth', 'Depth chart']].map(([value, label]) => (
+                          <button
+                            key={value}
+                            type="button"
+                            role="tab"
+                            aria-selected={lineupView === value}
+                            onClick={() => setLineupView(value)}
+                            className={`px-3 py-1.5 rounded-md font-mono text-[0.6rem] font-semibold uppercase tracking-[0.14em] transition-colors ${lineupView === value ? 'bg-gold text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                          >{label}</button>
+                        ))}
+                      </div>
+                    </div>
+                    {lineupView === 'court'
+                      ? <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
+                      : <DepthChart lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} incomingPlayer={activeChallenge.incomingPlayer} incomingLabel="Incoming" />}
                     <TapeReference player={outgoing} />
                     <CardCycler
                       items={activeChallenge.candidates}

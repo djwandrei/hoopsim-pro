@@ -6,7 +6,7 @@ export default function BoardControlStrip({ presentation, seed, onSeedChange, ba
   const season = `${scope.seasonStartYear}-${String(scope.seasonEndYear).slice(2)}`;
   return (
     <div className={`dg-strip${bare ? ' dg-strip--bare' : ''}`}>
-      <span className="dg-badge hidden"><span className="h-1.5 w-1.5 rounded-full bg-positive" /> Board {presentation.dailySeed}</span>
+      
       <span className="dg-badge dg-badge--plain">{season} · {presentation.packageRef.phase.replaceAll('_', ' ')}</span>
       
       <span className="dg-strip__spacer" />

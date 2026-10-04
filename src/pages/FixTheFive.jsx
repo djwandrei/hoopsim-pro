@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, Lock, Sparkles } from 'lucide-react';
-import StudioShell from '@/components/studio/StudioShell';
+import GameShell from '@/components/dailyGames/GameShell';
+import LineupSimPanel from '@/components/dailyGames/LineupSimPanel';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
@@ -54,7 +55,7 @@ export default function FixTheFive() {
   const [pending, setPending] = useState(false);
   const [revealLabel, setRevealLabel] = useState('');
   const [notice, setNotice] = useState('');
-  const { year, setYear, source } = useSeasonSource();
+  const { year, setYear, source, league } = useSeasonSource();
 
   const persist = useCallback((nextSeed, nextSelections, nextOutcomes) => {
     const store = readStore();
@@ -154,11 +155,20 @@ export default function FixTheFive() {
   const outgoing = activeChallenge
     ? activeChallenge.lineup.find(player => player.playerRef === activeChallenge.removePlayerRef)
     : null;
+  const simSquads = challenges
+    .filter(challenge => selections[challenge.challengeId])
+    .map(challenge => {
+      const picked = challenge.candidates.find(entry => entry.playerRef === selections[challenge.challengeId]);
+      const players = challenge.lineup
+        .map(player => (player.playerRef === challenge.removePlayerRef ? picked : player))
+        .filter(Boolean);
+      return { id: challenge.challengeId, label: challenge.title, code: challenge.teamCode, players };
+    });
   const current = completedCount === challenges.length ? 2 : 0;
   const statusState = status === 'error' ? errorKind || 'verification-error' : status;
 
   return (
-    <StudioShell active="/fix-the-five">
+    <GameShell>
       <WorkbenchHeader
         title="FIX THE FIVE"
         description="Compare each legal swap with the starting five by summed estimated additive player impact. This is a model estimate, not observed five-player performance or causal chemistry."
@@ -245,6 +255,9 @@ export default function FixTheFive() {
                       <GamePointsBoard key={challenge.challengeId} outcome={outcomes[challenge.challengeId]} contextTitle={`${challenge.title} · ${challenge.teamCode}`} />
                     ) : null)}
                   </div>
+                  {completedCount === challenges.length && simSquads.length > 0 && (
+                    <LineupSimPanel league={league} squads={simSquads} lineupLabel="The fixed five" />
+                  )}
                   <CompletionPanel
                     total={total}
                     max={maxTotal}
@@ -264,6 +277,6 @@ export default function FixTheFive() {
           </div>
         )}
       </main>
-    </StudioShell>
+    </GameShell>
   );
 }

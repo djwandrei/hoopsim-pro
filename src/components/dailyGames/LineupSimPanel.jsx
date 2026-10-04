@@ -1,0 +1,179 @@
+import React, { useState } from 'react';
+import { Play, RefreshCcw } from 'lucide-react';
+import { simSingleGame } from '@/lib/season/simEngine';
+import { teamAsset } from '@/components/studio/teamAssets';
+
+// Model a five-man squad as a team profile for the sim engine. Offense is
+// modeled from the five players' observed per-game rates; defense is held at
+// the league average because the public board carries no player defensive rates.
+export function lineupTeam(league, players, code, name) {
+  const avg = key => league.teams.reduce((sum, team) => sum + team[key], 0) / (league.teams.length || 1);
+  const roster = players.map(player => ({
+    playerRef: player.playerRef,
+    name: player.displayName,
+    positions: Array.isArray(player.positions) ? player.positions : [],
+    minutes: player.publicStats?.minutes ?? 24,
+    pts: player.publicStats?.points ?? 0,
+    reb: player.publicStats?.rebounds ?? 0,
+    ast: player.publicStats?.assists ?? 0,
+    stl: 0,
+    blk: 0,
+  }));
+  const onCourtMinutes = roster.reduce((sum, player) => sum + player.minutes, 0) || 1;
+  const benchMinutes = Math.max(0, 240 - onCourtMinutes);
+  const pace = avg('pace');
+  const benchPtsPerMin = (avg('off') * pace) / 4800;
+  const teamPpg = roster.reduce((sum, player) => sum + player.pts, 0) + benchMinutes * benchPtsPerMin;
+  const off = Math.round((teamPpg * 100) / pace);
+  const def = Math.round(avg('def'));
+  return {
+    code,
+    name,
+    conference: 'EAST',
+    off,
+    def,
+    net: off - def,
+    pace,
+    ppg: teamPpg,
+    papg: null,
+    efg: avg('efg'),
+    ftr: avg('ftr'),
+    orb: avg('orb'),
+    drb: avg('drb'),
+    tov: avg('tov'),
+    oppEfg: avg('oppEfg'),
+    oppFtr: avg('oppFtr'),
+    oppTov: avg('oppTov'),
+    roster,
+  };
+}
+
+const BOX_COLUMNS = [['MIN', 'min'], ['PTS', 'pts'], ['REB', 'reb'], ['AST', 'ast'], ['STL', 'stl'], ['BLK', 'blk']];
+
+function BoxTable({ title, box, teamStats, teamPoints }) {
+  return (
+    <div>
+      <p className="dg-sim__meta mb-1">{title}</p>
+      <div className="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Player</th>
+              {BOX_COLUMNS.map(([label]) => <th key={label}>{label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {box.lines.map(line => (
+              <tr key={line.name}>
+                <td className="truncate">{line.name}</td>
+                {BOX_COLUMNS.map(([label, key]) => <td key={key}>{line[key]}</td>)}
+              </tr>
+            ))}
+            {teamStats && (
+              <tr>
+                <td className="font-semibold">Team</td>
+                <td>240</td>
+                <td>{teamPoints ?? '—'}</td>
+                <td>{teamStats.reb ?? '—'}</td>
+                <td>{teamStats.ast ?? '—'}</td>
+                <td>{teamStats.stl ?? '—'}</td>
+                <td>{teamStats.blk ?? '—'}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+export default function LineupSimPanel({ league, squads = [], lineupLabel = 'Your lineup' }) {
+  const [squadId, setSquadId] = useState('');
+  const [opponentCode, setOpponentCode] = useState('');
+  const [seed, setSeed] = useState(7);
+  const [result, setResult] = useState(null);
+  const squadsAvailable = Boolean(league?.teams?.length);
+  const squad = squads.find(entry => entry.id === squadId) || squads[0] || null;
+  const opponent = squadsAvailable ? (league.teams.find(team => team.code === opponentCode) || league.teams[0]) : null;
+  const ready = Boolean(squad?.players?.length === 5 && opponent);
+  const oppLogo = opponent ? teamAsset(opponent.code) : null;
+
+  const run = (nextSeed = seed) => {
+    if (!ready) return;
+    const home = lineupTeam(league, squad.players, squad.code || 'FIVE', squad.label || lineupLabel);
+    setResult(simSingleGame(league, home, opponent, { seed: nextSeed, neutral: true, log: true }));
+  };
+  const rerun = () => {
+    const next = seed + 1;
+    setSeed(next);
+    run(next);
+  };
+
+  return (
+    <section className="dg-sim" aria-label="Simulate a game with the lineup">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span className="bcast-kicker">Extra run</span>
+          <h3 className="mt-2 font-display text-2xl tracking-wide">Simulate a game with the five</h3>
+        </div>
+        <p className="dg-sim__note max-w-md">Offense is modeled from the five players' observed scoring rates; defense is held at the league average. Every simulated line is a model estimate, never observed performance.</p>
+      </div>
+      <div className="dg-sim__controls mt-4">
+        {squads.length > 1 && (
+          <label className="dg-sim__field">
+            Which five
+            <select value={squadId || squads[0]?.id || ''} onChange={event => { setSquadId(event.target.value); setResult(null); }}>
+              {squads.map(entry => <option key={entry.id} value={entry.id}>{entry.label}</option>)}
+            </select>
+          </label>
+        )}
+        <label className="dg-sim__field">
+          Opponent
+          <select value={opponent?.code || ''} onChange={event => { setOpponentCode(event.target.value); setResult(null); }} disabled={!squadsAvailable}>
+            {squadsAvailable && league.teams.map(team => <option key={team.code} value={team.code}>{team.name}</option>)}
+          </select>
+        </label>
+        <button type="button" className="dg-sim__go" disabled={!ready} onClick={() => run()}>
+          <Play className="h-3.5 w-3.5" /> {result ? 'Re-simulate' : 'Tip off'}
+        </button>
+        {result && (
+          <button type="button" className="dg-sim__again" onClick={rerun}>
+            <RefreshCcw className="h-3.5 w-3.5" /> New draw
+          </button>
+        )}
+      </div>
+      {!squadsAvailable && <p className="dg-sim__note mt-3">League ratings are still loading — the sim unlocks as soon as the season source is ready.</p>}
+      {result && (
+        <div className="dg-sim__body mt-4 space-y-4">
+          <div className="dg-sim__score">
+            <div className="dg-sim__team">
+              <span className="dg-sim__pts">{result.homePts}</span>
+              <span className="dg-sim__meta">{squad.label || lineupLabel}</span>
+            </div>
+            <span className="dg-sim__meta">{result.ot ? `${result.ot}OT` : 'FINAL'}</span>
+            <div className="dg-sim__team">
+              <span className="dg-sim__pts">{result.awayPts}</span>
+              <span className="dg-sim__meta inline-flex items-center gap-1">{oppLogo && <img src={oppLogo} alt="" className="h-3.5 w-3.5 object-contain" />}{opponent.name}</span>
+            </div>
+          </div>
+          <BoxTable title={`${squad.label || lineupLabel} — box score`} box={result.boxHome} teamStats={result.statsHome} teamPoints={result.homePts} />
+          <details>
+            <summary className="cursor-pointer text-xs font-semibold uppercase tracking-widest text-gold">{opponent.name} box score</summary>
+            <div className="mt-2"><BoxTable title={opponent.name} box={result.boxAway} teamStats={result.statsAway} teamPoints={result.awayPts} /></div>
+          </details>
+          <details>
+            <summary className="cursor-pointer text-xs font-semibold uppercase tracking-widest text-gold">Play-by-play</summary>
+            <div className="dg-sim__feed mt-2">
+              {result.pbp.map((event, index) => (
+                <div key={index} className="dg-sim__feed-event">
+                  <span className="dg-sim__feed-clock">{event.q} {event.clock}</span>
+                  <span className="min-w-0 flex-1">{event.text}</span>
+                </div>
+              ))}
+            </div>
+          </details>
+        </div>
+      )}
+    </section>
+  );
+}

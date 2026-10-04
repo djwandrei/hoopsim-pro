@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, Lock, Sparkles } from 'lucide-react';
-import StudioShell from '@/components/studio/StudioShell';
+import GameShell from '@/components/dailyGames/GameShell';
+import LineupSimPanel from '@/components/dailyGames/LineupSimPanel';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
@@ -51,7 +52,7 @@ export default function DraftNight() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState('');
-  const { year, setYear, source } = useSeasonSource();
+  const { year, setYear, source, league } = useSeasonSource();
 
   const persist = useCallback((nextSeed, nextPicks, nextOutcome) => {
     const store = readStore();
@@ -134,11 +135,19 @@ export default function DraftNight() {
     persist(board.dailySeed, {}, null);
   }, [board, persist]);
 
+  const simSquads = outcome ? [{
+    id: 'draft',
+    label: presentation?.deck?.title || 'Your draft five',
+    code: 'FIVE',
+    players: orderedPicks
+      .map(entry => rounds.flatMap(round => round.candidates).find(candidate => candidate.playerRef === entry.playerRef))
+      .filter(Boolean),
+  }] : [];
   const points = gamePointsForOutcome(outcome);
   const statusState = status === 'error' ? errorKind || 'verification-error' : status;
 
   return (
-    <StudioShell active="/draft-night">
+    <GameShell>
       <WorkbenchHeader
         title="DRAFT NIGHT"
         description="Pick one player from each of five different team rounds. This cross-team five-pick board is scored by average estimated additive player impact; it is not observed lineup performance, a same-team lineup, a forecast, or causal chemistry."
@@ -159,6 +168,7 @@ export default function DraftNight() {
             </div>
             <ProgressRail steps={rounds.map(round => round.roundId)} current={Math.min(activeIndex, Math.max(rounds.length - 1, 0))} completed={picks} labelFor={(key) => rounds.find(round => round.roundId === key)?.title || key} />
             {outcome && <GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} />}
+            {outcome && simSquads.length > 0 && <LineupSimPanel league={league} squads={simSquads} lineupLabel="Your draft five" />}
             {!outcome && allPicked && (
               <section className="dg-lock" aria-label="Lock the draft">
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -227,6 +237,6 @@ export default function DraftNight() {
           </>
         )}
       </main>
-    </StudioShell>
+    </GameShell>
   );
 }

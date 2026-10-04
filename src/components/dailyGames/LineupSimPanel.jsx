@@ -5,8 +5,6 @@ import { hasLineupStats, lineupTeam } from '@/lib/dailyGames/lineupSimModel';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
 import LineupSimResults from '@/components/dailyGames/LineupSimResults';
 
-export { lineupTeam } from '@/lib/dailyGames/lineupSimModel';
-
 export default function LineupSimPanel({ league, squads = [], lineupLabel = 'Your lineup', courtPalette = null, scoreboardOverlay = false }) {
   const [squadId, setSquadId] = useState('');
   const [opponentCode, setOpponentCode] = useState('');

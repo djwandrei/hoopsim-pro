@@ -185,11 +185,11 @@ function scorePoints(ortg, poss, rng) {
   return Math.max(62, Math.round(ortg * poss / 100 + gauss(rng) * 11));
 }
 
-function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutral = false, log = false } = {}) {
+function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutral = false, log = false, leagueDef = 112 } = {}) {
   const poss = clamp((home.pace + away.pace) / 2, 88, 112);
   const hca = neutral ? 0 : homeCourt;
-  const ortgH = expectedOrtg(home.off, away.def, LEAGUE.defAvg, defenseWeight) + hca;
-  const ortgA = expectedOrtg(away.off, home.def, LEAGUE.defAvg, defenseWeight);
+  const ortgH = expectedOrtg(home.off, away.def, leagueDef, defenseWeight) + hca;
+  const ortgA = expectedOrtg(away.off, home.def, leagueDef, defenseWeight);
   const regulationHome = scorePoints(ortgH, poss, rng);
   const regulationAway = scorePoints(ortgA, poss, rng);
   let hp = regulationHome; let ap = regulationAway;
@@ -228,10 +228,7 @@ function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutra
   return { ...result, ...replayBoxScores(result.boxHome, result.boxAway, pbp), pbp };
 }
 
-let LEAGUE = { defAvg: 112 };
-
 export function runRepeat(league, schedule, { seed = 1, playoffs = true, defenseWeight = 0.8 } = {}) {
-  LEAGUE = league;
   const rng = mulberry32(seed >>> 0);
   const state = new Map(league.teams.map(team => [team.code, {
     wins: 0, losses: 0, pf: 0, pa: 0, poss: 0, ortgSum: 0, games: 0,
@@ -241,7 +238,7 @@ export function runRepeat(league, schedule, { seed = 1, playoffs = true, defense
     const home = league.byCode.get(g.home);
     const away = league.byCode.get(g.away);
     if (!home || !away) continue;
-    const game = simGame(home, away, rng, { defenseWeight });
+    const game = simGame(home, away, rng, { defenseWeight, leagueDef: league.defAvg });
     const hs = state.get(home.code);
     const as = state.get(away.code);
     if (game.homePts > game.awayPts) { hs.wins += 1; as.losses += 1; } else { as.wins += 1; hs.losses += 1; }
@@ -305,8 +302,8 @@ function bracketPairs(count) {
   return pairs;
 }
 
-function simulatePlayoffs(league, standings, rng, { defenseWeight }) {
-  const options = { defenseWeight, homeCourt: 1.6 };
+function simulatePlayoffs(league, standings, rng, { defenseWeight, leagueDef }) {
+  const options = { defenseWeight, homeCourt: 1.6, leagueDef };
   const reach = {};
   const rounds = [];
   const conferenceChamps = [];
@@ -467,7 +464,6 @@ export function nextLeague(league, year) {
 }
 
 export function simSingleGame(league, home, away, { seed = 1, neutral = false, defenseWeight = 0.8, log = false } = {}) {
-  LEAGUE = league;
   const rng = mulberry32(seed >>> 0);
-  return simGame(home, away, rng, { defenseWeight, neutral, log });
+  return simGame(home, away, rng, { defenseWeight, neutral, log, leagueDef: league.defAvg });
 }

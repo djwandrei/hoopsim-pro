@@ -29,7 +29,8 @@ export default function useDailyGameBoard({ gameKind, onBoardReady }) {
       readyRef.current?.(loaded);
     } catch (loadError) {
       setBoard(null); setError(loadError);
-      setStatus(BOARD_ERROR_KINDS.includes(swishIQDailyGameErrorKind(loadError)) ? swishIQDailyGameErrorKind(loadError) : 'error');
+      const kind = swishIQDailyGameErrorKind(loadError);
+      setStatus(BOARD_ERROR_KINDS.includes(kind) ? kind : 'error');
     }
   }, [gameKind, seed, urlFamily]);
 

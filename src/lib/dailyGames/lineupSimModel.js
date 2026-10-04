@@ -6,6 +6,19 @@ const statsFor = player => player?.publicStats || {
 export const hasLineupStats = player => ['points', 'rebounds', 'assists'].every(key =>
   Number.isFinite(statsFor(player)[key]) && statsFor(player)[key] >= 0);
 
+// Defense: a fixed five plays inside its own team's system, so a lineup whose
+// majority comes from one team carries that team's observed defensive rating;
+// mixed squads (the draft board) fall back to the league-average defense.
+function squadDefense(league, players) {
+  const counts = new Map();
+  for (const player of players) {
+    if (player.teamCode) counts.set(player.teamCode, (counts.get(player.teamCode) || 0) + 1);
+  }
+  const [topCode, topCount] = [...counts.entries()].sort((a, b) => b[1] - a[1])[0] || [];
+  const def = topCount >= 3 ? league.byCode?.get(topCode)?.def : null;
+  return Number.isFinite(def) ? def : null;
+}
+
 // Board players carry publicStats; league rosters already carry per-game rates.
 // Normalize both without mistaking season totals or absent stats for zero.
 export function lineupTeam(league, players, code, name, overrides = {}) {
@@ -25,7 +38,7 @@ export function lineupTeam(league, players, code, name, overrides = {}) {
   const efficiencyBonus = roster.reduce((sum, player) => sum + 0.12 * player.reb + 0.18 * player.ast, 0) * possessionValue;
   const teamPpg = roster.reduce((sum, player) => sum + player.pts, 0) + efficiencyBonus;
   const off = Math.round(teamPpg * 100 / pace);
-  const def = Math.round(overrides.def ?? avg('def'));
+  const def = Math.round(overrides.def ?? squadDefense(league, players) ?? avg('def'));
   return {
     code, name, conference: 'EAST', off, def, net: off - def, pace, ppg: teamPpg, papg: null,
     efg: overrides.efg ?? avg('efg'), ftr: overrides.ftr ?? avg('ftr'),

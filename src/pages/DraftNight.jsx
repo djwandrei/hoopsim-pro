@@ -208,33 +208,30 @@ export default function DraftNight() {
                 </ul>
               </section>
             )}
-            {rounds.map((round, index) => {
-              if (outcome || index !== activeIndex || picks[round.roundId]) return null;
-              return (
-                <section ref={roundRef} key={round.roundId} className="dg-round dg-flow-in" aria-label={round.title}>
-                  <div className="dg-round__title">
-                    <h3 className="font-display text-xl tracking-wide">Round {round.roundNumber} · {round.teamCode}</h3>
-                    <span className="dg-round__counter">Pick {pickCount}/5</span>
-                  </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{round.prompt}</p>
-                  <CardCycler
-                    className="mt-4"
-                    items={round.candidates}
-                    renderItem={candidate => (
-                      <TapeDuelCard
-                        key={candidate.playerRef}
-                        player={candidate}
-                        selected={picks[round.roundId] === candidate.playerRef}
-                        disabled={pending || Boolean(outcome)}
-                        ctaLabel="Draft him"
-                        fitNote={fit?.candidate?.playerRef === candidate.playerRef ? fit.reasons.join(' · ') : null}
-                        onSelect={() => choose(round, candidate)}
-                      />
-                    )}
-                  />
-                </section>
-              );
-            })}
+            {!outcome && activeRound && !picks[activeRound.roundId] && (
+              <section ref={roundRef} key={activeRound.roundId} className="dg-round dg-flow-in" aria-label={activeRound.title}>
+                <div className="dg-round__title">
+                  <h3 className="font-display text-xl tracking-wide">Round {activeRound.roundNumber} · {activeRound.teamCode}</h3>
+                  <span className="dg-round__counter">Pick {pickCount}/5</span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">{activeRound.prompt}</p>
+                <CardCycler
+                  className="mt-4"
+                  items={activeRound.candidates}
+                  renderItem={candidate => (
+                    <TapeDuelCard
+                      key={candidate.playerRef}
+                      player={candidate}
+                      selected={picks[activeRound.roundId] === candidate.playerRef}
+                      disabled={pending || Boolean(outcome)}
+                      ctaLabel="Draft him"
+                      fitNote={fit?.candidate?.playerRef === candidate.playerRef ? fit.reasons.join(' · ') : null}
+                      onSelect={() => choose(activeRound, candidate)}
+                    />
+                  )}
+                />
+              </section>
+            )}
             {outcome && (
               <CompletionPanel
                 total={points.total}

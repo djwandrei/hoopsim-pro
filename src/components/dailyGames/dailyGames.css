@@ -572,3 +572,59 @@ body:not(.dark-mode) .dg-court__portrait { filter: drop-shadow(0 5px 4px hsl(20 
 body:not(.dark-mode) .dg-duel__shot { filter: drop-shadow(0 4px 8px hsl(0 0% 20% / .28)); }
 body:not(.dark-mode) .dg-duel__band { background: linear-gradient(150deg, hsl(var(--court-surface) / .95), hsl(var(--court-raised)) 78%); }
 body:not(.dark-mode) .dg-court__name, body:not(.dark-mode) .dg-court__tag, body:not(.dark-mode) .dg-court__badge { background: hsl(var(--court-canvas) / .95); }
+
+/* === Light-mode scoreboard: the jumbotron follows the theme instead of always
+   rendering its dark arena palette === */
+body:not(.dark-mode) .dg-live { border-color: hsl(218 18% 80%); background: linear-gradient(160deg, hsl(220 30% 97%), hsl(222 24% 93%) 72%); box-shadow: 0 12px 32px hsl(222 30% 55% / .16), inset 0 0 0 1px hsl(0 0% 100% / .7); }
+body:not(.dark-mode) .dg-live::after { background: none; }
+body:not(.dark-mode) .dg-live--final { border-color: hsl(33 60% 62%); }
+body:not(.dark-mode) .dg-live__masthead { border-bottom-color: hsl(218 18% 84%); }
+body:not(.dark-mode) .dg-live__masthead span { color: hsl(218 24% 36%); }
+body:not(.dark-mode) .dg-live__masthead span:first-child { color: hsl(33 72% 30%); }
+body:not(.dark-mode) .dg-live__club { border-color: hsl(218 18% 84%); background: linear-gradient(150deg, hsl(0 0% 100%), hsl(220 26% 95%)); }
+body:not(.dark-mode) .dg-live__logo { border-color: hsl(218 18% 84%); background: hsl(0 0% 100%); }
+body:not(.dark-mode) .dg-live__city { color: hsl(222 32% 14%); }
+body:not(.dark-mode) .dg-live__digits { border-color: hsl(218 18% 82%); background: linear-gradient(180deg, hsl(222 22% 92%), hsl(222 20% 88%)); box-shadow: inset 0 0 0 1px hsl(0 0% 100% / .8), inset 0 2px 8px hsl(222 20% 50% / .14); }
+body:not(.dark-mode) .dg-live__pts { color: hsl(33 72% 28%); text-shadow: none; }
+body:not(.dark-mode) .dg-live__pts.is-ticking { color: hsl(28 74% 24%); text-shadow: none; }
+body:not(.dark-mode) .dg-live__pts.is-landed { animation: none; }
+body:not(.dark-mode) .dg-live__period { border-color: hsl(33 60% 66%); background: linear-gradient(180deg, hsl(222 22% 92%), hsl(222 20% 88%)); box-shadow: inset 0 2px 8px hsl(222 20% 50% / .12); }
+body:not(.dark-mode) .dg-live__qtr { color: hsl(33 72% 28%); text-shadow: none; }
+body:not(.dark-mode) .dg-live__clock { text-shadow: none; }
+body:not(.dark-mode) .dg-live__qrow span { color: hsl(222 32% 16%); }
+body:not(.dark-mode) .dg-live__progress { background: hsl(218 18% 86%); }
+body:not(.dark-mode) .dg-live__ticker { border-color: hsl(218 18% 84%); background: hsl(0 0% 100% / .85); color: hsl(222 30% 14%); }
+body:not(.dark-mode) .dg-live__skip { border-color: hsl(33 60% 62%); background: hsl(33 78% 60% / .12); color: hsl(33 72% 28%); }
+body:not(.dark-mode) .dg-live__skip:hover { background: hsl(33 78% 60% / .24); }
+
+/* === Readability pass 2: remaining gold, crimson, and royal inks on light panels === */
+
+/* Gold accent text deepens to amber ink in light mode */
+body:not(.dark-mode) .dg-result__score-value,
+body:not(.dark-mode) .dg-round__counter,
+body:not(.dark-mode) .dg-court__tag--in,
+body:not(.dark-mode) .dg-steprail__dot.is-done,
+body:not(.dark-mode) .dg-steprail__dot.is-active,
+body:not(.dark-mode) .dg-summary__line,
+body:not(.dark-mode) .dg-summary__final,
+body:not(.dark-mode) .dg-desk__count,
+body:not(.dark-mode) .dg-desk__stat,
+body:not(.dark-mode) .dg-desk__open-hint,
+body:not(.dark-mode) .dg-desk__fit-title,
+body:not(.dark-mode) .dg-desk__need--stat strong,
+body:not(.dark-mode) .dg-desk__open:hover .dg-desk__round,
+body:not(.dark-mode) .dg-cycle__nav,
+body:not(.dark-mode) .dg-sim__again,
+body:not(.dark-mode) .dg-brief__item--look svg { color: hsl(33 72% 30%); }
+
+/* Royal role chips switch from pale glass to deep royal ink */
+body:not(.dark-mode) .dg-depth__role,
+body:not(.dark-mode) .dg-desk__role { color: hsl(225 55% 32%); }
+
+/* Gold-numeral plates on light backgrounds lose their dark-mode glow */
+body:not(.dark-mode) .dg-result__score,
+body:not(.dark-mode) .dg-complete__trophy,
+body:not(.dark-mode) .dg-steprail__dot.is-active,
+body:not(.dark-mode) .dg-live__badge--live,
+body:not(.dark-mode) .dg-depth__flag--in { box-shadow: 0 0 0 1px hsl(33 72% 30% / .12); }
+body:not(.dark-mode) .dg-court__stat b { color: hsl(28 74% 24%); }

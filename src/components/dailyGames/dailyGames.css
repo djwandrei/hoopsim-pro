@@ -115,7 +115,8 @@
 .dg-lock__undo:hover { color: hsl(var(--court-trim-ink)); }
 
 /* Round strip (Draft Night active round) */
-.dg-round { position: relative; overflow: hidden; border: 1px solid hsl(var(--border) / .35); border-left: 3px solid hsl(var(--court-accent) / .8); border-radius: 1rem; background: linear-gradient(165deg, hsl(var(--court-raised) / .3), hsl(var(--card)) 55%); padding: 1.2rem 1.35rem; box-shadow: 0 8px 24px hsl(var(--court-canvas) / .16); }
+.dg-round { position: relative; overflow: hidden; border: 1px solid hsl(var(--border) / .35); border-left: 3px solid hsl(var(--court-accent) / .8); border-radius: 1rem; background: linear-gradient(165deg, hsl(var(--court-raised) / .3), hsl(var(--card)) 55%); padding: 1.05rem 1.2rem; box-shadow: 0 8px 24px hsl(var(--court-canvas) / .16); }
+.dg-round::before { content: ''; position: absolute; top: 0; left: 12px; right: 12px; height: 2px; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent) / .75), hsl(var(--court-royal) / .45) 45%, transparent 82%); pointer-events: none; }
 .dg-round__title { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; }
 .dg-round__counter { border: 1px solid hsl(var(--court-accent) / .35); border-radius: 999px; background: hsl(var(--court-accent) / .07); padding: .25rem .65rem; font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; color: hsl(var(--court-accent)); }
 
@@ -145,7 +146,8 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-court__tag--in { color: hsl(var(--court-accent)); border-color: hsl(var(--court-accent) / .55); }
 
 /* Live broadcast scoreboard: jumbotron that updates during playback */
-.dg-live { border: 1px solid hsl(var(--court-accent) / .45); border-radius: 1rem; background: linear-gradient(160deg, hsl(var(--court-surface) / .8), hsl(var(--court-canvas)) 70%); padding: 1.1rem 1.25rem; box-shadow: 0 10px 30px hsl(var(--court-canvas) / .3); }
+.dg-live { position: relative; overflow: hidden; border: 1px solid hsl(var(--court-accent) / .45); border-radius: 1rem; background: linear-gradient(160deg, hsl(var(--court-surface) / .8), hsl(var(--court-canvas)) 70%); padding: 1.1rem 1.25rem; box-shadow: 0 10px 30px hsl(var(--court-canvas) / .3); }
+.dg-live::before { content: ''; position: absolute; top: 0; left: 12px; right: 12px; height: 2px; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent) / .9), hsl(var(--court-royal) / .55) 42%, transparent 82%); pointer-events: none; }
 .dg-live--final { border-color: hsl(var(--court-accent) / .3); }
 .dg-live__board { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .8rem; }
 .dg-live__team { display: flex; align-items: center; gap: .6rem; min-width: 0; }
@@ -153,8 +155,11 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-live__logo { display: grid; place-items: center; height: 2.2rem; width: 2.2rem; flex-shrink: 0; border-radius: .5rem; border: 1px solid hsl(var(--border) / .35); background: hsl(var(--court-canvas) / .7); }
 .dg-live__logo img { height: 1.6rem; width: 1.6rem; object-fit: contain; }
 .dg-live__code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--court-muted)); }
-.dg-live__pts { font-family: var(--font-display); font-size: clamp(2.6rem, 6vw, 3.6rem); line-height: 1; color: hsl(var(--foreground)); animation: dg-score-pop .5s ease-out; }
-.dg-live--final .dg-live__pts { animation: none; }
+.dg-live__pts { font-family: var(--font-display); font-size: clamp(2.6rem, 6vw, 3.6rem); line-height: 1; color: hsl(var(--foreground)); transition: transform .22s ease, color .22s ease, text-shadow .22s ease; }
+.dg-live__pts.is-ticking { color: hsl(var(--court-focus)); text-shadow: 0 0 22px hsl(var(--court-accent) / .65); transform: scale(1.06); }
+.dg-live__pts.is-landed { animation: dg-score-pop .5s ease-out; }
+.dg-live--final .dg-live__pts { transform: none; text-shadow: none; }
+.dg-live--final .dg-live__pts.is-landed { animation: none; }
 @keyframes dg-score-pop { 0% { transform: scale(1); } 40% { transform: scale(1.16); color: hsl(var(--court-focus)); text-shadow: 0 0 18px hsl(var(--court-accent) / .6); } 100% { transform: scale(1); } }
 .dg-live__mid { display: grid; justify-items: center; gap: .25rem; }
 .dg-live__badge { border-radius: 999px; border: 1px solid hsl(var(--court-trim-ink) / .6); background: hsl(var(--court-trim-ink) / .12); padding: .1rem .55rem; font-family: var(--font-mono); font-size: .55rem; font-weight: 800; letter-spacing: .18em; color: hsl(var(--court-trim-ink)); }
@@ -169,7 +174,7 @@ body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { back
 .dg-live__skip { margin-top: .6rem; display: inline-flex; align-items: center; gap: .35rem; border: 1px solid hsl(var(--court-accent) / .4); border-radius: .5rem; background: hsl(var(--court-accent) / .08); padding: .3rem .7rem; font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--court-accent)); cursor: pointer; }
 .dg-live__skip:hover { background: hsl(var(--court-accent) / .2); }
 @media (max-width: 639px) { .dg-live { padding: .9rem .8rem; } .dg-live__team { gap: .4rem; } .dg-live__code { font-size: .55rem; } }
-@media (prefers-reduced-motion: reduce) { .dg-live__pts, .dg-live__badge--live, .dg-live__ticker { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .dg-live__pts, .dg-live__pts.is-landed, .dg-live__badge--live, .dg-live__ticker { animation: none !important; } .dg-live__pts { transition: none !important; } }
 
 /* Challenge header */
 .dg-challenge__chip { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid hsl(var(--court-trim-ink) / .45); border-radius: 999px; background: hsl(var(--court-trim-ink) / .1); padding: .35rem .75rem; font-family: var(--font-mono); font-size: .55rem; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--foreground)); }

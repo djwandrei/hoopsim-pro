@@ -158,7 +158,7 @@ export default function DraftNight() {
         state={statusState === 'ready' ? 'ready' : statusState === 'loading' ? 'idle' : 'error'}
         status={pending ? 'Evaluating your draft…' : outcome ? 'Draft verified' : statusState === 'ready' ? 'Board verified' : null}
       />
-      <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
+      <main className="mx-auto max-w-6xl space-y-4 px-4 py-4">
         <BoardStatusPanel state={statusState} error={error} onRetry={() => loadBoard(seed)} />
         {statusState === 'ready' && presentation && (
           <>

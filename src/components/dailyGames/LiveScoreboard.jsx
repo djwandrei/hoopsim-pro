@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FastForward } from 'lucide-react';
 import { teamAsset } from '@/components/studio/teamAssets';
+import AnimatedScore from '@/components/dailyGames/AnimatedScore';
 
 // Broadcast jumbotron: plays the simulated play-by-play back in real time,
 // with the score updating (and flashing) as every possession resolves.
@@ -67,7 +68,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', result, o
         <div className="dg-live__team">
           <span className="dg-live__logo">{homeLogo && <img src={homeLogo} alt="" />}</span>
           <span className="dg-live__code">{homeCode || 'YOUR FIVE'}</span>
-          <span key={`h-${homeScore}`} className="dg-live__pts">{homeScore}</span>
+          <AnimatedScore value={homeScore} className="dg-live__pts" />
         </div>
         <div className="dg-live__mid">
           <span className={`dg-live__badge ${playing ? 'dg-live__badge--live' : ''}`}>{done ? 'FINAL' : 'LIVE'}</span>
@@ -75,7 +76,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', result, o
           <span className="dg-live__clock">{current ? current.clock : '12:00'}</span>
         </div>
         <div className="dg-live__team dg-live__team--away">
-          <span key={`a-${awayScore}`} className="dg-live__pts">{awayScore}</span>
+          <AnimatedScore value={awayScore} className="dg-live__pts" />
           <span className="dg-live__code">{awayCode || 'AWAY'}</span>
           <span className="dg-live__logo">{awayLogo && <img src={awayLogo} alt="" />}</span>
         </div>

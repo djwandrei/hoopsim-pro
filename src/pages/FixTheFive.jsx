@@ -9,6 +9,7 @@ import HowToPlay from '@/components/dailyGames/HowToPlay';
 import CardCycler from '@/components/dailyGames/CardCycler';
 import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
 import TapeReference from '@/components/dailyGames/TapeReference';
+import SwapBriefing from '@/components/dailyGames/SwapBriefing';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
 import DepthChart from '@/components/dailyGames/DepthChart';
 import StepRail from '@/components/dailyGames/StepRail';
@@ -202,8 +203,8 @@ export default function FixTheFive() {
               note="Your picks save in this browser — refresh anytime and the run picks up where you left off." />
             
               {activeChallenge &&
-            <>
-                  <section key={activeChallenge.challengeId} className="dg-board-hero dg-flow-in" aria-label={activeChallenge.title}>
+            <React.Fragment key={activeChallenge.challengeId}>
+                  <section className="dg-board-hero dg-flow-in" aria-label={activeChallenge.title}>
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div className="min-w-0">
                         <span className="bcast-kicker">Swap {activeIndex + 1} of {challenges.length} · blind pick</span>
@@ -216,7 +217,7 @@ export default function FixTheFive() {
                     </div>
                     
                   </section>
-                  <div key={activeChallenge.challengeId} className="dg-flow-in space-y-4">
+                  <div className="dg-flow-in space-y-4">
                     <div className="flex justify-center">
                       <div className="inline-flex rounded-lg border border-border/40 bg-canvas/60 p-0.5" role="tablist" aria-label="Lineup view">
                         {[['court', 'Court'], ['depth', 'Depth chart']].map(([value, label]) => (
@@ -235,6 +236,7 @@ export default function FixTheFive() {
                       ? <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
                       : <DepthChart lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} incomingPlayer={activeChallenge.incomingPlayer} incomingLabel="Incoming" />}
                     <TapeReference player={outgoing} />
+                    <SwapBriefing challenge={activeChallenge} />
                     <CardCycler
                       items={activeChallenge.candidates}
                       renderItem={(candidate) =>
@@ -249,7 +251,7 @@ export default function FixTheFive() {
 
                   } />
                   </div>
-                </>
+                </React.Fragment>
             }
               {pending && revealLabel && <p className="dg-reveal-status" role="status">{revealLabel}</p>}
               {allPicked && completedCount < challenges.length &&

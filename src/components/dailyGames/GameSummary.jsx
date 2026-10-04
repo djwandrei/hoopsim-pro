@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Trophy, ShieldAlert } from 'lucide-react';
 import { teamAsset } from '@/components/studio/teamAssets';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
+import { replayPeriods } from '@/lib/season/gamePeriods';
 
 // The game-summary screen: verdict banner, score strip with team logos, a
 // quarter-by-quarter line, a head-to-head team stat duel, and top performers.
@@ -9,23 +10,13 @@ export default function GameSummary({ label, homeCode = '', awayCode = '', oppon
   const won = result.homePts > result.awayPts;
   const home = { name: label, logo: teamAsset(homeCode), palette: paletteForTeam(homeCode) };
   const away = { name: opponent?.name || 'Away', logo: teamAsset(awayCode), palette: paletteForTeam(awayCode) };
-  const quarters = useMemo(() => {
-    const byQuarter = new Map();
-    for (const event of result.pbp || []) {
-      if (!event?.q || event.q === 'FINAL') continue;
-      const slot = byQuarter.get(event.q) || { home: 0, away: 0 };
-      if (event.side === 'home') slot.home += event.pts || 0;
-      else if (event.side === 'away') slot.away += event.pts || 0;
-      byQuarter.set(event.q, slot);
-    }
-    return [...byQuarter.entries()];
-  }, [result?.pbp]);
+  const quarters = useMemo(() => replayPeriods(result.pbp || []), [result.pbp]);
   const qGrid = `minmax(5.5rem, 1fr) repeat(${Math.max(quarters.length, 4) + 1}, minmax(2.6rem, 1fr))`;
   const homeStats = result.statsHome || {};
   const awayStats = result.statsAway || {};
   const pct = value => `${(Math.round((value || 0) * 1000) / 10).toFixed(1)}%`;
   const duels = [
-    { label: 'Off. rating', home: Math.round(result.ortgH), away: Math.round(result.ortgA), better: 'high' },
+    { label: 'Off. rating', home: Math.round(result.homePts * 100 / result.poss), away: Math.round(result.awayPts * 100 / result.poss), better: 'high' },
     { label: 'eFG %', home: homeStats.efg, away: awayStats.efg, better: 'high', format: pct },
     { label: 'Rebounds', home: homeStats.reb, away: awayStats.reb, better: 'high' },
     { label: 'Assists', home: homeStats.ast, away: awayStats.ast, better: 'high' },

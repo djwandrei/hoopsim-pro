@@ -49,7 +49,7 @@ export default function BoxScore({ title, code = '', box, teamStats, teamPoints 
             <tfoot>
               <tr>
                 <td>Team</td>
-                <td>240</td>
+                <td>{lines.reduce((sum, line) => sum + line.min, 0)}</td>
                 <td>{teamPoints ?? '—'}</td>
                 <td>{teamStats.reb ?? '—'}</td>
                 <td>{teamStats.ast ?? '—'}</td>

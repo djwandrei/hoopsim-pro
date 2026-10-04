@@ -56,12 +56,16 @@ export default function LiveBoxScore({ events, count, home, away }) {
     events.slice(0, count).forEach(event => {
       if (!event.stat || !event.side) return;
       const map = event.side === 'home' ? homeMap : awayMap;
+      const otherMap = event.side === 'home' ? awayMap : homeMap;
       const stat = event.stat;
       if (stat.scorer) row(map, stat.scorer).pts += event.pts;
       if (stat.assist) row(map, stat.assist).ast += 1;
-      if (stat.rebound) row(map, stat.rebound).reb += 1;
+      if (stat.rebound) {
+        const reboundMap = stat.reboundSide === 'home' ? homeMap : stat.reboundSide === 'away' ? awayMap : otherMap;
+        row(reboundMap, stat.rebound).reb += 1;
+      }
       if (stat.turnover) row(map, stat.turnover).to += 1;
-      if (stat.steal) row(map, stat.steal).stl += 1;
+      if (stat.steal) row(otherMap, stat.steal).stl += 1;
     });
     const lines = map => [...map.entries()]
       .map(([name, stats]) => ({ name, ...stats }))

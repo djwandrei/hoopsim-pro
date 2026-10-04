@@ -1,6 +1,9 @@
 // SwishIQ Season Lab — possession/four-factor simulation engine (client-side).
 // Team profiles come from the published SwishIQ package (observed rates);
 // every simulated line is modeled, never observed.
+import { buildGamePeriods } from '@/lib/season/gamePeriods';
+import { buildGameReplay } from '@/lib/season/gameReplay';
+import { replayBoxScores } from '@/lib/season/replayBoxScores';
 
 export const CONFERENCE_BY_TEAM = {
   ATL: 'EAST', BKN: 'EAST', BOS: 'EAST', CHA: 'EAST', CHI: 'EAST', CLE: 'EAST', DET: 'EAST',
@@ -133,19 +136,18 @@ function rebTotals(shootHome, shootAway, home, away) {
   const drbRateHome = clamp((home.drb + (1 - away.orb)) / 2, 0.55, 0.9);
   const drbRateAway = clamp((away.drb + (1 - home.orb)) / 2, 0.55, 0.9);
   return {
-    orebH: missAway * (1 - drbRateAway), drebH: missAway * drbRateAway,
-    orebA: missHome * (1 - drbRateHome), drebA: missHome * drbRateHome,
+    orebH: missHome * (1 - drbRateAway), drebH: missAway * drbRateHome,
+    orebA: missAway * (1 - drbRateHome), drebA: missHome * drbRateAway,
   };
 }
 
-function buildBox(team, rng, totals, teamPts, teamReb, teamAst, teamStl, teamBlk) {
+function buildBox(team, rng, totals, teamPts, teamReb, teamAst, teamStl, teamBlk, gameMinutes = 48) {
   const rotation = team.roster.slice(0, 10);
   if (!rotation.length) return { minutes: [], lines: [] };
-  // A five-man lineup plays the whole game: exactly 48 minutes apiece, no
-  // rotation noise. Full teams keep the minutes-weighted distribution.
+  // Include every overtime period in player minutes and team minutes.
   const minutes = rotation.length <= 5
-    ? rotation.map(() => Math.round(240 / rotation.length))
-    : distribute(240, rotation.map(p => p.minutes), rng);
+    ? distribute(gameMinutes * 5, rotation.map(() => 1), () => 0.5)
+    : distribute(gameMinutes * 5, rotation.map(p => p.minutes), rng);
   const perMin = p => i => (minutes[i] / Math.max(8, p.minutes || 1));
   const ptsArr = distribute(Math.round(teamPts), rotation.map((p, i) => (p.pts + 1.0) * perMin(p)(i)), rng);
   const rebArr = distribute(Math.round(teamReb), rotation.map((p, i) => (p.reb + 0.5) * perMin(p)(i)), rng);
@@ -183,133 +185,31 @@ function scorePoints(ortg, poss, rng) {
   return Math.max(62, Math.round(ortg * poss / 100 + gauss(rng) * 11));
 }
 
-// ---- Play-by-play feed (only generated for watched games) ----
-const QUARTER_SECONDS = 720;
-const TWO_SHOTS = ['a driving layup', 'a pull-up jumper', 'a floater in the lane', 'a fadeaway from the elbow', 'a contested runner'];
-const THREE_SHOTS = ['a corner 3', 'a stepback 3', 'a catch-and-shoot 3', 'a transition 3'];
-const RIM_DUNKS = ['throws down a one-hand dunk', 'elevates for a two-hand slam', 'finishes an alley-oop flush'];
-
-function splitPeriods(total, periods, rng) {
-  const weights = Array.from({ length: periods }, () => 0.7 + rng() * 0.6);
-  const sum = weights.reduce((a, b) => a + b, 0);
-  const raw = weights.map(w => (w / sum) * total);
-  const floors = raw.map(Math.floor);
-  let left = total - floors.reduce((a, b) => a + b, 0);
-  const order = raw.map((value, index) => [value - floors[index], index]).sort((a, b) => b[0] - a[0]);
-  for (let k = 0; k < left; k += 1) floors[order[k % order.length][1]] += 1;
-  return floors;
-}
-
-function pickPlayer(team, rng, notName) {
-  const rotation = team.roster.slice(0, 10);
-  if (!rotation.length) return null;
-  const filtered = notName ? rotation.filter(p => p.name !== notName) : [];
-  const pool = filtered.length ? filtered : rotation;
-  const weights = pool.map(p => Math.max(0.5, p.minutes || 1));
-  const sum = weights.reduce((a, b) => a + b, 0);
-  let r = rng() * sum;
-  for (let i = 0; i < pool.length; i += 1) {
-    r -= weights[i];
-    if (r <= 0) return pool[i];
-  }
-  return pool[pool.length - 1];
-}
-
-function fmtClock(seconds) {
-  const s = Math.max(0, Math.round(seconds));
-  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-}
-
-function buildPbp(home, away, hp, ap, ot, rng) {
-  const periods = 4 + ot;
-  const hTargets = splitPeriods(hp, periods, rng);
-  const aTargets = splitPeriods(ap, periods, rng);
-  const events = [];
-  let hs = 0; let as = 0;
-  const push = (q, clock, side, type, text, pts, stat) => events.push({ q, clock: fmtClock(clock), side, type, text, pts: pts || 0, score: [hs, as], stat });
-  for (let q = 0; q < periods; q += 1) {
-    const label = q < 4 ? `Q${q + 1}` : `OT${q - 3}`;
-    let clock = QUARTER_SECONDS;
-    let hq = hTargets[q]; let aq = aTargets[q];
-    push(label, clock, null, 'period', `${label} is underway`);
-    let guard = 0;
-    while ((hq > 0 || aq > 0) && guard < 240) {
-      guard += 1;
-      const side = hq <= 0 ? 'away' : aq <= 0 ? 'home' : (rng() < 0.5 ? 'home' : 'away');
-      const team = side === 'home' ? home : away;
-      const opp = side === 'home' ? away : home;
-      const remain = side === 'home' ? hq : aq;
-      const player = pickPlayer(team, rng);
-      if (!player) break;
-      clock = Math.max(2, clock - (9 + Math.floor(rng() * 17)));
-      const r = rng();
-      let scored = 0; let text = ''; let type = 'made'; let stat = null;
-      if (remain <= 0 || r < 0.09) {
-        type = 'to';
-        const thief = rng() < 0.3 ? pickPlayer(opp, rng) : null;
-        stat = thief ? { turnover: player.name, steal: thief.name } : { turnover: player.name };
-        text = thief ? `${player.name} turns it over — ${thief.name} jumps the lane for ${opp.code}` : `${player.name} loses the handle — turnover, ${opp.code} ball`;
-      } else if (remain <= 2 || r < 0.24) {
-        type = 'ft';
-        stat = { scorer: player.name };
-        if (remain === 1 || rng() < 0.4) {
-          if (rng() < 0.72) { scored = 1; text = `${player.name} hits 1 of 2 at the line`; }
-          else { text = `${player.name} misfires from the stripe`; }
-        } else { scored = 2; text = `${player.name} sinks both free throws`; }
-      } else if (r < 0.4) {
-        type = 'miss';
-        const board = pickPlayer(opp, rng);
-        const shot = rng() < 0.42 ? THREE_SHOTS[Math.floor(rng() * THREE_SHOTS.length)] : TWO_SHOTS[Math.floor(rng() * TWO_SHOTS.length)];
-        stat = board ? { rebound: board.name } : null;
-        text = `${player.name} misses ${shot}${board ? ` — ${board.name} corrals the board` : ''}`;
-      } else if (r < 0.62) {
-        const helper = rng() < 0.55 ? pickPlayer(team, rng, player.name) : null;
-        scored = 2;
-        const dunk = rng() < 0.22;
-        stat = helper ? { scorer: player.name, assist: helper.name } : { scorer: player.name };
-        text = dunk ? `${player.name} ${RIM_DUNKS[Math.floor(rng() * RIM_DUNKS.length)]}${helper ? ` off the ${helper.name} feed` : ''}` : `${player.name} finishes ${TWO_SHOTS[Math.floor(rng() * TWO_SHOTS.length)]}${helper ? ` (assist: ${helper.name})` : ''}`;
-      } else if (remain >= 3) {
-        scored = 3;
-        const helper = rng() < 0.6 ? pickPlayer(team, rng, player.name) : null;
-        stat = helper ? { scorer: player.name, assist: helper.name } : { scorer: player.name };
-        text = `${player.name} splashes ${THREE_SHOTS[Math.floor(rng() * THREE_SHOTS.length)]}${helper ? ` (assist: ${helper.name})` : ''}`;
-      } else {
-        scored = 2;
-        stat = { scorer: player.name };
-        text = `${player.name} punches in ${TWO_SHOTS[Math.floor(rng() * TWO_SHOTS.length)]}`;
-      }
-      if (scored) {
-        if (side === 'home') { hs += scored; hq -= scored; } else { as += scored; aq -= scored; }
-      }
-      push(label, clock, side, type, text, scored, stat);
-    }
-    push(label, clock, null, 'period', `End of ${label} — ${home.code} ${hs}, ${away.code} ${as}`);
-  }
-  const winner = hp > ap ? home : away;
-  const loser = hp > ap ? away : home;
-  push(ot ? `${ot}OT` : 'FINAL', 0, null, 'final', `FINAL — ${winner.code} ${Math.max(hp, ap)}, ${loser.code} ${Math.min(hp, ap)}`);
-  return events;
-}
-
 function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutral = false, log = false } = {}) {
   const poss = clamp((home.pace + away.pace) / 2, 88, 112);
   const hca = neutral ? 0 : homeCourt;
   const ortgH = expectedOrtg(home.off, away.def, LEAGUE.defAvg, defenseWeight) + hca;
   const ortgA = expectedOrtg(away.off, home.def, LEAGUE.defAvg, defenseWeight);
-  let hp = scorePoints(ortgH, poss, rng);
-  let ap = scorePoints(ortgA, poss, rng);
-  let ot = 0;
+  const regulationHome = scorePoints(ortgH, poss, rng);
+  const regulationAway = scorePoints(ortgA, poss, rng);
+  let hp = regulationHome; let ap = regulationAway;
+  const overtime = [];
   while (hp === ap) {
-    ot += 1;
-    const otPoss = 5 * (poss / 48);
-    hp += Math.round(((ortgH + ortgA) / 2) * otPoss / 200 + gauss(rng) * 2);
-    ap += Math.round(((ortgH + ortgA) / 2) * otPoss / 200 + gauss(rng) * 2);
+    const otPoss = poss * 5 / 48;
+    const period = {
+      home: Math.max(0, Math.round(ortgH * otPoss / 100 + gauss(rng) * 3)),
+      away: Math.max(0, Math.round(ortgA * otPoss / 100 + gauss(rng) * 3)),
+    };
+    overtime.push(period); hp += period.home; ap += period.away;
   }
-  const sh = shootTotals(home, away, poss, hp, rng);
-  const sa = shootTotals(away, home, poss, ap, rng);
+  const ot = overtime.length;
+  const gameMinutes = 48 + ot * 5;
+  const totalPoss = poss * gameMinutes / 48;
+  const sh = shootTotals(home, away, totalPoss, hp, rng);
+  const sa = shootTotals(away, home, totalPoss, ap, rng);
   const rebs = rebTotals(sh, sa, home, away);
-  const rebH = Math.round(rebs.orebH + rebs.drebH);
-  const rebA = Math.round(rebs.orebA + rebs.drebA);
+  const rebH = Math.round(rebs.orebH) + Math.round(rebs.drebH);
+  const rebA = Math.round(rebs.orebA) + Math.round(rebs.drebA);
   const astH = Math.round(sh.fgm * 0.6 * (0.9 + rng() * 0.2));
   const astA = Math.round(sa.fgm * 0.6 * (0.9 + rng() * 0.2));
   const stlH = Math.round(sa.tov * 0.55);
@@ -317,18 +217,15 @@ function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutra
   const blkH = Math.round((sa.fga - sa.fgm) * 0.062);
   const blkA = Math.round((sh.fga - sh.fgm) * 0.062);
   const result = {
-    poss, ot, ortgH, ortgA,
+    poss: totalPoss, ot, ortgH, ortgA,
     homePts: hp, awayPts: ap,
-    boxHome: buildBox(home, rng, sh, hp, rebH, astH, stlH, blkH),
-    boxAway: buildBox(away, rng, sa, ap, rebA, astA, stlA, blkA),
+    boxHome: buildBox(home, rng, sh, hp, rebH, astH, stlH, blkH, gameMinutes),
+    boxAway: buildBox(away, rng, sa, ap, rebA, astA, stlA, blkA, gameMinutes),
   };
   if (!log) return result;
-  return {
-    ...result,
-    statsHome: { ...sh, orb: Math.round(rebs.orebH), dreb: Math.round(rebs.drebH), reb: rebH, ast: astH, stl: stlH, blk: blkH },
-    statsAway: { ...sa, orb: Math.round(rebs.orebA), dreb: Math.round(rebs.drebA), reb: rebA, ast: astA, stl: stlA, blk: blkA },
-    pbp: buildPbp(home, away, hp, ap, ot, rng),
-  };
+  const periods = buildGamePeriods(regulationHome, regulationAway, overtime, rng);
+  const pbp = buildGameReplay(home, away, periods, rng);
+  return { ...result, ...replayBoxScores(result.boxHome, result.boxAway, pbp), pbp };
 }
 
 let LEAGUE = { defAvg: 112 };

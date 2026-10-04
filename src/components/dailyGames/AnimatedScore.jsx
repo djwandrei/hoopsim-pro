@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // value, retargeting safely when the playback accelerates, and pop a floating
 // "+N" chip like a broadcast score bug. Interrupt-safe: a new value always
 // animates from the last displayed value, so scores never jump backwards.
-export default function AnimatedScore({ value = 0, className = '' }) {
+export default function AnimatedScore({ value = 0, className = '', instant = false }) {
   const [display, setDisplay] = useState(0);
   const [phase, setPhase] = useState('idle'); // idle | ticking | landed
   const [gain, setGain] = useState(null); // { amount, id }
@@ -20,7 +20,7 @@ export default function AnimatedScore({ value = 0, className = '' }) {
     const from = displayRef.current;
     if (value === from) return undefined;
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-    if (reduced) {
+    if (reduced || instant) {
       displayRef.current = value;
       setDisplay(value);
       setPhase('idle');
@@ -54,7 +54,7 @@ export default function AnimatedScore({ value = 0, className = '' }) {
       }
     };
     frameRef.current = requestAnimationFrame(step);
-  }, [value]);
+  }, [value, instant]);
 
   useEffect(() => () => {
     cancelAnimationFrame(frameRef.current);
@@ -65,9 +65,9 @@ export default function AnimatedScore({ value = 0, className = '' }) {
   return (
     <span className="dg-score-wrap">
       <span className={`${className} ${phase === 'ticking' ? 'is-ticking' : ''} ${phase === 'landed' ? 'is-landed' : ''}`}>
-        {display}
+        {instant ? value : display}
       </span>
-      {gain && <span key={gain.id} className="dg-score-gain" aria-hidden="true">+{gain.amount}</span>}
+      {!instant && gain && <span key={gain.id} className="dg-score-gain" aria-hidden="true">+{gain.amount}</span>}
     </span>
   );
 }

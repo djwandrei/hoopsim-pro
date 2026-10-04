@@ -4,6 +4,7 @@ import { teamAsset } from '@/components/studio/teamAssets';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 import { TEAM_NAMES } from '@/lib/season/simEngine';
 import AnimatedScore from '@/components/dailyGames/AnimatedScore';
+import { replayPeriods } from '@/lib/season/gamePeriods';
 
 const cityName = (code, name) => name || TEAM_NAMES[code] || (code || '').toUpperCase();
 
@@ -64,23 +65,13 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
 
   const done = index >= total;
   const current = index > 0 ? pbp[index - 1] : null;
-  const [homeScore, awayScore] = current?.score || [0, 0];
+  const [homeScore, awayScore] = done ? [result.homePts, result.awayPts] : current?.score || [0, 0];
   const homeLogo = teamAsset(homeCode);
   const awayLogo = teamAsset(awayCode);
   const homePalette = paletteForTeam(homeCode);
   const awayPalette = paletteForTeam(awayCode);
   const progress = total ? Math.round((index / total) * 100) : 0;
-  const quarters = useMemo(() => {
-    const byQuarter = new Map();
-    for (const event of pbp) {
-      if (!event?.q || event.q === 'FINAL') continue;
-      const slot = byQuarter.get(event.q) || { home: 0, away: 0 };
-      if (event.side === 'home') slot.home += event.pts || 0;
-      else if (event.side === 'away') slot.away += event.pts || 0;
-      byQuarter.set(event.q, slot);
-    }
-    return [...byQuarter.entries()];
-  }, [pbp]);
+  const quarters = useMemo(() => replayPeriods(pbp, index), [pbp, index]);
   const gridColumns = `4.75rem repeat(${Math.max(quarters.length, 4)}, minmax(0, 1fr))`;
 
   return (
@@ -96,7 +87,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
             <span className="dg-live__city">{cityName(homeCode, homeName) || 'Your Five'}</span>
             <span className="dg-live__code">{homeCode || 'FIVE'}</span>
           </span>
-          <AnimatedScore value={homeScore} className="dg-live__pts" />
+          <AnimatedScore value={homeScore} className="dg-live__pts" instant={done} />
         </div>
         <div className="dg-live__mid">
           <span className={`dg-live__badge ${playing ? 'dg-live__badge--live' : ''}`}>{done ? 'FINAL' : 'LIVE'}</span>
@@ -106,7 +97,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
           </span>
         </div>
         <div className="dg-live__club dg-live__club--away" style={{ '--dg-team': awayPalette?.primary }}>
-          <AnimatedScore value={awayScore} className="dg-live__pts" />
+          <AnimatedScore value={awayScore} className="dg-live__pts" instant={done} />
           <span className="dg-live__identity">
             <span className="dg-live__city">{cityName(awayCode, awayName) || 'Away'}</span>
             <span className="dg-live__code">{awayCode || 'AWAY'}</span>
@@ -122,11 +113,11 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
           </div>
           <div className="dg-live__qrow" style={{ display: 'grid', gridTemplateColumns: gridColumns, gap: '.25rem' }}>
             <span>{homeCode || 'FIVE'}</span>
-            {quarters.map(([label, slot]) => <span key={label}>{slot.home}</span>)}
+            {quarters.map(([label, slot]) => <span key={label}>{slot.home ?? '—'}</span>)}
           </div>
           <div className="dg-live__qrow" style={{ display: 'grid', gridTemplateColumns: gridColumns, gap: '.25rem' }}>
             <span>{awayCode || 'AWAY'}</span>
-            {quarters.map(([label, slot]) => <span key={label}>{slot.away}</span>)}
+            {quarters.map(([label, slot]) => <span key={label}>{slot.away ?? '—'}</span>)}
           </div>
         </div>
       )}

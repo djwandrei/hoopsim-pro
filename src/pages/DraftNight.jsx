@@ -13,17 +13,9 @@ import DraftDesk from '@/components/dailyGames/DraftDesk';
 import { bestFitFor, deskNeeds, pickedRoster } from '@/components/dailyGames/draftDesk';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
-import useSeasonSource from '@/hooks/useSeasonSource';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
-import {
-  loadSwishIQDailyBoard,
-  revealSwishIQDailyGame,
-  swishIQDailyGameErrorKind,
-  dailySeedFromPageSearch,
-  normalizeGameFamily,
-  gamePointsForOutcome,
-} from '@/lib/dailyGames/boardSource';
-import { hydratePresentationBoard, loadSwishIqPlayerMetadata } from '@/lib/dailyGames/boardHydration';
+import useDailyGameBoard from '@/hooks/useDailyGameBoard';
+import { revealSwishIQDailyGame, swishIQDailyGameErrorKind, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
 import { createRunStore } from '@/lib/dailyGames/runStorage';
 import '@/components/dailyGames/dailyGames.css';
 
@@ -38,53 +30,28 @@ function DraftSimPanel(props) {
 }
 
 export default function DraftNight() {
-  const urlSeed = useMemo(() => dailySeedFromPageSearch(window.location.search), []);
-  const urlFamily = useMemo(() => { try { return normalizeGameFamily(new URLSearchParams(window.location.search).get('family')); } catch { return ''; } }, []);
-  const [seed, setSeed] = useState(urlSeed);
-  const [board, setBoard] = useState(null);
-  const [metadata, setMetadata] = useState(null);
-  const [status, setStatus] = useState('loading');
-  const [error, setError] = useState(null);
-  const [errorKind, setErrorKind] = useState('');
   const [picks, setPicks] = useState({});
   const [outcome, setOutcome] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [pending, setPending] = useState(false);
-  const [notice, setNotice] = useState('');
-  const { year, setYear, source, league } = useSeasonSource();
-
-  const persist = useCallback((nextSeed, nextPicks, nextOutcome) => {
-    RUN_STORE.write(nextSeed, { picks: nextPicks, outcome: nextOutcome });
-  }, []);
-
-  const loadBoard = useCallback(async (targetSeed = seed) => {
-    setStatus('loading'); setError(null); setErrorKind(''); setNotice('');
-    try {
-      const loaded = await loadSwishIQDailyBoard({ gameKind: 'draft-night', dailySeed: targetSeed, family: urlFamily });
-      setBoard(loaded);
-      setStatus('ready');
+  const {
+    seed, setSeed, board, presentation, status, error, errorKind, notice, setNotice, loadBoard, league,
+  } = useDailyGameBoard({
+    gameKind: 'draft-night',
+    onBoardReady: (loaded) => {
       const store = RUN_STORE.read(loaded.dailySeed);
       const storedPicks = store.picks && typeof store.picks === 'object' ? store.picks : {};
       setPicks(storedPicks);
       setOutcome(store.outcome || null);
       const firstOpen = loaded.deck.rounds.findIndex(round => !storedPicks[round.roundId]);
       setActiveIndex(firstOpen >= 0 ? firstOpen : loaded.deck.rounds.length);
-    } catch (loadError) {
-      setBoard(null);
-      setError(loadError);
-      setErrorKind(swishIQDailyGameErrorKind(loadError));
-      setStatus(['board-unavailable', 'board-invalid', 'evaluator-unavailable', 'verification-error'].includes(swishIQDailyGameErrorKind(loadError)) ? swishIQDailyGameErrorKind(loadError) : 'error');
-    }
-  }, [seed, urlFamily]);
+    },
+  });
 
-  useEffect(() => { loadBoard(seed); }, [seed, loadBoard]);
-  useEffect(() => { loadSwishIqPlayerMetadata().then(setMetadata, () => setMetadata(null)); }, []);
-  useEffect(() => {
-    const boardYear = board?.packageRef?.scope?.seasonStartYear;
-    if (boardYear && String(year) !== String(boardYear)) setYear(boardYear);
-  }, [board, year, setYear]);
+  const persist = useCallback((nextSeed, nextPicks, nextOutcome) => {
+    RUN_STORE.write(nextSeed, { picks: nextPicks, outcome: nextOutcome });
+  }, []);
 
-  const presentation = useMemo(() => (board ? hydratePresentationBoard(board, { playerSeasons: source?.playerSeasons || [], metadata }) : null), [board, source, metadata]);
   const rounds = presentation?.deck?.rounds || [];
   const pickCount = rounds.filter(round => picks[round.roundId]).length;
   const allPicked = rounds.length > 0 && pickCount === rounds.length;
@@ -125,9 +92,8 @@ export default function DraftNight() {
     setPending(true); setNotice('');
     try {
       const result = await revealSwishIQDailyGame({ board, picks: orderedPicks });
-      const plain = JSON.parse(JSON.stringify({ format: result.format, contractVersion: result.contractVersion, action: result.action, boardRef: result.boardRef, resultContract: result.resultContract, selection: result.selection, resultPassport: result.resultPassport }));
-      setOutcome(plain);
-      persist(board.dailySeed, picks, plain);
+      setOutcome(result);
+      persist(board.dailySeed, picks, result);
     } catch (revealError) {
       const kind = swishIQDailyGameErrorKind(revealError);
       setNotice(kind === 'evaluator-unavailable'

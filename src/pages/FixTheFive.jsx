@@ -15,50 +15,26 @@ import DepthChart from '@/components/dailyGames/DepthChart';
 import StepRail from '@/components/dailyGames/StepRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
-import useSeasonSource from '@/hooks/useSeasonSource';
-import {
-  loadSwishIQDailyBoard,
-  revealSwishIQDailyGame,
-  swishIQDailyGameErrorKind,
-  dailySeedFromPageSearch,
-  normalizeGameFamily,
-  gamePointsForOutcome } from
-'@/lib/dailyGames/boardSource';
-import { hydratePresentationBoard, loadSwishIqPlayerMetadata } from '@/lib/dailyGames/boardHydration';
+import useDailyGameBoard from '@/hooks/useDailyGameBoard';
+import { revealSwishIQDailyGame, swishIQDailyGameErrorKind, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
 import { createRunStore } from '@/lib/dailyGames/runStorage';
 import '@/components/dailyGames/dailyGames.css';
 
 const RUN_STORE = createRunStore('swishiq-studio-fix-the-five');
 
 export default function FixTheFive() {
-  const urlSeed = useMemo(() => dailySeedFromPageSearch(window.location.search), []);
-  const urlFamily = useMemo(() => {try {return normalizeGameFamily(new URLSearchParams(window.location.search).get('family'));} catch {return '';}}, []);
-  const [seed, setSeed] = useState(urlSeed);
-  const [board, setBoard] = useState(null);
-  const [metadata, setMetadata] = useState(null);
-  const [status, setStatus] = useState('loading');
-  const [error, setError] = useState(null);
-  const [errorKind, setErrorKind] = useState('');
   const [selections, setSelections] = useState({});
   const [outcomes, setOutcomes] = useState({});
   const [activeIndex, setActiveIndex] = useState(0);
   const [lineupView, setLineupView] = useState('court');
   const [pending, setPending] = useState(false);
   const [revealLabel, setRevealLabel] = useState('');
-  const [notice, setNotice] = useState('');
   const [resultsOpen, setResultsOpen] = useState(true);
-  const { year, setYear, source, league } = useSeasonSource();
-
-  const persist = useCallback((nextSeed, nextSelections, nextOutcomes) => {
-    RUN_STORE.write(nextSeed, { selections: nextSelections, outcomes: nextOutcomes });
-  }, []);
-
-  const loadBoard = useCallback(async (targetSeed = seed) => {
-    setStatus('loading');setError(null);setErrorKind('');setNotice('');
-    try {
-      const loaded = await loadSwishIQDailyBoard({ gameKind: 'fix-the-five', dailySeed: targetSeed, family: urlFamily });
-      setBoard(loaded);
-      setStatus('ready');
+  const {
+    seed, setSeed, board, presentation, status, error, errorKind, notice, setNotice, loadBoard, league,
+  } = useDailyGameBoard({
+    gameKind: 'fix-the-five',
+    onBoardReady: (loaded) => {
       const store = RUN_STORE.read(loaded.dailySeed);
       const storedSelections = store.selections && typeof store.selections === 'object' ? store.selections : {};
       const storedOutcomes = store.outcomes && typeof store.outcomes === 'object' ? store.outcomes : {};
@@ -66,22 +42,13 @@ export default function FixTheFive() {
       setOutcomes(storedOutcomes);
       const firstOpen = loaded.challenges.findIndex((challenge) => !storedSelections[challenge.challengeId] && !storedOutcomes[challenge.challengeId]);
       setActiveIndex(firstOpen >= 0 ? firstOpen : loaded.challenges.length);
-    } catch (loadError) {
-      setBoard(null);
-      setError(loadError);
-      setErrorKind(swishIQDailyGameErrorKind(loadError));
-      setStatus(['board-unavailable', 'board-invalid', 'evaluator-unavailable', 'verification-error'].includes(swishIQDailyGameErrorKind(loadError)) ? swishIQDailyGameErrorKind(loadError) : 'error');
-    }
-  }, [seed, urlFamily]);
+    },
+  });
 
-  useEffect(() => {loadBoard(seed);}, [seed, loadBoard]);
-  useEffect(() => {loadSwishIqPlayerMetadata().then(setMetadata, () => setMetadata(null));}, []);
-  useEffect(() => {
-    const boardYear = board?.packageRef?.scope?.seasonStartYear;
-    if (boardYear && String(year) !== String(boardYear)) setYear(boardYear);
-  }, [board, year, setYear]);
+  const persist = useCallback((nextSeed, nextSelections, nextOutcomes) => {
+    RUN_STORE.write(nextSeed, { selections: nextSelections, outcomes: nextOutcomes });
+  }, []);
 
-  const presentation = useMemo(() => board ? hydratePresentationBoard(board, { playerSeasons: source?.playerSeasons || [], metadata }) : null, [board, source, metadata]);
   const challenges = presentation?.challenges || [];
   const pickCount = challenges.filter((challenge) => selections[challenge.challengeId]).length;
   const completedCount = challenges.filter((challenge) => outcomes[challenge.challengeId]).length;
@@ -121,8 +88,7 @@ export default function FixTheFive() {
         if (nextOutcomes[challenge.challengeId] || !selections[challenge.challengeId]) continue;
         setRevealLabel(`Revealing swap ${Object.keys(nextOutcomes).length + 1} of ${challenges.length}…`);
         const outcome = await revealSwishIQDailyGame({ board, challengeId: challenge.challengeId, playerRef: selections[challenge.challengeId] });
-        const plain = JSON.parse(JSON.stringify({ format: outcome.format, contractVersion: outcome.contractVersion, action: outcome.action, boardRef: outcome.boardRef, resultContract: outcome.resultContract, selection: outcome.selection, resultPassport: outcome.resultPassport }));
-        nextOutcomes = { ...nextOutcomes, [challenge.challengeId]: plain };
+        nextOutcomes = { ...nextOutcomes, [challenge.challengeId]: outcome };
         setOutcomes(nextOutcomes);
         persist(board.dailySeed, selections, nextOutcomes);
       }

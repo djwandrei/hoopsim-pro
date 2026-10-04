@@ -311,7 +311,7 @@ export default function FixTheFive() {
                 null)}
                   </div>
                   {completedCount === challenges.length && simSquads.length > 0 &&
-              <LineupSimPanel league={league} squads={simSquads} lineupLabel="The fixed five" />
+              <LineupSimPanel league={league} squads={simSquads} lineupLabel="The fixed five" scoreboardOverlay />
               }
                   <CompletionPanel
                 total={total}

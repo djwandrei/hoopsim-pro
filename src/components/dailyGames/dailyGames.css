@@ -131,19 +131,21 @@
    compact card anchored at their court spot instead of floating freely. */
 /* Portrait with its name beneath it on the left, stats stacked vertically
    on the right. */
-.dg-court__id { display: grid; flex-shrink: 0; justify-items: center; gap: .2rem; min-width: 0; }
-.dg-court__card { display: flex; align-items: center; gap: .55rem; min-width: 10.5rem; max-width: 13rem; border: 1px solid hsl(var(--border) / .5); border-radius: .6rem; background: linear-gradient(180deg, hsl(var(--court-surface) / .92), hsl(var(--court-canvas) / .96)); padding: .45rem .6rem .45rem .45rem; box-shadow: 0 8px 16px hsl(var(--court-canvas) / .5); backdrop-filter: blur(3px); }
+.dg-court__id { display: grid; flex-shrink: 0; justify-items: center; gap: .1rem; min-width: 0; }
+/* Condensed near-square card: width hugs the portrait plus a slim stat
+   column, and the panel is translucent so the hardwood shows through. */
+.dg-court__card { display: flex; align-items: center; gap: .35rem; min-width: 0; max-width: 10.5rem; border: 1px solid hsl(var(--border) / .5); border-radius: .6rem; background: linear-gradient(180deg, hsl(var(--court-surface) / .58), hsl(var(--court-canvas) / .72)); padding: .35rem .45rem .35rem .3rem; box-shadow: 0 8px 16px hsl(var(--court-canvas) / .5); backdrop-filter: blur(4px); }
 .dg-court__card > .dg-court__portrait, .dg-court__card > .dg-court__initials { flex-shrink: 0; }
 .dg-court__card .dg-court__name, .dg-court__card .dg-court__stat, .dg-court__card .dg-court__pos { border: 0; background: none; box-shadow: none; }
-.dg-court__card .dg-court__name { padding: .1rem .2rem 0; }
-.dg-court__card .dg-court__stat { padding: .05rem .25rem; }
+.dg-court__card .dg-court__name { padding: .05rem .15rem 0; }
+.dg-court__card .dg-court__stat { padding: .03rem .18rem; }
 .dg-court__shadow { position: absolute; left: 50%; bottom: -.45rem; transform: translateX(-50%); width: calc(var(--portrait-width) * var(--ds) * .85); height: calc(var(--portrait-width) * var(--ds) * .17); border-radius: 50%; background: radial-gradient(ellipse, hsl(0 0% 0% / .5), transparent 72%); pointer-events: none; }
 .dg-court__ring { position: absolute; bottom: -.6rem; left: 50%; transform: translateX(-50%); width: calc(var(--portrait-width) * var(--ds) * 1.1); height: calc(var(--portrait-width) * var(--ds) * .26); border: 1.5px dashed hsl(var(--court-trim-ink) / .75); border-radius: 50%; pointer-events: none; }
 .dg-court__marker--in .dg-court__ring { border-color: hsl(var(--court-accent) / .85); border-style: solid; box-shadow: 0 0 12px hsl(var(--court-accent) / .35); }
-.dg-court__caption { display: grid; flex: 1; justify-items: start; gap: .25rem; min-width: 0; text-align: left; }
-.dg-court__plate { display: grid; justify-items: start; gap: .2rem; max-width: 100%; }
-.dg-court__pos { display: inline-flex; align-items: center; border: 1px solid hsl(var(--court-accent) / .55); border-radius: .3rem; background: hsl(var(--court-accent) / .14); padding: .05rem .38rem; font-family: var(--font-display); font-size: clamp(.46rem, 1cqw, .64rem); letter-spacing: .08em; color: hsl(var(--court-accent)); }
-.dg-court__stat { display: inline-flex; align-items: baseline; gap: .18rem; border: 1px solid hsl(var(--border) / .5); border-radius: .3rem; background: hsl(var(--court-canvas) / .88); padding: .05rem .38rem; font-family: var(--font-mono); font-size: clamp(.42rem, .95cqw, .58rem); color: hsl(var(--court-text)); white-space: nowrap; }
+.dg-court__caption { display: grid; flex: 1; justify-items: start; gap: .16rem; min-width: 0; text-align: left; }
+.dg-court__plate { display: grid; justify-items: start; gap: .12rem; max-width: 100%; }
+.dg-court__pos { display: inline-flex; align-items: center; border: 1px solid hsl(var(--court-accent) / .55); border-radius: .3rem; background: hsl(var(--court-accent) / .14); padding: .04rem .28rem; font-family: var(--font-display); font-size: clamp(.46rem, 1cqw, .64rem); letter-spacing: .08em; color: hsl(var(--court-accent)); }
+.dg-court__stat { display: inline-flex; align-items: baseline; gap: .18rem; border: 1px solid hsl(var(--border) / .5); border-radius: .3rem; background: hsl(var(--court-canvas) / .88); padding: .04rem .28rem; font-family: var(--font-mono); font-size: clamp(.42rem, .95cqw, .58rem); color: hsl(var(--court-text)); white-space: nowrap; }
 .dg-court__stat b { font-weight: 700; color: hsl(var(--court-focus)); }
 body:not(.dark-mode) .dg-court__stat, body:not(.dark-mode) .dg-court__pos { background: hsl(var(--court-canvas) / .95); }
 .dg-court__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 1px solid hsl(var(--border) / .5); border-radius: .35rem; background: hsl(var(--court-canvas) / .88); padding: .12rem .45rem; font-size: clamp(.54rem, 1.3cqw, .8rem); font-weight: 700; line-height: 1.2; color: hsl(var(--court-text)); }
@@ -584,7 +586,7 @@ body:not(.dark-mode) .dg-court__portrait { filter: drop-shadow(0 5px 4px hsl(20 
 body:not(.dark-mode) .dg-duel__shot { filter: drop-shadow(0 4px 8px hsl(0 0% 20% / .28)); }
 body:not(.dark-mode) .dg-duel__band { background: linear-gradient(150deg, hsl(var(--court-surface) / .95), hsl(var(--court-raised)) 78%); }
 body:not(.dark-mode) .dg-court__tag, body:not(.dark-mode) .dg-court__badge { background: hsl(var(--court-canvas) / .95); }
-body:not(.dark-mode) .dg-court__card { border-color: hsl(218 16% 74%); background: linear-gradient(180deg, hsl(0 0% 100% / .96), hsl(220 26% 95% / .97)); box-shadow: 0 8px 16px hsl(20 30% 15% / .2); }
+body:not(.dark-mode) .dg-court__card { border-color: hsl(218 16% 74%); background: linear-gradient(180deg, hsl(0 0% 100% / .7), hsl(220 26% 95% / .78)); box-shadow: 0 8px 16px hsl(20 30% 15% / .2); }
 body:not(.dark-mode) .dg-court__card .dg-court__name, body:not(.dark-mode) .dg-court__card .dg-court__stat { color: hsl(222 32% 14%); }
 body:not(.dark-mode) .dg-court__initials { color: hsl(222 32% 14%); text-shadow: none; }
 

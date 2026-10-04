@@ -141,7 +141,11 @@ function rebTotals(shootHome, shootAway, home, away) {
 function buildBox(team, rng, totals, teamPts, teamReb, teamAst, teamStl, teamBlk) {
   const rotation = team.roster.slice(0, 10);
   if (!rotation.length) return { minutes: [], lines: [] };
-  const minutes = distribute(240, rotation.map(p => p.minutes), rng);
+  // A five-man lineup plays the whole game: exactly 48 minutes apiece, no
+  // rotation noise. Full teams keep the minutes-weighted distribution.
+  const minutes = rotation.length <= 5
+    ? rotation.map(() => Math.round(240 / rotation.length))
+    : distribute(240, rotation.map(p => p.minutes), rng);
   const perMin = p => i => (minutes[i] / Math.max(8, p.minutes || 1));
   const ptsArr = distribute(Math.round(teamPts), rotation.map((p, i) => (p.pts + 1.0) * perMin(p)(i)), rng);
   const rebArr = distribute(Math.round(teamReb), rotation.map((p, i) => (p.reb + 0.5) * perMin(p)(i)), rng);

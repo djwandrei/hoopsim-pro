@@ -6,34 +6,32 @@ import LineupCourt from '@/components/dailyGames/LineupCourt';
 import GameSummary from '@/components/dailyGames/GameSummary';
 import LiveScoreboard from '@/components/dailyGames/LiveScoreboard';
 
-// Model a five-man squad as a team profile for the sim engine. Offense is
-// modeled from the five players' observed per-game rates; defense is held at
-// the league average because the public board carries no player defensive rates.
-export function lineupTeam(league, players, code, name) {
+// Model a five-man squad as a team profile for the sim engine. The five are
+// the entire lineup — 48 minutes apiece, no bench players. Offense is modeled
+// from the five players' observed per-game rates; defense is held at the
+// league average because the public board carries no player defensive rates,
+// unless the caller supplies real team ratings (the opponent's starting five).
+export function lineupTeam(league, players, code, name, overrides = {}) {
   const avg = key => league.teams.reduce((sum, team) => sum + team[key], 0) / (league.teams.length || 1);
   const roster = players.map(player => ({
     playerRef: player.playerRef,
-    name: player.displayName,
+    name: player.displayName || player.name,
     positions: Array.isArray(player.positions) ? player.positions : [],
-    minutes: player.publicStats?.minutes ?? 24,
+    minutes: 48,
     pts: player.publicStats?.points ?? 0,
     reb: player.publicStats?.rebounds ?? 0,
     ast: player.publicStats?.assists ?? 0,
     stl: 0,
     blk: 0,
   }));
-  const onCourtMinutes = roster.reduce((sum, player) => sum + player.minutes, 0) || 1;
-  const benchMinutes = Math.max(0, 240 - onCourtMinutes);
-  const pace = avg('pace');
-  // Per PLAYER-minute: (ORtg/100 × pace) / 48 team-minutes ÷ 5 players on court.
-  const benchPtsPerMin = (avg('off') * pace) / 24000;
+  const pace = overrides.pace ?? avg('pace');
   // Efficiency credit: rebounding and playmaking convert into extra
   // possessions and are folded into the projected scoring.
   const possessionValue = avg('off') / 112;
   const efficiencyBonus = roster.reduce((sum, player) => sum + 0.12 * player.reb + 0.18 * player.ast, 0) * possessionValue;
-  const teamPpg = roster.reduce((sum, player) => sum + player.pts, 0) + benchMinutes * benchPtsPerMin + efficiencyBonus;
+  const teamPpg = roster.reduce((sum, player) => sum + player.pts, 0) + efficiencyBonus;
   const off = Math.round((teamPpg * 100) / pace);
-  const def = Math.round(avg('def'));
+  const def = Math.round(overrides.def ?? avg('def'));
   return {
     code,
     name,
@@ -44,14 +42,14 @@ export function lineupTeam(league, players, code, name) {
     pace,
     ppg: teamPpg,
     papg: null,
-    efg: avg('efg'),
-    ftr: avg('ftr'),
-    orb: avg('orb'),
-    drb: avg('drb'),
-    tov: avg('tov'),
-    oppEfg: avg('oppEfg'),
-    oppFtr: avg('oppFtr'),
-    oppTov: avg('oppTov'),
+    efg: overrides.efg ?? avg('efg'),
+    ftr: overrides.ftr ?? avg('ftr'),
+    orb: overrides.orb ?? avg('orb'),
+    drb: overrides.drb ?? avg('drb'),
+    tov: overrides.tov ?? avg('tov'),
+    oppEfg: overrides.oppEfg ?? avg('oppEfg'),
+    oppFtr: overrides.oppFtr ?? avg('oppFtr'),
+    oppTov: overrides.oppTov ?? avg('oppTov'),
     roster,
   };
 }
@@ -111,7 +109,15 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
   const run = (nextSeed = seed) => {
     if (!ready) return;
     const home = lineupTeam(league, squad.players, squad.code || 'FIVE', squad.label || lineupLabel);
-    setResult(simSingleGame(league, home, opponent, { seed: nextSeed, neutral: true, log: true }));
+    // The opponent is modeled as just its starting five — the same five-man
+    // model, carrying the real team's pace, defense, and four-factor rates.
+    const away = lineupTeam(league, opponent.roster.slice(0, 5), opponent.code, opponent.name, {
+      pace: opponent.pace,
+      def: opponent.def,
+      efg: opponent.efg, ftr: opponent.ftr, orb: opponent.orb, drb: opponent.drb, tov: opponent.tov,
+      oppEfg: opponent.oppEfg, oppFtr: opponent.oppFtr, oppTov: opponent.oppTov,
+    });
+    setResult(simSingleGame(league, home, away, { seed: nextSeed, neutral: true, log: true }));
     setPlaybackDone(false);
   };
   const rerun = () => {
@@ -130,7 +136,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
           <span className="bcast-kicker">Simulation step</span>
           <h3 className="mt-2 font-display text-2xl tracking-wide">Play the game with your five</h3>
         </div>
-        <p className="dg-sim__note max-w-md">The final score is built from your five players' efficiency — per-game scoring plus rebound and assist credit — against the opponent's ratings. Every simulated line is a model estimate, never observed performance.</p>
+        <p className="dg-sim__note max-w-md">The final score is built from your five players' efficiency — each plays all 48 minutes, per-game scoring plus rebound and assist credit — against the opponent's starting five, modeled the same way. Every simulated line is a model estimate, never observed performance.</p>
       </div>
       <div className="dg-sim__controls mt-4">
         {squads.length > 1 && (

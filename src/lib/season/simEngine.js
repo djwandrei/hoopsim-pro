@@ -442,25 +442,34 @@ function simulatePlayoffs(league, standings, rng, { defenseWeight }) {
       bracketSeeds = rows.slice(0, 8);
     }
     const seededCount = 2 ** Math.floor(Math.log2(bracketSeeds.length));
-    let survivors = bracketSeeds.slice(0, seededCount);
-    const roundNames = ['First round', 'Conference semifinals', 'Conference finals', 'Semifinals', 'Finals'];
-    const reachNames = ['r1', 'sf', 'cf', 'semis', 'finals'];
+    // Standard NBA bracket: 1v8 / 4v5 / 2v7 / 3v6 in the first round, and
+    // winners cross instead of re-seeding (so the 1 and 2 seeds can only meet
+    // in the conference finals). Round names follow the rounds remaining.
+    const totalRounds = Math.max(1, Math.round(Math.log2(seededCount)));
+    const roundName = left => (left >= 3 ? 'First round' : left === 2 ? 'Conference semifinals' : 'Conference finals');
+    const reachName = left => (left >= 3 ? 'r1' : left === 2 ? 'sf' : 'cf');
+    let pending = bracketPairs(seededCount).map(([a, b]) => [bracketSeeds[a], bracketSeeds[b]]);
     const seriesLog = [];
     let roundIndex = 0;
-    while (survivors.length > 1) {
-      const name = roundNames[Math.min(roundIndex, roundNames.length - 1)];
+    let conferenceChamp = null;
+    while (pending.length > 0) {
+      const left = totalRounds - roundIndex;
+      const name = roundName(left);
       const winners = [];
-      for (let i = 0; i < survivors.length; i += 2) {
-        const series = simSeries(survivors[i], survivors[i + 1], 7, rng, options);
+      for (const [first, second] of pending) {
+        const series = simSeries(first, second, 7, rng, options);
         seriesLog.push({ round: name, higher: series.higher.code, lower: series.lower.code, higherSeed: series.higher.seed, lowerSeed: series.lower.seed, winner: series.winner.code, games: series.results });
-        reach[series.loser.code] = reachNames[Math.min(roundIndex, reachNames.length - 1)];
+        reach[series.loser.code] = reachName(left);
         winners.push(series.winner);
       }
-      survivors = winners;
+      // Winners stay in bracket order: adjacent winners meet in the next round.
+      pending = [];
+      for (let i = 0; i + 1 < winners.length; i += 2) pending.push([winners[i], winners[i + 1]]);
+      if (winners.length === 1) conferenceChamp = winners[0];
       roundIndex += 1;
     }
     rounds.push({ conference, playIn, series: seriesLog });
-    conferenceChamps.push(survivors[0]);
+    conferenceChamps.push(conferenceChamp);
   }
   const finals = simSeries(conferenceChamps[0], conferenceChamps[1], 7, rng, options);
   reach[finals.loser.code] = 'finals';

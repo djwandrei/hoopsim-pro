@@ -25,24 +25,10 @@ import {
   gamePointsForOutcome } from
 '@/lib/dailyGames/boardSource';
 import { hydratePresentationBoard, loadSwishIqPlayerMetadata } from '@/lib/dailyGames/boardHydration';
+import { createRunStore } from '@/lib/dailyGames/runStorage';
 import '@/components/dailyGames/dailyGames.css';
 
-const STORAGE_KEY = 'swishiq-studio-fix-the-five';
-const STORAGE_VERSION = 1;
-
-function emptyStore() {
-  return { version: STORAGE_VERSION, runs: {} };
-}
-
-function readStore() {
-  try {
-    const stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || 'null');
-    if (!stored || stored.version !== STORAGE_VERSION || typeof stored !== 'object') return emptyStore();
-    return { ...emptyStore(), ...stored, runs: stored.runs && typeof stored.runs === 'object' ? stored.runs : {} };
-  } catch {
-    return emptyStore();
-  }
-}
+const RUN_STORE = createRunStore('swishiq-studio-fix-the-five');
 
 export default function FixTheFive() {
   const urlSeed = useMemo(() => dailySeedFromPageSearch(window.location.search), []);
@@ -64,9 +50,7 @@ export default function FixTheFive() {
   const { year, setYear, source, league } = useSeasonSource();
 
   const persist = useCallback((nextSeed, nextSelections, nextOutcomes) => {
-    const store = readStore();
-    store.runs[nextSeed] = { selections: nextSelections, outcomes: nextOutcomes };
-    try {window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store));} catch {/* visit-only */}
+    RUN_STORE.write(nextSeed, { selections: nextSelections, outcomes: nextOutcomes });
   }, []);
 
   const loadBoard = useCallback(async (targetSeed = seed) => {
@@ -75,7 +59,7 @@ export default function FixTheFive() {
       const loaded = await loadSwishIQDailyBoard({ gameKind: 'fix-the-five', dailySeed: targetSeed, family: urlFamily });
       setBoard(loaded);
       setStatus('ready');
-      const store = readStore().runs[loaded.dailySeed] || {};
+      const store = RUN_STORE.read(loaded.dailySeed);
       const storedSelections = store.selections && typeof store.selections === 'object' ? store.selections : {};
       const storedOutcomes = store.outcomes && typeof store.outcomes === 'object' ? store.outcomes : {};
       setSelections(storedSelections);
@@ -169,7 +153,7 @@ export default function FixTheFive() {
   const outgoing = activeChallenge ?
   activeChallenge.lineup.find((player) => player.playerRef === activeChallenge.removePlayerRef) :
   null;
-  const simSquads = challenges.
+  const simSquads = useMemo(() => challenges.
   filter((challenge) => selections[challenge.challengeId]).
   map((challenge) => {
     const picked = challenge.candidates.find((entry) => entry.playerRef === selections[challenge.challengeId]);
@@ -177,8 +161,8 @@ export default function FixTheFive() {
     map((player) => player.playerRef === challenge.removePlayerRef ? picked : player).
     filter(Boolean);
     return { id: challenge.challengeId, label: challenge.title, code: challenge.teamCode, players };
-  });
-  const current = completedCount === challenges.length ? 2 : 0;
+  }), [challenges, selections]);
+  const current = completedCount === challenges.length ? 2 : allPicked ? 1 : 0;
   const statusState = status === 'error' ? errorKind || 'verification-error' : status;
 
   // Flow glue: after a pick, undo, or reveal, follow the run to the step the

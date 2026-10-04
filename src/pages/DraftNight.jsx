@@ -24,10 +24,10 @@ import {
   gamePointsForOutcome,
 } from '@/lib/dailyGames/boardSource';
 import { hydratePresentationBoard, loadSwishIqPlayerMetadata } from '@/lib/dailyGames/boardHydration';
+import { createRunStore } from '@/lib/dailyGames/runStorage';
 import '@/components/dailyGames/dailyGames.css';
 
-const STORAGE_KEY = 'swishiq-studio-draft-night';
-const STORAGE_VERSION = 1;
+const RUN_STORE = createRunStore('swishiq-studio-draft-night');
 
 // Rendered inside GameShell's CourtThemeProvider, so it can read the team the
 // visitor picked in the palette picker and theme the sim court from it — the
@@ -35,20 +35,6 @@ const STORAGE_VERSION = 1;
 function DraftSimPanel(props) {
   const { palette } = useCourtTheme();
   return <LineupSimPanel {...props} courtPalette={palette} scoreboardOverlay />;
-}
-
-function emptyStore() {
-  return { version: STORAGE_VERSION, runs: {} };
-}
-
-function readStore() {
-  try {
-    const stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || 'null');
-    if (!stored || stored.version !== STORAGE_VERSION || typeof stored !== 'object') return emptyStore();
-    return { ...emptyStore(), ...stored, runs: stored.runs && typeof stored.runs === 'object' ? stored.runs : {} };
-  } catch {
-    return emptyStore();
-  }
 }
 
 export default function DraftNight() {
@@ -68,9 +54,7 @@ export default function DraftNight() {
   const { year, setYear, source, league } = useSeasonSource();
 
   const persist = useCallback((nextSeed, nextPicks, nextOutcome) => {
-    const store = readStore();
-    store.runs[nextSeed] = { picks: nextPicks, outcome: nextOutcome };
-    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch { /* visit-only */ }
+    RUN_STORE.write(nextSeed, { picks: nextPicks, outcome: nextOutcome });
   }, []);
 
   const loadBoard = useCallback(async (targetSeed = seed) => {
@@ -79,7 +63,7 @@ export default function DraftNight() {
       const loaded = await loadSwishIQDailyBoard({ gameKind: 'draft-night', dailySeed: targetSeed, family: urlFamily });
       setBoard(loaded);
       setStatus('ready');
-      const store = readStore().runs[loaded.dailySeed] || {};
+      const store = RUN_STORE.read(loaded.dailySeed);
       const storedPicks = store.picks && typeof store.picks === 'object' ? store.picks : {};
       setPicks(storedPicks);
       setOutcome(store.outcome || null);
@@ -160,14 +144,14 @@ export default function DraftNight() {
     persist(board.dailySeed, {}, null);
   }, [board, persist]);
 
-  const simSquads = outcome ? [{
+  const simSquads = useMemo(() => (outcome ? [{
     id: 'draft',
     label: presentation?.deck?.title || 'Your draft five',
     code: 'FIVE',
     players: orderedPicks
       .map(entry => rounds.flatMap(round => round.candidates).find(candidate => candidate.playerRef === entry.playerRef))
       .filter(Boolean),
-  }] : [];
+  }] : []), [outcome, presentation, orderedPicks, rounds]);
   const points = gamePointsForOutcome(outcome);
   const statusState = status === 'error' ? errorKind || 'verification-error' : status;
 

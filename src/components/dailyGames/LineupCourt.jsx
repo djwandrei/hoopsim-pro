@@ -2,13 +2,48 @@ import React from 'react';
 import { Ban } from 'lucide-react';
 import { playerAsset } from '@/components/studio/teamAssets';
 
-// Half-court slots (percent of the court) by primary position; players land
-// on their first listed slot, falling back to a forward slot.
+// Half-court slot pool (percent of the court). Positions list their preferred
+// spots first; the allocator never lets two markers share a slot.
 const SLOTS = {
-  C: [{ x: 50, y: 16 }],
-  F: [{ x: 20, y: 40 }, { x: 80, y: 40 }],
-  G: [{ x: 34, y: 76 }, { x: 66, y: 76 }],
+  C: [{ x: 50, y: 14 }, { x: 50, y: 27 }],
+  F: [{ x: 22, y: 44 }, { x: 78, y: 44 }, { x: 36, y: 30 }, { x: 64, y: 30 }],
+  G: [{ x: 30, y: 78 }, { x: 70, y: 78 }, { x: 50, y: 63 }],
 };
+const ALL_SLOTS = [...SLOTS.C, ...SLOTS.F, ...SLOTS.G];
+
+function allocateSlots(lineup) {
+  const taken = new Set();
+  const slotKey = slot => `${slot.x},${slot.y}`;
+  const positionsOf = player => (Array.isArray(player.positions) ? player.positions : []);
+
+  const assigned = lineup.map(() => null);
+  // Pass 1: each player takes the first free slot among their listed positions.
+  lineup.forEach((player, index) => {
+    for (const position of positionsOf(player)) {
+      const slot = (SLOTS[position] || []).find(candidate => !taken.has(slotKey(candidate)));
+      if (slot) { assigned[index] = slot; taken.add(slotKey(slot)); break; }
+    }
+  });
+  // Pass 2: anyone still unplaced takes the free slot closest to their
+  // preferred spots — so extra centers spread around the key instead of
+  // stacking on a forward slot.
+  lineup.forEach((player, index) => {
+    if (assigned[index]) return;
+    const preferred = positionsOf(player).flatMap(position => SLOTS[position] || []);
+    const anchors = preferred.length ? preferred : ALL_SLOTS;
+    const free = ALL_SLOTS.filter(slot => !taken.has(slotKey(slot)));
+    if (!free.length) { assigned[index] = ALL_SLOTS[0]; return; }
+    let best = free[0];
+    let bestDistance = Infinity;
+    for (const slot of free) {
+      const distance = Math.min(...anchors.map(anchor => (anchor.x - slot.x) ** 2 + (anchor.y - slot.y) ** 2));
+      if (distance < bestDistance) { bestDistance = distance; best = slot; }
+    }
+    assigned[index] = best;
+    taken.add(slotKey(best));
+  });
+  return assigned;
+}
 
 function initials(name) {
   return name.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase();
@@ -31,23 +66,8 @@ function CourtMarker({ x, y, player, tone = 'starter', tag, sub }) {
 }
 
 export default function LineupCourt({ lineup, removedPlayerRef, incomingPlayer, incomingLabel = 'Incoming' }) {
-  const used = new Map();
-  const placed = lineup.map(player => {
-    const positions = Array.isArray(player.positions) ? player.positions : [];
-    let slot = null;
-    for (const position of positions) {
-      const list = SLOTS[position] || [];
-      const index = used.get(position) || 0;
-      if (index < list.length) { slot = list[index]; used.set(position, index + 1); break; }
-    }
-    if (!slot) {
-      const list = SLOTS.F;
-      const index = used.get('F') || 0;
-      slot = list[Math.min(index, list.length - 1)];
-      used.set('F', index + 1);
-    }
-    return { ...player, _x: slot.x, _y: slot.y };
-  });
+  const slots = allocateSlots(lineup);
+  const placed = lineup.map((player, index) => ({ ...player, _x: slots[index].x, _y: slots[index].y }));
   const removed = placed.find(player => player.playerRef === removedPlayerRef);
   return (
     <div className="dg-court">

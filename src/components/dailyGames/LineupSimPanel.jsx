@@ -133,7 +133,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
   }, [result]);
 
   return (
-    <section className={scoreboardOverlay ? 'min-w-0' : 'dg-sim'} aria-label="Simulate a game with the lineup">
+    <section className="dg-sim" aria-label="Simulate a game with the lineup">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <span className="bcast-kicker">Simulation step</span>

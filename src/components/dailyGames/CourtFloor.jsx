@@ -33,8 +33,7 @@ export default function CourtFloor({ teamCode, palette: paletteProp = null }) {
         <linearGradient id={`gloss-${id}`} x1="0" y1="0" x2="0" y2="1"><stop stopColor="hsl(0 0% 100% / .09)" /><stop offset=".45" stopColor="hsl(0 0% 100% / 0)" /></linearGradient>
         <radialGradient id={`spot-${id}`}><stop stopColor="hsl(var(--court-rim))" stopOpacity=".16" /><stop offset="1" stopColor="hsl(var(--court-rim))" stopOpacity="0" /></radialGradient>
       </defs>
-      {/* Arena backdrop: dark bowl with four rows of stands */}
-      <rect width="1000" height="600" fill="hsl(var(--court-canvas))" />
+      {/* Arena stands on a transparent backdrop, without a rectangular fill. */}
       {[0, 1, 2, 3].map(row => (
         <g key={row} opacity={.6 - row * .13}>
           {Array.from({ length: 26 }, (_, i) => (

@@ -3,6 +3,7 @@ import { ArrowUpRight, ArrowDownRight, Check, Lock } from 'lucide-react';
 import { Image } from '@/components/ui/image';
 import { playerAsset, teamAsset } from '@/components/studio/teamAssets';
 import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPalettes';
+import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { hasPublicStats, statNumber, statDisplay } from '@/lib/dailyGames/boardHydration';
 
 const STRIP_STATS = [['PPG', 'points'], ['RPG', 'rebounds'], ['APG', 'assists']];
@@ -21,7 +22,8 @@ function per36(player, key) {
 export default function TapeDuelCard({ player, reference = null, selected = false, disabled = false, ctaLabel = 'Swap in', onSelect }) {
   const logo = teamAsset(player.teamCode);
   const palette = paletteForTeam(player.teamCode);
-  const ink = readableTeamInk(player.teamCode);
+  const { mode } = useCourtTheme();
+  const ink = readableTeamInk(player.teamCode, mode);
   const headshot = playerAsset(player.headshotPath || null);
   const stats = hasPublicStats(player);
   let net = null;

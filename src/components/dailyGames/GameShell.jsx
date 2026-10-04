@@ -10,7 +10,7 @@ export default function GameShell({ children }) {
     <CourtThemeProvider>
       <div className="studio-workspace min-h-screen bg-canvas">
         <DJHCHeader />
-        <a href="#game-content" className="sr-only z-50 rounded bg-gold p-3 text-canvas focus:not-sr-only focus:fixed focus:left-3 focus:top-3">Skip to game</a>
+        <a href="#game-content" className="sr-only z-50 rounded bg-gold p-3 text-primary-foreground focus:not-sr-only focus:fixed focus:left-3 focus:top-3">Skip to game</a>
         {children}
         <DJHCFooter />
       </div>

@@ -67,6 +67,7 @@ module.exports = {
   			gold: 'hsl(var(--court-accent) / <alpha-value>)',
   			goldSoft: 'hsl(var(--court-focus) / <alpha-value>)',
   			trim: 'hsl(var(--court-trim) / <alpha-value>)',
+  			'trim-ink': 'hsl(var(--court-trim-ink) / <alpha-value>)',
   			positive: 'hsl(var(--court-positive) / <alpha-value>)',
   			royal: 'hsl(var(--court-royal) / <alpha-value>)',
             'court-wood-light': 'hsl(var(--court-wood-light) / <alpha-value>)',

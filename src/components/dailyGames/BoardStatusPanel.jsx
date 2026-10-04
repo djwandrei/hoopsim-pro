@@ -16,7 +16,7 @@ export default function BoardStatusPanel({ state, error, onRetry }) {
   const Icon = state === 'loading' ? Loader2 : state === 'board-unavailable' ? CircleOff : AlertTriangle;
   return (
     <section className={`dg-status ${isError ? 'dg-status--error' : 'dg-status--loading'}`} role="status">
-      <Icon className={`h-5 w-5 shrink-0 ${state === 'loading' ? 'animate-spin text-gold' : 'text-trim'}`} />
+      <Icon className={`h-5 w-5 shrink-0 ${state === 'loading' ? 'animate-spin text-gold' : 'text-trim-ink'}`} />
       <div className="min-w-0 flex-1">
         <h2 className="font-display text-xl tracking-wide">{copy.title}</h2>
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{error ? `${copy.detail} (${error.message})` : copy.detail}</p>

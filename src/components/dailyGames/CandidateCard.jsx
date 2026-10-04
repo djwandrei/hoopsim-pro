@@ -3,6 +3,7 @@ import { ArrowUpRight, ArrowDownRight, Check, Lock } from 'lucide-react';
 import { Image } from '@/components/ui/image';
 import { playerAsset, teamAsset } from '@/components/studio/teamAssets';
 import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPalettes';
+import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { hasPublicStats, statDisplay, statNumber } from '@/lib/dailyGames/boardHydration';
 
 const STAT_LABELS = [['PTS', 'points'], ['REB', 'rebounds'], ['AST', 'assists'], ['MPG', 'minutes']];
@@ -22,7 +23,8 @@ function candidateDeltas(player, outgoing) {
 export default function CandidateCard({ player, outgoing, disabled = false, selected = false, revealed = false, ctaLabel = 'Swap in', onSelect }) {
   const logo = teamAsset(player.teamCode);
   const palette = paletteForTeam(player.teamCode);
-  const ink = readableTeamInk(player.teamCode);
+  const { mode } = useCourtTheme();
+  const ink = readableTeamInk(player.teamCode, mode);
   const headshot = playerAsset(player.headshotPath || null);
   const deltas = candidateDeltas(player, outgoing);
   const locked = selected || revealed;

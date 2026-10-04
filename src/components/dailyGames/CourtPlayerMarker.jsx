@@ -12,7 +12,7 @@ export default function CourtPlayerMarker({ point, player, tone = 'starter', tag
         ? <Image src={headshot} alt={player.displayName} fittingType="fit" loading="eager" className="dg-court__portrait" />
         : <span className="dg-court__initials" aria-hidden="true">{initials}</span>}
       <figcaption className="dg-court__caption">
-        <span className="dg-court__name">{player.displayName}</span>
+        <span className="dg-court__name" title={player.displayName}>{player.displayName}</span>
         {sub && <span className="dg-court__sub">for {sub}</span>}
         {tag && <span className={`dg-court__tag dg-court__tag--${tone}`}>{tag}</span>}
       </figcaption>

@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 // Jumbotron digits that tick up through intermediate values when points are
-// scored, instead of jumping straight to the new total.
+// scored, and pop a floating "+N" chip like a broadcast score bug.
 export default function AnimatedScore({ value = 0, className = '' }) {
   const [display, setDisplay] = useState(0);
   const [phase, setPhase] = useState('idle'); // idle | ticking | landed
+  const [gain, setGain] = useState(0);
   const frameRef = useRef(null);
   const timeoutRef = useRef(null);
+  const gainRef = useRef(null);
   const fromRef = useRef(0);
 
   useEffect(() => {
@@ -16,10 +18,17 @@ export default function AnimatedScore({ value = 0, className = '' }) {
     if (reduced || value < from) {
       // Snap on reset (new game) and for reduced-motion users.
       cancelAnimationFrame(frameRef.current);
+      clearTimeout(gainRef.current);
       fromRef.current = value;
       setDisplay(value);
       setPhase('idle');
+      setGain(0);
       return undefined;
+    }
+    if (value - from > 0) {
+      setGain(value - from);
+      clearTimeout(gainRef.current);
+      gainRef.current = setTimeout(() => setGain(0), 950);
     }
     const start = performance.now();
     const duration = Math.min(220 + (value - from) * 60, 560);
@@ -40,12 +49,16 @@ export default function AnimatedScore({ value = 0, className = '' }) {
     return () => {
       cancelAnimationFrame(frameRef.current);
       clearTimeout(timeoutRef.current);
+      clearTimeout(gainRef.current);
     };
   }, [value]);
 
   return (
-    <span className={`${className} ${phase === 'ticking' ? 'is-ticking' : ''} ${phase === 'landed' ? 'is-landed' : ''}`}>
-      {display}
+    <span className="dg-score-wrap">
+      <span className={`${className} ${phase === 'ticking' ? 'is-ticking' : ''} ${phase === 'landed' ? 'is-landed' : ''}`}>
+        {display}
+      </span>
+      {gain > 0 && <span className="dg-score-gain" aria-hidden="true">+{gain}</span>}
     </span>
   );
 }

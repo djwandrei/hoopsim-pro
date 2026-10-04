@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FastForward } from 'lucide-react';
 import { teamAsset } from '@/components/studio/teamAssets';
+import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 import { TEAM_NAMES } from '@/lib/season/simEngine';
 import AnimatedScore from '@/components/dailyGames/AnimatedScore';
 
@@ -64,6 +65,8 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
   const [homeScore, awayScore] = current?.score || [0, 0];
   const homeLogo = teamAsset(homeCode);
   const awayLogo = teamAsset(awayCode);
+  const homePalette = paletteForTeam(homeCode);
+  const awayPalette = paletteForTeam(awayCode);
   const progress = total ? Math.round((index / total) * 100) : 0;
   const quarters = useMemo(() => {
     const byQuarter = new Map();
@@ -85,7 +88,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
         <span>Neutral court</span>
       </div>
       <div className="dg-live__board">
-        <div className="dg-live__club">
+        <div className="dg-live__club" style={{ '--dg-team': homePalette?.primary }}>
           <span className="dg-live__logo">{homeLogo && <img src={homeLogo} alt="" />}</span>
           <span className="dg-live__identity">
             <span className="dg-live__city">{cityName(homeCode, homeName) || 'Your Five'}</span>
@@ -100,7 +103,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
             <span className="dg-live__clock">{current ? current.clock : '12:00'}</span>
           </span>
         </div>
-        <div className="dg-live__club">
+        <div className="dg-live__club dg-live__club--away" style={{ '--dg-team': awayPalette?.primary }}>
           <AnimatedScore value={awayScore} className="dg-live__pts" />
           <span className="dg-live__identity">
             <span className="dg-live__city">{cityName(awayCode, awayName) || 'Away'}</span>

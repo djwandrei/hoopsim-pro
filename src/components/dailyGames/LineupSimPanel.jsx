@@ -175,7 +175,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
               result={result}
               onComplete={() => setPlaybackDone(true)} />
           </div>
-          {playbackDone && <>
+          {playbackDone && <div className="dg-flow-in space-y-4">
             <GameSummary label={squad.label || lineupLabel} opponent={opponent} opponentLogo={oppLogo} result={result} />
             <BoxTable title={`${squad.label || lineupLabel} — box score`} box={result.boxHome} teamStats={result.statsHome} teamPoints={result.homePts} />
             <details>
@@ -193,7 +193,7 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
                 ))}
               </div>
             </details>
-          </>}
+          </div>}
         </div>
       )}
     </section>

@@ -194,10 +194,10 @@ export default function DraftNight() {
             {!outcome && (
               <DraftDesk rounds={rounds} picks={picks} roster={draftRoster} needs={needs} fit={fit} activeRound={activeRound} onSelectRound={jumpToRound} complete={allPicked} />
             )}
-            {outcome && <GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} />}
+            {outcome && <div className="dg-reveal"><GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} /></div>}
             {outcome && simSquads.length > 0 && <LineupSimPanel league={league} squads={simSquads} lineupLabel="Your draft five" />}
             {!outcome && allPicked && (
-              <section className="dg-lock" aria-label="Lock the draft">
+              <section className="dg-lock dg-flow-in" aria-label="Lock the draft">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <span className="bcast-kicker">Draft locked</span>
@@ -227,7 +227,7 @@ export default function DraftNight() {
             {rounds.map((round, index) => {
               if (outcome || index !== activeIndex || picks[round.roundId]) return null;
               return (
-                <section key={round.roundId} className="dg-round" aria-label={round.title}>
+                <section key={round.roundId} className="dg-round dg-flow-in" aria-label={round.title}>
                   <div className="dg-round__title">
                     <h3 className="font-display text-xl tracking-wide">Round {round.roundNumber} · {round.teamCode}</h3>
                     <span className="dg-round__counter">Pick {pickCount}/5</span>

@@ -7,7 +7,7 @@ export default function HowToPlay({ steps = [], note, controls = null }) {
   const [open, setOpen] = useState(false);
   if (!steps.length && !controls) return null;
   return (
-    <div className="dg-howto" aria-label="How this run works">
+    <div className="dg-howto dg-flow-in" aria-label="How this run works">
       <div className="dg-howto__bar">
         <button type="button" className="bcast-kicker dg-howto__toggle" aria-expanded={open} onClick={() => setOpen(value => !value)}>
           <Info className="h-3.5 w-3.5 shrink-0" /> How this run works

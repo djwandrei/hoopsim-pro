@@ -5,7 +5,8 @@ import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPal
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { statDisplay, statNumber } from '@/lib/dailyGames/boardHydration';
 
-const STAT_COLUMNS = [['PPG', 'points'], ['RPG', 'rebounds'], ['APG', 'assists']];
+const STAT_COLUMNS = [['MPG', 'minutes'], ['PPG', 'points'], ['RPG', 'rebounds'], ['APG', 'assists']];
+const TOTAL_COLUMNS = [['PPG', 'points'], ['RPG', 'rebounds'], ['APG', 'assists']];
 const ROLE_ORDER = { G: 0, F: 1, C: 2 };
 const roleOf = player => {
   const positions = (player.positions || []).map(position => String(position).toUpperCase());
@@ -21,15 +22,27 @@ export default function DepthChart({ lineup = [], removedPlayerRef = null, incom
   const rows = lineup.slice(0, 5)
     .map(player => {
       const outgoing = player.playerRef === removedPlayerRef;
-      return { player: outgoing && incomingPlayer ? incomingPlayer : player, role: roleOf(player), outgoing };
+      return { player: outgoing && incomingPlayer ? incomingPlayer : player, outgoing };
     })
-    .sort((a, b) => ROLE_ORDER[a.role] - ROLE_ORDER[b.role]);
+    .sort((a, b) => ROLE_ORDER[roleOf(a.player)] - ROLE_ORDER[roleOf(b.player)]);
+  const totals = TOTAL_COLUMNS.map(([label, key]) => {
+    const values = rows.map(({ player }) => statNumber(player, key)).filter(value => value !== null);
+    return { label, value: values.length ? values.reduce((sum, value) => sum + value, 0) : null };
+  });
   return (
     <div className="dg-depth" role="group" aria-label="Depth chart of the starting five">
       <header className="dg-depth__head">
         <span className="bcast-kicker">Depth chart</span>
         <span className="dg-depth__legend">Starting five · PG to C</span>
       </header>
+      <div className="dg-depth__cols" aria-hidden="true">
+        <span>Pos</span>
+        <span className="dg-depth__spacer" />
+        <span>Player</span>
+        <div className="dg-depth__stats dg-depth__stats--head">
+          {STAT_COLUMNS.map(([label]) => <span key={label} className="dg-depth__col-label">{label}</span>)}
+        </div>
+      </div>
       <ol className="dg-depth__rows">
         {rows.map(({ player, outgoing }) => {
           const palette = paletteForTeam(player.teamCode);
@@ -71,6 +84,18 @@ export default function DepthChart({ lineup = [], removedPlayerRef = null, incom
           );
         })}
       </ol>
+      <footer className="dg-depth__totals">
+        <span className="dg-depth__spacer" />
+        <span className="dg-depth__totals-label">Five-man totals</span>
+        <dl className="dg-depth__stats dg-depth__stats--totals">
+          {totals.map(({ label, value }) => (
+            <div key={label} className="dg-depth__stat">
+              <dt>{label}</dt>
+              <dd>{statDisplay(value)}</dd>
+            </div>
+          ))}
+        </dl>
+      </footer>
     </div>
   );
 }

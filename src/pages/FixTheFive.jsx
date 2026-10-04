@@ -216,7 +216,7 @@ export default function FixTheFive() {
                     </div>
                     
                   </section>
-                  <div key={activeChallenge.challengeId} className="dg-flow-in space-y-3">
+                  <div key={activeChallenge.challengeId} className="dg-flow-in space-y-4">
                     <div className="flex justify-center">
                       <div className="inline-flex rounded-lg border border-border/40 bg-canvas/60 p-0.5" role="tablist" aria-label="Lineup view">
                         {[['court', 'Court'], ['depth', 'Depth chart']].map(([value, label]) => (
@@ -226,7 +226,7 @@ export default function FixTheFive() {
                             role="tab"
                             aria-selected={lineupView === value}
                             onClick={() => setLineupView(value)}
-                            className={`px-3 py-1.5 rounded-md font-mono text-[0.6rem] font-semibold uppercase tracking-[0.14em] transition-colors ${lineupView === value ? 'bg-gold text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                            className={`h-11 px-4 rounded-md font-mono text-[0.6rem] font-semibold uppercase tracking-[0.14em] transition-colors ${lineupView === value ? 'bg-gold text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                           >{label}</button>
                         ))}
                       </div>

@@ -8,7 +8,7 @@ export default function BoardControlStrip({ presentation, seed, onSeedChange }) 
     <div className="dg-strip">
       <span className="dg-badge"><span className="h-1.5 w-1.5 rounded-full bg-positive" /> Board {presentation.dailySeed}</span>
       <span className="dg-badge dg-badge--plain">{season} · {presentation.packageRef.phase.replaceAll('_', ' ')}</span>
-      <span className="dg-badge dg-badge--plain hidden">{presentation.packageRef.packageVersion}</span>
+      
       <span className="dg-strip__spacer" />
       <label className="dg-date">
         Board date

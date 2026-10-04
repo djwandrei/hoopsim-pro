@@ -1,11 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FastForward } from 'lucide-react';
 import { teamAsset } from '@/components/studio/teamAssets';
+import { TEAM_NAMES } from '@/lib/season/simEngine';
 import AnimatedScore from '@/components/dailyGames/AnimatedScore';
 
-// Broadcast jumbotron: plays the simulated play-by-play back in real time,
-// with the score updating (and flashing) as every possession resolves.
-export default function LiveScoreboard({ homeCode = '', awayCode = '', result, onComplete }) {
+const cityName = (code, name) => name || TEAM_NAMES[code] || (code || '').toUpperCase();
+
+// Arena LED jumbotron: plays the simulated play-by-play back in real time,
+// with the score updating (and flashing) as every possession resolves and a
+// quarter-by-quarter line building underneath, like a real scoreboard.
+export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName, awayName, result, onComplete }) {
   const pbp = result?.pbp || [];
   const total = pbp.length;
   const [index, setIndex] = useState(0);
@@ -61,26 +65,66 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', result, o
   const homeLogo = teamAsset(homeCode);
   const awayLogo = teamAsset(awayCode);
   const progress = total ? Math.round((index / total) * 100) : 0;
+  const quarters = useMemo(() => {
+    const byQuarter = new Map();
+    for (const event of pbp) {
+      if (!event?.q || event.q === 'FINAL') continue;
+      const slot = byQuarter.get(event.q) || { home: 0, away: 0 };
+      if (event.side === 'home') slot.home += event.pts || 0;
+      else if (event.side === 'away') slot.away += event.pts || 0;
+      byQuarter.set(event.q, slot);
+    }
+    return [...byQuarter.entries()];
+  }, [pbp]);
+  const gridColumns = `4.75rem repeat(${Math.max(quarters.length, 4)}, minmax(0, 1fr))`;
 
   return (
     <section className={`dg-live ${done ? 'dg-live--final' : ''}`} aria-label="Live scoreboard">
+      <div className="dg-live__masthead" aria-hidden="true">
+        <span>SwishIQ simulation feed</span>
+        <span>Neutral court</span>
+      </div>
       <div className="dg-live__board">
-        <div className="dg-live__team">
+        <div className="dg-live__club">
           <span className="dg-live__logo">{homeLogo && <img src={homeLogo} alt="" />}</span>
-          <span className="dg-live__code">{homeCode || 'YOUR FIVE'}</span>
+          <span className="dg-live__identity">
+            <span className="dg-live__city">{cityName(homeCode, homeName) || 'Your Five'}</span>
+            <span className="dg-live__code">{homeCode || 'FIVE'}</span>
+          </span>
           <AnimatedScore value={homeScore} className="dg-live__pts" />
         </div>
         <div className="dg-live__mid">
           <span className={`dg-live__badge ${playing ? 'dg-live__badge--live' : ''}`}>{done ? 'FINAL' : 'LIVE'}</span>
-          <span className="dg-live__qtr">{current ? current.q : 'TIP-OFF'}</span>
-          <span className="dg-live__clock">{current ? current.clock : '12:00'}</span>
+          <span className="dg-live__period">
+            <span className="dg-live__qtr">{current ? current.q : 'Q1'}</span>
+            <span className="dg-live__clock">{current ? current.clock : '12:00'}</span>
+          </span>
         </div>
-        <div className="dg-live__team dg-live__team--away">
+        <div className="dg-live__club">
           <AnimatedScore value={awayScore} className="dg-live__pts" />
-          <span className="dg-live__code">{awayCode || 'AWAY'}</span>
+          <span className="dg-live__identity">
+            <span className="dg-live__city">{cityName(awayCode, awayName) || 'Away'}</span>
+            <span className="dg-live__code">{awayCode || 'AWAY'}</span>
+          </span>
           <span className="dg-live__logo">{awayLogo && <img src={awayLogo} alt="" />}</span>
         </div>
       </div>
+      {quarters.length > 0 && (
+        <div className="dg-live__quarters" aria-hidden="true">
+          <div className="dg-live__qhead" style={{ display: 'grid', gridTemplateColumns: gridColumns, gap: '.25rem' }}>
+            <span></span>
+            {quarters.map(([label]) => <span key={label}>{label.replace('Q', '')}</span>)}
+          </div>
+          <div className="dg-live__qrow" style={{ display: 'grid', gridTemplateColumns: gridColumns, gap: '.25rem' }}>
+            <span>{homeCode || 'FIVE'}</span>
+            {quarters.map(([label, slot]) => <span key={label}>{slot.home}</span>)}
+          </div>
+          <div className="dg-live__qrow" style={{ display: 'grid', gridTemplateColumns: gridColumns, gap: '.25rem' }}>
+            <span>{awayCode || 'AWAY'}</span>
+            {quarters.map(([label, slot]) => <span key={label}>{slot.away}</span>)}
+          </div>
+        </div>
+      )}
       <div className="dg-live__progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>
       <p key={index} className="dg-live__ticker" role="status">
         {current ? `${current.q} ${current.clock} — ${current.text}` : 'Teams are on the floor…'}

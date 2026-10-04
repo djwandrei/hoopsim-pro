@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Play, RefreshCcw } from 'lucide-react';
-import { simSingleGame } from '@/lib/season/simEngine';
+import { simSingleGame, TEAM_NAMES } from '@/lib/season/simEngine';
 import { teamAsset } from '@/components/studio/teamAssets';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
 import GameSummary from '@/components/dailyGames/GameSummary';
@@ -25,7 +25,8 @@ export function lineupTeam(league, players, code, name) {
   const onCourtMinutes = roster.reduce((sum, player) => sum + player.minutes, 0) || 1;
   const benchMinutes = Math.max(0, 240 - onCourtMinutes);
   const pace = avg('pace');
-  const benchPtsPerMin = (avg('off') * pace) / 4800;
+  // Per PLAYER-minute: (ORtg/100 × pace) / 48 team-minutes ÷ 5 players on court.
+  const benchPtsPerMin = (avg('off') * pace) / 24000;
   // Efficiency credit: rebounding and playmaking convert into extra
   // possessions and are folded into the projected scoring.
   const possessionValue = avg('off') / 112;
@@ -160,7 +161,13 @@ export default function LineupSimPanel({ league, squads = [], lineupLabel = 'You
       {result && (
         <div className="dg-sim__body mt-4 space-y-4">
           <div ref={summaryRef}>
-            <LiveScoreboard homeCode={squad.code} awayCode={opponent.code} result={result} onComplete={() => setPlaybackDone(true)} />
+            <LiveScoreboard
+              homeCode={squad.code}
+              awayCode={opponent.code}
+              homeName={TEAM_NAMES[squad.code] || squad.label || lineupLabel}
+              awayName={opponent.name}
+              result={result}
+              onComplete={() => setPlaybackDone(true)} />
           </div>
           {playbackDone && <>
             <GameSummary label={squad.label || lineupLabel} opponent={opponent} opponentLogo={oppLogo} result={result} />

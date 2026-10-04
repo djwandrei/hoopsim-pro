@@ -182,16 +182,16 @@ export default function FixTheFive() {
         state={statusState === 'ready' ? 'ready' : statusState === 'loading' ? 'idle' : 'error'}
         status={pending ? revealLabel || 'Working…' : completedCount === challenges.length ? 'Run verified' : statusState === 'ready' ? 'Blind run in progress' : null} />
       
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main className="mx-auto max-w-6xl px-4 py-4">
         <BoardStatusPanel state={statusState} error={error} onRetry={() => loadBoard(seed)} />
         {statusState === 'ready' && presentation &&
-        <div className="dg-tape-layout mt-5">
+        <div className="dg-tape-layout mt-4">
             <StepRail
             total={challenges.length}
             completedCount={pickCount + completedCount}
             label={pending ? 'Revealing' : completedCount === challenges.length ? 'Verified' : 'Locked picks'} />
           
-            <div className="min-w-0 space-y-5">
+            <div className="min-w-0 space-y-3">
               <HowToPlay
               controls={<BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />}
               steps={[
@@ -217,7 +217,7 @@ export default function FixTheFive() {
                     </div>
                     
                   </section>
-                  <div className="dg-flow-in space-y-4">
+                  <div className="dg-flow-in space-y-3">
                     <div className="flex justify-center">
                       <div className="inline-flex rounded-lg border border-border/40 bg-canvas/60 p-0.5" role="tablist" aria-label="Lineup view">
                         {[['court', 'Court'], ['depth', 'Depth chart']].map(([value, label]) => (

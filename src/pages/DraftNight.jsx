@@ -5,7 +5,8 @@ import LineupSimPanel from '@/components/dailyGames/LineupSimPanel';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
-import TapeDuelCard, { tapeMaxes } from '@/components/dailyGames/TapeDuelCard';
+import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
+import HowToPlay from '@/components/dailyGames/HowToPlay';
 import ProgressRail from '@/components/dailyGames/ProgressRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
@@ -161,8 +162,20 @@ export default function DraftNight() {
         {statusState === 'ready' && presentation && (
           <>
             <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} />
+            <HowToPlay
+              steps={[
+                'Draft one player per round — each round belongs to a different team, so pick with role fit in mind.',
+                'Compare candidates by their stat tiles: gold tiles (PPG, RPG, APG) carry the most scoring weight, and the per-36 chips show true pace-adjusted output.',
+                'Lock all five rounds blind — scores stay hidden and nothing is evaluated until the draft is locked.',
+                'Reveal once to score the draft against the verified evaluator. A perfect round earns 10 Game Points; exact estimates score in tiers.',
+              ]}
+              note="Your picks save in this browser — refresh anytime and the draft picks up where you left off."
+            />
             <div className="dg-board-hero">
-              <span className="bcast-kicker">Tonight's board</span>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="bcast-kicker">Tonight's board</span>
+                <span className="dg-badge">Rounds locked {pickCount}/5</span>
+              </div>
               <h2 className="dg-board-hero__title font-display tracking-wide">{presentation.deck.title}</h2>
               <p className="dg-board-hero__prompt text-muted-foreground">{presentation.deck.prompt}</p>
             </div>
@@ -211,7 +224,6 @@ export default function DraftNight() {
                       <TapeDuelCard
                         key={candidate.playerRef}
                         player={candidate}
-                        scale={tapeMaxes(round.candidates)}
                         selected={picks[round.roundId] === candidate.playerRef}
                         disabled={pending || Boolean(outcome)}
                         ctaLabel="Draft him"

@@ -5,7 +5,8 @@ import { playerAsset, teamAsset } from '@/components/studio/teamAssets';
 import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPalettes';
 import { hasPublicStats, statNumber, statDisplay } from '@/lib/dailyGames/boardHydration';
 
-const TAPE_STATS = [['PTS', 'points'], ['REB', 'rebounds'], ['AST', 'assists'], ['MIN', 'minutes']];
+const TAPE_STATS = [['PPG', 'points'], ['RPG', 'rebounds'], ['APG', 'assists'], ['MPG', 'minutes']];
+const GOLD_TILES = new Set(['points', 'rebounds', 'assists']);
 const EFFICIENCY_CHIPS = [['PTS/36', 'points'], ['REB/36', 'rebounds'], ['AST/36', 'assists']];
 
 // Per-36 pace-adjusted values, derived from the same observed per-game totals.
@@ -16,18 +17,9 @@ function per36(player, key) {
   return (value / minutes) * 36;
 }
 
-// Per-stat maximum across a set of players — the shared bar scale when a
-// comparison has no single reference player (Draft Night rounds).
-export function tapeMaxes(players) {
-  const maxes = {};
-  for (const [, key] of TAPE_STATS) {
-    const values = players.map(player => statNumber(player, key)).filter(value => value !== null);
-    maxes[key] = values.length ? Math.max(...values) : null;
-  }
-  return maxes;
-}
-
-export default function TapeDuelCard({ player, reference = null, scale = null, selected = false, disabled = false, ctaLabel = 'Swap in', onSelect }) {
+// Blueprint-style player card: big display identity, faint team watermark,
+// stat tile grid, and delta chips against the outgoing reference — no bars.
+export default function TapeDuelCard({ player, reference = null, selected = false, disabled = false, ctaLabel = 'Swap in', onSelect }) {
   const logo = teamAsset(player.teamCode);
   const palette = paletteForTeam(player.teamCode);
   const ink = readableTeamInk(player.teamCode);
@@ -48,37 +40,44 @@ export default function TapeDuelCard({ player, reference = null, scale = null, s
       style={{ '--dg-team': palette.primary }}
       aria-label={player.displayName}
     >
+      {logo && <img src={logo} alt="" loading="lazy" aria-hidden="true" className="dg-duel__watermark" />}
       <header className="dg-duel__head">
         {headshot && <Image src={headshot} alt="" fittingType="fit" className="dg-duel__shot" />}
         <div className="min-w-0 flex-1">
           <h3 className="dg-duel__name">{player.displayName}</h3>
           <p className="dg-duel__meta" style={{ color: ink }}>
-            {logo && <img src={logo} alt="" loading="lazy" className="dg-duel__logo" />}
             <span className="truncate">{player.positions.join('/')}{player.age ? ` · Age ${player.age}` : ''}</span>
           </p>
         </div>
         <span className={`dg-duel__radio ${selected ? 'is-on' : ''}`} aria-hidden="true">{selected && <Check className="h-3 w-3" />}</span>
       </header>
+      <span className="hero-rule dg-duel__rule" aria-hidden="true" />
       {stats && (
-        <dl className="dg-duel__tape">
-          {TAPE_STATS.map(([label, key]) => {
-            const value = statNumber(player, key);
-            const refValue = reference ? statNumber(reference, key) : null;
-            const base = Math.max(value ?? 0, refValue ?? 0, scale?.[key] ?? 0) || 1;
+        <dl className="dg-duel__strip">
+          {TAPE_STATS.map(([label, key]) => (
+            <div key={key} className={`dg-duel__tile ${GOLD_TILES.has(key) ? 'dg-duel__tile--gold' : ''}`}>
+              <dt className="dg-duel__tile-label">{label}</dt>
+              <dd className="dg-duel__tile-value">{statDisplay(statNumber(player, key))}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {reference && stats && hasPublicStats(reference) && (
+        <div className="dg-duel__deltas">
+          {TAPE_STATS.filter(([, key]) => GOLD_TILES.has(key)).map(([label, key]) => {
+            const mine = statNumber(player, key);
+            const theirs = statNumber(reference, key);
+            if (mine === null || theirs === null) return null;
+            const diff = mine - theirs;
+            const state = diff > 0.05 ? 'up' : diff < -0.05 ? 'down' : 'flat';
             return (
-              <div key={key} className="dg-duel__row">
-                <dt className="dg-duel__label">{label}</dt>
-                <dd className="dg-duel__bars">
-                  <span className="dg-duel__bar dg-duel__bar--mine"><span style={{ width: `${Math.min(100, (value / base) * 100)}%` }} /></span>
-                  {refValue !== null && (
-                    <span className="dg-duel__bar dg-duel__bar--ref"><span style={{ width: `${Math.min(100, (refValue / base) * 100)}%` }} /></span>
-                  )}
-                </dd>
-                <span className="dg-duel__value">{statDisplay(value)}</span>
-              </div>
+              <span key={key} className={`dg-delta-chip ${state === 'up' ? 'dg-delta-chip--up' : state === 'down' ? 'dg-delta-chip--down' : ''}`}>
+                {state === 'up' ? <ArrowUpRight className="h-2.5 w-2.5" /> : state === 'down' ? <ArrowDownRight className="h-2.5 w-2.5" /> : null}
+                {label} {diff > 0 ? '+' : ''}{diff.toFixed(1)} vs out
+              </span>
             );
           })}
-        </dl>
+        </div>
       )}
       <div className="dg-duel__foot">
         <div className="dg-duel__eff">

@@ -5,6 +5,7 @@ import LineupSimPanel from '@/components/dailyGames/LineupSimPanel';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
+import HowToPlay from '@/components/dailyGames/HowToPlay';
 import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
 import TapeReference from '@/components/dailyGames/TapeReference';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
@@ -188,6 +189,15 @@ export default function FixTheFive() {
             />
             <div className="min-w-0 space-y-5">
               <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} />
+              <HowToPlay
+                steps={[
+                  'Read the outgoing starter\u2019s tape first — the reference row under the court is the player you are replacing.',
+                  'Compare each candidate by their stat tiles. Green deltas mean they out-produce the outgoing player; red means they fall short.',
+                  'Lock all five swaps blind — scores stay hidden and nothing is evaluated until the board is locked.',
+                  'Reveal once to score every swap against the verified evaluator. A perfect swap earns 10 Game Points; exact estimates score in tiers.',
+                ]}
+                note="Your picks save in this browser — refresh anytime and the run picks up where you left off."
+              />
               {activeChallenge && (
                 <section className="dg-board-hero" aria-label={activeChallenge.title}>
                   <div className="flex flex-wrap items-center justify-between gap-3">
@@ -195,8 +205,9 @@ export default function FixTheFive() {
                       <span className="bcast-kicker">Swap {activeIndex + 1} of {challenges.length} · blind pick</span>
                       <h2 className="dg-board-hero__title font-display tracking-wide">{activeChallenge.title}</h2>
                     </div>
-                    <span className="dg-challenge__chip">
-                      Outgoing: {outgoing?.displayName}
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span className="dg-challenge__chip">Outgoing: {outgoing?.displayName}</span>
+                      <span className="dg-badge">Locked {pickCount}/{challenges.length}</span>
                     </span>
                   </div>
                   <p className="dg-board-hero__prompt text-muted-foreground">{activeChallenge.prompt}</p>

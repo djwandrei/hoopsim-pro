@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, Lock, Sparkles } from 'lucide-react';
 import GameShell from '@/components/dailyGames/GameShell';
 import LineupSimPanel from '@/components/dailyGames/LineupSimPanel';
@@ -111,11 +111,13 @@ export default function DraftNight() {
   const fit = useMemo(() => (activeRound && !outcome ? bestFitFor(activeRound.candidates, needs, draftRoster) : null), [activeRound, needs, draftRoster, outcome]);
   const jumpToRound = useCallback(round => {
     if (pending || outcome || picks[round.roundId]) return;
+    interacted.current = true;
     setActiveIndex(rounds.findIndex(entry => entry.roundId === round.roundId));
   }, [outcome, pending, picks, rounds]);
 
   const choose = useCallback((round, candidate) => {
     if (pending || outcome || picks[round.roundId]) return;
+    interacted.current = true;
     const nextPicks = { ...picks, [round.roundId]: candidate.playerRef };
     setPicks(nextPicks); setNotice('');
     persist(board.dailySeed, nextPicks, null);
@@ -125,6 +127,7 @@ export default function DraftNight() {
 
   const undoRound = useCallback(round => {
     if (outcome) return;
+    interacted.current = true;
     const nextPicks = { ...picks };
     delete nextPicks[round.roundId];
     setPicks(nextPicks); setNotice('');
@@ -134,6 +137,7 @@ export default function DraftNight() {
 
   const reveal = useCallback(async () => {
     if (pending || !allPicked || outcome) return;
+    interacted.current = true;
     setPending(true); setNotice('');
     try {
       const result = await revealSwishIQDailyGame({ board, picks: orderedPicks });
@@ -167,6 +171,26 @@ export default function DraftNight() {
   const points = gamePointsForOutcome(outcome);
   const statusState = status === 'error' ? errorKind || 'verification-error' : status;
 
+  // Flow glue: after a pick, undo, jump, or reveal, follow the run to the step
+  // the visitor just unlocked — but never steal the scroll on a fresh load.
+  const roundRef = useRef(null);
+  const lockRef = useRef(null);
+  const resultRef = useRef(null);
+  const interacted = useRef(false);
+  useEffect(() => {
+    if (interacted.current && roundRef.current) roundRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [activeIndex]);
+  useEffect(() => {
+    if (interacted.current && allPicked && !outcome && lockRef.current) {
+      lockRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [allPicked, outcome]);
+  useEffect(() => {
+    if (interacted.current && outcome && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [outcome]);
+
   return (
     <GameShell>
       <WorkbenchHeader
@@ -182,6 +206,7 @@ export default function DraftNight() {
         {statusState === 'ready' && presentation && (
           <>
             <HowToPlay
+              defaultOpen={pickCount === 0 && !outcome}
               controls={<BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />}
               steps={[
                 'Draft one player per round — each round belongs to a different team, so pick with role fit in mind.',
@@ -198,15 +223,16 @@ export default function DraftNight() {
               </div>
               <h2 className="dg-board-hero__title font-display tracking-wide">{presentation.deck.title}</h2>
               <p className="dg-board-hero__prompt text-muted-foreground">{presentation.deck.prompt}</p>
+              <div className="dg-complete__meter mt-3" aria-label={`${pickCount} of 5 rounds locked`}><span style={{ width: `${Math.round((pickCount / Math.max(rounds.length, 1)) * 100)}%` }} /></div>
             </div>
             <ProgressRail steps={rounds.map(round => round.roundId)} current={Math.min(activeIndex, Math.max(rounds.length - 1, 0))} completed={picks} labelFor={(key) => rounds.find(round => round.roundId === key)?.title || key} />
             {!outcome && (
               <DraftDesk rounds={rounds} picks={picks} roster={draftRoster} needs={needs} fit={fit} activeRound={activeRound} onSelectRound={jumpToRound} complete={allPicked} />
             )}
-            {outcome && <div className="dg-reveal"><GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} /></div>}
+            {outcome && <div ref={resultRef} className="dg-reveal"><GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} /></div>}
             {outcome && simSquads.length > 0 && <DraftSimPanel league={league} squads={simSquads} lineupLabel="Your draft five" />}
             {!outcome && allPicked && (
-              <section className="dg-lock dg-flow-in" aria-label="Lock the draft">
+              <section ref={lockRef} className="dg-lock dg-flow-in" aria-label="Lock the draft">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <span className="bcast-kicker">Draft locked</span>
@@ -236,7 +262,7 @@ export default function DraftNight() {
             {rounds.map((round, index) => {
               if (outcome || index !== activeIndex || picks[round.roundId]) return null;
               return (
-                <section key={round.roundId} className="dg-round dg-flow-in" aria-label={round.title}>
+                <section ref={roundRef} key={round.roundId} className="dg-round dg-flow-in" aria-label={round.title}>
                   <div className="dg-round__title">
                     <h3 className="font-display text-xl tracking-wide">Round {round.roundNumber} · {round.teamCode}</h3>
                     <span className="dg-round__counter">Pick {pickCount}/5</span>

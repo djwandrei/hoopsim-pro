@@ -629,6 +629,9 @@ body:not(.dark-mode) .dg-live__badge--live,
 body:not(.dark-mode) .dg-depth__flag--in { box-shadow: 0 0 0 1px hsl(33 72% 30% / .12); }
 body:not(.dark-mode) .dg-court__stat b { color: hsl(28 74% 24%); }
 
+/* Flow glue: auto-scrolled sections keep breathing room under sticky chrome */
+.dg-board-hero, .dg-lock, .dg-round, .dg-reveal, .dg-complete { scroll-margin-top: calc(var(--djhc-header-h, 0px) + 1rem); }
+
 /* === Game summary rework: logos, quarter line, and head-to-head stat duel === */
 .dg-summary__mid { display: grid; justify-items: center; gap: .2rem; }
 .dg-summary__poss { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }

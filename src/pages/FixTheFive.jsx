@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, Lock, Sparkles } from 'lucide-react';
 import GameShell from '@/components/dailyGames/GameShell';
 import LineupSimPanel from '@/components/dailyGames/LineupSimPanel';
@@ -107,6 +107,7 @@ export default function FixTheFive() {
   const pick = useCallback((challenge, candidate) => {
     const key = challenge.challengeId;
     if (pending || selections[key] || outcomes[key]) return;
+    interacted.current = true;
     const nextSelections = { ...selections, [key]: candidate.playerRef };
     setSelections(nextSelections);setNotice('');
     persist(board.dailySeed, nextSelections, outcomes);
@@ -116,6 +117,7 @@ export default function FixTheFive() {
 
   const undo = useCallback((challenge) => {
     if (pending || outcomes[challenge.challengeId]) return;
+    interacted.current = true;
     const key = challenge.challengeId;
     const nextSelections = { ...selections };
     delete nextSelections[key];
@@ -126,6 +128,7 @@ export default function FixTheFive() {
 
   const reveal = useCallback(async () => {
     if (pending || !board || !allPicked) return;
+    interacted.current = true;
     setPending(true);setNotice('');setRevealLabel('Revealing the board…');
     try {
       let nextOutcomes = { ...outcomes };
@@ -172,6 +175,26 @@ export default function FixTheFive() {
   const current = completedCount === challenges.length ? 2 : 0;
   const statusState = status === 'error' ? errorKind || 'verification-error' : status;
 
+  // Flow glue: after a pick, undo, or reveal, follow the run to the step the
+  // visitor just unlocked — but never steal the scroll on a fresh load.
+  const swapRef = useRef(null);
+  const lockRef = useRef(null);
+  const resultsRef = useRef(null);
+  const interacted = useRef(false);
+  useEffect(() => {
+    if (interacted.current && swapRef.current) swapRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [activeIndex]);
+  useEffect(() => {
+    if (interacted.current && allPicked && completedCount < challenges.length && lockRef.current) {
+      lockRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [allPicked, completedCount, challenges.length]);
+  useEffect(() => {
+    if (interacted.current && completedCount === challenges.length && resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [completedCount, challenges.length]);
+
   return (
     <GameShell>
       <WorkbenchHeader
@@ -193,6 +216,7 @@ export default function FixTheFive() {
           
             <div className="min-w-0 space-y-3">
               <HowToPlay
+              defaultOpen={pickCount + completedCount === 0}
               controls={
                 <div className="flex flex-wrap items-center justify-end gap-2">
                   <LineupViewToggle value={lineupView} onChange={setLineupView} />
@@ -209,7 +233,7 @@ export default function FixTheFive() {
             
               {activeChallenge &&
             <React.Fragment key={activeChallenge.challengeId}>
-                  <section className="dg-board-hero dg-flow-in" aria-label={activeChallenge.title}>
+                  <section ref={swapRef} className="dg-board-hero dg-flow-in" aria-label={activeChallenge.title}>
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div className="min-w-0">
                         <span className="bcast-kicker">Swap {activeIndex + 1} of {challenges.length} · blind pick</span>
@@ -245,7 +269,7 @@ export default function FixTheFive() {
             }
               {pending && revealLabel && <p className="dg-reveal-status" role="status">{revealLabel}</p>}
               {allPicked && completedCount < challenges.length &&
-            <section className="dg-lock dg-flow-in" aria-label="Reveal the board">
+            <section ref={lockRef} className="dg-lock dg-flow-in" aria-label="Reveal the board">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <span className="bcast-kicker">All five calls made</span>
@@ -274,7 +298,7 @@ export default function FixTheFive() {
             }
               {completedCount === challenges.length &&
             <>
-                  <div className="space-y-4">
+                  <div ref={resultsRef} className="space-y-4">
                     {challenges.map((challenge) => outcomes[challenge.challengeId] ?
                 <div key={challenge.challengeId} className="dg-reveal">
                         <GamePointsBoard outcome={outcomes[challenge.challengeId]} contextTitle={`${challenge.title} · ${challenge.teamCode}`} />

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { ChevronDown, Info } from 'lucide-react';
 
 // How-to disclosure with an optional controls slot (e.g. the board date bar)
-// rendered in the collapsed header row, so both share one bar.
-export default function HowToPlay({ steps = [], note, controls = null }) {
-  const [open, setOpen] = useState(false);
+// rendered in the collapsed header row, so both share one bar. `defaultOpen`
+// lets a page expand it for first-time runs while keeping it collapsed for
+// visitors returning to a saved run.
+export default function HowToPlay({ steps = [], note, controls = null, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
   if (!steps.length && !controls) return null;
   return (
     <div className="dg-howto dg-flow-in" aria-label="How this run works">

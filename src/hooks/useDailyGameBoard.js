@@ -16,23 +16,20 @@ export default function useDailyGameBoard({ gameKind, onBoardReady }) {
   const [metadata, setMetadata] = useState(null);
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState(null);
-  const [errorKind, setErrorKind] = useState('');
   const [notice, setNotice] = useState('');
   const { year, setYear, source, league } = useSeasonSource();
   const readyRef = useRef(onBoardReady);
   readyRef.current = onBoardReady;
 
   const loadBoard = useCallback(async (targetSeed = seed) => {
-    setStatus('loading'); setError(null); setErrorKind(''); setNotice('');
+    setStatus('loading'); setError(null); setNotice('');
     try {
       const loaded = await loadSwishIQDailyBoard({ gameKind, dailySeed: targetSeed, family: urlFamily });
       setBoard(loaded); setStatus('ready');
       readyRef.current?.(loaded);
     } catch (loadError) {
       setBoard(null); setError(loadError);
-      const kind = swishIQDailyGameErrorKind(loadError);
-      setErrorKind(kind);
-      setStatus(BOARD_ERROR_KINDS.includes(kind) ? kind : 'error');
+      setStatus(BOARD_ERROR_KINDS.includes(swishIQDailyGameErrorKind(loadError)) ? swishIQDailyGameErrorKind(loadError) : 'error');
     }
   }, [gameKind, seed, urlFamily]);
 
@@ -45,5 +42,5 @@ export default function useDailyGameBoard({ gameKind, onBoardReady }) {
 
   const presentation = useMemo(() => board ? hydratePresentationBoard(board, { playerSeasons: source?.playerSeasons || [], metadata }) : null, [board, source, metadata]);
 
-  return { seed, setSeed, board, presentation, status, error, errorKind, notice, setNotice, loadBoard, league };
+  return { seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, league };
 }

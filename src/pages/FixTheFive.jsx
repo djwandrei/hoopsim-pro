@@ -30,8 +30,14 @@ export default function FixTheFive() {
   const [pending, setPending] = useState(false);
   const [revealLabel, setRevealLabel] = useState('');
   const [resultsOpen, setResultsOpen] = useState(true);
+  // Flow glue: after a pick, undo, or reveal, follow the run to the step the
+  // visitor just unlocked — but never steal the scroll on a fresh load.
+  const swapRef = useRef(null);
+  const lockRef = useRef(null);
+  const resultsRef = useRef(null);
+  const interacted = useRef(false);
   const {
-    seed, setSeed, board, presentation, status, error, errorKind, notice, setNotice, loadBoard, league,
+    seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, league,
   } = useDailyGameBoard({
     gameKind: 'fix-the-five',
     onBoardReady: (loaded) => {
@@ -129,14 +135,7 @@ export default function FixTheFive() {
     return { id: challenge.challengeId, label: challenge.title, code: challenge.teamCode, players };
   }), [challenges, selections]);
   const current = completedCount === challenges.length ? 2 : allPicked ? 1 : 0;
-  const statusState = status === 'error' ? errorKind || 'verification-error' : status;
 
-  // Flow glue: after a pick, undo, or reveal, follow the run to the step the
-  // visitor just unlocked — but never steal the scroll on a fresh load.
-  const swapRef = useRef(null);
-  const lockRef = useRef(null);
-  const resultsRef = useRef(null);
-  const interacted = useRef(false);
   useEffect(() => {
     if (interacted.current && swapRef.current) swapRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [activeIndex]);
@@ -158,12 +157,12 @@ export default function FixTheFive() {
         description="Compare each legal swap with the starting five by summed estimated additive player impact. This is a model estimate, not observed five-player performance or causal chemistry."
         steps={['Board & context', 'Five repair calls', 'Verified summary']}
         current={current}
-        state={statusState === 'ready' ? 'ready' : statusState === 'loading' ? 'idle' : 'error'}
-        status={pending ? revealLabel || 'Working…' : completedCount === challenges.length ? 'Run verified' : statusState === 'ready' ? 'Blind run in progress' : null} />
+        state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}
+        status={pending ? revealLabel || 'Working…' : completedCount === challenges.length ? 'Run verified' : status === 'ready' ? 'Blind run in progress' : null} />
       
       <main className="mx-auto max-w-6xl px-4 py-4">
-        <BoardStatusPanel state={statusState} error={error} onRetry={() => loadBoard(seed)} />
-        {statusState === 'ready' && presentation &&
+        <BoardStatusPanel state={status} error={error} onRetry={() => loadBoard(seed)} />
+        {status === 'ready' && presentation &&
         <div className="dg-tape-layout mt-4">
             <StepRail
             total={challenges.length}

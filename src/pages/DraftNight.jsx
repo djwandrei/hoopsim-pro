@@ -34,8 +34,14 @@ export default function DraftNight() {
   const [outcome, setOutcome] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [pending, setPending] = useState(false);
+  // Flow glue: after a pick, undo, jump, or reveal, follow the run to the step
+  // the visitor just unlocked — but never steal the scroll on a fresh load.
+  const roundRef = useRef(null);
+  const lockRef = useRef(null);
+  const resultRef = useRef(null);
+  const interacted = useRef(false);
   const {
-    seed, setSeed, board, presentation, status, error, errorKind, notice, setNotice, loadBoard, league,
+    seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, league,
   } = useDailyGameBoard({
     gameKind: 'draft-night',
     onBoardReady: (loaded) => {
@@ -119,14 +125,7 @@ export default function DraftNight() {
       .filter(Boolean),
   }] : []), [outcome, presentation, orderedPicks, rounds]);
   const points = gamePointsForOutcome(outcome);
-  const statusState = status === 'error' ? errorKind || 'verification-error' : status;
 
-  // Flow glue: after a pick, undo, jump, or reveal, follow the run to the step
-  // the visitor just unlocked — but never steal the scroll on a fresh load.
-  const roundRef = useRef(null);
-  const lockRef = useRef(null);
-  const resultRef = useRef(null);
-  const interacted = useRef(false);
   useEffect(() => {
     if (interacted.current && roundRef.current) roundRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [activeIndex]);
@@ -148,12 +147,12 @@ export default function DraftNight() {
         description="Pick one player from each of five different team rounds. This cross-team five-pick board is scored by average estimated additive player impact; it is not observed lineup performance, a same-team lineup, a forecast, or causal chemistry."
         steps={['Five draft rounds', 'Lock the draft', 'Verified summary']}
         current={outcome ? 2 : allPicked ? 1 : 0}
-        state={statusState === 'ready' ? 'ready' : statusState === 'loading' ? 'idle' : 'error'}
-        status={pending ? 'Evaluating your draft…' : outcome ? 'Draft verified' : statusState === 'ready' ? 'Board verified' : null}
+        state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}
+        status={pending ? 'Evaluating your draft…' : outcome ? 'Draft verified' : status === 'ready' ? 'Board verified' : null}
       />
       <main className="mx-auto max-w-6xl space-y-4 px-4 py-4">
-        <BoardStatusPanel state={statusState} error={error} onRetry={() => loadBoard(seed)} />
-        {statusState === 'ready' && presentation && (
+        <BoardStatusPanel state={status} error={error} onRetry={() => loadBoard(seed)} />
+        {status === 'ready' && presentation && (
           <>
             <HowToPlay
               defaultOpen={pickCount === 0 && !outcome}

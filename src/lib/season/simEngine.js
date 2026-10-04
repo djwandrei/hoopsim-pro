@@ -546,6 +546,17 @@ export function buildGeneratedSchedule(teams, seed) {
       games.push({ at: null, home, away, actual: null });
     }
   }
+  // The rotation method can drift several home games off a fair 41/41 split,
+  // so rebalance in schedule order: the team with fewer home games hosts.
+  const homeCount = new Map(codes.map(code => [code, 0]));
+  for (const game of games) {
+    if (homeCount.get(game.home) - homeCount.get(game.away) > 0) {
+      const team = game.home;
+      game.home = game.away;
+      game.away = team;
+    }
+    homeCount.set(game.home, homeCount.get(game.home) + 1);
+  }
   return games;
 }
 

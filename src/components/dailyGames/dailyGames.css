@@ -118,14 +118,17 @@
 .dg-round__title { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; }
 .dg-round__counter { border: 1px solid hsl(var(--court-accent) / .35); border-radius: 999px; background: hsl(var(--court-accent) / .07); padding: .25rem .65rem; font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; color: hsl(var(--court-accent)); }
 
-/* Court */
-.dg-court { position: relative; overflow: hidden; border: 1px solid hsl(var(--border) / .3); border-radius: 1rem; background: hsl(var(--court-canvas) / .6); }
-.dg-court__badge { position: absolute; right: .5rem; top: .5rem; z-index: 1; display: inline-flex; align-items: center; gap: .3rem; border: 1px solid hsl(var(--border) / .4); border-radius: .35rem; background: hsl(var(--court-canvas) / .8); padding: .2rem .45rem; font-family: var(--font-mono); font-size: .5rem; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
-.dg-court__marker { display: flex; flex-direction: column; align-items: center; gap: .1rem; }
+/* Court: HTML markers positioned over an SVG-drawn half court */
+.dg-court { position: relative; overflow: hidden; border: 1px solid hsl(var(--border) / .3); border-radius: 1rem; aspect-ratio: 50 / 47; background: radial-gradient(circle at 50% 10%, hsl(var(--court-accent) / .07), transparent 55%), hsl(var(--court-canvas) / .6); }
+.dg-court__lines { position: absolute; inset: 0; height: 100%; width: 100%; }
+.dg-court__badge { position: absolute; right: .5rem; top: .5rem; z-index: 2; display: inline-flex; align-items: center; gap: .3rem; border: 1px solid hsl(var(--border) / .4); border-radius: .35rem; background: hsl(var(--court-canvas) / .8); padding: .2rem .45rem; font-family: var(--font-mono); font-size: .5rem; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.dg-court__marker { position: absolute; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: .12rem; transform: translate(-50%, -50%); }
 .dg-court__avatar { display: flex; height: 2.8rem; width: 2.8rem; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; border: 2px solid hsl(var(--court-positive) / .8); background: hsl(var(--court-canvas)); box-shadow: 0 4px 12px hsl(var(--court-canvas) / .5); }
 .dg-court__avatar--out { border-color: hsl(var(--court-trim)); box-shadow: 0 0 14px hsl(var(--court-trim) / .45); }
+.dg-court__avatar--in { border-color: hsl(var(--court-accent)); box-shadow: 0 0 14px hsl(var(--court-accent) / .45); }
 .dg-court__avatar img { width: 100%; height: 100%; object-fit: cover; }
-.dg-court__name { max-width: 4.4rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-radius: .25rem; background: hsl(var(--court-canvas) / .85); padding: 0 .25rem; font-size: .5rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: hsl(var(--foreground)); }
+.dg-court__name { max-width: 4.6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-radius: .25rem; background: hsl(var(--court-canvas) / .85); padding: 0 .25rem; font-size: .5rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: hsl(var(--foreground)); }
+.dg-court__sub { max-width: 5.6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .45rem; color: hsl(var(--muted-foreground)); }
 .dg-court__tag { border-radius: .25rem; padding: 0 .3rem; font-size: .45rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
 .dg-court__tag--out { background: hsl(var(--court-trim) / .9); color: hsl(0 0% 98%); }
 .dg-court__tag--in { background: hsl(var(--court-accent)); color: hsl(var(--court-canvas)); }

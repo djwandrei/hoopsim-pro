@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Lock, Sparkles } from 'lucide-react';
+import { AlertTriangle, Lock, Sparkles } from 'lucide-react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
+import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
 import CandidateCard from '@/components/dailyGames/CandidateCard';
 import ProgressRail from '@/components/dailyGames/ProgressRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
@@ -17,6 +18,7 @@ import {
   gamePointsForOutcome,
 } from '@/lib/dailyGames/boardSource';
 import { hydratePresentationBoard, loadSwishIqPlayerMetadata } from '@/lib/dailyGames/boardHydration';
+import '@/components/dailyGames/dailyGames.css';
 
 const STORAGE_KEY = 'swishiq-studio-draft-night';
 const STORAGE_VERSION = 1;
@@ -149,39 +151,36 @@ export default function DraftNight() {
         <BoardStatusPanel state={statusState} error={error} onRetry={() => loadBoard(seed)} />
         {statusState === 'ready' && presentation && (
           <>
-            <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-              <span className="rounded-full border border-gold/30 bg-gold/5 px-3 py-1 text-gold">Board {presentation.dailySeed}</span>
-              <span className="rounded-full border border-border/40 px-3 py-1">{presentation.packageRef.scope.seasonStartYear}-{String(presentation.packageRef.scope.seasonEndYear).slice(2)} · {presentation.packageRef.phase.replaceAll('_', ' ')}</span>
-              <span className="rounded-full border border-border/40 px-3 py-1">{presentation.packageRef.packageVersion}</span>
-              <label className="ml-auto inline-flex items-center gap-2">Board date
-                <input type="date" value={seed} onChange={event => { const value = event.target.value; if (/^\d{4}-\d{2}-\d{2}$/.test(value)) { setSeed(value); } }} className="studio-select w-40" />
-              </label>
-            </div>
+            <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} />
             <div className="court-panel p-5">
-              <h2 className="font-display text-2xl tracking-wide">{presentation.deck.title}</h2>
+              <span className="bcast-kicker">Tonight's board</span>
+              <h2 className="mt-2 font-display text-2xl tracking-wide">{presentation.deck.title}</h2>
               <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted-foreground">{presentation.deck.prompt}</p>
             </div>
             <ProgressRail steps={rounds.map(round => round.roundId)} current={Math.min(activeIndex, Math.max(rounds.length - 1, 0))} completed={picks} labelFor={(key) => rounds.find(round => round.roundId === key)?.title || key} />
             {outcome && <GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} />}
             {!outcome && allPicked && (
-              <section className="court-panel border-gold/50 p-5" aria-label="Lock the draft">
+              <section className="dg-lock" aria-label="Lock the draft">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <span className="bcast-kicker">Draft locked</span>
                     <h3 className="mt-2 flex items-center gap-2 font-display text-2xl tracking-wide"><Lock className="h-5 w-5 text-gold" />Five picks, one reveal</h3>
                     <p className="mt-1 text-xs text-muted-foreground">Evaluate the whole five-pick draft once. No partial reveals, no substitute score.</p>
                   </div>
-                  <button type="button" onClick={reveal} disabled={pending} className="inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-canvas disabled:opacity-50">
+                  <button type="button" onClick={reveal} disabled={pending} className="inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-3 text-xs font-bold uppercase tracking-widest text-canvas shadow-[0_8px_24px_hsl(43_78%_60%/.35)] hover:brightness-110 disabled:opacity-50">
                     <Sparkles className="h-4 w-4" /> {pending ? 'Evaluating…' : 'Lock in the draft & evaluate'}
                   </button>
                 </div>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+                <ul className="dg-lock__list mt-4">
                   {rounds.map(round => {
                     const candidate = round.candidates.find(entry => entry.playerRef === picks[round.roundId]);
                     return (
-                      <li key={round.roundId} className="flex items-center justify-between gap-2 rounded-lg border border-gold/30 bg-gold/5 px-3 py-2 text-xs">
-                        <span className="truncate">{round.teamCode}: <span className="font-display tracking-wide">{candidate?.displayName}</span></span>
-                        <button type="button" onClick={() => undoRound(round)} className="shrink-0 text-[10px] uppercase tracking-widest text-muted-foreground">Undo</button>
+                      <li key={round.roundId} className="dg-lock__pick">
+                        <span className="min-w-0">
+                          <span className="dg-lock__team">R{round.roundNumber} · {round.teamCode}</span>
+                          <span className="dg-lock__player block truncate">{candidate?.displayName}</span>
+                        </span>
+                        <button type="button" onClick={() => undoRound(round)} className="dg-lock__undo">Undo</button>
                       </li>
                     );
                   })}
@@ -191,10 +190,10 @@ export default function DraftNight() {
             {rounds.map((round, index) => {
               if (outcome || index !== activeIndex || picks[round.roundId]) return null;
               return (
-                <section key={round.roundId} className="court-panel p-5" aria-label={round.title}>
-                  <div className="flex flex-wrap items-center justify-between gap-2">
+                <section key={round.roundId} className="dg-round" aria-label={round.title}>
+                  <div className="dg-round__title">
                     <h3 className="font-display text-xl tracking-wide">Round {round.roundNumber} · {round.teamCode}</h3>
-                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Pick {pickCount}/5</span>
+                    <span className="dg-round__counter">Pick {pickCount}/5</span>
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">{round.prompt}</p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -223,7 +222,7 @@ export default function DraftNight() {
                 onReplay={replay}
               />
             )}
-            {notice && <p className="rounded-lg border border-trim/40 bg-trim/10 px-4 py-3 text-xs text-foreground" role="alert">{notice}</p>}
+            {notice && <p className="dg-notice" role="alert"><AlertTriangle className="h-3.5 w-3.5 shrink-0 text-trim" />{notice}</p>}
           </>
         )}
       </main>

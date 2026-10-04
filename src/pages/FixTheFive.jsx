@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { RefreshCcw } from 'lucide-react';
+import { AlertTriangle, RefreshCcw } from 'lucide-react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
+import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
 import CandidateCard from '@/components/dailyGames/CandidateCard';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
 import ProgressRail from '@/components/dailyGames/ProgressRail';
@@ -19,6 +20,7 @@ import {
   gamePointsForOutcome,
 } from '@/lib/dailyGames/boardSource';
 import { hydratePresentationBoard, loadSwishIqPlayerMetadata } from '@/lib/dailyGames/boardHydration';
+import '@/components/dailyGames/dailyGames.css';
 
 const STORAGE_KEY = 'swishiq-studio-fix-the-five';
 const STORAGE_VERSION = 1;
@@ -151,15 +153,14 @@ export default function FixTheFive() {
         <BoardStatusPanel state={statusState} error={error} onRetry={() => loadBoard(seed)} />
         {statusState === 'ready' && presentation && (
           <>
-            <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-              <span className="rounded-full border border-gold/30 bg-gold/5 px-3 py-1 text-gold">Board {presentation.dailySeed}</span>
-              <span className="rounded-full border border-border/40 px-3 py-1">{presentation.packageRef.scope.seasonStartYear}-{String(presentation.packageRef.scope.seasonEndYear).slice(2)} · {presentation.packageRef.phase.replaceAll('_', ' ')}</span>
-              <span className="rounded-full border border-border/40 px-3 py-1">{presentation.packageRef.packageVersion}</span>
-              <label className="ml-auto inline-flex items-center gap-2">Board date
-                <input type="date" value={seed} onChange={event => { const value = event.target.value; if (/^\d{4}-\d{2}-\d{2}$/.test(value)) { setSeed(value); } }} className="studio-select w-40" />
-              </label>
-            </div>
-            <ProgressRail steps={challenges.map(challenge => challenge.challengeId)} current={Math.min(activeIndex, challenges.length - 1)} completed={outcomes} labelFor={(key) => challenges.find(challenge => challenge.challengeId === key)?.title || key} />
+            <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} />
+            <ProgressRail
+              steps={challenges.map(challenge => challenge.challengeId)}
+              current={Math.min(activeIndex, challenges.length - 1)}
+              completed={outcomes}
+              labelFor={(key) => challenges.find(challenge => challenge.challengeId === key)?.title || key}
+              pointsFor={(key) => gamePointsForOutcome(outcomes[key])?.total ?? null}
+            />
             {completedCount === 5 && (
               <CompletionPanel
                 total={total}
@@ -179,7 +180,7 @@ export default function FixTheFive() {
                 <div className="court-panel p-5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h2 className="font-display text-2xl tracking-wide">{activeChallenge.title}</h2>
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-trim/40 bg-trim/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-foreground">
+                    <span className="dg-challenge__chip">
                       Outgoing: {activeChallenge.lineup.find(player => player.playerRef === activeChallenge.removePlayerRef)?.displayName}
                     </span>
                   </div>
@@ -203,9 +204,9 @@ export default function FixTheFive() {
                   </div>
                 </div>
                 {outcomes[activeChallenge.challengeId] && <GamePointsBoard outcome={outcomes[activeChallenge.challengeId]} contextTitle={`${activeChallenge.title} · ${activeChallenge.teamCode}`} />}
-                {notice && <p className="rounded-lg border border-trim/40 bg-trim/10 px-4 py-3 text-xs text-foreground" role="alert">{notice}</p>}
+                {notice && <p className="dg-notice" role="alert"><AlertTriangle className="h-3.5 w-3.5 shrink-0 text-trim" />{notice}</p>}
                 {!outcomes[activeChallenge.challengeId] && selections[activeChallenge.challengeId] && (
-                  <button type="button" onClick={() => undo(activeChallenge)} className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground"><RefreshCcw className="h-3.5 w-3.5" /> Undo this swap</button>
+                  <button type="button" onClick={() => undo(activeChallenge)} className="dg-undo"><RefreshCcw className="h-3.5 w-3.5" /> Undo this swap</button>
                 )}
               </section>
             )}

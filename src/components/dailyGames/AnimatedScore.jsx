@@ -1,64 +1,73 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-// Jumbotron digits that tick up through intermediate values when points are
-// scored, and pop a floating "+N" chip like a broadcast score bug.
+// Jumbotron digits: tick from whatever is currently on screen up to the new
+// value, retargeting safely when the playback accelerates, and pop a floating
+// "+N" chip like a broadcast score bug. Interrupt-safe: a new value always
+// animates from the last displayed value, so scores never jump backwards.
 export default function AnimatedScore({ value = 0, className = '' }) {
   const [display, setDisplay] = useState(0);
   const [phase, setPhase] = useState('idle'); // idle | ticking | landed
-  const [gain, setGain] = useState(0);
+  const [gain, setGain] = useState(null); // { amount, id }
   const frameRef = useRef(null);
   const timeoutRef = useRef(null);
   const gainRef = useRef(null);
-  const fromRef = useRef(0);
+  const displayRef = useRef(0);
+  const gainSeqRef = useRef(0);
 
   useEffect(() => {
-    const from = fromRef.current;
+    cancelAnimationFrame(frameRef.current);
+    clearTimeout(timeoutRef.current);
+    const from = displayRef.current;
     if (value === from) return undefined;
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-    if (reduced || value < from) {
-      // Snap on reset (new game) and for reduced-motion users.
-      cancelAnimationFrame(frameRef.current);
-      clearTimeout(gainRef.current);
-      fromRef.current = value;
+    if (reduced) {
+      displayRef.current = value;
       setDisplay(value);
       setPhase('idle');
-      setGain(0);
+      setGain(null);
       return undefined;
     }
-    if (value - from > 0) {
-      setGain(value - from);
+    if (value > from) {
+      gainSeqRef.current += 1;
+      setGain({ amount: value - from, id: gainSeqRef.current });
       clearTimeout(gainRef.current);
-      gainRef.current = setTimeout(() => setGain(0), 950);
+      gainRef.current = setTimeout(() => setGain(null), 950);
+    } else {
+      setGain(null);
     }
+    // Fast ticks stay readable: short distance = short roll, long gains get
+    // a little more time, but never long enough to lag the live feed.
+    const duration = Math.max(140, Math.min(240 + Math.abs(value - from) * 45, 420));
     const start = performance.now();
-    const duration = Math.min(220 + (value - from) * 60, 560);
     setPhase('ticking');
     const step = now => {
       const t = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setDisplay(Math.round(from + (value - from) * eased));
+      const eased = 1 - Math.pow(1 - t, 2);
+      const current = Math.round(from + (value - from) * eased);
+      displayRef.current = current;
+      setDisplay(current);
       if (t < 1) {
         frameRef.current = requestAnimationFrame(step);
       } else {
-        fromRef.current = value;
         setPhase('landed');
-        timeoutRef.current = setTimeout(() => setPhase('idle'), 500);
+        timeoutRef.current = setTimeout(() => setPhase('idle'), 400);
       }
     };
     frameRef.current = requestAnimationFrame(step);
-    return () => {
-      cancelAnimationFrame(frameRef.current);
-      clearTimeout(timeoutRef.current);
-      clearTimeout(gainRef.current);
-    };
   }, [value]);
+
+  useEffect(() => () => {
+    cancelAnimationFrame(frameRef.current);
+    clearTimeout(timeoutRef.current);
+    clearTimeout(gainRef.current);
+  }, []);
 
   return (
     <span className="dg-score-wrap">
       <span className={`${className} ${phase === 'ticking' ? 'is-ticking' : ''} ${phase === 'landed' ? 'is-landed' : ''}`}>
         {display}
       </span>
-      {gain > 0 && <span className="dg-score-gain" aria-hidden="true">+{gain}</span>}
+      {gain && <span key={gain.id} className="dg-score-gain" aria-hidden="true">+{gain.amount}</span>}
     </span>
   );
 }

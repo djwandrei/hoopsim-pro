@@ -34,9 +34,11 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
     let cancelled = false;
     const tick = () => {
       if (cancelled) return;
-      // Accelerate: the reveal starts event-by-event, then speeds up so the
-      // whole game plays back in a few seconds.
-      step += step < 10 ? 1 : 2 + Math.floor(step / 30);
+      // Broadcast pacing: settle in event-by-event, then ramp up smoothly
+      // with a capped stride so the score climbs in believable bursts
+      // instead of rocketing through whole quarters at once.
+      const stride = step < 12 ? 1 : Math.min(1 + Math.floor((step - 12) / 6), 4);
+      step += stride;
       if (step >= total) {
         setIndex(total);
         setPlaying(false);
@@ -44,7 +46,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
         return;
       }
       setIndex(step);
-      timerRef.current = setTimeout(tick, step < 8 ? 500 : 80);
+      timerRef.current = setTimeout(tick, step < 12 ? 420 : 110);
     };
     timerRef.current = setTimeout(tick, 450);
     return () => {

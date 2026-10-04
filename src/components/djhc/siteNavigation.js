@@ -1,14 +1,23 @@
 export const SITE = 'https://www.djshouseofcards-comics.com';
+// Every fan-tools page on the live /tools/ hub, in hub order. Tools the site
+// lists without an emblem asset carry `emblem: null` and render a letter
+// fallback (ToolEmblem). Fix the Five and Draft Night are deliberately absent
+// here — this app hosts them under the studio root.
 export const FAN_TOOLS = [
   ['/tools/','Fan Tools','fan-tools-emblem-20260911.png'],
   ['/lineup-lab/','Lineup Lab','lineup-lab-emblem-20260911.png'],
   ['/tools/player-card-matchups/','Player & Cards','card-matchups-emblem-20260911.png'],
   ['/tools/virtual-pack-opening/','Virtual Packs','card-matchups-emblem-20260911.png'],
+  ['/tools/collection-lineup-builder/','Collection Builder',null],
+  ['/tools/trade-package-builder/','Trade Packages',null],
+  ['/tools/position-lens/','Position Lens',null],
+  ['/tools/roster-fit-simulator/','Roster Fit',null],
+  ['/tools/franchise-rebuild-challenge/','Franchise Rebuild',null],
   ['/tools/workshop/','Workshop','workshop-emblem-20260911.png'],
   ['/tools/swishiq-studio/','SwishIQ Studio','swishiq-studio-emblem-20260913.png'],
-].map(([path,label,asset])=>({path,label,href:SITE+path,emblem:`${SITE}/assets/games/${asset}`}));
+].map(([path,label,asset])=>({path,label,href:SITE+path,emblem:asset?`${SITE}/assets/games/${asset}`:null}));
 export const FOOTER_GROUPS = [
-  {title:'Browse',key:'browse',links:[['Sports Cards',SITE+'/sports-cards.html'],['Comics',SITE+'/comics.html'],['Collectibles',SITE+'/collectibles.html']]},
+  {title:'Browse',key:'browse',links:[['Shop',SITE+'/shop.html'],['Sports Cards',SITE+'/sports-cards.html'],['Comics',SITE+'/comics.html'],['Collectibles',SITE+'/collectibles.html'],['Sell or Trade',SITE+'/sell-trade-want-list.html']]},
   {title:'Help & Policies',key:'support',links:[['Contact DJ',SITE+'/contact.html'],['Shipping',SITE+'/shipping.html'],['Returns',SITE+'/returns.html'],['Policies & Authenticity',SITE+'/policies.html']]},
   {title:'Shop & Follow',key:'storefronts',links:[['Facebook','https://www.facebook.com/DJCardsComics/'],['Whatnot','https://www.whatnot.com/user/djshouseofcards'],['Shopify','https://xy2hik-nq.myshopify.com/'],['TikTok Shop','https://www.tiktok.com/@djshouseofcards/shop']]},
 ];

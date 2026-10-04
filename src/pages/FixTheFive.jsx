@@ -214,6 +214,8 @@ export default function FixTheFive() {
                     <p className="dg-board-hero__prompt text-muted-foreground">{activeChallenge.prompt}</p>
                   </section>
                   <div key={activeChallenge.challengeId} className="dg-flow-in space-y-3">
+                    <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
+                    <TapeReference player={outgoing} />
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       {activeChallenge.candidates.map(candidate => (
                         <TapeDuelCard
@@ -227,8 +229,6 @@ export default function FixTheFive() {
                         />
                       ))}
                     </div>
-                    <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
-                    <TapeReference player={outgoing} />
                   </div>
                 </>
               )}

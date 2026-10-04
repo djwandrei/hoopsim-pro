@@ -158,14 +158,14 @@
 
 /* === Tale of the Tape redesign === */
 
-/* Board layout: numbered step rail in the left gutter */
-.dg-tape-layout { display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 1.1rem; align-items: start; }
-.dg-steprail { position: sticky; top: calc(var(--djhc-header-h, 0px) + 1rem); display: flex; flex-direction: column; align-items: center; gap: .35rem; padding-top: .25rem; }
+/* Board layout: horizontal step bar pinned to the top of the board */
+.dg-tape-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+.dg-steprail { position: sticky; top: calc(var(--djhc-header-h, 0px) + 1rem); z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; border: 1px solid hsl(var(--border) / .35); border-radius: .9rem; background: hsl(var(--court-canvas) / .82); padding: .55rem .9rem; box-shadow: 0 8px 24px hsl(var(--court-canvas) / .2); backdrop-filter: blur(8px); }
 .dg-steprail__dot { display: inline-flex; align-items: center; justify-content: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; border: 1.5px solid hsl(var(--border) / .5); background: hsl(var(--court-canvas)); font-family: var(--font-mono); font-size: .6rem; color: hsl(var(--muted-foreground)); }
 .dg-steprail__dot.is-done { border-color: hsl(var(--court-accent) / .85); background: hsl(var(--court-accent) / .16); color: hsl(var(--court-accent)); }
 .dg-steprail__dot.is-active { border-color: hsl(var(--court-accent)); color: hsl(var(--court-accent)); box-shadow: 0 0 12px hsl(var(--court-accent) / .35); }
-.dg-steprail__link { width: 2px; flex: 0 0 .9rem; border-radius: 999px; background: hsl(var(--border) / .35); }
-.dg-steprail__label { margin-top: .4rem; writing-mode: vertical-rl; font-family: var(--font-mono); font-size: .5rem; letter-spacing: .18em; text-transform: uppercase; color: hsl(var(--muted-foreground)); white-space: nowrap; }
+.dg-steprail__link { height: 2px; width: auto; flex: 0 0 .7rem; border-radius: 999px; background: hsl(var(--border) / .35); }
+.dg-steprail__label { margin-top: 0; margin-left: .4rem; writing-mode: horizontal-tb; font-family: var(--font-mono); font-size: .5rem; letter-spacing: .18em; text-transform: uppercase; color: hsl(var(--muted-foreground)); white-space: nowrap; }
 
 /* Keep the real half-court proportions, including in the comparison strip. */
 .dg-court--slim { aspect-ratio: 5 / 3; }

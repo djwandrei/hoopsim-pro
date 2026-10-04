@@ -11,6 +11,7 @@ export default function CourtHoop() {
       <polygon points={courtPoints([[22, 4, 10], [28, 4, 10], [28, 4, 13.5], [22, 4, 13.5]])} fill="hsl(var(--court-glass) / .17)" stroke="hsl(var(--court-line))" strokeWidth="2.5" />
       <polygon points={courtPoints([[22, 4, 13.5], [28, 4, 13.5], [28, 4.2, 13.7], [22, 4.2, 13.7]])} fill="hsl(var(--court-glass) / .5)" />
       <polygon points={courtPoints([[24, 4, 10.15], [26, 4, 10.15], [26, 4, 11.65], [24, 4, 11.65]])} fill="none" stroke="hsl(var(--court-line))" strokeWidth="1.7" />
+      <polygon points={courtPoints([[22.6, 4, 12.9], [24.2, 4, 12.9], [23.2, 4, 10.5], [21.9, 4, 10.5]])} fill="hsl(0 0% 100% / .14)" />
       <polygon points={courtRect(22, 3.85, 28, 4.2, 10)} fill="hsl(var(--court-canvas))" />
       <polyline points={courtPoints([[25, 4, 10], [25, 5.25, 10]])} stroke="hsl(var(--court-rim))" strokeWidth="4" />
       {Array.from({ length: 12 }, (_, i) => {

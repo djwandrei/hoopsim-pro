@@ -249,7 +249,7 @@ function buildPbp(home, away, hp, ap, ot, rng) {
         const thief = rng() < 0.3 ? pickPlayer(opp, rng) : null;
         stat = thief ? { turnover: player.name, steal: thief.name } : { turnover: player.name };
         text = thief ? `${player.name} turns it over — ${thief.name} jumps the lane for ${opp.code}` : `${player.name} loses the handle — turnover, ${opp.code} ball`;
-      } else if (remain === 1 || r < 0.24) {
+      } else if (remain <= 2 || r < 0.24) {
         type = 'ft';
         stat = { scorer: player.name };
         if (remain === 1 || rng() < 0.4) {
@@ -295,7 +295,7 @@ function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutra
   const poss = clamp((home.pace + away.pace) / 2, 88, 112);
   const hca = neutral ? 0 : homeCourt;
   const ortgH = expectedOrtg(home.off, away.def, LEAGUE.defAvg, defenseWeight) + hca;
-  const ortgA = expectedOrtg(away.def, home.def, LEAGUE.defAvg, defenseWeight);
+  const ortgA = expectedOrtg(away.off, home.def, LEAGUE.defAvg, defenseWeight);
   let hp = scorePoints(ortgH, poss, rng);
   let ap = scorePoints(ortgA, poss, rng);
   let ot = 0;

@@ -2,8 +2,6 @@ export const SITE = 'https://www.djshouseofcards-comics.com';
 export const FAN_TOOLS = [
   ['/tools/','Fan Tools','fan-tools-emblem-20260911.png'],
   ['/lineup-lab/','Lineup Lab','lineup-lab-emblem-20260911.png'],
-  ['/tools/fix-the-five/','Fix the Five','fix-the-five-emblem-20260911.png'],
-  ['/tools/draft-night/','Draft Night','draft-night-emblem-20260911.png'],
   ['/tools/player-card-matchups/','Player & Cards','card-matchups-emblem-20260911.png'],
   ['/tools/virtual-pack-opening/','Virtual Packs','card-matchups-emblem-20260911.png'],
   ['/tools/workshop/','Workshop','workshop-emblem-20260911.png'],

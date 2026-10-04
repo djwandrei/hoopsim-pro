@@ -12,7 +12,8 @@ export const WORKBENCHES = [
 
 // Daily games live outside the SwishIQ workbench system: not in the studio
 // sidebar or index — reachable from the site header drawer instead.
+const GAME_ASSETS = 'https://www.djshouseofcards-comics.com/assets/games/';
 export const DAILY_GAMES = [
-  { path: '/fix-the-five', emblem: `${EMBLEMS}fix-the-five-emblem-20260911.png`, title: 'Fix the Five', tag: 'DAILY ROTATION REPAIR', description: 'Repair five exact-season starting fives by swapping in legal replacements, verified by the original private evaluator.', flow: 'Board → Swap call → Verified rank' },
-  { path: '/draft-night', emblem: `${EMBLEMS}draft-night-emblem-20260911.png`, title: 'Draft Night', tag: 'DAILY FIVE-ROUND DRAFT', description: 'Draft one player from each of five team rounds, then reveal one verified cross-team impact result.', flow: 'Rounds → Lock draft → Verified rank' },
+  { path: '/fix-the-five', emblem: `${GAME_ASSETS}fix-the-five-emblem-20260911.png`, title: 'Fix the Five', tag: 'DAILY ROTATION REPAIR', description: 'Repair five exact-season starting fives by swapping in legal replacements, verified by the original private evaluator.', flow: 'Board → Swap call → Verified rank' },
+  { path: '/draft-night', emblem: `${GAME_ASSETS}draft-night-emblem-20260911.png`, title: 'Draft Night', tag: 'DAILY FIVE-ROUND DRAFT', description: 'Draft one player from each of five team rounds, then reveal one verified cross-team impact result.', flow: 'Rounds → Lock draft → Verified rank' },
 ];

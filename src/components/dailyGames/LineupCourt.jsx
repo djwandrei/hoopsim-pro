@@ -28,7 +28,7 @@ export default function LineupCourt({ lineup = [], removedPlayerRef, incomingPla
 
 
       })}
-      {removedPlayerRef && <span className="dg-court__badge hidden"><Ban className="h-2.5 w-2.5 text-trim-ink" /> marked swap</span>}
+      
     </div>);
 
 }

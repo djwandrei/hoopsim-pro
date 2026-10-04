@@ -6,6 +6,7 @@ import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
 import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
+import CardCycler from '@/components/dailyGames/CardCycler';
 import HowToPlay from '@/components/dailyGames/HowToPlay';
 import ProgressRail from '@/components/dailyGames/ProgressRail';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
@@ -219,8 +220,10 @@ export default function DraftNight() {
                     <span className="dg-round__counter">Pick {pickCount}/5</span>
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">{round.prompt}</p>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {round.candidates.map(candidate => (
+                  <CardCycler
+                    className="mt-4"
+                    items={round.candidates}
+                    renderItem={candidate => (
                       <TapeDuelCard
                         key={candidate.playerRef}
                         player={candidate}
@@ -229,8 +232,8 @@ export default function DraftNight() {
                         ctaLabel="Draft him"
                         onSelect={() => choose(round, candidate)}
                       />
-                    ))}
-                  </div>
+                    )}
+                  />
                 </section>
               );
             })}

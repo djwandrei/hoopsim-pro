@@ -236,6 +236,17 @@
   .dg-flow-in { animation: none; }
 }
 
+/* Mobile card cycler: one candidate at a time with cycle controls */
+.dg-cycle { display: grid; gap: .55rem; }
+.dg-cycle__bar { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.dg-cycle__nav { display: inline-flex; align-items: center; justify-content: center; height: 2.2rem; width: 2.2rem; flex-shrink: 0; border-radius: .5rem; border: 1px solid hsl(var(--court-accent) / .4); background: hsl(var(--court-accent) / .1); color: hsl(var(--court-accent)); }
+.dg-cycle__nav:hover { background: hsl(var(--court-accent) / .22); }
+.dg-cycle__nav:disabled { opacity: .35; cursor: not-allowed; }
+.dg-cycle__dots { display: flex; justify-content: center; gap: .35rem; }
+.dg-cycle__dot { height: .5rem; width: .5rem; padding: 0; border: 0; border-radius: 50%; background: hsl(var(--border) / .5); cursor: pointer; }
+.dg-cycle__dot.is-on { background: hsl(var(--court-accent)); box-shadow: 0 0 8px hsl(var(--court-accent) / .5); }
+.dg-cycle__card { min-width: 0; }
+
 /* Lineup sim room */
 .dg-sim { border: 1px solid hsl(var(--border) / .35); border-radius: 1rem; background: linear-gradient(150deg, hsl(var(--court-surface) / .55), hsl(var(--court-canvas) / .9)); padding: 1.25rem; box-shadow: 0 8px 24px hsl(var(--court-canvas) / .18); }
 .dg-sim__controls { display: flex; flex-wrap: wrap; gap: .6rem; align-items: end; }

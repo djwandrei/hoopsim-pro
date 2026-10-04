@@ -6,6 +6,7 @@ import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import BoardStatusPanel from '@/components/dailyGames/BoardStatusPanel';
 import BoardControlStrip from '@/components/dailyGames/BoardControlStrip';
 import HowToPlay from '@/components/dailyGames/HowToPlay';
+import CardCycler from '@/components/dailyGames/CardCycler';
 import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
 import TapeReference from '@/components/dailyGames/TapeReference';
 import LineupCourt from '@/components/dailyGames/LineupCourt';
@@ -216,8 +217,9 @@ export default function FixTheFive() {
                   <div key={activeChallenge.challengeId} className="dg-flow-in space-y-3">
                     <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />
                     <TapeReference player={outgoing} />
-                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                      {activeChallenge.candidates.map((candidate) =>
+                    <CardCycler
+                      items={activeChallenge.candidates}
+                      renderItem={(candidate) =>
                   <TapeDuelCard
                     key={candidate.playerRef}
                     player={candidate}
@@ -227,8 +229,7 @@ export default function FixTheFive() {
                     ctaLabel="Swap in"
                     onSelect={() => pick(activeChallenge, candidate)} />
 
-                  )}
-                    </div>
+                  } />
                   </div>
                 </>
             }

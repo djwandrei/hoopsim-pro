@@ -129,7 +129,9 @@
 .dg-court__initials { display: grid; place-items: center; width: calc(var(--portrait-width) * var(--ds)); height: calc(var(--portrait-width) * var(--ds) * .8); font-family: var(--font-display); font-size: calc(var(--portrait-width) * var(--ds) * .38); color: hsl(var(--court-text)); text-shadow: 0 2px 6px hsl(var(--court-canvas)); }
 /* Mini container: each player's portrait, name, and stat line sit in one
    compact card anchored at their court spot instead of floating freely. */
-/* Portrait on the left, name + stats stacked vertically on the right. */
+/* Portrait with its name beneath it on the left, stats stacked vertically
+   on the right. */
+.dg-court__id { display: grid; flex-shrink: 0; justify-items: center; gap: .2rem; min-width: 0; }
 .dg-court__card { display: flex; align-items: center; gap: .55rem; min-width: 10.5rem; max-width: 13rem; border: 1px solid hsl(var(--border) / .5); border-radius: .6rem; background: linear-gradient(180deg, hsl(var(--court-surface) / .92), hsl(var(--court-canvas) / .96)); padding: .45rem .6rem .45rem .45rem; box-shadow: 0 8px 16px hsl(var(--court-canvas) / .5); backdrop-filter: blur(3px); }
 .dg-court__card > .dg-court__portrait, .dg-court__card > .dg-court__initials { flex-shrink: 0; }
 .dg-court__card .dg-court__name, .dg-court__card .dg-court__stat, .dg-court__card .dg-court__pos { border: 0; background: none; box-shadow: none; }

@@ -211,7 +211,7 @@ export default function FixTheFive() {
                         <span className="dg-badge">Locked {pickCount}/{challenges.length}</span>
                       </span>
                     </div>
-                    <p className="dg-board-hero__prompt text-muted-foreground hidden">{activeChallenge.prompt}</p>
+                    
                   </section>
                   <div key={activeChallenge.challengeId} className="dg-flow-in space-y-3">
                     <LineupCourt slim lineup={activeChallenge.lineup} removedPlayerRef={activeChallenge.removePlayerRef} />

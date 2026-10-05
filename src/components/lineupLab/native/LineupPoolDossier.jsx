@@ -3,21 +3,19 @@ import { Image } from '@/components/ui/image';
 import { teamAsset } from '@/components/studio/teamAssets';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 import { statsFromTotals } from '@/components/players/blueprintModel';
-import BlueprintStatGrid from '@/components/players/BlueprintStatGrid';
-import BlueprintStatsTable from '@/components/players/BlueprintStatsTable';
 import PlayerContextTiles from '@/components/players/PlayerContextTiles';
-import PlayerCareerRecord from '@/components/players/PlayerCareerRecord';
+import LineupSeasonRecord from '@/components/lineupLab/native/LineupSeasonRecord';
 import PlayerBio from '@/components/players/PlayerBio';
 import TrophyCase from '@/components/players/TrophyCase';
 import usePlayerContext from '@/components/players/usePlayerContext';
 
 const initials = name => name.split(' ').map(part => part[0]).slice(0, 2).join('');
-const TABS = [['profile', 'Profile'], ['stats', 'Stats'], ['bio', 'Bio']];
+const TABS = [['profile', 'Profile'], ['bio', 'Bio']];
 
 // Pool card in the full dossier-profile design: the same layout and info the
 // Player Lab dossier shows — portrait header with team watermark, rate strip,
-// and Profile / Stats / Bio tabs — fed by the pool row plus the player's
-// published context record. Presentation only; pool actions stay wired to the
+// and Profile / Bio tabs with only the selected season's stats — fed by the
+// pool row plus the player's published context record. Presentation only; pool actions stay wired to the
 // hidden source table.
 export default function LineupPoolDossier({ row, team, strip, actions, pager }) {
   const [tab, setTab] = useState('profile');
@@ -97,11 +95,10 @@ export default function LineupPoolDossier({ row, team, strip, actions, pager }) 
         <p className="text-[10px] font-semibold uppercase tracking-[.2em] text-gold">Player profile</p>
         <h3 className="mt-1 font-display text-2xl uppercase tracking-wide text-foreground">Player context</h3>
         <PlayerContextTiles bio={bio} status={status} />
-        <p className="mt-6 text-[10px] font-semibold uppercase tracking-[.2em] text-gold">Career record</p>
-        <h3 className="mt-1 font-display text-2xl uppercase tracking-wide text-foreground">Career regular-season totals and averages</h3>
-        <PlayerCareerRecord context={context} status={status} />
+        <p className="mt-6 text-[10px] font-semibold uppercase tracking-[.2em] text-gold">Season statistics</p>
+        <h3 className="mt-1 font-display text-2xl uppercase tracking-wide text-foreground">{year ? `${year}–${String(year + 1).slice(-2)}` : 'Selected-season'} regular-season stats</h3>
+        <LineupSeasonRecord player={player} year={year} teamCode={teamCode} status={status} />
       </section>}
-      {tab === 'stats' && <><BlueprintStatGrid player={player} /><BlueprintStatsTable player={player} /></>}
       {tab === 'bio' && <><PlayerBio player={player} context={context} status={status} /><TrophyCase context={context} status={status} /></>}
       <p className="mt-4 text-[10px] leading-relaxed text-muted-foreground">{player.statsSource}. Player portraits and biography context may be current; statistics remain bound to the selected team, season and phase.</p>
     </div>

@@ -7,14 +7,25 @@
 import { installSessionMemory, restoreSessionInputs } from '@/lineupLab/lineup-lab/sessionMemory';
 import { buildSavedRunButtons } from '@/lineupLab/lineup-lab/savedRuns';
 import { installResultInsights, installWeightSummaryDisclosure } from '@/lineupLab/lineup-lab/resultInsights';
+import { installRunJournal } from '@/lineupLab/lineup-lab/runJournal';
+import { installPlayerDetail } from '@/lineupLab/lineup-lab/playerDetail';
+import { installWeightBalance } from '@/lineupLab/lineup-lab/weightBalance';
+import { installRunLink, applyRunLink } from '@/lineupLab/lineup-lab/runLink';
 
 export function installToolExtras(keeper) {
   installSessionMemory(keeper);
+  installRunJournal(keeper);
+  installPlayerDetail(keeper);
+  installWeightBalance(keeper);
+  installRunLink(keeper);
   installResultExports(keeper);
   installResultInsights(keeper);
   installWeightSummaryDisclosure(keeper);
-  // Restore remembered inputs first, then let the auto load pick them up.
-  restoreSessionInputs(keeper).finally(() => autoLoadData(keeper));
+  // Restore remembered inputs, then any ?run= link (a shared link wins over
+  // locally remembered inputs), then let the auto load pick them up.
+  restoreSessionInputs(keeper)
+    .then(() => applyRunLink(keeper))
+    .finally(() => autoLoadData(keeper));
 }
 
 let autoLoaded = false;

@@ -13,6 +13,7 @@ export default function LineupToolbar() {
         {[['optimizer', 'Build'], ['compare', 'Compare'], ['watchlist', 'Watchlist'], ['model', 'How it works']].map(([key, label]) => <button key={key} id={`${key}Tab`} type="button" role="tab" className={key === 'optimizer' ? 'is-active' : 'detailed-only'} data-view-target={key} aria-controls={`${key}View`} aria-selected={key === 'optimizer'}>{label}{['compare', 'watchlist'].includes(key) && <span id={`${key}Count`}>0</span>}</button>)}
       </nav>
       <div className="experience-switcher" aria-label="Level of detail"><button id="simpleModeButton" type="button" aria-pressed="false">Simple</button><button id="detailedModeButton" type="button" aria-pressed="true" className="is-active">Detailed</button></div>
+      <button id="tourReplayButton" type="button" onClick={() => window.dispatchEvent(new CustomEvent('ll-open-tour'))}>Game guide</button>
       <TeamPalettePicker />
     </div>
   </>;

@@ -28,4 +28,27 @@
 .ll-native .player-usage-scenario { display: grid; grid-template-columns: minmax(0, 1fr) 6rem; align-items: center; gap: .7rem; padding: .5rem 0; font-size: .8rem; }
 .ll-native .print-only { display: none; }
 body[data-experience-mode="simple"] .ll-native .player-table :is(th, td):nth-child(n+7):nth-child(-n+9), body[data-experience-mode="simple"] .ll-native .player-table :is(th, td):nth-child(n+12) { display: none; }
-@media print { .ll-native-toolbar, .ll-native-build, .ll-native .results__actions, .ll-native .command-export-bar, .ll-native-hero, .ll-native-dataset { display: none !important; } .ll-native .print-only { display: block; } .ll-native .results { display: block !important; box-shadow: none; } .ll-native .full-analysis { display: block !important; } }
+@media print { .ll-native-toolbar, .ll-native-build, .ll-native .results__actions, .ll-native .command-export-bar, .ll-native-hero, .ll-native-dataset, .ll-run-summary, .ll-run-diff, .ll-hud { display: none !important; } .ll-native .print-only { display: block; } .ll-native .results { display: block !important; box-shadow: none; } .ll-native .full-analysis { display: block !important; } }
+
+/* === Team-logo watermark on the results desk (#13) === */
+.ll-native .results { position: relative; overflow: hidden; }
+.ll-native .results::after { content: ''; position: absolute; right: -2.5rem; bottom: -2.5rem; width: 15rem; height: 15rem; background: var(--djhc-court-team-logo, none) center / contain no-repeat; opacity: .1; pointer-events: none; }
+
+/* === Fresh-result entrance: cards rise in with a stagger (#11) === */
+@keyframes ll-card-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.ll-native #results:not([hidden]) :is(.result-card, .score-card, .watch-card, .result-passport__card, .objective-scenario-card) { animation: ll-card-in .5s cubic-bezier(.2,.8,.3,1) both; }
+.ll-native :is(.result-scoreboard, .result-detail-grid, .result-passport__grid, .lineup-grid, .objective-scenario-grid) > :nth-child(2) { animation-delay: .07s; }
+.ll-native :is(.result-scoreboard, .result-detail-grid, .result-passport__grid, .lineup-grid, .objective-scenario-grid) > :nth-child(3) { animation-delay: .14s; }
+.ll-native :is(.result-scoreboard, .result-detail-grid, .result-passport__grid, .lineup-grid, .objective-scenario-grid) > :nth-child(4) { animation-delay: .21s; }
+.ll-native :is(.result-scoreboard, .result-detail-grid, .result-passport__grid, .lineup-grid, .objective-scenario-grid) > :nth-child(5) { animation-delay: .28s; }
+.ll-native :is(.result-scoreboard, .result-detail-grid, .result-passport__grid, .lineup-grid, .objective-scenario-grid) > :nth-child(6) { animation-delay: .35s; }
+.ll-native :is(.result-scoreboard, .result-detail-grid, .result-passport__grid, .lineup-grid, .objective-scenario-grid) > :nth-child(7) { animation-delay: .42s; }
+.ll-native :is(.result-scoreboard, .result-detail-grid, .result-passport__grid, .lineup-grid, .objective-scenario-grid) > :nth-child(8) { animation-delay: .49s; }
+@media (prefers-reduced-motion: reduce) { .ll-native #results :is(.result-card, .score-card, .watch-card, .result-passport__card, .objective-scenario-card) { animation: none !important; } }
+
+/* === Run summary strip + diff panel (#1, #3) === */
+.ll-run-summary { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin: 1.1rem 0; padding: .8rem 1rem; border: 1px solid hsl(var(--court-accent) / .4); border-radius: .7rem; background: hsl(var(--court-accent) / .07); font-size: .8rem; }
+.ll-run-summary strong { font-family: var(--font-display); font-size: .95rem; letter-spacing: .04em; }
+.ll-run-diff { margin-bottom: 1.1rem; padding: 1rem; border: 1px dashed hsl(var(--court-border) / .45); border-radius: .7rem; background: hsl(var(--court-canvas) / .5); }
+.ll-run-diff h3 { font-size: 1.1rem; margin-bottom: .2rem; }
+.ll-run-diff__chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }

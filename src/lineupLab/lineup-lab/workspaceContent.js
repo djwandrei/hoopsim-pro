@@ -4,7 +4,7 @@ const css = `
 ${s} .live-data-panel__intro { margin: 0 0 22px; padding: 0; border: 0; }
 ${s} .live-data-panel__intro .workflow-heading { margin: 0; border: 0; padding: 0; }
 ${s} .journey-stage--team { grid-template-columns: minmax(0, 1.45fr) minmax(280px, 1fr); }
-${s} .journey-stage--team #datasetStrip { margin: 0; padding: 22px; border: 1px solid var(--ll-panel-border); border-radius: 16px; background: var(--ll-panel); box-shadow: none; }
+${s} .journey-stage--team #datasetStrip { margin: 0; padding: 22px; border: 1px solid var(--ll-panel-border); border-radius: 16px; background: var(--ll-field); box-shadow: none; }
 ${s} .dataset-strip { display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: center; gap: 14px; margin: 18px 0 0; padding: 18px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-field); color: var(--ll-body-ink); font: 400 13px/1.6 var(--font-body); }
 ${s} :is(.dataset-strip__mark, .dataset-strip__logo) { width: 44px; height: 44px; }
 ${s} .dataset-strip__mark { color: var(--ll-gold); }
@@ -18,12 +18,13 @@ ${s} .dataset-strip__actions { display: flex; flex-wrap: wrap; gap: 10px; justif
 ${s} .dataset-strip__media { color: var(--ll-muted); font-size: 12px; }
 ${s} :is(.constraint-groups fieldset, .model-choice) { width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; }
 ${s} .constraint-groups legend { margin-bottom: 12px; }
-${s} :is(.command-card details, .journey-rule-group, .metric-field-guide) { margin-top: 18px; padding: 16px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-field); color: var(--ll-body-ink); font-size: 13px; line-height: 1.65; }
+${s} :is(.command-card details, .metric-field-guide) { margin-top: 18px; padding: 16px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-raise); color: var(--ll-body-ink); font-size: 13px; line-height: 1.65; }
+${s} .journey-rule-group { margin-top: 18px; padding: 16px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-field); color: var(--ll-body-ink); font-size: 13px; line-height: 1.65; }
 ${s} details summary { min-height: 28px; color: var(--ll-body-ink); font: 600 14px/1.5 var(--font-body); cursor: pointer; }
 ${s} details[open] > summary { margin-bottom: 16px; }
 ${s} .journey-rule-group { margin-top: 0; }
 ${s} .journey-stage--rules > .journey-rule-group { margin-top: 0; }
-${s} .player-pool-details { padding: 18px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-field); gap: 16px; }
+${s} .player-pool-details { padding: 18px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-raise); gap: 16px; }
 ${s} .player-pool-details__heading :is(h3, p) { margin: 0; }
 ${s} .player-pool-details__heading p { color: var(--ll-muted); font: 400 13px/1.6 var(--font-body); }
 ${s} :is(.table-wrap, .compare-content) { overflow: auto; max-width: 100%; border: 1px solid var(--ll-panel-border); border-radius: 12px; overscroll-behavior-x: contain; }
@@ -37,7 +38,7 @@ ${s} .results__heading { display: flex; align-items: start; flex-wrap: wrap; jus
 ${s} .results__heading p { max-width: 62ch; color: var(--ll-muted); }
 ${s} :is(.results__actions, .lab-coaching-brief__actions, .opponent-swishiq__controls) { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 ${s} :is(.result-card, .result-passport__card, .objective-scenario-card, .watch-card, .model-grid article) { padding: 18px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-field); color: var(--ll-body-ink); font: 400 14px/1.6 var(--font-body); box-shadow: none; }
-${s} .result-scoreboard { background: var(--ll-panel); border: 1px solid var(--ll-panel-border); box-shadow: none; }
+${s} .result-scoreboard { background: var(--ll-field); border: 1px solid var(--ll-panel-border); box-shadow: none; }
 ${s} .result-freshness { padding: 12px 16px; background: var(--ll-field); border: 1px solid var(--ll-field-border); color: var(--ll-warning) !important; }
 ${s} .unit-proof-checks .is-ok { color: var(--ll-success); }
 ${s} :is(.unit-proof-checks .is-fail, .weight-validation, .error-card) { color: var(--ll-error); }

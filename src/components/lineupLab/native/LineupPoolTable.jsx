@@ -144,12 +144,17 @@ export default function LineupPoolTable() {
   const focusIndex = Math.min(cardIndex, Math.max(0, sorted.length - 1));
   const focus = sorted[focusIndex];
 
+  const viewSwitch = <div className="pool-view-switch" role="group" aria-label="Pool table view">
+    <button type="button" className={view === 'ledger' ? 'is-active' : ''} aria-pressed={view === 'ledger'} onClick={() => setView('ledger')}>Ledger</button>
+    <button type="button" className={view === 'advanced' ? 'is-active' : ''} aria-pressed={view === 'advanced'} onClick={openAdvanced}>Player cards</button>
+  </div>;
+
   const scaleBar = <div className="pool-scale-bar">
     <span className="pool-scale-bar__label"><SlidersHorizontal size={13} aria-hidden="true" /> Stat scale</span>
     <div className="pool-scale-switch" role="group" aria-label="Stat scale">
       {SCALES.map(([key, label]) => <button key={key} type="button" className={scale === key ? 'is-active' : ''} aria-pressed={scale === key} onClick={() => onScale(key)}>{label}</button>)}
     </div>
-
+    {viewSwitch}
   </div>;
 
   const onTouchStart = event => { const touch = event.touches[0]; touchRef.current = { x: touch.clientX, y: touch.clientY }; dragRef.current = 0; };

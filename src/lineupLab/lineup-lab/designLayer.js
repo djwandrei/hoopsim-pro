@@ -525,6 +525,43 @@ body.dark-mode .lineup-lab-tool {
   font-size: .78rem;
 }
 
+/* ===== Guided journey flow (studio rail + site stage wrappers) ===== */
+.lineup-lab-tool .journey-rail {
+  position: sticky;
+  top: calc(var(--djhc-header-h, 96px) + 1rem);
+  max-height: calc(100vh - var(--djhc-header-h, 96px) - 2rem);
+  overflow: auto;
+  border: 1px solid rgba(233, 185, 73, .22);
+  box-shadow: 0 16px 38px rgba(4, 8, 20, .45);
+}
+.lineup-lab-tool .journey-rail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(233, 185, 73, .9), rgba(43, 63, 174, .5) 46%, transparent 84%);
+}
+.lineup-lab-tool .journey-rail__eyebrow {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.lineup-lab-tool .journey-stage,
+.lineup-lab-tool #results,
+.lineup-lab-tool #emptyResult {
+  scroll-margin-top: calc(var(--djhc-header-h, 96px) + 1.25rem);
+}
+.lineup-lab-tool .journey-heading h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: .02em;
+  color: var(--ll-heading-ink);
+}
+.lineup-lab-tool .journey-heading .eyebrow {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--ll-gold);
+}
+
 /* ===== Focus + motion ===== */
 .lineup-lab-tool :is(button, a, input, select, summary):focus-visible {
   outline: 2px solid rgba(233, 185, 73, .8);

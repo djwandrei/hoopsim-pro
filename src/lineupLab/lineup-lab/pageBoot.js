@@ -10,6 +10,7 @@ import { ensureToolStyles, removeToolStyles, ensureSiteConfig } from '@/lineupLa
 import toolLinks from '@/lineupLab/lineup-lab/toolLinks';
 import toolBodyState from '@/lineupLab/lineup-lab/toolBodyState';
 import { installLineupLabBridge } from '@/lineupLab/lineup-lab/siteBridge';
+import { installJourneyFlow } from '@/lineupLab/lineup-lab/journeyFlow';
 
 const MODULE_BASE = '/lineup-lab/';
 const APP_REV = '?v=20261002c&rev=lineup-v4-share-client-contract-pin-closure-v1';
@@ -46,6 +47,9 @@ export async function mountLineupLab(host, signal) {
     keeper.className = 'lineup-lab-tool';
     keeper.innerHTML = markup;
     toolLinks(keeper);
+    // Installed before the site's scripts boot so lab-experience.js finds
+    // the guided-workflow shell and activates the coaching-brief prompts.
+    installJourneyFlow(keeper);
   }
   host.appendChild(keeper);
   restoreBody = toolBodyState();

@@ -7,7 +7,6 @@ import commandDock from '@/lineupLab/lineup-lab/commandDock';
 export function installJourneyFlow(keeper) {
   const workspace = keeper.querySelector('#workspace');
   const view = keeper.querySelector('#optimizerView');
-  const form = keeper.querySelector('#optimizerForm');
   const shell = view?.querySelector('.guided-workflow');
   if (!workspace || !shell || workspace.classList.contains('command-workspace')) return;
   workspace.classList.add('command-workspace');
@@ -28,8 +27,5 @@ export function installJourneyFlow(keeper) {
     if (opponent) card.append(opponent);
     scenario.after(card);
   }
-  for (const id of ['weightsPanel', 'coachingBrief']) {
-    const details = form.querySelector(`#${id}`);
-    if (details) details.open = true;
-  }
+  // Optional fine-tuning and coaching notes keep their native collapsed state.
 }

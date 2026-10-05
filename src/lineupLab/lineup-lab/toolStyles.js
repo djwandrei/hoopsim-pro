@@ -1,4 +1,5 @@
 import designLayer from '@/lineupLab/lineup-lab/designLayer';
+import commandStyles from '@/lineupLab/lineup-lab/commandStyles';
 
 const STYLES = [
   '/styles.css?v=20261001g',
@@ -27,7 +28,7 @@ function ensureDesignLayer() {
   document.querySelectorAll('style[data-lineup-lab-design="true"]').forEach(style => style.remove());
   const style = document.createElement('style');
   style.dataset.lineupLabDesign = 'true';
-  style.textContent = designLayer;
+  style.textContent = designLayer + '\n' + commandStyles;
   document.head.appendChild(style);
 }
 

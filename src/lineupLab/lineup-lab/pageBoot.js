@@ -47,8 +47,8 @@ export async function mountLineupLab(host, signal) {
     keeper.className = 'lineup-lab-tool';
     keeper.innerHTML = markup;
     toolLinks(keeper);
-    // Installed before the site's scripts boot so lab-experience.js finds
-    // the guided-workflow shell and activates the coaching-brief prompts.
+    // Recompose only the workspace, retaining the original control nodes
+    // before the site's listeners attach. Hero and palette picker stay intact.
     installJourneyFlow(keeper);
   }
   host.appendChild(keeper);

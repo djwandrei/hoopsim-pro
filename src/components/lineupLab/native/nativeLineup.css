@@ -1,0 +1,102 @@
+@import '@/components/lineupLab/native/nativeResults.css';
+.ll-native { --ll-elev-rest: 0 4px 14px hsl(var(--court-canvas) / .2); --ll-elev-hover: 0 12px 30px hsl(var(--court-canvas) / .3); --ll-gold: hsl(var(--court-accent)); --ll-muted: hsl(var(--court-muted)); --ll-body-ink: hsl(var(--court-text)); --ll-field-border: hsl(var(--court-border) / .35); color: hsl(var(--court-text)); }
+.ll-native [hidden] { display: none !important; }
+.ll-native h1, .ll-native h2, .ll-native h3 { font-family: var(--font-display); letter-spacing: .04em; }
+.ll-native h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.05; }
+.ll-native h2 { font-size: 1.65rem; line-height: 1.15; }
+.ll-native h3 { font-size: 1.3rem; }
+.ll-native p, .ll-native small { line-height: 1.65; }
+.ll-native-hero { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1rem 0 2rem; }
+.ll-native-hero p:last-child { margin-top: 1rem; max-width: 60ch; font-size: .9rem; color: hsl(var(--court-muted)); }
+.ll-native-toolbar { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin-bottom: 1.3rem; }
+.ll-native-toolbar .tool-nav { display: flex; flex-wrap: wrap; gap: .4rem; margin-right: auto; }
+.ll-native-toolbar button { border: 1px solid hsl(var(--court-border) / .3); background: hsl(var(--court-surface)); color: hsl(var(--court-muted)); border-radius: .6rem; min-height: 2.75rem; padding: .6rem 1rem; font-size: .8rem; font-weight: 600; }
+.ll-native-toolbar button.is-active { background: hsl(var(--court-raised)); color: hsl(var(--court-text)); border-color: hsl(var(--court-accent) / .7); }
+.ll-native-toolbar button span { margin-left: .5rem; font-family: var(--font-mono); }
+.ll-native .experience-switcher { display: flex; gap: .3rem; }
+.ll-native-toolbar > .court-team-picker { position: relative; inset: auto; margin: 0; padding: .6rem; }
+.ll-native-card { min-width: 0; padding: 1.4rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: 1rem; background: hsl(var(--court-surface)); box-shadow: var(--ll-elev-rest); }
+.ll-native-card__heading { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.2rem; }
+.ll-native-index { display: inline-grid; place-items: center; min-width: 2rem; min-height: 2rem; border: 1px solid hsl(var(--court-accent) / .4); border-radius: .5rem; color: hsl(var(--court-accent)); font: 600 .75rem var(--font-mono); }
+.ll-native-dataset { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.ll-native-dataset__identity { display: flex; align-items: center; gap: .9rem; margin-right: auto; }
+.ll-native-dataset__identity strong { display: block; font-family: var(--font-display); font-size: 1.5rem; }
+.ll-native-dataset__identity small { display: block; font-size: .7rem; color: hsl(var(--court-muted)); }
+.ll-native-facts { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; }
+.ll-native-facts dt { color: hsl(var(--court-muted)); font-size: .7rem; }
+.ll-native-facts dd { font-size: .85rem; font-weight: 600; margin-top: .25rem; }
+.ll-native-build { display: grid; grid-template-columns: minmax(0, 1fr) 18rem; gap: 1.5rem; align-items: start; }
+.ll-native-settings { min-width: 0; padding: 0; margin: 0; border: 0; }
+.ll-native-settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.ll-native-settings-grid > :is(#liveDataPanel, #nativeGamePlan, #nativeRoster) { grid-column: 1 / -1; }
+.ll-native-run { position: sticky; top: calc(var(--djhc-header-h, 80px) + 1rem); }
+.ll-native-run .ll-native-facts { margin: 1.2rem 0; display: grid; grid-template-columns: 1fr 1fr; }
+.ll-native-run .button { margin-top: .8rem; }
+.ll-native-run > .text-button { display: block; width: 100%; margin-top: .8rem; }
+.ll-native-note { padding: .9rem; border: 1px solid hsl(var(--court-border) / .25); border-radius: .7rem; background: hsl(var(--court-canvas) / .5); font-size: .8rem; }
+.ll-native-note strong { display: block; margin-top: .25rem; }
+.ll-native-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.ll-native-fields--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ll-native .field { display: grid; gap: .45rem; min-width: 0; font-size: .78rem; }
+.ll-native .field > span { font-weight: 600; color: hsl(var(--court-text)); }
+.ll-native .field input, .ll-native .field select, .ll-native .player-usage-scenario input { width: 100%; min-width: 0; min-height: 2.75rem; padding: .6rem .7rem; border: 1px solid hsl(var(--court-border) / .5); border-radius: .5rem; background: hsl(var(--court-canvas)); color: hsl(var(--court-text)); font-size: .8rem; }
+.ll-native small, .ll-native .helper { font-size: .75rem; color: hsl(var(--court-muted)); }
+.ll-native .helper { margin: .9rem 0; }
+.ll-native .button, .ll-native .button-secondary, .ll-native .text-button { min-height: 2.75rem; padding: .6rem .85rem; border: 1px solid hsl(var(--court-accent) / .6); border-radius: .5rem; background: hsl(var(--court-accent)); color: hsl(var(--primary-foreground)); font: 600 .78rem/1.4 var(--font-body); }
+.ll-native .button--quiet, .ll-native .button-secondary, .ll-native .text-button { background: hsl(var(--court-raised) / .5); color: hsl(var(--court-text)); border-color: hsl(var(--court-border) / .35); }
+.ll-native .button--full { width: 100%; }
+.ll-native button:disabled { opacity: .5; cursor: not-allowed; }
+.ll-native .card-actions, .ll-native .results__actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.ll-native .preset-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
+.ll-native .preset-card { text-align: left; padding: .8rem; border-radius: .7rem; border: 1px solid hsl(var(--court-border) / .35); background: hsl(var(--court-canvas)); min-height: 5rem; }
+.ll-native .preset-card strong { display: block; font-size: .9rem; }
+.ll-native .preset-card span { display: block; margin-top: .35rem; font-size: .7rem; line-height: 1.5; color: hsl(var(--court-muted)); }
+.ll-native .preset-card.is-active { border-color: hsl(var(--court-accent)); background: hsl(var(--court-accent) / .09); }
+.ll-native details { border: 1px solid hsl(var(--court-border) / .3); border-radius: .7rem; padding: .9rem; margin-top: 1rem; background: hsl(var(--court-canvas) / .45); }
+.ll-native summary { font-size: .8rem; font-weight: 600; cursor: pointer; }
+.ll-native details[open] > summary { margin-bottom: 1rem; }
+.ll-native .model-choice { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid hsl(var(--court-border) / .25); }
+.ll-native .weight-grid, .ll-native .metric-field-guide__grid, .ll-native .model-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.ll-native .range-field { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .4rem; }
+.ll-native .range-field > span { grid-column: 1 / -1; font-size: .8rem; }
+.ll-native .range-field small { display: block; font-size: .7rem; }
+.ll-native input[type="range"] { width: 100%; accent-color: hsl(var(--court-accent)); }
+.ll-native .range-field output { font-family: var(--font-mono); font-size: .75rem; color: hsl(var(--court-accent)); }
+.ll-native fieldset:not(.ll-native-settings) { border: 0; min-width: 0; padding: 0; margin: 0 0 1.2rem; }
+.ll-native fieldset legend { font-weight: 600; font-size: .85rem; margin-bottom: .8rem; }
+.ll-native fieldset > .field { margin-top: 1rem; }
+.ll-native-roster__tools { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 1rem; align-items: end; }
+.ll-native .table-wrap, .ll-native .compare-content { overflow-x: auto; width: 100%; border: 1px solid hsl(var(--court-border) / .25); border-radius: .7rem; }
+.ll-native table { width: 100%; border-collapse: collapse; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.ll-native .player-table { min-width: 58rem; }
+.ll-native th { background: hsl(var(--court-raised)); color: hsl(var(--court-muted)); padding: .7rem; text-align: left; font-size: .7rem; }
+.ll-native td { padding: .7rem; border-bottom: 1px solid hsl(var(--court-border) / .2); }
+.ll-native .player-table-sort { min-height: 2rem; font-weight: 600; }
+.ll-native input[type="checkbox"] { width: 1rem; height: 1rem; accent-color: hsl(var(--court-accent)); }
+.ll-native .player-table__identity, .ll-native .player-identity { display: flex; gap: .6rem; align-items: center; }
+.ll-native .player-avatar, .ll-native .player-headshot { width: 2.5rem; height: 2.5rem; object-fit: contain; border-radius: 50%; }
+.ll-native .results { margin-top: 1.5rem; }
+.ll-native .results__heading { display: grid; gap: 1.2rem; margin-bottom: 1.5rem; }
+.ll-native .empty-result { margin-top: 1.5rem; text-align: center; padding: 2rem; }
+.ll-native .empty-result p { margin-top: .8rem; font-size: .8rem; color: hsl(var(--court-muted)); }
+.ll-native :is(.result-scoreboard, .result-detail-grid, .result-evidence, .result-passport__grid, .watchlist-grid, .compare-grid, .objective-scenario-grid) { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 1rem; margin: 1rem 0; }
+.ll-native :is(.result-card, .score-card, .watch-card, .result-passport__card, .objective-scenario-card, .model-grid article, .metric-field-guide__grid article) { min-width: 0; padding: 1rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .8rem; background: hsl(var(--court-canvas) / .5); }
+.ll-native .score-card span { display: block; font-size: .7rem; color: hsl(var(--court-muted)); }
+.ll-native .score-card strong { display: block; font: 400 1.8rem var(--font-display); color: hsl(var(--court-text)); }
+.ll-native :is(.lineup-player, .lineup-dna, .fan-report, .historical-benchmark, .alternatives-section, .result-passport) { margin-top: 1.2rem; padding: 1.2rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .8rem; background: hsl(var(--court-canvas) / .4); }
+.ll-native .resultContent, .ll-native #resultContent { overflow-wrap: anywhere; }
+.ll-native #resultContent img, .ll-native #compareContent img, .ll-native #watchlistContent img { max-width: 100%; object-fit: contain; }
+.ll-native :is(.result-player-avatar, .player-card__avatar, .lineup-player__avatar, .watch-card img, .compare-content img) { max-width: 5rem; max-height: 5rem; }
+.ll-native .ll-native-errors { display: grid; gap: .6rem; padding: 1rem; margin-bottom: 1rem; border: 1px solid hsl(var(--court-trim)); border-radius: .8rem; background: hsl(var(--court-trim) / .1); }
+.ll-native [aria-invalid="true"] { border-color: hsl(var(--court-trim)); }
+.ll-native .result-freshness { padding: .8rem; border: 1px solid hsl(var(--court-accent) / .6); margin-bottom: 1rem; border-radius: .5rem; }
+.ll-native .mobile-solve-bar { display: none; }
+.ll-native .toast { display: none; position: fixed; z-index: 80; bottom: 1rem; left: 50%; transform: translateX(-50%); width: min(90%, 32rem); padding: 1rem; border: 1px solid hsl(var(--court-accent)); border-radius: .8rem; background: hsl(var(--court-surface)); box-shadow: var(--ll-elev-hover); font-size: .85rem; }
+.ll-native .toast.is-visible { display: block; }
+.ll-native .simple-only { display: none; }
+body[data-experience-mode="simple"] .ll-native .simple-only { display: block; }
+body[data-experience-mode="simple"] .ll-native :is(.detailed-only, .detailed-only-column, .result-evidence, .result-detail-grid, .historical-benchmark, .alternatives-section, .fan-report) { display: none !important; }
+body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open :is(.result-evidence, .result-detail-grid, .historical-benchmark, .alternatives-section, .fan-report) { display: block !important; }
+@media (max-width: 1023px) { .ll-native-build { grid-template-columns: minmax(0, 1fr); } .ll-native-run { position: static; } }
+@media (max-width: 767px) { .ll-native-hero { gap: 1rem; } .ll-native-hero > img { width: 5rem; height: 5rem; } .ll-native-settings-grid { grid-template-columns: minmax(0, 1fr); } .ll-native-card { padding: 1rem; } .ll-native-roster__tools { grid-template-columns: minmax(0, 1fr); } .ll-native .preset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ll-native .mobile-solve-bar { display: flex; position: sticky; bottom: .5rem; z-index: 10; align-items: center; gap: .5rem; padding: .75rem; margin-top: 1rem; border: 1px solid hsl(var(--court-border) / .5); border-radius: .8rem; background: hsl(var(--court-surface)); box-shadow: var(--ll-elev-hover); } .ll-native .mobile-solve-bar span { margin-right: auto; font-size: .75rem; } }
+@media (max-width: 420px) { .ll-native-fields, .ll-native .weight-grid, .ll-native .model-grid, .ll-native .metric-field-guide__grid { grid-template-columns: minmax(0, 1fr); } .ll-native-fields--three { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

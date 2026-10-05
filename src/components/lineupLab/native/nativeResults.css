@@ -1,0 +1,31 @@
+.ll-native :is(.lineup-grid, .fan-report__grid, .input-stability-cases) { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1rem; }
+.ll-native :is(.player-name__identity, .lineup-player__top, .watch-card__identity, .watch-card__heading, .lineup-dna__header, .fan-report__header) { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.ll-native .player-name__identity { justify-content: flex-start; }
+.ll-native :is(.player-name, .player-name small) { display: block; }
+.ll-native .player-avatar { position: relative; display: inline-grid; place-items: center; overflow: hidden; flex: 0 0 2.5rem; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid hsl(var(--court-border) / .3); background: hsl(var(--court-raised)); font: 600 .75rem var(--font-mono); }
+.ll-native .player-avatar__image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; background: hsl(var(--court-raised)); }
+.ll-native .player-avatar__image.is-loaded { opacity: 1; }
+.ll-native .table-check-target { display: inline-grid; place-items: center; width: 2.75rem; height: 2.75rem; cursor: pointer; }
+.ll-native .player-table tr:is(.is-ineligible, .is-excluded) { opacity: .6; }
+.ll-native .player-table tr.is-locked { background: hsl(var(--court-accent) / .08); }
+.ll-native :is(.active-selection-tray, #activeSelectionTray, .role-tags, .ll-sensitivity, .lineup-dna__counts) { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin: .8rem 0; }
+.ll-native :is(.selection-chip, .role-tag, .position-pill, .model-status-chip, .ll-chip) { display: inline-flex; align-items: center; padding: .3rem .6rem; border: 1px solid hsl(var(--court-border) / .35); border-radius: .5rem; background: hsl(var(--court-raised) / .5); font-size: .7rem; }
+.ll-native :is(.minutes-list, .role-coverage-list, .family-contribution-list, .contribution-list, .audit-list, .unit-proof-checks) { display: grid; gap: .6rem; margin: 1rem 0; font-size: .8rem; }
+.ll-native :is(.minutes-list__player, .role-coverage-row, .analytics-chart__row, .compare-row) { padding: .65rem; border-bottom: 1px solid hsl(var(--court-border) / .25); }
+.ll-native :is(.metric-bar__track, .analytics-chart__track, .compare-player-track) { display: block; height: .6rem; background: hsl(var(--court-raised)); border-radius: 999px; overflow: hidden; }
+.ll-native :is(.metric-bar__fill, .analytics-chart__bar, .compare-player-bar) { display: block; height: 100%; min-height: .6rem; background: hsl(var(--court-accent)); border-radius: 999px; }
+.ll-native :is(.metric-bar, .compare-player-line, .compare-row__bars, .analytics-chart) { display: grid; gap: .6rem; }
+.ll-native :is(.result-passport__metrics, .result-passport__proof) { display: grid; gap: .8rem; }
+.ll-native :is(.result-passport__metric, .unit-proof-checks li, .opponent-player) { display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: .8rem; }
+.ll-native .resultContent a, .ll-native #resultContent a { color: hsl(var(--court-accent)); text-decoration: underline; }
+.ll-native :is(.exact-replacement, .lineup-dna__swap) { padding: 1rem; margin-top: 1rem; border-radius: .7rem; background: hsl(var(--court-raised) / .5); }
+.ll-native :is(.lineup-dna__swap-controls, .opponent-swishiq__actions, .command-export-bar, .ll-compare__head) { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+.ll-native :is(.is-ok, .ll-compare__best) { color: hsl(var(--court-positive)); }
+.ll-native :is(.is-fail, .error-card, #weightValidation) { color: hsl(var(--court-trim-ink)); }
+.ll-native .opponent-swishiq__logo-image { width: 3.6rem; height: 3.6rem; object-fit: contain; }
+.ll-native .opponent-swishiq__summary > * { margin-top: .8rem; }
+.ll-native .opponent-plan__priorities, .ll-native .opponent-swishiq__rotation { display: grid; gap: .7rem; }
+.ll-native .player-usage-scenario { display: grid; grid-template-columns: minmax(0, 1fr) 6rem; align-items: center; gap: .7rem; padding: .5rem 0; font-size: .8rem; }
+.ll-native .print-only { display: none; }
+body[data-experience-mode="simple"] .ll-native .player-table :is(th, td):nth-child(n+7):nth-child(-n+9), body[data-experience-mode="simple"] .ll-native .player-table :is(th, td):nth-child(n+12) { display: none; }
+@media print { .ll-native-toolbar, .ll-native-build, .ll-native .results__actions, .ll-native .command-export-bar, .ll-native-hero, .ll-native-dataset { display: none !important; } .ll-native .print-only { display: block; } .ll-native .results { display: block !important; box-shadow: none; } .ll-native .full-analysis { display: block !important; } }

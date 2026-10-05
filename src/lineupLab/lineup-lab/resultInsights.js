@@ -64,7 +64,11 @@ export function installResultInsights(keeper) {
       strip.hidden = true;
       return;
     }
-    strip.replaceChildren(...chips);
+    const signature = chips.map(item => `${item.className}:${item.textContent}`).join('|');
+    if (strip.dataset.signature !== signature) {
+      strip.dataset.signature = signature;
+      strip.replaceChildren(...chips);
+    }
     strip.hidden = false;
     if (scoreboard.nextElementSibling !== strip) scoreboard.after(strip);
   };

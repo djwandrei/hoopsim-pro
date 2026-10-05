@@ -1,0 +1,83 @@
+/* Player pool table: broadcast ledger (default) + advanced player-card carousel. */
+
+.pool-table-view { display: grid; gap: .7rem; min-width: 0; }
+.pool-view-switch { display: inline-flex; gap: .3rem; align-self: start; padding: .25rem; border: 1px solid hsl(var(--court-border) / .35); border-radius: .55rem; background: hsl(var(--court-canvas) / .5); }
+.pool-view-switch button { min-height: 1.9rem; padding: .3rem .85rem; border: 0; border-radius: .4rem; background: transparent; color: hsl(var(--court-muted)); font-family: var(--font-mono); font-size: .64rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; }
+.pool-view-switch button.is-active { background: hsl(var(--court-accent) / .16); color: hsl(var(--court-accent)); box-shadow: inset 0 0 0 1px hsl(var(--court-accent) / .45); }
+
+/* Broadcast ledger */
+.pool-ledger { border: 1px solid hsl(var(--court-border) / .3); border-radius: .85rem; background: hsl(var(--card)); overflow: hidden; box-shadow: 0 6px 18px hsl(var(--court-canvas) / .35); }
+.pool-ledger__table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .8rem; }
+.pool-ledger__table thead th { position: sticky; top: 0; z-index: 1; padding: .7rem .6rem; background: linear-gradient(180deg, hsl(var(--court-surface)), hsl(var(--court-canvas) / .6)); border-bottom: 2px solid hsl(var(--court-accent) / .5); font-family: var(--font-mono); font-size: .6rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--court-accent)); text-align: left; white-space: nowrap; }
+.pool-sort { display: inline-flex; align-items: center; gap: .25rem; border: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.pool-ledger__table tbody tr { transition: background-color .15s ease; }
+.pool-ledger__table tbody tr:hover { background: hsl(var(--court-accent) / .06); }
+.pool-ledger__table td { padding: .6rem; border-bottom: 1px solid hsl(var(--court-border) / .22); font-variant-numeric: tabular-nums; white-space: nowrap; color: hsl(var(--court-text)); }
+.pool-ledger__table tr.is-excluded td, .pool-ledger__table tr.is-ineligible td { opacity: .45; }
+.pool-ledger__table tr.is-locked td:first-child { box-shadow: inset 3px 0 0 hsl(var(--court-accent) / .7); }
+.pool-ledger__empty td { color: hsl(var(--court-muted)); font-size: .75rem; }
+.pool-ledger__name { display: flex; align-items: center; gap: .55rem; min-width: 9rem; }
+.pool-ledger__id strong { display: block; font-family: var(--font-display); font-size: .95rem; letter-spacing: .04em; color: hsl(var(--foreground)); }
+.pool-ledger__id small { display: block; font-size: .62rem; color: hsl(var(--court-muted)); }
+.pool-lead-stat { color: hsl(var(--court-accent)); font-weight: 700; }
+.pool-ledger__calls-col { text-align: right; }
+
+/* Shared avatar + chips */
+.pool-avatar { display: grid; place-items: center; overflow: hidden; flex: none; border-radius: .55rem; background: linear-gradient(140deg, hsl(var(--court-royal) / .55), hsl(var(--court-canvas))); border: 1px solid hsl(var(--court-accent) / .35); color: hsl(var(--court-accent)); font-family: var(--font-display); }
+.pool-avatar--sm { width: 2rem; height: 2rem; border-radius: .45rem; font-size: .75rem; }
+.pool-avatar--lg { width: 4.5rem; height: 4.5rem; border-radius: .9rem; font-size: 1.5rem; }
+.pool-avatar__image { width: 100%; height: 100%; object-fit: cover; }
+.pool-pos { display: inline-grid; place-items: center; min-width: 1.6rem; min-height: 1.3rem; padding: 0 .3rem; border: 1px solid hsl(var(--court-royal) / .5); border-radius: .35rem; background: hsl(var(--court-royal) / .14); color: hsl(var(--court-glass)); font-family: var(--font-mono); font-size: .6rem; letter-spacing: .08em; }
+.pool-pos--lg { min-width: 2rem; min-height: 1.6rem; font-size: .7rem; }
+
+/* Action calls */
+.pool-calls { display: inline-flex; gap: .3rem; }
+.pool-call { display: grid; place-items: center; width: 1.7rem; height: 1.7rem; border: 1px solid hsl(var(--court-border) / .35); border-radius: .4rem; background: hsl(var(--court-raised) / .4); color: hsl(var(--court-muted)); cursor: pointer; }
+.pool-call--lg { width: 2rem; height: 2rem; }
+.pool-call.is-lock.is-on, .pool-call--lock.is-on, .pool-call--compare.is-on, .pool-call--watch.is-on { border-color: hsl(var(--court-accent) / .7); background: hsl(var(--court-accent) / .16); color: hsl(var(--court-accent)); }
+.pool-call--ban.is-on { border-color: hsl(var(--court-trim) / .7); background: hsl(var(--court-trim) / .16); color: hsl(var(--court-trim-ink)); }
+.pool-calls--lg .pool-call { width: 2rem; height: 2rem; }
+.pool-calls--lg { gap: .4rem; }
+
+/* Advanced player cards (dossier profile style) */
+.pool-card-stage { display: grid; gap: .6rem; justify-items: center; }
+.pool-card { position: relative; width: 100%; max-width: 34rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: 1rem; background: hsl(var(--card)); overflow: hidden; box-shadow: 0 10px 28px hsl(var(--court-canvas) / .4); }
+.pool-card__band { position: relative; overflow: hidden; border-bottom: 1px solid hsl(var(--border) / .3); }
+.pool-card__band::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, hsl(var(--court-accent) / .14), hsl(var(--court-royal) / .1) 60%, transparent); pointer-events: none; }
+.pool-card__band::after { content: ''; position: absolute; inset-inline: 0; top: 0; height: 2px; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .3) 70%, transparent); }
+.pool-card__id { position: relative; display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.2rem 1rem; }
+.pool-card__identity { min-width: 0; flex: 1; }
+.pool-card__identity h3 { font-family: var(--font-display); font-size: 2rem; line-height: .95; letter-spacing: .04em; text-transform: uppercase; color: hsl(var(--foreground)); overflow-wrap: anywhere; }
+.pool-card__identity p { margin-top: .45rem; font-size: .7rem; color: hsl(var(--court-muted)); }
+.pool-card__band .bcast-lowerthird { position: absolute; top: .7rem; right: .7rem; }
+.pool-card__strip { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid hsl(var(--border) / .3); background: linear-gradient(180deg, hsl(var(--court-canvas) / .6), transparent); }
+.pool-card__strip-cell { padding: .7rem .5rem; text-align: center; }
+.pool-card__strip-cell + .pool-card__strip-cell { border-left: 1px solid hsl(var(--border) / .3); }
+.pool-card__strip-cell p:first-child { font-size: .6rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.pool-card__strip-value { margin-top: .15rem; font-family: var(--font-display); font-size: 2.1rem; line-height: 1; color: hsl(var(--foreground)); font-variant-numeric: tabular-nums; }
+.pool-card__strip-cell p:last-child { margin-top: .1rem; font-size: .58rem; color: hsl(var(--court-muted)); }
+.pool-card__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .45rem; padding: .9rem 1.1rem; border-bottom: 1px solid hsl(var(--border) / .3); }
+.pool-card__grid-cell { border: 1px solid hsl(var(--border) / .28); border-radius: .6rem; background: hsl(var(--court-canvas) / .45); padding: .55rem .4rem; text-align: center; }
+.pool-card__grid-cell p { font-family: var(--font-display); font-size: 1.3rem; line-height: 1; color: hsl(var(--foreground)); font-variant-numeric: tabular-nums; }
+.pool-card__grid-cell small { display: block; margin-top: .25rem; font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--court-muted)); }
+.pool-card__foot { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .8rem 1.1rem; }
+.pool-card__count { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; color: hsl(var(--court-muted)); }
+.pool-card-nav { display: flex; gap: .5rem; }
+.pool-card-nav button { display: grid; place-items: center; width: 2.3rem; height: 2.3rem; border: 1px solid hsl(var(--court-accent) / .45); border-radius: .55rem; background: hsl(var(--court-accent) / .1); color: hsl(var(--court-accent)); cursor: pointer; }
+.pool-card-nav button:hover:not(:disabled) { background: hsl(var(--court-accent) / .22); }
+.pool-card-nav button:disabled { opacity: .35; cursor: not-allowed; }
+.pool-flag { position: absolute; left: .7rem; top: .7rem; padding: .2rem .5rem; border-radius: .35rem; font-family: var(--font-mono); font-size: .55rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.pool-flag--lock { border: 1px solid hsl(var(--court-accent) / .6); background: hsl(var(--court-accent) / .14); color: hsl(var(--court-accent)); }
+.pool-flag--muted { border: 1px solid hsl(var(--court-trim) / .6); background: hsl(var(--court-trim) / .14); color: hsl(var(--court-trim-ink)); }
+.pool-cards-empty { padding: 1.5rem; border: 1px dashed hsl(var(--border) / .4); border-radius: .85rem; text-align: center; font-size: .78rem; color: hsl(var(--court-muted)); }
+
+@media (max-width: 639px) {
+  .pool-ledger { overflow-x: auto; overscroll-behavior-x: contain; }
+  .pool-ledger__table { min-width: 44rem; }
+  .pool-card__identity h3 { font-size: 1.6rem; }
+  .pool-card__id { gap: .7rem; padding: 2.2rem .9rem .9rem; }
+  .pool-card__band .bcast-lowerthird { top: auto; bottom: .6rem; right: .6rem; }
+  .pool-card__strip-value { font-size: 1.7rem; }
+  .pool-card__grid { grid-template-columns: repeat(2, 1fr); }
+  .pool-card__foot { flex-wrap: wrap; }
+}

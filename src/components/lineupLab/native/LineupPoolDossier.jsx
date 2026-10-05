@@ -76,7 +76,7 @@ export default function LineupPoolDossier({ row, team, strip, actions, pager }) 
           {row.avatar ? <Image src={row.avatar} fittingType="fit" className="h-full w-full object-cover" alt="" /> : <span className="grid h-full w-full place-items-center font-display text-3xl text-gold">{initials(row.name)}</span>}
         </span>
         <div className="min-w-0 flex-1 pb-4">
-          <h2 className="font-display text-3xl uppercase leading-[0.9] text-foreground sm:text-5xl">{row.name}</h2>
+          <h2 className="font-display text-3xl uppercase leading-[1.05] text-foreground sm:text-5xl">{row.name}</h2>
           <span className="hero-rule mt-3" aria-hidden="true"></span>
           <p className="mt-2 text-xs text-muted-foreground">{[teamCode || null, teamCode && teamName !== teamCode ? teamName : null, row.position || 'Position not supplied'].filter(Boolean).join(' · ')}</p>
           {row.detail && <p className="mt-1 text-[11px] text-muted-foreground">{row.detail}</p>}

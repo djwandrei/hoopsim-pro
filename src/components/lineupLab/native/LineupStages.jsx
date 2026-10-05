@@ -90,7 +90,7 @@ export default function LineupStages({ unavailable = false }) {
   return <div ref={rootRef} className="ll-game" data-current-stage={current.n} data-stage-dir={dir}>
     <div key={sweep} className="ll-broadcast-sweep" aria-hidden="true" />
     <nav className="ll-hud" aria-label="Build stages">
-      <span className="ll-hud__onair hidden"><span aria-hidden="true" />Live build</span>
+      
       {stages.map((s) => {
         const Icon = s.icon;
         const state = s.key === current.key ? 'is-current' : position(s.key) < position(current.key) ? 'is-done' : '';

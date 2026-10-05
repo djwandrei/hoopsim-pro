@@ -446,7 +446,6 @@ body.dark-mode .lineup-lab-tool {
   text-transform: uppercase;
   color: var(--ll-gold);
 }
-.lineup-lab-tool .results::before::after { content: none; }
 .lineup-lab-tool .result-scoreboard {
   border: 1px solid rgba(233, 185, 73, .35);
   border-radius: var(--ll-radius);

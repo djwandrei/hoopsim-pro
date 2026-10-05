@@ -92,9 +92,7 @@ export default function LineupRunBriefing() {
 
   return <div className="ll-brief">
     <BriefTile icon={LayoutGrid} title="Group shape" badge={MODE[mode.value] || '—'}>
-      <BriefItem label="Build" value={MODE[mode.value] || '—'} />
       <BriefItem label="Players in group" value={num(size.value)} />
-      {isRotation && <BriefItem label="Minutes to spread" value="240 total" />}
     </BriefTile>
     <BriefTile icon={Users} title="Court roles">
       <BriefItem label="Guards" value={`≥ ${num(guards.value)}`} />
@@ -109,7 +107,6 @@ export default function LineupRunBriefing() {
     </BriefTile>
     <BriefTile icon={Gauge} title="Planning reserve">
       <BriefItem label="Estimate caution" value={RESERVE[projectionRisk.value] || '—'} />
-      <BriefItem label="Effect" value={{ reliable: 'Pads thin data down', balanced: 'Middle road', upside: 'Rates as observed' }[projectionRisk.value] || '—'} />
     </BriefTile>
     {isRotation && <BriefTile icon={Timer} title="Rotation rules" badge="Rotation">
       <BriefItem label="Minutes per player" value={`${num(rotationMin.value)}–${num(rotationMax.value)}`} />

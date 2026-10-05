@@ -222,7 +222,6 @@ export function installLineupLabBridge() {
   globalThis.__lineupLabBridgeInstalled = true;
   const DJ = globalThis.DJ = globalThis.DJ || {};
   DJ.remoteCatalog = {
-    ...DJ.remoteCatalog,
     isConfigured: () => globalThis.DJ_BACKEND_CONFIG?.enabled === true,
     invokeFunction: invokeLineupShare,
     listNbaLineupSeasons,

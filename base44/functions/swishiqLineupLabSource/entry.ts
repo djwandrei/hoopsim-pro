@@ -31,7 +31,7 @@ export default async function(req) {
     if (!['GET', 'POST'].includes(req.method)) return Response.json({ error: 'Unsupported source request.' }, { status: 405 });
     const url = new URL(req.url);
     const isJson = req.method === 'POST' && (req.headers.get('content-type') || '').includes('application/json');
-    const body = isJson ? await req.clone().json() : {};
+    const body = isJson ? await req.json() : {};
     if (body.action === 'share') {
       const payload = body.body;
       if (req.method !== 'POST' || !payload?.summary || payload.summary.tool !== 'lineup-lab' ||
@@ -51,18 +51,10 @@ export default async function(req) {
     if (encoded && (!Number.isSafeInteger(offset) || offset < 0 || offset > 300 * 1024 * 1024)) {
       return Response.json({ error: 'Invalid source byte range.' }, { status: 400 });
     }
-    const isWrite = req.method === 'POST' && !body.path;
-    if (isWrite && !path.startsWith('/tools/shared-result/')) {
-      return Response.json({ error: 'Relay writes are limited to shared results.' }, { status: 400 });
-    }
     // Byte offsets and integrity pins refer to decoded source bytes, not gzip.
     const headers = new Headers({ accept: 'application/json, */*', 'accept-encoding': 'identity' });
     if (encoded) headers.set('range', sourceRange(offset, body.totalBytes));
-    if (isWrite && req.headers.get('content-type')) headers.set('content-type', req.headers.get('content-type'));
-    let upstream = await fetch(SITE + path, {
-      method: isWrite ? 'POST' : 'GET', headers,
-      body: isWrite ? await req.arrayBuffer() : undefined, cache: 'no-store',
-    });
+    const upstream = await fetch(SITE + path, { headers, cache: 'no-store' });
     // Some site assets reject an end offset beyond EOF instead of clamping it.
     // Unknown-length final pages still stream only the bounded requested bytes.
     if (encoded && upstream.status === 416) {

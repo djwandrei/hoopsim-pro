@@ -23,7 +23,7 @@ export async function requestSourceChunk(path, offset = 0, totalBytes = null) {
 }
 
 export function installRuntimeRelay() {
-  if (installed || STANDALONE) return;
+  if (installed) return;
   installed = true;
   navigator.serviceWorker.addEventListener('message', event => {
     const port = event.ports[0];

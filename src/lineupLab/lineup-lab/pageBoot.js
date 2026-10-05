@@ -30,7 +30,6 @@ async function fetchToolMarkup() {
 
 export async function mountLineupLab(host, signal) {
   await workerConnection();
-  if (signal.aborted && !/\/lineup-lab\/?$/.test(window.location.pathname)) disconnectWorker();
   signal.throwIfAborted();
   // The worker must control requests before loading any site CSS or scripts.
   const [, , markup] = await Promise.all([

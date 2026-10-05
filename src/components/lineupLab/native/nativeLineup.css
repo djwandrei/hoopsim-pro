@@ -110,8 +110,13 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 .ll-hud__dot { width: .4rem; height: .4rem; border-radius: 999px; background: hsl(var(--court-focus)); box-shadow: 0 0 6px hsl(var(--court-focus) / .8); }
 .ll-stage { scroll-margin-top: calc(var(--djhc-header-h, 80px) + 4.5rem); }
 .ll-stage[hidden] { display: none !important; }
-.ll-stage.is-current { animation: ll-stage-in .5s cubic-bezier(.2,.8,.3,1) both; }
+.ll-stage.is-current { animation: ll-stage-in-fwd .55s cubic-bezier(.2,.8,.3,1) both; }
+.ll-game[data-stage-dir="back"] .ll-stage.is-current { animation-name: ll-stage-in-back; }
 .ll-stage.is-current > .ll-stage-head, .ll-stage.is-current > .ll-stage-body > *, .ll-stage.is-current > .ll-stage-nav { animation: ll-rise .45s cubic-bezier(.2,.8,.3,1) both; }
+@keyframes ll-stage-in-fwd { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: none; } }
+@keyframes ll-stage-in-back { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: none; } }
+@keyframes ll-stage-in { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes ll-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .ll-stage.is-current > .ll-stage-body > :nth-child(2) { animation-delay: .07s; }
 .ll-stage.is-current > .ll-stage-body > :nth-child(3) { animation-delay: .14s; }
 .ll-stage.is-current > .ll-stage-body > :nth-child(4) { animation-delay: .21s; }
@@ -310,3 +315,37 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
   .ll-data-picker, .ll-role-steppers { grid-template-columns: minmax(0, 1fr); }
   .ll-preset-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* === Broadcast scene-change layer: a gold wipe plays on every stage change === */
+.ll-game { position: relative; }
+.ll-broadcast-sweep { position: absolute; inset: 0; z-index: 6; overflow: hidden; pointer-events: none; }
+.ll-broadcast-sweep::before { content: ''; position: absolute; top: 0; bottom: 0; width: 32%; background: linear-gradient(100deg, transparent, hsl(var(--court-accent) / .05) 55%, hsl(var(--court-accent) / .16) 85%, hsl(var(--court-accent) / .02)); transform: skewX(-12deg); animation: ll-sweep .85s cubic-bezier(.2,.8,.3,1) both; }
+.ll-broadcast-sweep::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, hsl(var(--court-accent) / .85), transparent); box-shadow: 0 0 12px hsl(var(--court-accent) / .6); animation: ll-sweep .85s cubic-bezier(.2,.8,.3,1) both; }
+@keyframes ll-sweep { from { left: -34%; } to { left: 104%; } }
+
+/* === Scoreboard HUD === */
+.ll-hud { padding-bottom: 1.1rem; border-radius: 1rem; border-color: hsl(var(--court-accent) / .35); background: linear-gradient(180deg, hsl(var(--court-canvas) / .94), hsl(var(--court-surface) / .88)); }
+.ll-hud::before { content: ''; position: absolute; top: 0; left: .75rem; right: .75rem; height: 2px; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent) / .9), hsl(var(--court-royal) / .5) 45%, transparent 80%); }
+.ll-hud__onair { display: inline-flex; align-items: center; gap: .45rem; margin-right: .3rem; padding: .35rem .6rem; border: 1px solid hsl(var(--court-trim) / .55); border-radius: .45rem; color: hsl(var(--court-trim-ink)); font: 700 .56rem var(--font-mono); letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; }
+.ll-hud__onair > span { width: .45rem; height: .45rem; border-radius: 999px; background: hsl(var(--court-trim)); box-shadow: 0 0 8px hsl(var(--court-trim) / .8); animation: ll-onair 1.6s ease-in-out infinite; }
+@keyframes ll-onair { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+.ll-hud__label em { margin-right: .45rem; font: 600 .6rem var(--font-mono); font-style: normal; letter-spacing: .1em; color: hsl(var(--court-accent)); }
+.ll-hud__meter { position: absolute; left: .6rem; right: .6rem; bottom: .5rem; height: .22rem; border-radius: 999px; background: hsl(var(--court-raised) / .8); overflow: hidden; }
+.ll-hud__meter > span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-focus))); box-shadow: 0 0 10px hsl(var(--court-accent) / .5); transition: width .45s cubic-bezier(.2,.8,.3,1); }
+
+/* === Lower-third stage headers === */
+.ll-stage-head::before { content: ''; position: absolute; left: 0; bottom: 0; width: 7.5rem; height: 3px; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .25) 70%, transparent); }
+.ll-stage-title { text-shadow: 0 0 32px hsl(var(--court-accent) / .14); }
+
+/* === Broadcast buttons: light sweep on hover === */
+.ll-native .button { position: relative; overflow: hidden; }
+.ll-native .button::after { content: ''; position: absolute; top: 0; bottom: 0; left: -45%; width: 45%; background: linear-gradient(100deg, transparent, rgb(255 255 255 / .25), transparent); transform: skewX(-14deg); transition: left .55s ease; pointer-events: none; }
+.ll-native .button:hover:not(:disabled)::after { left: 105%; }
+
+/* === Broadcast cards and chrome === */
+.ll-native-dataset, .ll-native-run { background: linear-gradient(160deg, hsl(var(--court-surface)), hsl(var(--court-canvas) / .72)); border-color: hsl(var(--court-accent) / .3); }
+.ll-native-run { border-top: 2px solid hsl(var(--court-accent) / .7); }
+.ll-native-run h2 { text-shadow: 0 0 26px hsl(var(--court-accent) / .16); }
+.ll-native-toolbar .tool-nav button { text-transform: uppercase; letter-spacing: .08em; font-size: .68rem; }
+.ll-native-toolbar .tool-nav button.is-active { box-shadow: 0 0 14px hsl(var(--court-accent) / .22); }
+.ll-native-hero h1 { text-shadow: 0 0 44px hsl(var(--court-accent) / .14); }

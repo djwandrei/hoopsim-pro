@@ -32,8 +32,18 @@ export default function LineupStages() {
   const [stage, setStage] = useState('season');
   const [mode, setMode] = useState(() => document.body.dataset.experienceMode || 'detailed');
   const [modified, setModified] = useState({});
+  const [dir, setDir] = useState('forward');
+  const [sweep, setSweep] = useState(0);
   const rootRef = useRef(null);
   const armed = useRef(false);
+  const stageRef = useRef(stage);
+  stageRef.current = stage;
+  // Broadcast scene change: every navigation wipes in the next scene.
+  const goto = key => {
+    setDir(STAGES.findIndex(s => s.key === key) >= STAGES.findIndex(s => s.key === stageRef.current) ? 'forward' : 'back');
+    setSweep(n => n + 1);
+    setStage(key);
+  };
 
   // Simple mode hides the detailed boundary stage; track it live.
   useEffect(() => {
@@ -54,6 +64,8 @@ export default function LineupStages() {
     if (!results) return;
     const observer = new MutationObserver(() => {
       if (!results.hidden) {
+        setDir('forward');
+        setSweep(n => n + 1);
         setStage('results');
         setTimeout(() => results.scrollIntoView({ block: 'start', behavior: 'instant' }), 80);
       }
@@ -63,9 +75,9 @@ export default function LineupStages() {
   }, []);
 
   useEffect(() => {
-    const goto = event => { if (typeof event.detail === 'string') setStage(event.detail); };
-    window.addEventListener('ll-goto-stage', goto);
-    return () => window.removeEventListener('ll-goto-stage', goto);
+    const listener = event => { if (typeof event.detail === 'string') goto(event.detail); };
+    window.addEventListener('ll-goto-stage', listener);
+    return () => window.removeEventListener('ll-goto-stage', listener);
   }, []);
 
   useEffect(() => {
@@ -83,17 +95,20 @@ export default function LineupStages() {
   const position = key => STAGES.findIndex(s => s.key === key);
   const markStage = key => () => { if (armed.current) setModified(m => (m[key] ? m : { ...m, [key]: true })); };
 
-  return <div ref={rootRef} className="ll-game" data-current-stage={current.n}>
+  return <div ref={rootRef} className="ll-game" data-current-stage={current.n} data-stage-dir={dir}>
+    <div key={sweep} className="ll-broadcast-sweep" aria-hidden="true" />
     <nav className="ll-hud" aria-label="Build stages">
+      <span className="ll-hud__onair"><span aria-hidden="true" />Live build</span>
       {stages.map(s => {
         const Icon = s.icon;
         const state = s.key === current.key ? 'is-current' : position(s.key) < position(current.key) ? 'is-done' : '';
-        return <button key={s.key} type="button" aria-label={s.title} className={state} aria-current={s.key === current.key ? 'step' : undefined} onClick={() => setStage(s.key)}>
+        return <button key={s.key} type="button" aria-label={s.title} className={state} aria-current={s.key === current.key ? 'step' : undefined} onClick={() => goto(s.key)}>
           <span className="ll-hud__node"><Icon size={14} /></span>
-          <span className="ll-hud__label">{s.title}</span>
+          <span className="ll-hud__label"><em aria-hidden="true">{s.n}</em>{s.title}</span>
           {modified[s.key] && <span className="ll-hud__dot" title="Adjusted in this run" />}
         </button>;
       })}
+      <div className="ll-hud__meter" aria-hidden="true"><span style={{ width: `${((index + 1) / stages.length) * 100}%` }} /></div>
     </nav>
     <form id="optimizerForm" noValidate className="ll-native-build">
       <fieldset id="nativeSettings" className="ll-native-settings">
@@ -106,7 +121,7 @@ export default function LineupStages() {
               {modified[s.key] && <span className="ll-stage-badge">Tuned</span>}
             </header>
             <div className="ll-stage-body">{s.content}</div>
-            <StageNav stages={stages} index={index} onGoto={setStage} isRun={s.key === 'run'} />
+            <StageNav stages={stages} index={index} onGoto={goto} isRun={s.key === 'run'} />
           </section>
         ))}
       </fieldset>
@@ -118,7 +133,7 @@ export default function LineupStages() {
       </header>
       <LineupResults />
       <div className="ll-stage-nav">
-        <button type="button" className="text-button" onClick={() => setStage('run')}><ChevronLeft size={14} /> Back to the build</button>
+        <button type="button" className="text-button" onClick={() => goto('run')}><ChevronLeft size={14} /> Back to the build</button>
       </div>
     </section>
   </div>;

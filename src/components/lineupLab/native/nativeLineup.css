@@ -354,6 +354,10 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 /* Helpers inside control-set field grids follow the grid gap, not their own
    double margins, so the copy sits close under the control it explains. */
 .ll-native .ll-native-fields > .helper { margin: 0; }
+/* Rotation controls: pair the control rows cleanly — the long comparison
+   helper spans the full row instead of sharing it with a stepper. */
+#rotationSettings .ll-native-fields > .ll-native-fields--full { grid-column: 1 / -1; }
+#rotationSettings .ll-native-fields { align-items: stretch; }
 .ll-native .helper:empty, .ll-native .ll-control__help:empty { display: none; }
 .ll-native .ll-section-intro { margin: 0 0 1.15rem; max-width: 72ch; font-size: .8rem; line-height: 1.65; color: hsl(var(--court-muted)); }
 .ll-native .ll-control-set { position: relative; min-width: 0; margin: 0 0 1rem; padding: 1.15rem 1.25rem 1.3rem; border: 1px solid hsl(var(--court-border) / .28); border-radius: .9rem; background: hsl(var(--court-canvas) / .4); transition: border-color .2s ease, box-shadow .2s ease; }

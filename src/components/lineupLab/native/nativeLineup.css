@@ -425,3 +425,44 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 .ll-native-toolbar .tool-nav button { text-transform: uppercase; letter-spacing: .08em; font-size: .68rem; }
 .ll-native-toolbar .tool-nav button.is-active { box-shadow: 0 0 14px hsl(var(--court-accent) / .22); }
 .ll-native-hero h1 { text-shadow: 0 0 44px hsl(var(--court-accent) / .14); }
+
+/* === Full-surface polish pass: contrast, readability, spacing, clutter === */
+
+/* Muted copy reads larger and clearer across every stage */
+.ll-native small, .ll-native .helper { font-size: .8rem; }
+.ll-native .ll-section-intro { margin: 0 0 1.25rem; font-size: .82rem; }
+.ll-native .ll-control__help { font-size: .78rem; }
+
+/* Stage cards keep even breathing room between neighbors */
+.ll-native .ll-stage-body > * + * { margin-top: 1.25rem; }
+
+/* Stage 1 — dataset strip: roomier identity block and broadcast-style facts */
+.ll-native .ll-native-dataset { gap: 1.1rem 1.75rem; }
+.ll-native .ll-native-facts dd { font-size: .95rem; }
+.ll-native .dataset-strip__mark { display: grid; place-items: center; flex: none; width: 3.5rem; height: 3.5rem; overflow: hidden; border: 1px solid hsl(var(--court-accent) / .35); border-radius: .8rem; background: hsl(var(--court-canvas) / .6); color: hsl(var(--court-accent)); font: 600 .95rem var(--font-mono); }
+
+/* Stage 4 — pool: one compact head bar, calmer ledger, quiet footnotes */
+.pool-scale-bar .pool-view-switch { margin-left: auto; }
+.pool-ledger__table thead th { padding: .75rem .65rem; }
+.pool-ledger__table td { padding: .65rem; }
+.pool-ledger__table tbody tr:nth-child(even) { background: hsl(var(--court-canvas) / .35); }
+.pool-ledger__table tbody tr.is-locked { background: hsl(var(--court-accent) / .08); }
+.pool-ledger__id small { font-size: .68rem; }
+.pool-sort { min-height: 1.5rem; border-radius: .35rem; }
+.pool-sort:hover { color: hsl(var(--court-focus)); }
+.ll-pool-legend span { padding: .3rem .65rem; border: 1px solid hsl(var(--court-border) / .25); border-radius: .5rem; background: hsl(var(--court-canvas) / .5); }
+.ll-native #poolSummary { margin-top: 1rem; padding: 0; border: 0; background: transparent; font-size: .78rem; color: hsl(var(--court-muted)); }
+
+/* Stage 5 — run: quieter tile chrome, punchier status */
+.ll-brief-tile { background: hsl(var(--court-canvas) / .55); }
+.ll-run-fact { background: hsl(var(--court-raised) / .35); }
+.ll-native .ll-run-status { font-weight: 600; }
+
+/* Stage 6 — results: compact action toolbar, roomier empty state */
+.ll-native .results__actions .button { min-height: 2.25rem; padding: .4rem .7rem; font-size: .72rem; }
+.ll-native .results__heading { align-items: start; gap: 1rem 1.5rem; }
+.ll-native .empty-result { padding: 2.5rem 1.5rem; }
+.ll-native .empty-result p { max-width: 48ch; margin-left: auto; margin-right: auto; }
+
+/* Buttons: consistent voice */
+.ll-native .button { font-size: .8rem; }

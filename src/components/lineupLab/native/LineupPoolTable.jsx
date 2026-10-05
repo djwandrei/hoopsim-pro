@@ -218,10 +218,6 @@ export default function LineupPoolTable() {
   </div>;
 
   return <div className="pool-table-view">
-    <div className="pool-view-switch" role="group" aria-label="Pool table view">
-      <button type="button" className={view === 'ledger' ? 'is-active' : ''} aria-pressed={view === 'ledger'} onClick={() => setView('ledger')}>Ledger</button>
-      <button type="button" className={view === 'advanced' ? 'is-active' : ''} aria-pressed={view === 'advanced'} onClick={openAdvanced}>Player cards</button>
-    </div>
-    {view === 'ledger' ? <>{scaleBar}{ledger}</> : advanced}
+    {view === 'ledger' ? <>{scaleBar}{ledger}</> : <>{scaleBar}{advanced}</>}
   </div>;
 }

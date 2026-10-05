@@ -29,8 +29,7 @@ function safePath(value) {
 export default async function(req) {
   try {
     if (req.method !== 'POST') return Response.json({ error: 'Unsupported source request.' }, { status: 405 });
-    const isJson = (req.headers.get('content-type') || '').includes('application/json');
-    const body = isJson ? await req.json() : {};
+    const body = await req.json().catch(() => ({}));
     if (body.action === 'share') {
       const payload = body.body;
       if (!payload?.summary || payload.summary.tool !== 'lineup-lab' ||
@@ -61,7 +60,7 @@ export default async function(req) {
       headers.delete('range');
       upstream = await fetch(SITE + path, { headers, cache: 'no-store' });
     }
-    const pathname = new URL(path, SITE).pathname;
+    const pathname = path.split('?')[0];
     const contentType = upstream.headers.get('content-type') || 'application/octet-stream';
     if (!upstream.ok) return Response.json({ error: `The Lineup Lab source is unavailable (${upstream.status}).` }, { status: upstream.status });
     if (/\.(js|css|json)$/.test(pathname) && contentType.includes('text/html')) {

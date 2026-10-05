@@ -46,7 +46,7 @@ async function getChunk(path, offset, clientId, totalBytes = null) {
 
 async function relay(path, clientId) {
   let page = await getChunk(path, 0, clientId);
-  const pathname = new URL(path, SITE).pathname;
+  const pathname = path.split('?')[0];
   const contentType = pathname.endsWith('.js') ? 'application/javascript; charset=utf-8'
     : pathname.endsWith('.css') ? 'text/css; charset=utf-8' : page.contentType;
   const stream = new ReadableStream({

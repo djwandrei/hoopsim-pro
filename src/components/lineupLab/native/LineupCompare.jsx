@@ -1,24 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { GitCompare } from 'lucide-react';
+import { Crown, GitCompare } from 'lucide-react';
 import { Image } from '@/components/ui/image';
 import CourtArt from '@/components/lineupLab/native/CourtArt';
 import '@/components/lineupLab/native/lineupCompare.css';
 
-// Native player comparison in the SwishIQ Studio blueprint's compare design.
-// The site controller keeps owning the math: it renders the comparison into
-// the hidden #compareContent whenever the Compare checkboxes change, and this
-// mirror re-renders that content — profile cards per player, then a
-// side-by-side stat table where every cell pairs the value with its pool
-// percentile bar and the row leader reads in gold.
+// Native player comparison for the pool stage. The site controller keeps
+// owning the comparison math (it renders the hidden #compareContent); this
+// mirror re-renders it as a head-to-head table: per-player leader badges and
+// gap-to-leader chips, plus a per-row difference meter that plots every
+// player between the row's best and worst mark. A scale switch converts the
+// raw per-game lines to per-36 minutes or estimated per-100 possessions
+// (same math the ledger uses); player minutes are read from the pool table.
 
 const SLOTS = ['A', 'B', 'C', 'D'];
 const FALLBACK_EMPTY = {
   heading: 'Head-to-head comparison',
   copy: 'Tick Compare on two to four players in the ledger above to chart them side by side.',
 };
+const SCALES = [['game', 'Raw', 'per game'], ['36', 'Per 36', 'per 36 min'], ['100', 'Per 100', 'per 100 poss']];
+const LOWER_IS_BETTER = /TOV|turnover/i;
+const isMinutesRow = label => /\bMPG\b|minutes|\bMIN\b/i.test(label);
 
 const clean = text => (text || '').replace(/\s+/g, ' ').trim();
 const initials = name => name.split(' ').map(part => part[0]).slice(0, 2).join('');
+const num = text => {
+  const parsed = parseFloat(String(text ?? '').replace(/[^0-9.+-]/g, ''));
+  return Number.isFinite(parsed) ? parsed : null;
+};
 
 function extractCompare(source) {
   if (!source.children.length) return null;
@@ -71,8 +79,18 @@ function HeadCell({ player }) {
   </span>;
 }
 
+const scaleValue = (base, minutes, scale) => {
+  if (base == null) return null;
+  if (scale === 'game') return base;
+  if (!Number.isFinite(minutes) || minutes <= 0) return null;
+  if (scale === '36') return base * 36 / minutes;
+  return base * 100 / (minutes * 2.06);
+};
+
 export default function LineupCompare() {
   const [data, setData] = useState(null);
+  const [minutes, setMinutes] = useState({});
+  const [scale, setScale] = useState('game');
   const signatureRef = useRef('');
 
   useEffect(() => {
@@ -98,24 +116,71 @@ export default function LineupCompare() {
     return () => { clearTimeout(timer); observer?.disconnect(); };
   }, []);
 
+  // Per-player minutes, read live from the hidden pool table so the scale
+  // switch can convert the comparison to per-36 and per-100 rates.
+  useEffect(() => {
+    let observer = null;
+    let timer = null;
+    const apply = body => {
+      const next = {};
+      [...body.querySelectorAll('tr')].forEach(tr => {
+        const name = clean(tr.querySelector('.player-name strong')?.textContent);
+        const value = num(tr.children[2]?.textContent);
+        if (name && value != null) next[name] = value;
+      });
+      setMinutes(current => (JSON.stringify(current) === JSON.stringify(next) ? current : next));
+    };
+    const attach = () => {
+      const body = document.getElementById('playerTableBody');
+      if (!body) { timer = setTimeout(attach, 250); return; }
+      apply(body);
+      observer = new MutationObserver(() => apply(body));
+      observer.observe(body, { childList: true, subtree: true, attributes: true });
+    };
+    attach();
+    return () => { clearTimeout(timer); observer?.disconnect(); };
+  }, []);
+
   if (!data) return null;
 
-  const leaderForRow = row => {
-    let best = 0, pick = -1, tie = false;
-    row.lines.forEach((line, index) => {
-      const pct = line.pct || 0;
-      if (pct > best) { best = pct; pick = index; tie = false; }
-      else if (pct === best && best > 0) tie = true;
+  const scaleReady = data.players.every(player => minutes[player.name] != null);
+  const scaleBar = <div className="cmp-scale" role="group" aria-label="Comparison stat scale">
+    {SCALES.map(([key, label, sub]) => <button key={key} type="button" className={scale === key ? 'is-active' : ''} disabled={key !== 'game' && !scaleReady} title={key !== 'game' && !scaleReady ? 'Load the roster to convert rates' : sub} aria-pressed={scale === key} onClick={() => setScale(key)}>{label}</button>)}
+  </div>;
+
+  const rows = data.rows.map(row => {
+    const fixed = isMinutesRow(row.label);
+    const lines = row.lines.map((line, index) => {
+      const base = num(line.value);
+      const value = fixed && scale !== 'game' ? base : scaleValue(base, minutes[data.players[index]?.name], scale);
+      return { ...line, raw: line.value, base, value };
     });
-    return best > 0 && !tie ? pick : -1;
-  };
+    const numeric = lines.map((line, index) => ({ index, v: line.value })).filter(entry => entry.v != null);
+    let leaderValue = null;
+    if (numeric.length) {
+      const values = numeric.map(entry => entry.v);
+      leaderValue = LOWER_IS_BETTER.test(row.label) ? Math.min(...values) : Math.max(...values);
+    }
+    const leaders = numeric.filter(entry => Math.abs(entry.v - leaderValue) < 1e-9).map(entry => entry.index);
+    const distinct = [...new Set(numeric.map(entry => entry.v))].sort((a, b) => b - a);
+    const gap = distinct.length > 1 ? Math.abs(distinct[0] - distinct[1]) : null;
+    const span = distinct.length > 1 ? distinct[0] - distinct[distinct.length - 1] : 0;
+    const dots = span > 0 ? numeric.map(entry => ({
+      index: entry.index,
+      pos: 6 + (LOWER_IS_BETTER.test(row.label) ? (distinct[0] - entry.v) : (entry.v - distinct[distinct.length - 1])) / span * 88,
+    })) : [];
+    return { ...row, fixed, lines, leaders, gap, dots };
+  });
 
   return <section className="cmp-panel court-panel" aria-label="Player comparison">
     <header className="cmp-header">
       <CourtArt className="cmp-court" />
-      <div className="cmp-header__copy">
-        <p className="cmp-kicker">Player comparison</p>
-        <h3 className="cmp-title">Head-to-head stat comparison</h3>
+      <div className="cmp-header__copy cmp-head-row">
+        <div>
+          <p className="cmp-kicker">Player comparison</p>
+          <h3 className="cmp-title">Head-to-head stat comparison</h3>
+        </div>
+        {!data.empty && scaleBar}
       </div>
     </header>
     <div className="cmp-body">
@@ -141,24 +206,45 @@ export default function LineupCompare() {
                 <thead><tr>
                   <th scope="col">Stat</th>
                   {data.players.map((player, index) => <th key={index} scope="col"><HeadCell player={player} /></th>)}
+                  <th scope="col" className="cmp-gap-col">Difference</th>
                 </tr></thead>
                 <tbody>
-                  {data.rows.map((row, rowIndex) => {
-                    const leader = leaderForRow(row);
-                    return <tr key={rowIndex}>
-                      <th scope="row">{row.label}</th>
-                      {row.lines.map((line, index) => <td key={index} className={leader === index ? 'cmp-leader' : ''} style={{ '--cmp-color': line.color || data.players[index]?.color }}>
+                  {rows.map((row, rowIndex) => <tr key={rowIndex}>
+                    <th scope="row">{row.label}</th>
+                    {row.lines.map((line, index) => {
+                      const leading = row.leaders.includes(index);
+                      const behind = !leading && line.value != null && row.leaders.length ? Math.abs(line.value - row.lines[row.leaders[0]].value) : null;
+                      return <td key={index} className={leading ? 'cmp-leader' : ''} style={{ '--cmp-color': line.color || data.players[index]?.color }}>
                         <span className="cmp-cell">
-                          <span className="cmp-cell-value">{line.value}</span>
-                          <span className="cmp-track"><span style={{ width: `${Math.max(2, line.pct || 0)}%` }} /></span>
-                          <span className="cmp-cell-pct">{line.pct ? `${Math.round(line.pct)}th pctile` : 'n/a'}</span>
+                          <span className="cmp-value">{row.fixed && scale !== 'game' ? line.raw : scale === 'game' ? line.raw : line.value != null ? line.value.toFixed(1) : '—'}</span>
+                          {row.fixed && scale !== 'game'
+                            ? null
+                            : leading
+                              ? <span className="cmp-lead-chip">{row.leaders.length > 1 ? 'Tied lead' : <><Crown size={10} aria-hidden="true" /> Leads</>}</span>
+                              : behind != null && <span className="cmp-delta" title={`${behind.toFixed(1)} behind the leader`}>−{behind.toFixed(1)}</span>}
+                          {scale === 'game' && !row.fixed && line.pct ? <span className="cmp-pct">{Math.round(line.pct)}th pctile</span> : null}
                         </span>
-                      </td>)}
-                    </tr>;
-                  })}
+                      </td>;
+                    })}
+                    <td className="cmp-gap-cell">
+                      {row.fixed && scale !== 'game'
+                        ? <span className="cmp-gap__na">—</span>
+                        : row.gap != null
+                          ? <span className="cmp-gap">
+                              <span className="cmp-gap__delta">+{row.gap.toFixed(1)}</span>
+                              <span className="cmp-gap__sub">{row.leaders.length > 1 ? 'tied at the top' : LOWER_IS_BETTER.test(row.label) ? 'fewest vs next' : 'top vs next'}</span>
+                              {row.dots.length > 1 && <span className="cmp-dots" aria-hidden="true">
+                                <span className="cmp-dots__track" />
+                                {row.dots.map(dot => <span key={dot.index} className={`cmp-dot${row.leaders.includes(dot.index) ? ' is-lead' : ''}`} style={{ left: `${dot.pos}%`, '--cmp-color': row.lines[dot.index].color || data.players[dot.index]?.color }} title={data.players[dot.index]?.name} />)}
+                              </span>}
+                            </span>
+                          : <span className="cmp-gap__na">—</span>}
+                    </td>
+                  </tr>)}
                 </tbody>
               </table>
             </div>
+            {scale !== 'game' && <p className="cmp-scale-note">Rates converted from the raw per-game lines — per-36 divides by each player's minutes, per-100 estimates possessions at a league-average pace, exactly like the ledger above.</p>}
             {data.note && <p className="cmp-note">{data.note}</p>}
           </>}
     </div>

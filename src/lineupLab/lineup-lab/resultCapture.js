@@ -5,7 +5,7 @@
 
 export function captureScoreboard(results, maxCards = undefined) {
   const text = (node) => (node?.textContent || '').trim();
-  const scoreboard = results.querySelector('.result-scoreboard');
+  const scoreboard = results?.querySelector('.result-scoreboard');
   const metrics = scoreboard
     ? [...scoreboard.querySelectorAll('.score-card')]
       .map((card, index) => ({ card, index }))

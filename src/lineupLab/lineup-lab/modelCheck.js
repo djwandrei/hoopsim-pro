@@ -162,7 +162,10 @@ export function buildModelCheckButton(keeper) {
   });
   const results = keeper.querySelector('#results');
   if (results) {
-    new MutationObserver(() => {
+    new MutationObserver((mutations) => {
+      // Render mutates this panel itself; skip those records or the observer
+      // would re-render itself forever while the panel is open.
+      if (mutations.every((record) => panel.contains(record.target))) return;
       if (results.isConnected && !results.contains(panel)) results.append(panel);
       else if (!panel.hidden && results.contains(panel)) render(keeper, panel, button);
     }).observe(results, { childList: true, subtree: true });

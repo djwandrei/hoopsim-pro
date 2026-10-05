@@ -199,7 +199,7 @@ export default function LineupPoolTable() {
           {row.stats.map(stat => <td key={stat.key} className={stat.key === 'points' ? 'pool-lead-stat' : ''}>{displayOf(row, stat.key)}</td>)}
           <td className="pool-ledger__calls-col">{calls(row)}</td>
         </tr>)}
-        {!sorted.length && <tr className="pool-ledger__empty"><td colSpan={11}>Load a team and season to see the player pool.</td></tr>}
+        {!sorted.length && <tr className="pool-ledger__empty"><td colSpan={10}>Load a team and season to see the player pool.</td></tr>}
       </tbody>
     </table>
     </div>

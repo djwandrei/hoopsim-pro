@@ -27,7 +27,11 @@ ${s} :is(.range-field, .range-field strong) { color: var(--ll-body-ink); font: 6
 ${s} :is(.range-field small, details small) { color: var(--ll-muted); font: 400 12px/1.5 var(--font-body); }
 ${s} :is(output, .lineup-player__minutes, .result-passport__metric) { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 ${s} :is(.lineup-player__name, .watch-card__name) { color: var(--ll-heading-ink); font: 650 15px/1.4 var(--font-body); }
-${s} :is(.position-pill, .selection-chip, .model-status-chip) { color: var(--ll-gold); font: 600 12px/1.5 var(--font-body); }
+${s} :is(.position-pill, .selection-chip, .model-status-chip) { color: var(--ll-gold); background: var(--ll-track); border-color: var(--ll-panel-border); font: 600 12px/1.5 var(--font-body); }
+${s} .lineup-player__rank { background: var(--ll-gold); color: var(--ll-gold-ink); }
+${s} :is(small, .result-passport__header, .analytics-chart__label) { font-size: 12px; line-height: 1.5; }
+${s} .result-passport__header { color: var(--ll-gold); font-family: var(--font-body); letter-spacing: .08em; }
+${s} :is(.lineup-dna__header, .rotation-plan__heading, .opponent-swishiq__heading) { font-family: var(--font-heading); letter-spacing: .025em; color: var(--ll-heading-ink); }
 ${s} a { color: var(--ll-gold); text-underline-offset: .2em; }
 ${s} a:hover { text-decoration: underline; }
 ${s} .command-card .step-number { display: none; }

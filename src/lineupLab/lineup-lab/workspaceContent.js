@@ -28,7 +28,7 @@ ${s} .player-pool-details__heading :is(h3, p) { margin: 0; }
 ${s} .player-pool-details__heading p { color: var(--ll-muted); font: 400 13px/1.6 var(--font-body); }
 ${s} :is(.table-wrap, .compare-content) { overflow: auto; max-width: 100%; border: 1px solid var(--ll-panel-border); border-radius: 12px; overscroll-behavior-x: contain; }
 ${s} table { width: 100%; min-width: 0; border-collapse: separate; border-spacing: 0; text-align: left; font: 400 13px/1.5 var(--font-body); font-variant-numeric: tabular-nums; }
-${s} th { padding: 12px 10px; background: var(--ll-track); color: var(--ll-body-ink); border-bottom: 1px solid var(--ll-field-border); font: 650 11px/1.4 var(--font-body); letter-spacing: .035em; }
+${s} th { padding: 12px 10px; background: var(--ll-track); color: var(--ll-muted); border-bottom: 1px solid var(--ll-field-border); font: 600 11px/1.4 var(--font-mono); letter-spacing: .06em; text-transform: none; }
 ${s} td { padding: 13px 10px; color: var(--ll-body-ink); border-bottom: 1px solid var(--ll-panel-border); }
 ${s} tbody tr:nth-child(even) { background: var(--ll-row-alt); }
 ${s} tbody tr:hover { background: var(--ll-track); }

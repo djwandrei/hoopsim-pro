@@ -379,6 +379,14 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 .ll-native .ll-control-set__head p { margin-top: .35rem; max-width: 62ch; font-size: .78rem; line-height: 1.65; color: hsl(var(--court-muted)); }
 .ll-native .ll-control-set__body { min-width: 0; }
 .ll-native .ll-control-set__body > .ll-control + .ll-control { margin-top: 1.1rem; }
+/* Collapsible control sets: the body hides via CSS so bound source nodes
+   stay mounted while the section is folded. */
+.ll-native .ll-control-set__toggle { display: inline-grid; place-items: center; align-self: center; flex: 0 0 auto; margin-left: auto; width: 2.1rem; height: 2.1rem; border: 1px solid hsl(var(--court-border) / .35); border-radius: .5rem; background: hsl(var(--court-raised) / .4); color: hsl(var(--court-muted)); cursor: pointer; transition: color .15s ease, border-color .15s ease, background-color .15s ease, transform .15s ease; }
+.ll-native .ll-control-set__toggle:hover { color: hsl(var(--court-accent)); border-color: hsl(var(--court-accent) / .5); background: hsl(var(--court-accent) / .1); }
+.ll-native .ll-control-set.is-collapsed .ll-control-set__body { display: none; }
+.ll-native .ll-control-set.is-collapsed .ll-control-set__head p { display: none; }
+.ll-native .ll-control-set.is-collapsed .ll-control-set__head { margin-bottom: 0; }
+.ll-native .ll-control-set.is-collapsed .ll-control-set__toggle { transform: rotate(-90deg); }
 .ll-native fieldset.ll-control-set > .ll-control + .ll-control { margin-top: 1.1rem; }
 /* Same specificity as the base fieldset reset (0,2,1) and later in the file,
    so padding/margin actually win over it — without this the control-set

@@ -7,7 +7,7 @@ import LineupCompare from '@/components/lineupLab/native/LineupCompare';
 
 const columns = [['name', 'Player'], ['positions', 'Position'], ['minutes', 'MPG'], ['points', 'PTS'], ['rebounds', 'REB'], ['assists', 'AST'], ['steals', 'STL'], ['blocks', 'BLK'], ['turnovers', 'TOV'], [null, 'Lock'], [null, 'Exclude'], [null, 'Compare'], [null, 'Watch']];
 export default function LineupRoster() {
-  return <LineupSection id="nativeRoster" headingId="playersHeading" title="Build the player pool" number="03" className="ll-native-roster">
+  return <LineupSection id="nativeRoster" headingId="playersHeading" title="Build the player pool" number="04" className="ll-native-roster">
     <span id="playersStepNumber" className="sr-only">4</span>
     <div id="activeSelectionTray" hidden aria-label="Active player selections" />
     <section id="playerPoolDetails" className="player-pool-details" aria-label="Browse this roster">

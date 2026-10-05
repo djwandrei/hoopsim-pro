@@ -102,8 +102,8 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 
 /* === Game-flow stages === */
 .ll-hud { position: sticky; top: calc(var(--djhc-header-h, 80px) + .5rem); z-index: 20; display: flex; align-items: center; gap: .3rem; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: .5rem; margin-bottom: 1.2rem; border: 1px solid hsl(var(--court-accent) / .3); border-radius: .9rem; background: hsl(var(--court-canvas) / .88); backdrop-filter: blur(10px); box-shadow: var(--ll-elev-rest); }
-.ll-hud button { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; flex: 0 1 auto; min-height: 2.4rem; padding: .3rem .7rem .3rem .4rem; border: 1px solid transparent; border-radius: .6rem; background: transparent; color: hsl(var(--court-muted)); font-size: .72rem; font-weight: 600; }
-.ll-hud__label { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ll-hud button { display: inline-flex; align-items: center; gap: .5rem; flex: 0 0 auto; min-height: 2.4rem; padding: .3rem .7rem .3rem .4rem; border: 1px solid transparent; border-radius: .6rem; background: transparent; color: hsl(var(--court-muted)); font-size: .72rem; font-weight: 600; }
+.ll-hud__label { white-space: nowrap; }
 .ll-hud button.is-current { border-color: hsl(var(--court-accent) / .6); background: hsl(var(--court-accent) / .1); color: hsl(var(--court-text)); }
 .ll-hud button.is-current .ll-hud__node { background: hsl(var(--court-accent)); color: hsl(var(--primary-foreground)); box-shadow: 0 0 14px hsl(var(--court-accent) / .45); }
 .ll-hud button.is-done .ll-hud__node { color: hsl(var(--court-positive)); border: 1px solid hsl(var(--court-positive) / .5); }
@@ -172,8 +172,6 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 @keyframes ll-slide-in { from { transform: translateX(100%); } to { transform: none; } }
 
 @media (max-width: 767px) {
-  .ll-hud { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
-  .ll-hud__label { display: none; }
   .ll-stage-art { display: none; }
   .ll-stage-head::after { right: 0; font-size: 3rem; }
 }

@@ -72,17 +72,21 @@ export function restoreInputs(keeper, data) {
 
 // Restore in settling passes: each pass applies what its predecessors made
 // possible (season first, then team, then everything else). Stops when a pass
-// changes nothing or the pass budget runs out.
+// changes nothing or the pass budget runs out. Shared by the session restore
+// and the ?run= link restore, which replay different saved inputs.
+export async function settleRestore(keeper, data) {
+  for (let pass = 0; pass < 5; pass += 1) {
+    if ((await restoreInputs(keeper, data)) === 0) break;
+    await new Promise(resolve => setTimeout(resolve, 350));
+  }
+}
+
 export async function restoreSessionInputs(keeper) {
   const saved = readSaved();
   if (!saved) return;
   restoring = true;
   try {
-    const settle = () => new Promise(resolve => setTimeout(resolve, 350));
-    for (let pass = 0; pass < 5; pass += 1) {
-      if ((await Promise.resolve(restoreInputs(keeper, saved))) === 0) break;
-      await settle();
-    }
+    await settleRestore(keeper, saved);
   } finally {
     restoring = false;
   }

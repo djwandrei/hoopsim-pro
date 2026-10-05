@@ -4,6 +4,8 @@
 // the real worker stay in charge). Results land in this panel; nothing is
 // written to the site's state beyond what its own controls already do.
 
+import { captureScoreboard, downloadBlob } from '@/lineupLab/lineup-lab/resultCapture';
+
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function waitFor(test, timeout, step = 300) {
@@ -19,21 +21,6 @@ const click = (el) => {
   el?.dispatchEvent(new Event('input', { bubbles: true }));
   el?.dispatchEvent(new Event('change', { bubbles: true }));
 };
-
-function captureScoreboard(results) {
-  const scoreboard = results.querySelector('.result-scoreboard');
-  if (!scoreboard) return null;
-  const metrics = [...scoreboard.querySelectorAll('.score-card')].slice(0, 6).map((card) => ({
-    label: (card.querySelector('span')?.textContent || '').trim(),
-    value: (card.querySelector('strong')?.textContent || '').trim(),
-  })).filter((metric) => metric.label && metric.value);
-  if (!metrics.length) return null;
-  const table = results.querySelector('table');
-  const lineup = table
-    ? [...table.querySelectorAll('tbody tr')].map((row) => (row.children[0]?.innerText || '').replace(/\s+/g, ' ').trim()).filter(Boolean).slice(0, 15)
-    : [];
-  return { metrics, lineup };
-}
 
 const production = (metrics) => metrics.find((m) => /production|projected|score/i.test(m.label))?.value || metrics[0]?.value || '—';
 
@@ -116,17 +103,7 @@ export function installLeagueScan(keeper) {
       csv.type = 'button';
       csv.className = 'button-secondary';
       csv.textContent = 'Export CSV';
-      csv.addEventListener('click', () => {
-        const blob = new Blob([rowsToCsv(state.rows)], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'league-scan.csv';
-        document.body.append(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-      });
+      csv.addEventListener('click', () => downloadBlob(new Blob([rowsToCsv(state.rows)], { type: 'text/csv' }), 'league-scan.csv'));
       controls.append(again, csv);
     }
     const table = document.createElement('table');

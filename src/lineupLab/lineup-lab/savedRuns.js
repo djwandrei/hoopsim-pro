@@ -5,6 +5,7 @@
 // validation and V4 gating remain in charge.
 
 import { collectInputs, restoreInputs } from '@/lineupLab/lineup-lab/sessionMemory';
+import { captureScoreboard, downloadBlob } from '@/lineupLab/lineup-lab/resultCapture';
 
 const RUNS_KEY = 'swishiq-lineup-lab-saved-runs';
 const MAX_RUNS = 6;
@@ -28,19 +29,8 @@ function writeRuns(runs) {
 
 function captureRun(keeper) {
   const results = keeper.querySelector('#results');
-  if (!results?.querySelector('.result-scoreboard')) return null;
-  const metrics = [...results.querySelectorAll('.result-scoreboard .score-card')].map(card => ({
-    label: card.querySelector('span')?.textContent.trim() || '',
-    value: card.querySelector('strong')?.textContent.trim() || '',
-  }));
+  const { metrics, lineup } = captureScoreboard(results) || { metrics: [], lineup: [] };
   if (!metrics.length) return null;
-  const table = results.querySelector('table');
-  const lineup = table
-    ? [...table.querySelectorAll('tbody tr')]
-      .map(row => (row.children[0]?.innerText || '').replace(/\s+/g, ' ').trim())
-      .filter(Boolean)
-      .slice(0, 15)
-    : [];
   const picks = [...(keeper.querySelector('#workspace') || keeper).querySelectorAll('select')]
     .map(select => select.selectedOptions?.[0]?.text)
     .filter(Boolean);
@@ -55,27 +45,27 @@ function captureRun(keeper) {
 
 // Numeric rows highlight their best column: production metrics favor the
 // maximum, rank coverage favors the minimum. Non-numeric rows stay neutral.
-function isBestRow(label) {
+function bestDirection(label) {
   if (/rank|coverage/i.test(label)) return 'min';
   if (/PTS|REB|AST/i.test(label)) return 'max';
   return null;
 }
 
-function bestIndexes(values) {
+function bestIndexes(values, direction) {
   const numbers = values.map(value => {
     const parsed = parseFloat(String(value).replace(/[^0-9.\-]/g, ''));
     return Number.isFinite(parsed) ? parsed : null;
   });
   const usable = numbers.filter(value => value !== null);
   if (usable.length < 2) return new Set();
-  const target = Math.min(...usable);
+  const target = direction === 'max' ? Math.max(...usable) : Math.min(...usable);
   return new Set(numbers.reduce((best, value, index) => {
     if (value !== null && value === target) best.push(index);
     return best;
   }, []));
 }
 
-function buildCompareTable(keeper, panel) {
+function buildCompareTable(keeper) {
   const current = captureRun(keeper);
   const runs = readRuns().reverse();
   const columns = [
@@ -103,12 +93,13 @@ function buildCompareTable(keeper, panel) {
   }
   thead.append(headRow);
   const tbody = document.createElement('tbody');
-  const addRow = (label, cells, highlight) => {
+  const addRow = (label, cells) => {
     const tr = document.createElement('tr');
     const th = document.createElement('td');
     th.textContent = label;
     tr.append(th);
-    const best = highlight ? bestIndexes(cells.map(cell => cell?.value ?? '')) : new Set();
+    const direction = bestDirection(label);
+    const best = direction ? bestIndexes(cells.map(cell => cell?.value ?? ''), direction) : new Set();
     cells.forEach((cell, index) => {
       const td = document.createElement('td');
       td.textContent = cell?.value || '—';
@@ -117,13 +108,9 @@ function buildCompareTable(keeper, panel) {
     });
     tbody.append(tr);
   };
-  addRow('Lineup', columns.map(run => ({ value: (run.lineup || []).join(' · ') })), false);
+  addRow('Lineup', columns.map(run => ({ value: (run.lineup || []).join(' · ') })));
   for (const label of labels) {
-    addRow(
-      label,
-      columns.map(run => run.metrics.find(metric => metric.label === label)),
-      isBestRow(label),
-    );
+    addRow(label, columns.map(run => run.metrics.find(metric => metric.label === label)));
   }
   const actions = document.createElement('tr');
   const actionsLabel = document.createElement('td');
@@ -177,7 +164,7 @@ export function buildSavedRunButtons(keeper) {
   let panelOpen = false;
 
   const renderPanel = () => {
-    panel.replaceChildren(buildCompareTable(keeper, panel));
+    panel.replaceChildren(buildCompareTable(keeper));
   };
 
   const saveButton = document.createElement('button');

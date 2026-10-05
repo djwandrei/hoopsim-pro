@@ -4,6 +4,7 @@
 // sentence into a small card under the scoreboard.
 
 import { base44 } from '@/api/base44Client';
+import { captureScoreboard } from '@/lineupLab/lineup-lab/resultCapture';
 
 const text = (node) => (node?.textContent || '').trim();
 
@@ -31,16 +32,8 @@ export function buildNarrativeButton(keeper) {
 
   button.addEventListener('click', async () => {
     const results = keeper.querySelector('#results');
-    const scoreboard = results?.querySelector('.result-scoreboard');
-    if (!results || !scoreboard || button.disabled) return;
-    const metrics = [...scoreboard.querySelectorAll('.score-card')].slice(0, 14).map((card) => ({
-      label: text(card.querySelector('span')),
-      value: text(card.querySelector('strong')),
-    })).filter((metric) => metric.label && metric.value);
-    const table = results.querySelector('table');
-    const lineup = table
-      ? [...table.querySelectorAll('tbody tr')].map((row) => (row.children[0]?.innerText || '').replace(/\s+/g, ' ').trim()).filter(Boolean).slice(0, 15)
-      : [];
+    if (!results || button.disabled) return;
+    const { metrics, lineup } = captureScoreboard(results, 14) || { metrics: [], lineup: [] };
     if (!metrics.length || !lineup.length) {
       button.textContent = 'Solve a lineup first';
       setTimeout(() => { button.textContent = 'Explain this pick'; }, 1400);

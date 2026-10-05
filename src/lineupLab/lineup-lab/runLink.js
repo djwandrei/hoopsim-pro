@@ -3,7 +3,7 @@
 // pasted. A ?run= link is applied after session restore, so a shared link
 // wins over locally remembered inputs.
 
-import { collectInputs, restoreInputs } from '@/lineupLab/lineup-lab/sessionMemory';
+import { collectInputs, settleRestore } from '@/lineupLab/lineup-lab/sessionMemory';
 
 const PARAM = 'run';
 
@@ -22,10 +22,7 @@ export async function applyRunLink(keeper) {
   if (!raw) return;
   const data = decode(raw);
   if (!data || typeof data !== 'object') return;
-  for (let pass = 0; pass < 5; pass += 1) {
-    if ((await Promise.resolve(restoreInputs(keeper, data))) === 0) break;
-    await new Promise(resolve => setTimeout(resolve, 350));
-  }
+  await settleRestore(keeper, data);
 }
 
 export function installRunLink(keeper) {

@@ -16,6 +16,7 @@ import { buildDiagnosticsButton } from '@/lineupLab/lineup-lab/runDiagnostics';
 import { buildModelCheckButton } from '@/lineupLab/lineup-lab/modelCheck';
 import { installLeagueScan } from '@/lineupLab/lineup-lab/leagueScan';
 import { installSolveClock } from '@/lineupLab/lineup-lab/solveClock';
+import { downloadBlob } from '@/lineupLab/lineup-lab/resultCapture';
 
 export function installToolExtras(keeper) {
   installSolveClock(keeper);
@@ -92,15 +93,7 @@ function tableToCsv(table) {
 function exportCsv(results) {
   const tables = [...results.querySelectorAll('table')];
   if (!tables.length) return;
-  const blob = new Blob([tables.map(tableToCsv).join('\n\n')], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'lineup-lab-results.csv';
-  document.body.append(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  downloadBlob(new Blob([tables.map(tableToCsv).join('\n\n')], { type: 'text/csv' }), 'lineup-lab-results.csv');
 }
 
 async function exportImage(button, results) {

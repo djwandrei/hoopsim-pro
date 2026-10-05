@@ -54,7 +54,7 @@ export default async function(req) {
     // Byte offsets and integrity pins refer to decoded source bytes, not gzip.
     const headers = new Headers({ accept: 'application/json, */*', 'accept-encoding': 'identity' });
     if (encoded) headers.set('range', sourceRange(offset, body.totalBytes));
-    const upstream = await fetch(SITE + path, { headers, cache: 'no-store' });
+    let upstream = await fetch(SITE + path, { headers, cache: 'no-store' });
     // Some site assets reject an end offset beyond EOF instead of clamping it.
     // Unknown-length final pages still stream only the bounded requested bytes.
     if (encoded && upstream.status === 416) {

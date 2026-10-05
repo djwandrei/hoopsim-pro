@@ -53,5 +53,14 @@ ${s} :is(.field > label, .field-group label, details summary, .experience-switch
   ${s} .dataset-strip__actions .button { flex: 1 1 150px; }
   ${s} .command-actions { position: sticky; bottom: 10px; z-index: 6; padding: 14px; border: 1px solid var(--ll-panel-border); border-radius: 14px; background: var(--ll-panel); box-shadow: var(--ll-elev-hover); }
 }
+${s} .ll-compare { margin-top: 20px; }
+${s} .ll-compare__head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+${s} .ll-compare__head h3 { margin: 0; color: var(--ll-heading-ink); font-family: var(--font-display); font-size: 1.2rem; letter-spacing: .04em; }
+${s} .ll-compare__hint { margin: 12px 0 0; color: var(--ll-muted); font: 400 12px/1.6 var(--font-body); }
+${s} .ll-compare__empty { margin: 0; color: var(--ll-muted); font: 400 13px/1.6 var(--font-body); }
+${s} .ll-compare td:first-child { color: var(--ll-muted); font: 600 11px/1.4 var(--font-mono); letter-spacing: .06em; }
+${s} .ll-compare__best { color: var(--ll-gold); font-weight: 700; }
+${s} .ll-compare__current { color: var(--ll-gold); }
+${s} .ll-compare .button-secondary { min-height: 32px; padding: 6px 12px; }
 `;
 export default css;

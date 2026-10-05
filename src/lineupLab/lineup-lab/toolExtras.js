@@ -1,10 +1,17 @@
 // Post-boot enhancements that ride alongside the site's own workflow without
-// touching its logic: a one-tap auto data load, and CSV/image export of the
-// result desk. Everything re-uses the site's real buttons and DOM state.
+// touching its logic: session memory for the workflow inputs, a one-tap auto
+// data load, saved-run presets with an inline comparison desk, and CSV/image
+// export of the result desk. Everything re-uses the site's real buttons and
+// DOM state.
+
+import { installSessionMemory, restoreSessionInputs } from '@/lineupLab/lineup-lab/sessionMemory';
+import { buildSavedRunButtons } from '@/lineupLab/lineup-lab/savedRuns';
 
 export function installToolExtras(keeper) {
-  autoLoadData(keeper);
+  installSessionMemory(keeper);
   installResultExports(keeper);
+  // Restore remembered inputs first, then let the auto load pick them up.
+  restoreSessionInputs(keeper).finally(() => autoLoadData(keeper));
 }
 
 let autoLoaded = false;
@@ -27,7 +34,9 @@ function installResultExports(keeper) {
   if (!results) return;
   const attach = () => {
     if (!results.querySelector('.command-export-bar')) {
-      results.prepend(buildExportBar());
+      const bar = buildExportBar();
+      bar.append(...buildSavedRunButtons(keeper));
+      results.prepend(bar);
     }
   };
   attach();

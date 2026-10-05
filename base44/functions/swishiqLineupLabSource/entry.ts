@@ -33,7 +33,7 @@ export default async function(req) {
     const body = isJson ? await req.json() : {};
     if (body.action === 'share') {
       const payload = body.body;
-      if (req.method !== 'POST' || !payload?.summary || payload.summary.tool !== 'lineup-lab' ||
+      if (!payload?.summary || payload.summary.tool !== 'lineup-lab' ||
           !['native', 'clipboard'].includes(payload.share_method) || JSON.stringify(payload).length > 32768) {
         return Response.json({ error: 'A valid Lineup Lab result summary is required.' }, { status: 400 });
       }
@@ -45,18 +45,18 @@ export default async function(req) {
     }
     const path = safePath(body.path);
     if (!path) return Response.json({ error: 'Unknown Lineup Lab data path.' }, { status: 400 });
-    const encoded = body.responseFormat === 'base64';
+    if (body.responseFormat !== 'base64') return Response.json({ error: 'The base64 response format is required.' }, { status: 400 });
     const offset = body.offset ?? 0;
-    if (encoded && (!Number.isSafeInteger(offset) || offset < 0 || offset > 300 * 1024 * 1024)) {
+    if (!Number.isSafeInteger(offset) || offset < 0 || offset > 300 * 1024 * 1024) {
       return Response.json({ error: 'Invalid source byte range.' }, { status: 400 });
     }
     // Byte offsets and integrity pins refer to decoded source bytes, not gzip.
     const headers = new Headers({ accept: 'application/json, */*', 'accept-encoding': 'identity' });
-    if (encoded) headers.set('range', sourceRange(offset, body.totalBytes));
+    headers.set('range', sourceRange(offset, body.totalBytes));
     let upstream = await fetch(SITE + path, { headers, cache: 'no-store' });
     // Some site assets reject an end offset beyond EOF instead of clamping it.
     // Unknown-length final pages still stream only the bounded requested bytes.
-    if (encoded && upstream.status === 416) {
+    if (upstream.status === 416) {
       await upstream.body?.cancel();
       headers.delete('range');
       upstream = await fetch(SITE + path, { headers, cache: 'no-store' });
@@ -67,10 +67,7 @@ export default async function(req) {
     if (/\.(js|css|json)$/.test(pathname) && contentType.includes('text/html')) {
       return Response.json({ error: 'The Lineup Lab source is temporarily unavailable.' }, { status: 503 });
     }
-    if (encoded) return Response.json(await sourceBytes(upstream, offset), { headers: { 'cache-control': 'no-store' } });
-    return new Response(upstream.body, { status: upstream.status, headers: {
-      'content-type': contentType, 'cache-control': 'no-store', 'access-control-allow-origin': '*',
-    } });
+    return Response.json(await sourceBytes(upstream, offset), { headers: { 'cache-control': 'no-store' } });
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : 'The Lineup Lab data relay failed.' }, { status: 502 });
   }

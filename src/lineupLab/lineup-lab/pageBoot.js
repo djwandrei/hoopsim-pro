@@ -48,6 +48,20 @@ function removeCss() {
   cssInstalled = false;
 }
 
+// A transient upstream blip (the site's challenge layer 404s or stalls a
+// request occasionally) must not brick the boot: retry once after a pause and
+// purge any runtime-cache entry the first attempt may have polluted.
+async function importWithRetry(url, attempts = 2) {
+  try {
+    return await import(url);
+  } catch (error) {
+    if (attempts <= 1) throw error;
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    try { await caches.delete("lineup-lab-runtime-v1"); } catch { /* no cache */ }
+    return import(url);
+  }
+}
+
 function swReady() {
   if (!swReady.promise) {
     swReady.promise = (async () => {
@@ -149,13 +163,21 @@ export async function mountLineupLab(host) {
     rewriteLinks(keeper);
     installThemeToggle(keeper);
     bootPromise = (async () => {
-      await import(`${MODULE_BASE}app.js${APP_REV}`);
+      await importWithRetry(`${MODULE_BASE}app.js${APP_REV}`);
       // Small experience enhancers from the live shell; failure is cosmetic.
       await Promise.allSettled([
-        import(`${MODULE_BASE}lab-experience.js?v=20261002c`),
-        import(`${MODULE_BASE}source-summary.js?v=20261002c&rev=mobile-full-source-v1`),
+        importWithRetry(`${MODULE_BASE}lab-experience.js?v=20261002c`),
+        importWithRetry(`${MODULE_BASE}source-summary.js?v=20261002c&rev=mobile-full-source-v1`),
       ]);
-    })();
+    })().catch(error => {
+      // A failed boot must not be cached: drop the dead tool node and reset so
+      // the next mount retries the module graph from scratch instead of
+      // re-awaiting the rejected promise.
+      if (keeper && keeper.parentNode) keeper.parentNode.removeChild(keeper);
+      keeper = null;
+      bootPromise = null;
+      throw error;
+    });
   }
   if (keeper.parentNode) keeper.parentNode.removeChild(keeper);
   host.appendChild(keeper);

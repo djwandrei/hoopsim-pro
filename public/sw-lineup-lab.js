@@ -61,6 +61,15 @@ async function relay(path, request) {
   }
   const response = await fetch(target, init);
   if (!response.ok) return response;
+  // Upstream bot-challenge pages arrive as HTML; never pass or cache them as
+  // if they were the tool's code — fail retryable instead.
+  if (!DIRECT && (response.headers.get("content-type") || "").includes("text/html") &&
+      /\.(js|css|json)$/.test(path)) {
+    return new Response("Lineup Lab source temporarily unavailable", {
+      status: 503,
+      headers: { "content-type": "text/plain", "cache-control": "no-store" },
+    });
+  }
   const headers = new Headers(response.headers);
   if (path.endsWith(".js")) headers.set("content-type", "application/javascript; charset=utf-8");
   return new Response(response.body, { status: response.status, headers });

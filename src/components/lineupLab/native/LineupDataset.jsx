@@ -9,6 +9,6 @@ export default function LineupDataset() {
     <SourceButton id="importCsvButton" />
     <SourceButton id="resetDatasetButton" />
     <input id="csvFileInput" type="file" accept=".csv,text/csv" hidden />
-    <div className="card-actions detailed-only"><BoundButton sourceId="importCsvButton" className="text-button">Import player CSV</BoundButton><BoundButton sourceId="resetDatasetButton" className="text-button">Use course demo</BoundButton></div>
+    <div className="card-actions detailed-only"><BoundButton sourceId="importCsvButton" className="text-button">Import player CSV</BoundButton><BoundButton sourceId="resetDatasetButton" className="text-button">Reset to demo team</BoundButton></div>
   </aside>;
 }

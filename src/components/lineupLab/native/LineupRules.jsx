@@ -15,7 +15,7 @@ export default function LineupRules() {
         <BoundStepper sourceId="minForwardsInput" label="Forwards" />
         <BoundStepper sourceId="minCentersInput" label="Centers" />
       </div>
-      <BoundSelect sourceId="positionFlexibilityInput" label="Allow multi-position players?" help="Multi-position players may cover any listed position, but only one court role at a time." helpId="positionCoverageHelp" />
+      <BoundSelect sourceId="positionFlexibilityInput" label="Allow multi-position players?" help="A guard–forward counts toward either role — but each player fills just one spot in the group, so no one covers two roles at once." helpId="positionCoverageHelp" />
     </fieldset>
     <fieldset id="productionRules" hidden><legend id="productionRulesLegend">Required group production (optional)</legend>
       {['minPointsInput', 'minReboundsInput', 'minAssistsInput', 'minStealsInput', 'minBlocksInput', 'maxTurnoversInput'].map(id => <SourceField key={id} id={id} label="Required production" min="0" step="0.1" placeholder="Any" />)}

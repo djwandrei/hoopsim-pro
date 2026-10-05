@@ -6,7 +6,7 @@ const KEY = 'll-tour-v1';
 const steps = [
   { n: '01', title: 'Load your squad', body: 'Pick a historical team and season. Your last choice loads automatically when you return.' },
   { n: '02', title: 'Call the game plan', body: 'Choose what you are building — starting five or full rotation — then shape the objective with presets or fine-tuning sliders.' },
-  { n: '03', title: 'Set boundaries & pool', body: 'Advanced rules stay tucked away with a Tuned badge when you touch them. In the pool, lock must-haves and exclude the rest.' },
+  { n: '03', title: 'Set boundaries & pool', body: 'In the pool stage, lock your must-haves and exclude anyone off the table. Detailed mode adds court-role rules and production floors.' },
   { n: '04', title: 'Run the build', body: 'Solve for the best eligible group, then read the desk: run summary, diff vs your last run, and click any player for their season line.' },
 ];
 

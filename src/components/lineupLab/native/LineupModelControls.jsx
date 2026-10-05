@@ -15,11 +15,11 @@ export default function LineupModelControls() {
         <BoundStepper sourceId="swishiqOffenseWeightInput" label="Offense weight" />
         <BoundStepper sourceId="swishiqDefenseWeightInput" label="Defense weight" />
       </div>
-      <p id="swishiqCustomWeightsHelp" className="helper">Use any weights from 0 to 10,000; they do not need to add to 100. At least one must be above zero. This changes the preference mix, not the underlying player estimates.</p>
+      <p id="swishiqCustomWeightsHelp" className="helper">Set any weights from 0 to 10,000 — they don't need to add up to 100, but at least one must be above zero. This only changes how strongly offense vs defense weighs in the search, not how players are measured.</p>
     </div>
     <p id="swishiqPrioritySummary" role="status" hidden className="helper" />
-    <p id="swishiqEvidenceModeHelp" hidden className="helper">SwishIQ Impact uses data for the selected team, season, and phase. It requires complete coverage and does not substitute pooled seasons.</p>
-    <p id="modelModeHelp" className="helper">Historical combines your visible priorities with player box-score stats. SwishIQ Impact estimates player impact for the selected team-season when complete data are available.</p>
+    <p id="swishiqEvidenceModeHelp" hidden className="helper">SwishIQ Impact only uses complete data for the exact team, season, and phase you picked — it never blends in other seasons to fill gaps.</p>
+    <p id="modelModeHelp" className="helper">Historical builds from the box-score stats and the priorities you set. SwishIQ Impact adds a play-by-play impact read for the selected team-season when full data is available.</p>
     <p id="swishiqEvidenceStatus" role="status" hidden className="helper" />
   </div>;
 }

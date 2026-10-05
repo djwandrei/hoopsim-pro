@@ -41,7 +41,7 @@
 .ll-native .field > span { font-weight: 600; color: hsl(var(--court-text)); }
 .ll-native .field input, .ll-native .field select, .ll-native .player-usage-scenario input { width: 100%; min-width: 0; min-height: 2.75rem; padding: .6rem .7rem; border: 1px solid hsl(var(--court-border) / .5); border-radius: .5rem; background: hsl(var(--court-canvas)); color: hsl(var(--court-text)); font-size: .8rem; }
 .ll-native small, .ll-native .helper { font-size: .75rem; color: hsl(var(--court-muted)); }
-.ll-native .helper { margin: .9rem 0; }
+.ll-native .helper { margin: .8rem 0; font-size: .78rem; line-height: 1.65; }
 .ll-native .button, .ll-native .button-secondary, .ll-native .text-button { min-height: 2.75rem; padding: .6rem .85rem; border: 1px solid hsl(var(--court-accent) / .6); border-radius: .5rem; background: hsl(var(--court-accent)); color: hsl(var(--primary-foreground)); font: 600 .78rem/1.4 var(--font-body); }
 .ll-native .button--quiet, .ll-native .button-secondary, .ll-native .text-button { background: hsl(var(--court-raised) / .5); color: hsl(var(--court-text)); border-color: hsl(var(--court-border) / .35); }
 .ll-native .button--full { width: 100%; }
@@ -125,7 +125,8 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 .ll-stage.is-current > .ll-stage-body > :nth-child(6) { animation-delay: .35s; }
 .ll-stage-head { position: relative; display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid hsl(var(--court-border) / .3); overflow: hidden; }
 .ll-stage-head::after { content: attr(data-stage-number); position: absolute; right: 4.8rem; bottom: -1.2rem; font-family: var(--font-display); font-size: clamp(3rem, 8vw, 5rem); line-height: 1; color: hsl(var(--court-accent) / .09); pointer-events: none; }
-.ll-stage-tag { margin-top: .3rem; font-size: .8rem; color: hsl(var(--court-muted)); }
+.ll-stage-tag { position: relative; margin-top: .3rem; padding-left: .75rem; font-size: .78rem; line-height: 1.55; color: hsl(var(--court-muted)); }
+.ll-stage-tag::before { content: ''; position: absolute; left: 0; top: .4em; bottom: .4em; width: 3px; border-radius: 999px; background: linear-gradient(180deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .25)); }
 .ll-stage-art { flex: 0 0 auto; width: 6.5rem; color: hsl(var(--court-accent)); opacity: .75; }
 .ll-stage-badge { display: inline-flex; align-items: center; min-height: 1.6rem; padding: .25rem .6rem; border: 1px solid hsl(var(--court-focus) / .55); border-radius: 999px; background: hsl(var(--court-focus) / .12); color: hsl(var(--court-focus)); font: 600 .62rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
 .ll-stage-nav { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-top: 1.4rem; padding-top: 1.1rem; border-top: 1px solid hsl(var(--court-border) / .25); }
@@ -266,7 +267,9 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 
 .ll-control { display: grid; gap: .45rem; min-width: 0; }
 .ll-control__label { font: 600 .68rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--court-muted)); }
-.ll-control__help { font-size: .7rem; line-height: 1.5; color: hsl(var(--court-muted)); }
+.ll-control__help { font-size: .72rem; line-height: 1.6; color: hsl(var(--court-muted)); padding-left: .65rem; border-left: 2px solid hsl(var(--court-accent) / .4); }
+.metric-field-guide__grid article h3 { font: 600 .68rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.metric-field-guide__grid article p { margin-top: .5rem; font-size: .72rem; line-height: 1.65; color: hsl(var(--court-muted)); }
 
 .ll-segmented { display: grid; grid-template-columns: repeat(var(--ll-segmented-cols, 2), minmax(0, 1fr)); gap: .4rem; padding: .3rem; border: 1px solid hsl(var(--court-border) / .35); border-radius: .7rem; background: hsl(var(--court-canvas) / .55); }
 .ll-segmented button { min-height: 2.4rem; padding: .35rem .6rem; border: 0; border-radius: .5rem; background: transparent; color: hsl(var(--court-muted)); font-size: .78rem; font-weight: 600; cursor: pointer; transition: background-color .15s ease, color .15s ease, box-shadow .15s ease; }

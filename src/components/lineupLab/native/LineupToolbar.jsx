@@ -5,7 +5,7 @@ import TeamPalettePicker from '@/components/djhc/TeamPalettePicker';
 export default function LineupToolbar() {
   return <>
     <header className="ll-native-hero">
-      <div><p className="court-kicker">Lineup Lab · Historical NBA</p><h1>Your team. Your calls.<br /><span className="text-gold">Find your best five.</span></h1><p>Choose a historical roster, call the game plan, and inspect the best eligible group.</p></div>
+      <div><p className="court-kicker">Lineup Lab · Historical NBA</p><h1>Your team. Your calls.<br /><span className="text-gold">Find your best five.</span></h1><p>Pick any historical roster, shape your game plan, and see the best group that passes every rule you set.</p></div>
       <Image src="https://www.djshouseofcards-comics.com/assets/games/lineup-lab-emblem-20260911.png" alt="Lineup Lab emblem" className="h-28 w-28 shrink-0" fittingType="fit" />
     </header>
     <div className="ll-native-toolbar">

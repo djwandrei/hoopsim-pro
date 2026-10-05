@@ -16,6 +16,6 @@ export default function LineupDataControls() {
     <BoundSegmented sourceId="nbaSeasonPhaseInput" label="Phase" columns={2} />
     <SourceButton id="loadLiveDataButton" />
     <div className="card-actions mt-4"><BoundButton sourceId="loadLiveDataButton" className="button button--full">Load team and season</BoundButton></div>
-    <p id="liveDataStatus" role="status" aria-live="polite" className="helper">Ready. Load a team and season to see the roster and stats.</p>
+    <p id="liveDataStatus" role="status" aria-live="polite" className="helper">Ready when you are — pick a season and a team, then press load to bring in the full roster and game stats.</p>
   </LineupSection>;
 }

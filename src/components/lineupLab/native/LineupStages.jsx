@@ -12,11 +12,11 @@ import CourtArt from '@/components/lineupLab/native/CourtArt';
 import LineupStagePanel from '@/components/lineupLab/native/LineupStagePanel';
 
 const STAGES = [
-{ key: 'season', n: '01', title: 'Load your squad', tag: 'Pick a historical team and season to play with.', icon: Database, content: <><LineupDataset /><LineupDataControls /></> },
+{ key: 'season', n: '01', title: 'Load your squad', tag: 'Pick any historical NBA team and season as your squad.', icon: Database, content: <><LineupDataset /><LineupDataControls /></> },
 { key: 'plan', n: '02', title: 'Call the game plan', tag: 'Choose what you are building, then shape the objective.', icon: Target, content: <LineupGamePlan /> },
 { key: 'boundaries', n: '03', title: 'Set the boundaries', tag: 'Court roles, optional production rules, and reports.', icon: Shield, detailed: true, content: <><LineupRules /><LineupReporting /></> },
 { key: 'pool', n: '04', title: 'Build the player pool', tag: 'Search, lock must-haves, and exclude the rest.', icon: Users, content: <LineupRoster /> },
-{ key: 'run', n: '05', title: 'Run the build', tag: 'Every eligible group is checked against your rules.', icon: Play, content: <LineupRunControls /> },
+{ key: 'run', n: '05', title: 'Run the build', tag: 'One press — every group that fits your rules gets checked and ranked.', icon: Play, content: <LineupRunControls /> },
 { key: 'results', n: '06', title: 'Results desk', tag: 'The recommended group, plus Lineup DNA and alternatives.', icon: Trophy, results: true }];
 
 

@@ -15,7 +15,7 @@ export default function LineupRoster() {
           <span>Search players</span>
           <span className="ll-pool-search-box">
             <Search size={15} aria-hidden="true" />
-            <input id="playerSearchInput" type="search" placeholder="Search this roster by name" />
+            <input id="playerSearchInput" type="search" placeholder="Find a player by name" />
           </span>
         </label>
         <fieldset id="playerEligibilityFilters" className="detailed-only ll-pool-filters">
@@ -26,21 +26,21 @@ export default function LineupRoster() {
           </div>
         </fieldset>
       </div>
-      <p id="sampleFilterHelp" className="helper">These eligibility filters shape the player pool.</p>
+      <p id="sampleFilterHelp" className="helper">Players below these minimums stay out of the pool — raise them to focus on regulars, lower them to widen the net.</p>
       <div className="ll-pool-legend">
-        <span className="is-lock"><Lock size={12} aria-hidden="true" /> Lock guarantees a player is selected</span>
-        <span className="is-ban"><Ban size={12} aria-hidden="true" /> Exclude removes a player from the search</span>
+        <span className="is-lock"><Lock size={12} aria-hidden="true" /> Lock — must appear in every result</span>
+        <span className="is-ban"><Ban size={12} aria-hidden="true" /> Exclude — kept out of every result</span>
       </div>
       <div className="table-wrap player-table-wrap ll-source-table" aria-hidden="true"><table className="player-table"><thead><tr>{columns.map(([key, label]) => <th key={label} data-player-sort={key || undefined} scope="col">{key ? <button type="button" className="player-table-sort"><span>{label}</span></button> : label}</th>)}</tr></thead><tbody id="playerTableBody" /></table></div>
       <LineupPoolTable />
       <div className="ll-native-note ll-compare-inline">
         <h3><GitCompare size={14} aria-hidden="true" /> Compare players</h3>
-        <p className="helper">Tick "Compare" on two to four players above to chart them head-to-head.</p>
+        <p className="helper">Tick Compare on two to four players in the table to chart them head-to-head below.</p>
         <span id="compareCount" hidden>0</span>
         <div id="compareContent" className="compare-content" />
       </div>
       <details id="usageScenarioControls" className="detailed-only" hidden><summary>Set usage scenarios (optional)</summary><p className="helper" id="usageScenarioHelp">Optional changes to a player's on-court possession share. Leave blank to keep observed usage.</p><div id="usageScenarioList" /></details>
-      <p id="poolSummary" className="helper">Load a team and season to see the player pool.</p>
+      <p id="poolSummary" className="helper">Pick a team and season, and the full player pool shows up here.</p>
     </section>
   </LineupSection>;
 }

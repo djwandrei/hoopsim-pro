@@ -12,13 +12,13 @@ import CourtArt from '@/components/lineupLab/native/CourtArt';
 import LineupStagePanel from '@/components/lineupLab/native/LineupStagePanel';
 
 const STAGES = [
-  { key: 'season', n: '01', title: 'Load your squad', tag: 'Pick a historical team and season to play with.', icon: Database, content: <><LineupDataset /><LineupDataControls /></> },
-  { key: 'plan', n: '02', title: 'Call the game plan', tag: 'Choose what you are building, then shape the objective.', icon: Target, content: <LineupGamePlan /> },
-  { key: 'boundaries', n: '03', title: 'Set the boundaries', tag: 'Court roles, optional production rules, and reports.', icon: Shield, detailed: true, content: <><LineupRules /><LineupReporting /></> },
-  { key: 'pool', n: '04', title: 'Build the player pool', tag: 'Search, lock must-haves, and exclude the rest.', icon: Users, content: <LineupRoster /> },
-  { key: 'run', n: '05', title: 'Run the build', tag: 'Every eligible group is checked against your rules.', icon: Play, content: <LineupRunControls /> },
-  { key: 'results', n: '06', title: 'Results desk', tag: 'The recommended group, plus Lineup DNA and alternatives.', icon: Trophy, results: true },
-];
+{ key: 'season', n: '01', title: 'Load your squad', tag: 'Pick a historical team and season to play with.', icon: Database, content: <><LineupDataset /><LineupDataControls /></> },
+{ key: 'plan', n: '02', title: 'Call the game plan', tag: 'Choose what you are building, then shape the objective.', icon: Target, content: <LineupGamePlan /> },
+{ key: 'boundaries', n: '03', title: 'Set the boundaries', tag: 'Court roles, optional production rules, and reports.', icon: Shield, detailed: true, content: <><LineupRules /><LineupReporting /></> },
+{ key: 'pool', n: '04', title: 'Build the player pool', tag: 'Search, lock must-haves, and exclude the rest.', icon: Users, content: <LineupRoster /> },
+{ key: 'run', n: '05', title: 'Run the build', tag: 'Every eligible group is checked against your rules.', icon: Play, content: <LineupRunControls /> },
+{ key: 'results', n: '06', title: 'Results desk', tag: 'The recommended group, plus Lineup DNA and alternatives.', icon: Trophy, results: true }];
+
 
 export default function LineupStages({ unavailable = false }) {
   const [stage, setStage] = useState('season');
@@ -31,9 +31,9 @@ export default function LineupStages({ unavailable = false }) {
   const stageRef = useRef(stage);
   stageRef.current = stage;
   // Broadcast scene change: every navigation wipes in the next scene.
-  const goto = key => {
-    setDir(STAGES.findIndex(s => s.key === key) >= STAGES.findIndex(s => s.key === stageRef.current) ? 'forward' : 'back');
-    setSweep(n => n + 1);
+  const goto = (key) => {
+    setDir(STAGES.findIndex((s) => s.key === key) >= STAGES.findIndex((s) => s.key === stageRef.current) ? 'forward' : 'back');
+    setSweep((n) => n + 1);
     setStage(key);
   };
 
@@ -46,7 +46,7 @@ export default function LineupStages({ unavailable = false }) {
 
   // Don't badge stages while boot restoration replays saved inputs.
   useEffect(() => {
-    const timer = setTimeout(() => { armed.current = true; }, 5000);
+    const timer = setTimeout(() => {armed.current = true;}, 5000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -57,7 +57,7 @@ export default function LineupStages({ unavailable = false }) {
     const observer = new MutationObserver(() => {
       if (!results.hidden) {
         setDir('forward');
-        setSweep(n => n + 1);
+        setSweep((n) => n + 1);
         setStage('results');
         setTimeout(() => results.scrollIntoView({ block: 'start', behavior: 'instant' }), 80);
       }
@@ -67,7 +67,7 @@ export default function LineupStages({ unavailable = false }) {
   }, []);
 
   useEffect(() => {
-    const listener = event => { if (typeof event.detail === 'string') goto(event.detail); };
+    const listener = (event) => {if (typeof event.detail === 'string') goto(event.detail);};
     window.addEventListener('ll-goto-stage', listener);
     return () => window.removeEventListener('ll-goto-stage', listener);
   }, []);
@@ -80,18 +80,18 @@ export default function LineupStages({ unavailable = false }) {
     return () => button.removeEventListener('click', reset);
   }, []);
 
-  const stages = STAGES.filter(s => mode !== 'simple' || !s.detailed);
-  let index = stages.findIndex(s => s.key === stage);
+  const stages = STAGES.filter((s) => mode !== 'simple' || !s.detailed);
+  let index = stages.findIndex((s) => s.key === stage);
   if (index === -1) index = Math.min(2, stages.length - 2);
   const current = stages[index];
-  const position = key => STAGES.findIndex(s => s.key === key);
-  const markStage = key => () => { if (armed.current) setModified(m => (m[key] ? m : { ...m, [key]: true })); };
+  const position = (key) => STAGES.findIndex((s) => s.key === key);
+  const markStage = (key) => () => {if (armed.current) setModified((m) => m[key] ? m : { ...m, [key]: true });};
 
   return <div ref={rootRef} className="ll-game" data-current-stage={current.n} data-stage-dir={dir}>
     <div key={sweep} className="ll-broadcast-sweep" aria-hidden="true" />
     <nav className="ll-hud" aria-label="Build stages">
-      <span className="ll-hud__onair"><span aria-hidden="true" />Live build</span>
-      {stages.map(s => {
+      <span className="ll-hud__onair hidden"><span aria-hidden="true" />Live build</span>
+      {stages.map((s) => {
         const Icon = s.icon;
         const state = s.key === current.key ? 'is-current' : position(s.key) < position(current.key) ? 'is-done' : '';
         return <button key={s.key} type="button" aria-label={s.title} className={state} aria-current={s.key === current.key ? 'step' : undefined} onClick={() => goto(s.key)}>
@@ -100,14 +100,14 @@ export default function LineupStages({ unavailable = false }) {
           {modified[s.key] && <span className="ll-hud__dot" title="Adjusted in this run" />}
         </button>;
       })}
-      <div className="ll-hud__meter" aria-hidden="true"><span style={{ width: `${((index + 1) / stages.length) * 100}%` }} /></div>
+      <div className="ll-hud__meter" aria-hidden="true"><span style={{ width: `${(index + 1) / stages.length * 100}%` }} /></div>
     </nav>
     <form id="optimizerForm" noValidate className="ll-native-build">
       <fieldset id="nativeSettings" className="ll-native-settings" disabled={unavailable}>
         <legend className="sr-only">Lineup settings</legend>
-        {STAGES.filter(s => !s.results && s.key !== 'run').map(s => (
-          <LineupStagePanel key={s.key} scene={s} active={current.key === s.key} modified={modified[s.key]} stages={stages} index={index} onGoto={goto} onEdit={markStage(s.key)} />
-        ))}
+        {STAGES.filter((s) => !s.results && s.key !== 'run').map((s) =>
+        <LineupStagePanel key={s.key} scene={s} active={current.key === s.key} modified={modified[s.key]} stages={stages} index={index} onGoto={goto} onEdit={markStage(s.key)} />
+        )}
       </fieldset>
       <fieldset className="ll-native-settings" disabled={unavailable}>
         <legend className="sr-only">Review and build actions</legend>

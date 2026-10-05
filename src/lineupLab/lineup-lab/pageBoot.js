@@ -47,9 +47,8 @@ export async function mountLineupLab(host, signal) {
     keeper.className = 'lineup-lab-tool';
     keeper.innerHTML = markup;
     toolLinks(keeper);
-    // Recompose only the workspace, retaining the original control nodes
-    // before the site's listeners attach. Hero and palette picker stay intact.
-    installJourneyFlow(keeper);
+    // The site's workflow first creates its own stateful stage controls.
+    // The command presentation is applied to those real nodes after boot.
   }
   host.appendChild(keeper);
   restoreBody = toolBodyState();
@@ -74,6 +73,7 @@ export async function mountLineupLab(host, signal) {
   try {
     await bootPromise;
     signal.throwIfAborted();
+    installJourneyFlow(keeper);
   } catch (error) {
     if (!signal.aborted) unmountLineupLab();
     throw error;

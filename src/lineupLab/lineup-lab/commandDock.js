@@ -1,20 +1,11 @@
-// Move—not clone—the existing submit/reset/cancel buttons. They stay in
-// optimizerForm, so the original submit listener and disabled states apply.
-export default function commandDock(form) {
-  const tray = document.createElement('div');
-  tray.className = 'command-actions';
-  const phases = document.createElement('span');
-  phases.className = 'command-actions__phases';
-  phases.textContent = 'Ingestion & Scope · Strategic Weights · Roster Directives · Results Studio';
-  const actions = document.createElement('div');
-  actions.className = 'command-actions__buttons';
-  for (const id of ['resetScenarioButton', 'cancelOptimizeButton', 'optimizeButton']) {
-    const button = form.querySelector(`#${id}`);
-    if (!button) continue;
-    button.classList.add('button');
-    if (id !== 'optimizeButton') button.classList.add('button--quiet');
-    actions.append(button);
+// Style the real native navigation tray; don't expose submit ahead of the
+// review step or bypass the workflow's validation and confirmed reset.
+export default function commandDock(shell) {
+  const navigation = shell.querySelector('.journey-navigation');
+  const restart = shell.querySelector('.journey-restart');
+  if (navigation) {
+    navigation.classList.add('command-actions');
+    if (restart) navigation.prepend(restart);
   }
-  tray.append(phases, actions);
-  form.append(tray);
+  shell.querySelector('.journey-result-navigation')?.classList.add('command-actions');
 }

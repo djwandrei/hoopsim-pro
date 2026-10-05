@@ -327,6 +327,19 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
   .ll-preset-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
+/* === Boundaries stage: clearly separated control sets === */
+.ll-native .ll-section-intro { margin: 0 0 1.1rem; padding-left: .75rem; border-left: 2px solid hsl(var(--court-accent) / .5); font-size: .8rem; line-height: 1.6; color: hsl(var(--court-muted)); }
+.ll-native .ll-control-set { position: relative; min-width: 0; margin: 0 0 1rem; padding: 1.1rem 1.15rem 1.25rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .9rem; background: hsl(var(--court-canvas) / .45); }
+.ll-native .ll-control-set::before { content: ''; position: absolute; top: 1rem; bottom: 1rem; left: 0; width: 3px; border-radius: 999px; background: linear-gradient(180deg, hsl(var(--court-accent) / .85), hsl(var(--court-accent) / .08)); pointer-events: none; }
+.ll-native .ll-control-set__head { display: flex; align-items: flex-start; gap: .7rem; margin-bottom: 1.1rem; }
+.ll-native .ll-control-set__icon { display: inline-grid; place-items: center; flex: 0 0 auto; width: 2rem; height: 2rem; border: 1px solid hsl(var(--court-accent) / .45); border-radius: .55rem; background: hsl(var(--court-accent) / .1); color: hsl(var(--court-accent)); }
+.ll-native .ll-control-set__head h3 { font-size: 1.05rem; letter-spacing: .05em; }
+.ll-native .ll-control-set__badge { display: inline-block; margin-left: .55rem; padding: .15rem .5rem; border: 1px solid hsl(var(--court-focus) / .5); border-radius: 999px; vertical-align: middle; background: hsl(var(--court-focus) / .1); color: hsl(var(--court-focus)); font: 600 .58rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.ll-native .ll-control-set__head p { margin-top: .35rem; font-size: .75rem; line-height: 1.6; color: hsl(var(--court-muted)); }
+.ll-native .ll-control-set__body { min-width: 0; }
+.ll-native fieldset.ll-control-set { border: 1px solid hsl(var(--court-border) / .3); border-radius: .9rem; background: hsl(var(--court-canvas) / .45); }
+.ll-native fieldset.ll-control-set legend.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; padding: 0; }
+
 /* === Broadcast scene-change layer: a gold wipe plays on every stage change === */
 .ll-game { position: relative; }
 .ll-broadcast-sweep { position: absolute; inset: 0; z-index: 6; overflow: hidden; pointer-events: none; }

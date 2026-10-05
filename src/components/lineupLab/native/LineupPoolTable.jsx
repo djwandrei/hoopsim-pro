@@ -17,7 +17,7 @@ const STRIP = [['points', 'PPG'], ['rebounds', 'RPG'], ['assists', 'APG']];
 const SCALES = [['game', 'Per game'], ['36', 'Per 36'], ['100', 'Per 100']];
 const SCALE_SUB = { game: 'per game', '36': 'per 36 min', '100': 'per 100 poss' };
 
-const clean = text => (text || '').replace(/\s+/g, ' ').trim();
+import { clean } from '@/lineupLab/lineup-lab/domText';
 const initials = name => name.split(' ').map(part => part[0]).slice(0, 2).join('');
 
 function extractRows(body) {

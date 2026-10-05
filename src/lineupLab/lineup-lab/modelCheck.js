@@ -5,8 +5,7 @@
 // model's stat view (minute allocation and impact estimates) adds to or
 // takes from the recorded line.
 
-const clean = (text) => (text || '').replace(/\s+/g, ' ').trim();
-const norm = (name) => clean(name).toLowerCase().replace(/[^a-z]/g, '');
+import { clean, norm } from '@/lineupLab/lineup-lab/domText';
 
 function readLineup(keeper) {
   const content = keeper.querySelector('#resultContent');

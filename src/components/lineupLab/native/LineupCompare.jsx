@@ -21,7 +21,7 @@ const SCALES = [['game', 'Raw', 'per game'], ['36', 'Per 36', 'per 36 min'], ['1
 const LOWER_IS_BETTER = /TOV|turnover/i;
 const isMinutesRow = label => /\bMPG\b|minutes|\bMIN\b/i.test(label);
 
-const clean = text => (text || '').replace(/\s+/g, ' ').trim();
+import { clean } from '@/lineupLab/lineup-lab/domText';
 const initials = name => name.split(' ').map(part => part[0]).slice(0, 2).join('');
 const num = text => {
   const parsed = parseFloat(String(text ?? '').replace(/[^0-9.+-]/g, ''));

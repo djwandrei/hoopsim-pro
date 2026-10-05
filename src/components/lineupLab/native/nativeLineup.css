@@ -31,6 +31,29 @@
 .ll-native-settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
 .ll-native-settings-grid > :is(#liveDataPanel, #nativeGamePlan, #nativeRoster) { grid-column: 1 / -1; }
 .ll-native-run { position: sticky; top: calc(var(--djhc-header-h, 80px) + 1rem); }
+
+/* Run stage: pre-flight briefing dashboard */
+.ll-native-run { position: static; }
+.ll-brief { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: .8rem; margin: 1.2rem 0; }
+.ll-brief-tile { min-width: 0; padding: .95rem 1rem 1.05rem; border: 1px solid hsl(var(--court-border) / .25); border-radius: .8rem; background: hsl(var(--court-canvas) / .45); }
+.ll-brief-tile > header { display: flex; align-items: center; gap: .45rem; margin-bottom: .65rem; padding-bottom: .55rem; border-bottom: 1px solid hsl(var(--court-border) / .18); color: hsl(var(--court-accent)); }
+.ll-brief-tile > header h3 { font-family: var(--font-display); font-size: .98rem; letter-spacing: .06em; text-transform: uppercase; color: hsl(var(--foreground)); }
+.ll-brief-tile__badge { margin-left: auto; flex-shrink: 0; border: 1px solid hsl(var(--court-accent) / .35); border-radius: 999px; padding: .12rem .5rem; font: 600 .55rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.ll-brief-tile__body { display: grid; gap: .1rem; }
+.ll-brief-item { display: flex; justify-content: space-between; align-items: baseline; gap: .8rem; min-width: 0; padding: .28rem 0; font-size: .78rem; }
+.ll-brief-item span { flex-shrink: 0; color: hsl(var(--court-muted)); }
+.ll-brief-item strong { min-width: 0; overflow-wrap: anywhere; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; color: hsl(var(--foreground)); }
+.ll-brief-empty { font-size: .75rem; line-height: 1.6; color: hsl(var(--court-muted)); }
+.ll-brief-weights { display: grid; gap: .5rem; }
+.ll-brief-weight__head { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; font-size: .72rem; color: hsl(var(--court-muted)); }
+.ll-brief-weight__head strong { color: hsl(var(--court-accent)); font-variant-numeric: tabular-nums; }
+.ll-brief-bar { height: .3rem; overflow: hidden; border-radius: 999px; background: hsl(var(--court-raised) / .6); }
+.ll-brief-bar > span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-focus))); }
+.ll-run-status { min-height: 2.6rem; display: flex; align-items: center; margin-top: 1rem; padding: .55rem .8rem; border: 1px solid hsl(var(--court-accent) / .3); border-left: 3px solid hsl(var(--court-accent)); border-radius: .6rem; background: hsl(var(--court-accent) / .07); color: hsl(var(--foreground)); font-size: .8rem; }
+.ll-run-actions { display: grid; gap: .55rem; margin-top: 1rem; }
+.ll-run-actions .button { margin-top: 0; }
+.ll-run-launch { min-height: 3rem; font-family: var(--font-display); font-size: 1.05rem !important; letter-spacing: .09em; text-transform: uppercase; box-shadow: 0 8px 24px hsl(var(--court-accent) / .25); }
+.ll-run-launch:hover { box-shadow: 0 10px 30px hsl(var(--court-accent) / .4); }
 .ll-native-run .ll-native-facts { margin: 1.2rem 0; display: grid; grid-template-columns: 1fr 1fr; }
 .ll-native-run .button { margin-top: .8rem; }
 .ll-native-run > .text-button { display: block; width: 100%; margin-top: .8rem; }

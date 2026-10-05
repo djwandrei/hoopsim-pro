@@ -9,7 +9,16 @@ const CACHE = "lineup-lab-runtime-v1";
 // "?mode=direct" registration: same-origin site build, no relay.
 const DIRECT = self.location.search.includes("direct");
 const ALLOWED_SITE_PATHS = ["/tools/", "/lineup-lab/"];
-const LOCAL_MEDIA_PATHS = ["/assets/"];
+// Studio-local mirrors of the site layout: the tool's modules load at the
+// exact same site-relative paths, so same-origin requests under these
+// prefixes relay to the site 1:1 and every relative import inside the module
+// graph resolves to its real site URL.
+const ALLOWED_LOCAL_PREFIXES = [
+  "/tools/", "/lineup-lab/", "/assets/",
+  // Root shell scripts and the base stylesheet, exact.
+  "/backend-config.js", "/supabase-client.js", "/core.js", "/nav.js",
+  "/theme-init.js", "/styles.css",
+];
 
 function mapRequest(url) {
   // Direct site-hosted data and module fetches (site-origin URLs).
@@ -20,30 +29,8 @@ function mapRequest(url) {
     return null;
   }
   if (url.origin !== self.location.origin) return null;
-  // Runtime module graph: studio-local module URLs map back to the site.
-  if (url.pathname.startsWith("/lineup-lab/modules/assets/")) {
-    return "/assets/" + url.pathname.slice("/lineup-lab/modules/assets/".length) + url.search;
-  }
-  if (url.pathname.startsWith("/lineup-lab/modules/tools/")) {
-    return "/tools/" + url.pathname.slice("/lineup-lab/modules/tools/".length) + url.search;
-  }
-  if (url.pathname.startsWith("/lineup-lab/modules/")) {
-    return "/lineup-lab/" + url.pathname.slice("/lineup-lab/modules/".length) + url.search;
-  }
-  // Asset paths the modules resolve against their own module URLs.
-  if (url.pathname.startsWith("/lineup-lab/assets/")) {
-    return "/assets/" + url.pathname.slice("/lineup-lab/assets/".length) + url.search;
-  }
-  if (LOCAL_MEDIA_PATHS.some(prefix => url.pathname.startsWith(prefix))) {
+  if (ALLOWED_LOCAL_PREFIXES.some(prefix => url.pathname.startsWith(prefix))) {
     return url.pathname + url.search;
-  }
-  // Stylesheets the tool page requests locally.
-  if (url.pathname.startsWith("/lineup-lab/css/")) {
-    const name = url.pathname.slice("/lineup-lab/css/".length);
-    const sitePath = name === "styles.css" ? "/styles.css"
-      : name === "fan-tools.css" ? "/tools/fan-tools.css"
-      : "/lineup-lab/" + name;
-    return sitePath + url.search;
   }
   return null;
 }

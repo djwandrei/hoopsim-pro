@@ -7,12 +7,16 @@
 import { STANDALONE } from "@/lib/deployConfig";
 
 const SITE = "https://www.djshouseofcards-comics.com";
-const MODULE_BASE = "/lineup-lab/modules/";
+// The studio serves the tool's modules at the exact same site-relative paths
+// as the live page (app.js sits at /lineup-lab/app.js), so every relative
+// import inside the module graph resolves to its real site URL and the
+// service worker can relay them 1:1.
+const MODULE_BASE = "/lineup-lab/";
 const APP_REV = "?v=20261002c&rev=lineup-v4-share-client-contract-pin-closure-v1";
 const CSS_FILES = [
-  "/lineup-lab/css/styles.css?v=20261001g",
-  "/lineup-lab/css/lineup-lab.css?v=20261002c&rev=data-source-select-full-label-v1-20260930",
-  "/lineup-lab/css/fan-tools.css?v=20261002c-fan-tools-readable-text-14px-v1",
+  "/styles.css?v=20261001g",
+  "/lineup-lab/lineup-lab.css?v=20261002c&rev=data-source-select-full-label-v1-20260930",
+  "/tools/fan-tools.css?v=20261002c-fan-tools-readable-text-14px-v1",
 ];
 
 // Tool hrefs that resolve inside the studio app; everything else points back
@@ -69,8 +73,12 @@ function swReady() {
         throw new Error("This browser cannot host the Lineup Lab service worker.");
       }
       await navigator.serviceWorker.register(STANDALONE ? "/sw-lineup-lab.js?mode=direct" : "/sw-lineup-lab.js");
-      await navigator.serviceWorker.ready;
-      if (!navigator.serviceWorker.controller) {
+      const registration = await navigator.serviceWorker.ready;
+      // A freshly deployed worker carries the current path mapping: pull the
+      // update and make sure it is the one controlling this page before any
+      // module imports happen.
+      await registration.update().catch(() => {});
+      if (registration.installing || registration.waiting || !navigator.serviceWorker.controller) {
         await new Promise((resolve, reject) => {
           const timer = setTimeout(() => reject(new Error("The Lineup Lab service worker did not activate.")), 10000);
           navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -176,6 +184,9 @@ export async function mountLineupLab(host) {
       if (keeper && keeper.parentNode) keeper.parentNode.removeChild(keeper);
       keeper = null;
       bootPromise = null;
+      // Re-run registration on the next mount so the newest worker (with the
+      // current path mapping) is in place.
+      swReady.promise = null;
       throw error;
     });
   }

@@ -15,11 +15,11 @@ export default function LineupModelControls() {
         <BoundStepper sourceId="swishiqOffenseWeightInput" label="Offense weight" />
         <BoundStepper sourceId="swishiqDefenseWeightInput" label="Defense weight" />
       </div>
-      <p id="swishiqCustomWeightsHelp" className="helper">Set any weights from 0 to 10,000 — they don't need to add up to 100, but at least one must be above zero. This only changes how strongly offense vs defense weighs in the search, not how players are measured.</p>
+      <p id="swishiqCustomWeightsHelp" className="helper">Only for a custom mix. Any number from 0 to 10,000 works — the offense/defense balance is the ratio, not the total, so 60/40 and 6,000/4,000 behave identically. Keep at least one side above zero.</p>
     </div>
     <p id="swishiqPrioritySummary" role="status" hidden className="helper" />
-    <p id="swishiqEvidenceModeHelp" hidden className="helper">SwishIQ Impact only uses complete data for the exact team, season, and phase you picked — it never blends in other seasons to fill gaps.</p>
-    <p id="modelModeHelp" className="helper">Historical builds from the box-score stats and the priorities you set. SwishIQ Impact adds a play-by-play impact read for the selected team-season when full data is available.</p>
+    <p id="swishiqEvidenceModeHelp" hidden className="helper">SwishIQ Impact reads only complete play-by-play data for the exact team, season, and phase you picked. If that data is missing the app tells you plainly — it never quietly borrows another season to fill the gap.</p>
+    <p id="modelModeHelp" className="helper">Two ways to score players. Historical profile ranks groups from box-score stats and your skill priorities. SwishIQ Impact adds a play-by-play offense/defense impact read — available when complete data exists for the team-season you picked.</p>
     <p id="swishiqEvidenceStatus" role="status" hidden className="helper" />
   </div>;
 }

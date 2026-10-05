@@ -9,6 +9,6 @@ export default function LineupResults() {
       <p id="shareResultHelp" hidden className="helper" /><p id="shareResultDisclosure" className="helper">Result sharing is unavailable right now. No link has been created.</p>
       <div id="resultContent" />
     </section>
-    <section id="emptyResult" className="ll-native-card empty-result"><CourtArt className="ll-empty-art" /><h2>Your recommended group will appear here</h2><p>Load a team, call your game plan, set any player must-haves or exclusions, then press build — the best group that passes every rule appears here.</p></section>
+    <section id="emptyResult" className="ll-native-card empty-result"><CourtArt className="ll-empty-art" /><h2>Your recommended group will appear here</h2><p>Nothing built yet. Load a team, call your game plan, lock any must-haves or exclusions in the pool, then press build — the strongest group that passes all your rules shows up here, with backups and the share link alongside it.</p></section>
   </>;
 }

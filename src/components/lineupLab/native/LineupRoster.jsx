@@ -27,7 +27,7 @@ export default function LineupRoster() {
           </div>
         </fieldset>
       </div>
-      <p id="sampleFilterHelp" className="helper">Players below these minimums stay out of the pool — raise them to focus on regulars, lower them to widen the net.</p>
+      <p id="sampleFilterHelp" className="helper">Sets who is eligible for the pool. Raise either floor to focus on regulars, or lower them to bring in fringe players — anyone under either minimum is hidden from the table below.</p>
       <div className="ll-pool-legend">
         <span className="is-lock"><Lock size={12} aria-hidden="true" /> Lock — must appear in every result</span>
         <span className="is-ban"><Ban size={12} aria-hidden="true" /> Exclude — kept out of every result</span>
@@ -41,8 +41,8 @@ export default function LineupRoster() {
         <span id="compareCount" hidden>0</span>
         <div id="compareContent" className="compare-content" hidden />
       </div>
-      <details id="usageScenarioControls" className="detailed-only" hidden><summary>Set usage scenarios (optional)</summary><p className="helper" id="usageScenarioHelp">Optional changes to a player's on-court possession share. Leave blank to keep observed usage.</p><div id="usageScenarioList" /></details>
-      <p id="poolSummary" className="helper">Pick a team and season, and the full player pool shows up here.</p>
+      <details id="usageScenarioControls" className="detailed-only" hidden><summary>Set usage scenarios (optional)</summary><p className="helper" id="usageScenarioHelp">Optional what-if: type a new usage percentage to test how a player fares with a bigger or smaller offensive role. Leave it blank to keep each player's real season usage.</p><div id="usageScenarioList" /></details>
+      <p id="poolSummary" className="helper">Once a team is loaded, every eligible player lands here. Sort the ledger, open a card for the full dossier, and lock or exclude players to steer the build.</p>
     </section>
   </LineupSection>;
 }

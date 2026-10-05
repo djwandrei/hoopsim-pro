@@ -15,7 +15,7 @@ export default function LineupPriorities() {
     <SourcePresets presets={presets} />
     <div className="ll-preset-grid">{visible.map(preset => <button key={preset.key} type="button" className={`ll-preset-card ${preset.detailed ? 'detailed-only' : ''} ${preset.active ? 'is-active' : ''}`} aria-pressed={preset.active} disabled={preset.disabled} onClick={() => document.querySelector(`#presetGrid [data-preset="${preset.key}"]`)?.click()}><strong>{preset.title}</strong><span>{preset.copy}</span></button>)}</div>
     <details className="weights-panel" id="weightsPanel"><summary>Fine-tune the game plan <span id="priorityMixLabel">(optional)</span></summary>
-      <p className="helper" id="weightsHelp">All sliders feed one focus mix that always adds up to 100% — raise a slider to give that skill more weight than the others.</p>
+      <p className="helper" id="weightsHelp">Fine-tuning is optional. Each slider sets how much one skill matters when groups are ranked; the mix always totals 100%, so raising one skill lowers the others. Leave everything at 0 to stay on your preset.</p>
       <p id="weightValidation" role="status" hidden>Choose at least one skill priority above zero before optimizing.</p>
       <div className="weight-grid" id="weightGrid" role="group" aria-label="Game-plan skill priorities">{families.map(([key, label, copy]) => <React.Fragment key={key}>
         <SourceRange id={`familyWeight-${key}`} label={label} min="0" max="100" step="1" defaultValue="0" />

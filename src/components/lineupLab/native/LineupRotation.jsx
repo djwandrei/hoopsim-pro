@@ -3,7 +3,7 @@ import { SourceField, BoundSegmented, BoundStepper, BoundSelect } from '@/compon
 
 export default function LineupRotation() {
   return <fieldset id="rotationSettings" className="rotation-settings" hidden><legend>Rotation controls</legend>
-    <p className="helper">For a rotation, the solver spreads all 240 minutes across your players, staying inside the minimum and maximum you set.</p>
+    <p className="helper">Rotation mode only. The solver spreads a full 240 minutes across your 8–12 players, keeping everyone inside the minimum and maximum minutes you set here.</p>
     <SourceField id="rotationMinutePlanInput" label="Minute approach" hidden value="openWhatIf" options={[["openWhatIf", "Optimize for the game plan"]]} />
     <SourceField id="rotationFlexibilityInput" fieldId="rotationFlexibilityField" hidden label="Allowed difference from recorded minutes" value="8" options={[["4", "±4 minutes per game"], ["8", "±8 minutes per game"], ["12", "±12 minutes per game"], ["16", "±16 minutes per game"]]} />
     <SourceField id="rotationAllocationStyleInput" fieldId="rotationAllocationStyleField" hidden label="When using recorded minutes" value="strategyFirst" options={[["strategyFirst", "Favor game plan — recommended"], ["preserveWorkload", "Stay near recorded minutes"]]} />
@@ -18,10 +18,10 @@ export default function LineupRotation() {
       <BoundSegmented sourceId="rotationRateStabilityInput" fieldId="rotationRateStabilityField" label="Rate confidence" labels={{ sampleAdjusted: 'Sample-adjusted', raw: 'Raw rates' }} columns={2} />
       <BoundSelect sourceId="rotationPositionProfileInput" label="Position-minute mix" />
       <BoundSegmented sourceId="roleBalanceInput" label="Role coverage preference" labels={{ off: 'No effect', recommended: 'Recommended', emphasized: 'Emphasized' }} columns={3} />
-      <p id="rotationScoringBasisHelp" className="helper">Per 36 puts every player on equal playing time, so a part-timer compares fairly with a starter.</p>
+      <p id="rotationScoringBasisHelp" className="helper">How players are compared: per 36 puts everyone on equal playing time so a part-timer can be judged next to a starter, while per game uses raw nightly numbers.</p>
       <BoundStepper sourceId="rotationMinInput" label="Minimum minutes per player" />
       <BoundStepper sourceId="rotationMaxInput" label="Maximum minutes per player" />
     </div>
-    <p id="rotationMinutePlanHelp" className="helper" /><p id="rotationAllocationStyleHelp" hidden /><p id="rotationRateStabilityHelp" className="helper" /><p id="rotationMinutesHelp" className="helper">The solver builds an exact 240-minute plan — only the minimum and maximum you set act as hard limits.</p>
+    <p id="rotationMinutePlanHelp" className="helper" /><p id="rotationAllocationStyleHelp" hidden /><p id="rotationRateStabilityHelp" className="helper" /><p id="rotationMinutesHelp" className="helper">The plan always totals exactly 240 minutes. Your minimum and maximum are the only hard limits — everything in between is shaped by the priorities you set in the game plan.</p>
   </fieldset>;
 }

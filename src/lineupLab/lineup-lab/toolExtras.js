@@ -13,6 +13,7 @@ import { installWeightBalance } from '@/lineupLab/lineup-lab/weightBalance';
 import { installRunLink, applyRunLink } from '@/lineupLab/lineup-lab/runLink';
 import { buildNarrativeButton } from '@/lineupLab/lineup-lab/resultNarrative';
 import { buildDiagnosticsButton } from '@/lineupLab/lineup-lab/runDiagnostics';
+import { buildModelCheckButton } from '@/lineupLab/lineup-lab/modelCheck';
 import { installLeagueScan } from '@/lineupLab/lineup-lab/leagueScan';
 import { installSolveClock } from '@/lineupLab/lineup-lab/solveClock';
 
@@ -55,7 +56,7 @@ function installResultExports(keeper) {
   const attach = () => {
     if (!results.querySelector('.command-export-bar')) {
       const bar = buildExportBar();
-      bar.append(...buildSavedRunButtons(keeper), buildNarrativeButton(keeper), buildDiagnosticsButton(keeper));
+      bar.append(...buildSavedRunButtons(keeper), buildNarrativeButton(keeper), buildDiagnosticsButton(keeper), buildModelCheckButton(keeper));
       results.prepend(bar);
     }
   };

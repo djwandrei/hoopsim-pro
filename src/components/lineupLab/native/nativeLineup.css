@@ -505,6 +505,19 @@ body:not(.dark-mode) .ll-native .ll-narrative__body { color: hsl(var(--court-tex
 /* === Solve clock: elapsed-time chip next to the site's solver status === */
 .ll-solve-clock { display: inline-flex; align-items: center; gap: .4rem; margin-left: .6rem; padding: .28rem .65rem; border: 1px solid hsl(var(--court-accent) / .4); border-radius: .5rem; background: hsl(var(--court-accent) / .08); color: hsl(var(--court-accent)); font: 600 .62rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
 
+/* === Model check: model stat view vs recorded season line === */
+.ll-modelcheck { margin: 1rem 0; }
+.ll-modelcheck__head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .7rem; }
+.ll-modelcheck__title { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: .05em; }
+.ll-modelcheck__copy { max-width: 74ch; margin-bottom: .8rem; font-size: .78rem; line-height: 1.65; color: hsl(var(--court-muted)); }
+.ll-modelcheck table { width: 100%; border-collapse: collapse; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.ll-modelcheck th { padding: .6rem; text-align: left; color: hsl(var(--court-muted)); font: 600 .6rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; border-bottom: 1px solid hsl(var(--court-border) / .3); }
+.ll-modelcheck td { padding: .55rem .6rem; border-bottom: 1px solid hsl(var(--court-border) / .18); }
+.ll-modelcheck tr.mc-totals td { font-weight: 700; border-top: 2px solid hsl(var(--court-accent) / .45); border-bottom: 0; }
+.mc-gap { display: inline-block; min-width: 2.6rem; padding: .05rem .35rem; border-radius: .35rem; font: 600 .68rem var(--font-mono); text-align: center; }
+.mc-gap-up { color: hsl(var(--court-positive)); background: hsl(var(--court-positive) / .12); }
+.mc-gap-down { color: hsl(var(--court-trim-ink)); background: hsl(var(--court-trim-ink) / .12); }
+
 /* === League scan panel === */
 .ll-scan { margin: 1rem 0; }
 .ll-scan__head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .8rem; }

@@ -100,7 +100,6 @@ export default function LineupStages({ unavailable = false }) {
           {modified[s.key] && <span className="ll-hud__dot" title="Adjusted in this run" />}
         </button>;
       })}
-      <div className="ll-hud__meter" aria-hidden="true"><span style={{ width: `${(index + 1) / stages.length * 100}%` }} /></div>
     </nav>
     <form id="optimizerForm" noValidate className="ll-native-build">
       <fieldset id="nativeSettings" className="ll-native-settings" disabled={unavailable}>

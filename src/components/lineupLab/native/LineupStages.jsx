@@ -1,0 +1,125 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Database, Target, Shield, Users, Play, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
+import LineupDataset from '@/components/lineupLab/native/LineupDataset';
+import LineupDataControls from '@/components/lineupLab/native/LineupDataControls';
+import LineupGamePlan from '@/components/lineupLab/native/LineupGamePlan';
+import LineupRules from '@/components/lineupLab/native/LineupRules';
+import LineupReporting from '@/components/lineupLab/native/LineupReporting';
+import LineupRoster from '@/components/lineupLab/native/LineupRoster';
+import LineupRunControls from '@/components/lineupLab/native/LineupRunControls';
+import LineupResults from '@/components/lineupLab/native/LineupResults';
+import CourtArt from '@/components/lineupLab/native/CourtArt';
+
+const STAGES = [
+  { key: 'season', n: '01', title: 'Load your squad', tag: 'Pick a historical team and season to play with.', icon: Database, content: <><LineupDataset /><LineupDataControls /></> },
+  { key: 'plan', n: '02', title: 'Call the game plan', tag: 'Choose what you are building, then shape the objective.', icon: Target, content: <LineupGamePlan /> },
+  { key: 'boundaries', n: '03', title: 'Set the boundaries', tag: 'Court roles, optional production rules, and reports.', icon: Shield, detailed: true, content: <><LineupRules /><LineupReporting /></> },
+  { key: 'pool', n: '04', title: 'Build the player pool', tag: 'Search, lock must-haves, and exclude the rest.', icon: Users, content: <LineupRoster /> },
+  { key: 'run', n: '05', title: 'Run the build', tag: 'Every eligible group is checked against your rules.', icon: Play, content: <LineupRunControls /> },
+  { key: 'results', n: '06', title: 'Results desk', tag: 'The recommended group, plus Lineup DNA and alternatives.', icon: Trophy, results: true },
+];
+
+function StageNav({ stages, index, onGoto, isRun }) {
+  const prev = stages[index - 1];
+  const next = stages[index + 1];
+  return <div className="ll-stage-nav">
+    {prev && <button type="button" className="text-button" onClick={() => onGoto(prev.key)}><ChevronLeft size={14} /> {prev.title}</button>}
+    {next && !isRun && <button type="button" className="button" onClick={() => onGoto(next.key)}>Continue: {next.title} <ChevronRight size={14} /></button>}
+  </div>;
+}
+
+export default function LineupStages() {
+  const [stage, setStage] = useState('season');
+  const [mode, setMode] = useState(() => document.body.dataset.experienceMode || 'detailed');
+  const [modified, setModified] = useState({});
+  const rootRef = useRef(null);
+  const armed = useRef(false);
+
+  // Simple mode hides the detailed boundary stage; track it live.
+  useEffect(() => {
+    const observer = new MutationObserver(() => setMode(document.body.dataset.experienceMode || 'detailed'));
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-experience-mode'] });
+    return () => observer.disconnect();
+  }, []);
+
+  // Don't badge stages while boot restoration replays saved inputs.
+  useEffect(() => {
+    const timer = setTimeout(() => { armed.current = true; }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // When a solve lands, the controller unhides #results — jump to the desk.
+  useEffect(() => {
+    const results = rootRef.current?.querySelector('#results');
+    if (!results) return;
+    const observer = new MutationObserver(() => {
+      if (!results.hidden) {
+        setStage('results');
+        setTimeout(() => results.scrollIntoView({ block: 'start', behavior: 'instant' }), 80);
+      }
+    });
+    observer.observe(results, { attributes: true, attributeFilter: ['hidden'] });
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const goto = event => { if (typeof event.detail === 'string') setStage(event.detail); };
+    window.addEventListener('ll-goto-stage', goto);
+    return () => window.removeEventListener('ll-goto-stage', goto);
+  }, []);
+
+  useEffect(() => {
+    const button = rootRef.current?.querySelector('#resetScenarioButton');
+    if (!button) return;
+    const reset = () => setModified({});
+    button.addEventListener('click', reset);
+    return () => button.removeEventListener('click', reset);
+  }, []);
+
+  const stages = STAGES.filter(s => mode !== 'simple' || !s.detailed);
+  let index = stages.findIndex(s => s.key === stage);
+  if (index === -1) index = Math.min(2, stages.length - 2);
+  const current = stages[index];
+  const position = key => STAGES.findIndex(s => s.key === key);
+  const markStage = key => () => { if (armed.current) setModified(m => (m[key] ? m : { ...m, [key]: true })); };
+
+  return <div ref={rootRef} className="ll-game" data-current-stage={current.n}>
+    <nav className="ll-hud" aria-label="Build stages">
+      {stages.map(s => {
+        const Icon = s.icon;
+        const state = s.key === current.key ? 'is-current' : position(s.key) < position(current.key) ? 'is-done' : '';
+        return <button key={s.key} type="button" aria-label={s.title} className={state} aria-current={s.key === current.key ? 'step' : undefined} onClick={() => setStage(s.key)}>
+          <span className="ll-hud__node"><Icon size={14} /></span>
+          <span className="ll-hud__label">{s.title}</span>
+          {modified[s.key] && <span className="ll-hud__dot" title="Adjusted in this run" />}
+        </button>;
+      })}
+    </nav>
+    <form id="optimizerForm" noValidate className="ll-native-build">
+      <fieldset id="nativeSettings" className="ll-native-settings">
+        <legend className="sr-only">Lineup settings</legend>
+        {STAGES.filter(s => !s.results).map(s => (
+          <section key={s.key} className={`ll-stage ${current.key === s.key ? 'is-current' : ''}`} data-stage={s.n} hidden={current.key !== s.key} onInput={markStage(s.key)} onChange={markStage(s.key)}>
+            <header className="ll-stage-head" data-stage-number={s.n}>
+              <div><p className="court-kicker">Stage {s.n}</p><h2 className="ll-stage-title">{s.title}</h2><p className="ll-stage-tag">{s.tag}</p></div>
+              <CourtArt className="ll-stage-art" />
+              {modified[s.key] && <span className="ll-stage-badge">Tuned</span>}
+            </header>
+            <div className="ll-stage-body">{s.content}</div>
+            <StageNav stages={stages} index={index} onGoto={setStage} isRun={s.key === 'run'} />
+          </section>
+        ))}
+      </fieldset>
+    </form>
+    <section className={`ll-stage ${current.key === 'results' ? 'is-current' : ''}`} data-stage="06" hidden={current.key !== 'results'}>
+      <header className="ll-stage-head" data-stage-number="06">
+        <div><p className="court-kicker">Stage 06</p><h2 className="ll-stage-title">Results desk</h2><p className="ll-stage-tag">{STAGES[5].tag}</p></div>
+        <CourtArt className="ll-stage-art" />
+      </header>
+      <LineupResults />
+      <div className="ll-stage-nav">
+        <button type="button" className="text-button" onClick={() => setStage('run')}><ChevronLeft size={14} /> Back to the build</button>
+      </div>
+    </section>
+  </div>;
+}

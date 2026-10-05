@@ -6,8 +6,10 @@
 const SITE = "https://www.djshouseofcards-comics.com";
 const RELAY = "/functions/swishiqLineupLabSource";
 const CACHE = "lineup-lab-runtime-v1";
+// "?mode=direct" registration: same-origin site build, no relay.
+const DIRECT = self.location.search.includes("direct");
 const ALLOWED_SITE_PATHS = ["/tools/", "/lineup-lab/"];
-const LOCAL_MEDIA_PATHS = ["/assets/player-headshots/", "/assets/nba-logos/"];
+const LOCAL_MEDIA_PATHS = ["/assets/"];
 
 function mapRequest(url) {
   // Direct site-hosted data and module fetches (site-origin URLs).
@@ -47,7 +49,9 @@ function mapRequest(url) {
 }
 
 async function relay(path, request) {
-  const params = new URLSearchParams({ path });
+  // On the live site the tool's paths are same-origin; only the studio app
+  // needs the backend relay.
+  const target = DIRECT ? path : `${RELAY}?${new URLSearchParams({ path })}`;
   const init = { method: "GET", cache: "no-store" };
   if (request.method === "POST") {
     init.method = "POST";
@@ -55,7 +59,7 @@ async function relay(path, request) {
     const contentType = request.headers.get("content-type");
     if (contentType) init.headers = { "content-type": contentType };
   }
-  const response = await fetch(`${RELAY}?${params}`, init);
+  const response = await fetch(target, init);
   if (!response.ok) return response;
   const headers = new Headers(response.headers);
   if (path.endsWith(".js")) headers.set("content-type", "application/javascript; charset=utf-8");

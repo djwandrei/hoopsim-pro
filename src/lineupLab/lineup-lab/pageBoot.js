@@ -4,6 +4,8 @@
 // release pins intact. The single tool instance parks in a module-level
 // keeper while the React route is unmounted, preserving its state.
 
+import { STANDALONE } from "@/lib/deployConfig";
+
 const SITE = "https://www.djshouseofcards-comics.com";
 const MODULE_BASE = "/lineup-lab/modules/";
 const APP_REV = "?v=20261002c&rev=lineup-v4-share-client-contract-pin-closure-v1";
@@ -52,7 +54,7 @@ function swReady() {
       if (!("serviceWorker" in navigator)) {
         throw new Error("This browser cannot host the Lineup Lab service worker.");
       }
-      await navigator.serviceWorker.register("/sw-lineup-lab.js");
+      await navigator.serviceWorker.register(STANDALONE ? "/sw-lineup-lab.js?mode=direct" : "/sw-lineup-lab.js");
       await navigator.serviceWorker.ready;
       if (!navigator.serviceWorker.controller) {
         await new Promise((resolve, reject) => {

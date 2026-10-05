@@ -7,6 +7,10 @@ const SITE = "https://www.djshouseofcards-comics.com";
 const ALLOWED_PREFIXES = [
   "/tools/",
   "/lineup-lab/",
+  "/assets/",
+  // Root shell scripts and the base stylesheet, exact.
+  "/backend-config.js", "/supabase-client.js", "/core.js", "/nav.js",
+  "/theme-init.js", "/styles.css",
 ];
 
 function safePath(value: unknown): string | null {

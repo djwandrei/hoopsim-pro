@@ -29,7 +29,7 @@ export default function LineupRotation() {
         <BoundStepper sourceId="rotationMinInput" label="Minimum minutes per player" />
         <BoundStepper sourceId="rotationMaxInput" label="Maximum minutes per player" />
       </div>
-      <p id="rotationMinutePlanHelp" className="helper" /><p id="rotationAllocationStyleHelp" hidden /><p id="rotationRateStabilityHelp" className="helper" />
+      <p id="rotationMinutePlanHelp" className="helper" /><p id="rotationAllocationStyleHelp" hidden /><p id="rotationRateStabilityHelp" className="helper" /><p id="rotationMinutesHelp" className="helper">The plan always totals exactly 240 minutes. Your minimum and maximum are the only hard limits — everything in between is shaped by the priorities you set in the game plan.</p>
     </fieldset>
   </div>;
 }

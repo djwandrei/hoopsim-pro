@@ -25,7 +25,7 @@ ${s} * { box-sizing: border-box; }
 ${s}::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; border-radius: 16px 16px 0 0; background: linear-gradient(90deg, var(--ll-gold), var(--ll-royal), transparent 80%); }
 ${s} > .shell { width: 100%; max-width: none; margin: 0; padding: 0; }
 ${s} .command-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 4px 2px 20px; border-bottom: 1px solid var(--ll-panel-border); animation: command-rise .55s ease-out both; }
-${s} .command-title { margin: 0; font-family: var(--font-heading); font-size: 25px; line-height: 1.15; letter-spacing: -.035em; font-weight: 750; color: var(--ll-heading-ink); }
+${s} .command-title { margin: 0; font-family: var(--font-body); font-size: 25px; line-height: 1.15; letter-spacing: -.035em; font-weight: 750; color: var(--ll-heading-ink); }
 ${s} .experience-switcher { display: flex; align-items: center; gap: 8px; max-width: 60%; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 ${s} .experience-switcher::before { content: none; }
 ${s} .experience-switcher__copy strong { font-family: var(--font-body); font-size: 13px; font-weight: 650; letter-spacing: 0; }
@@ -47,7 +47,7 @@ ${s} .journey-step__status { grid-column: 2; font-size: 10px; font-weight: 400; 
 ${s} .journey-step__description { display: none; }
 ${s} .journey-step.is-current { border-color: var(--ll-gold); background: var(--djhc-court-raised); box-shadow: inset 0 -2px var(--ll-gold); }
 ${s} .journey-heading { margin: 0 0 16px; }
-${s} .journey-heading h2 { margin: 0; font-family: var(--font-heading); font-size: 25px; line-height: 1.15; }
+${s} .journey-heading h2 { margin: 0; font-family: var(--font-body); font-size: 25px; line-height: 1.15; }
 ${s} .command-ticket { display: flex; align-items: baseline; gap: 16px; margin: 0 0 16px; padding: 11px 12px; border: 1px dashed var(--ll-field-border); border-radius: 8px; background: var(--ll-field); }
 ${s} .command-ticket p { margin: 0; color: var(--ll-muted); font-size: 11px; line-height: 1.6; white-space: normal; }
 ${s} .journey-stage { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; scroll-margin-top: calc(var(--djhc-header-h, 96px) + 1rem); }
@@ -58,7 +58,7 @@ ${s} .journey-review-action-surface { min-width: 0; }
 ${s} .journey-rule-group { border: 1px solid var(--ll-panel-border); border-radius: 8px; padding: 11px; background: var(--ll-field); color: var(--ll-muted); }
 ${s} .journey-next-hint { margin-left: auto; color: var(--ll-muted); font-size: 11px; }
 ${s} .journey-navigation .button { width: auto; }
-${s} .journey-restart { margin: 0; padding: 10px 14px; border: 1px solid var(--ll-field-border); border-radius: 7px; background: var(--djhc-court-raised); color: var(--ll-body-ink); font-size: 11px; }
+${s} .journey-restart { width: auto; flex: 0 0 auto; margin: 0; padding: 10px 14px; border: 1px solid var(--ll-field-border); border-radius: 7px; background: var(--djhc-court-raised); color: var(--ll-body-ink); font-size: 11px; }
 ${s} .journey-navigation { border-top: 1px solid var(--ll-field-border); }
 ${s} .journey-rule-group summary { cursor: pointer; }
 ${s} .journey-busy { grid-template-columns: minmax(0, 1fr); padding: 19px; }
@@ -69,12 +69,14 @@ ${s} .builder-grid { display: block; }
 ${s} .builder-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
 ${s} :is(.command-card, .results, .empty-result, .run-card) { position: relative; min-width: 0; padding: 19px; border: 1px solid var(--ll-panel-border); border-radius: 13px; background: var(--ll-panel); box-shadow: 0 12px 28px #05091040; animation: command-rise .55s .1s ease-out both; }
 ${s} :is(.command-card, .results, .run-card)::before { content: ''; position: absolute; left: 18px; right: 18px; top: 0; height: 1px; border-radius: 0; background: linear-gradient(90deg, var(--ll-gold), color-mix(in srgb, var(--ll-royal) 53%, transparent), transparent); }
-${s} :is(.command-card, .run-card, .results) h2 { margin: 0 0 16px; font-family: var(--font-heading); font-size: 17px; line-height: 1.25; letter-spacing: -.02em; color: var(--ll-heading-ink); }
-${s} :is(.command-card, .run-card, .results) h3 { margin: 18px 0 10px; font-family: var(--font-heading); font-size: 13px; letter-spacing: .01em; color: var(--ll-heading-ink); }
+${s} :is(.command-card, .run-card, .results) h2 { margin: 0 0 16px; font-family: var(--font-body); font-size: 17px; line-height: 1.25; letter-spacing: -.02em; color: var(--ll-heading-ink); }
+${s} :is(.command-card, .run-card, .results) h3 { margin: 18px 0 10px; font-family: var(--font-body); font-size: 13px; letter-spacing: .01em; color: var(--ll-heading-ink); }
 ${s} .eyebrow { margin: 0 0 7px; color: var(--ll-gold); font: 700 10px var(--font-mono); letter-spacing: .16em; text-transform: uppercase; }
 ${s} .guided-workflow :is(.step-heading, .workflow-heading, .run-card__heading) { display: flex; align-items: start; gap: 10px; margin: 0 0 16px; }
 ${s} .step-number { flex: 0 0 24px; width: 24px; height: 24px; margin-top: 2px; font-size: 11px; border-radius: 7px; box-shadow: none; background: var(--ll-track); color: var(--ll-gold); }
 ${s} .live-data-panel { margin: 0; }
+${s} .live-data-panel__intro { margin: 0 0 16px; padding: 0; border: 0; }
+${s} .live-data-panel__intro .workflow-heading { margin: 0; }
 ${s} .live-data-panel__controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 12px; }
 ${s} .live-data-panel__controls > :first-child, ${s} #loadLiveDataButton { grid-column: 1 / -1; }
 ${s} :is(.field-row, .rotation-model-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

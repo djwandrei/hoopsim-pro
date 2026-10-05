@@ -5,7 +5,10 @@ export default function commandDock(shell) {
   const restart = shell.querySelector('.journey-restart');
   if (navigation) {
     navigation.classList.add('command-actions');
-    if (restart) navigation.prepend(restart);
+    if (restart) {
+      restart.classList.add('button', 'button--quiet');
+      navigation.prepend(restart);
+    }
   }
   shell.querySelector('.journey-result-navigation')?.classList.add('command-actions');
 }

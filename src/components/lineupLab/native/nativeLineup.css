@@ -65,7 +65,6 @@
 .ll-native fieldset:not(.ll-native-settings) { border: 0; min-width: 0; padding: 0; margin: 0 0 1.2rem; }
 .ll-native fieldset legend { font-weight: 600; font-size: .85rem; margin-bottom: .8rem; }
 .ll-native fieldset > .field { margin-top: 1rem; }
-.ll-native-roster__tools { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 1rem; align-items: end; }
 .ll-native .table-wrap, .ll-native .compare-content { overflow-x: auto; width: 100%; border: 1px solid hsl(var(--court-border) / .25); border-radius: .7rem; }
 .ll-native table { width: 100%; border-collapse: collapse; font-size: .8rem; font-variant-numeric: tabular-nums; }
 .ll-native .player-table { min-width: 58rem; }
@@ -98,7 +97,7 @@ body[data-experience-mode="simple"] .ll-native .simple-only { display: block; }
 body[data-experience-mode="simple"] .ll-native :is(.detailed-only, .detailed-only-column, .result-evidence, .result-detail-grid, .historical-benchmark, .alternatives-section, .fan-report) { display: none !important; }
 body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open :is(.result-evidence, .result-detail-grid, .historical-benchmark, .alternatives-section, .fan-report) { display: block !important; }
 @media (max-width: 1023px) { .ll-native-build { grid-template-columns: minmax(0, 1fr); } .ll-native-run { position: static; } }
-@media (max-width: 767px) { .ll-native-hero { gap: 1rem; } .ll-native-hero > img { width: 5rem; height: 5rem; } .ll-native-settings-grid { grid-template-columns: minmax(0, 1fr); } .ll-native-card { padding: 1rem; } .ll-native-roster__tools { grid-template-columns: minmax(0, 1fr); } .ll-native .preset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ll-native .mobile-solve-bar { display: flex; position: sticky; bottom: .5rem; z-index: 10; align-items: center; gap: .5rem; padding: .75rem; margin-top: 1rem; border: 1px solid hsl(var(--court-border) / .5); border-radius: .8rem; background: hsl(var(--court-surface)); box-shadow: var(--ll-elev-hover); } .ll-native .mobile-solve-bar span { margin-right: auto; font-size: .75rem; } }
+@media (max-width: 767px) { .ll-native-hero { gap: 1rem; } .ll-native-hero > img { width: 5rem; height: 5rem; } .ll-native-settings-grid { grid-template-columns: minmax(0, 1fr); } .ll-native-card { padding: 1rem; }  .ll-native .preset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ll-native .mobile-solve-bar { display: flex; position: sticky; bottom: .5rem; z-index: 10; align-items: center; gap: .5rem; padding: .75rem; margin-top: 1rem; border: 1px solid hsl(var(--court-border) / .5); border-radius: .8rem; background: hsl(var(--court-surface)); box-shadow: var(--ll-elev-hover); } .ll-native .mobile-solve-bar span { margin-right: auto; font-size: .75rem; } }
 @media (max-width: 420px) { .ll-native-fields, .ll-native .weight-grid, .ll-native .model-grid, .ll-native .metric-field-guide__grid { grid-template-columns: minmax(0, 1fr); } .ll-native-fields--three { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 /* === Game-flow stages === */
@@ -174,4 +173,71 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 }
 @media (prefers-reduced-motion: reduce) {
   .ll-native *, .ll-stage, .ll-tour, .ll-tour__panel, .ll-player-detail, .ll-detail-backdrop { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* === Player pool: control + table overhaul === */
+.ll-native .ll-pool-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 1rem 1.4rem; align-items: end; }
+.ll-pool-search { display: block; }
+.ll-pool-search-box { position: relative; display: block; }
+.ll-pool-search-box svg { position: absolute; left: .85rem; top: 50%; transform: translateY(-50%); color: hsl(var(--court-muted)); pointer-events: none; }
+.ll-pool-search-box input { padding-left: 2.5rem; }
+.ll-pool-search-box input:focus { border-color: hsl(var(--court-accent) / .7); box-shadow: 0 0 0 3px hsl(var(--court-accent) / .15); outline: none; }
+.ll-native .ll-pool-filters { display: grid; gap: .55rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+.ll-native .ll-pool-filters legend { display: inline-flex; align-items: center; gap: .45rem; margin-bottom: .55rem; color: hsl(var(--court-muted)); font: 600 .66rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.ll-native .ll-pool-filters .ll-native-fields { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.ll-pool-legend { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; margin: .9rem 0; font-size: .72rem; color: hsl(var(--court-muted)); }
+.ll-pool-legend span { display: inline-flex; align-items: center; gap: .45rem; }
+.ll-pool-legend svg { flex: 0 0 auto; }
+.ll-pool-legend .is-lock { color: hsl(var(--court-focus)); }
+.ll-pool-legend .is-ban { color: hsl(var(--court-trim-ink)); }
+
+/* Table shell */
+.ll-native .player-table-wrap { max-height: 32rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .9rem; background: hsl(var(--court-canvas) / .55); box-shadow: var(--ll-elev-rest); }
+.ll-native .player-table { min-width: 58rem; border-collapse: separate; border-spacing: 0; }
+.ll-native .player-table tbody:empty::after { content: 'No players match — load a team and season, or loosen the filters.'; display: block; padding: 1.4rem; text-align: center; font-size: .8rem; color: hsl(var(--court-muted)); }
+
+/* Header band */
+.ll-native .player-table thead th { position: sticky; top: 0; z-index: 3; padding: .85rem .75rem; background: hsl(var(--court-surface)); border-bottom: 2px solid hsl(var(--court-accent) / .5); color: hsl(var(--court-muted)); font: 600 .6rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; text-align: left; white-space: nowrap; }
+.ll-native .player-table thead th:first-child { box-shadow: inset 2px 0 0 hsl(var(--court-accent) / .5); }
+.ll-native .player-table-sort { display: flex; width: 100%; align-items: center; gap: .3rem; min-height: 1.4rem; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.ll-native .player-table-sort:hover { color: hsl(var(--court-focus)); }
+
+/* Column alignment: rates right, actions centered */
+.ll-native .player-table :is(th, td):nth-child(n+3):nth-child(-n+9) { text-align: right; }
+.ll-native .player-table th:nth-child(n+3):nth-child(-n+9) .player-table-sort { justify-content: flex-end; }
+.ll-native .player-table :is(th, td):nth-child(n+10) { text-align: center; }
+.ll-native .player-table td { padding: .55rem .75rem; border-bottom: 1px solid hsl(var(--court-border) / .18); font-size: .8rem; }
+.ll-native .player-table td:nth-child(n+3):nth-child(-n+9) { font-variant-numeric: tabular-nums; }
+.ll-native .player-table td:nth-child(2) { color: hsl(var(--court-focus)); font: 600 .7rem var(--font-mono); letter-spacing: .08em; }
+
+/* Sticky first column: survives horizontal scroll, tracks row state */
+.ll-native .player-table th:first-child { z-index: 4; }
+.ll-native .player-table tbody td:first-child { position: sticky; left: 0; z-index: 2; background: hsl(var(--court-surface)); box-shadow: inset -1px 0 0 hsl(var(--court-border) / .25); }
+.ll-native .player-table tbody tr.is-locked td:first-child { background: color-mix(in srgb, hsl(var(--court-surface)) 90%, hsl(var(--court-accent))); box-shadow: inset 3px 0 0 hsl(var(--court-accent)), inset -1px 0 0 hsl(var(--court-border) / .25); }
+.ll-native .player-table tbody tr.is-excluded td:first-child, .ll-native .player-table tbody tr.is-ineligible td:first-child { background: hsl(var(--court-raised) / .8); }
+
+/* Row states */
+.ll-native .player-table tbody tr { transition: background-color .15s ease; }
+.ll-native .player-table tbody tr:hover { background: hsl(var(--court-accent) / .07); }
+.ll-native .player-table tbody tr:hover td:first-child { color: hsl(var(--court-focus)); }
+.ll-native .player-table tbody tr.is-locked { background: hsl(var(--court-accent) / .1); }
+.ll-native .player-table tbody tr:is(.is-excluded, .is-ineligible) td { color: hsl(var(--court-muted)); }
+
+/* Identity cell */
+.ll-native .player-table .player-name__identity { gap: .7rem; }
+.ll-native .player-table .player-avatar { width: 2.75rem; height: 2.75rem; border-radius: .55rem; border: 1px solid hsl(var(--court-border) / .4); background: hsl(var(--court-raised)); }
+.ll-native .player-table .player-name strong { font-size: .85rem; }
+.ll-native .player-table .player-name small { color: hsl(var(--court-muted)); }
+
+/* Selection controls */
+.ll-native .player-table .table-check-target { width: 2.5rem; height: 2.5rem; border-radius: .5rem; transition: background-color .15s ease; }
+.ll-native .player-table .table-check-target:hover { background: hsl(var(--court-accent) / .14); }
+.ll-native .player-table input[type="checkbox"] { width: 1.1rem; height: 1.1rem; border-radius: .3rem; cursor: pointer; }
+
+/* Pool status line */
+.ll-native #poolSummary { display: flex; align-items: center; gap: .5rem; margin-top: .9rem; padding: .7rem .9rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .6rem; background: hsl(var(--court-canvas) / .5); }
+@media (max-width: 767px) {
+  .ll-native .ll-pool-toolbar { grid-template-columns: minmax(0, 1fr); }
+  .ll-native .player-table { min-width: 50rem; }
+  .ll-native .player-table-wrap { max-height: 26rem; }
 }

@@ -72,6 +72,25 @@ export default function LineupStages({ unavailable = false }) {
     return () => window.removeEventListener('ll-goto-stage', listener);
   }, []);
 
+  // Keyboard stage flow: arrow keys step between stages, digits jump to one.
+  useEffect(() => {
+    const listener = (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.target?.closest?.('input, select, textarea, [contenteditable="true"]')) return;
+      if (document.querySelector('.ll-tour')) return;
+      const visible = STAGES.filter((s) => (document.body.dataset.experienceMode || 'detailed') !== 'simple' || !s.detailed);
+      const at = visible.findIndex((s) => s.key === stageRef.current);
+      if (event.key === 'ArrowRight' && at < visible.length - 1) { event.preventDefault(); goto(visible[at + 1].key); }
+      else if (event.key === 'ArrowLeft' && at > 0) { event.preventDefault(); goto(visible[at - 1].key); }
+      else if (/^[1-9]$/.test(event.key)) {
+        const pick = visible[Number(event.key) - 1];
+        if (pick) goto(pick.key);
+      }
+    };
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, []);
+
   useEffect(() => {
     const button = rootRef.current?.querySelector('#resetScenarioButton');
     if (!button) return;

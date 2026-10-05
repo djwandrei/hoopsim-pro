@@ -483,3 +483,21 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 /* Step 5 — review & build card: firmer edges, roomier gutters */
 aside.ll-native-run { padding: 1.4rem 1.9rem; border: 1px solid hsl(var(--court-team-hint) / .55); border-radius: 1.2rem; box-shadow: 0 10px 30px hsl(var(--court-canvas) / .35); }
 @media (max-width: 767px) { aside.ll-native-run { padding: 1.1rem 1.2rem; } }
+
+/* === Source health chip (dataset strip) === */
+.ll-health { display: inline-flex; align-items: center; gap: .45rem; padding: .3rem .65rem; border-radius: .5rem; font: 600 .62rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+.ll-health.is-pending { color: hsl(var(--court-muted)); border: 1px dashed hsl(var(--court-border) / .4); }
+.ll-health.is-ok { color: hsl(var(--court-positive)); border: 1px solid hsl(var(--court-positive) / .5); background: hsl(var(--court-positive) / .1); }
+.ll-health.is-warn { color: hsl(var(--court-trim-ink)); border: 1px solid hsl(var(--court-trim-ink) / .55); background: hsl(var(--court-trim-ink) / .1); }
+
+/* === Result-desk narrative card === */
+.ll-narrative { margin: 1rem 0; padding: 1rem 1.15rem; border: 1px solid hsl(var(--court-accent) / .35); border-left: 3px solid hsl(var(--court-accent)); border-radius: .7rem; background: hsl(var(--court-canvas) / .5); }
+.ll-narrative__kicker { font: 600 .58rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.ll-narrative__body { margin-top: .45rem; font-size: .9rem; line-height: 1.7; color: hsl(var(--court-text)); }
+
+/* === Accessibility pass: keep team-palette ink readable in light mode === */
+body:not(.dark-mode) .ll-native .button--quiet, body:not(.dark-mode) .ll-native .button-secondary { color: color-mix(in srgb, hsl(var(--court-team-hint)) 68%, black); }
+body:not(.dark-mode) .ll-native .ll-native-index { color: color-mix(in srgb, hsl(var(--court-team-hint)) 68%, black); }
+body:not(.dark-mode) .ll-brief-tile__badge { color: color-mix(in srgb, hsl(var(--court-team-hint)) 68%, black); }
+body:not(.dark-mode) .ll-native .ll-native-note strong { color: hsl(var(--court-text)); }
+body:not(.dark-mode) .ll-native .ll-narrative__body { color: hsl(var(--court-text)); }

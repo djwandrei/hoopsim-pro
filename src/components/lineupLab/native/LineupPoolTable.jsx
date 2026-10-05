@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Lock, Ban, GitCompare, Eye, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { Image } from '@/components/ui/image';
+import LineupPoolDossier from '@/components/lineupLab/native/LineupPoolDossier';
 import '@/components/lineupLab/native/poolTable.css';
 
 // React-rendered player pool table. The site controller keeps owning the
@@ -15,6 +16,7 @@ const ACTIONS = [['lock', 'Lock', Lock], ['ban', 'Exclude', Ban], ['compare', 'C
 const STRIP = [['points', 'PPG'], ['rebounds', 'RPG'], ['assists', 'APG']];
 const SCALES = [['game', 'Per game'], ['36', 'Per 36'], ['100', 'Per 100']];
 const QUICK_SORTS = [['points', 'PTS'], ['rebounds', 'REB'], ['assists', 'AST'], ['steals', 'STL'], ['blocks', 'BLK']];
+const SCALE_SUB = { game: 'per game', '36': 'per 36 min', '100': 'per 100 poss' };
 
 const clean = text => (text || '').replace(/\s+/g, ' ').trim();
 const initials = name => name.split(' ').map(part => part[0]).slice(0, 2).join('');
@@ -80,6 +82,29 @@ export default function LineupPoolTable() {
     return () => { clearTimeout(timer); observer?.disconnect(); };
   }, []);
 
+  // The loaded team and season, read live from the dataset strip — every
+  // dossier card needs them to resolve the player's published season record.
+  const [team, setTeam] = useState({ code: '', name: '', season: '', logo: null });
+  useEffect(() => {
+    const read = () => {
+      const bodyCode = (document.body.dataset.courtContextTeam || '').trim().toUpperCase();
+      const fallback = (document.getElementById('datasetTeamLogoFallback')?.textContent || '').trim().toUpperCase();
+      const code = /^[A-Z]{2,4}$/.test(bodyCode) ? bodyCode : /^[A-Z]{2,4}$/.test(fallback) && fallback !== 'NBA' ? fallback : '';
+      const rawName = (document.getElementById('datasetTeam')?.textContent || '').trim();
+      const name = rawName && rawName !== '-' && !/\bteams?$/.test(rawName) ? rawName : '';
+      const season = (document.getElementById('datasetSeason')?.textContent || '').trim();
+      const logo = document.getElementById('datasetTeamLogo');
+      const logoSrc = logo && !logo.hidden ? logo.getAttribute('src') : null;
+      setTeam(current => (current.code === code && current.name === name && current.season === season && current.logo === logoSrc ? current : { code, name, season, logo: logoSrc }));
+    };
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-court-context-team'] });
+    const strip = document.getElementById('datasetStrip');
+    if (strip) observer.observe(strip, { childList: true, subtree: true, attributes: true, characterData: true });
+    return () => observer.disconnect();
+  }, []);
+
   // Scale-aware rate: the per-game value converted to per-36 minutes, or to
   // per-100 possessions estimated at league-average pace (~99 per 48 min).
   const rateOf = (row, key) => {
@@ -119,7 +144,6 @@ export default function LineupPoolTable() {
   const openAdvanced = () => { setCardIndex(0); setView('advanced'); };
   const focusIndex = Math.min(cardIndex, Math.max(0, sorted.length - 1));
   const focus = sorted[focusIndex];
-  const statOf = (row, key) => row?.stats.find(stat => stat.key === key)?.value || '—';
 
   const scaleBar = <div className="pool-scale-bar">
     <span className="pool-scale-bar__label"><SlidersHorizontal size={13} aria-hidden="true" /> Stat scale</span>
@@ -182,29 +206,13 @@ export default function LineupPoolTable() {
 
   const advanced = !focus ? <div className="pool-cards-empty">Load a team and season to browse player cards.</div> : <div className="pool-card-stage" aria-label="Player card carousel">
     <div className={`pool-card ${drag ? 'is-dragging' : ''}`} style={drag ? { transform: `translateX(${drag}px)` } : undefined} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={endTouch} onTouchCancel={endTouch}>
-      <div className="pool-card__band">
-        <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>Player profile</span>
-        <div className="pool-card__id">
-          <span className="pool-avatar pool-avatar--lg" aria-hidden="true">{focus.avatar ? <Image src={focus.avatar} fittingType="fit" className="pool-avatar__image" alt="" /> : initials(focus.name)}</span>
-          <div className="pool-card__identity">
-            <h3>{focus.name}</h3>
-            <span className="hero-rule" aria-hidden="true"></span>
-            <p>{focus.detail || focus.position || '—'}</p>
-          </div>
-          <span className="pool-pos pool-pos--lg">{focus.position || '—'}</span>
-          {(focus.locked || focus.muted) && <span className={`pool-flag ${focus.locked ? 'pool-flag--lock' : 'pool-flag--muted'}`}>{focus.locked ? 'Locked' : 'Excluded'}</span>}
-        </div>
-      </div>
-      <div className="pool-card__strip">
-        {STRIP.map(([key, label]) => <div key={key} className="pool-card__strip-cell"><p>{label}</p><p className="pool-card__strip-value">{statOf(focus, key)}</p><p>per game</p></div>)}
-      </div>
-      <div className="pool-card__grid">
-        {['minutes', 'steals', 'blocks', 'turnovers'].map(key => <div key={key} className="pool-card__grid-cell"><p>{statOf(focus, key)}</p><small>{STAT_COLUMNS.find(([statKey]) => statKey === key)[1]}</small></div>)}
-      </div>
-      <div className="pool-card__foot">
-        {calls(focus, 'lg')}
-        <span className="pool-card__count">{focusIndex + 1} of {sorted.length}</span>
-      </div>
+      <LineupPoolDossier
+        row={focus}
+        team={team}
+        strip={STRIP.map(([key, label]) => [label, displayOf(focus, key), SCALE_SUB[scale]])}
+        actions={calls(focus, 'lg')}
+        pager={<span className="pool-card__count">{focusIndex + 1} of {sorted.length}</span>}
+      />
     </div>
     <div className="pool-card-nav">
       <button type="button" aria-label="Previous player" disabled={focusIndex === 0} onClick={() => setCardIndex(focusIndex - 1)}><ChevronLeft size={16} /></button>

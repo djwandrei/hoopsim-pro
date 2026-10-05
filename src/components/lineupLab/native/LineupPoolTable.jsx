@@ -15,7 +15,6 @@ const STAT_COLUMNS = [['minutes', 'MPG'], ['points', 'PTS'], ['rebounds', 'REB']
 const ACTIONS = [['lock', 'Lock', Lock], ['ban', 'Exclude', Ban], ['compare', 'Compare', GitCompare], ['watch', 'Watch', Eye]];
 const STRIP = [['points', 'PPG'], ['rebounds', 'RPG'], ['assists', 'APG']];
 const SCALES = [['game', 'Per game'], ['36', 'Per 36'], ['100', 'Per 100']];
-const QUICK_SORTS = [['points', 'PTS'], ['rebounds', 'REB'], ['assists', 'AST'], ['steals', 'STL'], ['blocks', 'BLK']];
 const SCALE_SUB = { game: 'per game', '36': 'per 36 min', '100': 'per 100 poss' };
 
 const clean = text => (text || '').replace(/\s+/g, ' ').trim();
@@ -150,10 +149,7 @@ export default function LineupPoolTable() {
     <div className="pool-scale-switch" role="group" aria-label="Stat scale">
       {SCALES.map(([key, label]) => <button key={key} type="button" className={scale === key ? 'is-active' : ''} aria-pressed={scale === key} onClick={() => onScale(key)}>{label}</button>)}
     </div>
-    <div className="pool-scale-chips" role="group" aria-label="Quick sort by stat">
-      <span>Top</span>
-      {QUICK_SORTS.map(([key, label]) => <button key={key} type="button" className={sort?.key === key && sort?.dir === 'desc' ? 'is-active' : ''} onClick={() => onSort(key)}>{label}</button>)}
-    </div>
+
   </div>;
 
   const onTouchStart = event => { const touch = event.touches[0]; touchRef.current = { x: touch.clientX, y: touch.clientY }; dragRef.current = 0; };
@@ -185,7 +181,7 @@ export default function LineupPoolTable() {
       <thead><tr>
         <SortHead label="Player" sortKey="name" sort={sort} onSort={onSort} />
         <th scope="col">Pos</th>
-        {STAT_COLUMNS.map(([, label]) => <th key={label}>{scale === 'game' || label === 'MPG' ? label : `${label}/${scale}`}</th>)}
+        {STAT_COLUMNS.map(([key, label]) => <SortHead key={label} label={scale === 'game' || label === 'MPG' ? label : `${label}/${scale}`} sortKey={key} sort={sort} onSort={onSort} />)}
         <th scope="col" className="pool-ledger__calls-col">Calls</th>
       </tr></thead>
       <tbody>

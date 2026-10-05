@@ -28,9 +28,8 @@ function safePath(value) {
 
 export default async function(req) {
   try {
-    if (!['GET', 'POST'].includes(req.method)) return Response.json({ error: 'Unsupported source request.' }, { status: 405 });
-    const url = new URL(req.url);
-    const isJson = req.method === 'POST' && (req.headers.get('content-type') || '').includes('application/json');
+    if (req.method !== 'POST') return Response.json({ error: 'Unsupported source request.' }, { status: 405 });
+    const isJson = (req.headers.get('content-type') || '').includes('application/json');
     const body = isJson ? await req.json() : {};
     if (body.action === 'share') {
       const payload = body.body;
@@ -44,7 +43,7 @@ export default async function(req) {
       });
       return new Response(upstream.body, { status: upstream.status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
     }
-    const path = safePath(body.path ?? url.searchParams.get('path'));
+    const path = safePath(body.path);
     if (!path) return Response.json({ error: 'Unknown Lineup Lab data path.' }, { status: 400 });
     const encoded = body.responseFormat === 'base64';
     const offset = body.offset ?? 0;

@@ -4,6 +4,8 @@
 // methods straight from the site's public analytics project; site-hosted
 // data packages ride the runtime service worker instead.
 
+import { invokeLineupShare } from '@/lineupLab/lineup-lab/runtimeRelay';
+
 const ANALYTICS_URL = "https://fbbmuqbdpgsmvnezowwn.supabase.co";
 const ANALYTICS_KEY = "sb_publishable_ZZUUmm65NYHiRtUBHNW0sg_eJXE6KV2";
 
@@ -220,6 +222,9 @@ export function installLineupLabBridge() {
   globalThis.__lineupLabBridgeInstalled = true;
   const DJ = globalThis.DJ = globalThis.DJ || {};
   DJ.remoteCatalog = {
+    ...DJ.remoteCatalog,
+    isConfigured: () => globalThis.DJ_BACKEND_CONFIG?.enabled === true,
+    invokeFunction: invokeLineupShare,
     listNbaLineupSeasons,
     listNbaLineupTeams,
     listNbaTeamSeasonPlayers,

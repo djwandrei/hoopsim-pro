@@ -14,6 +14,7 @@ import { installLineupLabBridge } from '@/lineupLab/lineup-lab/siteBridge';
 
 const MODULE_BASE = '/lineup-lab/';
 const APP_REV = '?v=20261002c&rev=lineup-v4-share-client-contract-pin-closure-v1';
+const GUIDE_PATH = '/tools/fan-tools-guide.js';
 let keeper = null, bootPromise = null;
 let restoreBody = null, disposeChrome = null;
 let parkedExperience = 'detailed';
@@ -56,7 +57,7 @@ export async function mountLineupLab(host, signal) {
       await Promise.all([
         import(/* @vite-ignore */ `${MODULE_BASE}lab-experience.js?v=20261002c`),
         import(/* @vite-ignore */ `${MODULE_BASE}source-summary.js?v=20261002c&rev=mobile-full-source-v1`),
-        import(/* @vite-ignore */ '/tools/fan-tools-guide.js?v=20261002c&rev=phase2-guided-onboarding-v3-stable-floating-20260928j'),
+        import(/* @vite-ignore */ `${GUIDE_PATH}?v=20261002c&rev=phase2-guided-onboarding-v3-stable-floating-20260928j`),
       ]);
     })().catch(error => {
       instance.remove();

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Search, Filter, Lock, Ban, GitCompare } from 'lucide-react';
+import { Search, Filter, Lock, Ban } from 'lucide-react';
 import LineupSection from '@/components/lineupLab/native/LineupSection';
 import LineupField from '@/components/lineupLab/native/LineupField';
 import LineupPoolTable from '@/components/lineupLab/native/LineupPoolTable';
+import LineupCompare from '@/components/lineupLab/native/LineupCompare';
 
 const columns = [['name', 'Player'], ['positions', 'Position'], ['minutes', 'MPG'], ['points', 'PTS'], ['rebounds', 'REB'], ['assists', 'AST'], ['steals', 'STL'], ['blocks', 'BLK'], ['turnovers', 'TOV'], [null, 'Lock'], [null, 'Exclude'], [null, 'Compare'], [null, 'Watch']];
 export default function LineupRoster() {
@@ -33,11 +34,12 @@ export default function LineupRoster() {
       </div>
       <div className="table-wrap player-table-wrap ll-source-table" aria-hidden="true"><table className="player-table"><thead><tr>{columns.map(([key, label]) => <th key={label} data-player-sort={key || undefined} scope="col">{key ? <button type="button" className="player-table-sort"><span>{label}</span></button> : label}</th>)}</tr></thead><tbody id="playerTableBody" /></table></div>
       <LineupPoolTable />
-      <div className="ll-native-note ll-compare-inline">
-        <h3><GitCompare size={14} aria-hidden="true" /> Compare players</h3>
-        <p className="helper">Tick Compare on two to four players in the table to chart them head-to-head below.</p>
+      <div className="ll-compare-native">
+        <LineupCompare />
+        {/* Hidden source content: the site controller renders the comparison
+            here, and the native component above mirrors it. */}
         <span id="compareCount" hidden>0</span>
-        <div id="compareContent" className="compare-content" />
+        <div id="compareContent" className="compare-content" hidden />
       </div>
       <details id="usageScenarioControls" className="detailed-only" hidden><summary>Set usage scenarios (optional)</summary><p className="helper" id="usageScenarioHelp">Optional changes to a player's on-court possession share. Leave blank to keep observed usage.</p><div id="usageScenarioList" /></details>
       <p id="poolSummary" className="helper">Pick a team and season, and the full player pool shows up here.</p>

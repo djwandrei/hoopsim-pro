@@ -64,6 +64,9 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
   };
 
   const done = index >= total;
+  // Past the event-by-event opening the feed is at its fast 110ms cadence, so
+  // the score rolls are clamped to keep up with the clock and ticker.
+  const fastPace = !done && index >= 12;
   const current = index > 0 ? pbp[index - 1] : null;
   const [homeScore, awayScore] = done ? [result.homePts, result.awayPts] : current?.score || [0, 0];
   const homeLogo = teamAsset(homeCode);
@@ -87,7 +90,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
             <span className="dg-live__city">{cityName(homeCode, homeName) || 'Your Five'}</span>
             <span className="dg-live__code">{homeCode || 'FIVE'}</span>
           </span>
-          <AnimatedScore value={homeScore} className="dg-live__pts" instant={done} />
+          <AnimatedScore value={homeScore} className="dg-live__pts" instant={done} fast={fastPace} />
         </div>
         <div className="dg-live__mid">
           <span className={`dg-live__badge ${playing ? 'dg-live__badge--live' : ''}`}>{done ? 'FINAL' : 'LIVE'}</span>
@@ -97,7 +100,7 @@ export default function LiveScoreboard({ homeCode = '', awayCode = '', homeName,
           </span>
         </div>
         <div className="dg-live__club dg-live__club--away" style={{ '--dg-team': awayPalette?.primary }}>
-          <AnimatedScore value={awayScore} className="dg-live__pts" instant={done} />
+          <AnimatedScore value={awayScore} className="dg-live__pts" instant={done} fast={fastPace} />
           <span className="dg-live__identity">
             <span className="dg-live__city">{cityName(awayCode, awayName) || 'Away'}</span>
             <span className="dg-live__code">{awayCode || 'AWAY'}</span>

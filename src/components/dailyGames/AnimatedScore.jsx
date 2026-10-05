@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // value, retargeting safely when the playback accelerates, and pop a floating
 // "+N" chip like a broadcast score bug. Interrupt-safe: a new value always
 // animates from the last displayed value, so scores never jump backwards.
-export default function AnimatedScore({ value = 0, className = '', instant = false }) {
+export default function AnimatedScore({ value = 0, className = '', instant = false, fast = false }) {
   const [display, setDisplay] = useState(0);
   const [phase, setPhase] = useState('idle'); // idle | ticking | landed
   const [gain, setGain] = useState(null); // { amount, id }
@@ -36,8 +36,10 @@ export default function AnimatedScore({ value = 0, className = '', instant = fal
       setGain(null);
     }
     // Fast ticks stay readable: short distance = short roll, long gains get
-    // a little more time, but never long enough to lag the live feed.
-    const duration = Math.max(140, Math.min(240 + Math.abs(value - from) * 45, 420));
+    // a little more time, but never long enough to lag the live feed. At high
+    // playback speed the roll is clamped to land inside the fast tick cadence,
+    // so the digits, clock, and play-by-play ticker stay in sync.
+    const duration = Math.max(90, Math.min(240 + Math.abs(value - from) * 45, fast ? 100 : 420));
     const start = performance.now();
     setPhase('ticking');
     const step = now => {
@@ -54,7 +56,7 @@ export default function AnimatedScore({ value = 0, className = '', instant = fal
       }
     };
     frameRef.current = requestAnimationFrame(step);
-  }, [value, instant]);
+  }, [value, instant, fast]);
 
   useEffect(() => () => {
     cancelAnimationFrame(frameRef.current);

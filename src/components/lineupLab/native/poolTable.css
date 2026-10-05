@@ -5,6 +5,15 @@
 .pool-view-switch button { min-height: 1.9rem; padding: .3rem .85rem; border: 0; border-radius: .4rem; background: transparent; color: hsl(var(--court-muted)); font-family: var(--font-mono); font-size: .64rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; }
 .pool-view-switch button.is-active { background: hsl(var(--court-accent) / .16); color: hsl(var(--court-accent)); box-shadow: inset 0 0 0 1px hsl(var(--court-accent) / .45); }
 
+/* Stat-scale bar: switch the ledger between per game, per 36, and per 100 */
+.pool-scale-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem 1rem; padding: .65rem .8rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .7rem; background: hsl(var(--court-canvas) / .55); }
+.pool-scale-bar__label { display: inline-flex; align-items: center; gap: .45rem; font: 600 .6rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.pool-scale-switch, .pool-scale-chips { display: inline-flex; gap: .25rem; padding: .2rem; border: 1px solid hsl(var(--court-border) / .35); border-radius: .5rem; background: hsl(var(--court-canvas) / .6); }
+.pool-scale-switch button, .pool-scale-chips button { min-height: 2rem; padding: .3rem .75rem; border: 0; border-radius: .35rem; background: transparent; color: hsl(var(--court-muted)); font: 600 .62rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.pool-scale-switch button.is-active { background: hsl(var(--court-accent) / .16); color: hsl(var(--court-accent)); box-shadow: inset 0 0 0 1px hsl(var(--court-accent) / .45); }
+.pool-scale-chips button.is-active { background: hsl(var(--court-royal) / .22); color: hsl(var(--court-glass)); box-shadow: inset 0 0 0 1px hsl(var(--court-royal) / .55); }
+.pool-scale-chips > span { align-self: center; padding-left: .4rem; font: 600 .55rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--court-muted)); }
+
 /* Broadcast ledger */
 .pool-ledger { border: 1px solid hsl(var(--court-border) / .3); border-radius: .85rem; background: hsl(var(--card)); overflow: hidden; box-shadow: 0 6px 18px hsl(var(--court-canvas) / .35); }
 .pool-ledger__table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .8rem; }
@@ -41,7 +50,10 @@
 
 /* Advanced player cards (dossier profile style) */
 .pool-card-stage { display: grid; gap: .6rem; justify-items: center; }
-.pool-card { position: relative; width: 100%; max-width: 34rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: 1rem; background: hsl(var(--card)); overflow: hidden; box-shadow: 0 10px 28px hsl(var(--court-canvas) / .4); }
+.pool-card { position: relative; width: 100%; max-width: 34rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: 1rem; background: hsl(var(--card)); overflow: hidden; box-shadow: 0 10px 28px hsl(var(--court-canvas) / .4); touch-action: pan-y; transition: transform .25s cubic-bezier(.2, .8, .3, 1); }
+.pool-card.is-dragging { transition: none; }
+.pool-card-hint { align-self: center; display: none; font: 600 .58rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--court-muted)); }
+.pool-scroll-hint { display: none; }
 .pool-card__band { position: relative; overflow: hidden; border-bottom: 1px solid hsl(var(--border) / .3); }
 .pool-card__band::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, hsl(var(--court-accent) / .14), hsl(var(--court-royal) / .1) 60%, transparent); pointer-events: none; }
 .pool-card__band::after { content: ''; position: absolute; inset-inline: 0; top: 0; height: 2px; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .3) 70%, transparent); }
@@ -80,4 +92,15 @@
   .pool-card__strip-value { font-size: 1.7rem; }
   .pool-card__grid { grid-template-columns: repeat(2, 1fr); }
   .pool-card__foot { flex-wrap: wrap; }
+  /* Touch-sized controls and stacked bars */
+  .pool-view-switch { display: grid; grid-auto-flow: column; width: 100%; }
+  .pool-view-switch button { min-height: 2.5rem; }
+  .pool-scale-bar { flex-direction: column; align-items: stretch; }
+  .pool-scale-switch, .pool-scale-chips { display: grid; grid-auto-flow: column; }
+  .pool-scale-switch button, .pool-scale-chips button { min-height: 2.5rem; }
+  .pool-call { width: 2.1rem; height: 2.1rem; }
+  .pool-call--lg { width: 2.5rem; height: 2.5rem; }
+  .pool-card-nav button { width: 2.7rem; height: 2.7rem; }
+  .pool-card-hint { display: inline; margin-left: .4rem; }
+  .pool-scroll-hint { display: block; margin-bottom: .35rem; font: 600 .6rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--court-muted)); }
 }

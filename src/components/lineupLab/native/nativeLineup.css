@@ -175,6 +175,13 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
 @media (max-width: 767px) {
   .ll-stage-art { display: none; }
   .ll-stage-head::after { right: 0; font-size: 3rem; }
+  /* Touch-target pass: roomier tap areas on the key mobile controls */
+  .ll-hud button { min-height: 2.6rem; padding: .4rem .8rem .4rem .45rem; }
+  .ll-hud__node { width: 2rem; height: 2rem; }
+  .ll-stage-nav > .button, .ll-stage-nav > .text-button { min-height: 2.9rem; }
+  .ll-tour__panel { padding: 1.4rem; }
+  .ll-tour__close { width: 2.4rem; height: 2.4rem; }
+  .ll-player-detail { padding: 1.2rem; }
 }
 .ll-page-foot { display: flex; justify-content: center; margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid hsl(var(--court-border) / .25); }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Lock, Ban, GitCompare, Eye, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Lock, Ban, GitCompare, Eye, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { Image } from '@/components/ui/image';
 import '@/components/lineupLab/native/poolTable.css';
 
@@ -13,6 +13,8 @@ import '@/components/lineupLab/native/poolTable.css';
 const STAT_COLUMNS = [['minutes', 'MPG'], ['points', 'PTS'], ['rebounds', 'REB'], ['assists', 'AST'], ['steals', 'STL'], ['blocks', 'BLK'], ['turnovers', 'TOV']];
 const ACTIONS = [['lock', 'Lock', Lock], ['ban', 'Exclude', Ban], ['compare', 'Compare', GitCompare], ['watch', 'Watch', Eye]];
 const STRIP = [['points', 'PPG'], ['rebounds', 'RPG'], ['assists', 'APG']];
+const SCALES = [['game', 'Per game'], ['36', 'Per 36'], ['100', 'Per 100']];
+const QUICK_SORTS = [['points', 'PTS'], ['rebounds', 'REB'], ['assists', 'AST'], ['steals', 'STL'], ['blocks', 'BLK']];
 
 const clean = text => (text || '').replace(/\s+/g, ' ').trim();
 const initials = name => name.split(' ').map(part => part[0]).slice(0, 2).join('');
@@ -49,6 +51,10 @@ export default function LineupPoolTable() {
   const [sort, setSort] = useState(null);
   const [view, setView] = useState('ledger');
   const [cardIndex, setCardIndex] = useState(0);
+  const [scale, setScale] = useState('game');
+  const [drag, setDrag] = useState(0);
+  const touchRef = useRef(null);
+  const dragRef = useRef(0);
   const bodyRef = useRef(null);
   const signatureRef = useRef('');
 
@@ -74,17 +80,34 @@ export default function LineupPoolTable() {
     return () => { clearTimeout(timer); observer?.disconnect(); };
   }, []);
 
+  // Scale-aware rate: the per-game value converted to per-36 minutes, or to
+  // per-100 possessions estimated at league-average pace (~99 per 48 min).
+  const rateOf = (row, key) => {
+    const raw = parseFloat(row.stats.find(stat => stat.key === key)?.value);
+    if (!Number.isFinite(raw)) return null;
+    const minutes = parseFloat(row.stats.find(stat => stat.key === 'minutes')?.value);
+    if (scale === 'game' || key === 'minutes' || !Number.isFinite(minutes) || minutes <= 0) return raw;
+    if (scale === '36') return raw * 36 / minutes;
+    return raw * 100 / (minutes * 2.06);
+  };
+  const displayOf = (row, key) => {
+    if (scale === 'game' || key === 'minutes') return row.stats.find(stat => stat.key === key)?.value || '—';
+    const rate = rateOf(row, key);
+    return rate == null ? '—' : rate.toFixed(1);
+  };
+
   const sorted = useMemo(() => {
     if (!sort) return rows;
     const direction = sort.dir === 'asc' ? 1 : -1;
     return [...rows].sort((a, b) => {
       if (sort.key === 'name') return a.name.localeCompare(b.name) * direction;
-      const value = row => { const parsed = parseFloat(row.stats.find(stat => stat.key === sort.key)?.value); return Number.isFinite(parsed) ? parsed : -Infinity; };
+      const value = row => { const parsed = rateOf(row, sort.key); return Number.isFinite(parsed) ? parsed : -Infinity; };
       return (value(a) - value(b)) * direction;
     });
-  }, [rows, sort]);
+  }, [rows, sort, scale]);
 
   const onSort = key => setSort(current => (current?.key === key ? { key, dir: current.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: key === 'name' ? 'asc' : 'desc' }));
+  const onScale = key => { setScale(key); setCardIndex(0); };
 
   const toggleAction = (name, index) => {
     const row = [...(bodyRef.current?.children || [])]
@@ -98,16 +121,47 @@ export default function LineupPoolTable() {
   const focus = sorted[focusIndex];
   const statOf = (row, key) => row?.stats.find(stat => stat.key === key)?.value || '—';
 
+  const scaleBar = <div className="pool-scale-bar">
+    <span className="pool-scale-bar__label"><SlidersHorizontal size={13} aria-hidden="true" /> Stat scale</span>
+    <div className="pool-scale-switch" role="group" aria-label="Stat scale">
+      {SCALES.map(([key, label]) => <button key={key} type="button" className={scale === key ? 'is-active' : ''} aria-pressed={scale === key} onClick={() => onScale(key)}>{label}</button>)}
+    </div>
+    <div className="pool-scale-chips" role="group" aria-label="Quick sort by stat">
+      <span>Top</span>
+      {QUICK_SORTS.map(([key, label]) => <button key={key} type="button" className={sort?.key === key && sort?.dir === 'desc' ? 'is-active' : ''} onClick={() => onSort(key)}>{label}</button>)}
+    </div>
+  </div>;
+
+  const onTouchStart = event => { const touch = event.touches[0]; touchRef.current = { x: touch.clientX, y: touch.clientY }; dragRef.current = 0; };
+  const onTouchMove = event => {
+    if (!touchRef.current) return;
+    const touch = event.touches[0];
+    const dx = touch.clientX - touchRef.current.x;
+    if (Math.abs(touch.clientY - touchRef.current.y) > Math.abs(dx)) return;
+    dragRef.current = Math.max(-90, Math.min(90, dx));
+    setDrag(dragRef.current);
+  };
+  const endTouch = () => {
+    const dx = dragRef.current;
+    touchRef.current = null;
+    dragRef.current = 0;
+    setDrag(0);
+    if (dx <= -56 && focusIndex < sorted.length - 1) setCardIndex(focusIndex + 1);
+    if (dx >= 56 && focusIndex > 0) setCardIndex(focusIndex - 1);
+  };
+
   const calls = (row, size = '') => <div className={`pool-calls pool-calls--${size}`}>
     {ACTIONS.map(([key, label, Icon], index) => <button key={key} type="button" className={`pool-call pool-call--${key} ${row.actions[index] ? 'is-on' : ''}`} aria-pressed={row.actions[index]} aria-label={`${label} ${row.name}`} title={label} onClick={() => toggleAction(row.name, index)}><Icon size={size === 'lg' ? 15 : 13} /></button>)}
   </div>;
 
-  const ledger = <div className="pool-ledger" tabIndex="0" role="region" aria-label="Player pool">
+  const ledger = <div className="pool-ledger-shell">
+    <p className="pool-scroll-hint" aria-hidden="true">Swipe the table sideways to see all columns</p>
+    <div className="pool-ledger" tabIndex="0" role="region" aria-label="Player pool">
     <table className="pool-ledger__table">
       <thead><tr>
         <SortHead label="Player" sortKey="name" sort={sort} onSort={onSort} />
         <th scope="col">Pos</th>
-        {STAT_COLUMNS.map(([, label]) => <th key={label}>{label}</th>)}
+        {STAT_COLUMNS.map(([, label]) => <th key={label}>{scale === 'game' || label === 'MPG' ? label : `${label}/${scale}`}</th>)}
         <th scope="col" className="pool-ledger__calls-col">Calls</th>
       </tr></thead>
       <tbody>
@@ -117,16 +171,17 @@ export default function LineupPoolTable() {
             <span className="pool-ledger__id"><strong>{row.name}</strong><small>{row.detail}</small></span>
           </td>
           <td><span className="pool-pos">{row.position || '—'}</span></td>
-          {row.stats.map(stat => <td key={stat.key} className={stat.key === 'points' ? 'pool-lead-stat' : ''}>{stat.value || '—'}</td>)}
+          {row.stats.map(stat => <td key={stat.key} className={stat.key === 'points' ? 'pool-lead-stat' : ''}>{displayOf(row, stat.key)}</td>)}
           <td className="pool-ledger__calls-col">{calls(row)}</td>
         </tr>)}
         {!sorted.length && <tr className="pool-ledger__empty"><td colSpan={11}>Load a team and season to see the player pool.</td></tr>}
       </tbody>
     </table>
+    </div>
   </div>;
 
   const advanced = !focus ? <div className="pool-cards-empty">Load a team and season to browse player cards.</div> : <div className="pool-card-stage" aria-label="Player card carousel">
-    <div className="pool-card">
+    <div className={`pool-card ${drag ? 'is-dragging' : ''}`} style={drag ? { transform: `translateX(${drag}px)` } : undefined} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={endTouch} onTouchCancel={endTouch}>
       <div className="pool-card__band">
         <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>Player profile</span>
         <div className="pool-card__id">
@@ -154,6 +209,7 @@ export default function LineupPoolTable() {
     <div className="pool-card-nav">
       <button type="button" aria-label="Previous player" disabled={focusIndex === 0} onClick={() => setCardIndex(focusIndex - 1)}><ChevronLeft size={16} /></button>
       <button type="button" aria-label="Next player" disabled={focusIndex >= sorted.length - 1} onClick={() => setCardIndex(focusIndex + 1)}><ChevronRight size={16} /></button>
+      <span className="pool-card-hint" aria-hidden="true">Swipe to browse</span>
     </div>
   </div>;
 
@@ -162,6 +218,6 @@ export default function LineupPoolTable() {
       <button type="button" className={view === 'ledger' ? 'is-active' : ''} aria-pressed={view === 'ledger'} onClick={() => setView('ledger')}>Ledger</button>
       <button type="button" className={view === 'advanced' ? 'is-active' : ''} aria-pressed={view === 'advanced'} onClick={openAdvanced}>Player cards</button>
     </div>
-    {view === 'ledger' ? ledger : advanced}
+    {view === 'ledger' ? <>{scaleBar}{ledger}</> : advanced}
   </div>;
 }

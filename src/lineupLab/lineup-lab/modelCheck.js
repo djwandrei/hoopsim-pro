@@ -165,7 +165,7 @@ export function buildModelCheckButton(keeper) {
   if (results) {
     new MutationObserver(() => {
       if (results.isConnected && !results.contains(panel)) results.append(panel);
-      else if (!panel.hidden && results.contains(panel)) render(keeper, panel);
+      else if (!panel.hidden && results.contains(panel)) render(keeper, panel, button);
     }).observe(results, { childList: true, subtree: true });
   }
   return button;

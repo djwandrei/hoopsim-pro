@@ -31,7 +31,7 @@ export function useCollapsible() {
 // Collapsible: the body is hidden with CSS, so bound source nodes keep
 // living in the DOM while the section is folded.
 export default function LineupControlSet({ icon, title, badge, copy, children, className = '' }) {
-  const { open, headProps, className: collapsedClass } = useCollapsible();
+  const { headProps, className: collapsedClass } = useCollapsible();
   return <div className={`ll-control-set ${collapsedClass} ${className}`}>
     <LineupControlHead icon={icon} title={title} badge={badge} copy={copy} {...headProps} />
     <div className="ll-control-set__body">{children}</div>

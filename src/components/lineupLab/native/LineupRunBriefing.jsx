@@ -15,15 +15,6 @@ const MODEL = { historical: 'Historical box-score profile', 'swishiq-impact': 'S
 const OBJECTIVE = { balanced: 'Balanced', offense: 'Offense only', defense: 'Defense only', custom: 'Custom mix' };
 const MODE = { lineup: 'Starting five', rotation: 'Full rotation' };
 
-const WEIGHT_FAMILIES = [
-  ['scoring', 'Scoring'],
-  ['freeThrowPressure', 'Free-throw pressure'],
-  ['spacing', 'Spacing'],
-  ['creation', 'Creation'],
-  ['rebounding', 'Rebounding'],
-  ['perimeterDefense', 'Perimeter defense'],
-  ['interiorDefense', 'Interior defense'],
-];
 
 function BriefTile({ icon: Icon, title, badge, children }) {
   return <div className="ll-brief-tile">

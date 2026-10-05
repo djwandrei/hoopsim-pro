@@ -20,7 +20,7 @@ export default function LineupSeasonRecord({ player, year, teamCode, status }) {
         <tr>
           <td className="text-xs font-semibold text-foreground">{season || '—'}</td>
           <td className="text-xs text-muted-foreground">{teamCode || '—'}</td>
-          {COLUMNS.map(([key, label]) => <td key={key} className={`text-right font-mono text-[11px] tabular-nums ${key === 'pts' ? 'text-gold' : 'text-foreground'}`}>{statText(key, player.stats[key])}</td>)}
+          {COLUMNS.map(([key]) => <td key={key} className={`text-right font-mono text-[11px] tabular-nums ${key === 'pts' ? 'text-gold' : 'text-foreground'}`}>{statText(key, player.stats[key])}</td>)}
         </tr>
       </tbody>
     </table>

@@ -1,6 +1,6 @@
 import React from 'react';
 import LineupBootStatus from '@/components/lineupLab/LineupBootStatus';
-import GameShell from '@/components/dailyGames/GameShell';
+import CourtThemeProvider from '@/components/djhc/CourtThemeProvider';
 import usePageMeta from '@/hooks/usePageMeta';
 import LineupWorkspace from '@/components/lineupLab/native/LineupWorkspace';
 import useNativeLineup from '@/components/lineupLab/native/useNativeLineup';
@@ -14,9 +14,9 @@ export default function LineupLab() {
 
 
   return (
-    <GameShell>
+    <CourtThemeProvider>
       <LineupBootStatus loading={loading} error={error} />
       <LineupWorkspace loading={loading} error={error} />
-    </GameShell>
+    </CourtThemeProvider>
   );
 }

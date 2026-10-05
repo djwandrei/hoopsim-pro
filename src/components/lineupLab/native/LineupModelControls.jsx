@@ -4,7 +4,7 @@ import { SourceField, BoundSegmented, BoundStepper } from '@/components/lineupLa
 export default function LineupModelControls() {
   return <div className="model-choice">
     <SourceField id="modelModeInput" label="Primary model" value="historical" options={[["historical", "Historical box-score profile"], ["swishiq-impact", "SwishIQ Impact — advanced offense / defense impact"]]} />
-    <SourceField id="swishiqObjectiveInput" fieldId="swishiqObjectiveField" hidden label="Offense / defense priority" value="balanced" options={[["balanced", "Balanced"], ["offense", "Offense only"], ["defense", "Defense only"], ["custom", "Custom"]]} />
+    <SourceField id="swishiqObjectiveInput" fieldId="swishiqObjectiveField" hidden label="Offense / defense priority" value="balanced" options={[["balanced", "Balanced \u2014 equal priority"], ["offense", "Offense only \u2014 scoring impact"], ["defense", "Defense only \u2014 points prevented"], ["custom", "Custom \u2014 choose the balance"]]} />
     <SourceField id="swishiqEvidenceModeInput" fieldId="swishiqEvidenceModeField" hidden label="Data scope" value="exact" options={[["exact", "Selected team-season"]]} />
     <BoundSegmented sourceId="modelModeInput" label="Primary model" labels={{ historical: 'Historical profile', 'swishiq-impact': 'SwishIQ Impact' }} columns={2} />
     <BoundSegmented sourceId="swishiqObjectiveInput" fieldId="swishiqObjectiveField" label="Offense / defense priority" labels={{ balanced: 'Balanced', offense: 'Offense only', defense: 'Defense only', custom: 'Custom mix' }} columns={2} />

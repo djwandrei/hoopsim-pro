@@ -18,6 +18,7 @@ export default function LineupRotation() {
       <BoundSegmented sourceId="rotationRateStabilityInput" fieldId="rotationRateStabilityField" label="Rate confidence" labels={{ sampleAdjusted: 'Sample-adjusted', raw: 'Raw rates' }} columns={2} />
       <BoundSelect sourceId="rotationPositionProfileInput" label="Position-minute mix" />
       <BoundSegmented sourceId="roleBalanceInput" label="Role coverage preference" labels={{ off: 'No effect', recommended: 'Recommended', emphasized: 'Emphasized' }} columns={3} />
+      <p id="rotationScoringBasisHelp" className="helper">Per 36 compares counting stats at equal playing time. The solver then assigns the best-fitting group all 240 minutes.</p>
       <BoundStepper sourceId="rotationMinInput" label="Minimum minutes per player" />
       <BoundStepper sourceId="rotationMaxInput" label="Maximum minutes per player" />
     </div>

@@ -8,8 +8,8 @@ import { SourceField, BoundSegmented, BoundStepper } from '@/components/lineupLa
 
 export default function LineupGamePlan() {
   return <LineupSection id="nativeGamePlan" headingId="scenarioHeading" title="Call the game plan" number="02">
-    <SourceField id="modeInput" label="What are you building?" value="lineup" options={[["lineup", "Starting five"], ["rotation", "Full rotation"]]} />
-    <SourceField id="sizeInput" fieldId="sizeField" label="Roster size" min="5" max="12" step="1" value="5" />
+    <SourceField id="modeInput" label="What are you building?" value="lineup" options={[["lineup", "Starting five (5 players)"], ["rotation", "Full rotation (8\u201312 players, 240 minutes)"]]} />
+    <SourceField id="sizeInput" fieldId="sizeField" label="Roster size" min="5" max="12" step="1" value="5" help="Use 5 for a starting five, or choose 8\u201312 for a full rotation." helpId="sizeInputHelp" />
     <div className="ll-native-fields mb-5">
       <BoundSegmented sourceId="modeInput" label="What are you building?" labels={{ lineup: 'Starting five', rotation: 'Full rotation (8–12)' }} columns={2} />
       <BoundStepper sourceId="sizeInput" fieldId="sizeField" label="Roster size" />

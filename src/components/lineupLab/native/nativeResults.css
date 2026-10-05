@@ -30,6 +30,93 @@
 body[data-experience-mode="simple"] .ll-native .player-table :is(th, td):nth-child(n+7):nth-child(-n+9), body[data-experience-mode="simple"] .ll-native .player-table :is(th, td):nth-child(n+12) { display: none; }
 @media print { .ll-native-toolbar, .ll-native-build, .ll-native .results__actions, .ll-native .command-export-bar, .ll-native-hero, .ll-native-dataset, .ll-run-summary, .ll-run-diff, .ll-hud { display: none !important; } .ll-native .print-only { display: block; } .ll-native .results { display: block !important; box-shadow: none; } .ll-native .full-analysis { display: block !important; } }
 
+/* === Controller-rendered fragments (results desk, watchlist, compare).
+   The studio page never loads the site's own stylesheets, so every class the
+   site controller renders into #results / #compareContent / #watchlistContent
+   is styled here with the studio's court tokens. === */
+.ll-native .panel { min-width: 0; padding: 1rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .8rem; background: hsl(var(--court-canvas) / .5); }
+.ll-native .empty-state { padding: 2.4rem 1.5rem; text-align: center; color: hsl(var(--court-muted)); }
+.ll-native .empty-state h3 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: .04em; color: hsl(var(--foreground)); }
+.ll-native .empty-state p { max-width: 52ch; margin: .7rem auto 0; font-size: .8rem; line-height: 1.6; }
+.ll-native .eyebrow { display: block; margin-bottom: .35rem; font: 600 .6rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.ll-native .field-row, .ll-native .field-row--three { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.ll-native .field-row--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 420px) { .ll-native .field-row--three { grid-template-columns: minmax(0, 1fr); } }
+.ll-native .result-ranking-context, .ll-native .lineup-dna__swap-note, .ll-native .watchlist-migration-note, .ll-native .opponent-swishiq__delta-note, .ll-native .simple-result-model-note, .ll-native .audit-list__note, .ll-native .compare-pool-note, .ll-native .workload-stretch-note, .ll-native .simple-benchmark__help, .ll-native .opponent-plan__caveat, .ll-native .exact-replacement__objective, .ll-native .exact-replacement__result { margin: .8rem 0 0; font-size: .75rem; line-height: 1.65; color: hsl(var(--court-muted)); }
+.ll-native .player-impact-evidence { display: block; margin: .2rem 0 0; font-size: .65rem; letter-spacing: .05em; color: hsl(var(--court-muted)); }
+.ll-native .score-card--primary { border-color: hsl(var(--court-accent) / .55); background: hsl(var(--court-accent) / .08); }
+.ll-native .score-card--primary strong { color: hsl(var(--court-accent)); }
+.ll-native :is(.rotation-plan, .rotation-unit-proof, .opponent-plan, .input-stability-report, .simple-result-overview, .simple-result-details) { min-width: 0; margin: 1.2rem 0; padding: 1.2rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .8rem; background: hsl(var(--court-canvas) / .4); }
+.ll-native .lineup-dna-report { min-width: 0; margin: 1rem 0 0; }
+.ll-native .rotation-plan__heading { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: .05em; color: hsl(var(--foreground)); }
+.ll-native .rotation-plan-note { margin: .5rem 0 0; font-size: .75rem; line-height: 1.65; color: hsl(var(--court-muted)); }
+.ll-native .unit-proof-frame { padding: .85rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .7rem; background: hsl(var(--court-canvas) / .5); }
+.ll-native .unit-proof-frame strong { font: 600 .7rem var(--font-mono); color: hsl(var(--court-accent)); }
+.ll-native .unit-proof-examples { display: grid; gap: .6rem; margin: .8rem 0 0; }
+.ll-native .lineup-dna__method { margin: .8rem 0 0; padding-left: 1.3rem; font-size: .78rem; line-height: 1.6; color: hsl(var(--court-text)); }
+.ll-native .lineup-dna__method li + li { margin-top: .5rem; }
+.ll-native .lineup-dna__source { display: block; margin-top: .6rem; font-size: .68rem; color: hsl(var(--court-muted)); }
+.ll-native .opponent-plan { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }
+.ll-native .opponent-plan__column { min-width: 0; }
+.ll-native .opponent-plan__threats { display: grid; gap: .4rem; }
+.ll-native .opponent-swishiq__section { min-width: 0; margin-top: 1rem; padding: 1rem; border: 1px solid hsl(var(--court-border) / .28); border-radius: .8rem; background: hsl(var(--court-canvas) / .5); }
+.ll-native .opponent-swishiq__section h4 { font-family: var(--font-display); font-size: 1.05rem; letter-spacing: .05em; color: hsl(var(--foreground)); }
+.ll-native .opponent-swishiq__team { display: flex; align-items: center; gap: .8rem; }
+.ll-native .opponent-swishiq__logo { flex: 0 0 auto; }
+.ll-native .opponent-swishiq__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .5rem 1.2rem; }
+.ll-native .opponent-swishiq__stats dt { font: 600 .6rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--court-muted)); }
+.ll-native .opponent-swishiq__stats dd { margin: 0; font-size: .85rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ll-native .simple-result-insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 1rem; margin: 1rem 0; }
+.ll-native .simple-result-insight { min-width: 0; padding: 1rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .8rem; background: hsl(var(--court-canvas) / .5); }
+.ll-native .simple-result-insight h3 { font-family: var(--font-display); font-size: 1rem; letter-spacing: .05em; }
+.ll-native .simple-result-insight p { margin-top: .4rem; font-size: .78rem; line-height: 1.65; color: hsl(var(--court-muted)); }
+.ll-native .simple-result-insight--good { border-color: hsl(var(--court-positive) / .5); background: hsl(var(--court-positive) / .08); }
+.ll-native .simple-result-insight--bad { border-color: hsl(var(--court-trim-ink) / .5); background: hsl(var(--court-trim-ink) / .08); }
+.ll-native .simple-benchmark { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin-bottom: .6rem; }
+.ll-native .simple-benchmark .score-card { min-width: 8rem; }
+.ll-native .result-passport__header { margin-bottom: .6rem; }
+.ll-native .result-passport__header p { margin-top: .4rem; font-size: .78rem; line-height: 1.65; color: hsl(var(--court-muted)); }
+.ll-native .result-passport__card--decision { border-color: hsl(var(--court-accent) / .5); }
+.ll-native .result-passport__card--game { border-color: hsl(var(--court-royal) / .5); }
+.ll-native .role-coverage-row__title { display: flex; align-items: center; justify-content: space-between; gap: .6rem; font-weight: 600; }
+.ll-native .role-coverage-status { flex-shrink: 0; padding: .15rem .5rem; border: 1px solid hsl(var(--court-border) / .4); border-radius: 999px; font: 600 .58rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--court-muted)); }
+.ll-native .watch-toggle { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border: 1px solid hsl(var(--court-border) / .4); border-radius: .5rem; background: hsl(var(--court-raised) / .5); color: hsl(var(--court-muted)); cursor: pointer; }
+.ll-native .watch-toggle:hover { border-color: hsl(var(--court-focus) / .7); background: hsl(var(--court-focus) / .12); color: hsl(var(--court-text)); }
+.ll-native .watch-toggle.is-active { background: hsl(var(--court-positive) / .9); border-color: hsl(var(--court-positive)); color: hsl(var(--court-canvas)); }
+.ll-native .watch-card__stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; margin-top: .7rem; }
+.ll-native .watch-card__stats span { display: block; font: 600 .55rem var(--font-mono); letter-spacing: .1em; color: hsl(var(--court-muted)); }
+.ll-native .watch-card__stats strong { display: block; font-size: .85rem; font-variant-numeric: tabular-nums; }
+.ll-native .data-eligibility-notice { padding: .9rem; border: 1px solid hsl(var(--court-trim-ink) / .45); border-radius: .7rem; background: hsl(var(--court-trim-ink) / .08); font-size: .78rem; line-height: 1.6; color: hsl(var(--court-trim-ink)); }
+.ll-native .error-card { padding: .9rem; border: 1px solid hsl(var(--court-trim-ink) / .45); border-radius: .7rem; background: hsl(var(--court-trim-ink) / .08); font-size: .8rem; line-height: 1.6; }
+.ll-native .insight-list--warning li { color: hsl(var(--court-trim-ink)); }
+.ll-native .compare-bars { display: grid; gap: .5rem; }
+.ll-native .compare-legend { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem .9rem; margin: .7rem 0; font-size: .75rem; color: hsl(var(--court-text)); }
+.ll-native .compare-legend i { display: inline-block; width: .6rem; height: .6rem; border-radius: 999px; }
+.ll-native .compare-legend__avatar { width: 1.6rem; height: 1.6rem; }
+.ll-native .compare-player-value { font: 600 .68rem var(--font-mono); color: hsl(var(--court-muted)); text-align: right; font-variant-numeric: tabular-nums; }
+.ll-native .counter-weight-table caption { text-align: left; padding-bottom: .5rem; font: 600 .65rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--court-muted)); }
+.ll-native .input-stability-control { display: grid; gap: .5rem; }
+.ll-native .input-stability-membership { font-size: .72rem; color: hsl(var(--court-muted)); }
+.ll-native .input-stability-case-table { font-size: .78rem; }
+.ll-native .analytics-chart__bar--warning { background: hsl(var(--court-trim)); }
+.ll-native .benchmark-explainer { margin: 1rem 0; padding: 1rem 1.15rem; border: 1px solid hsl(var(--court-border) / .3); border-radius: .8rem; background: hsl(var(--court-canvas) / .4); }
+.ll-native .benchmark-explainer--compact { padding: .8rem .9rem; }
+.ll-native .benchmark-explainer__intro, .ll-native .benchmark-explainer__reading { margin-top: .5rem; font-size: .78rem; line-height: 1.65; color: hsl(var(--court-muted)); }
+.ll-native .benchmark-explainer__steps { margin: .6rem 0 0; padding-left: 1.3rem; font-size: .78rem; line-height: 1.6; }
+.ll-native .fan-report__chart, .ll-native .fan-report__roles { min-width: 0; }
+.ll-native .fan-report__chart > p, .ll-native .fan-report__roles > p { margin-top: .4rem; font-size: .75rem; line-height: 1.65; color: hsl(var(--court-muted)); }
+.ll-native .lineup-player__minutes { font: 600 .7rem var(--font-mono); color: hsl(var(--court-accent)); }
+.ll-native .lineup-player__rank { font: 600 .65rem var(--font-mono); color: hsl(var(--court-muted)); }
+.ll-native .lineup-player__context { margin-top: .35rem; font-size: .7rem; color: hsl(var(--court-muted)); }
+.ll-native .card-search-link { color: hsl(var(--court-accent)); text-decoration: underline; }
+.ll-native .is-stale { opacity: .6; }
+.ll-native .is-result-current { border-left: 3px solid hsl(var(--court-accent)); background: hsl(var(--court-accent) / .07); }
+.ll-native .is-selected { border-color: hsl(var(--court-accent) / .6); background: hsl(var(--court-accent) / .12); }
+.ll-native .has-pending-selection { outline: 2px dashed hsl(var(--court-accent) / .5); outline-offset: 2px; }
+.ll-native .is-impact-unresolved { color: hsl(var(--court-trim-ink)); }
+.ll-native .alternatives-wrap { max-width: 100%; }
+.ll-native .objective-scenario-results { display: grid; gap: .8rem; }
+
 /* === Team-logo watermark on the results desk (#13) === */
 .ll-native .results { position: relative; overflow: hidden; }
 .ll-native .results::after { content: ''; position: absolute; right: -2.5rem; bottom: -2.5rem; width: 15rem; height: 15rem; background: var(--djhc-court-team-logo, none) center / contain no-repeat; opacity: .1; pointer-events: none; }

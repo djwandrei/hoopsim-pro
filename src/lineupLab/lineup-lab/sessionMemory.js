@@ -18,7 +18,7 @@ function readSaved() {
 function controls(keeper) {
   const scope = keeper.querySelector('#workspace') || keeper;
   return [...scope.querySelectorAll('select, input, textarea')]
-    .filter(el => el.tagName !== 'BUTTON' && !el.disabled && el.type !== 'file' && el.type !== 'hidden');
+    .filter(el => el.tagName !== 'BUTTON' && !el.disabled && el.type !== 'file' && el.type !== 'hidden' && !el.hasAttribute('data-ll-designed'));
 }
 
 function keyOf(el, index) {

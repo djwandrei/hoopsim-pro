@@ -33,7 +33,7 @@ export default async function workerConnection() {
     connection = (async () => {
       if (!('serviceWorker' in navigator)) throw new Error('This browser cannot load the Lineup Lab connection.');
       installRuntimeRelay();
-      const scriptUrl = new URL('/sw-lineup-lab.js?v=wiring-v2', window.location.origin).href;
+      const scriptUrl = new URL('/sw-lineup-lab.js?v=wiring-v3', window.location.origin).href;
       const registration = await navigator.serviceWorker.register(scriptUrl, { scope: '/', updateViaCache: 'none' });
       await registration.update();
       await waitForController(registration, scriptUrl);

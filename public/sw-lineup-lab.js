@@ -103,22 +103,3 @@ self.addEventListener('fetch', event => {
   })());
 });
 
-self.addEventListener("fetch", (event) => {
-  const request = event.request;
-  if (request.method !== "GET" && request.method !== "POST") return;
-  let url;
-  try { url = new URL(request.url); } catch { return; }
-  const path = mapRequest(url);
-  if (!path) return;
-  // Release tokens change whenever the site republishes, so URL-keyed
-  // cache-first reads stay exact for module and artifact pins.
-  event.respondWith((async () => {
-    if (request.method !== "GET") return relay(path, request);
-    const cache = await caches.open(CACHE);
-    const cached = await cache.match(request);
-    if (cached) return cached;
-    const response = await relay(path, request);
-    if (response.ok) cache.put(request, response.clone());
-    return response;
-  })());
-});

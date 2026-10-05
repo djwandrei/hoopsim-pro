@@ -1,6 +1,7 @@
 import base44 from "@base44/vite-plugin"
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import path from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 
 // Standalone site export: VITE_STANDALONE=true builds the app for the DJHC
@@ -20,6 +21,16 @@ export default defineConfig({
     { find: '@pins', replacement: fileURLToPath(new URL('./base44/shared/studioNativeAssets.ts', import.meta.url)) },
   ] },
   plugins: [
+    // Lineup Lab modules carry the live site's cache-buster query strings on
+    // relative imports; strip them so each import resolves to one module.
+    {
+      name: 'lineup-lab-strip-import-queries',
+      enforce: 'pre',
+      resolveId(source, importer) {
+        if (!importer || !source.startsWith('.') || !/\?(?:v|rev)=/.test(source)) return null;
+        return path.resolve(path.dirname(importer), source.split('?')[0]);
+      },
+    },
     ...(standalone ? [] : [base44({
       // Support for legacy code that imports the base44 SDK with @/integrations, @/entities, etc.
       legacySDKImports: process.env.BASE44_LEGACY_SDK_IMPORTS === 'true',

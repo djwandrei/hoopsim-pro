@@ -16,4 +16,5 @@ const GAME_ASSETS = 'https://www.djshouseofcards-comics.com/assets/games/';
 export const DAILY_GAMES = [
   { path: '/fix-the-five', emblem: `${GAME_ASSETS}fix-the-five-emblem-20260911.png`, title: 'Fix the Five', tag: 'DAILY ROTATION REPAIR', description: 'Repair five exact-season starting fives by swapping in legal replacements, verified by the original private evaluator.', flow: 'Board → Swap call → Verified rank' },
   { path: '/draft-night', emblem: `${GAME_ASSETS}draft-night-emblem-20260911.png`, title: 'Draft Night', tag: 'DAILY FIVE-ROUND DRAFT', description: 'Draft one player from each of five team rounds, then reveal one verified cross-team impact result.', flow: 'Rounds → Lock draft → Verified rank' },
+  { path: '/lineup-lab', emblem: `${GAME_ASSETS}lineup-lab-emblem-20260911.png`, title: 'NBA Lineup Lab', tag: 'LINEUP & ROTATION OPTIMIZER', description: 'Pick a team-season, set the game plan, and run the exact optimizer to rank lineups, rotations, and one-player tradeoffs.', flow: 'Team & season → Game plan → Build' },
 ];

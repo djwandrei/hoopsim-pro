@@ -5,7 +5,7 @@ export const SITE = 'https://www.djshouseofcards-comics.com';
 // here — this app hosts them under the studio root.
 export const FAN_TOOLS = [
   ['/tools/','Fan Tools','fan-tools-emblem-20260911.png'],
-  ['/lineup-lab/','Lineup Lab','lineup-lab-emblem-20260911.png'],
+  ['/lineup-lab/','Lineup Lab','lineup-lab-emblem-20260911.png','local'],
   ['/tools/player-card-matchups/','Player & Cards','card-matchups-emblem-20260911.png'],
   ['/tools/virtual-pack-opening/','Virtual Packs','card-matchups-emblem-20260911.png'],
   ['/tools/collection-lineup-builder/','Collection Builder',null],
@@ -15,7 +15,7 @@ export const FAN_TOOLS = [
   ['/tools/franchise-rebuild-challenge/','Franchise Rebuild',null],
   ['/tools/workshop/','Workshop','workshop-emblem-20260911.png'],
   ['/tools/swishiq-studio/','SwishIQ Studio','swishiq-studio-emblem-20260913.png'],
-].map(([path,label,asset])=>({path,label,href:SITE+path,emblem:asset?`${SITE}/assets/games/${asset}`:null}));
+].map(([path,label,asset,local])=>({path,label,href:local?path.replace(/\/+$/,''):SITE+path,emblem:asset?(local?`/studio-assets/games/${asset}`:`${SITE}/assets/games/${asset}`):null}));
 export const FOOTER_GROUPS = [
   {title:'Browse',key:'browse',links:[['Shop',SITE+'/shop.html'],['Sports Cards',SITE+'/sports-cards.html'],['Comics',SITE+'/comics.html'],['Collectibles',SITE+'/collectibles.html'],['Sell or Trade',SITE+'/sell-trade-want-list.html']]},
   {title:'Help & Policies',key:'support',links:[['Contact DJ',SITE+'/contact.html'],['Shipping',SITE+'/shipping.html'],['Returns',SITE+'/returns.html'],['Policies & Authenticity',SITE+'/policies.html']]},

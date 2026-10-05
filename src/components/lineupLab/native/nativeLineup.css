@@ -175,6 +175,8 @@ body[data-experience-mode="simple"] .ll-native .full-analysis.is-simple-open, bo
   .ll-stage-art { display: none; }
   .ll-stage-head::after { right: 0; font-size: 3rem; }
 }
+.ll-page-foot { display: flex; justify-content: center; margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid hsl(var(--court-border) / .25); }
+
 @media (prefers-reduced-motion: reduce) {
   .ll-native *, .ll-stage, .ll-tour, .ll-tour__panel, .ll-player-detail, .ll-detail-backdrop { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }

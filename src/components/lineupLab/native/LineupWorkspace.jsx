@@ -17,6 +17,7 @@ export default function LineupWorkspace({ loading = false, error = '' }) {
         <LineupSecondaryViews />
       </section>
       <div id="toast" className="toast" role="status" aria-live="polite" />
+      <div id="llPageFooter" className="ll-page-foot" />
     </main>
     {!loading && !error && <LineupTour />}
   </>;

@@ -54,5 +54,5 @@ export function installRunLink(keeper) {
     }
     setTimeout(() => { button.textContent = 'Copy setup link'; }, 2400);
   });
-  document.querySelector('.ll-native-toolbar')?.append(button);
+  document.getElementById('llPageFooter')?.append(button);
 }

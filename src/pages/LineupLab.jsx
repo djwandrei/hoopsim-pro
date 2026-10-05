@@ -39,7 +39,7 @@ export default function LineupLab() {
           </button>
         </div>
       )}
-      {!bootError && <div ref={hostRef} />}
+      <div ref={hostRef} hidden={Boolean(bootError)} />
     </div>
   );
 }

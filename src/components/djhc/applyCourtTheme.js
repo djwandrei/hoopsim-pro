@@ -8,8 +8,13 @@ export default function applyCourtTheme(palette,mode,source='default') {
     set(`--djhc-court-${name}`,value);set(`--court-${name}`,hslChannels(value));
   });
   const highlight=[palette.primary,palette.highlight].reduce((best,color)=>mode==='dark' ? luminance(color)>luminance(best)?color:best : luminance(color)<luminance(best)?color:best);
-  const colors={'team-primary':palette.primary,'team-secondary':palette.highlight,'team-highlight':highlight,'team-trim':palette.trim,'team-secondary-ink':themeFor({...palette,primary:palette.highlight,highlight:palette.highlight},mode).accent,'palette-primary':palette.primary,'palette-highlight':palette.highlight,'palette-trim':palette.trim};
+  // Cross-mode hint: light mode borrows the team's secondary, dark mode its
+  // primary — resolved readable against this mode's backgrounds for subtle use.
+  const hintSeed=mode==='dark' ? palette.primary : palette.highlight;
+  const hint=themeFor({...palette,primary:hintSeed,highlight:hintSeed},mode).accent;
+  const colors={'team-primary':palette.primary,'team-secondary':palette.highlight,'team-highlight':highlight,'team-trim':palette.trim,'team-secondary-ink':themeFor({...palette,primary:palette.highlight,highlight:palette.highlight},mode).accent,'team-hint':hint,'palette-primary':palette.primary,'palette-highlight':palette.highlight,'palette-trim':palette.trim};
   Object.entries(colors).forEach(([key,value])=>set(`--djhc-court-${key}`,value));
+  set('--court-team-hint',hslChannels(hint));
   const roles={background:tokens.canvas,foreground:tokens.text,card:tokens.surface,'card-foreground':tokens.text,popover:tokens.surface,'popover-foreground':tokens.text,primary:tokens.accent,'primary-foreground':tokens.onAccent,secondary:tokens.raised,'secondary-foreground':tokens.text,muted:tokens.raised,'muted-foreground':tokens.muted,accent:tokens.raised,'accent-foreground':tokens.text,destructive:tokens.error,'destructive-foreground':tokens.onAccent,border:tokens.border,input:tokens.border,ring:tokens.focus,'court-royal':palette.primary,'chart-1':tokens.accent,'chart-2':palette.primary,'chart-3':tokens.positive,'chart-4':palette.trim,'chart-5':tokens.muted,'court-trim-ink':themeFor({...palette,primary:palette.trim,highlight:palette.trim},mode).accent,'sidebar-background':tokens.canvas,'sidebar-foreground':tokens.muted,'sidebar-primary':tokens.accent,'sidebar-primary-foreground':tokens.onAccent,'sidebar-accent':tokens.raised,'sidebar-accent-foreground':tokens.text,'sidebar-border':tokens.border,'sidebar-ring':tokens.focus};
   Object.entries(roles).forEach(([key,value])=>set(`--${key}`,hslChannels(value)));
   const logo=teamLogo(palette),slug=palette.team.toLowerCase().replace(/\s+/g,'-');

@@ -27,7 +27,7 @@ ${s} {
   --ink: var(--ll-body-ink); --muted: var(--ll-muted); --navy: var(--ll-heading-ink);
   --blue: var(--ll-gold); --gold: var(--ll-gold); --warning: var(--ll-warning); --line: var(--ll-panel-border);
   box-sizing: border-box; width: calc(100% - 2rem); max-width: 1152px; margin: 24px auto 32px; padding: 24px;
-  background: var(--ll-field); color: var(--ll-body-ink); position: relative; min-height: 0;
+  background: color-mix(in srgb, var(--ll-panel) 55%, var(--ll-field)); color: var(--ll-body-ink); position: relative; min-height: 0;
   font-family: var(--font-body); border-radius: 16px; border: 1px solid var(--ll-panel-border);
 }
 ${s} * { box-sizing: border-box; }
@@ -40,7 +40,7 @@ ${s} .experience-switcher::before { content: none; }
 ${s} .experience-switcher__buttons { display: flex; flex-shrink: 0; gap: 4px; padding: 3px; border: 1px solid var(--ll-panel-border); background: var(--ll-field); border-radius: 10px; }
 ${s} :is(.experience-switcher__button, .tool-nav__button) { border: 0; background: transparent; color: var(--ll-muted); padding: 10px 16px; border-radius: 7px; }
 ${s} :is(.experience-switcher__button, .tool-nav__button).is-active { background: var(--ll-track); color: var(--ll-body-ink); box-shadow: inset 0 -2px var(--ll-gold); }
-${s} .tool-nav.command-navigation { position: static; display: flex; flex-wrap: wrap; gap: 6px; width: auto; height: auto; clip: auto; clip-path: none; overflow: visible; white-space: normal; margin: 16px 0 22px; padding: 0 0 16px; border: 0; border-bottom: 1px solid var(--ll-panel-border); border-radius: 0; background: transparent; }
+${s} .tool-nav.command-navigation { position: static; display: flex; flex-wrap: wrap; gap: 6px; width: auto; height: auto; clip: auto; clip-path: none; overflow: visible; white-space: normal; margin: 16px 0 22px; padding: 6px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-panel); }
 ${s} .tool-nav__button { padding: 10px 20px; }
 ${s} .guided-workflow.command-build { display: block; width: 100%; max-width: none; min-height: 0; }
 ${s} :is(.journey-canvas, #optimizerForm, .tool-view, .journey-stage) { min-height: 0; }
@@ -48,16 +48,16 @@ ${s} .journey-canvas { width: 100%; max-width: none; }
 ${s} .journey-rail.command-stages { display: block; position: static; width: 100%; max-height: none; overflow: visible; margin: 0 0 24px; padding: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
 ${s} .journey-rail::before, ${s} .journey-rail__title { display: none; }
 ${s} .journey-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
-${s} .journey-step { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 10px; align-content: center; min-height: 74px; height: 100%; margin: 0; padding: 10px 8px; border: 0; border-bottom: 2px solid var(--ll-panel-border); border-radius: 8px 8px 0 0; background: transparent; color: var(--ll-muted); box-shadow: none; text-align: left; }
+${s} .journey-step { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 10px; align-content: center; min-height: 74px; height: 100%; margin: 0; padding: 10px 8px; border: 1px solid var(--ll-panel-border); border-radius: 8px; background: var(--ll-panel); color: var(--ll-muted); box-shadow: var(--ll-elev-rest); text-align: left; }
 ${s} .journey-step__number { grid-row: 1 / 3; width: 28px; height: 28px; margin: 0; color: var(--ll-body-ink); border: 1px solid var(--ll-field-border); border-radius: 8px; box-shadow: none; }
 ${s} .journey-step__status { grid-column: 2; }
 ${s} .journey-step__description { display: none; }
-${s} .journey-step.is-current { border-color: var(--ll-gold); background: var(--ll-track); box-shadow: none; }
+${s} .journey-step.is-current { border-color: var(--ll-gold); background: var(--ll-track); box-shadow: var(--ll-elev-rest); }
 ${s} .journey-step:is(.is-current, .is-complete) .journey-step__number { background: var(--ll-gold); color: var(--ll-gold-ink); border-color: var(--ll-gold); outline: none; }
 ${s} .journey-step:disabled { opacity: 1; cursor: not-allowed; }
 ${s} .journey-step:not(:disabled):hover { background: var(--ll-track); border-color: var(--ll-gold); }
 ${s} .journey-heading { margin: 0 0 18px; }
-${s} .command-ticket { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 24px; padding: 12px 16px; border: 0; border-left: 2px solid var(--ll-gold); border-radius: 0 8px 8px 0; background: var(--ll-panel); }
+${s} .command-ticket { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 24px; padding: 12px 16px; border: 1px solid var(--ll-panel-border); border-left: 3px solid var(--ll-gold); border-radius: 8px; background: var(--ll-panel); }
 ${s} .journey-stage { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 22px; scroll-margin-top: calc(var(--djhc-header-h, 96px) + 1rem); }
 ${s} .journey-stage > :is(.hero-outcomes, .players-step, .journey-review-action-surface) { grid-column: 1 / -1; }
 ${s} .journey-stage--plan .hero-outcomes { width: 100%; max-width: none; padding: 16px; margin: 0; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-panel); color: var(--ll-body-ink); }

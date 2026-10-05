@@ -3,6 +3,7 @@ import { readSourceText } from '@/lineupLab/lineup-lab/runtimeRelay';
 import { ensureSiteConfig } from '@/lineupLab/lineup-lab/toolStyles';
 import { installLineupLabBridge } from '@/lineupLab/lineup-lab/siteBridge';
 import nativeWorkflow from '@/components/lineupLab/native/nativeWorkflow';
+import controllerContract from '@/components/lineupLab/native/controllerContract';
 
 const REV = '?v=20261002c&rev=lineup-v4-share-client-contract-pin-closure-v1';
 const WORKFLOW = '/lineup-lab/workflow-state.js?v=20261002c&rev=lineup-workflow-state-phase10-component-reliability-v1-20260928j';
@@ -13,6 +14,7 @@ export default async function nativeRuntime(root, signal) {
     ensureSiteConfig(), readSourceText('/lineup-lab/app.js' + REV), import(/* @vite-ignore */ WORKFLOW),
   ]);
   signal.throwIfAborted();
+  controllerContract(root, original);
   installLineupLabBridge();
   const factories = globalThis.__nativeLineupFactories ||= new Map();
   const instance = crypto.randomUUID();

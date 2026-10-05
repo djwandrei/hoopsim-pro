@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Database, Target, Shield, Users, Play, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Database, Target, Shield, Users, Play, Trophy, ChevronLeft } from 'lucide-react';
 import LineupDataset from '@/components/lineupLab/native/LineupDataset';
 import LineupDataControls from '@/components/lineupLab/native/LineupDataControls';
 import LineupGamePlan from '@/components/lineupLab/native/LineupGamePlan';
@@ -19,16 +19,7 @@ const STAGES = [
   { key: 'results', n: '06', title: 'Results desk', tag: 'The recommended group, plus Lineup DNA and alternatives.', icon: Trophy, results: true },
 ];
 
-function StageNav({ stages, index, onGoto, isRun }) {
-  const prev = stages[index - 1];
-  const next = stages[index + 1];
-  return <div className="ll-stage-nav">
-    {prev && <button type="button" className="text-button" onClick={() => onGoto(prev.key)}><ChevronLeft size={14} /> {prev.title}</button>}
-    {next && !isRun && <button type="button" className="button" onClick={() => onGoto(next.key)}>Continue: {next.title} <ChevronRight size={14} /></button>}
-  </div>;
-}
-
-export default function LineupStages() {
+export default function LineupStages({ unavailable = false }) {
   const [stage, setStage] = useState('season');
   const [mode, setMode] = useState(() => document.body.dataset.experienceMode || 'detailed');
   const [modified, setModified] = useState({});
@@ -111,19 +102,15 @@ export default function LineupStages() {
       <div className="ll-hud__meter" aria-hidden="true"><span style={{ width: `${((index + 1) / stages.length) * 100}%` }} /></div>
     </nav>
     <form id="optimizerForm" noValidate className="ll-native-build">
-      <fieldset id="nativeSettings" className="ll-native-settings">
+      <fieldset id="nativeSettings" className="ll-native-settings" disabled={unavailable}>
         <legend className="sr-only">Lineup settings</legend>
-        {STAGES.filter(s => !s.results).map(s => (
-          <section key={s.key} className={`ll-stage ${current.key === s.key ? 'is-current' : ''}`} data-stage={s.n} hidden={current.key !== s.key} onInput={markStage(s.key)} onChange={markStage(s.key)}>
-            <header className="ll-stage-head" data-stage-number={s.n}>
-              <div><p className="court-kicker">Stage {s.n}</p><h2 className="ll-stage-title">{s.title}</h2><p className="ll-stage-tag">{s.tag}</p></div>
-              <CourtArt className="ll-stage-art" />
-              {modified[s.key] && <span className="ll-stage-badge">Tuned</span>}
-            </header>
-            <div className="ll-stage-body">{s.content}</div>
-            <StageNav stages={stages} index={index} onGoto={goto} isRun={s.key === 'run'} />
-          </section>
+        {STAGES.filter(s => !s.results && s.key !== 'run').map(s => (
+          <LineupStagePanel key={s.key} scene={s} active={current.key === s.key} modified={modified[s.key]} stages={stages} index={index} onGoto={goto} onEdit={markStage(s.key)} />
         ))}
+      </fieldset>
+      <fieldset className="ll-native-settings" disabled={unavailable}>
+        <legend className="sr-only">Review and build actions</legend>
+        <LineupStagePanel scene={STAGES[4]} active={current.key === 'run'} stages={stages} index={index} onGoto={goto} onEdit={markStage('run')} />
       </fieldset>
     </form>
     <section className={`ll-stage ${current.key === 'results' ? 'is-current' : ''}`} data-stage="06" hidden={current.key !== 'results'}>

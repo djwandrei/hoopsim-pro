@@ -1,6 +1,6 @@
 import React from 'react';
 import LineupSection from '@/components/lineupLab/native/LineupSection';
-import { SourceField, BoundSelect, BoundSegmented, BoundButton } from '@/components/lineupLab/native/boundControls';
+import { SourceField, SourceButton, BoundSelect, BoundSegmented, BoundButton } from '@/components/lineupLab/native/boundControls';
 
 export default function LineupDataControls() {
   return <LineupSection id="liveDataPanel" headingId="liveDataHeading" title="Team & season" number="01">
@@ -14,6 +14,7 @@ export default function LineupDataControls() {
       <BoundSelect sourceId="nbaTeamInput" label="NBA team" />
     </div>
     <BoundSegmented sourceId="nbaSeasonPhaseInput" label="Phase" columns={2} />
+    <SourceButton id="loadLiveDataButton" />
     <div className="card-actions mt-4"><BoundButton sourceId="loadLiveDataButton" className="button button--full">Load team and season</BoundButton></div>
     <p id="liveDataStatus" role="status" aria-live="polite" className="helper">Ready. Load a team and season to see the roster and stats.</p>
   </LineupSection>;

@@ -153,7 +153,7 @@ export function BoundStepper({ sourceId, fieldId, label, placeholder }) {
   const [text, setText] = useState('');
   const focused = useRef(false);
   useEffect(() => { if (!focused.current && source.ready) setText(source.value); }, [source.ready, source.value]);
-  const commit = value => { writeSource(sourceId, value, ['change']); setText(value); };
+  const commit = value => { writeSource(sourceId, value, ['input', 'change']); setText(value); };
   const nudge = direction => {
     const el = document.getElementById(sourceId);
     if (!el || el.disabled) return;

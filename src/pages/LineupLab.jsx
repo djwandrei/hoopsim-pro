@@ -16,7 +16,7 @@ export default function LineupLab() {
   return (
     <GameShell>
       <LineupBootStatus loading={loading} error={error} />
-      <LineupWorkspace loading={loading || Boolean(error)} />
+      <LineupWorkspace loading={loading} error={error} />
     </GameShell>
   );
 }

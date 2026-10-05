@@ -6,10 +6,13 @@
 
 import { installSessionMemory, restoreSessionInputs } from '@/lineupLab/lineup-lab/sessionMemory';
 import { buildSavedRunButtons } from '@/lineupLab/lineup-lab/savedRuns';
+import { installResultInsights, installWeightSummaryDisclosure } from '@/lineupLab/lineup-lab/resultInsights';
 
 export function installToolExtras(keeper) {
   installSessionMemory(keeper);
   installResultExports(keeper);
+  installResultInsights(keeper);
+  installWeightSummaryDisclosure(keeper);
   // Restore remembered inputs first, then let the auto load pick them up.
   restoreSessionInputs(keeper).finally(() => autoLoadData(keeper));
 }

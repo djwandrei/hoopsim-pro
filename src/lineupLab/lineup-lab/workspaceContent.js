@@ -62,5 +62,11 @@ ${s} .ll-compare td:first-child { color: var(--ll-muted); font: 600 11px/1.4 var
 ${s} .ll-compare__best { color: var(--ll-gold); font-weight: 700; }
 ${s} .ll-compare__current { color: var(--ll-gold); }
 ${s} .ll-compare .button-secondary { min-height: 32px; padding: 6px 12px; }
+${s} .ll-sensitivity { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+${s} .ll-sensitivity .ll-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--ll-field-border); background: var(--ll-field); color: var(--ll-muted); font: 600 11px/1.4 var(--font-mono); letter-spacing: .05em; }
+${s} .ll-sensitivity .is-ok { border-color: color-mix(in srgb, var(--ll-success) 55%, transparent); color: var(--ll-success); }
+${s} .ll-sensitivity .is-warn { border-color: color-mix(in srgb, var(--ll-warning) 55%, transparent); color: var(--ll-warning); }
+${s} .ll-weight-mirror { margin-left: 10px; color: var(--ll-muted); font: 400 11px/1.4 var(--font-body); }
+${s} #weightsPanel[open] .ll-weight-mirror { display: none; }
 `;
 export default css;

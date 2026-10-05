@@ -9,6 +9,7 @@ import LineupRoster from '@/components/lineupLab/native/LineupRoster';
 import LineupRunControls from '@/components/lineupLab/native/LineupRunControls';
 import LineupResults from '@/components/lineupLab/native/LineupResults';
 import CourtArt from '@/components/lineupLab/native/CourtArt';
+import LineupStagePanel from '@/components/lineupLab/native/LineupStagePanel';
 
 const STAGES = [
   { key: 'season', n: '01', title: 'Load your squad', tag: 'Pick a historical team and season to play with.', icon: Database, content: <><LineupDataset /><LineupDataControls /></> },

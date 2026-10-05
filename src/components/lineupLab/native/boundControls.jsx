@@ -122,7 +122,7 @@ const writeSource = (sourceId, value, events) => {
 
 export function BoundSegmented({ sourceId, fieldId, label, labels, columns }) {
   const source = useSource(sourceId, fieldId);
-  const pick = value => { const el = document.getElementById(sourceId); if (el && !el.disabled) writeSource(sourceId, value, ['change']); };
+  const pick = value => { const el = document.getElementById(sourceId); if (el && !el.disabled) writeSource(sourceId, value, ['input', 'change']); };
   if (!source.ready || source.hidden || !source.options.length) return null;
   return <div className="ll-control">
     {label && <span className="ll-control__label">{label}</span>}
@@ -134,7 +134,7 @@ export function BoundSegmented({ sourceId, fieldId, label, labels, columns }) {
 
 export function BoundSelect({ sourceId, fieldId, label, help, helpId }) {
   const source = useSource(sourceId, fieldId);
-  const pick = value => writeSource(sourceId, value, ['change']);
+  const pick = value => writeSource(sourceId, value, ['input', 'change']);
   if (!source.ready || source.hidden) return null;
   return <div className="ll-control">
     {label && <span className="ll-control__label">{label}</span>}

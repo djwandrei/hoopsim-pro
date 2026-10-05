@@ -9,14 +9,13 @@ import { readSourceText } from '@/lineupLab/lineup-lab/runtimeRelay';
 import { ensureToolStyles, removeToolStyles, ensureSiteConfig } from '@/lineupLab/lineup-lab/toolStyles';
 import toolLinks from '@/lineupLab/lineup-lab/toolLinks';
 import toolBodyState from '@/lineupLab/lineup-lab/toolBodyState';
-import toolChrome from '@/lineupLab/lineup-lab/toolChrome';
 import { installLineupLabBridge } from '@/lineupLab/lineup-lab/siteBridge';
 
 const MODULE_BASE = '/lineup-lab/';
 const APP_REV = '?v=20261002c&rev=lineup-v4-share-client-contract-pin-closure-v1';
 const GUIDE_PATH = '/tools/fan-tools-guide.js';
 let keeper = null, bootPromise = null;
-let restoreBody = null, disposeChrome = null;
+let restoreBody = null;
 let parkedExperience = 'detailed';
 
 async function fetchToolMarkup() {
@@ -25,6 +24,10 @@ async function fetchToolMarkup() {
   if (!parsed.querySelector('#workspace') || !parsed.querySelector('#loadLiveDataButton')) {
     throw new Error('The Lineup Lab page source is temporarily unavailable.');
   }
+  // The studio supplies its own DJHC header/footer chrome; the site's copies
+  // are removed so only one header and footer render.
+  parsed.querySelector('.site-header')?.remove();
+  parsed.querySelector('.site-footer')?.remove();
   parsed.querySelectorAll('script').forEach(script => script.remove());
   return parsed.body.innerHTML;
 }
@@ -47,7 +50,6 @@ export async function mountLineupLab(host, signal) {
   host.appendChild(keeper);
   restoreBody = toolBodyState();
   document.body.dataset.experienceMode = parkedExperience;
-  disposeChrome = toolChrome(keeper);
   installLineupLabBridge();
   if (!bootPromise) {
     const instance = keeper;
@@ -76,7 +78,6 @@ export async function mountLineupLab(host, signal) {
 
 export function unmountLineupLab() {
   parkedExperience = document.body.dataset.experienceMode || parkedExperience;
-  disposeChrome?.(); disposeChrome = null;
   keeper?.remove();
   removeToolStyles();
   disconnectWorker();

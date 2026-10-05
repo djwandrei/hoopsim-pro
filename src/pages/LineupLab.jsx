@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LineupBootStatus from '@/components/lineupLab/LineupBootStatus';
+import GameShell from '@/components/dailyGames/GameShell';
 import usePageMeta from '@/hooks/usePageMeta';
 import { mountLineupLab, unmountLineupLab } from '@/lineupLab/lineup-lab/pageBoot';
 
@@ -33,9 +34,9 @@ export default function LineupLab() {
   }, [location.pathname, location.search, location.hash, navigate]);
 
   return (
-    <div className="min-h-screen">
+    <GameShell>
       <LineupBootStatus loading={loading} error={bootError} />
       <div ref={hostRef} hidden={Boolean(bootError)} />
-    </div>
+    </GameShell>
   );
 }

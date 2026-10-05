@@ -18,7 +18,6 @@ ${s} {
   --ll-panel-border: color-mix(in srgb, var(--ll-field-border) 45%, transparent);
   --ll-track: hsl(var(--court-raised));
   --ll-row-alt: color-mix(in srgb, var(--ll-track) 45%, var(--ll-panel));
-  --ll-raise: color-mix(in srgb, var(--ll-track) 45%, var(--ll-field));
   --ll-focus: hsl(var(--court-focus));
   --ll-success: hsl(var(--court-positive));
   --ll-warning: var(--djhc-court-warning);
@@ -28,7 +27,7 @@ ${s} {
   --ink: var(--ll-body-ink); --muted: var(--ll-muted); --navy: var(--ll-heading-ink);
   --blue: var(--ll-gold); --gold: var(--ll-gold); --warning: var(--ll-warning); --line: var(--ll-panel-border);
   box-sizing: border-box; width: calc(100% - 2rem); max-width: 1152px; margin: 24px auto 32px; padding: 24px;
-  background: var(--ll-field); color: var(--ll-body-ink); position: relative; min-height: 0;
+  background: color-mix(in srgb, var(--ll-panel) 55%, var(--ll-field)); color: var(--ll-body-ink); position: relative; min-height: 0;
   font-family: var(--font-body); border-radius: 16px; border: 1px solid var(--ll-panel-border);
 }
 ${s} * { box-sizing: border-box; }
@@ -38,7 +37,7 @@ ${s} .command-top { display: flex; align-items: center; justify-content: space-b
 ${s} .command-title { margin: 0; color: var(--ll-heading-ink); }
 ${s} .experience-switcher { display: flex; align-items: center; gap: 18px; max-width: 62%; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 ${s} .experience-switcher::before { content: none; }
-${s} .experience-switcher__buttons { display: flex; flex-shrink: 0; gap: 4px; padding: 3px; border: 1px solid var(--ll-panel-border); background: var(--ll-panel); border-radius: 10px; }
+${s} .experience-switcher__buttons { display: flex; flex-shrink: 0; gap: 4px; padding: 3px; border: 1px solid var(--ll-panel-border); background: var(--ll-field); border-radius: 10px; }
 ${s} :is(.experience-switcher__button, .tool-nav__button) { border: 0; background: transparent; color: var(--ll-muted); padding: 10px 16px; border-radius: 7px; }
 ${s} :is(.experience-switcher__button, .tool-nav__button).is-active { background: var(--ll-track); color: var(--ll-body-ink); box-shadow: inset 0 -2px var(--ll-gold); }
 ${s} .tool-nav.command-navigation { position: static; display: flex; flex-wrap: wrap; gap: 6px; width: auto; height: auto; clip: auto; clip-path: none; overflow: visible; white-space: normal; margin: 16px 0 22px; padding: 6px; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-panel); }
@@ -59,9 +58,9 @@ ${s} .journey-step:disabled { opacity: 1; cursor: not-allowed; }
 ${s} .journey-step:not(:disabled):hover { background: var(--ll-track); border-color: var(--ll-gold); }
 ${s} .journey-heading { margin: 0 0 18px; }
 ${s} .command-ticket { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 24px; padding: 12px 16px; border: 1px solid var(--ll-panel-border); border-left: 3px solid var(--ll-gold); border-radius: 8px; background: var(--ll-panel); }
-${s} .journey-stage { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 22px; padding: 22px; border: 1px solid var(--ll-panel-border); border-radius: 16px; background: var(--ll-panel); box-shadow: var(--ll-elev-rest); scroll-margin-top: calc(var(--djhc-header-h, 96px) + 1rem); }
+${s} .journey-stage { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 22px; scroll-margin-top: calc(var(--djhc-header-h, 96px) + 1rem); }
 ${s} .journey-stage > :is(.hero-outcomes, .players-step, .journey-review-action-surface) { grid-column: 1 / -1; }
-${s} .journey-stage--plan .hero-outcomes { width: 100%; max-width: none; padding: 16px; margin: 0; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-field); color: var(--ll-body-ink); }
+${s} .journey-stage--plan .hero-outcomes { width: 100%; max-width: none; padding: 16px; margin: 0; border: 1px solid var(--ll-panel-border); border-radius: 12px; background: var(--ll-panel); color: var(--ll-body-ink); }
 ${s} .journey-review-action-surface { min-width: 0; }
 ${s} .journey-next-hint { margin-left: auto; color: var(--ll-muted); font: 400 13px/1.5 var(--font-body); }
 ${s} .journey-restart { flex: 0 0 auto; margin: 0; }
@@ -69,13 +68,12 @@ ${s} .journey-navigation { border-top: 1px solid var(--ll-panel-border); }
 ${s} .journey-busy { grid-template-columns: minmax(0, 1fr); padding: 19px; }
 ${s} .journey-errors { margin-bottom: 16px; }
 ${s} .builder-grid { display: block; }
-${s} .builder-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; padding: 22px; border: 1px solid var(--ll-panel-border); border-radius: 16px; background: var(--ll-panel); box-shadow: var(--ll-elev-rest); }
-${s} :is(.command-card, .results, .empty-result, .run-card) { position: relative; min-width: 0; padding: 22px; border: 1px solid var(--ll-panel-border); border-radius: 16px; background: var(--ll-field); box-shadow: var(--ll-elev-rest); transition: box-shadow .2s ease, transform .2s ease; }
+${s} .builder-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+${s} :is(.command-card, .results, .empty-result, .run-card) { position: relative; min-width: 0; padding: 22px; border: 1px solid var(--ll-panel-border); border-radius: 16px; background: var(--ll-panel); box-shadow: var(--ll-elev-rest); transition: box-shadow .2s ease, transform .2s ease; }
 ${s} :is(.command-card, .run-card):hover { box-shadow: var(--ll-elev-hover); transform: translateY(-1px); }
 ${s} .command-export-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 18px; }
 ${s} .command-export-bar .button-secondary { min-height: 40px; padding: 9px 16px; }
 ${s} :is(.panel, .command-card, .results, .run-card)::before { display: none; }
-${s} .panel { background: var(--ll-field); box-shadow: none; }
 ${s} .guided-workflow :is(.step-heading, .workflow-heading, .run-card__heading) { display: flex; align-items: start; gap: 12px; margin: 0 0 18px; }
 ${s} .live-data-panel { margin: 0; }
 ${s} .live-data-panel__controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 18px; }

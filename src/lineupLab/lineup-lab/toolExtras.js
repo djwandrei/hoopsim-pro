@@ -13,8 +13,12 @@ import { installWeightBalance } from '@/lineupLab/lineup-lab/weightBalance';
 import { installRunLink, applyRunLink } from '@/lineupLab/lineup-lab/runLink';
 import { buildNarrativeButton } from '@/lineupLab/lineup-lab/resultNarrative';
 import { buildDiagnosticsButton } from '@/lineupLab/lineup-lab/runDiagnostics';
+import { installLeagueScan } from '@/lineupLab/lineup-lab/leagueScan';
+import { installSolveClock } from '@/lineupLab/lineup-lab/solveClock';
 
 export function installToolExtras(keeper) {
+  installSolveClock(keeper);
+  installLeagueScan(keeper);
   installSessionMemory(keeper);
   installRunJournal(keeper);
   installPlayerDetail(keeper);

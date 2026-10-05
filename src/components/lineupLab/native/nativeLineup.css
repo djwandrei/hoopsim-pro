@@ -501,3 +501,22 @@ body:not(.dark-mode) .ll-native .ll-native-index { color: color-mix(in srgb, hsl
 body:not(.dark-mode) .ll-brief-tile__badge { color: color-mix(in srgb, hsl(var(--court-team-hint)) 68%, black); }
 body:not(.dark-mode) .ll-native .ll-native-note strong { color: hsl(var(--court-text)); }
 body:not(.dark-mode) .ll-native .ll-narrative__body { color: hsl(var(--court-text)); }
+
+/* === Solve clock: elapsed-time chip next to the site's solver status === */
+.ll-solve-clock { display: inline-flex; align-items: center; gap: .4rem; margin-left: .6rem; padding: .28rem .65rem; border: 1px solid hsl(var(--court-accent) / .4); border-radius: .5rem; background: hsl(var(--court-accent) / .08); color: hsl(var(--court-accent)); font: 600 .62rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+
+/* === League scan panel === */
+.ll-scan { margin: 1rem 0; }
+.ll-scan__head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .8rem; }
+.ll-scan__title { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: .05em; }
+.ll-scan__copy { max-width: 70ch; font-size: .78rem; line-height: 1.65; color: hsl(var(--court-muted)); }
+.ll-scan__status { margin: .8rem 0 .6rem; font-size: .8rem; font-weight: 600; }
+.ll-scan__actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .9rem; }
+.ll-scan__bar { height: .45rem; overflow: hidden; border-radius: 999px; background: hsl(var(--court-raised) / .6); }
+.ll-scan__bar > span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-focus))); transition: width .3s ease; }
+.ll-scan table { width: 100%; border-collapse: collapse; font-size: .78rem; font-variant-numeric: tabular-nums; }
+.ll-scan th { padding: .6rem; text-align: left; color: hsl(var(--court-muted)); font: 600 .6rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; border-bottom: 1px solid hsl(var(--court-border) / .3); }
+.ll-scan td { padding: .55rem .6rem; border-bottom: 1px solid hsl(var(--court-border) / .18); }
+.ll-scan tbody tr.is-ok td:last-child { color: hsl(var(--court-positive)); }
+.ll-scan tbody tr:not(.is-ok) td:last-child { color: hsl(var(--court-trim-ink)); }
+.ll-scan .table-wrap, .ll-scan > table { overflow-wrap: anywhere; }

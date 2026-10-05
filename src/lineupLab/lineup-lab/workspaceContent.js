@@ -45,11 +45,13 @@ ${s} :is(.model-grid, .metric-field-guide__grid) { display: grid; grid-template-
 ${s} .tool-view:not(#optimizerView) { padding-top: 22px; }
 ${s} .view-heading p { max-width: 70ch; font: 400 14px/1.65 var(--font-body); color: var(--ll-muted); }
 ${s} .run-card__summary { display: flex; flex-wrap: wrap; gap: 16px 24px; }
+${s} :is(.field > label, .field-group label, details summary, .experience-switcher__button, .tool-nav__button, .choice-button-group button, .model-choice button) { text-transform: none; }
 @media (max-width: 767px) {
   ${s} .journey-stage--team { grid-template-columns: minmax(0, 1fr); }
   ${s} :is(.model-grid, .metric-field-guide__grid, .result-detail-grid) { grid-template-columns: minmax(0, 1fr); }
   ${s} .table-wrap table { min-width: 680px; }
   ${s} .dataset-strip__actions .button { flex: 1 1 150px; }
+  ${s} .command-actions { position: sticky; bottom: 10px; z-index: 6; padding: 14px; border: 1px solid var(--ll-panel-border); border-radius: 14px; background: var(--ll-panel); box-shadow: var(--ll-elev-hover); }
 }
 `;
 export default css;

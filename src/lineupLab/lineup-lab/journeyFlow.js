@@ -1,6 +1,7 @@
 import commandHeader from '@/lineupLab/lineup-lab/commandHeader';
 import commandStages from '@/lineupLab/lineup-lab/commandStages';
 import commandDock from '@/lineupLab/lineup-lab/commandDock';
+import { installToolExtras } from '@/lineupLab/lineup-lab/toolExtras';
 
 // Apply after the site's workflow initializes. Its own stage buttons,
 // validation, conditional visibility, and original listeners stay in charge.
@@ -14,6 +15,7 @@ export function installJourneyFlow(keeper) {
   commandHeader(workspace);
   commandStages(shell);
   commandDock(shell);
+  installToolExtras(keeper);
   keeper.querySelectorAll('.step-panel, #liveDataPanel').forEach(panel => panel.classList.add('command-card'));
   const scenario = view.querySelector('[aria-labelledby="scenarioHeading"]');
   const model = scenario?.querySelector('.model-choice');

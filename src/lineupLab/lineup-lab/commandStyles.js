@@ -22,6 +22,8 @@ ${s} {
   --ll-success: hsl(var(--court-positive));
   --ll-warning: var(--djhc-court-warning);
   --ll-error: var(--djhc-court-error);
+  --ll-elev-rest: 0 4px 14px hsl(var(--court-canvas) / .35);
+  --ll-elev-hover: 0 12px 30px hsl(var(--court-canvas) / .55);
   --ink: var(--ll-body-ink); --muted: var(--ll-muted); --navy: var(--ll-heading-ink);
   --blue: var(--ll-gold); --gold: var(--ll-gold); --warning: var(--ll-warning); --line: var(--ll-panel-border);
   box-sizing: border-box; width: calc(100% - 2rem); max-width: 1152px; margin: 24px auto 32px; padding: 24px;
@@ -67,7 +69,10 @@ ${s} .journey-busy { grid-template-columns: minmax(0, 1fr); padding: 19px; }
 ${s} .journey-errors { margin-bottom: 16px; }
 ${s} .builder-grid { display: block; }
 ${s} .builder-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
-${s} :is(.command-card, .results, .empty-result, .run-card) { position: relative; min-width: 0; padding: 22px; border: 1px solid var(--ll-panel-border); border-radius: 16px; background: var(--ll-panel); box-shadow: none; }
+${s} :is(.command-card, .results, .empty-result, .run-card) { position: relative; min-width: 0; padding: 22px; border: 1px solid var(--ll-panel-border); border-radius: 16px; background: var(--ll-panel); box-shadow: var(--ll-elev-rest); transition: box-shadow .2s ease, transform .2s ease; }
+${s} :is(.command-card, .run-card):hover { box-shadow: var(--ll-elev-hover); transform: translateY(-1px); }
+${s} .command-export-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 18px; }
+${s} .command-export-bar .button-secondary { min-height: 40px; padding: 9px 16px; }
 ${s} :is(.panel, .command-card, .results, .run-card)::before { display: none; }
 ${s} .guided-workflow :is(.step-heading, .workflow-heading, .run-card__heading) { display: flex; align-items: start; gap: 12px; margin: 0 0 18px; }
 ${s} .live-data-panel { margin: 0; }
@@ -115,6 +120,15 @@ ${s} [hidden] { display: none !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   ${s} *, ${s} *::before, ${s} *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* Compact tool hero: the stage controls deserve the space above the fold */
+.lineup-lab-tool .tool-hero { padding: 1.6rem 1.7rem; }
+.lineup-lab-tool .tool-hero__title { font-size: clamp(2.1rem, 4vw, 3.2rem); }
+
+/* Low-vision users: muted copy rises to full ink */
+@media (prefers-contrast: more) {
+  ${s} { --ll-muted: var(--ll-heading-ink); }
 }
 `;
 export default [css, typography, controls, content].join('\n');

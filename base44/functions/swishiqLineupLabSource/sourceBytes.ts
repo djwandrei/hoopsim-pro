@@ -38,11 +38,13 @@ export async function sourceBytes(upstream, offset) {
   const hasMore = total !== null ? nextOffset < total : written > CHUNK_SIZE;
   if (hasMore && !bytes.length) throw new Error('The source returned an incomplete byte range.');
   return {
-    dataB64: btoa(parts.join('')), nextOffset, hasMore,
+    dataB64: btoa(parts.join('')), nextOffset, hasMore, totalBytes: total,
     contentType: upstream.headers.get('content-type') || 'application/octet-stream',
   };
 }
 
-export function sourceRange(offset) {
-  return `bytes=${offset}-${offset + CHUNK_SIZE}`;
+export function sourceRange(offset, totalBytes) {
+  const end = Number.isSafeInteger(totalBytes) && totalBytes > offset
+    ? Math.min(offset + CHUNK_SIZE, totalBytes - 1) : offset + CHUNK_SIZE;
+  return `bytes=${offset}-${end}`;
 }

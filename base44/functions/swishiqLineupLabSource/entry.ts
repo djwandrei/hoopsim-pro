@@ -57,12 +57,19 @@ export default async function(req) {
     }
     // Byte offsets and integrity pins refer to decoded source bytes, not gzip.
     const headers = new Headers({ accept: 'application/json, */*', 'accept-encoding': 'identity' });
-    if (encoded) headers.set('range', sourceRange(offset));
+    if (encoded) headers.set('range', sourceRange(offset, body.totalBytes));
     if (isWrite && req.headers.get('content-type')) headers.set('content-type', req.headers.get('content-type'));
-    const upstream = await fetch(SITE + path, {
+    let upstream = await fetch(SITE + path, {
       method: isWrite ? 'POST' : 'GET', headers,
       body: isWrite ? await req.arrayBuffer() : undefined, cache: 'no-store',
     });
+    // Some site assets reject an end offset beyond EOF instead of clamping it.
+    // Unknown-length final pages still stream only the bounded requested bytes.
+    if (encoded && upstream.status === 416) {
+      await upstream.body?.cancel();
+      headers.delete('range');
+      upstream = await fetch(SITE + path, { headers, cache: 'no-store' });
+    }
     const pathname = new URL(path, SITE).pathname;
     const contentType = upstream.headers.get('content-type') || 'application/octet-stream';
     if (!upstream.ok) return Response.json({ error: `The Lineup Lab source is unavailable (${upstream.status}).` }, { status: upstream.status });

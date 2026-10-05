@@ -23,7 +23,7 @@ function sourcePath(url) {
   return null;
 }
 
-async function getChunk(path, offset, clientId) {
+async function getChunk(path, offset, clientId, totalBytes = null) {
   let client = clientId ? await self.clients.get(clientId) : null;
   if (!await isConnected(client)) {
     client = null;
@@ -40,7 +40,7 @@ async function getChunk(path, offset, clientId) {
       if (event.data?.error) reject(new Error(event.data.error));
       else resolve(event.data.data);
     };
-    client.postMessage({ type: 'LINEUP_LAB_SOURCE', path, offset }, [channel.port2]);
+    client.postMessage({ type: 'LINEUP_LAB_SOURCE', path, offset, totalBytes }, [channel.port2]);
   });
 }
 
@@ -56,7 +56,7 @@ async function relay(path, clientId) {
         controller.enqueue(bytes);
         if (!page.hasMore) { controller.close(); return; }
         const offset = page.nextOffset;
-        page = await getChunk(path, offset, clientId);
+        page = await getChunk(path, offset, clientId, page.totalBytes);
         if (page.hasMore && page.nextOffset <= offset) throw new Error('Incomplete Lineup Lab source.');
       } catch (error) { controller.error(error); }
     },

@@ -12,10 +12,37 @@ async function isConnected(client) {
   return Boolean(await (await caches.open(CONNECTIONS)).match(ownerKey(client.id)));
 }
 const ROOT_FILES = new Set(['/backend-config.js', '/supabase-client.js', '/core.js', '/nav.js', '/theme-init.js', '/styles.css']);
+// The optimizer's module graph is vendored byte-exact in the studio build.
+// Dedicated workers are not service-worker-controlled in every browser, so
+// their own module imports must resolve as ordinary same-origin files rather
+// than through this relay.
+const OPTIMIZER_MODULES = new Set([
+  '/lineup-lab/optimizer-worker.js',
+  '/lineup-lab/optimizer-core.js',
+  '/lineup-lab/optimizer-config.js',
+  '/lineup-lab/projection-parameters.js',
+  '/lineup-lab/player-projection.js',
+  '/lineup-lab/workload-model.js',
+  '/lineup-lab/projection-evidence.js',
+  '/lineup-lab/lineup-role-model.js',
+  '/lineup-lab/swishiq-impact.js',
+  '/lineup-lab/rotation-unit-planner.js',
+  '/lineup-lab/workload-calibration.js',
+  '/tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js',
+  '/tools/swishiq-studio/engine/canonical-v4-site-consumer-policy.js',
+  '/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js',
+  '/tools/swishiq-studio/engine/canonical-v4-descriptive-source-consumer.js',
+  '/tools/swishiq-studio/engine/canonical-v4-public-network-loader.js',
+  '/tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js',
+  '/tools/swishiq-studio/engine/canonical-v4-projection-resolver.js',
+  '/tools/swishiq-studio/engine/canonical-v4-identity.js',
+  '/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js',
+]);
 
 function sourcePath(url) {
   if (![SITE, self.location.origin].includes(url.origin)) return null;
   if (url.origin === self.location.origin && url.pathname.startsWith('/assets/') && /\.(js|css)$/.test(url.pathname)) return null;
+  if (url.origin === self.location.origin && OPTIMIZER_MODULES.has(url.pathname)) return null;
   if (url.pathname.startsWith('/fixtures/')) return '/lineup-lab' + url.pathname + url.search;
   if (['/tools/', '/lineup-lab/', '/assets/'].some(prefix => url.pathname.startsWith(prefix)) || ROOT_FILES.has(url.pathname)) {
     return url.pathname + url.search;

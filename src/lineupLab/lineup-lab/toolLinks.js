@@ -3,7 +3,6 @@ import { STANDALONE, SITE_BASE, SITE_ORIGIN } from '@/lib/deployConfig';
 const LOCAL_ROUTES = new Map([
   ['/lineup-lab/', '/lineup-lab/'],
   ['/tools/', '/'],
-  ['/tools/swishiq-studio/', '/'],
   ['/tools/fix-the-five/', '/fix-the-five'],
   ['/tools/draft-night/', '/draft-night'],
 ]);

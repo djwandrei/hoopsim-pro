@@ -179,7 +179,6 @@ function listNbaPlayerSeasonEvidence(options = {}) {
           orders: [["id", true, false]],
           limit: 100,
         });
-        if (!Array.isArray(rows)) throw new Error("Season evidence returned an invalid response.");
         if (!rows.length) break;
         for (const row of rows) {
           const id = count(row?.id);

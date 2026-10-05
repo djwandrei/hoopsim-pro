@@ -7,7 +7,6 @@ export default function toolBodyState() {
   try { dark = localStorage.getItem('theme') !== 'light'; } catch { /* Browser storage may be unavailable. */ }
   body.classList.add('court-themed', 'lab-guided');
   body.classList.toggle('dark-mode', dark);
-  body.dataset.experienceMode = 'detailed';
   body.dataset.page = 'fan-tools';
   body.dataset.fanHelp = 'lineup';
   body.style.colorScheme = dark ? 'dark' : 'light';

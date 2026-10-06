@@ -37,7 +37,7 @@ export default function RealBook() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState(null);
   const { league, state: seasonState } = useSeasonSource(2025);
-  const { feed, loadOdds, model, movement, boosts } = useBookFeed(league, seasonState);
+  const { feed, loadOdds, model, movement, boosts, propsByEvent } = useBookFeed(league, seasonState);
 
   const loadAccount = useCallback(async () => {
     try {
@@ -95,7 +95,8 @@ export default function RealBook() {
   const addLeg = leg => {
     if (slipLegs.some(existing => existing.eventKey === leg.eventKey)) return;
     const modelData = model?.byEvent?.[leg.eventKey];
-    const edge = modelData ? modelEdgePct(modelData, leg, leg.price) : null;
+    // The sim models game outcomes, not player props — no edge chip on props.
+    const edge = leg.market !== 'prop' && modelData ? modelEdgePct(modelData, leg, leg.price) : null;
     setSlipLegs(current => [...current, Number.isFinite(edge) ? { ...leg, modelEdge: edge } : leg]);
   };
 
@@ -174,7 +175,7 @@ export default function RealBook() {
             </section> :
               feed.state === 'loading' ? <div className="court-panel grid place-items-center p-14 text-sm text-muted-foreground">Loading live prices…</div> :
                 view === 'featured' ? <ModelEdgePanel model={model} games={feed.games} format={format} leagueLabel={model?.leagueLabel || league?.label} onModelPick={addLeg} /> :
-                  <PickDeskBoard games={feed.games} quota={feed.quota} movement={movement} boosts={{}} format={format} model={model} onPick={addLeg} onRefresh={loadOdds} loading={feed.state === 'loading'} />}
+                  <PickDeskBoard games={feed.games} quota={feed.quota} movement={movement} boosts={{}} format={format} model={model} onPick={addLeg} onRefresh={loadOdds} loading={feed.state === 'loading'} propsByEvent={propsByEvent} />}
         </div>
         <div className="min-w-0 self-start lg:sticky lg:top-[calc(var(--djhc-header-h,0px)+1rem)]">
           <PickSlipRail legsCount={slipLegs.length} openCount={openCount}

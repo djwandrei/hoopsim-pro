@@ -23,19 +23,27 @@ function cleanLegs(raw) {
     const price = Number(leg.price);
     const market = leg.market;
     if (!leg.eventKey || typeof leg.eventKey !== 'string' || leg.eventKey.length > 100) return null;
-    if (market !== 'moneyline' && market !== 'spread' && market !== 'total') return null;
+    if (market !== 'moneyline' && market !== 'spread' && market !== 'total' && market !== 'prop') return null;
     if (!Number.isFinite(price) || price === 0 || Math.abs(price) > 10000) return null;
-    if ((market === 'spread' || market === 'total') && !Number.isFinite(Number(leg.line))) return null;
-    if (market !== 'total' && leg.pickSide !== 'home' && leg.pickSide !== 'away') return null;
-    if (market === 'total' && leg.totalPick !== 'over' && leg.totalPick !== 'under') return null;
+    let propPlayer = '', propLine = 0;
+    if (market === 'prop') {
+      propPlayer = typeof leg.propPlayer === 'string' ? leg.propPlayer.trim() : '';
+      propLine = Number(leg.propLine);
+      if (!propPlayer || propPlayer.length > 80) return null;
+      if (!Number.isFinite(propLine) || propLine < 1 || propLine > 99) return null;
+    } else {
+      if ((market === 'spread' || market === 'total') && !Number.isFinite(Number(leg.line))) return null;
+      if (market !== 'total' && leg.pickSide !== 'home' && leg.pickSide !== 'away') return null;
+      if (market === 'total' && leg.totalPick !== 'over' && leg.totalPick !== 'under') return null;
+    }
     if (legs.some(existing => existing.eventKey === leg.eventKey)) return 'duplicate';
     legs.push({
       eventKey: leg.eventKey,
       matchup: String(leg.matchup || '').slice(0, 80),
       commenceTime: String(leg.commenceTime || ''),
       market,
-      ...(market === 'total' ? { totalPick: leg.totalPick } : { pickSide: leg.pickSide }),
-      ...(Number.isFinite(Number(leg.line)) ? { line: Number(leg.line) } : {}),
+      ...(market === 'prop' ? { propPlayer, propLine } : market === 'total' ? { totalPick: leg.totalPick } : { pickSide: leg.pickSide }),
+      ...(market !== 'prop' && Number.isFinite(Number(leg.line)) ? { line: Number(leg.line) } : {}),
       label: String(leg.label || '').slice(0, 80),
       price,
       book: String(leg.book || '').slice(0, 60),
@@ -77,8 +85,37 @@ export default async function(req) {
       return fail('The odds board is unavailable — real wagers need live prices.', 'board_unavailable', 503);
     }
     const gameMap = new Map(games.map(game => [game.eventKey, game]));
+    // Prop legs re-price against the ESPN prop board instead of the game board.
+    let propGames = [];
+    if (legs.some(leg => leg.market === 'prop')) {
+      try {
+        const propFeed = await base44.functions.invoke('swishiqOddsFeed', { kind: 'props' });
+        propGames = propFeed.data?.games || [];
+      } catch {
+        return fail('The prop board is unavailable — real prop wagers need live prices.', 'board_unavailable', 503);
+      }
+    }
+    const propMap = new Map(propGames.map(game => [game.eventKey, game]));
     const now = Date.now();
     for (const leg of legs) {
+      if (leg.market === 'prop') {
+        const propGame = propMap.get(leg.eventKey);
+        if (!propGame) return fail('That prop market is no longer on the board — refresh and re-price your pick.', 'line_expired', 409);
+        const start = Date.parse(propGame.commenceTime);
+        if (Number.isFinite(start) && start <= now) return fail('A picked game has already started — wagers are not accepted after tip-off.', 'game_started', 409);
+        leg.commenceTime = propGame.commenceTime;
+        leg.matchup = leg.matchup || `${propGame.away} @ ${propGame.home}`;
+        const entry = (propGame.props || []).find(item => item.player === leg.propPlayer);
+        const option = entry?.options?.find(item => Number(item.line) === Number(leg.propLine));
+        if (!option) return fail(`That prop line is no longer offered (${leg.propPlayer} ${leg.propLine}+ pts) — refresh the board.`, 'line_expired', 409);
+        if (leg.price > option.price + LINE_TOLERANCE) {
+          audit('denied.erroneous_line', { user: gate.user.id, event: leg.eventKey });
+          return fail('That prop price is stale — the market has moved. Refresh and re-price your pick.', 'erroneous_line', 409);
+        }
+        leg.price = option.price;
+        leg.book = 'ESPN';
+        continue;
+      }
       const game = gameMap.get(leg.eventKey);
       if (!game) return fail('A picked game is no longer on the board — refresh and re-price your pick.', 'line_expired', 409);
       const start = Date.parse(game.commenceTime);

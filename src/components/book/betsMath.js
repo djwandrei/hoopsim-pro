@@ -89,6 +89,13 @@ export function gradeLeg(leg, final) {
     if (sum === line) return 'push';
     return (leg.totalPick === 'over') === (sum > line) ? 'won' : 'lost';
   }
+  if (leg.market === 'prop') {
+    // "N+ points" milestone: graded on the box score; a player missing from
+    // the box (DNP) voids the leg (push) like a real book.
+    const pts = Number(final?.pointsByPlayer?.[leg.propPlayer]);
+    if (!Number.isFinite(pts)) return 'push';
+    return pts >= Number(leg.propLine) ? 'won' : 'lost';
+  }
   return null;
 }
 

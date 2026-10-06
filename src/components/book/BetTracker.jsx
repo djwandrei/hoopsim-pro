@@ -2,7 +2,7 @@ import React from 'react';
 import { RefreshCcw, Trophy, Ban, Receipt, Brain } from 'lucide-react';
 import { formatOdds, profitFor, commenceStatus } from '@/components/book/betsMath';
 
-const MARKET_LABEL = { moneyline: 'Moneyline', spread: 'Spread', total: 'Total' };
+const MARKET_LABEL = { moneyline: 'Moneyline', spread: 'Spread', total: 'Total', prop: 'Prop' };
 const RESULT_LABEL = { won: 'Won', lost: 'Lost', push: 'Push', cashedout: 'Cashed out' };
 const RESULT_CLASS = { won: 'border-positive/50 bg-positive/10 text-positive', lost: 'border-trim/50 bg-trim/10 text-trim-ink', push: 'border-border/50 bg-raised/40 text-muted-foreground', cashedout: 'border-gold/50 bg-gold/10 text-gold' };
 const STRIPE = { open: 'border-l-border', won: 'border-l-positive', lost: 'border-l-trim', push: 'border-l-border/50', cashedout: 'border-l-gold' };

@@ -121,7 +121,14 @@ export function prepareRows(rows: HarvestRow[], setInfo: SetInfo, poolNames: str
     const usd = Number(row.priceUsd10);
     const price10 = Number.isFinite(usd) && usd > 0 ? Math.round(usd * 100) : null;
     const tier = tierFromUsd(price10 != null ? usd : null) || tierFromVariant(variant);
-    const scanUrl = typeof row.imageUrl === 'string' && /^https:\/\/i\.psacard\.com\/.+\.jpg/i.test(row.imageUrl) ? row.imageUrl : null;
+    // Scans: PSA's CDN, or PriceCharting's (upsized from its 60px thumbnail
+    // to the 240px render the CDN serves).
+    const scanRaw = typeof row.imageUrl === 'string' ? row.imageUrl : '';
+    const psaScan = /^https:\/\/i\.psacard\.com\/.+\.jpg/i.test(scanRaw) ? scanRaw : null;
+    const chartingScan = /^https:\/\/storage\.googleapis\.com\/images\.pricecharting\.com\/[a-z0-9]+\/\d+\.jpg/i.test(scanRaw)
+      ? scanRaw.replace(/\/\d+\.jpg$/i, '/240.jpg')
+      : null;
+    const scanUrl = psaScan || chartingScan;
     prepared.push({
       name: `${setInfo.name} ${cardNumber} ${player}${variant ? ` ${variant}` : ''}`,
       player,

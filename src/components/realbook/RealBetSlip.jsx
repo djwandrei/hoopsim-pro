@@ -3,7 +3,7 @@ import { X, Receipt } from 'lucide-react';
 import { formatOdds, profitFor, parlayAmerican, teaserPrice, roundRobinCombos } from '@/components/book/betsMath';
 import { dollars, signedDollars } from '@/components/realbook/realFormat';
 
-const MARKET_LABEL = { moneyline: 'ML', spread: 'Spread', total: 'Total' };
+const MARKET_LABEL = { moneyline: 'ML', spread: 'Spread', total: 'Total', prop: 'Prop' };
 const MODE_LABEL = { parlay: 'Parlay', roundrobin: 'Round robin', teaser: 'Teaser' };
 const edgeChip = edge => <span className={`shrink-0 rounded border px-1 py-px font-mono text-[10px] ${edge >= 0 ? 'border-positive/60 text-positive' : 'border-border/50 text-muted-foreground'}`} title="Studio model edge vs this price">{edge >= 0 ? '+' : ''}{edge.toFixed(1)}</span>;
 

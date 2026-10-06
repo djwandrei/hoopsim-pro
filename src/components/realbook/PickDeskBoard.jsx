@@ -3,6 +3,7 @@ import { ArrowDownRight, ArrowUpRight, CalendarClock, RefreshCcw } from 'lucide-
 import { formatOdds, formatCommence, pickKey } from '@/components/book/betsMath';
 import { modelEdgePct, CODE_BY_NAME } from '@/lib/bookRoom/modelEdge';
 import TeamMark from '@/components/studio/TeamMark';
+import PropsSection from '@/components/book/PropsSection';
 import { bestMoneyline, bestSpread, bestTotal, bookOptions } from '@/components/book/OddsBoard';
 
 const spreadText = offer => (offer && Number.isFinite(offer.point) ? `${offer.point > 0 ? '+' : ''}${offer.point}` : '');
@@ -35,7 +36,7 @@ function PriceCell({ cell, format }) {
 
 // Pick Desk board: mockup-style game cards — "Game N" header with a gold
 // NBA badge and tip time, then team rows across Spread / Total / Money cells.
-export default function PickDeskBoard({ games, quota, movement, boosts, format, model, bookFilter = '', onBookFilter, onPick, onRefresh, loading }) {
+export default function PickDeskBoard({ games, quota, movement, boosts, format, model, bookFilter = '', onBookFilter, onPick, onRefresh, loading, propsByEvent = {} }) {
   const now = Date.now();
   const live = games.filter(game => Date.parse(game.commenceTime) <= now);
   const upcoming = games.filter(game => Date.parse(game.commenceTime) > now);
@@ -99,6 +100,7 @@ export default function PickDeskBoard({ games, quota, movement, boosts, format, 
         <PriceCell cell={cells.under} format={format} />
         <PriceCell cell={cells.homeMl} format={format} />
       </div>
+      <PropsSection game={{ ...game, props: propsByEvent[game.eventKey] || [] }} format={format} onPick={onPick} />
     </article>;
   };
 

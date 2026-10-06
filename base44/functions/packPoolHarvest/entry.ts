@@ -37,14 +37,18 @@ export default async function(req: Request): Promise<Response> {
     for (const set of sets) {
       const setInfo = { name: String(set.name).trim(), year: Number(set.year) };
       const llm = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: `Harvest basketball card data from PSA's public price guide (psacard.com). Set: ${setInfo.name} (released ${setInfo.year}).
+        prompt: `Harvest basketball card pricing for this set: ${setInfo.name} (released ${setInfo.year}).
 
-Use web search to find PSA's price guide and CardFacts pages for this exact set (psacard.com/priceguide/basketball-card-values/... and psacard.com/cardfacts/basketball-cards/...). List up to ${MAX_ROWS_PER_SET} individual cards, prioritizing rookie cards of NBA players and notable parallels (SILVER PRIZM, BLUE PRIZM, RED PRIZM, ICE, PULSAR, WAVE, FAST BREAK, CHOICE, GOLD, etc.). For each card give:
-- description: the player name plus parallel name exactly as PSA writes it (e.g. "LaMelo Ball (R) SILVER PRIZM")
+Use web search to find priced listings for this exact set on BOTH:
+- PSA's price guide and CardFacts pages (psacard.com/priceguide/basketball-card-values/... and psacard.com/cardfacts/basketball-cards/...)
+- SportsCardsPro / PriceCharting set pages (sportscardspro.com/console/basketball-cards-...), which list Ungraded / Grade 9 / PSA 10 sale prices for the full checklist.
+
+List up to ${MAX_ROWS_PER_SET} individual cards, prioritizing rookie cards of NBA players and notable parallels (SILVER PRIZM, BLUE PRIZM, RED PRIZM, ICE, PULSAR, WAVE, FAST BREAK, CHOICE, GOLD, HOLO, etc.). For each card give:
+- description: the player name plus parallel name exactly as listed (e.g. "LaMelo Ball (R) SILVER PRIZM")
 - cardNumber: the card number in the set
-- priceUsd10: the GEM-MT 10 (PSA 10) price in USD when shown, with "+" and commas stripped
-- imageUrl: ONLY if you actually saw a card scan hosted on i.psacard.com ending in .jpg — never a page URL.
-Only include cards PSA actually prices or lists; do not invent cards.`,
+- priceUsd10: the PSA 10 price in USD when shown (the PSA 10 column), with "+" and commas stripped
+- imageUrl: ONLY if you actually saw a card scan ending in .jpg hosted on i.psacard.com or storage.googleapis.com/images.pricecharting.com — never a page URL.
+Only include cards actually priced or listed; do not invent cards.`,
         response_json_schema: {
           type: 'object',
           properties: {

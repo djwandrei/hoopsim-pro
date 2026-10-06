@@ -11,7 +11,21 @@ export default function useBookFeed(league, seasonState) {
   const [model, setModel] = useState(null);
   const [movement, setMovement] = useState({});
   const [boosts, setBoosts] = useState({});
+  const [propsFeed, setPropsFeed] = useState({ state: 'idle', byEvent: {} });
   const prevPricesRef = useRef(null);
+
+  // Player prop milestones ride on a second relay call, so an outage there
+  // never blocks the main odds board.
+  const loadProps = useCallback(async () => {
+    try {
+      const response = await base44.functions.invoke('swishiqOddsFeed', { kind: 'props' });
+      const byEvent = {};
+      for (const game of response.data?.games || []) byEvent[game.eventKey] = game.props || [];
+      setPropsFeed({ state: 'ready', byEvent });
+    } catch {
+      setPropsFeed({ state: 'error', byEvent: {} });
+    }
+  }, []);
 
   const loadOdds = useCallback(async () => {
     setFeed(current => ({ ...current, state: 'loading' }));
@@ -34,6 +48,7 @@ export default function useBookFeed(league, seasonState) {
         setBoosts({ [key]: offer.price + 100 });
       } else setBoosts({});
       setFeed({ state: 'ready', games, quota: response.data?.quota ?? null, error: null, setup: false });
+      loadProps();
     } catch (error) {
       const data = error?.response?.data || {};
       setFeed({ state: data.code === 'odds_feed_not_configured' ? 'setup' : 'error', games: [], quota: null, error: data.error || error?.message || 'The odds feed is unavailable.', setup: data.code === 'odds_feed_not_configured' });
@@ -64,5 +79,5 @@ export default function useBookFeed(league, seasonState) {
     return () => { cancelled = true; };
   }, [feed.state, upcomingSignature, seasonState, league]);
 
-  return { feed, loadOdds, model, movement, boosts };
+  return { feed, loadOdds, model, movement, boosts, propsByEvent: propsFeed.byEvent, propsState: propsFeed.state };
 }

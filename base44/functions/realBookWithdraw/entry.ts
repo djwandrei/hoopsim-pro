@@ -39,11 +39,18 @@ export default async function(req) {
     if (debit.error) return fail('The wallet is busy — try again in a moment.', 'wallet_busy', 503);
     const newBalance = debit.balance;
     audit('withdrawal.requested', { user: gate.user.id, amount_cents: amountCents });
-    await base44.asServiceRole.entities.RealTransaction.create({
-      created_by_id: gate.user.id,
-      type: 'withdrawal', amount_cents: amountCents, status: 'requested',
-      label: 'Withdrawal request — payout pending', balance_after_cents: newBalance,
-    });
+    try {
+      await base44.asServiceRole.entities.RealTransaction.create({
+        created_by_id: gate.user.id,
+        type: 'withdrawal', amount_cents: amountCents, status: 'requested',
+        label: 'Withdrawal request — payout pending', balance_after_cents: newBalance,
+      });
+    } catch {
+      // The debit and pending queue are already committed — a failed ledger
+      // line must not surface as an error (a retry is refused as a duplicate
+      // pending payout, leaving the request in a consistent state).
+      audit('withdrawal.ledger_write_failed', { user: gate.user.id, cents: amountCents });
+    }
     return Response.json({ wallet: { ...wallet, balance_cents: newBalance, pending_withdrawal_cents: amountCents } });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not request the withdrawal.' }, { status: 500 });

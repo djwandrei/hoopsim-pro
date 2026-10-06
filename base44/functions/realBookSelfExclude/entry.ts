@@ -39,18 +39,33 @@ export default async function(req) {
         { $set: { status: 'void', settled_profit_cents: 0 } }
       );
       if (!(Number(flip?.updated) > 0)) continue;
+      const stake = Number(bet.stake_cents) || 0;
+      if (stake > 0) {
+        // Refund THIS bet before moving on. If the credit fails, the void is
+        // rolled back so the stake is never stranded on a voided wager with
+        // no remaining settlement path — it stays open and settles normally.
+        const credit = await applyWalletDelta(base44, wallet, stake);
+        if (credit.error) {
+          await base44.asServiceRole.entities.RealBet.updateMany(
+            { id: bet.id, status: 'void' },
+            { $set: { status: 'open', settled_profit_cents: null } }
+          );
+          audit('exclusion.refund_failed_rolled_back', { user: gate.user.id, bet: bet.id, cents: stake });
+          return fail('Self-exclusion is active, but one refund hit wallet contention — that wager stays open and settles normally once the cool-off ends.', 'wallet_busy', 503);
+        }
+        refunded += stake;
+      }
       refundedBets++;
-      refunded += Number(bet.stake_cents) || 0;
-    }
-    if (refunded > 0) {
-      const credit = await applyWalletDelta(base44, wallet, refunded);
-      if (credit.error) return fail('Self-exclusion is active, but the refund credit hit an error — contact support with your account details.', 'wallet_busy', 503);
-      await base44.asServiceRole.entities.RealTransaction.create({
-        created_by_id: gate.user.id,
-        type: 'void', amount_cents: refunded, status: 'completed',
-        label: `Refund on self-exclusion: ${refundedBets} open bet${refundedBets === 1 ? '' : 's'}`,
-        balance_after_cents: credit.balance,
-      });
+      try {
+        await base44.asServiceRole.entities.RealTransaction.create({
+          created_by_id: gate.user.id,
+          type: 'void', amount_cents: stake, status: 'completed', bet_id: bet.id,
+          label: `Refund on self-exclusion: ${bet.matchup || bet.event_key || 'wager'}`,
+          balance_after_cents: Number(credit?.balance) || null,
+        });
+      } catch {
+        audit('exclusion.ledger_write_failed', { user: gate.user.id, bet: bet.id });
+      }
     }
     audit('exclusion.activated', { user: gate.user.id, days: permanent ? 'permanent' : days, refunded_bets: refundedBets, refunded_cents: refunded });
     return Response.json({ permanent, self_excluded_until: until, refunded_bets: refundedBets, refunded_cents: refunded });

@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { secrets } from 'base44:runtime';
-import { fail, requireGate, ensureWallet, applyWalletDelta, audit, depositedTodayCents } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta, isRateLimited, audit, depositedTodayCents } from '../../shared/realBookCore.ts';
 
 // Verifies a completed Stripe Checkout Session server-side and credits the
 // real-money wallet exactly once (idempotent by session id), so the balance
@@ -11,6 +11,7 @@ export default async function(req) {
     const base44 = createClientFromRequest(req);
     const gate = await requireGate(base44);
     if (gate.error) return gate.error;
+    if (isRateLimited(`deposit:${gate.user.id}`, 12)) return fail('Too many deposit verifications — try again in a moment.', 'rate_limited', 429);
     const key = secrets.get('STRIPE_SECRET_KEY');
     if (!key) {
       return fail('Real-money deposits are not connected yet: add STRIPE_SECRET_KEY on the dashboard Secrets page.', 'payments_not_configured', 503);
@@ -63,11 +64,20 @@ export default async function(req) {
     if (credit.error) return fail('Payment verified, but crediting the wallet hit contention — retry to apply your deposit.', 'wallet_busy', 503);
     const balance = credit.balance;
     audit('deposit.credited', { user: gate.user.id, cents: amountCents, session: sessionId });
-    await base44.asServiceRole.entities.RealTransaction.create({
-      created_by_id: gate.user.id,
-      type: 'deposit', amount_cents: amountCents, status: 'completed', ref: sessionId,
-      label: 'Stripe deposit', balance_after_cents: balance,
-    });
+    try {
+      await base44.asServiceRole.entities.RealTransaction.create({
+        created_by_id: gate.user.id,
+        type: 'deposit', amount_cents: amountCents, status: 'completed', ref: sessionId,
+        label: 'Stripe deposit', balance_after_cents: balance,
+      });
+    } catch {
+      // The ledger entry IS the idempotency key — if it can't be written, a
+      // retry would double-credit. Reverse the credit so wallet and ledger
+      // stay consistent, then ask the user to retry.
+      const reversed = await applyWalletDelta(base44, wallet, -amountCents);
+      audit(reversed.error ? 'deposit.ledger_and_reverse_failed' : 'deposit.ledger_failed_reversed', { user: gate.user.id, cents: amountCents, session: sessionId });
+      return fail('Payment verified, but recording the deposit failed — the credit was reversed. Try again in a moment.', 'ledger_busy', 503);
+    }
     return Response.json({ wallet: { ...wallet, balance_cents: balance, lifetime_deposited_cents: (Number(wallet.lifetime_deposited_cents) || 0) + amountCents } });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not verify the deposit.' }, { status: 500 });

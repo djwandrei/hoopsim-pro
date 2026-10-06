@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { fail, requireGate } from '../../shared/realBookCore.ts';
+import { fail, requireGate, isRateLimited } from '../../shared/realBookCore.ts';
 
 // Responsible-gaming limit changes. Standard policy: decreases apply
 // immediately; increases take effect after a 24-hour cooling-off period.
@@ -12,6 +12,7 @@ export default async function(req) {
     const base44 = createClientFromRequest(req);
     const gate = await requireGate(base44);
     if (gate.error) return gate.error;
+    if (isRateLimited(`limits:${gate.user.id}`, 10)) return fail('Too many limit changes — try again in a minute.', 'rate_limited', 429);
     const body = await req.json().catch(() => ({}));
     const depositCents = Math.round(Number(body?.depositCents));
     const lossCents = Math.round(Number(body?.lossCents));

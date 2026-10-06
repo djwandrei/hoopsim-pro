@@ -169,13 +169,20 @@ export default async function(req) {
       throw error;
     }
     audit('bet.placed', { user: gate.user.id, mode, legs: legs.length, stake_cents: stakeCents, outlay_cents: outlay });
-    await base44.asServiceRole.entities.RealTransaction.create({
-      created_by_id: gate.user.id,
-      type: 'bet', amount_cents: -outlay, status: 'completed',
-      label: mode === 'roundrobin' ? `Round robin: ${legs.length} legs × ${combos.length} combos`
-        : mode === 'teaser' ? `Teaser: ${matchup}` : `Wager: ${matchup}`,
-      balance_after_cents: newBalance,
-    });
+    try {
+      await base44.asServiceRole.entities.RealTransaction.create({
+        created_by_id: gate.user.id,
+        type: 'bet', amount_cents: -outlay, status: 'completed',
+        label: mode === 'roundrobin' ? `Round robin: ${legs.length} legs × ${combos.length} combos`
+          : mode === 'teaser' ? `Teaser: ${matchup}` : `Wager: ${matchup}`,
+        balance_after_cents: newBalance,
+      });
+    } catch {
+      // The bet and the debit are already committed — a failed ledger line
+      // must not surface as an error, or the user would re-place the wager
+      // and double their stake believing the first attempt failed.
+      audit('bet.ledger_write_failed', { user: gate.user.id, cents: outlay });
+    }
     return Response.json({ bets: created, balance_cents: newBalance });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not place the wager.' }, { status: 500 });

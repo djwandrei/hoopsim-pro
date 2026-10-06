@@ -15,7 +15,13 @@ const ELIGIBLE_STATES = [
 const ageFromDob = dob => {
   const birth = new Date(`${dob}T00:00:00Z`);
   if (Number.isNaN(birth.getTime())) return null;
-  return Math.floor((Date.now() - birth.getTime()) / (365.2425 * 24 * 3600 * 1000));
+  // Exact calendar age (same math the server enforces), never the
+  // average-year approximation that can round someone up a day early.
+  const now = new Date();
+  let age = now.getUTCFullYear() - birth.getUTCFullYear();
+  const monthDelta = now.getUTCMonth() - birth.getUTCMonth();
+  if (monthDelta < 0 || (monthDelta === 0 && now.getUTCDate() < birth.getUTCDate())) age -= 1;
+  return age;
 };
 
 // The eligibility gate for the real-money book: 21+ attestation backed by a

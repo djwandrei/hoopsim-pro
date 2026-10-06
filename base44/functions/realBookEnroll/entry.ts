@@ -27,7 +27,14 @@ export default async function(req) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dob) || Number.isNaN(new Date(`${dob}T00:00:00Z`).getTime())) {
       return fail('Enter a valid date of birth.', 'invalid_dob', 400);
     }
-    const age = Math.floor((Date.now() - new Date(`${dob}T00:00:00Z`).getTime()) / (365.2425 * 24 * 3600 * 1000));
+    // Exact calendar age in UTC — an average-year approximation can admit a
+    // user up to a day before their real 21st birthday, so compute the age
+    // the way calendars do (birthday not yet reached this year = one less).
+    const birth = new Date(`${dob}T00:00:00Z`);
+    const today = new Date();
+    let age = today.getUTCFullYear() - birth.getUTCFullYear();
+    const monthDelta = today.getUTCMonth() - birth.getUTCMonth();
+    if (monthDelta < 0 || (monthDelta === 0 && today.getUTCDate() < birth.getUTCDate())) age -= 1;
     if (age < 21) return fail('You must be at least 21 to enter the real-money book.', 'under_age', 403);
     if (!ELIGIBLE_STATES.has(state)) return fail('Online sports wagering is not licensed in that state.', 'state_not_licensed', 403);
     const existing = await base44.entities.RealMoneyProfile.filter({});

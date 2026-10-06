@@ -57,12 +57,19 @@ export default async function(req) {
           return fail('Settlement hit wallet contention — try again in a moment.', 'wallet_busy', 503);
         }
         totalReturned += returned;
-        await base44.asServiceRole.entities.RealTransaction.create({
-          created_by_id: gate.user.id,
-          type: result.status === 'push' ? 'void' : 'payout', amount_cents: returned, status: 'completed',
-          bet_id: bet.id, label: `${result.status === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`,
-          balance_after_cents: credit.balance,
-        });
+        try {
+          await base44.asServiceRole.entities.RealTransaction.create({
+            created_by_id: gate.user.id,
+            type: result.status === 'push' ? 'void' : 'payout', amount_cents: returned, status: 'completed',
+            bet_id: bet.id, label: `${result.status === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`,
+            balance_after_cents: credit.balance,
+          });
+        } catch {
+          // The bet is settled and the money credited — a failed ledger line
+          // must not surface as an error (a retry settles nothing and can
+          // never double-credit; the bet is no longer open).
+          audit('settlement.ledger_write_failed', { user: gate.user.id, bet: bet.id, cents: returned });
+        }
       }
       settled++;
     }

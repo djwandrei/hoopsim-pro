@@ -1,4 +1,0 @@
-import React from 'react';
-export default function WorkbenchViewTabs({ label, options, value, onChange }) {
-  return <nav aria-label={label} className="flex flex-wrap gap-1 rounded-xl border border-border/30 bg-canvas/50 p-1">{options.map(({key,label:caption,disabled,reason}) => <button key={key} type="button" aria-pressed={value===key} disabled={disabled} title={reason} onClick={() => onChange(key)} className={value===key ? 'min-h-11 rounded-lg border border-gold/30 bg-gold/10 px-4 text-xs font-semibold text-gold' : 'min-h-11 rounded-lg border border-transparent px-4 text-xs font-medium text-muted-foreground transition-colors hover:bg-raised hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'}>{caption}</button>)}</nav>;
-}

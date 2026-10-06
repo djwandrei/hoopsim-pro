@@ -37,8 +37,6 @@
 .spin-desk__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .8rem; margin-top: 1.1rem; }
 .spin-desk__field { display: grid; gap: .4rem; font-size: .72rem; color: hsl(var(--muted-foreground)); min-width: 0; }
 .spin-desk__field input, .spin-desk__field select { width: 100%; min-height: 2.5rem; border-radius: .5rem; border: 1px solid hsl(var(--input)); background: hsl(var(--court-raised) / .5); padding: .5rem .7rem; color: hsl(var(--foreground)); font-size: .8rem; }
-.spin-desk__apply { margin-top: 1.1rem; width: 100%; min-height: 2.75rem; border-radius: .6rem; border: 1px solid hsl(var(--court-accent) / .45); background: hsl(var(--court-accent) / .1); color: hsl(var(--court-accent)); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; transition: background-color .15s ease; }
-.spin-desk__apply:hover { background: hsl(var(--court-accent) / .2); }
 /* Previous picks strip on the stage */
 .spin-past { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
 .spin-past__label { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
@@ -50,7 +48,7 @@
 /* Control desk sections & chips */
 .spin-desk__section { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px dashed hsl(var(--border) / .3); }
 .spin-desk__label { margin-bottom: .5rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
-.spin-chips { display: flex; flex-wrap: wrap; gap: .35rem; max-height: 8rem; overflow-y: auto; padding: 2px; }
+.spin-chips { display: flex; flex-wrap: wrap; gap: .35rem; }
 .spin-chip { display: inline-flex; align-items: center; min-height: 1.9rem; border-radius: 999px; border: 1px solid hsl(var(--border) / .45); background: hsl(var(--court-raised) / .4); padding: 0 .7rem; font-family: var(--font-mono); font-size: .65rem; font-weight: 600; letter-spacing: .06em; color: hsl(var(--muted-foreground)); transition: border-color .12s ease, color .12s ease, background-color .12s ease; }
 .spin-chip:hover { border-color: hsl(var(--court-accent) / .5); color: hsl(var(--foreground)); }
 .spin-chip--on { border-color: hsl(var(--court-accent) / .7); background: hsl(var(--court-accent) / .16); color: hsl(var(--court-accent)); }

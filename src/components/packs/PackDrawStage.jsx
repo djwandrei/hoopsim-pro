@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dices, Loader2, Lock, RotateCcw } from 'lucide-react';
 import { MAX_PACK_OPENING_SIZE, PACK_OPENING_ALGORITHM, PACK_OPENING_RULESET } from '@/lib/cards/packModel';
-import { Image } from '@/components/ui/image';
+import PackReveal from '@/components/packs/PackReveal';
 
 const PACK_SIZES = [1, 3, 5, 10];
 
@@ -39,16 +39,7 @@ export default function PackDrawStage({ poolCount, packSize, onPackSize, seed, o
       <p className="font-mono text-[10px] leading-relaxed text-muted-foreground">Ruleset {PACK_OPENING_RULESET} · Algorithm {PACK_OPENING_ALGORITHM}. The seed, pool product IDs and drawn IDs form the replay receipt below; a seed is not a secure random guarantee.</p>
       <div className="space-y-2">
         <h3 className="font-display text-xl tracking-wide text-foreground">LATEST DRAW</h3>
-        {drawnCards.length ? (
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
-            {drawnCards.map(card => <li key={card.product.id} className="slot-pop">
-              <div className="court-panel overflow-hidden">
-                <div className="aspect-[4/3] bg-raised/40">{card.product.image ? <Image src={card.product.image} alt={card.product.name} fittingType="fit" className="h-full w-full object-contain" /> : <div className="grid h-full place-items-center font-display text-2xl text-muted-foreground">CARD</div>}</div>
-                <p className="p-2 text-[11px] font-semibold leading-snug text-foreground">{card.product.name}</p>
-              </div>
-            </li>)}
-          </ul>
-        ) : <p className="rounded-xl border border-dashed border-border/40 p-4 text-xs text-muted-foreground">Your card results will appear here after a draw.</p>}
+        {drawnCards.length ? <PackReveal drawnCards={drawnCards} /> : <p className="rounded-xl border border-dashed border-border/40 p-4 text-xs text-muted-foreground">Your card results will appear here after a draw.</p>}
       </div>
       <div className="space-y-2">
         <h3 className="font-display text-xl tracking-wide text-foreground">REPLAY RECEIPT</h3>

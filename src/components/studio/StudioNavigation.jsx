@@ -31,9 +31,9 @@ export default function StudioNavigation({ active, collapsed = false, onToggle }
         <Link to="/" aria-label="SwishIQ Studio overview" className="flex shrink-0 items-center">
           <Image src={STUDIO_EMBLEM} alt="" fittingType="fit" className="h-14 w-14 shrink-0 object-contain" />
         </Link>
-        {!collapsed && <div className="flex min-w-0 flex-col items-start gap-2">
-          <span className="font-display text-2xl leading-none tracking-wide text-foreground">SWISHIQ</span>
-          <button type="button" onClick={onToggle} className="inline-flex items-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-gold hover:bg-gold/20"><ChevronsLeft className="h-4 w-4" />Collapse</button>
+        {!collapsed && <div className="flex min-w-0 flex-1 flex-col items-stretch gap-2">
+          <span className="truncate font-display text-2xl leading-none tracking-wide text-foreground">SWISHIQ</span>
+          <button type="button" onClick={onToggle} className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-2 py-1.5 text-[10px] font-semibold tracking-widest text-gold hover:bg-gold/20"><ChevronsLeft className="h-4 w-4 shrink-0" />Collapse</button>
         </div>}
       </div>
       {collapsed && <div className="hidden px-3 pb-2 lg:block"><button type="button" onClick={onToggle} aria-label="Expand workbench menu" className="flex w-full items-center justify-center rounded-lg border border-gold/40 bg-gold/10 py-2 text-gold hover:bg-gold/20"><ChevronsRight className="h-4 w-4" /></button></div>}

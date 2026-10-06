@@ -13,15 +13,15 @@ const Silhouette = () => (
   </>
 );
 
-const initials = pick => (pick?.player?.name || '?').split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('');
+const initials = pick => (pick?.player?.name || '?').split(/\s+/).filter(Boolean).map(word => word[0]).slice(0, 2).join('');
 
-// BAP-style circular attribute wheel: nine slots around a central silhouette,
-// each segment lighting up as its pick lands and graded by share of the max.
-export default function ForgeBuildWheel({ picks, leagueMax, overall, selectedKey, spinning = false }) {
+// Circular attribute wheel: nine slots around a central silhouette, each
+// segment lighting up as its pick lands, graded by the DJHC rating.
+export default function ForgeBuildWheel({ picks, overall, selectedKey, spinning = false }) {
   const slice = 360 / SKILLS.length;
   const segments = SKILLS.map((skill, index) => {
     const pick = picks[skill.key];
-    const ratio = pick ? Math.min(1, (pick.value || 0) / (leagueMax[skill.key] || 1)) : 0;
+    const ratio = pick ? Math.max(0, Math.min(1, (pick.value - 25) / 74)) : 0;
     return { skill, pick, ratio, index };
   });
   const gradient = `conic-gradient(from -90deg, ${segments.map(({ pick, ratio, index }) => {
@@ -30,12 +30,12 @@ export default function ForgeBuildWheel({ picks, leagueMax, overall, selectedKey
   }).join(', ')})`;
   return <div className={`relative mx-auto aspect-square w-full max-w-[21rem] ${spinning ? 'wheel-spinning' : ''}`} aria-label="Build attribute wheel">
     <div className="absolute inset-0 overflow-hidden rounded-full border border-border/25 shadow-[0_0_44px_hsl(var(--court-canvas)/0.55)]" style={{ background: gradient }}>
-      {segments.map(({ skill, pick, ratio, index }) => {
+      {segments.map(({ skill, pick, index }) => {
         const rad = index * slice * Math.PI / 180;
         const selected = selectedKey === skill.key;
         return <div key={skill.key} style={{ left:`${50 + 37 * Math.sin(rad)}%`, top:`${50 - 37 * Math.cos(rad)}%` }} className={`absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-center transition-colors ${pick ? 'border-gold/60 bg-canvas/85 text-gold wheel-chip-landed' : 'border-border/30 bg-canvas/70 text-muted-foreground'} ${selected ? 'border-gold wheel-chip-active' : ''}`}>
           <span className="font-display text-[11px] leading-none tracking-wide">{skill.label}</span>
-          <span className="font-mono text-[9px] leading-none opacity-80">{pick ? `${gradeFor(ratio)} · ${initials(pick)}` : '—'}</span>
+          <span className="font-mono text-[9px] leading-none opacity-80">{pick ? `${gradeFor(pick.value)} ${pick.value} · ${initials(pick)}` : '—'}</span>
         </div>;
       })}
     </div>

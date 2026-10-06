@@ -15,7 +15,7 @@ export default function ForgeReelPanel({
   armedSkill = null,
   showGrades, onToggleGrades, teamItems, playerItems, teamSpin, playerSpin, spinning,
   reveal, onSpin, spinDisabled, onRespinTeam, onRespinPlayer,
-  teamRespins, playerRespins, picks, leagueMax,
+  teamRespins, playerRespins, picks,
 }) {
   const landed = Boolean(reveal);
   const filled = SKILLS.filter(skill => picks[skill.key]);
@@ -43,13 +43,13 @@ export default function ForgeReelPanel({
     <div className="mt-2 space-y-1.5">
       {filled.map(skill => {
         const pick = picks[skill.key];
-        const ratio = leagueMax[skill.key] ? pick.value / leagueMax[skill.key] : 0;
+        const fill = Math.max(0, Math.min(100, Math.round((pick.value - 25) / 74 * 100)));
         return <div key={skill.key} className="slot-pop rounded-lg border border-border/20 bg-canvas/40 px-2.5 py-1.5">
           <div className="flex items-center gap-2">
             <span className="flex-1 text-[10px] font-semibold uppercase tracking-wider">{skill.label}</span>
-            <span className={`flex h-6 min-w-6 items-center justify-center rounded-full border px-1 font-mono text-[10px] font-bold ${TONE_CHIP[gradeTone(ratio)]}`}>{showGrades ? gradeFor(ratio) : skill.fmt(pick.value)}</span>
+            <span className={`flex h-6 min-w-6 items-center justify-center rounded-full border px-1 font-mono text-[10px] font-bold ${TONE_CHIP[gradeTone(pick.value)]}`}>{showGrades ? gradeFor(pick.value) : skill.fmt(pick.value)}</span>
           </div>
-          <div className="mt-1 h-1 overflow-hidden rounded-full bg-canvas/70"><span className="block h-full rounded-full bg-gold" style={{ width: `${Math.max(3, Math.round(ratio * 100))}%` }} /></div>
+          <div className="mt-1 h-1 overflow-hidden rounded-full bg-canvas/70"><span className="block h-full rounded-full bg-gold" style={{ width: `${fill}%` }} /></div>
         </div>;
       })}
       {!filled.length && <p className="px-1 py-2 text-center text-[10px] leading-relaxed text-muted-foreground">No skills locked yet — spin the reels.</p>}

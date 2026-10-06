@@ -1,39 +1,53 @@
-const one = value => value.toFixed(1);
-const pct = value => `${(value * 100).toFixed(1)}%`;
+const one = value => {
+  const num = Number(value);
+  return Number.isFinite(num) ? String(Math.round(num)) : '—';
+};
 
-// Nine Build-A-Bucket style attributes, each backed by an observed metric
-// from the season source. Perimeter D blends steals + blocks per 36.
+// Nine DJHC skill attributes, each backed by an observed season metric from
+// the blueprint rows. Every rating is a 25–99 percentile estimate.
 export const SKILLS = [
-  { key:'handles', label:'Handles', metric:'A/TO', metricKey:'assistTurnoverRatio', fmt:one, weight:0.8 },
-  { key:'jumpShot', label:'Jump Shot', metric:'3P%', metricKey:'threePointPercentage', fmt:pct, weight:0.9 },
-  { key:'finishing', label:'Finishing', metric:'FG%', metricKey:'fieldGoalPercentage', fmt:pct, weight:0.9 },
-  { key:'speed', label:'Speed', metric:'SPG', metricKey:'stealsPerGame', fmt:one, weight:0.7 },
-  { key:'bounce', label:'Bounce', metric:'BPG', metricKey:'blocksPerGame', fmt:one, weight:0.7 },
-  { key:'passing', label:'Passing', metric:'APG', metricKey:'assistsPerGame', fmt:one, weight:0.9 },
-  { key:'perimeterD', label:'Perimeter D', metric:'STL+B/36', metricKey:'perimeterD36', fmt:one, weight:0.8 },
-  { key:'strength', label:'Strength', metric:'RPG', metricKey:'reboundsPerGame', fmt:one, weight:0.8 },
-  { key:'hl', label:'H/L', metric:'MPG', metricKey:'minutesPerGame', fmt:one, weight:0.6 },
+  { key: 'scoring', label: 'Scoring', basis: 'Points per 36 minutes', metricKey: 'pointsPer36', fmt: one, weight: 0.9 },
+  { key: 'jumpShot', label: 'Jump Shot', basis: 'Attempt-shrunk 3P%', metricKey: 'threePointPercentage', fmt: one, weight: 0.9 },
+  { key: 'finishing', label: 'Finishing', basis: 'Attempt-shrunk 2P% (FG% fallback)', metricKey: 'twoPointPercentage', fmt: one, weight: 0.9 },
+  { key: 'playmaking', label: 'Playmaking', basis: 'Assists per 36 minutes', metricKey: 'assistsPer36', fmt: one, weight: 0.9 },
+  { key: 'decision', label: 'Decision', basis: 'Attempt-shrunk AST/TO', metricKey: 'assistTurnoverRatio', fmt: one, weight: 0.8 },
+  { key: 'rebounding', label: 'Rebounding', basis: 'Rebounds per 36 minutes', metricKey: 'reboundsPer36', fmt: one, weight: 0.8 },
+  { key: 'offensiveRebound', label: 'O. Rebounding', basis: 'Offensive rebounds per 36 minutes', metricKey: 'offensiveReboundsPer36', fmt: one, weight: 0.7 },
+  { key: 'steals', label: 'Steals', basis: 'Steals per 36 minutes', metricKey: 'stealsPer36', fmt: one, weight: 0.7 },
+  { key: 'rimProtection', label: 'Rim Protection', basis: 'Blocks per 36 minutes', metricKey: 'blocksPer36', fmt: one, weight: 0.7 },
 ];
 
-// Letter grade from a 0..1 share of the pool maximum (BAP-style slot grades).
-export const gradeFor = ratio => {
-  const share = Math.max(0, Math.min(1, Number(ratio) || 0));
-  if (share >= 0.88) return 'A+'; if (share >= 0.80) return 'A'; if (share >= 0.72) return 'A-';
-  if (share >= 0.64) return 'B+'; if (share >= 0.55) return 'B'; if (share >= 0.46) return 'C+';
-  if (share >= 0.37) return 'C'; if (share >= 0.28) return 'D'; return 'F';
+// Pinned rating model version, mirrored from the live forge release.
+export const RATING_MODEL = 'djhc-season-skill-percentile-v1';
+
+// Letter grade from a 25–99 DJHC skill rating.
+export const gradeFor = rating => {
+  const value = Number(rating);
+  if (!Number.isFinite(value)) return '—';
+  if (value >= 90) return 'A';
+  if (value >= 80) return 'B';
+  if (value >= 70) return 'C';
+  if (value >= 60) return 'D';
+  return 'F';
+};
+
+// Tone bucket for a rating, mapped to the court palette tokens.
+export const gradeTone = rating => {
+  const value = Number(rating);
+  if (!Number.isFinite(value)) return 'trim';
+  if (value >= 80) return 'positive';
+  if (value >= 70) return 'royal';
+  if (value >= 60) return 'gold';
+  return 'trim';
 };
 
 // Build-A-Bucket's Guard / Big split, mapped to the source's G / F / C codes.
 export const GROUPS = [
-  { key:'Guard', codes:['G'], hint:'G' },
-  { key:'Big', codes:['F','C'], hint:'F · C' },
+  { key: 'Guard', codes: ['G'], hint: 'G' },
+  { key: 'Big', codes: ['F', 'C'], hint: 'F · C' },
 ];
 
-// Tone bucket for a grade letter, mapped to the court palette tokens.
-export const gradeTone = ratio => {
-  const share = Math.max(0, Math.min(1, Number(ratio) || 0));
-  if (share >= 0.72) return 'positive';
-  if (share >= 0.46) return 'royal';
-  if (share >= 0.28) return 'gold';
-  return 'trim';
-};
+// Role adjustment blend: role populations under 30 players are ignored, and a
+// supported role percentile is blended at 25% against the season percentile.
+export const ROLE_SAMPLE_MIN = 30;
+export const ROLE_BLEND = 0.25;

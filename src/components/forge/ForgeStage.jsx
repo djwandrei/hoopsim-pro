@@ -10,26 +10,26 @@ const SILHOUETTE_DARK = forgeSilhouette('dark');
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {
-  handles: { side: 'left', top: 4 },
+  scoring: { side: 'left', top: 4 },
   jumpShot: { side: 'left', top: 26 },
-  passing: { side: 'left', top: 48 },
-  strength: { side: 'left', top: 70 },
-  bounce: { side: 'left', top: 91 },
+  playmaking: { side: 'left', top: 48 },
+  rebounding: { side: 'left', top: 70 },
+  offensiveRebound: { side: 'left', top: 91 },
   finishing: { side: 'right', top: 14 },
-  perimeterD: { side: 'right', top: 38 },
-  speed: { side: 'right', top: 61 },
-  hl: { side: 'right', top: 83 }
+  decision: { side: 'right', top: 38 },
+  steals: { side: 'right', top: 61 },
+  rimProtection: { side: 'right', top: 83 }
 };
 
 // Center stage of the Build-A-Bucket layout: silhouette with attribute chips.
-export default function ForgeStage({ mode, picks, leagueMax, reveal, selectedKey, onSelect, onAssign, showGrades, spinning }) {
+export default function ForgeStage({ mode, picks, reveal, selectedKey, onSelect, onAssign, showGrades, spinning }) {
   const bestLiveKey = (() => {
     if (!reveal || mode !== 'wheel') return null;
-    let best = null;let bestRatio = -1;
+    let best = null;let bestRating = -Infinity;
     for (const skill of SKILLS) {
-      if (picks[skill.key] || !leagueMax[skill.key]) continue;
-      const ratio = (reveal[skill.key] || 0) / leagueMax[skill.key];
-      if (ratio > bestRatio) {bestRatio = ratio;best = skill.key;}
+      const rating = reveal[skill.key];
+      if (picks[skill.key] || !Number.isFinite(rating) || rating <= bestRating) continue;
+      bestRating = rating;best = skill.key;
     }
     return best;
   })();
@@ -43,11 +43,10 @@ export default function ForgeStage({ mode, picks, leagueMax, reveal, selectedKey
         {SKILLS.map((skill) => {
           const layout = CHIP_LAYOUT[skill.key] || { side: 'left', top: 50 };
           const pick = picks[skill.key];
-          const live = Boolean(reveal) && !pick && (mode === 'wheel' || selectedKey === skill.key);
+          const live = Boolean(reveal) && !pick && (mode === 'wheel' || selectedKey === skill.key) && Number.isFinite(reveal[skill.key]);
           const armed = mode === 'pick' && !pick && !reveal && !spinning && selectedKey === skill.key;
           const selectable = mode === 'pick' && !pick && !reveal && !spinning;
           const clickable = live || armed || selectable && !selectedKey;
-          const ratio = pick && leagueMax[skill.key] ? pick.value / leagueMax[skill.key] : 0;
           const isBest = live && skill.key === bestLiveKey;
           const tone = pick ? 'forge-stage-chip--filled' : isBest ? 'forge-stage-chip--best' : live ? 'forge-stage-chip--live' : armed || selectedKey === skill.key && mode === 'pick' ? 'forge-stage-chip--armed' : 'forge-stage-chip--open';
           return <button key={skill.key} type="button" disabled={!clickable}
@@ -55,9 +54,9 @@ export default function ForgeStage({ mode, picks, leagueMax, reveal, selectedKey
           className={`forge-stage-chip ${tone}${clickable ? ' cursor-pointer' : ''}`}
           style={{ top: `${layout.top}%`, [layout.side === 'left' ? 'left' : 'right']: '0%' }}>
             <span>{skill.label}</span>
-            {live && <span className="forge-stage-chip-val">{skill.fmt(reveal[skill.key] || 0)}</span>}
+            {live && <span className="forge-stage-chip-val">{skill.fmt(reveal[skill.key])}</span>}
             {isBest && <span className="text-[8px] font-bold uppercase tracking-widest">★ best</span>}
-            {showGrades && pick && <span className="forge-stage-chip-grade">{gradeFor(ratio)}</span>}
+            {showGrades && pick && <span className="forge-stage-chip-grade">{gradeFor(pick.value)}</span>}
           </button>;
         })}
       </div>

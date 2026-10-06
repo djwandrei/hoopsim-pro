@@ -1,4 +1,5 @@
 import { SKILLS } from '@/components/forge/bapSkills';
+import { forgePlayerScore } from '@/components/forge/forgePool';
 import { mulberry32, buildGeneratedSchedule, runRepeat } from '@/lib/season/simEngine';
 
 const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
@@ -9,23 +10,17 @@ const ELIM_LABELS = {
   'Conference finals': 'the conference finals',
 };
 
-// OVR-style score (0..100) for a pool player, relative to the pool maximums —
-// the same scale the wheel forge uses for its live overall.
-export function forgeScore(player, leagueMax) {
-  if (!SKILLS.length) return 50;
-  return SKILLS.reduce((sum, skill) => sum + Math.min(100, (player[skill.key] || 0) / (leagueMax[skill.key] || 1) * 100), 0) / SKILLS.length;
-}
-
 // Build the forged roster as a league team, swap it into the league in place of
 // a random host franchise, and simulate the full 82-game season plus playoffs.
-export function simulateForgeSeason({ league, pool, leagueMax, picks, slots, seed }) {
+// Strength comes from the mean of each donor's 25–99 DJHC skill ratings.
+export function simulateForgeSeason({ league, pool, picks, slots, seed }) {
   const rng = mulberry32(seed >>> 0);
   const drafted = slots.map(slot => ({ slot, player: picks[slot.key]?.player })).filter(row => row.player);
   const totalMinutes = drafted.reduce((sum, row) => sum + row.slot.minutes, 0);
   const teamScore = totalMinutes
-    ? drafted.reduce((sum, row) => sum + forgeScore(row.player, leagueMax) * row.slot.minutes, 0) / totalMinutes
+    ? drafted.reduce((sum, row) => sum + forgePlayerScore(row.player) * row.slot.minutes, 0) / totalMinutes
     : 50;
-  const scores = pool.map(player => forgeScore(player, leagueMax)).sort((a, b) => a - b);
+  const scores = pool.map(player => forgePlayerScore(player)).sort((a, b) => a - b);
   const median = scores[Math.floor(scores.length / 2)] || 50;
   const avg = key => league.teams.reduce((sum, team) => sum + (team[key] || 0), 0) / (league.teams.length || 1);
   const net = clamp((teamScore - median) * 0.4, -10, 13);
@@ -33,9 +28,7 @@ export function simulateForgeSeason({ league, pool, leagueMax, picks, slots, see
   const roster = drafted.map(({ slot, player }) => ({
     playerRef: player.playerRef, name: player.name, positions: player.positions || [],
     games: player.games, minutes: slot.minutes,
-    pts: player.pts, reb: player.reb, ast: player.ast,
-    stl: (player.perimeterD || 0) * 0.6 * (player.mpg || 24) / 36,
-    blk: (player.perimeterD || 0) * 0.4 * (player.mpg || 24) / 36,
+    pts: player.pts, reb: player.reb, ast: player.ast, stl: player.stl || 0, blk: player.blk || 0,
   }));
   const forgeTeam = {
     code: 'FRG', name: 'Forge Legends', conference: host.conference,

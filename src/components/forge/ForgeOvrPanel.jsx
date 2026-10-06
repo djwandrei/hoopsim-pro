@@ -12,7 +12,7 @@ const TONE = {
 };
 
 // Right panel of the Build-A-Bucket layout: OVR ring, remaining count, and slots.
-export default function ForgeOvrPanel({ picks, overall, leagueMax, showGrades, onUndo }) {
+export default function ForgeOvrPanel({ picks, overall, showGrades, onUndo }) {
   const remaining = SKILLS.reduce((sum, skill) => sum + (picks[skill.key] ? 0 : 1), 0);
   const ringRadius = 42;
   const ring = 2 * Math.PI * ringRadius;
@@ -34,14 +34,13 @@ export default function ForgeOvrPanel({ picks, overall, leagueMax, showGrades, o
       {SKILLS.map(skill => {
         const pick = picks[skill.key];
         if (!pick) return <p key={skill.key} className="px-2 py-1 text-center font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/45">{skill.label}</p>;
-        const ratio = leagueMax[skill.key] ? pick.value / leagueMax[skill.key] : 0;
         return <div key={`${skill.key}:filled`} className="slot-pop flex items-center gap-2 rounded-lg border border-border/25 bg-raised/40 px-2 py-1.5">
           <PlayerPortrait player={pick.player} className="h-8 w-8" frameless />
           <div className="min-w-0 flex-1 text-left">
             <p className="truncate text-[11px] font-semibold leading-tight">{pick.player.name}</p>
-            <p className="truncate font-mono text-[9px] text-muted-foreground">{skill.label} · {skill.fmt(pick.value)}</p>
+            <p className="truncate font-mono text-[9px] text-muted-foreground">{skill.label} · DJHC {skill.fmt(pick.value)}</p>
           </div>
-          {showGrades && <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border font-mono text-[10px] font-bold ${TONE[gradeTone(ratio)]}`}>{gradeFor(ratio)}</span>}
+          {showGrades && <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border font-mono text-[10px] font-bold ${TONE[gradeTone(pick.value)]}`}>{gradeFor(pick.value)}</span>}
           <button type="button" aria-label={`Release ${pick.player.name} from ${skill.label}`} onClick={() => onUndo(skill.key)} className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:text-trim"><X className="h-3 w-3" /></button>
         </div>;
       })}

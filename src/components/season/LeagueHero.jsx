@@ -79,7 +79,7 @@ export default function LeagueHero({ team, simRow, actualRecord, conferenceRank 
           <OddsBar label="Title odds" value={simRow.title} color="var(--myna-trim)" icon={Trophy} />
         </div>
       )}
-      {actualRecord && (
+      {actualRecord && simRow && (
         <div className="relative border-t border-[var(--myna-border)] px-5 py-3 text-[11px] myna-muted">
           Actual season: <span className="myna-mono font-semibold">{actualRecord.w}–{actualRecord.l}</span> · {actualRecord.gp} games played.
         </div>

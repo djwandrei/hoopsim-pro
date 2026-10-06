@@ -28,14 +28,6 @@ export default function HubSourcePanel() {
           <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
         </div>)}
       </div>
-      <div className="relative mt-5 grid gap-2 border-t border-border/30 pt-4 text-xs text-muted-foreground sm:grid-cols-2">
-        {[
-          ['Workbenches', 'Season, Player, Chemistry, Forge, Game, Career & Spin run on the original gameplay modules'],
-          ['Daily games', 'Fix the Five & Draft Night rank through the original private evaluator'],
-          ['Lineup Lab', 'Solver boots through its own service-worker connection with the optimizer worker'],
-          ['Season data', 'Loaded on demand from the live site — v3/v4 packages are never stored here'],
-        ].map(([label, copy]) => <p key={label}><strong className="font-mono text-[10px] uppercase tracking-[0.14em] text-gold">{label}</strong> — {copy}</p>)}
-      </div>
     </div>
   </section>;
 }

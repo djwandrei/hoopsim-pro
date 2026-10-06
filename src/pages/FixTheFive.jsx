@@ -155,7 +155,7 @@ export default function FixTheFive() {
     <GameShell>
       <WorkbenchHeader
         title="FIX THE FIVE"
-        description="Compare each legal swap with the starting five by summed estimated additive player impact. This is a model estimate, not observed five-player performance or causal chemistry."
+        description="Repair a blind starting five with legal swaps — each call scored by summed estimated additive player impact once the board locks."
         steps={['Board & context', 'Five repair calls', 'Verified summary']}
         current={current}
         state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}

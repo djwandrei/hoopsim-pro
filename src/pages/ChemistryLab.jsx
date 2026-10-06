@@ -38,7 +38,6 @@ export default function ChemistryLab() {
         <p className="text-sm text-foreground">{chemistry.error}</p>
         <button type="button" onClick={chemistry.retry} className="mt-3 min-h-10 rounded-lg border border-border/50 px-4 text-xs font-medium text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold">Retry verified data</button>
       </div>}
-      {ready && chemistry.progress && view === 'pair' && <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{chemistry.progress}</p>}
     </main>
   </StudioShell>;
 }

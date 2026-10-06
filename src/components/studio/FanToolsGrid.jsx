@@ -8,7 +8,7 @@ import { FAN_TOOLS } from '@/components/djhc/siteNavigation';
 // stays reachable from one desk.
 export default function FanToolsGrid() {
   return <section className="mt-12" aria-labelledby="fan-tools-heading">
-    <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2 pb-4">
+    <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
       <div>
         <p className="bcast-kicker mb-2">The full suite · live site</p>
         <h2 id="fan-tools-heading" className="font-display text-xl tracking-wide">EVERY DJHC FAN TOOL</h2>
@@ -20,7 +20,6 @@ export default function FanToolsGrid() {
         <ToolEmblem emblem={tool.emblem} label={tool.label} className="h-11 w-11 shrink-0 object-contain" />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-display text-lg tracking-wide text-foreground">{tool.label}</span>
-          <span className="block truncate font-mono text-[10px] text-muted-foreground">{tool.path}</span>
         </span>
         <ExternalLink className="h-4 w-4 shrink-0 text-gold opacity-60 transition-opacity group-hover:opacity-100" aria-hidden="true" />
       </a>)}

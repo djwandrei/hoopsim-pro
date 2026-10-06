@@ -141,7 +141,7 @@ export default function DraftNight() {
     <GameShell>
       <WorkbenchHeader
         title="DRAFT NIGHT"
-        description="Pick one player from each of five different team rounds. This cross-team five-pick board is scored by average estimated additive player impact; it is not observed lineup performance, a same-team lineup, a forecast, or causal chemistry."
+        description="Pick one player from each of five different team rounds — locked blind, revealed once, scored by average estimated additive player impact."
         steps={['Five draft rounds', 'Lock the draft', 'Verified summary']}
         current={outcome ? 2 : allPicked ? 1 : 0}
         state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}

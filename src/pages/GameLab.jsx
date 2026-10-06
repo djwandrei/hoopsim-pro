@@ -60,7 +60,7 @@ export default function GameLab() {
   return (
     <StudioShell active="/game" followTeam="djhc">
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
-      <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: pick the board, review the intel and charts, and sim single games and 7-game series with team-colored scoreboards and box scores." state="ready" status="Matchup hub ready" />
+      <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: review the matchup intel, then sim single games and 7-game series." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">
         <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&

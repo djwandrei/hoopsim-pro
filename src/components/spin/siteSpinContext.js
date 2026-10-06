@@ -1,4 +1,21 @@
 import { ROLE_TAXONOMY, normalizePositions } from '@/components/spin/engine/roleTaxonomy';
+// Per-game source metrics the Spin Room can filter and weight by; each entry
+// carries them flat (entry.pointsPerGame, …) so the eligibility engine and the
+// weighted draw both read the same values.
+export const SPIN_METRICS = Object.freeze([
+  { key:'pointsPerGame',label:'PPG · points per game' },
+  { key:'assistsPerGame',label:'APG · assists per game' },
+  { key:'reboundsPerGame',label:'RPG · rebounds per game' },
+  { key:'minutesPerGame',label:'MPG · minutes per game' },
+  { key:'stealsPerGame',label:'SPG · steals per game' },
+  { key:'blocksPerGame',label:'BPG · blocks per game' },
+  { key:'stealsPer36',label:'Steals per 36' },
+  { key:'blocksPer36',label:'Blocks per 36' },
+  { key:'assistTurnoverRatio',label:'Assist / turnover ratio' },
+  { key:'trueShootingPercentage',label:'True shooting %' },
+  { key:'fieldGoalPercentage',label:'Field goal %' },
+  { key:'threePointPercentage',label:'3-point %' },
+]);
 const PLAYER_REF = /^p_[a-f0-9]{32}$/;
 const clean = value => String(value || '').trim();
 const normalized = value => clean(value).normalize('NFKC').toLocaleLowerCase('en-US').replace(/\s+/g,' ');
@@ -19,12 +36,14 @@ export default function siteSpinContext(source,year) {
     if(row.seasonStartYear !== year || row.phase !== 'regular' || row.observed !== true || !(row.games > 0)) continue;
     if(!PLAYER_REF.test(row.playerRef || '') || !/^[A-Z]{2,3}$/.test(row.teamCode || '')) throw new Error('A player-season row has no valid player or team identity.');
     const profile=profiles.get(row.playerRef),positions=normalizePositions(row.positions),displayName=clean(row.displayName),existing=entriesByRef.get(row.playerRef);
+    const metrics={};
+    for(const [key,metric] of Object.entries(row.metrics||{})){const value=Number(metric?.value);if(Number.isFinite(value))metrics[key]=value;}
     if(!profile || !displayName || normalized(displayName) !== normalized(profile.displayName) || !positions.length) throw new Error('A player-season row does not join cleanly to its source player profile.');
     if(existing && (normalized(existing.displayName) !== normalized(displayName) || existing.positions.join('|') !== [...positions].sort().join('|'))) throw new Error('A player has conflicting identity or position rows in this season package.');
     const teamCodes=[...new Set([...(existing?.teamCodes || []),row.teamCode])].sort();
-    entriesByRef.set(row.playerRef,{ ...(existing || {}),playerRef:row.playerRef,displayName:profile.displayName,player:profile.displayName,positions:[...positions].sort(),seasonStartYear:year,phase:'regular',observed:true,games:Math.max(existing?.games || 0,row.games),teamCodes,teamCode:teamCodes.join('/'),packageId:packageRef.packageId,packageVersion:packageRef.packageVersion,packageManifestSha256:packageRef.packageManifestSha256,sourceLockSha256:packageRef.sourceLockSha256 });
+    entriesByRef.set(row.playerRef,{ ...(existing || {}),playerRef:row.playerRef,displayName:profile.displayName,player:profile.displayName,positions:[...positions].sort(),seasonStartYear:year,phase:'regular',observed:true,games:Math.max(existing?.games || 0,row.games),teamCodes,teamCode:teamCodes.join('/'),metrics:existing && existing.metricGames > row.games ? existing.metrics : metrics,metricGames:Math.max(existing?.metricGames || 0,row.games),packageId:packageRef.packageId,packageVersion:packageRef.packageVersion,packageManifestSha256:packageRef.packageManifestSha256,sourceLockSha256:packageRef.sourceLockSha256 });
   }
   const base={seasonStartYears:[year],phases:['regular'],requireObserved:true,minGames:1};
-  const options=[{value:'all',label:'All source-backed players',eligibility:base},...['guard','wing','forward','big','center'].map(key=>({value:key,label:`${ROLE_TAXONOMY[key].label} · source position`,eligibility:{...base,roles:[key]}}))];
+  const options=[{value:'all',label:'All source-backed players',eligibility:base},...Object.values(ROLE_TAXONOMY).map(spec=>({value:spec.key,label:spec.label,eligibility:{...base,roles:[spec.key]}}))];
   return { packageRef,entries:[...entriesByRef.values()].sort((a,b)=>a.playerRef.localeCompare(b.playerRef)),options,seed:`${packageRef.packageVersion}-spin-room` };
 }

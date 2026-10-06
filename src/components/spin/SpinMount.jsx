@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { createSpinRoom } from '@/components/spin/createSpinRoom';
 import { buildSeededPool, spinSeededPool } from '@/components/spin/engine/seededPool';
 import { stableHash } from '@/components/spin/engine/scenarioContract';
-import siteSpinContext from '@/components/spin/siteSpinContext';
+import siteSpinContext, { SPIN_METRICS } from '@/components/spin/siteSpinContext';
 export default function SpinMount({ source, year, excluded, onSelection, onPool }) {
   const root = useRef(null);
-  const settings = useRef({ seed:null,role:'all' });
+  const settings = useRef({ seed:null,eligibility:'all',team:'all',weight:'uniform',metric:'none',metricMin:'',metricMax:'',minGames:'' });
   useEffect(() => {
     const refs = [...excluded].sort();
     const excludedSet = new Set(refs);
@@ -22,7 +22,7 @@ export default function SpinMount({ source, year, excluded, onSelection, onPool 
     const entries = context.entries.filter(player => !excludedSet.has(player.playerRef));
     const options = context.options;
     let starting = true;
-    const controller = createSpinRoom({ root:root.current,entries,packageRef:context.packageRef,seed:settings.current.seed === null ? context.seed : settings.current.seed,eligibilityOptions:[options.find(option => option.value === settings.current.role) || options[0],...options.filter(option => option.value !== settings.current.role)],uniquePlayerKey:'playerRef',
+    const controller = createSpinRoom({ root:root.current,entries,packageRef:context.packageRef,seed:settings.current.seed === null ? context.seed : settings.current.seed,eligibilityOptions:[options.find(option => option.value === settings.current.eligibility) || options[0],...options.filter(option => option.value !== settings.current.eligibility)],teamOptions:[...new Set(entries.flatMap(entry => entry.teamCodes || []))].sort(),metricOptions:SPIN_METRICS,initial:settings.current,uniquePlayerKey:'playerRef',
       buildSeededPool:input => {
         const result = buildSeededPool(input);
         if (result.status === 'ready') result.receipt = { ...result.receipt,adapterVersion:'djhc-spin-exclusions-v1',excludedPlayerRefs:refs,exclusionsHash:stableHash(refs) };
@@ -41,7 +41,7 @@ export default function SpinMount({ source, year, excluded, onSelection, onPool 
     form.addEventListener('input',markDirty);
     form.addEventListener('change',markDirty);
     button.addEventListener('click',markDraw,true);
-    return () => { settings.current = { seed:form.elements.seed.value,role:form.elements.eligibility.value }; form.removeEventListener('submit',markRebuild,true); form.removeEventListener('input',markDirty); form.removeEventListener('change',markDirty); button.removeEventListener('click',markDraw,true); controller.destroy(); };
+    return () => { settings.current = { seed:form.elements.seed.value,eligibility:form.elements.eligibility.value,team:form.elements.team.value,weight:form.elements.weight.value,metric:form.elements.metric.value,metricMin:form.elements.metricMin.value,metricMax:form.elements.metricMax.value,minGames:form.elements.minGames.value }; form.removeEventListener('submit',markRebuild,true); form.removeEventListener('input',markDirty); form.removeEventListener('change',markDirty); button.removeEventListener('click',markDraw,true); controller.destroy(); };
   }, [source,year,excluded,onSelection,onPool]);
   return <div ref={root} className="min-w-0" />;
 }

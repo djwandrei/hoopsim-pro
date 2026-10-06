@@ -273,7 +273,7 @@ export function runRepeat(league, schedule, { seed = 1, playoffs = true, defense
       pace: s.games ? s.poss / s.games : 0,
     };
   }).sort((a, b) => b.winPct - a.winPct || b.pd - a.pd);
-  const bracket = playoffs ? simulatePlayoffs(league, standings, rng, { defenseWeight, offenseWeight, bestOf }) : null;
+  const bracket = playoffs ? simulatePlayoffs(league, standings, rng, { defenseWeight, offenseWeight, bestOf, leagueDef: league.defAvg }) : null;
   return { seed, standings, games, bracket };
 }
 

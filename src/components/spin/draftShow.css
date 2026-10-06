@@ -54,6 +54,18 @@
 .spin-chip { display: inline-flex; align-items: center; min-height: 1.9rem; border-radius: 999px; border: 1px solid hsl(var(--border) / .45); background: hsl(var(--court-raised) / .4); padding: 0 .7rem; font-family: var(--font-mono); font-size: .65rem; font-weight: 600; letter-spacing: .06em; color: hsl(var(--muted-foreground)); transition: border-color .12s ease, color .12s ease, background-color .12s ease; }
 .spin-chip:hover { border-color: hsl(var(--court-accent) / .5); color: hsl(var(--foreground)); }
 .spin-chip--on { border-color: hsl(var(--court-accent) / .7); background: hsl(var(--court-accent) / .16); color: hsl(var(--court-accent)); }
+.spin-desk__hint { margin-top: .35rem; font-size: .68rem; color: hsl(var(--muted-foreground)); }
+.spin-mode { display: inline-flex; gap: .25rem; border: 1px solid hsl(var(--border) / .4); border-radius: .5rem; padding: .2rem; }
+.spin-mode button { min-height: 1.7rem; border-radius: .35rem; padding: 0 .6rem; font-family: var(--font-mono); font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.spin-mode button[aria-pressed="true"] { background: hsl(var(--court-accent) / .18); color: hsl(var(--court-accent)); }
+.spin-desk__add { display: inline-flex; align-items: center; gap: .35rem; min-height: 2rem; border-radius: .5rem; border: 1px solid hsl(var(--court-accent) / .45); background: hsl(var(--court-accent) / .08); padding: 0 .7rem; font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.spin-desk__add:hover { background: hsl(var(--court-accent) / .18); }
+.spin-rule { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) auto; align-items: end; gap: .5rem; border: 1px solid hsl(var(--border) / .3); border-radius: .6rem; padding: .6rem; background: hsl(var(--court-canvas) / .45); }
+.spin-rule select, .spin-rule input { min-height: 2.4rem; width: 100%; border-radius: .45rem; border: 1px solid hsl(var(--border) / .45); background: hsl(var(--court-raised) / .4); padding: 0 .5rem; font-size: .75rem; color: hsl(var(--foreground)); }
+.spin-rule__bound { display: block; }
+.spin-rule__bound > span { display: block; margin-bottom: .25rem; font-family: var(--font-mono); font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.spin-rule__remove { display: inline-flex; align-items: center; justify-content: center; width: 2.4rem; height: 2.4rem; border-radius: .45rem; border: 1px solid hsl(var(--trim) / .4); color: hsl(var(--court-trim-ink)); }
+.spin-rule__remove:hover { background: hsl(var(--court-trim) / .12); }
 .spin-desk__actions { display: flex; gap: .6rem; margin-top: 1.2rem; }
 .spin-desk__reset { display: inline-flex; align-items: center; gap: .4rem; min-height: 2.75rem; border-radius: .6rem; border: 1px solid hsl(var(--border) / .45); background: transparent; padding: 0 .9rem; font-size: .72rem; font-weight: 600; color: hsl(var(--muted-foreground)); transition: color .15s ease, border-color .15s ease; }
 .spin-desk__reset:hover { color: hsl(var(--foreground)); border-color: hsl(var(--border) / .8); }

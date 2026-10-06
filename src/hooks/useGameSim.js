@@ -17,7 +17,9 @@ const storeSeries = value => {
 };
 
 export default function useGameSim(initial = {}) {
-  const [seed, setSeed] = useState(initial.seed || '7');
+  // The seed is system-generated per visit (never user-edited); share links
+  // and saved-result replays still restore their own seed programmatically.
+  const [seed, setSeed] = useState(initial.seed || String(Math.floor(Math.random() * 9999) + 1));
   const [neutral, setNeutral] = useState(Boolean(initial.neutral));
   const [game, setGame] = useState(null);
   const [series, setSeries] = useState(readStoredSeries);

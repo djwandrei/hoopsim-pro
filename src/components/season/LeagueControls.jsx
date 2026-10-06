@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch } from '@/components/ui/switch';
-import { Calendar, Dices, Gauge, Loader2, Play, Repeat, Trophy } from 'lucide-react';
+import { Calendar, Gauge, Loader2, Play, Repeat, Trophy } from 'lucide-react';
 
 const BLEND_OPTIONS = [
   ['0.5', 'Balanced'],
@@ -98,10 +98,6 @@ export default function LeagueControls({
             <option value="3">Best of 3</option>
             <option value="1">One game</option>
           </select>
-        </label>
-        <label className="block">
-          <span className={labelCls}><Dices className="mr-1 inline h-3 w-3" />Replay seed</span>
-          <input type="text" maxLength={80} className={fieldCls} placeholder="Leave blank for a new run" value={setup.seed} onChange={event => onSetupChange({ ...setup, seed: event.target.value })} disabled={running} aria-label="Replay seed" />
         </label>
       </div>
 

@@ -10,9 +10,13 @@ import { stableHash } from '@/components/spin/engine/scenarioContract';
 
 const SPIN_LIMIT = 1000;
 const SPIN_ANIMATION_MS = 700;
-const DEFAULT_SETTINGS = Object.freeze({ seed: '', roleValue: 'all', teams: [], positions: [], weight: 'uniform', metric: 'none', metricMin: '', metricMax: '', minGames: '', minMinutes: '' });
+const DEFAULT_SETTINGS = Object.freeze({ roleValue: 'all', teams: [], positions: [], positionMode: 'include', weight: 'uniform', statRules: [], minGames: '', minMinutes: '' });
 
 const clean = value => String(value ?? '').trim();
+
+// The draw seed is always system-generated — never user-supplied — so every
+// fresh pool is a new, unrepeatable-by-input draw session.
+const randomSeed = () => `spin-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
 function stableKey(entry) {
   if (!entry || typeof entry !== 'object') return '';
@@ -26,12 +30,19 @@ function stableKey(entry) {
 
 function filterRuleFrom(settings) {
   const rule = {};
-  if (Array.isArray(settings.positions) && settings.positions.length) rule.positions = [...settings.positions];
-  if (settings.metric !== 'none') {
-    const minimum = clean(settings.metricMin) === '' ? null : Number(settings.metricMin);
-    const maximum = clean(settings.metricMax) === '' ? null : Number(settings.metricMax);
-    if (minimum !== null || maximum !== null) rule.minMetrics = [{ key: settings.metric, minimum, maximum }];
-  }
+  // Positions: 'include' → the eligibility engine requires a match; 'exclude'
+  // → the caller pre-drops matching entries (see runRebuild).
+  if (settings.positionMode !== 'exclude' && Array.isArray(settings.positions) && settings.positions.length) rule.positions = [...settings.positions];
+  // Stat filters: every rule must pass (metric floor, cap, or both).
+  const statRules = (Array.isArray(settings.statRules) ? settings.statRules : [])
+    .filter(statRule => statRule.metric)
+    .map(statRule => ({
+      key: statRule.metric,
+      minimum: clean(statRule.min) === '' ? null : Number(statRule.min),
+      maximum: clean(statRule.max) === '' ? null : Number(statRule.max),
+    }))
+    .filter(statRule => statRule.minimum !== null || statRule.maximum !== null);
+  if (statRules.length) rule.minMetrics = statRules;
   if (clean(settings.minGames) !== '') rule.minGames = Number(settings.minGames);
   if (clean(settings.minMinutes) !== '') rule.minMinutes = Number(settings.minMinutes);
   return rule;
@@ -55,11 +66,13 @@ export default function useSpinDraw({ source, year, excluded, onSelection }) {
   const runRebuild = useCallback(() => {
     const { settings: s, context: ctx, source: src, excluded: excl, onSelection: select } = stateRef.current;
     if (ctx.error) { setPool({ status: 'unavailable', reason: ctx.error }); setHistory([]); setDirty(false); select(null); return; }
-    const effectiveSeed = clean(s.seed) || ctx.seed;
-    setSettings(current => current.seed === effectiveSeed ? current : { ...current, seed: effectiveSeed });
+    const effectiveSeed = randomSeed();
     const role = ctx.options.find(option => option.value === s.roleValue) || ctx.options[0];
     const wantedTeams = Array.isArray(s.teams) ? s.teams : [];
-    const scopedEntries = !wantedTeams.length ? ctx.entries : ctx.entries.filter(entry => wantedTeams.some(team => (entry.teamCodes || []).includes(team) || entry.teamCode === team));
+    const wantedPositions = s.positionMode === 'exclude' && Array.isArray(s.positions) ? s.positions : [];
+    const scopedEntries = ctx.entries
+      .filter(entry => !wantedTeams.length || wantedTeams.some(team => (entry.teamCodes || []).includes(team) || entry.teamCode === team))
+      .filter(entry => !wantedPositions.length || !entry.positions.some(position => wantedPositions.includes(position)));
     let result;
     try {
       result = buildSeededPool({ entries: scopedEntries, packageRef: ctx.packageRef, seed: effectiveSeed, eligibility: { ...role.eligibility, ...filterRuleFrom(s) }, uniquePlayerKey: 'playerRef' });

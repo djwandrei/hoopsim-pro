@@ -22,6 +22,9 @@
     "self_excluded_at": {
       "type": "string"
     },
+    "self_excluded_until": {
+      "type": "string"
+    },
     "daily_deposit_limit_cents": {
       "type": "number",
       "default": 50000
@@ -29,6 +32,15 @@
     "daily_loss_limit_cents": {
       "type": "number",
       "default": 100000
+    },
+    "pending_deposit_limit_cents": {
+      "type": "number"
+    },
+    "pending_loss_limit_cents": {
+      "type": "number"
+    },
+    "limit_change_at": {
+      "type": "string"
     }
   },
   "required": [
@@ -43,7 +55,9 @@
       "created_by_id": "{{user.id}}"
     },
     "update": {
-      "created_by_id": "{{user.id}}"
+      "user_condition": {
+        "role": "admin"
+      }
     },
     "delete": {
       "user_condition": {

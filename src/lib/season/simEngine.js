@@ -228,7 +228,7 @@ function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutra
   return { ...result, ...replayBoxScores(result.boxHome, result.boxAway, pbp), pbp };
 }
 
-export function runRepeat(league, schedule, { seed = 1, playoffs = true, defenseWeight = 0.8 } = {}) {
+export function runRepeat(league, schedule, { seed = 1, playoffs = true, defenseWeight = 0.8, bestOf = 7 } = {}) {
   const rng = mulberry32(seed >>> 0);
   const state = new Map(league.teams.map(team => [team.code, {
     wins: 0, losses: 0, pf: 0, pa: 0, poss: 0, ortgSum: 0, games: 0,

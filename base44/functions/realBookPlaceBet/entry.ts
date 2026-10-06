@@ -1,16 +1,19 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { parlayAmerican, teaserPrice, roundRobinCombos, TEASER_POINTS } from '../../shared/realBetsMath.ts';
+import { parlayAmerican, teaserPrice, roundRobinCombos, TEASER_POINTS, profitCents, bestOffer } from '../../shared/realBetsMath.ts';
 import { fail, requireGate, ensureWallet, lostTodayCents } from '../../shared/realBookCore.ts';
 
-// Real-money bet placement. The server re-prices every wager from the raw leg
-// prices, enforces the gate, correlated-parlay ban, stake bounds, the daily
-// loss limit and the balance check, then debits the wallet and writes
-// immutable ledger entries. Client-supplied prices are never trusted.
+// Real-money bet placement. Standard sportsbook policies enforced here:
+// the server re-reads the live board and re-prices every leg (client prices
+// are never trusted), refuses started games, expired prices, moved lines and
+// palpable errors, bans correlated same-game parlays, applies the $25,000
+// max-payout cap, the daily loss limit and the balance check, then debits
+// the wallet and writes immutable ledger entries.
 const MIN_STAKE_CENTS = 100;
 const MAX_STAKE_CENTS = 50000;
 const MAX_LEGS = 8;
-const MAX_ABS_PRICE = 10000;
 const MAX_RR_COMBOS = 15;
+const MAX_PAYOUT_PROFIT_CENTS = 2500000;
+const LINE_TOLERANCE = 25;
 
 function cleanLegs(raw) {
   if (!Array.isArray(raw) || raw.length === 0 || raw.length > MAX_LEGS) return null;
@@ -21,7 +24,7 @@ function cleanLegs(raw) {
     const market = leg.market;
     if (!leg.eventKey || typeof leg.eventKey !== 'string' || leg.eventKey.length > 100) return null;
     if (market !== 'moneyline' && market !== 'spread' && market !== 'total') return null;
-    if (!Number.isFinite(price) || price === 0 || Math.abs(price) > MAX_ABS_PRICE) return null;
+    if (!Number.isFinite(price) || price === 0 || Math.abs(price) > 10000) return null;
     if ((market === 'spread' || market === 'total') && !Number.isFinite(Number(leg.line))) return null;
     if (market !== 'total' && leg.pickSide !== 'home' && leg.pickSide !== 'away') return null;
     if (market === 'total' && leg.totalPick !== 'over' && leg.totalPick !== 'under') return null;
@@ -63,6 +66,38 @@ export default async function(req) {
     if (mode === 'roundrobin' && (legs.length < 3 || combos.length > MAX_RR_COMBOS)) {
       return fail(`Round robins need at least three legs and are capped at ${MAX_RR_COMBOS} two-leg combos.`);
     }
+
+    // Server-authoritative pricing against the live board.
+    let games = [];
+    try {
+      const feed = await base44.functions.invoke('swishiqOddsFeed', { kind: 'odds' });
+      games = feed.data?.games || [];
+    } catch {
+      return fail('The odds board is unavailable — real wagers need live prices.', 'board_unavailable', 503);
+    }
+    const gameMap = new Map(games.map(game => [game.eventKey, game]));
+    const now = Date.now();
+    for (const leg of legs) {
+      const game = gameMap.get(leg.eventKey);
+      if (!game) return fail('A picked game is no longer on the board — refresh and re-price your pick.', 'line_expired', 409);
+      const start = Date.parse(game.commenceTime);
+      if (Number.isFinite(start) && start <= now) return fail('A picked game has already started — wagers are not accepted after tip-off.', 'game_started', 409);
+      leg.commenceTime = game.commenceTime;
+      leg.matchup = leg.matchup || `${game.away} @ ${game.home}`;
+      const side = leg.market === 'total' ? leg.totalPick : leg.pickSide;
+      const offer = bestOffer(game.books, leg.market, side);
+      if (!offer || !Number.isFinite(offer.price)) return fail('That price is no longer available — refresh the board.', 'line_expired', 409);
+      if (leg.market !== 'moneyline' && Math.abs(Number(offer.line) - Number(leg.line)) > 1e-9) {
+        const moved = leg.market === 'total' ? offer.line : `${offer.line > 0 ? '+' : ''}${offer.line}`;
+        return fail(`The line moved: ${leg.label || 'your pick'} is now at ${moved}. Refresh and re-price your pick.`, 'line_moved', 409);
+      }
+      if (leg.price > offer.price + LINE_TOLERANCE) {
+        return fail('That price is stale — the market has moved. Refresh and re-price your pick.', 'erroneous_line', 409);
+      }
+      leg.price = offer.price;
+      leg.book = offer.book || leg.book;
+    }
+
     const outlay = mode === 'roundrobin' ? stakeCents * combos.length : stakeCents;
     const lossLimit = Number(gate.profile.daily_loss_limit_cents) || 0;
     if (lossLimit > 0) {
@@ -78,6 +113,14 @@ export default async function(req) {
       : mode === 'roundrobin' ? parlayAmerican(combos[0])
       : legs.length > 1 ? parlayAmerican(legs) : legs[0].price;
     if (!Number.isFinite(price)) return fail('Could not price this wager.');
+    const maxPayoutLabel = (MAX_PAYOUT_PROFIT_CENTS / 100).toLocaleString();
+    if (mode === 'roundrobin') {
+      if (combos.some(combo => profitCents(stakeCents, parlayAmerican(combo)) > MAX_PAYOUT_PROFIT_CENTS)) {
+        return fail(`Each combo's maximum payout is $${maxPayoutLabel} — reduce the stake.`, 'max_payout', 422);
+      }
+    } else if (profitCents(stakeCents, price) > MAX_PAYOUT_PROFIT_CENTS) {
+      return fail(`Maximum payout per wager is $${maxPayoutLabel} — reduce the stake.`, 'max_payout', 422);
+    }
     const matchup = [...new Set(legs.map(leg => leg.matchup))].join(' + ') || legs[0].eventKey;
     const common = {
       event_key: legs[0].eventKey, matchup, commence_time: legs[0].commenceTime,

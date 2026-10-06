@@ -28,6 +28,7 @@
         "won",
         "lost",
         "push",
+        "void",
         "cashedout"
       ],
       "default": "open"

@@ -85,3 +85,22 @@ export function gradeBet(bet, finalFor) {
   if (bet.teaser) return { status: 'push', price: bet.price_american };
   return { status: 'won', price: kept.length === 1 ? kept[0].price : parlayAmerican(kept) };
 }
+
+// Best market offer across books for a market/side — the server re-prices
+// every client leg against this live board before accepting a wager.
+export function bestOffer(books, market, side) {
+  let best = null;
+  for (const book of books || []) {
+    if (market === 'moneyline') {
+      const price = book.moneyline?.[side];
+      if (Number.isFinite(price) && (!best || price > best.price)) best = { price, book: book.title };
+    } else if (market === 'spread') {
+      const offer = book.spreads?.[side];
+      if (offer && Number.isFinite(offer.price) && (!best || offer.price > best.price)) best = { price: offer.price, line: offer.point, book: book.title };
+    } else if (market === 'total') {
+      const total = book.total;
+      if (total && Number.isFinite(total[side]) && (!best || total[side] > best.price)) best = { price: total[side], line: total.point, book: book.title };
+    }
+  }
+  return best;
+}

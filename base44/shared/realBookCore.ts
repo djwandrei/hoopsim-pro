@@ -7,6 +7,27 @@ export function fail(message, code, status = 400) {
   return Response.json({ error: message, ...(code ? { code } : {}) }, { status });
 }
 
+// Pending limit increases (24h cooling-off) self-apply when their effective
+// time passes; the gate resolves them lazily on the next read.
+async function resolvePendingLimits(base44, profile) {
+  if (profile.pending_deposit_limit_cents == null && profile.pending_loss_limit_cents == null) return profile;
+  const changeAt = Date.parse(profile.limit_change_at || '');
+  if (!Number.isFinite(changeAt) || changeAt > Date.now()) return profile;
+  const applied = {
+    daily_deposit_limit_cents: Number(profile.pending_deposit_limit_cents ?? profile.daily_deposit_limit_cents) || 0,
+    daily_loss_limit_cents: Number(profile.pending_loss_limit_cents ?? profile.daily_loss_limit_cents) || 0,
+    pending_deposit_limit_cents: null,
+    pending_loss_limit_cents: null,
+    limit_change_at: null,
+  };
+  try {
+    await base44.asServiceRole.entities.RealMoneyProfile.update(profile.id, applied);
+  } catch {
+    /* resolves again on the next read */
+  }
+  return { ...profile, ...applied };
+}
+
 export async function requireGate(base44) {
   let user = null;
   try {
@@ -19,7 +40,8 @@ export async function requireGate(base44) {
   const profile = (profiles.items || [])[0] || null;
   if (!profile) return { error: fail('Complete the eligibility gate first.', 'gate_required', 403) };
   if (profile.self_excluded) return { error: fail('Your account is self-excluded from real-money wagering.', 'self_excluded', 403) };
-  return { user, profile };
+  const resolved = await resolvePendingLimits(base44, profile);
+  return { user, profile: resolved };
 }
 
 export async function ensureWallet(base44) {

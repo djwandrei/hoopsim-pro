@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Download } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
@@ -29,6 +30,17 @@ const ZONE_FILTERS = [['all', 'All'], ['playoff', 'Playoffs'], ['playin', 'Play-
 export default function LeagueStandings({ league, summary, actualRecords, focusCode, onFocusChange, limit }) {
   const [zone, setZone] = useState('all');
   const hasSim = Boolean(summary);
+  const exportCsv = (conference, rows) => {
+    const csv = [['Seed', 'Team', 'W', 'L', 'Net']]
+      .concat(rows.map((entry, index) => [index + 1, entry.team.name, entry.wins, entry.losses, Number.isFinite(entry.net) ? entry.net.toFixed(1) : entry.net]))
+      .map(line => line.map(value => `"${String(value).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    link.download = `swishiq-standings-${conference.toLowerCase()}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
   const cell = 'px-2.5 py-3 text-right';
   const chip = active => `min-h-8 rounded-lg border px-2.5 text-[9px] font-bold uppercase tracking-[0.16em] transition-colors ${active ? 'myna-accent' : 'border-[var(--myna-border)] text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`;
   return (
@@ -43,7 +55,12 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                 <p className="myna-accent-text text-[10px] font-bold uppercase tracking-[0.22em]">Conference standings</p>
                 <h3 className="myna-display mt-0.5 text-2xl">{conference === 'EAST' ? 'EASTERN' : 'WESTERN'} CONFERENCE</h3>
               </div>
-              <span className="myna-muted text-[10px]">{hasSim ? `Median of ${summary?.repeats ?? ''} replays` : 'Observed record'}</span>
+              <span className="flex items-center gap-3">
+                <span className="myna-muted text-[10px]">{hasSim ? `Median of ${summary?.repeats ?? ''} replays` : 'Observed record'}</span>
+                <button type="button" onClick={() => exportCsv(conference, rows)} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-[var(--myna-border)] px-2.5 text-[9px] font-bold uppercase tracking-[0.16em] text-[var(--myna-muted)] transition-colors hover:bg-[var(--myna-raised)] hover:text-[var(--myna-text)]" aria-label={`Export ${conference} standings as CSV`}>
+                  <Download className="h-3 w-3" />CSV
+                </button>
+              </span>
             </header>
             <div className="flex flex-wrap items-center gap-3 border-y border-[var(--myna-border)] bg-[var(--myna-canvas)] px-4 py-1.5">
               {['playoff', 'playin'].map(zoneKey => (

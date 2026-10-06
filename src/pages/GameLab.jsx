@@ -20,10 +20,19 @@ import LiveBoxScore from '@/components/game/LiveBoxScore';
 export default function GameLab() {
   usePageMeta({ title: 'Game Lab — SwishIQ Studio', description: 'Simulate any NBA matchup or full seven-game series with live play-by-play and series momentum.' });
   const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
-  const sim = useGameSim();
-  const [tab, setTab] = useState('game');
-  const [a, setA] = useState('BOS');
-  const [b, setB] = useState('LAL');
+  const sim = useGameSim({ seed: urlPick('seed') || undefined, neutral: urlPick('neutral') });
+  // Shareable call state: matchup, seed, neutral court and tab live in the URL
+  // so a copied link re-opens the exact call (the sim is deterministic).
+  const params = new URLSearchParams(window.location.search);
+  const urlPick = key => {
+    const value = params.get(key);
+    if (key === 'tab') return value === 'series' ? 'series' : 'game';
+    if (key === 'neutral') return value === '1';
+    return value || null;
+  };
+  const [tab, setTab] = useState(urlPick('tab'));
+  const [a, setA] = useState(urlPick('a') || 'BOS');
+  const [b, setB] = useState(urlPick('b') || 'LAL');
   const [feedDone, setFeedDone] = useState(false);
   const [showPreGame, setShowPreGame] = useState(true);
   const [liveCount, setLiveCount] = useState(0);
@@ -39,6 +48,13 @@ export default function GameLab() {
     if (!league.byCode.has(a)) setA(league.teams[0]?.code || 'BOS');
     if (!league.byCode.has(b) || b === a) setB(league.teams.find((team) => team.code !== a)?.code || 'LAL');
   }, [league, a, b]);
+
+  // Keep the call in the URL so "copy link" always shares the current state.
+  useEffect(() => {
+    const query = new URLSearchParams({ tab, a, b, seed: String(sim.seed), neutral: sim.neutral ? '1' : '0' }).toString();
+    window.history.replaceState(null, '', `${window.location.pathname}?${query}`);
+  }, [tab, a, b, sim.seed, sim.neutral]);
+  const shareLink = React.useCallback(() => navigator.clipboard.writeText(window.location.href), []);
 
   if (state !== 'ready' || !league) {
     return (
@@ -74,7 +90,8 @@ export default function GameLab() {
               breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: false })}
               <GameControls
               seed={sim.seed} onSeedChange={sim.setSeed}
-              neutral={sim.neutral} onNeutralChange={sim.setNeutral} />
+              neutral={sim.neutral} onNeutralChange={sim.setNeutral}
+              onShareLink={shareLink} />
             
               {sim.game ?
               <GameMatchupTheme homeCode={resultHome.code} awayCode={resultAway.code}>
@@ -100,6 +117,7 @@ export default function GameLab() {
               <GameControls
               seed={sim.seed} onSeedChange={sim.setSeed}
               neutral={sim.neutral} onNeutralChange={sim.setNeutral}
+              onShareLink={shareLink}
               onRunSeries={() => sim.runSeries(league, home, away)}
               hasSeries={Boolean(sim.series)} />
             

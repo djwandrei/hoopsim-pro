@@ -16,9 +16,9 @@ const storeSeries = value => {
   try { sessionStorage.setItem(SERIES_HISTORY_KEY, JSON.stringify(value)); } catch { /* storage unavailable */ }
 };
 
-export default function useGameSim() {
-  const [seed, setSeed] = useState('7');
-  const [neutral, setNeutral] = useState(false);
+export default function useGameSim(initial = {}) {
+  const [seed, setSeed] = useState(initial.seed || '7');
+  const [neutral, setNeutral] = useState(Boolean(initial.neutral));
   const [game, setGame] = useState(null);
   const [series, setSeries] = useState(readStoredSeries);
 

@@ -23,7 +23,12 @@ export default function PlayerLab() {
   const roster = useMemo(() => source ? buildBlueprintRows(source,'regular') : [],[source]);
   const atlas = useMemo(() => buildLeagueAtlas(roster),[roster]);
   const phaseRows = useMemo(() => source ? buildBlueprintRows(source,phase) : [],[source,phase]);
-  const selected = selectedIds.map(id => phaseRows.find(row => row.id === id) || (roster.find(row => row.id === id) && { ...roster.find(row => row.id === id),phase,available:false,stats:{},totals:{},statsSource:'No observed record for this phase' })).filter(Boolean);
+  const selected = selectedIds.map(id => {
+    const phaseRow = phaseRows.find(row => row.id === id);
+    if (phaseRow) return phaseRow;
+    const rosterRow = roster.find(row => row.id === id);
+    return rosterRow ? { ...rosterRow,phase,available:false,stats:{},totals:{},statsSource:'No observed record for this phase' } : null;
+  }).filter(Boolean);
   const toggle = row => setSelectedIds(current => current.includes(row.id) ? current.filter(id => id !== row.id) : current.some(id => id.startsWith(`${row.playerRef}:`)) ? current.map(id => id.startsWith(`${row.playerRef}:`) ? row.id : id) : current.length < 4 ? [...current,row.id] : current);
   const careerPool = useCareerPool(scope.mode === 'career');
   const careerPlayer = useMemo(() => careerPool.players.find(player => player.playerRef === scope.careerRef) || null,[careerPool.players,scope.careerRef]);

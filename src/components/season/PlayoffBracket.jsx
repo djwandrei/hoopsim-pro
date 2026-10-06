@@ -26,7 +26,7 @@ function TeamRow({ code, seed, winner, wins, losses, isSel, onTeam }) {
   );
 }
 
-function SeriesCard({ series, selCode, onTeam, expanded, onToggle, expandKey }) {
+function SeriesCard({ series, selCode, onTeam, expanded, onToggle }) {
   const { mode = 'dark' } = useCourtTheme() || {};
   const teams = [[series.higher, series.higherSeed], [series.lower, series.lowerSeed]];
   const involvesSel = Boolean(selCode) && teams.some(([code]) => code === selCode);
@@ -65,7 +65,7 @@ function SeriesCard({ series, selCode, onTeam, expanded, onToggle, expandKey }) 
   );
 }
 
-function PlayInGame({ game, selCode, onTeam }) {
+function PlayInGame({ game, onTeam }) {
   const rows = [
     { code: game.home, seed: game.homeSeed, pts: game.homePts },
     { code: game.away, seed: game.awaySeed, pts: game.awayPts },

@@ -17,6 +17,9 @@ export function installSolveClock(keeper) {
     startedAt = 0;
   };
   const tick = () => {
+    // Self-teardown: when the workbench unmounts mid-search, kill the interval
+    // and the observer instead of ticking against a detached node forever.
+    if (!status.isConnected) { stop(); observer.disconnect(); return; }
     const seconds = Math.round((Date.now() - startedAt) / 1000);
     clock.textContent = seconds >= 20 ? `Search running — ${seconds}s elapsed` : 'Search running…';
   };

@@ -119,13 +119,6 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
     }, 900);
   };
 
-  const undo = slotKey => {
-    const next = { ...picks };
-    delete next[slotKey];
-    setPicks(next);
-    setResult(null);
-  };
-
   const rerun = () => runSeason(picks);
 
   const reset = () => {

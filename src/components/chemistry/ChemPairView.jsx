@@ -7,7 +7,7 @@ import { Search } from 'lucide-react';
 const selectClass = 'studio-select';
 
 export default function ChemPairView({ dataset, chem }) {
-  const { rows, teams, scope } = dataset;
+  const { rows, teams } = dataset;
   const [team, setTeam] = useState('');
   const [position, setPosition] = useState('');
   const [query, setQuery] = useState('');

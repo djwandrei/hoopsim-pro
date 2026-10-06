@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
-import OddsBoard, { gamePrices, bestPriceFor } from '@/components/book/OddsBoard';
+import OddsBoard, { bestPriceFor } from '@/components/book/OddsBoard';
 import BetSlip from '@/components/book/BetSlip';
 import BetTracker from '@/components/book/BetTracker';
 import OddsSetupState from '@/components/book/OddsSetupState';
 import ModelEdgePanel from '@/components/book/ModelEdgePanel';
 import WalletPanel from '@/components/book/WalletPanel';
 import useSeasonSource from '@/hooks/useSeasonSource';
+import useBookFeed from '@/hooks/useBookFeed';
 import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsStore';
 import { gradeBet, profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRobinCombos, TEASER_POINTS } from '@/components/book/betsMath';
-import { CODE_BY_NAME, runModelGame, modelEdgePct } from '@/lib/bookRoom/modelEdge';
+import { modelEdgePct } from '@/lib/bookRoom/modelEdge';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, RefreshCcw, ShieldCheck, Wallet } from 'lucide-react';
@@ -43,75 +44,14 @@ export default function BookRoom() {
   const [tab, setTab] = useState('board');
   const [format, setFormat] = useState(() => { try { return localStorage.getItem('swishiq-odds-format') || 'american'; } catch { return 'american'; } });
   const [book, setBook] = useState(loadBook);
-  const [feed, setFeed] = useState({ state: 'loading', games: [], quota: null, error: null, setup: false });
   const [slipLegs, setSlipLegs] = useState([]);
   const [bookFilter, setBookFilter] = useState('');
-  const [movement, setMovement] = useState({});
-  const [boosts, setBoosts] = useState({});
   const [checking, setChecking] = useState(false);
-  const [model, setModel] = useState(null);
-  const prevPricesRef = useRef(null);
   const { league, state: seasonState } = useSeasonSource(2025);
+  const { feed, loadOdds, model, movement, boosts } = useBookFeed(league, seasonState);
 
-  useEffect(() => saveBook(book), [book]);
+  useEffect(() => { saveBook(book); }, [book]);
   useEffect(() => { try { localStorage.setItem('swishiq-odds-format', format); } catch { /* ignore */ } }, [format]);
-
-  const loadOdds = useCallback(async () => {
-    setFeed(current => ({ ...current, state: 'loading' }));
-    try {
-      const response = await base44.functions.invoke('swishiqOddsFeed', { kind: 'odds' });
-      const games = response.data?.games || [];
-      const prices = {};
-      for (const game of games) Object.assign(prices, gamePrices(game));
-      const trend = {};
-      const previous = prevPricesRef.current;
-      if (previous) for (const [key, offer] of Object.entries(prices)) {
-        const before = previous[key];
-        if (before && offer.price !== before.price) trend[key] = offer.price > before.price ? 'up' : 'down';
-      }
-      prevPricesRef.current = prices;
-      setMovement(trend);
-      const candidates = Object.entries(prices).filter(([, offer]) => offer.price >= -250 && offer.price <= 200);
-      if (candidates.length) {
-        const [key, offer] = candidates[Math.floor(Math.random() * candidates.length)];
-        setBoosts({ [key]: offer.price + 100 });
-      } else setBoosts({});
-      setFeed({ state: 'ready', games, quota: response.data?.quota ?? null, error: null, setup: false });
-    } catch (error) {
-      const data = error?.response?.data || {};
-      setFeed({ state: data.code === 'odds_feed_not_configured' ? 'setup' : 'error', games: [], quota: null, error: data.error || error?.message || 'The odds feed is unavailable.', setup: data.code === 'odds_feed_not_configured' });
-    }
-  }, []);
-
-  // The differentiator: run the studio's season sim (Monte Carlo) on every
-  // upcoming game from the live board, yielding between games so the page
-  // stays responsive while the model fills in.
-  const upcomingSignature = feed.state === 'ready' ? feed.games.filter(game => Date.parse(game.commenceTime) > Date.now()).map(game => game.eventKey).join('|') : '';
-  useEffect(() => {
-    if (feed.state !== 'ready' || seasonState !== 'ready' || !league) { setModel(null); return; }
-    const upcoming = feed.games.filter(game => Date.parse(game.commenceTime) > Date.now()).slice(0, 12);
-    if (!upcoming.length) { setModel({ byEvent: {}, progress: '0/0', leagueLabel: league.label }); return; }
-    let cancelled = false;
-    setModel({ byEvent: {}, progress: `0/${upcoming.length}`, leagueLabel: league.label });
-    (async () => {
-      const byEvent = {};
-      for (const game of upcoming) {
-        if (cancelled) return;
-        const home = league.byCode.get(CODE_BY_NAME[game.home]);
-        const away = league.byCode.get(CODE_BY_NAME[game.away]);
-        if (home && away) byEvent[game.eventKey] = runModelGame(league, home, away);
-        if (cancelled) return;
-        setModel({ byEvent: { ...byEvent }, progress: `${Object.keys(byEvent).length}/${upcoming.length}`, leagueLabel: league.label });
-        await new Promise(resolve => setTimeout(resolve));
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [feed.state, upcomingSignature, seasonState, league]);
-
-  const priceForLeg = useCallback(leg => {
-    const game = feed.games.find(item => item.eventKey === leg.eventKey);
-    return game ? bestPriceFor(game, leg) : null;
-  }, [feed.games]);
 
   const checkFinals = useCallback(async () => {
     setChecking(true);
@@ -150,27 +90,37 @@ export default function BookRoom() {
   }, [feed.state, openCount, checkFinals]);
 
   const bonusReady = !book.lastBonusAt || Date.now() - Date.parse(book.lastBonusAt) > BONUS_COOLDOWN;
-  const claimBonus = () => {
-    if (!bonusReady) return;
+  // The cooldown re-check runs inside the updater, so a double-click can
+  // never double-claim the bonus.
+  const claimBonus = () => setBook(current => {
+    if (current.lastBonusAt && Date.now() - Date.parse(current.lastBonusAt) < BONUS_COOLDOWN) return current;
     const at = new Date().toISOString();
-    setBook(current => ({ ...current, bankroll: current.bankroll + BONUS_AMOUNT, lastBonusAt: at, ledger: pushLedger(current.ledger, { id: `bonus-${Date.now()}`, at, type: 'bonus', label: 'Daily sportsbook bonus', amount: BONUS_AMOUNT }) }));
-  };
+    return { ...current, bankroll: current.bankroll + BONUS_AMOUNT, lastBonusAt: at, ledger: pushLedger(current.ledger, { id: `bonus-${Date.now()}`, at, type: 'bonus', label: 'Daily sportsbook bonus', amount: BONUS_AMOUNT }) };
+  });
 
   const placeBet = ({ legs, stake, mode = 'parlay' }) => {
+    if (!Array.isArray(legs) || legs.length === 0) return;
+    const stakeCredits = Math.round(Number(stake));
+    if (!Number.isFinite(stakeCredits) || stakeCredits < 1) return;
     const at = new Date().toISOString();
-    if (mode === 'roundrobin') {
-      const combos = roundRobinCombos(legs, 2);
-      const outlay = stake * combos.length;
-      // Each combo is its own parlay at its own combined price.
-      const bets = combos.map(combo => makeBet(combo, stake, parlayAmerican(combo), { roundRobin: true }));
-      setBook(current => ({ ...current, bankroll: current.bankroll - outlay, bets: [...bets, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bets[0].id}`, at, type: 'bet', label: `Round robin: ${legs.length} legs × ${combos.length} combos`, amount: -outlay }) }));
-    } else if (mode === 'teaser') {
-      const bet = makeBet(legs, stake, teaserPrice(legs.length), { teaser: true, teaserPoints: TEASER_POINTS, parlay: false });
-      setBook(current => ({ ...current, bankroll: current.bankroll - stake, bets: [bet, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bet.id}`, at, type: 'bet', label: `Teaser: ${bet.matchup}`, amount: -stake }) }));
-    } else {
-      const bet = makeBet(legs, stake, legs.length > 1 ? parlayAmerican(legs) : legs[0].price);
-      setBook(current => ({ ...current, bankroll: current.bankroll - stake, bets: [bet, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bet.id}`, at, type: 'bet', label: `Wager: ${bet.matchup}`, amount: -stake }) }));
-    }
+    // Bankroll guard runs against the live state inside the updater, so a
+    // stale slip (or a double submit) can never overdraw the wallet.
+    setBook(current => {
+      const outlay = mode === 'roundrobin' ? stakeCredits * roundRobinCombos(legs, 2).length : stakeCredits;
+      if (outlay > current.bankroll) return current;
+      if (mode === 'roundrobin') {
+        const combos = roundRobinCombos(legs, 2);
+        // Each combo is its own parlay at its own combined price.
+        const bets = combos.map(combo => makeBet(combo, stakeCredits, parlayAmerican(combo), { roundRobin: true }));
+        return { ...current, bankroll: current.bankroll - outlay, bets: [...bets, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bets[0].id}`, at, type: 'bet', label: `Round robin: ${legs.length} legs × ${combos.length} combos`, amount: -outlay }) };
+      }
+      if (mode === 'teaser') {
+        const bet = makeBet(legs, stakeCredits, teaserPrice(legs.length), { teaser: true, teaserPoints: TEASER_POINTS, parlay: false });
+        return { ...current, bankroll: current.bankroll - stakeCredits, bets: [bet, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bet.id}`, at, type: 'bet', label: `Teaser: ${bet.matchup}`, amount: -stakeCredits }) };
+      }
+      const bet = makeBet(legs, stakeCredits, legs.length > 1 ? parlayAmerican(legs) : legs[0].price);
+      return { ...current, bankroll: current.bankroll - stakeCredits, bets: [bet, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bet.id}`, at, type: 'bet', label: `Wager: ${bet.matchup}`, amount: -stakeCredits }) };
+    });
     setSlipLegs([]);
   };
 
@@ -208,6 +158,11 @@ export default function BookRoom() {
     const at = new Date().toISOString();
     return { ...current, bankroll: current.bankroll + value, bets: current.bets.map(item => item.id === id ? { ...item, status: 'cashedout', settledAt: at, profit: value - bet.stake } : item), ledger: pushLedger(current.ledger, { id: `cashout-${id}`, at, type: 'cashout', label: `Cashed out: ${bet.matchup}`, amount: value }) };
   });
+
+  const priceForLeg = useCallback(leg => {
+    const game = feed.games.find(item => item.eventKey === leg.eventKey);
+    return game ? bestPriceFor(game, leg) : null;
+  }, [feed.games]);
 
   const headerState = feed.state === 'loading' ? 'loading' : feed.state === 'ready' ? 'ready' : 'error';
   const headerStatus = feed.state === 'ready' ? `${feed.games.length} games priced · model edge live` : feed.state === 'setup' ? 'Feed not connected · tracking still works' : feed.state === 'error' ? 'Feed unavailable' : null;

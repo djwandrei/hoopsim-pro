@@ -26,7 +26,11 @@ export default function RealBetSlip({ legs, wallet, format, onRemoveLeg, onClear
   const price = mode === 'teaser' ? teaserPrice(legs.length) : mode === 'roundrobin' ? comboPrices[0] : parlayAmerican(legs);
   const stakeCents = Math.round(Number(stakeDollars) * 100);
   const outlay = Number.isFinite(stakeCents) && stakeCents > 0 && mode === 'roundrobin' ? stakeCents * combos.length : stakeCents;
-  const valid = Number.isFinite(stakeCents) && stakeCents >= 100 && stakeCents <= 50000 && outlay <= balanceCents;
+  const maxComboWin = Number.isFinite(stakeCents) && (mode === 'roundrobin' && combos.length
+    ? Math.max(...comboPrices.map(comboPrice => profitFor(stakeCents, comboPrice)))
+    : profitFor(stakeCents, price));
+  const overCap = Number.isFinite(maxComboWin) && maxComboWin > 2500000;
+  const valid = Number.isFinite(stakeCents) && stakeCents >= 100 && stakeCents <= 50000 && outlay <= balanceCents && !overCap;
   const win = valid ? (mode === 'roundrobin' ? combos.reduce((sum, _, index) => sum + profitFor(stakeCents, comboPrices[index]), 0) : profitFor(stakeCents, price)) : null;
   const totalReturn = valid ? outlay + win : null;
   return <section className="court-panel p-4" aria-label="Bet slip">
@@ -56,7 +60,8 @@ export default function RealBetSlip({ legs, wallet, format, onRemoveLeg, onClear
       <div className={`flex justify-between ${mode === 'roundrobin' ? 'mt-1' : ''}`}><span className="text-muted-foreground">To return if all win</span><span className="font-mono text-foreground">{valid ? dollars(totalReturn) : '—'}</span></div>
       <div className="mt-1 flex justify-between"><span className="text-muted-foreground">Profit if it wins</span><span className="font-mono font-semibold text-positive">{valid ? signedDollars(win) : '—'}</span></div>
     </div>
-    {stakeDollars !== '' && !valid && <p className="mt-2 text-[11px] text-trim-ink">Stake must be $1–$500 per combo and within your available balance.</p>}
+    {overCap && <p className="mt-2 text-[11px] text-trim-ink">Max payout per combo is $25,000 — reduce the stake.</p>}
+    {!overCap && stakeDollars !== '' && !valid && <p className="mt-2 text-[11px] text-trim-ink">Stake must be $1–$500 per combo and within your available balance.</p>}
     <button type="button" disabled={!valid || busy} onClick={() => onPlace({ legs, stakeCents, mode })} className="mt-3 w-full rounded-lg bg-gradient-to-r from-gold to-goldSoft py-2.5 text-xs font-bold uppercase tracking-widest text-canvas shadow-lg shadow-gold/20 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">{busy ? 'Placing…' : 'Place real-money bet'}</button>
     <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">Settled by official finals. Wagers can't be cancelled once placed; the book accepts at the live market price and refuses stale or moved lines. Max payout $25,000 per combo. No cash-out in this mode. 21+ · Gambling problem? Call 1-800-GAMBLER.</p>
   </section>;

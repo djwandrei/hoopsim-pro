@@ -21,8 +21,8 @@ export default function ChemistryLab() {
   const observedReady = Boolean(chemistry.data?.observed);
   return <StudioShell active="/chemistry">
     <WorkbenchHeader title="CHEMISTRY LAB" description={DESCRIPTION} steps={STEPS} state={state} status={ready ? 'Workbench source ready' : undefined} />
-    <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6">
-      <SourceStatus state={season.state} />
+    <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
+      <SourceStatus state={season.state} error={season.error} year={season.year} years={season.years} onYearChange={season.setYear} onRetry={season.retry} />
       {season.state === 'ready' && <React.Fragment>
         <div className="flex w-fit gap-1 rounded-xl border border-border/30 bg-card p-1">
           {[['pair', 'Player comparison'], ['combinations', 'Observed lineups']].map(([value, label]) => (

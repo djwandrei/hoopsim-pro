@@ -22,7 +22,7 @@ export default function ForgeLab() {
   const active = DRAFT_MODES.find(item => item.key === mode) || DRAFT_MODES[0];
   return <StudioShell active="/forge">
     <WorkbenchHeader title="COMPOSITE FORGE" description={active.desc} steps={MODE_STEPS[mode]} state={data.state} status={data.state === 'ready' ? 'Workbench source ready' : undefined} />
-    <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6">
+    <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
       <SourceStatus state={data.state} source={data.source} error={data.error} year={data.year} years={data.years} onYearChange={data.setYear} onRetry={data.retry} />
       {data.state === 'ready' && <div className="flex flex-wrap gap-2" role="tablist" aria-label="Draft mode">
         {DRAFT_MODES.map(item => <button key={item.key} type="button" role="tab" aria-selected={mode === item.key} onClick={() => setMode(item.key)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${mode === item.key ? 'border-gold/60 bg-gradient-to-r from-gold/15 to-royal/10 text-gold shadow-[0_0_18px_rgba(233,185,73,0.12)]' : 'border-border/30 text-muted-foreground hover:border-gold/40 hover:text-gold'}`}>{item.label}</button>)}

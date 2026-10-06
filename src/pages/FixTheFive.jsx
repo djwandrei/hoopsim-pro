@@ -161,7 +161,7 @@ export default function FixTheFive() {
         state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}
         status={pending ? revealLabel || 'Working…' : completedCount === challenges.length ? 'Run verified' : status === 'ready' ? 'Blind run in progress' : null} />
       
-      <main className="mx-auto max-w-6xl px-4 py-4">
+      <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
         <BoardStatusPanel state={status} error={error} onRetry={() => loadBoard(seed)} />
         {status === 'ready' && presentation &&
         <div className="dg-tape-layout mt-4">

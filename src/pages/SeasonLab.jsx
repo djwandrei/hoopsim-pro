@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
-import WorkbenchState from '@/components/studio/WorkbenchState';
+import SourceStatus from '@/components/studio/SourceStatus';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import useSeasonSim from '@/hooks/useSeasonSim';
 import MyNbaHub from '@/components/season/MyNbaHub';
@@ -18,7 +18,7 @@ import SeasonSummaryPanel from '@/components/season/SeasonSummaryPanel';
 import '@/components/season/seasonTables.css';
 
 export default function SeasonLab() {
-  const { year, setYear, years, source, league, state } = useSeasonSource();
+  const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
   const sim = useSeasonSim();
   const [tab, setTab] = useState('hub');
   const [focus, setFocus] = useState('BOS');
@@ -54,7 +54,7 @@ export default function SeasonLab() {
     return (
       <StudioShell active="/season">
         <WorkbenchHeader title="SEASON LAB" description="A MyNBA-style league hub on the observed season package." state={state} status={state === 'ready' ? 'League hub ready' : undefined} />
-        <main className="season-lab mx-auto min-w-0 max-w-7xl px-4 py-6"><WorkbenchState state={state} /></main>
+        <main className="season-lab mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6"><SourceStatus state={state} error={error} year={year} years={years} onYearChange={setYear} onRetry={retry} /></main>
       </StudioShell>
     );
   }
@@ -82,7 +82,7 @@ export default function SeasonLab() {
   return (
     <StudioShell active="/season">
       <WorkbenchHeader title="SEASON LAB" description="A MyNBA-style league hub: replay the observed season, track standings and the schedule, and dive into your team page." state="ready" status="League hub ready" />
-      <main className="season-lab mx-auto min-w-0 max-w-7xl px-4 py-6">
+      <main className="season-lab mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">
         <MyNbaHub
           focusCode={team.code}
           tab={tab}

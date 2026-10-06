@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
-import WorkbenchState from '@/components/studio/WorkbenchState';
+import SourceStatus from '@/components/studio/SourceStatus';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import useGameSim from '@/hooks/useGameSim';
 import MyNbaHub from '@/components/season/MyNbaHub';
@@ -17,7 +17,7 @@ import PreGameDisclosure from '@/components/game/PreGameDisclosure';
 import LiveBoxScore from '@/components/game/LiveBoxScore';
 
 export default function GameLab() {
-  const { year, setYear, source, league, state } = useSeasonSource();
+  const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
   const sim = useGameSim();
   const [tab, setTab] = useState('game');
   const [a, setA] = useState('BOS');
@@ -43,7 +43,7 @@ export default function GameLab() {
       <StudioShell active="/game" followTeam="djhc">
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
         <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub on the observed season package." state={state} status={state === 'ready' ? 'Matchup hub ready' : undefined} />
-        <main className="mx-auto min-w-0 max-w-7xl px-4 py-6"><WorkbenchState state={state} /></main>
+        <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6"><SourceStatus state={state} error={error} year={year} years={years} onYearChange={setYear} onRetry={retry} /></main>
       </GameMatchupTheme>
       </StudioShell>);
 
@@ -61,7 +61,7 @@ export default function GameLab() {
     <StudioShell active="/game" followTeam="djhc">
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
       <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: pick the board, review the intel and charts, and sim single games and 7-game series with team-colored scoreboards and box scores." state="ready" status="Matchup hub ready" />
-      <main className="mx-auto min-w-0 max-w-7xl px-4 py-6">
+      <main className="mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">
         <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&
           <div className="space-y-4">

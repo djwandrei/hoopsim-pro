@@ -100,6 +100,20 @@ export default async function(req) {
       leg.book = offer.book || leg.book;
     }
 
+    // Price the wager and enforce the payout cap BEFORE any money moves, so no
+    // validation failure can strand an already-debited stake.
+    const price = mode === 'teaser' ? teaserPrice(legs.length)
+      : mode === 'roundrobin' ? parlayAmerican(combos[0])
+      : legs.length > 1 ? parlayAmerican(legs) : legs[0].price;
+    if (!Number.isFinite(price)) return fail('Could not price this wager.');
+    const maxPayoutLabel = (MAX_PAYOUT_PROFIT_CENTS / 100).toLocaleString();
+    if (mode === 'roundrobin') {
+      if (combos.some(combo => profitCents(stakeCents, parlayAmerican(combo)) > MAX_PAYOUT_PROFIT_CENTS)) {
+        return fail(`Each combo's maximum payout is $${maxPayoutLabel} — reduce the stake.`, 'max_payout', 422);
+      }
+    } else if (profitCents(stakeCents, price) > MAX_PAYOUT_PROFIT_CENTS) {
+      return fail(`Maximum payout per wager is $${maxPayoutLabel} — reduce the stake.`, 'max_payout', 422);
+    }
     const outlay = mode === 'roundrobin' ? stakeCents * combos.length : stakeCents;
     const lossLimit = Number(gate.profile.daily_loss_limit_cents) || 0;
     if (lossLimit > 0) {
@@ -115,17 +129,14 @@ export default async function(req) {
     if (debit.error === 'insufficient') return fail('Not enough real-money balance for this wager — deposit first.', 'insufficient_balance', 402);
     if (debit.error) return fail('The wallet is busy — try again in a moment.', 'wallet_busy', 503);
     const newBalance = debit.balance;
-    const price = mode === 'teaser' ? teaserPrice(legs.length)
-      : mode === 'roundrobin' ? parlayAmerican(combos[0])
-      : legs.length > 1 ? parlayAmerican(legs) : legs[0].price;
-    if (!Number.isFinite(price)) return fail('Could not price this wager.');
-    const maxPayoutLabel = (MAX_PAYOUT_PROFIT_CENTS / 100).toLocaleString();
-    if (mode === 'roundrobin') {
-      if (combos.some(combo => profitCents(stakeCents, parlayAmerican(combo)) > MAX_PAYOUT_PROFIT_CENTS)) {
-        return fail(`Each combo's maximum payout is $${maxPayoutLabel} — reduce the stake.`, 'max_payout', 422);
-      }
-    } else if (profitCents(stakeCents, price) > MAX_PAYOUT_PROFIT_CENTS) {
-      return fail(`Maximum payout per wager is $${maxPayoutLabel} — reduce the stake.`, 'max_payout', 422);
+    // Self-exclusion re-check AFTER the debit: if an exclusion activated while
+    // this wager was being priced, the stake is refunded instead of trapped on
+    // an account that can no longer settle.
+    const exclusionRecheck = await base44.entities.RealMoneyProfile.filter({});
+    if ((exclusionRecheck.items || [])[0]?.self_excluded) {
+      await applyWalletDelta(base44, wallet, outlay);
+      audit('bet.refunded_excluded', { user: gate.user.id, outlay_cents: outlay });
+      return fail('Your account was self-excluded while this wager was being placed — the stake was refunded.', 'self_excluded', 403);
     }
     const matchup = [...new Set(legs.map(leg => leg.matchup))].join(' + ') || legs[0].eventKey;
     const common = {
@@ -134,20 +145,28 @@ export default async function(req) {
       status: 'open', settled_profit_cents: null,
     };
     let created = [];
-    if (mode === 'roundrobin') {
-      const records = combos.map(combo => ({
-        ...common, legs: combo, mode: 'roundrobin', round_robin: true,
-        teaser: false, teaser_points: null, stake_cents: stakeCents, price_american: parlayAmerican(combo),
-      }));
-      created = await base44.asServiceRole.entities.RealBet.bulkCreate(records);
-    } else {
-      const record = {
-        ...common, legs,
-        mode: mode === 'teaser' ? 'teaser' : legs.length > 1 ? 'parlay' : 'single',
-        round_robin: false, teaser: mode === 'teaser', teaser_points: mode === 'teaser' ? TEASER_POINTS : null,
-        stake_cents: stakeCents, price_american: price,
-      };
-      created = [await base44.asServiceRole.entities.RealBet.create(record)];
+    try {
+      if (mode === 'roundrobin') {
+        const records = combos.map(combo => ({
+          ...common, legs: combo, mode: 'roundrobin', round_robin: true,
+          teaser: false, teaser_points: null, stake_cents: stakeCents, price_american: parlayAmerican(combo),
+        }));
+        created = await base44.asServiceRole.entities.RealBet.bulkCreate(records);
+      } else {
+        const record = {
+          ...common, legs,
+          mode: mode === 'teaser' ? 'teaser' : legs.length > 1 ? 'parlay' : 'single',
+          round_robin: false, teaser: mode === 'teaser', teaser_points: mode === 'teaser' ? TEASER_POINTS : null,
+          stake_cents: stakeCents, price_american: price,
+        };
+        created = [await base44.asServiceRole.entities.RealBet.create(record)];
+      }
+    } catch (error) {
+      // The stake is already debited — refund it so the wallet never diverges
+      // from the ledger of live wagers, then surface the failure.
+      await applyWalletDelta(base44, wallet, outlay);
+      audit('bet.create_failed_refund', { user: gate.user.id, outlay_cents: outlay });
+      throw error;
     }
     audit('bet.placed', { user: gate.user.id, mode, legs: legs.length, stake_cents: stakeCents, outlay_cents: outlay });
     await base44.asServiceRole.entities.RealTransaction.create({

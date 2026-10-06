@@ -29,7 +29,6 @@ export default async function(req) {
     }
     const finalsFor = key => finals.find(item => item.eventKey === key) || null;
     const wallet = await ensureWallet(base44, gate.user.id);
-    let balance = Number(wallet.balance_cents) || 0;
     let settled = 0;
     let totalReturned = 0;
     for (const bet of open.items) {
@@ -37,27 +36,35 @@ export default async function(req) {
       if (!result) continue;
       const returned = result.status === 'won' ? bet.stake_cents + profitCents(bet.stake_cents, result.price)
         : result.status === 'push' ? bet.stake_cents : 0;
-      balance += returned;
-      totalReturned += returned;
-      await base44.asServiceRole.entities.RealBet.update(bet.id, {
-        status: result.status, price_american: result.price,
-        settled_profit_cents: returned - bet.stake_cents,
-      });
+      // Compare-and-set the status flip: only one settlement run can move a
+      // bet out of 'open', so two concurrent runs can never grade and credit
+      // the same wager twice.
+      const flip = await base44.asServiceRole.entities.RealBet.updateMany(
+        { id: bet.id, status: 'open' },
+        { $set: { status: result.status, price_american: result.price, settled_profit_cents: returned - bet.stake_cents } }
+      );
+      if (!(Number(flip?.updated) > 0)) continue;
       if (returned > 0) {
+        // Credit immediately, per bet — if the credit fails, roll the bet
+        // back to open so the stake is never stranded in a settled-but-unpaid
+        // state, and stop the batch.
+        const credit = await applyWalletDelta(base44, wallet, returned);
+        if (credit.error) {
+          await base44.asServiceRole.entities.RealBet.updateMany(
+            { id: bet.id, status: result.status },
+            { $set: { status: 'open', settled_profit_cents: null } }
+          );
+          return fail('Settlement hit wallet contention — try again in a moment.', 'wallet_busy', 503);
+        }
+        totalReturned += returned;
         await base44.asServiceRole.entities.RealTransaction.create({
           created_by_id: gate.user.id,
           type: result.status === 'push' ? 'void' : 'payout', amount_cents: returned, status: 'completed',
           bet_id: bet.id, label: `${result.status === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`,
-          balance_after_cents: balance,
+          balance_after_cents: credit.balance,
         });
       }
       settled++;
-    }
-    // Single compare-and-set credit for the whole batch: even if a deposit
-    // or another settlement lands mid-batch, the payout is never lost.
-    if (totalReturned > 0) {
-      const credit = await applyWalletDelta(base44, wallet, totalReturned);
-      if (credit.error) return fail('Settlement completed but the wallet credit hit an error — contact support with your bet details.', 'wallet_busy', 503);
     }
     if (settled > 0) audit('settlement.batch', { user: gate.user.id, settled, credited_cents: totalReturned });
     return Response.json({ settled });

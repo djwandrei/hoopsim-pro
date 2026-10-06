@@ -3,7 +3,10 @@
   "type": "object",
   "properties": {
     "legs": {
-      "type": "array"
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     },
     "mode": {
       "type": "string",

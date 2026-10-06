@@ -268,3 +268,25 @@ body.dark-mode .studio-workspace tbody tr:nth-child(even) { background: transpar
 
 /* Drawer fallback tile for fan tools the live site lists without an emblem asset */
 .tool-emblem-fallback { display: grid; place-items: center; border-radius: .6rem; border: 1px solid hsl(var(--court-royal) / .5); background: hsl(var(--court-royal) / .14); color: hsl(var(--court-glass)); font-family: var(--font-display); font-size: 1.1rem; letter-spacing: .04em; }
+
+/* === Visual design pass: motion, charts, tables === */
+/* Staggered entrance: sections and cards rise in with a per-item delay */
+.rise-in { animation: rise-in .5s cubic-bezier(.2, .8, .3, 1) both; animation-delay: var(--rise-delay, 0ms); }
+@keyframes rise-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .rise-in { animation: none; } }
+
+/* Chart frames: one consistent, clearly labeled chart container */
+.chart-frame { @apply rounded-2xl border border-border/35 bg-card p-4; box-shadow: 0 8px 24px hsl(var(--court-canvas) / .16); }
+.chart-frame__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem; }
+.chart-frame__title { @apply font-display text-xl tracking-wide text-foreground; }
+.chart-frame__caption { @apply mt-2 text-[11px] leading-relaxed text-muted-foreground; }
+.chart-frame .recharts-wrapper { font-family: var(--font-body); }
+.chart-frame .recharts-surface { overflow: visible; }
+.chart-frame .recharts-cartesian-axis-tick text { font-size: .65rem; }
+.chart-frame .recharts-label { font-size: .65rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+/* Tables: closing rule, row emphasis and a labeled caption slot */
+.studio-workspace table caption { caption-side: top; text-align: left; padding: 0 0 .55rem; font-size: .65rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.studio-workspace tbody td:first-child { font-weight: 500; color: hsl(var(--foreground)); }
+.studio-workspace tbody tr:last-child td { border-bottom: 1px solid hsl(var(--border) / .35); }
+.studio-workspace td { transition: background-color .15s ease, color .15s ease; }

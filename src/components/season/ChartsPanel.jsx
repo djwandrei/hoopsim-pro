@@ -5,6 +5,8 @@ import {
 } from 'recharts';
 
 const tooltipStyle = { backgroundColor:'hsl(var(--card))', border:'1px solid hsl(var(--border))', color:'hsl(var(--foreground))', borderRadius:10, fontSize:12 };
+const axisTick = { fill: 'hsl(var(--muted-foreground))', fontSize: 11 };
+const axisLabel = { fill: 'hsl(var(--muted-foreground))', fontSize: 10, fontWeight: 600 };
 
 function WinDistribution({ summary, focusCode, actualWins }) {
   const focus = summary.find(row => row.code === focusCode);
@@ -23,24 +25,25 @@ function WinDistribution({ summary, focusCode, actualWins }) {
   }, [focus]);
   if (!focus) return null;
   return (
-    <div className="court-panel p-4">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="court-display text-2xl text-foreground">WIN DISTRIBUTION · {focusCode}</h3>
+    <div className="chart-frame rise-in court-panel-hover">
+      <div className="chart-frame__head">
+        <h3 className="chart-frame__title">WIN DISTRIBUTION · {focusCode}</h3>
         <span className="text-xs text-muted-foreground">{focus.winsList.length} replays · median {focus.wins.toFixed(1)}</span>
       </div>
       <div className="mt-3 h-56">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+          <BarChart data={data} margin={{ top: 12, right: 8, left: -14, bottom: 8 }}>
             <CartesianGrid stroke="hsl(var(--border) / .25)" vertical={false} />
-            <XAxis dataKey="bucket" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} interval={1} />
-            <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} allowDecimals={false} />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'hsl(var(--court-royal) / .13)' }} />
+            <XAxis dataKey="bucket" tick={axisTick} interval={1} label={{ value: 'Wins (bucketed in fours)', position: 'insideBottom', offset: -6, ...axisLabel }} />
+            <YAxis tick={axisTick} allowDecimals={false} label={{ value: 'Replays', angle: -90, position: 'insideLeft', offset: 16, ...axisLabel }} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'hsl(var(--court-royal) / .13)' }} formatter={value => [`${value} replays`, 'Simulated seasons']} labelFormatter={label => `${label} wins`} />
             {Number.isFinite(actualWins) && <ReferenceLine x={`${Math.floor(actualWins / 4) * 4}–${Math.floor(actualWins / 4) * 4 + 3}`} stroke="hsl(var(--court-positive))" strokeDasharray="4 3" label={{ value: 'Actual', fill: 'hsl(var(--court-positive))', fontSize: 10, position: 'top' }} />}
             <ReferenceLine x={`${Math.floor(focus.wins / 4) * 4}–${Math.floor(focus.wins / 4) * 4 + 3}`} stroke="hsl(var(--court-accent))" label={{ value: 'Median', fill: 'hsl(var(--court-accent))', fontSize: 10, position: 'top' }} />
-            <Bar dataKey="wins" fill="hsl(var(--court-royal))" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+            <Bar dataKey="wins" fill="hsl(var(--court-royal))" radius={[4, 4, 0, 0]} animationDuration={600} />
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <p className="chart-frame__caption">Where every replay season landed. Gold line marks the median outcome; green dashed marks the actual season.</p>
     </div>
   );
 }
@@ -52,20 +55,20 @@ function NetScatter({ summary, focusCode }) {
     focus: row.code === focusCode,
   }));
   return (
-    <div className="court-panel p-4">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="court-display text-2xl text-foreground">EFFICIENCY MAP</h3>
-        <span className="text-xs text-muted-foreground">ORtg ↑ better · DRtg ↓ better · accent = focus team</span>
+    <div className="chart-frame rise-in court-panel-hover" style={{ '--rise-delay': '90ms' }}>
+      <div className="chart-frame__head">
+        <h3 className="chart-frame__title">EFFICIENCY MAP</h3>
+        <span className="inline-flex items-center gap-3 text-[10px] text-muted-foreground"><span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full border-2 border-[hsl(var(--court-focus))]" style={{ background: 'hsl(var(--court-accent))' }} />Focus team</span><span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(var(--court-royal))' }} />Rest of league</span></span>
       </div>
       <div className="mt-3 h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 12, right: 16, left: -12, bottom: 4 }}>
+          <ScatterChart margin={{ top: 12, right: 16, left: -10, bottom: 14 }}>
             <CartesianGrid stroke="hsl(var(--border) / .25)" />
-            <XAxis type="number" dataKey="ortg" name="ORtg" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} domain={['dataMin - 1', 'dataMax + 1']} />
-            <YAxis type="number" dataKey="drtg" name="DRtg" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} domain={['dataMin - 1', 'dataMax + 1']} reversed />
+            <XAxis type="number" dataKey="ortg" name="ORtg" tick={axisTick} domain={['dataMin - 1', 'dataMax + 1']} label={{ value: 'Offensive rating →', position: 'insideBottom', offset: -8, ...axisLabel }} />
+            <YAxis type="number" dataKey="drtg" name="DRtg" tick={axisTick} domain={['dataMin - 1', 'dataMax + 1']} reversed label={{ value: 'Defensive rating ↓ better', angle: -90, position: 'insideLeft', offset: 14, ...axisLabel }} />
             <ZAxis dataKey="net" range={[30, 30]} />
-            <Tooltip contentStyle={tooltipStyle} />
-            <Scatter data={data} shape="circle">
+            <Tooltip contentStyle={tooltipStyle} formatter={(value, name) => [value.toFixed ? value.toFixed(1) : value, name]} />
+            <Scatter data={data} shape="circle" animationDuration={600}>
               {data.map(entry => (
                 <Cell key={entry.code} fill={entry.focus ? 'hsl(var(--court-accent))' : 'hsl(var(--court-royal))'} stroke={entry.focus ? 'hsl(var(--court-focus))' : 'none'} strokeWidth={2} />
               ))}
@@ -73,6 +76,7 @@ function NetScatter({ summary, focusCode }) {
           </ScatterChart>
         </ResponsiveContainer>
       </div>
+      <p className="chart-frame__caption">Each dot is a team: further right scores more, further down defends better. The gold dot is the focused team.</p>
     </div>
   );
 }

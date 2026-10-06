@@ -69,9 +69,6 @@ export default function PlayerStatsLog({ team, simGames }) {
   const sortTh = (key, children, title, className = headCell) => (
     <th scope="col" aria-sort={sort.key === key ? (sort.dir === 'desc' ? 'descending' : 'ascending') : 'none'} className={className} title={title}>{children}</th>
   );
-  const headButton = (key, label) => (
-    <button type="button" onClick={() => changeSort(key)} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">{label}{sortIcon(key)}</button>
-  );
   const maxPts = Math.max(...log.averages.map(player => player.avgs.pts), 1);
 
   return (

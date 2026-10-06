@@ -14,10 +14,8 @@ const MEDALS = [
 export default function LeagueLeaders({ simGames }) {
   const [mode, setMode] = useState('avg');
   const dark = ((useCourtTheme() || {}).mode) === 'dark';
-  const boards = useMemo(() => {
-    const ranked = buildPlayerAverages(simGames);
-    return Object.fromEntries(CATEGORIES.map(([stat]) => [stat, [...ranked].sort((a, b) => (mode === 'avg' ? b[stat] - a[stat] : b.totals[stat] - a.totals[stat])).slice(0, 5)]));
-  }, [simGames, mode]);
+  const ranked = useMemo(() => buildPlayerAverages(simGames), [simGames]);
+  const boards = useMemo(() => Object.fromEntries(CATEGORIES.map(([stat]) => [stat, [...ranked].sort((a, b) => (mode === 'avg' ? b[stat] - a[stat] : b.totals[stat] - a.totals[stat])).slice(0, 5)])), [ranked, mode]);
 
   if (!(simGames || []).length) {
     return (

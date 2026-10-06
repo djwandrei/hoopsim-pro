@@ -22,7 +22,9 @@ export default function SeasonSummaryPanel({ summary, simGames, actualRecords, l
       .sort((a, b) => b.delta - a.delta);
     const over = surprises[0] || null;
     const under = surprises.length > 1 ? surprises[surprises.length - 1] : null;
-    const leaders = (simGames || []).length ? buildPlayerAverages(simGames).slice(0, 5) : [];
+    const leaders = (simGames || []).length
+      ? buildPlayerAverages(simGames).sort((a, b) => b.pts - a.pts).slice(0, 5)
+      : [];
     return { rows, bestNet, over, under, leaders };
   }, [summary, simGames, actualRecords]);
 
@@ -31,7 +33,6 @@ export default function SeasonSummaryPanel({ summary, simGames, actualRecords, l
   const championRow = championCode ? summary.find(row => row.code === championCode) : null;
   const best = model.rows[0];
   const signed = value => (value > 0 ? `+${value}` : `${value}`);
-  const teamOf = code => league.byCode.get(code);
 
   const tile = 'group flex w-full flex-col rounded-xl border border-[var(--myna-border)] bg-[var(--myna-canvas)] p-3 text-left transition-colors hover:bg-[var(--myna-raised)]';
   const tileLabel = 'flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] myna-muted';

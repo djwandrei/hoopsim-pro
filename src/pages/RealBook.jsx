@@ -15,7 +15,7 @@ import { dollars } from '@/components/realbook/realFormat';
 import { modelEdgePct } from '@/lib/bookRoom/modelEdge';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { AlertTriangle, Loader2, ShieldAlert, Wallet, RefreshCcw, Dice5 } from 'lucide-react';
+import { AlertTriangle, Loader2, ShieldAlert, Wallet, RefreshCcw, Dice5, UserRound } from 'lucide-react';
 
 // Real-Money Book — the restricted variant of the sportsbook. Real stakes,
 // real finals settlement, 21+ and licensed-state gate, daily deposit and loss
@@ -160,6 +160,7 @@ export default function RealBook() {
         <div className="flex flex-wrap items-center gap-2">{tabs.map(([value, label]) => <button key={value} type="button" onClick={() => setTab(value)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors ${tab === value ? 'border-gold/40 bg-gold/10 text-gold' : 'border-border/50 text-muted-foreground hover:bg-raised hover:text-foreground'}`}>{label}</button>)}</div>
         <div className="flex flex-wrap items-center gap-2">
           <Link to="/book" className="inline-flex items-center gap-2 rounded-lg border border-border/50 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"><Dice5 className="h-3.5 w-3.5" aria-hidden="true" />Play-money book</Link>
+          <Link to="/account" className="inline-flex items-center gap-2 rounded-lg border border-border/50 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"><UserRound className="h-3.5 w-3.5" aria-hidden="true" />Account</Link>
           <span className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2" aria-label="Real-money balance"><Wallet className="h-3.5 w-3.5 text-gold" aria-hidden="true" /><span className="font-mono text-xs font-bold text-gold">{dollars(balanceCents)}</span></span>
           <div className="flex items-center gap-1 rounded-lg border border-border/50 p-1">{['american', 'decimal'].map(option => <button key={option} type="button" onClick={() => setFormat(option)} className={`rounded-md px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest transition-colors ${format === option ? 'bg-gold/15 text-gold' : 'text-muted-foreground hover:text-foreground'}`}>{option}</button>)}</div>
         </div>

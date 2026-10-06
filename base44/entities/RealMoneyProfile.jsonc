@@ -1,0 +1,54 @@
+{
+  "name": "RealMoneyProfile",
+  "type": "object",
+  "properties": {
+    "dob": {
+      "type": "string",
+      "format": "date"
+    },
+    "state": {
+      "type": "string"
+    },
+    "terms_version": {
+      "type": "string"
+    },
+    "acknowledged_at": {
+      "type": "string"
+    },
+    "self_excluded": {
+      "type": "boolean",
+      "default": false
+    },
+    "self_excluded_at": {
+      "type": "string"
+    },
+    "daily_deposit_limit_cents": {
+      "type": "number",
+      "default": 50000
+    },
+    "daily_loss_limit_cents": {
+      "type": "number",
+      "default": 100000
+    }
+  },
+  "required": [
+    "dob",
+    "state"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "name": "RealBet",
+  "type": "object",
+  "properties": {
+    "legs": {
+      "type": "array"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "single",
+        "parlay",
+        "teaser",
+        "roundrobin"
+      ],
+      "default": "parlay"
+    },
+    "stake_cents": {
+      "type": "number"
+    },
+    "price_american": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "won",
+        "lost",
+        "push",
+        "cashedout"
+      ],
+      "default": "open"
+    },
+    "settled_profit_cents": {
+      "type": "number"
+    },
+    "teaser": {
+      "type": "boolean",
+      "default": false
+    },
+    "teaser_points": {
+      "type": "number"
+    },
+    "round_robin": {
+      "type": "boolean",
+      "default": false
+    },
+    "event_key": {
+      "type": "string"
+    },
+    "matchup": {
+      "type": "string"
+    },
+    "commence_time": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "legs",
+    "mode",
+    "stake_cents",
+    "price_american"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

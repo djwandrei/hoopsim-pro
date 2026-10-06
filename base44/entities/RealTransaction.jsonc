@@ -1,0 +1,64 @@
+{
+  "name": "RealTransaction",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "deposit",
+        "withdrawal",
+        "bet",
+        "payout",
+        "void"
+      ],
+      "default": "deposit"
+    },
+    "amount_cents": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "pending",
+        "requested",
+        "failed"
+      ],
+      "default": "completed"
+    },
+    "ref": {
+      "type": "string"
+    },
+    "bet_id": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "balance_after_cents": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "type",
+    "amount_cents"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

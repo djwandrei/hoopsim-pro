@@ -1,0 +1,38 @@
+{
+  "name": "RealWallet",
+  "type": "object",
+  "properties": {
+    "balance_cents": {
+      "type": "number",
+      "default": 0
+    },
+    "pending_withdrawal_cents": {
+      "type": "number",
+      "default": 0
+    },
+    "lifetime_deposited_cents": {
+      "type": "number",
+      "default": 0
+    },
+    "lifetime_withdrawn_cents": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

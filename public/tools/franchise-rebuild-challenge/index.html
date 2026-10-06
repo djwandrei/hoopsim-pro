@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width,initial-scale=1" name="viewport">
+  <title>Franchise Rebuild Challenge | DJ's House of Cards &amp; Comics</title>
+  <meta content="Create a hypothetical NBA player-season group and check user-set roster-shape requirements against declared public positions." name="description">
+  <meta content="noindex,follow,max-image-preview:large" name="robots">
+  <meta content="#1f2fa3" name="theme-color">
+  <meta content="light dark" name="color-scheme">
+  <link href="../../styles.css?v=20261002c" rel="stylesheet">
+  <link href="../fan-tools.css?v=20260928j&amp;rev=fan-tools-readable-text-14px-v1" rel="stylesheet">
+  <link href="../roster-planning/roster-planning.css?v=20260928j&amp;rev=phase7-roster-planning-v1" rel="stylesheet">
+  <link href="https://www.djshouseofcards-comics.com/tools/franchise-rebuild-challenge/" rel="canonical">
+  <link href="../../site.webmanifest?v=20261002c" rel="manifest">
+  <link href="../../assets/games/card-matchups-emblem-20260911.png" rel="icon" type="image/png">
+   <script id="seo-structured-data" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://www.djshouseofcards-comics.com/tools/franchise-rebuild-challenge/#webpage","url":"https://www.djshouseofcards-comics.com/tools/franchise-rebuild-challenge/","name":"Franchise Rebuild Challenge | DJ's House of Cards & Comics","description":"Create a hypothetical NBA player-season group and check user-set roster-shape requirements against declared public positions.","isPartOf":{"@id":"https://www.djshouseofcards-comics.com/#website"},"inLanguage":"en-US"}</script>
+</head>
+ <body class="fan-tools-page dark-mode court-themed roster-planner-page franchise-rebuild-page" data-page="fan-tools">
+  <script src="../../theme-init.js?v=20261002c"></script>
+  <a class="skip-link" href="#mainContent">Skip to rebuild challenge</a>
+  <header class="site-header fan-suite-header">
+   <div class="container header-inner">
+    <a aria-label="DJ's House of Cards &amp; Comics home" class="brand" href="../../index.html">
+     <img alt="DJ's House of Cards &amp; Comics logo" class="brand-logo" decoding="async" height="84" src="../../assets/dj-logo.png" width="84">
+     <span class="brand-copy"><span class="brand-script">DJ's House of Cards</span><span class="brand-kicker">&amp; Comics &bull; Trusted Hobby Finds</span></span>
+    </a>
+    <nav aria-label="Primary navigation" class="site-nav" id="siteNav">
+     <ul class="primary-nav__list">
+      <li class="primary-nav__item"><a class="primary-nav__link" href="../../shop.html">Shop</a></li>
+      <li class="primary-nav__item"><a class="primary-nav__link" href="../">Fan Tools</a></li>
+      <li class="primary-nav__item"><a class="primary-nav__link" href="../roster-fit-simulator/">Roster Fit Simulator</a></li>
+     </ul>
+    </nav>
+    <button aria-controls="siteNav" aria-expanded="false" aria-label="Open navigation menu" class="nav-toggle" id="navToggle" type="button"><span></span><span></span><span></span></button>
+   </div>
+  </header>
+
+  <main id="mainContent" tabindex="-1">
+   <section aria-labelledby="rebuildTitle" class="tool-hero roster-planner-hero">
+    <div class="tool-hero__copy">
+     <span class="tool-hero__eyebrow">Hypothetical planning &bull; Browser-local</span>
+     <h1 class="tool-hero__title" id="rebuildTitle">Franchise Rebuild Challenge</h1>
+     <p class="tool-hero__lede">Make a local player-group plan, then check it against your own roster-shape targets.</p>
+    </div>
+   </section>
+
+   <div class="container roster-planner-workspace">
+    <p class="roster-planner-boundary">Regular-season player/team data are team stints, not a complete roster at one point in time. This challenge checks planning targets only: no transaction, salary cap, contract, draft-pick, roster legality, ownership, or player impact is assessed. Nothing changes an actual team or roster.</p>
+
+    <section aria-labelledby="rebuildSetupTitle" class="roster-planner-region roster-planner-setup">
+     <div class="roster-planner-heading"><span class="kicker">Step 1</span><h2 id="rebuildSetupTitle">Set the rebuild context</h2></div>
+     <div class="roster-planner-controls">
+      <label>Exact season
+       <select disabled id="rosterSeason"><option>Loading seasons…</option></select>
+      </label>
+      <label>Planning focus team
+       <select disabled id="rosterFocusTeam"><option>Loading teams…</option></select>
+      </label>
+      <label>Candidate team
+       <select disabled id="rosterSourceTeam"><option>Loading teams…</option></select>
+      </label>
+     </div>
+     <p class="roster-planner-muted" id="rosterDataSummary">Season data have not loaded.</p>
+     <p class="roster-planner-status" id="rosterLoadStatus" role="status" aria-live="polite" aria-atomic="true">Loading player and team data…</p>
+    </section>
+
+    <section aria-labelledby="rebuildPlanTitle" class="roster-planner-region">
+     <div class="roster-planner-heading"><span class="kicker">Step 2</span><h2 id="rebuildPlanTitle">Build a hypothetical group</h2></div>
+      <label class="roster-planner-search-label" for="rosterPlayerSearch">Search player/team rows</label>
+     <input autocomplete="off" id="rosterPlayerSearch" type="search" placeholder="Search player name or team code" disabled>
+      <p class="roster-planner-muted">Choose one team stint from the selected season per player. A stint listing the focus team counts toward your checklist, but does not prove current roster retention.</p>
+     <div aria-label="Exact-season player-team row candidates" class="roster-candidate-list" id="rosterCandidates" role="list"></div>
+    </section>
+
+    <section aria-labelledby="rebuildTargetsTitle" class="roster-planner-region roster-planner-result-region">
+     <div class="roster-planner-heading"><span class="kicker">Step 3</span><h2 id="rebuildTargetsTitle">Choose and check requirements</h2></div>
+     <div class="rebuild-target-grid">
+      <label>Players in planning group<input id="rebuildTargetPlayers" type="number" min="1" max="15" step="1" value="10"></label>
+      <label>Guard eligible, at least<input id="rebuildTargetG" type="number" min="0" max="15" step="1" value="3"></label>
+      <label>Forward eligible, at least<input id="rebuildTargetF" type="number" min="0" max="15" step="1" value="3"></label>
+      <label>Center eligible, at least<input id="rebuildTargetC" type="number" min="0" max="15" step="1" value="2"></label>
+      <label>Same-team rows, at least<input id="rebuildTargetFocusRows" type="number" min="0" max="15" step="1" value="5"></label>
+     </div>
+     <p class="roster-planner-muted">These starting values are editable checklist targets, not league requirements or a roster-legality test. G/F/C eligibility can overlap for players listed in multiple groups. “Same-team rows” means the selected stint lists the focus team; it does not establish the team's roster at one point in time.</p>
+     <div aria-label="Hypothetical rebuild plan" class="roster-selected-list" id="rosterSelected" role="list"></div>
+     <button class="button" id="runRebuildCheck" type="button" disabled>Check this local plan</button>
+     <button class="button-secondary" id="clearRosterPlan" type="button" disabled>Clear this local plan</button>
+     <p class="roster-planner-status" id="rebuildStatus" role="status" aria-live="polite" aria-atomic="true">Build a group and run the checklist when ready.</p>
+     <div aria-label="Rebuild planning checklist result" class="rebuild-checklist-result" id="rebuildResult" role="region" aria-live="polite"></div>
+    </section>
+   </div>
+  </main>
+
+  <footer class="footer site-footer"><div class="container footer-bottom"><span>DJ's House of Cards &amp; Comics &bull; Independent hobby tools</span><a href="../roster-fit-simulator/">Open Roster Fit Simulator</a></div></footer>
+  <button aria-label="Back to top" class="back-to-top" id="backToTop" type="button">&uarr;</button>
+  <script defer src="../../core.js?v=20261002c"></script>
+  <script defer src="../../nav.js?v=20260930f&amp;rev=drawer-fix-v4-webp"></script>
+  <script type="module" src="./franchise-rebuild-challenge.js?v=20261005a&amp;rev=phase7-franchise-rebuild-v12-v4-runtime-cache-closure-v1"></script>
+  <script type="module" src="../basketball-theme.js?v=20260930f&amp;rev=hero-retro-v7-stable-picker-mount-20260928l"></script>
+ <script defer src="../fan-tools-editor-runtime.js?v=20261005b&amp;rev=drag-resize-code-v1"></script>
+  </body>
+</html>

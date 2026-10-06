@@ -1,0 +1,255 @@
+{
+  "format": "djhc-swishiq-public-projection-v1",
+  "projectionVersion": 1,
+  "generatedAt": "2026-09-27T12:39:21.375Z",
+  "packageId": "nba-swishiq-v3-2021-22",
+  "packageVersion": "v3-2021-22-0004540fd013",
+  "packageManifestSha256": "a7361380731de552abe28e4bf73746fc50b7c9d211ceba919fb21feec68e350c",
+  "sourceLockSha256": "87a8ca36ebdab5438a6a6af58508ff0aa991fb76b78b1d6263b431115df9e74d",
+  "modelId": "swishiq-v3",
+  "normalizer": "swishiq-v3-canonical-normalizer",
+  "metricsVersion": "swishiq-v3-metrics-v1.2",
+  "scope": {
+    "kind": "exact-season",
+    "seasonStartYears": [
+      2021
+    ],
+    "seasonStartYear": 2021,
+    "seasonEndYear": 2022,
+    "phases": [
+      "regular",
+      "in_season_tournament",
+      "play_in",
+      "playoffs"
+    ],
+    "pooledFitIsSeasonSpecific": true
+  },
+  "capabilities": {
+    "swishiqStudio": {
+      "status": "available",
+      "evidenceSha256": "e8a92ebb42440dde5acabe4bf3e773145f7d5729ca33bbf0dce12e4979b41819",
+      "artifactIds": [
+        "player-seasons",
+        "players"
+      ]
+    },
+    "lineupLab": {
+      "status": "available",
+      "evidenceSha256": "31f50a1075539b7c79a4856c8d8539f605b74a398fbd236be7d07640bd73c2be",
+      "artifactIds": [
+        "exact-five-evidence",
+        "lineup-evidence",
+        "player-impact"
+      ]
+    },
+    "publicAdvancedImpact": {
+      "status": "available",
+      "evidenceSha256": "ad228638fa2253d34a9034c619bafb8b64b871c591355e65b0d1ece8b6d9d94b",
+      "artifactIds": [
+        "lineup-evidence",
+        "player-impact"
+      ]
+    },
+    "chemistry": {
+      "status": "available",
+      "evidenceSha256": "3a65d2c3efc9e71224ec44d997c9bf6185c9616da8c9117ef8f08258a6237746",
+      "artifactIds": [
+        "chemistry",
+        "chemistry-0002",
+        "chemistry-0003"
+      ]
+    },
+    "shotProfile": {
+      "status": "available",
+      "evidenceSha256": "d9e63f0a319f920c969603c69a35082509ac7da0e024f5259ac9683cc7582851",
+      "artifactIds": [
+        "player-seasons"
+      ]
+    },
+    "playType": {
+      "status": "available",
+      "evidenceSha256": "77d8ef2bc591345ca60f3269c5148480b7c05ab10bbe4f695ef22903a7e63177",
+      "artifactIds": [
+        "player-seasons"
+      ]
+    },
+    "historicalSeason": {
+      "status": "available",
+      "evidenceSha256": "2bbdc274c66aa11649a45b145d505c7d1e468af1f0d6bf686f34b0cc2dd1af2e",
+      "artifactIds": [
+        "player-seasons",
+        "roster-memberships",
+        "rules",
+        "team-styles"
+      ]
+    },
+    "seasonSimulation": {
+      "status": "available",
+      "evidenceSha256": "1ebc3dbeacfdf4ed71ed2fbb17bbf205bf5249efcd4e52be4dcb7b650ecbe43a",
+      "artifactIds": [
+        "player-seasons",
+        "roster-memberships",
+        "rules",
+        "team-styles"
+      ]
+    },
+    "compositeRecipe": {
+      "status": "available",
+      "evidenceSha256": "618a4a91e8f1f829c9a390fde03a6f213e7cf7a86fae21f02bb1d601223af43a",
+      "artifactIds": [
+        "era-baselines",
+        "player-seasons",
+        "skill-components"
+      ]
+    },
+    "compositeSimulation": {
+      "status": "unavailable"
+    },
+    "careerHistory": {
+      "status": "unavailable"
+    },
+    "careerSimulation": {
+      "status": "unavailable"
+    },
+    "crossEraGames": {
+      "status": "unavailable"
+    },
+    "challengePools": {
+      "status": "available",
+      "evidenceSha256": "689d0bac147255340cef0ec087e652e69143fef4d70ffea9940a65d0890840ae",
+      "artifactIds": [
+        "challenge-pools"
+      ]
+    },
+    "franchise": {
+      "status": "unavailable"
+    },
+    "commissioner": {
+      "status": "unavailable"
+    },
+    "probabilities": {
+      "status": "unavailable"
+    },
+    "virtualPacks": {
+      "status": "unavailable"
+    },
+    "collector": {
+      "status": "unavailable"
+    }
+  },
+  "artifacts": [
+    {
+      "artifactId": "challenge-pools",
+      "kind": "challenge-pools",
+      "path": "parts/challenge-pools.json",
+      "bytes": 35797,
+      "sha256": "1614e51345bcf4fafad4d1082db1c41f4276758d6a34b06381b2bd8ce4a0cdac",
+      "rows": 30
+    },
+    {
+      "artifactId": "chemistry-0002",
+      "kind": "chemistry",
+      "path": "parts/chemistry-0002.json",
+      "bytes": 19500340,
+      "sha256": "b98b2519cd7e22beecb6df37f482eb088d37a0be7e1226d14de269ea94d43060",
+      "rows": 16532
+    },
+    {
+      "artifactId": "chemistry-0003",
+      "kind": "chemistry",
+      "path": "parts/chemistry-0003.json",
+      "bytes": 6738945,
+      "sha256": "02ac64e7b6a6a1c4ed3b4f7c2007c19d5b92688666464f499b922d8fdb575768",
+      "rows": 5696
+    },
+    {
+      "artifactId": "chemistry",
+      "kind": "chemistry",
+      "path": "parts/chemistry.json",
+      "bytes": 19500044,
+      "sha256": "e65bbc5a53f8f207913f5cfd646d587bae14b857136797a4508fad34dc1f6cfa",
+      "rows": 16533
+    },
+    {
+      "artifactId": "era-baselines",
+      "kind": "era-baselines",
+      "path": "parts/era-baselines.json",
+      "bytes": 1096,
+      "sha256": "fdc6ebd2cfd7ad32e6af3f8a46e3d4c797eab5bee61eced15922b5cef89e7370",
+      "rows": 1
+    },
+    {
+      "artifactId": "exact-five-evidence",
+      "kind": "exact-five-evidence",
+      "path": "parts/exact-five-evidence.json",
+      "bytes": 2503930,
+      "sha256": "9d81e48dd7b4b61f65c2287a81b6138b24718c2c4e4f976d462abb00870e77f6",
+      "rows": 4207
+    },
+    {
+      "artifactId": "lineup-evidence",
+      "kind": "lineup-evidence",
+      "path": "parts/lineup-evidence.json",
+      "bytes": 566146,
+      "sha256": "90e3192697b009fdb26243081f337ba2a390b7b0b9b720b44a3b0289cce11e58",
+      "rows": 801
+    },
+    {
+      "artifactId": "player-impact",
+      "kind": "player-impact",
+      "path": "parts/player-impact.json",
+      "bytes": 339721,
+      "sha256": "26215be9280dea6e4a49e94aa31d7992570b4ebf86f4e475e6cb9a87c029c78c",
+      "rows": 475
+    },
+    {
+      "artifactId": "player-seasons",
+      "kind": "player-seasons",
+      "path": "parts/player-seasons.json",
+      "bytes": 17802038,
+      "sha256": "237e5fd8f61991fb202b9bc2bfa0c5e8838035dc99626df86f57028a9cbed052",
+      "rows": 1015
+    },
+    {
+      "artifactId": "players",
+      "kind": "players",
+      "path": "parts/players.json",
+      "bytes": 61368,
+      "sha256": "f5dc2f5b177c648d4ecca680912796617d263fefd339e924e3b2945e61e63245",
+      "rows": 606
+    },
+    {
+      "artifactId": "roster-memberships",
+      "kind": "roster-memberships",
+      "path": "parts/roster-memberships.json",
+      "bytes": 234716,
+      "sha256": "84bba808b1e2e91c4f1d5134eb40ef5ba060b4b307361428d83f293fed9cf262",
+      "rows": 1015
+    },
+    {
+      "artifactId": "rules",
+      "kind": "rules",
+      "path": "parts/rules.json",
+      "bytes": 1108,
+      "sha256": "5ea6e98da19af1feb50af5452179106ab2a5efc116c89e2920c582385bec6cad",
+      "rows": 1
+    },
+    {
+      "artifactId": "skill-components",
+      "kind": "skill-components",
+      "path": "parts/skill-components.json",
+      "bytes": 303125,
+      "sha256": "ae7032fae7adeaa541bcce63bb593b5a62d75d879accaf021b5ace4e28ac3e28",
+      "rows": 715
+    },
+    {
+      "artifactId": "team-styles",
+      "kind": "team-styles",
+      "path": "parts/team-styles.json",
+      "bytes": 243321,
+      "sha256": "35bcc012d2829479f80bd61b4246c1bebd18589cd43bd85bb8aec74b96173267",
+      "rows": 53
+    }
+  ],
+  "contentSha256": "9d7247b115fddb307c9caa5bd3a758cf629bdf1bc9dec51c2627b03a4cbd533f"
+}

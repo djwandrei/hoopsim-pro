@@ -1,150 +1,99 @@
 import React, { useEffect, useState } from 'react';
-import { Loader2, Plus, Search } from 'lucide-react';
+import { Dices, Loader2, PackageOpen } from 'lucide-react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import usePageMeta from '@/hooks/usePageMeta';
-import PackPool from '@/components/packs/PackPool';
-import PackDrawStage from '@/components/packs/PackDrawStage';
+import PackReveal from '@/components/packs/PackReveal';
 import PackHistory from '@/components/packs/PackHistory';
-import { browseCards, findPlayerMatches } from '@/lib/cards/cardClient';
+import { base44 } from '@/api/base44Client';
 import {
-  MAX_PACK_OPENING_POOL_SIZE,
-  clearPackOpeningHistory,
-  createPackOpeningReceipt,
-  createPackOpeningSeed,
-  eligiblePackCardFromMatches,
-  prependPackOpeningHistory,
-  readPackOpeningHistory,
-} from '@/lib/cards/packModel';
+  PACK_SIZE,
+  TIER_META,
+  TIER_ODDS,
+  clearPackHistory,
+  openPack,
+  prependPackHistory,
+  readPackHistory,
+} from '@/lib/cards/packEngine';
 
+// Virtual Packs: each pack is 5 real-world cards — curated PSA scans plus the
+// shop catalog — drawn server-side with tier weights (base cards through
+// legendary pulls). Simulation only: no purchase, no ownership claim.
 export default function VirtualPacks() {
-  usePageMeta({ title: 'Virtual Packs · SwishIQ Studio', description: 'Declare an eligible card pool from verified player matches and replay a deterministic simulated pack draw. Simulation only, no purchase.' });
-  const [query, setQuery] = useState('');
-  const [candidates, setCandidates] = useState([]);
-  const [searching, setSearching] = useState(false);
-  const [searchStatus, setSearchStatus] = useState('Search is ready. Find a player match before adding a card to your pool.');
-  const [pool, setPool] = useState([]);
-  const [packSize, setPackSize] = useState(3);
-  const [seed, setSeed] = useState(createPackOpeningSeed);
-  const [receipt, setReceipt] = useState(null);
-  const [drawnCards, setDrawnCards] = useState([]);
+  usePageMeta({ title: 'Virtual Packs · SwishIQ Studio', description: 'Open a 5-card pack of real NBA cards — PSA-graded scans across the 2017–26 player pool, with real card values from base to legendary. Simulation only.' });
   const [busy, setBusy] = useState(false);
-  const [openStatus, setOpenStatus] = useState('Declare at least one eligible card to start.');
+  const [status, setStatus] = useState('Ready to open a pack.');
+  const [pack, setPack] = useState(null);
   const [history, setHistory] = useState([]);
+  const [pool, setPool] = useState(null);
 
-  useEffect(() => { setHistory(readPackOpeningHistory()); }, []);
+  useEffect(() => { setHistory(readPackHistory()); }, []);
 
-  const runSearch = async (event) => {
-    event?.preventDefault();
-    const value = query.trim();
-    if (value.length < 2) { setSearchStatus('Type at least two characters to find candidate cards.'); return; }
-    setSearching(true);
-    setSearchStatus('Checking candidates for verified player matches…');
-    try {
-      const { matches, unavailable } = await findPlayerMatches(value);
-      const byProduct = new Map();
-      for (const match of matches || []) {
-        if (!byProduct.has(match.product.id)) byProduct.set(match.product.id, []);
-        byProduct.get(match.product.id).push(match);
-      }
-      const eligible = [...byProduct.values()].map(group => eligiblePackCardFromMatches(group)).filter(Boolean);
-      setCandidates(eligible);
-      if (unavailable) setSearchStatus('The verified mapping service is temporarily unavailable — try again shortly.');
-      else if (!eligible.length) setSearchStatus('No verified player matches in these candidates. Only verified cards can join the pool.');
-      else setSearchStatus(`${eligible.length} verified candidate${eligible.length === 1 ? '' : 's'} ready to add.`);
-    } catch (error) {
-      setCandidates([]);
-      setSearchStatus(error?.message || 'The candidate search failed. Try again shortly.');
-    } finally {
-      setSearching(false);
-    }
-  };
+  useEffect(() => {
+    let alive = true;
+    base44.entities.PackCard.aggregate({ query: { active: true }, groupBy: 'tier' })
+      .then(result => { if (alive) setPool(result.rows || []); })
+      .catch(() => { if (alive) setPool([]); });
+    return () => { alive = false; };
+  }, []);
 
-  const addToPool = (card) => {
-    setPool(current => {
-      if (current.some(entry => entry.product.id === card.product.id)) return current;
-      if (current.length >= MAX_PACK_OPENING_POOL_SIZE) { setSearchStatus(`The pool is full at ${MAX_PACK_OPENING_POOL_SIZE} cards.`); return current; }
-      setSearchStatus(`${card.product.name} added to the pool.`);
-      return [...current, card];
-    });
-  };
+  const poolTotal = (pool || []).reduce((sum, row) => sum + (Number(row.count) || 0), 0);
 
-  const removeFromPool = (productId) => setPool(current => current.filter(entry => entry.product.id !== productId));
-
-  const openPack = () => {
+  const handleOpen = async () => {
     setBusy(true);
+    setStatus('Drawing 5 cards…');
     try {
-      const nextReceipt = createPackOpeningReceipt({ eligibleCards: pool, packSize, seed });
-      setReceipt(nextReceipt);
-      setDrawnCards(nextReceipt.drawnProductIds.map(id => pool.find(card => card.product.id === id)).filter(Boolean));
-      setHistory(prependPackOpeningHistory(history, nextReceipt));
-      setOpenStatus(`Draw complete — ${nextReceipt.drawnProductIds.length} cards, replayable with seed \u201c${nextReceipt.seed}\u201d.`);
+      const { cards, receipt } = await openPack(PACK_SIZE);
+      setPack({ cards, receipt });
+      setHistory(prependPackHistory({ openedAt: receipt.openedAt, cards }));
+      setStatus(`Pack opened — best pull: ${(cards.reduce((best, card) => (TIER_ODDS.findIndex(([tier]) => tier === card.tier) > TIER_ODDS.findIndex(([tier]) => tier === best.tier) ? card : best), cards[0]) || {}).name || '—'}`);
     } catch (error) {
-      setOpenStatus(error?.message || 'The simulated draw failed.');
+      setStatus(error?.message || 'The pack draw failed. Try again shortly.');
     } finally {
       setBusy(false);
     }
   };
 
-  const clearHistory = () => { clearPackOpeningHistory(); setHistory([]); };
-
   return <StudioShell active="/packs">
     <WorkbenchHeader
       title="VIRTUAL PACKS"
-      description="Choose cards with verified NBA player matches, declare the eligible pool, and replay a deterministic seeded draw."
-      state={searching ? 'loading' : 'ready'}
-      status={searching ? 'Checking candidates' : `${pool.length} in pool`}
+      description="Open a five-card pack of real NBA cards: PSA-graded scans and shop cards for players in the 2017–26 pool, from base cards to legendary pulls. Draws are server-side and fully random."
+      state={busy ? 'loading' : pool === null ? 'loading' : 'ready'}
+      status={busy ? 'Drawing pack' : pool === null ? 'Loading card pool' : `${poolTotal.toLocaleString()} cards in the pool`}
     />
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
-      <p className="rounded-xl border border-gold/30 bg-gold/5 p-3 text-[11px] leading-relaxed text-muted-foreground"><strong className="text-foreground">Simulation only:</strong> every eligible card has equal weight and a drawn card leaves the pool for that pack. This is not a real pack guarantee, a modeled probability, a rarity or value estimate, a purchase, or an ownership record. History stays in this browser.</p>
+      <p className="rounded-xl border border-gold/30 bg-gold/5 p-3 text-[11px] leading-relaxed text-muted-foreground"><strong className="text-foreground">Simulation only:</strong> every pack is five cards drawn server-side with crypto randomness — tier odds are the studio's designed pack odds, and card values are PSA price-guide references where known. No purchase, no rarity guarantee, no ownership record. History stays in this browser.</p>
 
-      <section className="court-panel space-y-3 p-4">
-        <div>
-          <p className="court-kicker">Step 1</p>
-          <h2 className="mt-1 font-display text-2xl tracking-wide text-foreground">FIND CARDS FOR YOUR POOL</h2>
-        </div>
-        <form onSubmit={runSearch} className="flex flex-wrap items-end gap-2">
-          <label className="min-w-0 flex-1 basis-56">
-            <span className="studio-control-label">Search NBA cards</span>
-            <input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Try a player or card title" minLength={2} maxLength={120} autoComplete="off" className="studio-select" />
-          </label>
-          <button type="submit" disabled={searching} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20 disabled:cursor-not-allowed disabled:opacity-40">
-            {searching ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Search className="h-4 w-4" aria-hidden="true" />}Find candidates
+      <section className="court-panel space-y-4 p-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="court-kicker">Card pool</p>
+            <h2 className="mt-1 font-display text-2xl tracking-wide text-foreground">REAL CARDS, REAL VALUES</h2>
+          </div>
+          <button type="button" onClick={handleOpen} disabled={busy || !poolTotal}
+            className="book-cta inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-gold to-goldSoft px-6 py-3 text-xs font-bold uppercase tracking-widest text-canvas shadow-lg shadow-gold/20 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
+            {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <PackageOpen className="h-4 w-4" aria-hidden="true" />}{busy ? 'Opening…' : `Open ${PACK_SIZE}-card pack`}
           </button>
-        </form>
-        <p role="status" aria-live="polite" className="text-[11px] leading-relaxed text-muted-foreground">{searchStatus}</p>
-        {candidates.length > 0 && <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-          {candidates.map(card => <li key={card.product.id}>
-            <div className="court-panel court-panel-hover flex min-w-0 flex-col overflow-hidden">
-              <div className="aspect-[4/3] bg-raised/40">{card.product.image
-                ? <img src={card.product.image} alt={card.product.name} loading="lazy" className="h-full w-full object-contain" />
-                : <div className="grid h-full place-items-center font-display text-2xl text-muted-foreground">CARD</div>}</div>
-              <div className="flex min-w-0 flex-1 flex-col gap-2 p-3">
-                <h3 className="text-xs font-semibold leading-snug text-foreground">{card.product.name}</h3>
-                <p className="truncate font-mono text-[10px] text-gold">{card.mappings.map(mapping => `${mapping.player.name}${mapping.depictedSeasonLabel ? ` · ${mapping.depictedSeasonLabel}` : ''}`).filter((value, index, all) => all.indexOf(value) === index).join(' / ')}</p>
-                <button type="button" onClick={() => addToPool(card)} disabled={pool.some(entry => entry.product.id === card.product.id)} className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20 disabled:cursor-not-allowed disabled:opacity-40">
-                  <Plus className="h-3.5 w-3.5" aria-hidden="true" />{pool.some(entry => entry.product.id === card.product.id) ? 'In pool' : 'Add to pool'}
-                </button>
-              </div>
-            </div>
-          </li>)}
-        </ul>}
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+          {TIER_ODDS.map(([tier, odds]) => {
+            const meta = TIER_META[tier];
+            const count = (pool || []).find(row => row.tier === tier)?.count || 0;
+            return <div key={tier} className="rounded-xl border border-border/35 bg-raised/30 p-3">
+              <p className="flex items-center justify-between gap-2 font-mono text-[10.4px] font-semibold uppercase tracking-widest"><span className={`rounded border px-1.5 py-0.5 ${meta.chip}`}>{meta.label}</span><span className="text-muted-foreground">{odds}%</span></p>
+              <p className="mt-2 font-mono text-lg text-foreground">{count.toLocaleString()} <span className="text-[10.4px] text-muted-foreground">cards</span></p>
+            </div>;
+          })}
+        </div>
+        <p role="status" aria-live="polite" className="text-[11px] leading-relaxed text-muted-foreground">{pool === null ? 'Loading the card pool…' : status}</p>
       </section>
 
-      <PackPool pool={pool} onRemove={removeFromPool} />
-      <PackDrawStage
-        poolCount={pool.length}
-        packSize={packSize}
-        onPackSize={setPackSize}
-        seed={seed}
-        onNewSeed={() => setSeed(createPackOpeningSeed())}
-        onOpen={openPack}
-        busy={busy}
-        openStatus={openStatus}
-        receipt={receipt}
-        drawnCards={drawnCards}
-      />
-      <PackHistory history={history} onClear={clearHistory} />
+      <section className="space-y-2">
+        <h2 className="font-display text-xl tracking-wide text-foreground">LATEST PACK</h2>
+        {pack ? <PackReveal drawnCards={pack.cards} /> : <p className="rounded-xl border border-dashed border-border/40 p-6 text-center text-xs text-muted-foreground"><Dices className="mx-auto mb-2 h-6 w-6 text-gold/60" aria-hidden="true" />Open a pack to reveal five cards.</p>}
+      </section>
+
+      <PackHistory history={history} onClear={() => setHistory(clearPackHistory())} />
     </main>
   </StudioShell>;
 }

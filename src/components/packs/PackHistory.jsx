@@ -1,29 +1,39 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
+import { Image } from '@/components/ui/image';
+import { TIER_META, formatCardValue } from '@/lib/cards/packEngine';
 
-// Browser-local simulation history: each entry is the replay receipt only.
+// Pack history: the last twelve opened packs, kept in this browser only.
 export default function PackHistory({ history, onClear }) {
-  return (
-    <section className="court-panel space-y-3 p-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <p className="court-kicker">Browser-local</p>
-          <h2 className="mt-1 font-display text-2xl tracking-wide text-foreground">SIMULATION HISTORY</h2>
-        </div>
-        <button type="button" onClick={onClear} disabled={!history.length} className="rounded-lg border border-border/50 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-trim/50 hover:text-trim-ink disabled:cursor-not-allowed disabled:opacity-40"><Trash2 className="mr-1.5 inline h-3.5 w-3.5" aria-hidden="true" />Clear local history</button>
+  return <section className="court-panel space-y-3 p-4">
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <div>
+        <p className="court-kicker">Recap</p>
+        <h2 className="mt-1 font-display text-2xl tracking-wide text-foreground">PACK HISTORY</h2>
       </div>
-      <p className="text-[11px] leading-relaxed text-muted-foreground">History stores only the ruleset, seed, selected product IDs, drawn product IDs and local timestamp. No prices, customer data or ownership claims. Saved runs stay in this browser.</p>
-      {history.length === 0 ? <p className="rounded-xl border border-dashed border-border/40 p-4 text-xs text-muted-foreground">No simulated packs are saved in this browser yet.</p> : (
-        <ul className="space-y-2">
-          {history.map(entry => <li key={`${entry.openedAt}-${entry.seed}`} className="rounded-lg border border-border/40 bg-raised/30 p-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="font-mono text-[11px] text-gold">seed {entry.seed}</span>
-              <span className="font-mono text-[10px] text-muted-foreground">{new Date(entry.openedAt).toLocaleString()} · {entry.packSize} of {entry.poolProductIds.length} drawn</span>
-            </div>
-            <p className="mt-1 font-mono text-[10px] text-muted-foreground">drawn: {entry.drawnProductIds.join(', ')}</p>
-          </li>)}
-        </ul>
-      )}
-    </section>
-  );
+      {history.length > 0 && <button type="button" onClick={onClear} className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-3 py-2 text-[10.4px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-trim/50 hover:text-trim-ink"><Trash2 className="h-3.5 w-3.5" aria-hidden="true" />Clear history</button>}
+    </div>
+    {history.length
+      ? <ul className="space-y-3">
+        {history.map((entry, entryIndex) => <li key={`${entry.openedAt}-${entryIndex}`} className="rounded-xl border border-border/35 bg-raised/25 p-3">
+          <p className="mb-2 font-mono text-[10.4px] uppercase tracking-widest text-muted-foreground">{new Date(entry.openedAt).toLocaleString()} · {entry.cards.length} cards</p>
+          <ul className="grid grid-cols-5 gap-2">
+            {entry.cards.map((card, cardIndex) => {
+              const meta = TIER_META[card.tier] || TIER_META.base;
+              const value = formatCardValue(card.valueCents);
+              return <li key={`${entry.openedAt}-${cardIndex}`} className="min-w-0">
+                <div className="aspect-[3/4] overflow-hidden rounded-lg border border-border/35 bg-canvas/50">
+                  {card.imageUrl
+                    ? <Image src={card.imageUrl} alt={card.name} fittingType="fit" className="h-full w-full object-contain" />
+                    : <div className="grid h-full place-items-center font-display text-lg text-muted-foreground">CARD</div>}
+                </div>
+                <p className="mt-1 truncate text-[10.4px] text-foreground">{card.player}</p>
+                <p className="truncate font-mono text-[10.4px]"><span className={meta.chip.split(' ').find(cls => cls.startsWith('text-')) || 'text-muted-foreground'}>{meta.label}</span>{value && <span className="ml-1 text-gold">{value}</span>}</p>
+              </li>;
+            })}
+          </ul>
+        </li>)}
+      </ul>
+      : <p className="rounded-xl border border-dashed border-border/40 p-4 text-xs text-muted-foreground">Opened packs will appear here. History stays in this browser.</p>}
+  </section>;
 }

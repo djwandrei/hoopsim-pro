@@ -1,0 +1,91 @@
+{
+  "name": "PackCard",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "player": {
+      "type": "string"
+    },
+    "set": {
+      "type": "string"
+    },
+    "year": {
+      "type": "number"
+    },
+    "cardNumber": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "grade": {
+      "type": "string"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "base",
+        "uncommon",
+        "rare",
+        "super_rare",
+        "legendary"
+      ],
+      "default": "base"
+    },
+    "valueCents": {
+      "type": "number"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "psa",
+        "site"
+      ],
+      "default": "psa"
+    },
+    "sourceId": {
+      "type": "string"
+    },
+    "psaPrice10Cents": {
+      "type": "number"
+    },
+    "population": {
+      "type": "number"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "player",
+    "set",
+    "year",
+    "imageUrl",
+    "tier"
+  ],
+  "rls": {
+    "read": true,
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

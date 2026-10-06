@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Image } from '@/components/ui/image';
+import { TIER_META, formatCardValue } from '@/lib/cards/packEngine';
 import './packReveal.css';
 
 const FLIP_STAGGER_MS = 460;
 
-// The pack-opening reveal: cards deal in face-down, then flip one at a time
-// with a gold glow; the final flip fires a confetti burst. Reduced-motion
-// users get every card face-up immediately.
+// The pack-opening reveal: five cards deal in face-down, then flip one at a
+// time; rare-or-better pulls glow and the final flip fires a confetti burst.
+// Reduced-motion users get every card face-up immediately.
 export default function PackReveal({ drawnCards }) {
   const [revealed, setRevealed] = useState(0);
   useEffect(() => {
@@ -28,23 +29,38 @@ export default function PackReveal({ drawnCards }) {
     }
     return () => timers.forEach(timer => clearTimeout(timer));
   }, [drawnCards]);
-  return <ul className="pack-reveal" aria-label="Latest simulated pack contents">
-    {drawnCards.map((card, index) => <li
-      key={card.product.id}
-      className={`pack-card${index < revealed ? ' pack-card--revealed' : ''}`}
-      style={{ '--deal-delay': `${index * 110}ms` }}
-    >
-      <div className="pack-card__flip">
-        <div className="pack-card__face pack-card__face--back" aria-hidden="true"><span className="pack-card__brand">SWISHIQ</span></div>
-        <div className="pack-card__face pack-card__face--front">
-          <div className="pack-card__media">
-            {card.product.image
-              ? <Image src={card.product.image} alt={card.product.name} fittingType="fit" className="h-full w-full object-contain" />
-              : <span className="font-display text-2xl text-muted-foreground">CARD</span>}
+  const bestIndex = drawnCards.reduce((best, card, index) => {
+    const rank = ['base', 'uncommon', 'rare', 'super_rare', 'legendary'].indexOf(card.tier || 'base');
+    return rank > (drawnCards[best] ? ['base', 'uncommon', 'rare', 'super_rare', 'legendary'].indexOf(drawnCards[best].tier || 'base') : -1) ? index : best;
+  }, 0);
+  return <ul className="pack-reveal" aria-label="Latest pack contents">
+    {drawnCards.map((card, index) => {
+      const meta = TIER_META[card.tier] || TIER_META.base;
+      const value = formatCardValue(card.valueCents);
+      const glows = ['rare', 'super_rare', 'legendary'].includes(card.tier);
+      return <li
+        key={card.id}
+        className={`pack-card${index < revealed ? ' pack-card--revealed' : ''}${glows && index === bestIndex && revealed === drawnCards.length ? ' pack-card--star' : ''}`}
+        style={{ '--deal-delay': `${index * 110}ms` }}
+      >
+        <div className="pack-card__flip">
+          <div className="pack-card__face pack-card__face--back" aria-hidden="true"><span className="pack-card__brand">SWISHIQ</span></div>
+          <div className="pack-card__face pack-card__face--front">
+            <div className="pack-card__media">
+              {card.imageUrl
+                ? <Image src={card.imageUrl} alt={card.name} fittingType="fit" className="h-full w-full object-contain" />
+                : <span className="font-display text-2xl text-muted-foreground">CARD</span>}
+            </div>
+            <p className="pack-card__name">{card.name}</p>
+            <p className="mt-1 flex flex-wrap items-center justify-center gap-1.5 font-mono text-[10.4px]">
+              <span className={`rounded border px-1.5 py-0.5 font-semibold uppercase tracking-widest ${meta.chip}`}>{meta.label}</span>
+              {card.grade && <span className="text-muted-foreground">PSA {card.grade}</span>}
+              {value && <span className="font-bold text-gold">{value}</span>}
+            </p>
+            <p className="mt-0.5 truncate font-mono text-[10.4px] text-muted-foreground">{[card.set, card.cardNumber && `#${card.cardNumber}`].filter(Boolean).join(' · ')}</p>
           </div>
-          <p className="pack-card__name">{card.product.name}</p>
         </div>
-      </div>
-    </li>)}
+      </li>;
+    })}
   </ul>;
 }

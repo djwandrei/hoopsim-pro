@@ -3,17 +3,20 @@ export const SITE = 'https://www.djshouseofcards-comics.com';
 // lists without an emblem asset carry `emblem: null` and render a letter
 // fallback (ToolEmblem). Fix the Five and Draft Night are deliberately absent
 // here — this app hosts them under the studio root.
+// Live hub order (minus Fix the Five and Draft Night, hosted under the studio
+// root) so the grid reads exactly like djshouseofcards-comics.com/tools/.
 export const FAN_TOOLS = [
   ['/tools/','Fan Tools','fan-tools-emblem-20260911.png'],
   ['/lineup-lab/','Lineup Lab','lineup-lab-emblem-20260911.png','local'],
+  ['/tools/lineup-dna/','Lineup DNA',null],
+  ['/tools/position-lens/','Position Lens',null],
+  ['/tools/roster-fit-simulator/','Roster Fit',null],
+  ['/tools/trade-package-builder/','Trade Packages',null],
+  ['/tools/franchise-rebuild-challenge/','Franchise Rebuild',null],
   ['/tools/player-card-matchups/','Player & Cards','card-matchups-emblem-20260911.png'],
   ['/tools/virtual-pack-opening/','Virtual Packs','card-matchups-emblem-20260911.png'],
   ['/tools/collection-lineup-builder/','Collection Builder',null],
   ['/tools/team-dna-atlas/','Team DNA Atlas',null],
-  ['/tools/trade-package-builder/','Trade Packages',null],
-  ['/tools/position-lens/','Position Lens',null],
-  ['/tools/roster-fit-simulator/','Roster Fit',null],
-  ['/tools/franchise-rebuild-challenge/','Franchise Rebuild',null],
   ['/tools/workshop/','Workshop','workshop-emblem-20260911.png'],
   ['/tools/swishiq-studio/','SwishIQ Studio','swishiq-studio-emblem-20260913.png'],
 ].map(([path,label,asset,local])=>({path,label,href:local?path.replace(/\/+$/,''):SITE+path,emblem:asset?(local?`/studio-assets/games/${asset}`:`${SITE}/assets/games/${asset}`):null}));

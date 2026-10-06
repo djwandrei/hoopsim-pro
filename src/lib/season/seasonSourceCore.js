@@ -377,7 +377,7 @@ export async function loadCareerArchiveCore() {
       copiedAt: new Date().toISOString().slice(0, 10),
       artifactHashesChecked: true,
       artifactSha256: descriptor.sha256,
-      url: `${DATA_BASE}${descriptor.path}`,
+      url: `${DATA_BASE}${V4_RELEASE}/${descriptor.path}`,
     },
     records,
   };

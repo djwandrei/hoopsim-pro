@@ -1,0 +1,47 @@
+{
+  "name": "BookRoomPurchase",
+  "type": "object",
+  "properties": {
+    "stripe_session_id": {
+      "type": "string"
+    },
+    "credits": {
+      "type": "number"
+    },
+    "amount_cents": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed"
+      ],
+      "default": "completed"
+    }
+  },
+  "required": [
+    "stripe_session_id",
+    "credits",
+    "amount_cents"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

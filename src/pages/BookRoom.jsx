@@ -8,6 +8,7 @@ import BetTracker from '@/components/book/BetTracker';
 import OddsSetupState from '@/components/book/OddsSetupState';
 import ModelEdgePanel from '@/components/book/ModelEdgePanel';
 import WalletPanel from '@/components/book/WalletPanel';
+import BuyCreditsDialog from '@/components/book/BuyCreditsDialog';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import useBookFeed from '@/hooks/useBookFeed';
 import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsStore';
@@ -15,7 +16,7 @@ import { gradeBet, profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRo
 import { modelEdgePct } from '@/lib/bookRoom/modelEdge';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { AlertTriangle, RefreshCcw, ShieldCheck, Wallet } from 'lucide-react';
+import { AlertTriangle, Coins, RefreshCcw, ShieldCheck, Wallet } from 'lucide-react';
 
 const BONUS_AMOUNT = 250;
 const BONUS_COOLDOWN = 24 * 3600 * 1000;
@@ -46,6 +47,7 @@ export default function BookRoom() {
   const [book, setBook] = useState(loadBook);
   const [slipLegs, setSlipLegs] = useState([]);
   const [bookFilter, setBookFilter] = useState('');
+  const [showBuy, setShowBuy] = useState(false);
   const [checking, setChecking] = useState(false);
   const { league, state: seasonState } = useSeasonSource(2025);
   const { feed, loadOdds, model, movement, boosts } = useBookFeed(league, seasonState);
@@ -80,6 +82,26 @@ export default function BookRoom() {
   }, []);
 
   useEffect(() => { loadOdds(); }, [loadOdds]);
+
+  // Returning from a credits checkout: verify server-side, then credit the
+  // bankroll exactly once per paid session (ledger id = the session id, so a
+  // re-verified session can never double-credit the wallet).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('credits_session');
+    if (!sessionId) return undefined;
+    window.history.replaceState({}, '', window.location.pathname);
+    (async () => {
+      try {
+        const response = await base44.functions.invoke('bookRoomVerifyPurchase', { sessionId });
+        const credits = Math.floor(Number(response.data?.credits)) || 0;
+        if (!credits) return;
+        setBook(current => current.ledger.some(entry => entry.id === `purchase-${sessionId}`) ? current
+          : { ...current, bankroll: current.bankroll + credits, ledger: pushLedger(current.ledger, { id: `purchase-${sessionId}`, at: new Date().toISOString(), type: 'purchase', label: 'SwishIQ Credits pack', amount: credits }) });
+      } catch { /* unverified purchases grant no credits */ }
+    })();
+    return undefined;
+  }, []);
 
   const openCount = book.bets.filter(bet => bet.status === 'open').length;
   // Live tracking: re-check finals every minute while the book is exposed.
@@ -176,6 +198,7 @@ export default function BookRoom() {
         <div className="flex flex-wrap items-center gap-2">{tabs.map(([value, label]) => <button key={value} type="button" onClick={() => setTab(value)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors ${tab === value ? 'border-gold/40 bg-gold/10 text-gold' : 'border-border/50 text-muted-foreground hover:bg-raised hover:text-foreground'}`}>{label}</button>)}</div>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2" aria-label="Bankroll"><Wallet className="h-3.5 w-3.5 text-gold" aria-hidden="true" /><span className="font-mono text-xs font-bold text-gold">{book.bankroll.toLocaleString()} cr</span></span>
+          <button type="button" onClick={() => setShowBuy(true)} className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20"><Coins className="h-3.5 w-3.5" aria-hidden="true" />Buy credits</button>
           <div className="flex items-center gap-1 rounded-lg border border-border/50 p-1">{['american', 'decimal'].map(option => <button key={option} type="button" onClick={() => setFormat(option)} className={`rounded-md px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest transition-colors ${format === option ? 'bg-gold/15 text-gold' : 'text-muted-foreground hover:text-foreground'}`}>{option}</button>)}</div>
           <Link to="/real-book" className="inline-flex items-center gap-2 rounded-lg border border-positive/50 bg-positive/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-positive transition-colors hover:bg-positive/20"><ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />Real-money mode</Link>
         </div>
@@ -202,6 +225,7 @@ export default function BookRoom() {
         </div>
       </div> :
         <BetTracker book={book} format={format} cashOutFor={bet => cashOutValue(bet, priceForLeg)} onSettle={settleBet} onVoid={voidBet} onCashOut={cashOutBet} onCheckFinals={checkFinals} checking={checking} feedReady={feed.state === 'ready'} onReset={() => setBook(resetBook())} />}
+      <BuyCreditsDialog open={showBuy} onOpenChange={setShowBuy} />
       <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Play-money book: wagers are tracked in SwishIQ Credits and settle against real sportsbook results — no real-money wagering happens here. Model edge is the studio sim's probability minus the book's implied probability at last refresh; boosts apply to new wagers only and cash-out uses the unboosted live market.</p>
     </main>
   </StudioShell>;

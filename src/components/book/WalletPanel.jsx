@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Wallet, Gift, History } from 'lucide-react';
+import { Wallet, Gift, History, Coins } from 'lucide-react';
 
-const TYPE_LABEL = { bet: 'Wager', payout: 'Payout', bonus: 'Daily bonus', cashout: 'Cash out', void: 'Void', reset: 'Reset' };
+const TYPE_LABEL = { bet: 'Wager', payout: 'Payout', bonus: 'Daily bonus', cashout: 'Cash out', void: 'Void', reset: 'Reset', purchase: 'Purchase' };
 
 // SwishIQ Credits wallet: balance, the daily sportsbook bonus, and the last
 // wallet movements (wagers, payouts, cash-outs, bonuses).
-export default function WalletPanel({ bankroll, ledger, bonusReady, onClaim }) {
+export default function WalletPanel({ bankroll, ledger, bonusReady, onClaim, onBuy }) {
   const [, setTick] = useState(0);
   useEffect(() => { const id = setInterval(() => setTick(t => t + 1), 30000); return () => clearInterval(id); }, []);
   const shown = (ledger || []).slice(0, 6);
@@ -14,6 +14,7 @@ export default function WalletPanel({ bankroll, ledger, bonusReady, onClaim }) {
       <p className="bcast-kicker flex items-center gap-1.5"><Wallet className="h-3.5 w-3.5" aria-hidden="true" />SwishIQ credits</p>
       {bonusReady ? <button type="button" onClick={onClaim} className="inline-flex items-center gap-1.5 rounded-lg border border-positive/50 bg-positive/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-positive transition-colors hover:bg-positive/20"><Gift className="h-3.5 w-3.5" aria-hidden="true" />Claim +250 daily bonus</button> :
         <span className="rounded-lg border border-border/50 px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">Daily bonus on cooldown</span>}
+      <button type="button" onClick={onBuy} className="inline-flex items-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20"><Coins className="h-3.5 w-3.5" aria-hidden="true" />Buy credits</button>
     </div>
     <p className="broadcast-gradient-text mt-1 font-display text-3xl tracking-wide">{bankroll.toLocaleString()} cr</p>
     <p className="mt-1 text-[11px] text-muted-foreground">Play-money currency for this studio's book. A fresh +250 credit grant unlocks every 24 hours.</p>

@@ -1,0 +1,2596 @@
+/* Studio workbench redesign. The storefront shell, hero, footer and team media
+   stay owned by their existing shared stylesheets. */
+body.swishiq-studio-page {
+  --studio-ink:var(--swishiq-text,#172033);
+  --studio-muted:var(--swishiq-muted,#5c667f);
+  --studio-canvas:var(--swishiq-canvas,#eef3fb);
+  --studio-surface:var(--swishiq-surface,#fff);
+  --studio-raised:var(--swishiq-raised,#e8edf7);
+  --studio-line:var(--swishiq-border,rgba(24,37,73,.18));
+  --studio-gold:#e8b84c;
+  --studio-blue:#263f93;
+  --studio-radius:1.1rem;
+  --studio-shadow:0 12px 34px rgba(9,20,43,.07);
+}
+
+body.swishiq-studio-page.dark-mode {
+  --studio-shadow:0 16px 38px rgba(0,0,0,.19);
+}
+
+body.swishiq-studio-page #mainContent [hidden] { display:none !important; }
+
+body.swishiq-studio-page #mainContent > .swishiq-tabs--top {
+  position:relative;
+  z-index:3;
+  width:min(90rem,calc(100% - 2rem));
+  margin:1.1rem auto .9rem;
+  border:1px solid var(--studio-line);
+  border-radius:1rem;
+  background:color-mix(in srgb,var(--studio-surface) 92%,transparent);
+  box-shadow:0 8px 24px rgba(9,20,43,.1);
+  backdrop-filter:none;
+}
+
+body.swishiq-studio-page .swishiq-tabs__scroll {
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:.35rem;
+  overflow:visible;
+  padding:.42rem;
+  scrollbar-width:none;
+}
+
+body.swishiq-studio-page .swishiq-tabs__scroll::-webkit-scrollbar { display:none; }
+
+body.swishiq-studio-page .swishiq-tabs--top button {
+  position:relative;
+  display:flex;
+  min-width:0;
+  min-height:3rem;
+  align-items:center;
+  justify-content:center;
+  padding:.5rem .65rem;
+  border:1px solid transparent;
+  border-radius:.72rem;
+  background:transparent;
+  color:var(--studio-muted);
+  font-size:.82rem;
+  font-weight:850;
+  line-height:1.2;
+  text-align:center;
+  white-space:normal;
+  transition:background-color 140ms ease,border-color 140ms ease,color 140ms ease;
+}
+
+body.swishiq-studio-page .swishiq-tabs--top button:hover {
+  transform:none;
+  border-color:var(--studio-line);
+  background:var(--studio-raised);
+  color:var(--studio-ink);
+}
+
+body.swishiq-studio-page .swishiq-tabs--top button[aria-pressed="true"] {
+  border-color:color-mix(in srgb,var(--studio-blue) 18%,var(--studio-line));
+  background:color-mix(in srgb,var(--studio-blue) 10%,var(--studio-surface));
+  box-shadow:inset 0 -3px var(--studio-gold);
+  color:var(--studio-ink);
+}
+
+body.swishiq-studio-page.dark-mode .swishiq-tabs--top button[aria-pressed="true"] {
+  border-color:color-mix(in srgb,var(--studio-gold) 30%,var(--studio-line));
+  background:color-mix(in srgb,var(--studio-blue) 28%,var(--studio-surface));
+  color:#fff;
+}
+
+body.swishiq-studio-page .fan-help-launcher {
+  display:flex;
+  width:min(90rem,calc(100% - 2rem));
+  max-width:90rem;
+  align-items:center;
+  gap:.5rem 1rem;
+  margin:.35rem auto .6rem;
+  padding:.42rem .7rem;
+  border-radius:.72rem;
+  box-shadow:none;
+}
+
+body.swishiq-studio-page .fan-help-launcher__copy {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:.05rem .65rem;
+}
+
+body.swishiq-studio-page .fan-help-launcher__eyebrow,
+body.swishiq-studio-page .fan-help-launcher__copy strong { display:inline; margin:0; font-size:.78rem; }
+body.swishiq-studio-page .fan-help-launcher__copy p { display:none; }
+body.swishiq-studio-page .fan-help-launcher__button { min-height:2.75rem; padding:.42rem .72rem; }
+
+body.swishiq-studio-page #mainContent > :is(.swishiq-blueprint--top,.swishiq-workspace) {
+  width:min(90rem,calc(100% - 2rem));
+  max-width:90rem;
+  margin:0 auto 1rem;
+}
+
+body.swishiq-studio-page #mainContent > .swishiq-blueprint--top {
+  padding:clamp(1rem,2.2vw,1.65rem);
+  border:1px solid var(--studio-line);
+  border-radius:var(--studio-radius);
+  background:var(--studio-surface);
+  box-shadow:var(--studio-shadow);
+}
+
+body.swishiq-studio-page #mainContent > .swishiq-workspace {
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+body.swishiq-studio-page .swishiq-workspace__heading {
+  min-height:2.4rem;
+  align-items:center;
+  margin:0 0 .65rem;
+  padding:0 .2rem;
+}
+
+body.swishiq-studio-page .swishiq-workspace__heading .swishiq-kicker {
+  margin:0 0 .12rem;
+  font-size:.64rem;
+  letter-spacing:.12em;
+}
+
+body.swishiq-studio-page .swishiq-workspace__heading h2 {
+  margin:0;
+  font-size:clamp(1rem,1.8vw,1.28rem);
+  line-height:1.18;
+}
+
+body.swishiq-studio-page .swishiq-state {
+  padding:.28rem .55rem;
+  border-radius:999px;
+  background:var(--studio-surface);
+  font-size:.67rem;
+  letter-spacing:.035em;
+}
+
+body.swishiq-studio-page #mainContent :is(.swishiq-capability-panel,.swishiq-workbench-placeholder,#seasonLabSourcePanel) {
+  width:100%;
+  margin:0 0 .85rem;
+  padding:clamp(.9rem,1.7vw,1.25rem);
+  border:1px solid var(--studio-line);
+  border-radius:.95rem;
+  background:var(--studio-surface);
+  box-shadow:var(--studio-shadow);
+}
+
+body.swishiq-studio-page #mainContent #seasonLabSourcePanel {
+  grid-template-columns:minmax(0,1fr) minmax(14rem,22rem) auto;
+  align-items:center;
+  gap:.55rem 1rem;
+}
+
+body.swishiq-studio-page #mainContent :is(.swishiq-capability-panel h3,.swishiq-workbench-placeholder h3,#seasonLabSourcePanel h3) {
+  margin:.05rem 0 .15rem;
+  font-size:1.05rem;
+}
+
+body.swishiq-studio-page #mainContent :is(.swishiq-capability-panel > p,.swishiq-workbench-placeholder > p,#seasonLabSourceNote) {
+  margin:.3rem 0 0;
+  color:var(--studio-muted);
+  font-size:.88rem;
+  line-height:1.45;
+}
+
+body.swishiq-studio-page #mainContent :is(.swishiq-capability-note,#seasonLabSourceNote) { grid-column:1/-1; }
+
+body.swishiq-studio-page .swishiq-blueprint__heading,
+body.swishiq-studio-page .swishiq-capability-panel__heading {
+  align-items:center;
+  margin-bottom:.8rem;
+}
+
+body.swishiq-studio-page .swishiq-blueprint__heading h2 {
+  margin:.05rem 0 0;
+  font-size:clamp(1.35rem,2.4vw,1.85rem);
+  line-height:1.12;
+}
+
+body.swishiq-studio-page .swishiq-blueprint__filters {
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:.7rem;
+  margin:0;
+  padding:0 0 1rem;
+  border-bottom:1px solid var(--studio-line);
+}
+
+body.swishiq-studio-page .swishiq-blueprint__filter { grid-column:span 2; }
+body.swishiq-studio-page .swishiq-blueprint__search { grid-column:span 4; }
+body.swishiq-studio-page .swishiq-blueprint__select { grid-column:span 4; max-width:none; margin:0; }
+
+body.swishiq-studio-page #mainContent :is(.swishiq-blueprint__filter,.swishiq-blueprint__search,.swishiq-blueprint__select,.swishiq-package-card label,.swishiq-advanced-field,.swishiq-season-lab label) {
+  min-width:0;
+  gap:.38rem;
+  color:var(--studio-muted);
+  font-size:.875rem;
+  font-weight:800;
+}
+
+body.swishiq-studio-page #mainContent :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) {
+  width:100%;
+  min-height:2.8rem;
+  padding:.62rem .72rem;
+  border:1px solid var(--studio-line);
+  border-radius:.68rem;
+  background:var(--studio-surface);
+  color:var(--studio-ink);
+  font:inherit;
+  font-size:.88rem;
+}
+
+body.swishiq-studio-page #mainContent input::placeholder { color:var(--studio-muted); opacity:.78; }
+body.swishiq-studio-page #mainContent input:disabled,
+body.swishiq-studio-page #mainContent select:disabled { opacity:.58; cursor:not-allowed; }
+
+body.swishiq-studio-page #mainContent :is(button,.button,.button-secondary,[role="button"]) {
+  min-height:2.75rem;
+  border-radius:.7rem;
+  font-weight:850;
+  cursor:pointer;
+}
+
+body.swishiq-studio-page #mainContent :is(button,.button-secondary):not(.swishiq-tabs--top button) {
+  transition:background-color 140ms ease,border-color 140ms ease,transform 140ms ease;
+}
+
+body.swishiq-studio-page #mainContent :is(button,.button,.button-secondary):disabled {
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none;
+}
+
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-lab,.swishiq-season-lab) {
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:clamp(1rem,2.2vw,1.7rem);
+  border:1px solid var(--studio-line);
+  border-radius:var(--studio-radius);
+  background:var(--studio-surface);
+  box-shadow:var(--studio-shadow);
+  color:var(--studio-ink);
+}
+
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-lab,.swishiq-season-lab) > :first-child { margin-top:0; }
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-lab,.swishiq-season-lab) h2 { font-size:clamp(1.35rem,2.6vw,2rem); line-height:1.1; }
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-lab,.swishiq-season-lab) h3 { font-size:clamp(1rem,1.6vw,1.2rem); }
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-lab,.swishiq-season-lab) p { line-height:1.5; }
+
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-lab__section,.swishiq-method,.swishiq-game-lab__result,.swishiq-game-lab__summary,.swishiq-game-lab__evidence,.swishiq-game-lab__comparison,.swishiq-pair-profile,.swishiq-chemistry-combination,.swishiq-season-lab .season-result-section,.studio-franchise-panel,.swishiq-career-result__recorded,.swishiq-career-result__future) {
+  border-color:var(--studio-line);
+  border-radius:.9rem;
+  background:var(--studio-raised);
+}
+
+body.swishiq-studio-page #mainContent :is(details.swishiq-game-lab__assumptions,.season-lab-advanced,.swishiq-career-source-details,.swishiq-blueprint__secondary,.swishiq-career-result__table-details,.swishiq-career-result__provenance) {
+  border:1px solid var(--studio-line);
+  border-radius:.75rem;
+  background:color-mix(in srgb,var(--studio-raised) 70%,var(--studio-surface));
+}
+
+body.swishiq-studio-page #mainContent :is(details.swishiq-game-lab__assumptions,.season-lab-advanced,.swishiq-career-source-details,.swishiq-blueprint__secondary,.swishiq-career-result__table-details,.swishiq-career-result__provenance) > summary {
+  min-height:2.75rem;
+  align-content:center;
+  padding:.55rem .8rem;
+  color:var(--studio-muted);
+  font-size:.82rem;
+  font-weight:850;
+  cursor:pointer;
+}
+
+body.swishiq-studio-page #mainContent :is(.swishiq-game-lab__assumptions,.season-lab-advanced,.swishiq-career-source-details,.swishiq-blueprint__secondary,.swishiq-career-result__table-details,.swishiq-career-result__provenance)[open] { padding-bottom:.8rem; }
+body.swishiq-studio-page #mainContent :is(.swishiq-game-lab__assumptions,.season-lab-advanced,.swishiq-career-source-details,.swishiq-blueprint__secondary,.swishiq-career-result__table-details,.swishiq-career-result__provenance)[open] > :not(summary) { margin-inline:.8rem; }
+
+/* Game Lab: matchup and pick together, run controls in reach, evidence after output. */
+body.swishiq-studio-page .swishiq-game-lab__intro { max-width:62rem; margin:.35rem 0 1rem; }
+body.swishiq-studio-page .swishiq-game-lab__form {
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(16rem,.75fr);
+  align-items:start;
+  gap:.85rem;
+  margin:1rem 0;
+  padding:1rem;
+  border:1px solid var(--studio-line);
+  border-radius:1rem;
+  background:color-mix(in srgb,var(--studio-raised) 52%,var(--studio-surface));
+}
+body.swishiq-studio-page .swishiq-game-lab__setup { min-width:0; }
+body.swishiq-studio-page .swishiq-game-lab__actions { display:grid; align-content:start; gap:.65rem; min-width:0; }
+body.swishiq-studio-page .swishiq-game-lab__actions > button,
+body.swishiq-studio-page .swishiq-game-lab__actions > .button { width:100%; }
+body.swishiq-studio-page .swishiq-game-lab__assumptions { grid-column:1/-1; }
+body.swishiq-studio-page .swishiq-game-lab__status { min-height:1.4rem; margin:.2rem 0 .65rem; }
+body.swishiq-studio-page .swishiq-game-lab__summary { margin:.75rem 0; }
+body.swishiq-studio-page .swishiq-game-lab__result { margin:.75rem 0; }
+body.swishiq-studio-page .swishiq-game-lab__evidence { margin-top:.7rem; }
+body.swishiq-studio-page .swishiq-game-lab__native-timeline { margin:.7rem 0; }
+body.swishiq-studio-page .swishiq-game-lab__table-wrap { max-width:100%; overflow-x:auto; }
+body.swishiq-studio-page .swishiq-game-lab__matchup-meta {
+  position:relative;
+  z-index:2;
+  justify-self:center;
+  max-width:100%;
+  margin:.55rem 0 0;
+  padding:.38rem .65rem;
+  border:1px solid color-mix(in srgb,var(--studio-playfield-line,var(--studio-line)) 55%,transparent);
+  border-radius:999px;
+  background:color-mix(in srgb,var(--studio-playfield-dark,#101a2d) 91%,#000 9%);
+  color:var(--studio-playfield-dark-ink,#f4f6fa);
+  font-size:.68rem;
+  font-weight:800;
+  letter-spacing:.055em;
+  line-height:1.35;
+  opacity:1;
+  text-align:center;
+  white-space:normal;
+}
+body.swishiq-studio-page .swishiq-game-lab__session[hidden] { display:none !important; }
+body.swishiq-studio-page .swishiq-game-lab__session--compact {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:.5rem .9rem;
+  margin:.2rem 0 .55rem;
+  padding:.55rem .75rem;
+  border-width:1px;
+  border-radius:.8rem;
+  background:color-mix(in srgb,var(--studio-raised) 70%,var(--studio-surface));
+  box-shadow:none;
+}
+body.swishiq-studio-page .swishiq-game-lab__session--compact::before { display:none; }
+body.swishiq-studio-page .swishiq-game-lab__session--compact :is(.swishiq-session-hud__kicker,.swishiq-session-hud__status,.swishiq-session-hud__progress,.swishiq-session-hud__steps,.swishiq-session-hud__provenance) { display:none !important; }
+body.swishiq-studio-page .swishiq-game-lab__session--compact .swishiq-session-hud__title {
+  margin:0;
+  font-family:inherit;
+  font-size:.77rem;
+  font-weight:900;
+  letter-spacing:.07em;
+  line-height:1.2;
+}
+body.swishiq-studio-page .swishiq-game-lab__session--compact .swishiq-session-hud__actions {
+  display:flex;
+  grid-column:auto;
+  grid-row:auto;
+  align-self:center;
+  justify-content:flex-end;
+  gap:.35rem;
+  margin-left:auto;
+}
+body.swishiq-studio-page .swishiq-game-lab__session--compact .swishiq-session-hud__actions button {
+  min-height:2.5rem;
+  padding:.35rem .58rem;
+  font-size:.68rem;
+}
+
+/* Chemistry and player comparison: keep selection controls near the evidence. */
+body.swishiq-studio-page .swishiq-chemistry-lab__view-chooser,
+body.swishiq-studio-page .season-lab-mode-switch {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.4rem;
+  margin:.85rem 0;
+  padding:.32rem;
+  border:1px solid var(--studio-line);
+  border-radius:.8rem;
+  background:var(--studio-raised);
+}
+body.swishiq-studio-page #mainContent :is(.swishiq-chemistry-lab__view-chooser button,.season-lab-mode-switch button) { min-height:2.65rem; padding:.5rem .85rem; }
+body.swishiq-studio-page #mainContent :is(.swishiq-chemistry-lab__view-chooser button[aria-pressed="true"],.season-lab-mode-switch button[aria-pressed="true"]) { border-color:var(--studio-blue); background:var(--studio-blue); color:#fff; }
+body.swishiq-studio-page :is(.swishiq-pair-profile,.swishiq-chemistry-combination) { padding:clamp(.85rem,1.7vw,1.25rem); }
+body.swishiq-studio-page .swishiq-blueprint__comparison { margin-top:1rem; padding:1rem; border:1px solid var(--studio-line); border-radius:.9rem; background:var(--studio-raised); }
+body.swishiq-studio-page .swishiq-blueprint__comparison-table-wrap { max-width:100%; overflow-x:auto; }
+body.swishiq-studio-page #mainContent .swishiq-blueprint__comparison-table-wrap:focus-visible { outline:3px solid var(--studio-gold); outline-offset:3px; }
+body.swishiq-studio-page .swishiq-chemistry-combination__pager { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem; }
+body.swishiq-studio-page .swishiq-blueprint__secondary { margin-top:.9rem; }
+body.swishiq-studio-page .swishiq-blueprint__context-state,
+body.swishiq-studio-page .swishiq-career-state-help { color:var(--studio-muted); font-size:.82rem; line-height:1.45; }
+
+/* Composite and career: make the output profile legible before its evidence. */
+body.swishiq-studio-page .swishiq-composite-result-profile { margin-top:1rem; }
+body.swishiq-studio-page .swishiq-builder-visual { margin-top:.8rem; }
+body.swishiq-studio-page .swishiq-composite-donor-field { display:grid; align-content:start; gap:.4rem; min-width:0; }
+body.swishiq-studio-page .swishiq-composite-stepper__field[hidden] { display:none; }
+body.swishiq-studio-page #mainContent .swishiq-composite-result-source { display:block; min-width:0; overflow:visible; overflow-wrap:anywhere; line-height:1.3; text-overflow:clip; white-space:normal; }
+body.swishiq-studio-page .swishiq-composite-donor-pager { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; }
+body.swishiq-studio-page .swishiq-composite-donor-pager > span { color:var(--studio-muted); font-size:.75rem; font-weight:800; }
+body.swishiq-studio-page .swishiq-composite-donor-pager > button { min-height:2.75rem; padding:.35rem .6rem; }
+body.swishiq-studio-page .swishiq-career-form { margin:1rem 0; padding:clamp(.9rem,1.8vw,1.3rem); border:1px solid var(--studio-line); border-radius:.9rem; background:var(--studio-raised); }
+body.swishiq-studio-page .swishiq-career-result__recorded,
+body.swishiq-studio-page .swishiq-career-result__future { margin:.8rem 0; padding:clamp(.8rem,1.6vw,1.2rem); }
+body.swishiq-studio-page .swishiq-career-result__heading { display:grid; gap:.18rem; margin-bottom:.75rem; }
+body.swishiq-studio-page .swishiq-career-result__eyebrow { color:var(--studio-muted); font-size:.68rem; font-weight:900; letter-spacing:.1em; text-transform:uppercase; }
+body.swishiq-studio-page .swishiq-career-result__recorded > :first-child,
+body.swishiq-studio-page .swishiq-career-result__future > :first-child { margin-top:0; }
+body.swishiq-studio-page .swishiq-career-observed__details,
+body.swishiq-studio-page .swishiq-career-source-details { margin:.7rem 0; }
+
+/* Season / Franchise: keep the mode choice obvious; isolate long-run details. */
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-hero { padding:0 0 .9rem; border-bottom:1px solid var(--studio-line); }
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-hero__description { max-width:66rem; }
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-mode-switch { position:relative; top:auto; z-index:1; }
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-mode-panel[hidden] { display:none; }
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-mode-panel { min-width:0; }
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-result-summary-grid { gap:.55rem; }
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-result-section { margin-top:.85rem; padding:clamp(.75rem,1.4vw,1.1rem); }
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 :is(.season-results-table,.studio-table-wrap) { max-width:100%; overflow-x:auto; }
+
+/* Shared result tables: stable headers and horizontal scroll on narrow screens. */
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-table-wrap,.swishiq-game-lab__table-wrap,.swishiq-blueprint__comparison-table-wrap,.studio-table-wrap,.season-results-table,.swishiq-career-history-table-wrap) {
+  max-width:100%;
+  overflow-x:auto;
+  border:1px solid var(--studio-line);
+  border-radius:.75rem;
+  background:var(--studio-surface);
+  scrollbar-color:color-mix(in srgb,var(--studio-muted) 60%,transparent) transparent;
+}
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-table,.swishiq-game-lab__table,.swishiq-blueprint__comparison table,.studio-table,.swishiq-career-history-table) { margin:0; }
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-table,.swishiq-game-lab__table,.swishiq-blueprint__comparison table,.studio-table,.swishiq-career-history-table) :is(th,td) { border-color:var(--studio-line); }
+body.swishiq-studio-page #mainContent :is(.swishiq-advanced-table,.swishiq-game-lab__table,.swishiq-blueprint__comparison table,.studio-table,.swishiq-career-history-table) th { color:var(--studio-muted); }
+
+body.swishiq-studio-page #mainContent :focus-visible { outline:3px solid var(--studio-gold); outline-offset:3px; }
+
+@media (max-width:900px) {
+  body.swishiq-studio-page .swishiq-tabs__scroll { display:flex; gap:.3rem; overflow-x:auto; overscroll-behavior-inline:contain; scroll-snap-type:x proximity; }
+  body.swishiq-studio-page .swishiq-tabs--top button { min-width:8.4rem; scroll-snap-align:start; }
+  body.swishiq-studio-page .swishiq-blueprint__filter { grid-column:span 4; }
+  body.swishiq-studio-page .swishiq-blueprint__search { grid-column:span 6; }
+  body.swishiq-studio-page .swishiq-blueprint__select { grid-column:span 6; }
+}
+
+@media (max-width:680px) {
+  body.swishiq-studio-page .fan-help-launcher { flex-direction:row; align-items:center; width:calc(100% - 1rem); }
+  body.swishiq-studio-page .fan-help-launcher__copy { flex:1 1 auto; }
+  body.swishiq-studio-page .fan-help-launcher__button { width:auto; }
+  body.swishiq-studio-page #mainContent > :is(.swishiq-tabs--top,.swishiq-blueprint--top,.swishiq-workspace) { width:calc(100% - 1rem); }
+  body.swishiq-studio-page #mainContent > .swishiq-tabs--top { top:auto; margin:.65rem auto .7rem; }
+  body.swishiq-studio-page .swishiq-tabs--top button { min-width:7.2rem; min-height:2.75rem; font-size:.86rem; }
+  body.swishiq-studio-page #mainContent > .swishiq-blueprint--top,
+  body.swishiq-studio-page #mainContent :is(.swishiq-advanced-lab,.swishiq-season-lab) { padding:.85rem; border-radius:.85rem; }
+  body.swishiq-studio-page .swishiq-blueprint__identity { display:flex; min-height:0; align-items:center; gap:.75rem; }
+  body.swishiq-studio-page .swishiq-blueprint__avatar { width:3.5rem; height:3.5rem; }
+  body.swishiq-studio-page .swishiq-blueprint__identity-copy { flex:1 1 auto; }
+  body.swishiq-studio-page .swishiq-workspace__heading { padding-inline:.1rem; }
+  body.swishiq-studio-page #mainContent #seasonLabSourcePanel { grid-template-columns:minmax(0,1fr) auto; }
+  body.swishiq-studio-page #seasonLabSourcePanel .season-lab-source-picker { grid-column:1/-1; grid-row:2; }
+  body.swishiq-studio-page .swishiq-blueprint__filters { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.swishiq-studio-page .swishiq-blueprint__filter,
+  body.swishiq-studio-page .swishiq-blueprint__search,
+  body.swishiq-studio-page .swishiq-blueprint__select { grid-column:span 1; }
+  body.swishiq-studio-page .swishiq-blueprint__filter:last-of-type,
+  body.swishiq-studio-page .swishiq-blueprint__search,
+  body.swishiq-studio-page .swishiq-blueprint__select { grid-column:1/-1; }
+  body.swishiq-studio-page .swishiq-game-lab__form { grid-template-columns:minmax(0,1fr); padding:.75rem; }
+  body.swishiq-studio-page .swishiq-game-lab__assumptions { grid-column:auto; }
+  body.swishiq-studio-page .swishiq-game-lab__session--compact { display:grid; grid-template-columns:minmax(0,1fr); gap:.42rem; }
+  body.swishiq-studio-page .swishiq-game-lab__session--compact .swishiq-session-hud__actions { grid-column:1; justify-content:flex-start; margin:0; }
+  body.swishiq-studio-page .swishiq-game-lab__session--compact .swishiq-session-hud__actions button { flex:1 1 0; min-width:0; white-space:normal; }
+  body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-mode-switch { top:auto; }
+  body.swishiq-studio-page #mainContent :is(.swishiq-advanced-lab,.swishiq-season-lab) h2 { font-size:1.35rem; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  body.swishiq-studio-page #mainContent *,body.swishiq-studio-page #mainContent *::before,body.swishiq-studio-page #mainContent *::after {
+    scroll-behavior:auto !important;
+    animation:none !important;
+    transition:none !important;
+  }
+}
+@media (max-width:480px) {
+  body.swishiq-studio-page #mainContent #compositeLabPanel .swishiq-composite-roster__table thead th:first-child,
+  body.swishiq-studio-page #mainContent #compositeLabPanel .swishiq-composite-roster__table tbody th[scope="row"] {
+    position:static;
+    left:auto;
+    z-index:auto;
+  }
+}
+
+/* Observed-lineup cards repeat team and player count in the title. Keep the
+ * published sample caveat and three rates in the first read, with detailed
+ * numerators, coverage, and evidence one keyboard-operable disclosure away. */
+body.swishiq-studio-page .swishiq-chemistry-combination__sample {
+  margin:0 0 .5rem;
+  color:var(--studio-muted,var(--swishiq-muted));
+  font-size:.7rem;
+  line-height:1.35;
+}
+body.swishiq-studio-page .swishiq-chemistry-combination__metrics { gap:.4rem; }
+body.swishiq-studio-page .swishiq-chemistry-combination__metrics > div { padding:.45rem .52rem; }
+body.swishiq-studio-page .swishiq-chemistry-combination__metrics dd { margin:.12rem 0 0; }
+body.swishiq-studio-page .swishiq-chemistry-combination__metrics strong { font-size:.92rem; }
+body.swishiq-studio-page .swishiq-chemistry-combination__evidence {
+  margin-top:.5rem;
+  border:1px solid var(--studio-line,var(--swishiq-border));
+  border-radius:.7rem;
+  background:color-mix(in srgb,var(--studio-surface,var(--swishiq-surface)) 82%,transparent);
+}
+body.swishiq-studio-page .swishiq-chemistry-combination__evidence > summary {
+  display:flex;
+  align-items:center;
+  min-height:2.75rem;
+  padding:.4rem .6rem;
+  color:var(--swishiq-text);
+  cursor:pointer;
+  font-size:.7rem;
+  font-weight:850;
+}
+body.swishiq-studio-page .swishiq-chemistry-combination__evidence[open] > summary {
+  border-bottom:1px solid var(--studio-line,var(--swishiq-border));
+}
+body.swishiq-studio-page .swishiq-chemistry-combination__evidence-list {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.4rem .65rem;
+  margin:0;
+  padding:.55rem .65rem .65rem;
+}
+body.swishiq-studio-page .swishiq-chemistry-combination__evidence-list > div { min-width:0; }
+body.swishiq-studio-page .swishiq-chemistry-combination__evidence-list dt {
+  color:var(--studio-muted,var(--swishiq-muted));
+  font-size:.58rem;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+body.swishiq-studio-page .swishiq-chemistry-combination__evidence-list dd {
+  overflow-wrap:anywhere;
+  margin:.12rem 0 0;
+  color:var(--swishiq-text);
+  font-size:.66rem;
+  line-height:1.4;
+}
+@media (max-width:620px) {
+  body.swishiq-studio-page .swishiq-chemistry-combination__evidence-list { grid-template-columns:1fr; }
+}
+
+/* The Blueprint starts with a choice, then reveals the exact season evidence. */
+body.swishiq-studio-page .swishiq-blueprint__scout {
+  display:grid;
+  gap:.85rem;
+  padding:clamp(1rem,2vw,1.5rem);
+  border:1px solid var(--studio-line);
+  border-radius:var(--studio-radius);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--studio-blue) 14%,var(--studio-surface)),var(--studio-surface));
+  box-shadow:var(--studio-shadow);
+}
+body.swishiq-studio-page .swishiq-blueprint__scout-header {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:start;
+  justify-content:space-between;
+  gap:.5rem 1rem;
+}
+body.swishiq-studio-page .swishiq-blueprint__scout-header h3 { margin:.2rem 0 0; }
+body.swishiq-studio-page .swishiq-blueprint__scout-progress {
+  padding:.45rem .7rem;
+  border:1px solid var(--studio-line);
+  border-radius:999px;
+  background:var(--studio-surface);
+  font-size:.8rem;
+}
+body.swishiq-studio-page .swishiq-blueprint__scout > p { margin:0; color:var(--studio-muted); }
+body.swishiq-studio-page .swishiq-blueprint__scout-choices {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));
+  gap:.65rem;
+}
+body.swishiq-studio-page .swishiq-blueprint__scout-choice {
+  display:flex;
+  align-items:center;
+  gap:.7rem;
+  min-height:4.25rem;
+  padding:.65rem;
+  border:1px solid var(--studio-line);
+  border-radius:.85rem;
+  background:var(--studio-surface);
+  color:var(--studio-ink);
+  text-align:left;
+  cursor:pointer;
+}
+body.swishiq-studio-page .swishiq-blueprint__scout-choice[aria-pressed="true"] {
+  border-color:var(--studio-gold);
+  box-shadow:inset 0 0 0 2px var(--studio-gold);
+}
+body.swishiq-studio-page .swishiq-blueprint__scout-choice img { width:2.25rem; height:2.25rem; object-fit:contain; }
+body.swishiq-studio-page .swishiq-blueprint__scout-action { justify-self:start; }
+body.swishiq-studio-page .swishiq-blueprint__scout-outcome {
+  display:grid;
+  gap:.6rem;
+  padding:.8rem;
+  border:1px solid var(--studio-line);
+  border-radius:.8rem;
+  background:var(--studio-surface);
+}
+body.swishiq-studio-page .swishiq-blueprint__scout-values { display:grid; gap:.25rem; margin:0; padding-left:1.25rem; }
+body.swishiq-studio-page .swishiq-blueprint__scout-evidence {
+  margin-top:.85rem;
+  border:1px solid var(--studio-line);
+  border-radius:var(--studio-radius);
+  background:var(--studio-surface);
+}
+body.swishiq-studio-page .swishiq-blueprint__scout-evidence > summary {
+  min-height:2.75rem;
+  padding:.75rem 1rem;
+  cursor:pointer;
+  font-weight:800;
+}
+body.swishiq-studio-page .swishiq-blueprint__scout-evidence[open] > summary { border-bottom:1px solid var(--studio-line); }
+
+body.swishiq-studio-page .swishiq-blueprint__scout-change {
+  justify-self:start;
+  min-height:2.75rem;
+  padding:.3rem .7rem;
+  border:1px solid var(--studio-line);
+  border-radius:.65rem;
+  background:transparent;
+  color:var(--studio-ink);
+  font-weight:700;
+  cursor:pointer;
+}
+
+body.swishiq-studio-page :is(.swishiq-chemistry-lab__challenge,.swishiq-chemistry-lab__observed-challenge):not(:empty) {
+  display:grid;
+  gap:.65rem;
+  margin-block:.85rem;
+  padding:clamp(.8rem,2vw,1.1rem);
+  border:1px solid var(--studio-line);
+  border-radius:var(--studio-radius);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--studio-blue) 10%,var(--studio-surface)),var(--studio-surface));
+}
+body.swishiq-studio-page :is(.swishiq-chemistry-lab__challenge,.swishiq-chemistry-lab__observed-challenge) h4,
+body.swishiq-studio-page :is(.swishiq-chemistry-lab__challenge,.swishiq-chemistry-lab__observed-challenge) p { margin:0; }
+body.swishiq-studio-page .swishiq-chemistry-lab__challenge-choices {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.55rem;
+}
+body.swishiq-studio-page .swishiq-chemistry-lab__challenge-choices > button {
+  flex:1 1 12rem;
+  min-height:2.75rem;
+  white-space:normal;
+}
+body.swishiq-studio-page :is(.swishiq-chemistry-lab__challenge,.swishiq-chemistry-lab__observed-challenge) > button {
+  justify-self:start;
+  min-height:2.75rem;
+}
+body.swishiq-studio-page :is(.swishiq-chemistry-lab__challenge,.swishiq-chemistry-lab__observed-challenge) > button[hidden] { display:none; }
+
+body.swishiq-studio-page #seasonLabChallenge {
+  display:grid;
+  gap:.7rem;
+  border-color:var(--studio-gold);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--studio-gold) 10%,var(--studio-surface)),var(--studio-surface));
+}
+body.swishiq-studio-page #seasonLabChallenge[hidden] { display:none; }
+body.swishiq-studio-page #seasonLabChallenge h3,
+body.swishiq-studio-page #seasonLabChallenge h4,
+body.swishiq-studio-page #seasonLabChallenge p { margin:0; }
+body.swishiq-studio-page #seasonLabChallenge .studio-team-form { margin:.25rem 0; }
+body.swishiq-studio-page #seasonLabChallenge .studio-team-form > label { flex:1 1 12rem; min-width:0; }
+body.swishiq-studio-page #seasonLabChallenge .studio-team-form select { width:100%; max-width:100%; }
+body.swishiq-studio-page #seasonLabChallenge .studio-team-form > button { flex:0 0 auto; }
+body.swishiq-studio-page #seasonLabGameTape {
+  display:grid;
+  gap:.45rem;
+  min-width:0;
+  padding:.75rem;
+  border:1px solid var(--studio-line);
+  border-radius:.8rem;
+  background:var(--studio-surface);
+}
+body.swishiq-studio-page #seasonLabGameTape label { max-width:24rem; }
+body.swishiq-studio-page #seasonLabGameTape select { width:100%; max-width:100%; }
+body.swishiq-studio-page #seasonLabChallengeBoxSummary { overflow-wrap:anywhere; }
+@media (max-width:680px) {
+  body.swishiq-studio-page #seasonLabChallenge .studio-team-form > label,
+  body.swishiq-studio-page #seasonLabChallenge .studio-team-form > button { flex:1 1 100%; width:100%; }
+  body.swishiq-studio-page #seasonLabGameTape { padding:.65rem; }
+}
+
+/* Composite donor browsing follows the exact package season, team, then a
+ * bounded player page. These wrappers also anchor the wide workbench. */
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope {
+  display:grid;
+  grid-column:1 / -1;
+  grid-template-columns:minmax(0,1fr);
+  gap:.55rem;
+  min-width:0;
+  padding:.75rem;
+  border:1px solid var(--studio-line);
+  border-radius:.85rem;
+  background:color-mix(in srgb,var(--studio-blue) 7%,var(--studio-surface));
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope > strong {
+  color:var(--studio-ink);
+  font-size:.86rem;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope > button {
+  justify-self:start;
+  max-width:100%;
+  min-width:0;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  text-align:center;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope > label,
+body.swishiq-studio-page #careerLabPanel :is(.swishiq-career-journey,.swishiq-career-journey__results) { min-width:0; }
+body.swishiq-studio-page #careerLabPanel .swishiq-career-journey {
+  display:grid;
+  align-content:start;
+  gap:.7rem;
+  padding:clamp(.85rem,1.5vw,1.15rem);
+  border:1px solid color-mix(in srgb,var(--studio-gold) 46%,var(--studio-line));
+  border-radius:var(--studio-radius);
+  background:color-mix(in srgb,var(--studio-gold) 7%,var(--studio-surface));
+}
+body.swishiq-studio-page #careerLabPanel .swishiq-career-journey :is(h3,p) { margin:0; }
+body.swishiq-studio-page #careerLabPanel .swishiq-career-journey__status {
+  color:var(--studio-ink);
+  font-weight:750;
+  overflow-wrap:anywhere;
+}
+body.swishiq-studio-page #careerLabPanel .swishiq-career-journey__results .swishiq-advanced-table-wrap {
+  max-width:100%;
+  overflow-x:auto;
+}
+
+@media (min-width:1280px) {
+  body.swishiq-studio-page #compositeLabPanel:not([hidden]),
+  body.swishiq-studio-page #careerLabPanel:not([hidden]) {
+    display:grid;
+    align-items:start;
+    gap:.85rem 1rem;
+    min-width:0;
+  }
+  body.swishiq-studio-page #compositeLabPanel:not([hidden]) {
+    grid-template-columns:minmax(0,1.14fr) minmax(18rem,.86fr);
+  }
+  body.swishiq-studio-page #compositeLabPanel > :is(h2,#compositeLabIntro,.swishiq-builder-hud) { grid-column:1 / -1; }
+  body.swishiq-studio-page #compositeLabPanel > h2 { grid-row:1; }
+  body.swishiq-studio-page #compositeLabPanel > #compositeLabIntro { grid-row:2; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-builder-hud:not(.swishiq-composite-round) { grid-row:3; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-round { grid-row:4; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-controls {
+    grid-column:1;
+    grid-row:5;
+    margin-top:0;
+    min-width:0;
+  }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-builder-visual {
+    grid-column:2;
+    grid-row:5;
+    position:static;
+    min-width:0;
+    max-height:none;
+    overflow:visible;
+  }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-results {
+    grid-column:1 / -1;
+    grid-row:6;
+    position:static;
+    min-width:0;
+    max-height:none;
+    overflow:visible;
+    margin-top:0;
+  }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-controls .swishiq-advanced-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope { grid-column:1 / -1; }
+
+  body.swishiq-studio-page #careerLabPanel:not([hidden]) {
+    grid-template-columns:minmax(0,1fr) minmax(0,.88fr) minmax(0,1fr);
+  }
+  body.swishiq-studio-page #careerLabPanel > .swishiq-career-heading { grid-column:1 / -1; grid-row:1; }
+  body.swishiq-studio-page #careerLabPanel > #careerLabSessionHud { grid-column:1 / -1; grid-row:2; }
+  body.swishiq-studio-page #careerLabPanel > .swishiq-career-dashboard,
+  body.swishiq-studio-page #careerLabPanel .swishiq-career-dashboard__primary { display:contents; }
+  body.swishiq-studio-page #careerLabPanel .swishiq-career-controls {
+    grid-column:1;
+    grid-row:3 / span 2;
+    min-width:0;
+    margin-top:0;
+  }
+  body.swishiq-studio-page #careerLabPanel .swishiq-career-controls .swishiq-advanced-grid {
+    grid-template-columns:minmax(0,1fr);
+  }
+  body.swishiq-studio-page #careerLabPanel .swishiq-career-visual {
+    grid-column:2;
+    grid-row:3;
+    min-width:0;
+    margin:0;
+  }
+  body.swishiq-studio-page #careerLabPanel .swishiq-career-dashboard__sidebar {
+    grid-column:2;
+    grid-row:4;
+    position:sticky;
+    top:1rem;
+    min-width:0;
+  }
+  body.swishiq-studio-page #careerLabPanel > .swishiq-career-journey {
+    grid-column:3;
+    grid-row:3;
+    min-width:0;
+    max-height:calc(100vh - 2rem);
+    overflow:auto;
+  }
+  body.swishiq-studio-page #careerLabPanel > .swishiq-career-results {
+    grid-column:3;
+    grid-row:4;
+    min-width:0;
+    max-height:calc(100vh - 2rem);
+    overflow:auto;
+    margin-top:0;
+  }
+  body.swishiq-studio-page #careerLabPanel > .swishiq-career-round {
+    grid-column:1 / -1;
+    grid-row:5;
+  }
+}
+
+/* Roster-first Chemistry and Composite Forge controls. The roster tables are
+ * the primary player picker; trait tiles keep cross-team selections visible. */
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster {
+  grid-column:1 / -1;
+  min-width:0;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster {
+  width:100%;
+  min-width:0;
+  max-width:100%;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-status,
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__status {
+  margin:.2rem 0 .45rem;
+  color:var(--swishiq-muted);
+  font-size:.875rem;
+  font-weight:750;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table-wrap,
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table-wrap {
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  max-height:34rem;
+  overflow-x:auto;
+  overflow-y:auto;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  border:0;
+  border-top:1px solid var(--studio-line);
+  border-radius:0;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table,
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table {
+  width:100%;
+  min-width:58rem;
+  border-collapse:collapse;
+  color:var(--swishiq-text);
+  font-size:.875rem;
+  text-align:left;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table :is(th,td),
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table :is(th,td) {
+  padding:.52rem .58rem;
+  border-bottom:1px solid color-mix(in srgb,var(--studio-line) 76%,transparent);
+  white-space:nowrap;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table thead,
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table thead {
+  position:sticky;
+  top:0;
+  z-index:1;
+  background:var(--studio-surface);
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) .swishiq-chemistry-lab__roster-table th,
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table th {
+  color:var(--studio-ink);
+  font-size:.875rem;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table tbody th,
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table tbody th {
+  font-size:.875rem;
+  letter-spacing:0;
+  text-transform:none;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table tbody th[scope="row"] {
+  min-width:12rem;
+  text-align:left;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table .swishiq-table-numeric {
+  min-width:4.25rem;
+  text-align:right;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table-wrap:focus-visible {
+  outline:3px solid var(--studio-accent-strong,var(--studio-accent));
+  outline-offset:3px;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__sort {
+  display:inline-flex;
+  align-items:center;
+  gap:.3rem;
+  min-height:2rem;
+  margin:-.25rem -.3rem;
+  padding:.25rem .3rem;
+  border:0;
+  background:transparent;
+  color:inherit;
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__sort:hover { color:var(--studio-accent-strong,var(--studio-accent)); text-decoration:underline; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__sort:focus-visible { outline:2px solid var(--studio-accent-strong,var(--studio-accent)); outline-offset:2px; }
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table input[type="checkbox"] {
+  width:1.15rem;
+  height:1.15rem;
+  accent-color:var(--studio-accent);
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table tbody tr[draggable="true"] { cursor:grab; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table tbody tr[draggable="true"]:active { cursor:grabbing; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__assign {
+  min-height:36px;
+  padding:.35rem .55rem;
+  border:1px solid var(--studio-line);
+  border-radius:8px;
+  background:transparent;
+  color:var(--studio-ink);
+  font-size:.875rem;
+  font-weight:850;
+  cursor:pointer;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-board {
+  display:grid;
+  grid-column:1 / -1;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:.35rem .7rem;
+  min-width:0;
+  padding:.65rem 0;
+  border-top:1px solid var(--studio-line);
+  border-bottom:1px solid var(--studio-line);
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target {
+  display:grid;
+  align-content:start;
+  gap:.12rem;
+  min-width:0;
+  min-height:4.1rem;
+  padding:.55rem .1rem;
+  border:0;
+  border-bottom:2px solid transparent;
+  border-radius:0;
+  background:transparent;
+  color:var(--swishiq-text);
+  text-align:left;
+  cursor:pointer;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target.is-active { border-bottom-color:var(--studio-accent); }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target.is-drop-target {
+  outline:2px dashed var(--studio-accent-strong,var(--studio-accent));
+  outline-offset:2px;
+  background:color-mix(in srgb,var(--studio-accent) 16%,var(--studio-surface));
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--studio-accent) 24%,transparent);
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target.has-player strong { color:var(--studio-ink); }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target strong { font-size:.76rem; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target__donor { overflow:hidden; color:var(--swishiq-text); font-size:.74rem; text-overflow:ellipsis; white-space:nowrap; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target__value { color:var(--swishiq-muted); font-size:.66rem; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target:focus-visible,
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__assign:focus-visible {
+  outline:3px solid var(--studio-accent-strong,var(--studio-accent));
+  outline-offset:2px;
+}
+@media (min-width:1280px) {
+  body.swishiq-studio-page #compositeLabPanel:not([hidden]) { grid-template-columns:minmax(0,1.14fr) minmax(18rem,.86fr); }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-controls { grid-column:1; grid-row:5; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-builder-visual { grid-column:2; grid-row:5; position:static; max-height:none; overflow:visible; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-results { grid-column:1 / -1; grid-row:6; position:static; max-height:none; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-advanced-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope { grid-column:1 / -1; }
+}
+@media (max-width:760px) {
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-board { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) .swishiq-advanced-field { padding:.5rem 0; border:0; border-radius:0; background:transparent; box-shadow:none; }
+}
+@media (max-width:420px) {
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-board { grid-template-columns:1fr 1fr; gap:.2rem .45rem; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target { min-height:3.6rem; }
+}
+@media (min-width:900px) {
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--pair { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-controls { grid-column:1 / -1; grid-row:1; }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-challenge { grid-column:1; grid-row:2; }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-evidence { grid-column:2; grid-row:2; }
+}
+@media (prefers-reduced-motion:reduce) {
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target { transition:none; }
+}
+
+/* Keep the next choice, current state, and its evidence on one desktop row.
+ * Below desktop width the same DOM order becomes two columns, then one. */
+body.swishiq-studio-page :is(.swishiq-chemistry-lab__workbench-grid,.swishiq-game-lab__workbench) > *,
+body.swishiq-studio-page #seasonLabChallenge > *,
+body.swishiq-studio-page .studio-franchise-panel > * { min-width:0; }
+
+@media (min-width:900px) {
+  body.swishiq-studio-page :is(.swishiq-chemistry-lab__workbench-grid--pair,.swishiq-chemistry-lab__workbench-grid--observed) {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:start;
+    gap:.85rem;
+  }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-controls { grid-column:1 / -1; grid-row:1; }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-challenge {
+    grid-column:1;
+    grid-row:2;
+    margin-block:0;
+  }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--observed > .swishiq-chemistry-lab__workbench-controls { grid-column:1; }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--observed > .swishiq-chemistry-lab__workbench-challenge {
+    grid-column:2;
+    grid-row:auto;
+    margin-block:0;
+  }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-evidence { grid-column:2; grid-row:2; min-width:0; }
+  body.swishiq-studio-page .swishiq-chemistry-lab__workbench-grid--observed > .swishiq-chemistry-lab__workbench-evidence { grid-column:1 / -1; min-width:0; }
+
+  body.swishiq-studio-page .swishiq-game-lab__workbench {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:start;
+    gap:.85rem;
+  }
+  body.swishiq-studio-page .swishiq-game-lab__workbench-setup { grid-column:1; min-width:0; }
+  body.swishiq-studio-page .swishiq-game-lab__workbench-round { grid-column:2; min-width:0; }
+  body.swishiq-studio-page .swishiq-game-lab__workbench-evidence { grid-column:1 / -1; min-width:0; }
+
+  body.swishiq-studio-page #seasonLabChallenge:not([hidden]) {
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    align-items:start;
+  }
+  body.swishiq-studio-page #seasonLabChallengeActions { grid-column:1; min-width:0; }
+  body.swishiq-studio-page #seasonLabGameTape { grid-column:2; min-width:0; }
+
+  body.swishiq-studio-page .studio-franchise-panel {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    align-items:start;
+    gap:.75rem 1rem;
+  }
+  body.swishiq-studio-page .studio-franchise-panel > :is(h3,.studio-muted) { grid-column:1 / -1; }
+  body.swishiq-studio-page .studio-franchise-panel > .studio-roadmap,
+  body.swishiq-studio-page .studio-franchise-panel > :is(.franchise-controls,.franchise-roster-details,.franchise-coach-details,.franchise-save-details,.franchise-replay-details) { grid-column:1; }
+  body.swishiq-studio-page .studio-franchise-panel > :is(#franchiseJourney,#franchiseStatus,#franchiseResults) { grid-column:2; }
+  body.swishiq-studio-page .studio-franchise-panel > #franchiseResults { min-width:0; }
+  body.swishiq-studio-page .studio-franchise-panel :is(#franchiseResults,.franchise-roster-audit,.franchise-roster-details,.franchise-coach-details) :is(.studio-table-wrap,table) {
+    max-width:100%;
+  }
+  body.swishiq-studio-page .studio-franchise-panel :is(#franchiseResults,.franchise-roster-audit) .studio-table-wrap { overflow-x:auto; }
+}
+
+@media (min-width:1280px) {
+  body.swishiq-studio-page .swishiq-game-lab__workbench {
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  body.swishiq-studio-page .swishiq-game-lab__workbench-evidence { grid-column:3; }
+  body.swishiq-studio-page .swishiq-game-lab__workbench-round {
+    position:sticky;
+    top:1rem;
+  }
+  body.swishiq-studio-page .swishiq-game-lab__workbench-evidence {
+    max-height:calc(100vh - 2rem);
+    overflow:auto;
+  }
+
+  body.swishiq-studio-page #seasonLabChallenge:not([hidden]) {
+    grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+  }
+  body.swishiq-studio-page #seasonLabChallengeActions .season-challenge-actions__controls {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    align-items:end;
+    gap:.55rem;
+  }
+  body.swishiq-studio-page #seasonLabChallengeActions .season-challenge-actions__controls > * { min-width:0; }
+  body.swishiq-studio-page #seasonLabChallengeActions .season-challenge-actions__controls > button {
+    grid-column:1 / -1;
+    justify-self:start;
+  }
+  body.swishiq-studio-page #seasonLabGameTape {
+    position:sticky;
+    top:1rem;
+    max-height:calc(100vh - 2rem);
+    overflow:auto;
+  }
+
+  body.swishiq-studio-page .studio-franchise-panel {
+    grid-template-columns:minmax(0,.95fr) minmax(0,1fr) minmax(0,1.05fr);
+  }
+  body.swishiq-studio-page .studio-franchise-panel > :is(h3,.studio-muted) { grid-column:1 / -1; }
+  body.swishiq-studio-page .studio-franchise-panel > .studio-roadmap { grid-column:1; grid-row:3; }
+  body.swishiq-studio-page .studio-franchise-panel > #franchiseJourney { grid-column:2; grid-row:3; }
+  body.swishiq-studio-page .studio-franchise-panel > #franchiseStatus { grid-column:3; grid-row:3; }
+  body.swishiq-studio-page .studio-franchise-panel > .franchise-controls { grid-column:1; grid-row:4; }
+  body.swishiq-studio-page .studio-franchise-panel > :is(.franchise-save-details,.franchise-replay-details,.franchise-roster-details,.franchise-coach-details) { grid-column:1; }
+  body.swishiq-studio-page .studio-franchise-panel > #franchiseResults { display:contents; }
+  body.swishiq-studio-page #franchiseResults > :not(.franchise-roster-audit) { grid-column:3; min-width:0; }
+  body.swishiq-studio-page #franchiseResults > .franchise-result-summary { grid-row:4; }
+  body.swishiq-studio-page #franchiseResults > .franchise-roster-audit {
+    grid-column:2;
+    grid-row:4 / span 5;
+    align-self:start;
+    position:sticky;
+    top:1rem;
+    min-width:0;
+    max-height:calc(100vh - 2rem);
+    overflow:auto;
+  }
+  body.swishiq-studio-page #franchiseResults > :is(.franchise-result-summary,.season-result-details) {
+    max-width:100%;
+  }
+}
+
+/* One work area per lab. Inner groups use spacing and rules so the current
+ * choice, context, and result remain distinct without a stack of cards. */
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-hero {
+  padding:0 0 .9rem;
+  border:0;
+  border-bottom:1px solid var(--studio-line);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 > .season-lab-setup {
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 > .season-lab-setup::before { display:none; }
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-mode-switch {
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+}
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 :is(.season-lab-team-selector > label,.season-lab-setup-group > label) {
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-hero .swishiq-session-hud {
+  padding:.7rem 0;
+  border-right:0;
+  border-left:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.swishiq-studio-page #mainContent :is(
+  .swishiq-chemistry-lab__view-panel,
+  .swishiq-chemistry-lab__challenge,
+  .swishiq-chemistry-lab__observed-challenge,
+  .swishiq-chemistry-combination,
+  .swishiq-game-lab__form,
+  .swishiq-game-lab__setup,
+  .swishiq-game-lab__result,
+  .swishiq-game-lab__summary,
+  .swishiq-game-lab__evidence,
+  .swishiq-game-lab__comparison,
+  .swishiq-season-lab .season-result-section,
+  .swishiq-career-form,
+  .swishiq-career-observed,
+  .swishiq-career-journey,
+  .swishiq-career-result__recorded,
+  .swishiq-career-result__future
+) {
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.swishiq-studio-page #mainContent :is(
+  .swishiq-chemistry-lab__view-panel,
+  .swishiq-game-lab__form,
+  .studio-franchise-panel,
+  .swishiq-career-form,
+  .swishiq-career-observed,
+  .swishiq-career-journey
+) { padding:0; }
+body.swishiq-studio-page #mainContent :is(
+  .swishiq-chemistry-lab__challenge,
+  .swishiq-chemistry-lab__observed-challenge,
+  .swishiq-game-lab__setup,
+  .swishiq-game-lab__result,
+  .swishiq-game-lab__summary,
+  .swishiq-game-lab__evidence,
+  .swishiq-game-lab__comparison,
+  .swishiq-season-lab .season-result-section,
+  .swishiq-career-result__recorded,
+  .swishiq-career-result__future
+) { padding:.75rem 0; }
+body.swishiq-studio-page #mainContent :is(
+  .swishiq-chemistry-lab__challenge,
+  .swishiq-chemistry-lab__observed-challenge,
+  .swishiq-chemistry-combination,
+  .swishiq-game-lab__result,
+  .swishiq-game-lab__summary,
+  .swishiq-game-lab__evidence,
+  .swishiq-game-lab__comparison,
+  .swishiq-season-lab .season-result-section,
+  .swishiq-career-result__recorded,
+  .swishiq-career-result__future
+) { border-top:1px solid var(--studio-line); }
+body.swishiq-studio-page #mainContent .swishiq-game-lab__setup::before,
+body.swishiq-studio-page #mainContent .swishiq-game-lab__setup::after { display:none; }
+
+body.swishiq-studio-page #chemistryLabPanel :is(.swishiq-chemistry-lab__view-chooser,.swishiq-chemistry-combination__summary > div,.swishiq-chemistry-combination__metrics > div),
+body.swishiq-studio-page #compositeLabPanel :is(.swishiq-builder-hud,.swishiq-advanced-form,.swishiq-composite-picker-scope,.swishiq-composite-source-card,.swishiq-composite-source-card__donor,.swishiq-builder-visual,.swishiq-builder-visual__card,.swishiq-composite-result-summary,.swishiq-builder-evidence,.swishiq-builder-result-evidence),
+body.swishiq-studio-page #careerLabPanel :is(.swishiq-advanced-form,.swishiq-career-observed__card) {
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__view-chooser,
+body.swishiq-studio-page #compositeLabPanel :is(.swishiq-builder-hud,.swishiq-composite-picker-scope,.swishiq-builder-visual),
+body.swishiq-studio-page #careerLabPanel .swishiq-career-observed__card { padding:.55rem 0; }
+body.swishiq-studio-page #compositeLabPanel :is(.swishiq-composite-source-card,.swishiq-composite-result-summary,.swishiq-builder-evidence,.swishiq-builder-result-evidence),
+body.swishiq-studio-page #careerLabPanel .swishiq-career-observed__card { border-top:1px solid var(--studio-line); }
+body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual[data-previewed="true"] { box-shadow:none; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-selection-summary {
+  padding:.3rem 0;
+  border-radius:0;
+  background:transparent;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-advanced-form { padding:0; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-advanced-field { padding:.45rem 0; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual__card {
+  min-height:0;
+  padding:.5rem 0;
+}
+body.swishiq-studio-page #compositeLabPanel :is(.swishiq-composite-source-card,.swishiq-composite-result-summary) { padding:.55rem 0; }
+/* Metric cards and the persistent franchise tool are meaningful content,
+ * not wrapper chrome. Keep their surface while flattening the surrounding
+ * form and report containers. */
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__result-card,
+body.swishiq-studio-page #mainContent .swishiq-game-lab__summary-card {
+  border:1px solid var(--studio-line);
+  border-top:3px solid var(--studio-accent);
+  border-radius:.75rem;
+  background:var(--studio-raised);
+  box-shadow:none;
+}
+body.swishiq-studio-page #mainContent .swishiq-game-lab__summary-card { padding:.65rem .75rem; }
+body.swishiq-studio-page #seasonLabPanel .studio-franchise-panel {
+  padding:.9rem;
+  border:1px solid var(--studio-line);
+  border-top:3px solid var(--studio-accent);
+  border-radius:.9rem;
+  background:var(--studio-raised);
+  box-shadow:none;
+}
+
+body.swishiq-studio-page #seasonLabChallenge {
+  padding:.75rem 0;
+  border:0;
+  border-top:1px solid var(--studio-line);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+body.swishiq-studio-page #seasonLabGameTape,
+body.swishiq-studio-page .studio-franchise-panel :is(#franchiseJourney,#franchiseStatus,.franchise-result-summary,.franchise-roster-audit,.franchise-roster-details,.franchise-coach-details),
+body.swishiq-studio-page #careerLabPanel :is(.swishiq-career-controls,.swishiq-career-dashboard__sidebar) {
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.swishiq-studio-page #seasonLabGameTape,
+body.swishiq-studio-page .studio-franchise-panel :is(#franchiseJourney,#franchiseStatus,.franchise-result-summary,.franchise-roster-audit,.franchise-roster-details,.franchise-coach-details) {
+  padding:.65rem 0;
+  border-top:1px solid var(--studio-line);
+}
+body.swishiq-studio-page #careerLabPanel :is(.swishiq-career-journey,.swishiq-career-observed,.swishiq-career-result__recorded,.swishiq-career-result__future) { border-top:1px solid var(--studio-line); }
+
+@media (min-width:900px) {
+  body.swishiq-studio-page #mainContent :is(.swishiq-chemistry-lab__workbench-grid,.swishiq-game-lab__workbench) > :not(:first-child),
+  body.swishiq-studio-page #seasonLabGameTape,
+  body.swishiq-studio-page .studio-franchise-panel > :is(#franchiseJourney,#franchiseStatus,#franchiseResults) {
+    padding-left:1rem;
+    border-top:0;
+    border-left:1px solid var(--studio-line);
+  }
+}
+
+/* Chemistry keeps the roster as the full-width first stage, then places the
+ * matchup prompt and its evidence in balanced columns. Composite Forge gives
+ * the donor controls room beside the live build and moves finished output
+ * below both columns. Scroll targets clear the sticky header and workbench
+ * switcher instead of landing underneath them. */
+body.swishiq-studio-page #chemistryLabPanel .swishiq-advanced-field:has(> select[hidden]) { display:none !important; }
+body.swishiq-studio-page #chemistryLabPanel :is(.swishiq-chemistry-lab__workbench-challenge,.swishiq-chemistry-lab__workbench-evidence),
+body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-results,
+body.swishiq-studio-page #mainContent .swishiq-game-lab__workbench-evidence {
+  scroll-margin-block-start:calc(var(--header-h,5rem) + 7rem);
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-evidence {
+  min-width:0;
+  max-height:none;
+  overflow:visible;
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) .swishiq-advanced-field {
+  min-width:0;
+  padding:.45rem 0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+@media (min-width:900px) {
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:start;
+  }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-controls { grid-column:1 / -1; grid-row:1; }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-challenge { grid-column:1 / -1; grid-row:2; min-width:0; }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-evidence { grid-column:1 / -1; grid-row:3; min-width:0; }
+
+  body.swishiq-studio-page #compositeLabPanel:not([hidden]) {
+    display:grid;
+    align-items:start;
+    gap:.85rem 1rem;
+    min-width:0;
+    grid-template-columns:minmax(0,1.14fr) minmax(18rem,.86fr);
+  }
+  body.swishiq-studio-page #compositeLabPanel > :is(h2,#compositeLabIntro,.swishiq-builder-hud) { grid-column:1 / -1; }
+  body.swishiq-studio-page #compositeLabPanel > h2 { grid-row:1; }
+  body.swishiq-studio-page #compositeLabPanel > #compositeLabIntro { grid-row:2; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-builder-hud:not(.swishiq-composite-round) { grid-row:3; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-round { grid-row:4; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-controls { grid-column:1; grid-row:5; min-width:0; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-builder-visual { grid-column:2; grid-row:5; position:static; max-height:none; overflow:visible; min-width:0; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-results { grid-column:1 / -1; grid-row:6; position:static; max-height:none; overflow:visible; min-width:0; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-advanced-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope { grid-column:1 / -1; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual__grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+/* Give the long donor list a wider desktop track while keeping its live
+ * preview beside it during scroll. overflow:clip preserves the panel edge
+ * without creating the scroll container that would disable sticky positioning. */
+@media (min-width:1280px) {
+  body.swishiq-studio-page #compositeLabPanel:not([hidden]) {
+    overflow:clip;
+    grid-template-columns:minmax(0,2fr) minmax(20rem,1fr);
+  }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-builder-visual {
+    position:sticky;
+    top:calc(var(--fan-suite-header-offset,116px) + 1rem);
+    align-self:start;
+    margin-top:0;
+    max-height:none;
+    overflow:visible;
+  }
+}
+
+@media (max-width:899px) {
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair { grid-template-columns:minmax(0,1fr); }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair > * { grid-column:1; grid-row:auto; min-width:0; }
+  body.swishiq-studio-page #compositeLabPanel:not([hidden]) { display:grid; grid-template-columns:minmax(0,1fr); }
+  body.swishiq-studio-page #compositeLabPanel > * { grid-column:1; grid-row:auto; min-width:0; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual__grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width:620px) {
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-pair-profile__metric-grid { grid-template-columns:1fr; }
+}
+@media (min-width:1280px) {
+  body.swishiq-studio-page #careerLabPanel > :is(.swishiq-career-journey,.swishiq-career-results),
+  body.swishiq-studio-page #careerLabPanel .swishiq-career-dashboard__sidebar,
+  body.swishiq-studio-page #franchiseResults > :is(.franchise-roster-audit,.franchise-result-summary) {
+    padding-left:1rem;
+    border-left:1px solid var(--studio-line);
+  }
+  body.swishiq-studio-page #franchiseResults > .franchise-roster-audit { border-top:0; }
+}
+
+/* Match the team watermark placement used by the other fan-tool heroes. */
+body.court-themed.swishiq-studio-page main .swishiq-hero {
+  display:block;
+  min-height:0;
+  padding:clamp(.8rem,1.7vw,1.1rem) 0;
+}
+body.court-themed.swishiq-studio-page main .swishiq-hero::after {
+  top:-18%;
+  right:auto;
+  left:clamp(0rem,4vw,3rem);
+  width:min(38vw,24rem);
+  height:140%;
+  border:0;
+  border-radius:0;
+  background:var(--swishiq-hero-team-logo,var(--court-team-logo,none)) center / contain no-repeat;
+  opacity:0;
+  transform:rotate(-8deg) translateX(-8%);
+}
+body.court-themed.swishiq-studio-page main .swishiq-hero[data-team-logo-failed]::after { opacity:.58; }
+body.court-themed.swishiq-studio-page main .swishiq-hero .tool-hero__copy {
+  width:min(100%,45rem);
+  max-width:45rem;
+  padding:0;
+}
+body.court-themed.swishiq-studio-page main .swishiq-hero__team-logo {
+  position:absolute;
+  z-index:0;
+  top:-18%;
+  left:clamp(0rem,4vw,3rem);
+  width:min(38vw,24rem);
+  height:140%;
+  object-fit:contain;
+  opacity:.24;
+  filter:saturate(.82) brightness(.72) contrast(1.08);
+  pointer-events:none;
+  transform:rotate(-8deg) translateX(-8%);
+}
+body.court-themed.swishiq-studio-page main .swishiq-hero__team-logo[hidden] { display:none; }
+body.court-themed.swishiq-studio-page main .swishiq-hero[data-hero-logo-pending] .swishiq-hero__team-logo { opacity:0; }
+@media (max-width:780px) {
+  body.court-themed.swishiq-studio-page main .swishiq-hero { padding:.8rem 0; }
+  body.court-themed.swishiq-studio-page main .swishiq-hero__team-logo {
+    width:min(38vw,14rem);
+    opacity:.22;
+  }
+  body.court-themed.swishiq-studio-page main .swishiq-hero::after {
+    width:min(38vw,14rem);
+  }
+  body.court-themed.swishiq-studio-page main .swishiq-hero > .court-team-picker--hero {
+    position:relative;
+    inset:auto;
+    width:min(100%,24rem);
+    margin:.75rem 0 0;
+  }
+}
+/* Chemistry's roster is the main work surface: keep it flat, separate the
+ * filters from the player rows, and let the table scroll on narrow screens. */
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__view-panel--pair {
+  margin-top:.75rem;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  background-image:none;
+  box-shadow:none;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__view-panel--pair::before,
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__view-panel--pair::after,
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-controls::before,
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-controls::after {
+  content:none;
+  display:none;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__filter-grid {
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.35rem .8rem;
+  margin-top:.25rem;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__filter-grid .swishiq-advanced-field > span {
+  font-size:.875rem;
+  letter-spacing:.06em;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-controls {
+  padding:.25rem 0;
+  background-image:none;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-controls > h3 {
+  margin:0;
+  padding-bottom:.45rem;
+  border-bottom:1px solid var(--studio-line);
+  font-size:1rem;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster {
+  padding-top:.55rem;
+  border-top:1px solid var(--studio-line);
+  background-image:none;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster > h4 { margin:.05rem 0 .1rem; }
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-scope {
+  margin:.1rem 0 .35rem;
+  color:var(--swishiq-muted);
+  font-size:.875rem;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-pager {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.55rem;
+  margin-top:.5rem;
+  color:var(--swishiq-muted);
+  font-size:.875rem;
+  font-variant-numeric:tabular-nums;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-page-control {
+  min-width:5.5rem;
+  min-height:2.6rem;
+  padding:.4rem .65rem;
+  font-size:.875rem;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-page-status { text-align:center; }
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table {
+  min-width:63rem;
+  table-layout:auto;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table :is(th,td) {
+  font-size:max(.875rem,14px);
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table tbody tr:hover {
+  background:color-mix(in srgb,var(--studio-accent) 7%,transparent);
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table td:nth-child(2) {
+  color:var(--swishiq-muted);
+  font-weight:850;
+}
+
+@media (min-width:900px) {
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair {
+    grid-template-columns:minmax(0,1fr);
+    align-items:start;
+  }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-controls {
+    grid-column:1 / -1;
+    grid-row:1;
+    padding:0;
+    border:0;
+  }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--pair > .swishiq-chemistry-lab__workbench-evidence {
+    grid-column:1 / -1;
+    grid-row:2;
+    min-width:0;
+    padding:0;
+    border:0;
+  }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--observed { grid-template-columns:minmax(0,1fr); }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--observed > .swishiq-chemistry-lab__workbench-controls,
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__workbench-grid--observed > .swishiq-chemistry-lab__workbench-evidence { grid-column:1 / -1; }
+}
+
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-combination__averages-heading {
+  margin:0;
+  color:var(--studio-accent-strong);
+  font-size:.66rem;
+  font-weight:950;
+  letter-spacing:.075em;
+  text-transform:uppercase;
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-combination__player-averages > div {
+  border-top-color:color-mix(in srgb,var(--swishiq-team-primary) 46%,var(--swishiq-border));
+  background:color-mix(in srgb,var(--swishiq-surface) 90%,var(--swishiq-team-primary) 10%);
+}
+body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-combination__player-averages dt { color:var(--studio-accent-strong); }
+
+@media (max-width:640px) {
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__filter-grid {
+    grid-template-columns:minmax(0,1fr);
+  }
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__roster-table-wrap {
+    max-height:29rem;
+  }
+}
+
+/* A setup column has room for a full matchup board when its decisions stack
+ * below the court. Result tables then use their own column rather than
+ * widening the whole workbench. */
+@media (min-width:900px) {
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-setup {
+    grid-template-columns:minmax(0,1fr);
+  }
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-setup > * { grid-column:1; min-width:0; }
+}
+@media (min-width:1280px) {
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence .swishiq-game-lab__table {
+    width:100%;
+    min-width:0;
+    table-layout:fixed;
+    font-size:.72rem;
+  }
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence .swishiq-game-lab__table :is(th,td) {
+    padding:.42rem .3rem;
+    overflow-wrap:anywhere;
+    white-space:normal;
+  }
+}
+@media (max-width:899px) {
+  body.swishiq-studio-page #gameLabPanel:not([hidden]),
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench,
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+  }
+  body.swishiq-studio-page #gameLabPanel > *,
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench > *,
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence > * {
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__intro { overflow-wrap:anywhere; }
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__table-wrap { max-width:100%; overflow-x:auto; }
+}
+
+@media (min-width:1280px) {
+  body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual__head {
+    display:grid;
+    gap:.2rem;
+  }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual__grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual__card :is(.swishiq-builder-visual__label,.swishiq-builder-visual__unit,small) {
+    overflow-wrap:anywhere;
+    white-space:normal;
+  }
+}
+
+/* Keep matchup codes intact, and give the evidence tables the full desktop
+ * workbench width. The setup and campaign actions share the first row; long
+ * result tables no longer have to fit inside a narrow third column. */
+body.swishiq-studio-page .swishiq-game-lab__matchup-code {
+  min-width:0;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+
+body.court-themed.swishiq-studio-page main .swishiq-hero__team-logo { z-index:0; }
+body.court-themed.swishiq-studio-page main .swishiq-hero .tool-hero__copy { position:relative; z-index:1; }
+body.court-themed.swishiq-studio-page main .swishiq-hero[data-hero-logo-pending]::after,
+body.court-themed.swishiq-studio-page main .swishiq-hero[data-hero-logo-loaded]::after { opacity:0; }
+
+@media (min-width:1280px) {
+  body.swishiq-studio-page .swishiq-game-lab__workbench {
+    grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+    align-items:start;
+  }
+
+  body.swishiq-studio-page .swishiq-game-lab__workbench-round {
+    grid-column:2;
+    position:static;
+  }
+
+  body.swishiq-studio-page #mainContent .swishiq-game-lab__workbench > .swishiq-game-lab__workbench-evidence {
+    grid-column:1 / -1;
+    max-height:none;
+    overflow:visible;
+    padding-left:0;
+    border-left:0;
+  }
+
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence .swishiq-game-lab__table {
+    width:100%;
+    min-width:0;
+    table-layout:fixed;
+  }
+
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence .swishiq-game-lab__table :is(th,td) {
+    overflow-wrap:break-word;
+    word-break:normal;
+  }
+}
+
+@media (max-width:899px) {
+  body.swishiq-studio-page #gameLabPanel,
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench,
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench > *,
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence > * {
+    box-sizing:border-box;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__matchup-code {
+    font-size:clamp(1.2rem,7vw,2.05rem);
+    white-space:nowrap;
+  }
+
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__matchup-label {
+    min-width:0;
+    overflow-wrap:break-word;
+    word-break:normal;
+  }
+
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__table-wrap {
+  box-sizing:border-box;
+  width:100%;
+    min-width:0;
+  max-width:100%;
+  overflow-x:auto;
+}
+}
+
+/* The simulation workbenches use one outer reading area. Keep headings and
+ * section rules visible without adding a second card around their contents. */
+body.swishiq-studio-page #mainContent :is(#gameLabPanel,#seasonLabPanel,#careerLabPanel) {
+  margin:1.1rem 0 0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__intro {
+  max-width:72ch;
+  margin:0 0 1rem;
+  padding:0 0 .9rem;
+  border-bottom:1px solid var(--studio-line);
+}
+
+/* Court outlines and hatch patterns are decoration, not simulation evidence.
+ * Keep the matchup surface high-contrast while removing lines behind team names. */
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__matchup-board {
+  background:linear-gradient(145deg,
+    color-mix(in srgb,var(--studio-playfield-dark) 94%,#000 6%),
+    color-mix(in srgb,var(--studio-playfield-dark) 76%,var(--studio-accent) 24%));
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__matchup-board::before,
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__matchup-board::after,
+body.swishiq-studio-page #careerLabPanel .swishiq-career-visual::after {
+  display:none;
+  content:none;
+}
+
+/* Composite Forge keeps the donor table and trait map in one working surface.
+ * Use section rules in place of nested cards so controls stay readable at all
+ * widths without decorative lines or gradients behind the values. */
+body.swishiq-studio-page #compositeLabPanel:not([hidden]) {
+  background:var(--studio-surface);
+  background-image:none;
+  border-color:var(--studio-line);
+  box-shadow:none;
+}
+body.swishiq-studio-page #compositeLabPanel > #compositeLabIntro {
+  max-width:72ch;
+  margin:.55rem 0 .9rem;
+  padding-bottom:.85rem;
+  border-bottom:1px solid var(--studio-line);
+}
+body.swishiq-studio-page #compositeLabPanel > .swishiq-builder-hud:not(.swishiq-composite-round) {
+  margin:.1rem 0 .2rem;
+  padding:0 0 .85rem;
+  border:0;
+  border-bottom:1px solid var(--studio-line);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-controls {
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope {
+  padding:.2rem 0 .7rem;
+  border:0;
+  border-bottom:1px solid var(--studio-line);
+  border-radius:0;
+  background:transparent;
+}
+body.swishiq-studio-page #compositeLabPanel > .swishiq-builder-visual {
+  padding:.9rem 0;
+  border:0;
+  border-top:1px solid var(--studio-line);
+  border-bottom:1px solid var(--studio-line);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+/* The shared visual card ring crosses Composite's data table and skill slots. */
+body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual::after {
+  display:none;
+  content:none;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-controls .swishiq-advanced-field > span {
+  font-size:.72rem;
+  letter-spacing:.06em;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table { font-size:.86rem; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table :is(th,td) { padding:.58rem .65rem; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__sort { min-height:2.75rem; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__assign {
+  min-height:44px;
+  padding:.45rem .65rem;
+  white-space:nowrap;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target {
+  gap:.2rem;
+  min-height:4.5rem;
+  padding:.6rem .2rem;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target strong { font-size:.84rem; line-height:1.2; }
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target__donor {
+  overflow:visible;
+  font-size:.82rem;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+  white-space:normal;
+}
+body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target__value {
+  font-size:.74rem;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+@media (max-width:760px) {
+  body.swishiq-studio-page #compositeLabPanel:not([hidden]) { padding:.8rem 0; }
+  body.swishiq-studio-page #compositeLabPanel > .swishiq-composite-controls { gap:.75rem; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-picker-scope { gap:.4rem; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-roster__table { min-width:56rem; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-composite-trait-target { min-height:4.2rem; }
+  body.swishiq-studio-page #compositeLabPanel .swishiq-advanced-field select,
+  body.swishiq-studio-page #compositeLabPanel .swishiq-advanced-field input { min-height:48px; font-size:.95rem; }
+}
+
+/* Shared simulation layout overrides. Keep selectors inside Studio so the
+ * common shell remains available on the other public tools. */
+body.swishiq-studio-page .swishiq-season-lab--visual-v2 .season-lab-mode-switch {
+  position:relative;
+  top:auto;
+  z-index:1;
+}
+body.swishiq-studio-page #mainContent > .swishiq-tabs--top {
+  position:relative;
+  top:auto;
+}
+body.swishiq-studio-page #mainContent > .swishiq-tabs--top button { font-size:.9rem; }
+body.swishiq-studio-page #mainContent :is(#gameLabPanel,#seasonLabPanel,#careerLabPanel) :is(select,input,textarea) {
+  box-sizing:border-box;
+  min-width:0;
+  max-width:100%;
+  min-height:2.75rem;
+  font-size:.9rem;
+  line-height:1.35;
+}
+body.swishiq-studio-page #mainContent :is(#gameLabPanel,#seasonLabPanel,#careerLabPanel) .swishiq-advanced-field > span {
+  font-size:.82rem;
+  letter-spacing:.045em;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence .swishiq-game-lab__table {
+  font-size:.85rem;
+  line-height:1.4;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__workbench-evidence .swishiq-game-lab__table :is(th,td) {
+  font-size:.85rem;
+  line-height:1.4;
+  overflow-wrap:break-word;
+  word-break:normal;
+  white-space:normal;
+}
+body.swishiq-studio-page #seasonLabPanel .swishiq-season-lab--visual-v2 .season-results-table .studio-table :is(th,td) {
+  padding:.5rem .58rem;
+  font-size:.85rem;
+  line-height:1.35;
+}
+body.swishiq-studio-page #careerLabPanel .swishiq-career-observed__table .swishiq-advanced-table {
+  font-size:.85rem;
+  line-height:1.4;
+}
+body.swishiq-studio-page #careerLabPanel .swishiq-career-observed__table .swishiq-advanced-table :is(th,td) {
+  font-size:.85rem;
+  line-height:1.4;
+}
+body.swishiq-studio-page #careerLabPanel .swishiq-career-observed__table .swishiq-advanced-table caption { font-size:.85rem; }
+body.swishiq-studio-page #careerLabPanel .swishiq-career-observed__table .swishiq-advanced-table-wrap {
+  max-width:100%;
+  overflow-x:auto;
+  overscroll-behavior-inline:contain;
+}
+body.swishiq-studio-page #seasonLabPanel .season-lab-mode-switch button {
+  min-height:2.75rem;
+  padding:.55rem .8rem;
+  font-size:.9rem;
+}
+body.swishiq-studio-page #mainContent :focus-visible { outline-offset:3px; }
+
+/* The public audit and the prototype both use a standard direct hero-emblem
+ * slot. In Studio that slot is the transparent live team watermark. */
+body.court-themed.swishiq-studio-page main .tool-hero__emblem.swishiq-hero__team-logo {
+  display:block;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  aspect-ratio:auto;
+}
+/* Player picker options remain readable over both Studio themes, even when a
+ * club palette uses similarly colored primary and highlight tones. */
+body.swishiq-studio-page .swishiq-player-picker__menu {
+  color:var(--studio-ink);
+  background:var(--studio-surface);
+}
+body.swishiq-studio-page .swishiq-player-picker__option,
+body.swishiq-studio-page .swishiq-player-picker__option-copy strong {
+  color:var(--studio-ink);
+}
+body.swishiq-studio-page .swishiq-player-picker__option:hover,
+body.swishiq-studio-page .swishiq-player-picker__option:focus-visible,
+body.swishiq-studio-page .swishiq-player-picker__option[aria-selected="true"] {
+  border-color:color-mix(in srgb,var(--studio-blue) 42%,var(--studio-line));
+  background:color-mix(in srgb,var(--studio-blue) 12%,var(--studio-surface));
+}
+body.swishiq-studio-page #blueprintPlayerLabel {
+  color:var(--studio-muted);
+  font-size:.82rem;
+  font-weight:800;
+  line-height:1.35;
+}
+
+/* Keep menu labels legible when the page theme changes independently of the
+ * selected club colors. Wrap long names instead of clipping them in narrow menus. */
+body.swishiq-studio-page:not(.dark-mode) .swishiq-filter-picker__option-copy,
+body.swishiq-studio-page:not(.dark-mode) #mainContent .swishiq-blueprint__filters .swishiq-filter-picker__option-copy,
+body.swishiq-studio-page:not(.dark-mode) #mainContent #blueprintPlayerLabel { color:#334155 !important; }
+body.swishiq-studio-page.dark-mode .swishiq-filter-picker__option-copy,
+body.swishiq-studio-page.dark-mode #mainContent .swishiq-blueprint__filters .swishiq-filter-picker__option-copy,
+body.swishiq-studio-page.dark-mode #mainContent #blueprintPlayerLabel { color:#f1f5f9 !important; }
+body.swishiq-studio-page .swishiq-filter-picker__option-copy {
+  overflow:visible;
+  overflow-wrap:anywhere;
+  text-overflow:clip;
+  white-space:normal;
+  font-size:.88rem;
+  line-height:1.3;
+}
+
+/* A picker inside a two-column filter row should use its own column width on
+ * compact screens. The legacy 19rem minimum pushed the right-hand popover
+ * past the viewport just above the single-column breakpoint. */
+@media (max-width:900px) {
+  body.swishiq-studio-page #mainContent .swishiq-blueprint__season-picker .swishiq-filter-picker__panel,
+  body.swishiq-studio-page #mainContent .swishiq-blueprint__filters .swishiq-filter-picker__panel {
+    left:0;
+    right:0;
+    min-width:0;
+    max-width:100%;
+    width:auto;
+    box-sizing:border-box;
+  }
+}
+
+/* Remove the oversized ambient rings and court hatching behind reading text.
+ * The matchup and career data itself stays visible. */
+body.swishiq-studio-page main::before,
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__setup::before,
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__setup::after {
+  display:none;
+  content:none;
+}
+
+/* Make the current matchup, campaign score, and example result read in that order. */
+body.swishiq-studio-page #gameLabPanel #gameStatus {
+  display:flex;
+  align-items:flex-start;
+  gap:.58rem;
+  min-height:0;
+  margin:.45rem 0 .75rem;
+  padding:.72rem .85rem;
+  border:1px solid color-mix(in srgb,var(--studio-accent) 24%,var(--studio-line));
+  border-left:3px solid var(--studio-accent);
+  border-radius:.75rem;
+  color:var(--studio-ink);
+  background:color-mix(in srgb,var(--studio-accent) 6%,var(--studio-surface));
+  font-size:.82rem;
+  font-weight:700;
+  line-height:1.45;
+}
+body.swishiq-studio-page #gameLabPanel #gameStatus::before {
+  flex:0 0 .48rem;
+  width:.48rem;
+  height:.48rem;
+  margin:.36em .04rem 0 0;
+  border-radius:50%;
+  background:var(--studio-accent);
+  box-shadow:0 0 0 .2rem color-mix(in srgb,var(--studio-accent) 14%,transparent);
+  content:"";
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__campaign-scoreboard {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.5rem;
+  margin:0 0 .75rem !important;
+  font-family:inherit;
+  font-size:inherit;
+  letter-spacing:normal;
+  line-height:normal;
+  text-transform:none;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__campaign-separator { display:none; }
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__campaign-metric {
+  display:flex;
+  align-items:center;
+  min-width:0;
+  min-height:3.35rem;
+  padding:.62rem .7rem;
+  border:1px solid color-mix(in srgb,var(--studio-accent) 24%,var(--studio-line));
+  border-radius:.7rem;
+  color:var(--studio-ink);
+  background:color-mix(in srgb,var(--studio-raised) 78%,var(--studio-accent) 22%);
+  font-family:var(--font-display,"Bebas Neue",Impact,sans-serif);
+  font-size:clamp(.72rem,2vw,.9rem);
+  font-variant-numeric:tabular-nums;
+  font-weight:850;
+  letter-spacing:.025em;
+  line-height:1.1;
+  overflow-wrap:anywhere;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__result {
+  display:grid;
+  gap:.4rem;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__result h3,
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__result-note { margin:0; }
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:.25rem .8rem;
+  width:min(100%,42rem);
+  margin:.5rem 0 .7rem;
+  padding:.8rem .95rem;
+  border:1px solid color-mix(in srgb,var(--studio-accent) 32%,var(--studio-line));
+  border-radius:.85rem;
+  background:linear-gradient(135deg,
+    color-mix(in srgb,var(--studio-accent) 9%,var(--studio-surface)),
+    var(--studio-surface) 68%);
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard-label {
+  grid-column:1/-1;
+  color:var(--studio-muted);
+  font-size:.63rem;
+  font-weight:850;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard-team {
+  display:grid;
+  gap:.2rem;
+  min-width:0;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard-team--b {
+  justify-items:end;
+  text-align:right;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard-name {
+  overflow-wrap:anywhere;
+  color:var(--studio-muted);
+  font-size:.75rem;
+  font-weight:800;
+  line-height:1.25;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard-value {
+  color:var(--studio-ink);
+  font-family:var(--font-display,"Bebas Neue",Impact,sans-serif);
+  font-size:clamp(1.8rem,5vw,2.65rem);
+  font-variant-numeric:tabular-nums;
+  line-height:.9;
+}
+body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard-separator {
+  color:var(--studio-accent-strong,var(--studio-accent));
+  font-family:var(--font-display,"Bebas Neue",Impact,sans-serif);
+  font-size:1.35rem;
+  font-weight:900;
+}
+
+@media (max-width:520px) {
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__campaign-scoreboard { gap:.35rem; }
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__campaign-metric {
+    min-height:3rem;
+    padding:.55rem;
+    font-size:clamp(.64rem,3vw,.78rem);
+  }
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard {
+    gap:.25rem .5rem;
+    padding:.7rem .75rem;
+  }
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard-name { font-size:.68rem; }
+  body.swishiq-studio-page #gameLabPanel .swishiq-game-lab__scoreboard-value { font-size:clamp(1.5rem,8vw,2rem); }
+}
+
+/* Keep meaningful controls, workflow text, and evidence labels legible in every workbench. */
+body.swishiq-studio-page #mainContent :is(#chemistryLabPanel,#compositeLabPanel,#gameLabPanel,#seasonLabPanel,#careerLabPanel) :is(button,summary,small,th,td,caption,output,[role="status"]) {
+  font-size:max(14px,1em);
+}
+body.swishiq-studio-page #mainContent :is(#chemistryLabPanel,#compositeLabPanel,#gameLabPanel,#seasonLabPanel,#careerLabPanel) .swishiq-advanced-field > span,
+body.swishiq-studio-page #mainContent :is(#chemistryLabPanel,#compositeLabPanel,#gameLabPanel,#seasonLabPanel,#careerLabPanel) :is(.swishiq-game-lab__field-label,.swishiq-game-lab__matchup-label,.swishiq-game-lab__matchup-meta,.swishiq-game-lab__scoreboard-name,.swishiq-game-lab__campaign-metric,.swishiq-builder-hud__prompt,.swishiq-builder-hud__step,.swishiq-builder-hud__step-marker,.swishiq-builder-hud__meta,.swishiq-builder-visual__label,.swishiq-builder-visual__unit,.swishiq-composite-selection-summary,.swishiq-composite-trait-target__donor,.swishiq-composite-trait-target__value,.swishiq-session-hud__step,.swishiq-session-hud__step-marker,.swishiq-session-hud__step-label,.swishiq-session-hud__status,.swishiq-session-hud__reference-status,.swishiq-season-lab-status,.studio-table-hint,.season-lab-hero__badge,.swishiq-career-state-help,.swishiq-career-observed__subcopy,.swishiq-career-observed__note,.swishiq-career-observed__card span,.swishiq-career-observed__card small,.swishiq-career-visual__legend,.swishiq-career-visual__bar small,.swishiq-career-visual__bar-value,.swishiq-advanced-muted,.swishiq-advanced-status,.swishiq-state,[role="status"]) {
+  font-size:max(14px,1em);
+}
+body.swishiq-studio-page #mainContent #chemistryLabPanel :is(strong,.swishiq-chemistry-lab__roster-page-status,.swishiq-chemistry-lab__roster-scope,.swishiq-chemistry-lab__roster-status),
+body.swishiq-studio-page #mainContent #compositeLabPanel .swishiq-builder-evidence > summary,
+body.swishiq-studio-page #mainContent #compositeLabPanel .swishiq-builder-result-evidence > summary {
+  font-size:max(14px,1em);
+}
+
+/* Data labels and workflow copy in visual summaries should be as legible as
+   the controls that produce them. The compact swishiq-kicker remains an
+   eyebrow and is intentionally outside this rule. */
+body.swishiq-studio-page #mainContent :is(#chemistryLabPanel,#compositeLabPanel,#gameLabPanel,#seasonLabPanel,#careerLabPanel) :is(
+  .swishiq-builder-visual__head span,
+  .swishiq-builder-visual__card strong,
+  .swishiq-builder-visual__card small,
+  .swishiq-composite-picker-scope > strong,
+  .swishiq-composite-donor-pager > span,
+  .swishiq-game-lab__result-note,
+  .swishiq-game-lab__scoreboard-label,
+  .swishiq-game-lab__scoreboard-name,
+  .swishiq-game-lab__summary-card span,
+  .season-result-badge,
+  .season-result-metric__label,
+  .season-result-metric__detail,
+  .swishiq-result-visual__caption span,
+  .swishiq-result-visual__status,
+  .swishiq-result-visual__context dt,
+  .swishiq-result-visual__context dd,
+  .swishiq-result-visual__bar-label,
+  .swishiq-result-visual__timeline-label,
+  .swishiq-result-visual__bar-value,
+  .swishiq-result-visual__role strong,
+  .swishiq-result-visual__role span,
+  .swishiq-result-visual__role small,
+  .swishiq-result-visual__comparison-row strong,
+  .swishiq-result-visual__comparison-row span
+) {
+  font-size:max(14px,1em);
+}
+body.swishiq-studio-page .site-header :is(.nav-toggle,.theme-toggle),
+body.swishiq-studio-page .site-header .site-nav .primary-nav__link,
+body.swishiq-studio-page .site-header .fan-suite-nav__link,
+body.swishiq-studio-page .footer-bottom > span,
+body.swishiq-studio-page .footer.site-footer .footer-brand > p,
+body.swishiq-studio-page .footer.site-footer .footer-link-group :is(strong,a) {
+  font-size:max(14px,1em);
+}
+body.swishiq-studio-page .fan-help-launcher :is(.fan-help-launcher__eyebrow,.fan-help-launcher__copy strong) {
+  font-size:max(14px,1em);
+}
+
+/* Composite evidence and trait controls carry model scope, so keep their
+   explanatory copy and action labels at the same floor as the controls. */
+body.swishiq-studio-page #mainContent #compositeLabPanel :is(.swishiq-builder-hud__eyebrow,.swishiq-builder-evidence__body p,.swishiq-composite-trait-target > strong),
+body.swishiq-studio-page #mainContent #careerLabPanel .swishiq-career-heading__eyebrow {
+  font-size:max(14px,1em);
+}
+
+/* Season provenance is decision context rather than a decorative kicker. */
+body.swishiq-studio-page #mainContent #seasonLabPanel :is(.swishiq-session-hud__kicker,.swishiq-session-hud__provenance-item dt,.swishiq-session-hud__provenance-item dd,.season-lab-hero__kicker,.season-lab-team-selector__kicker) {
+  font-size:max(14px,1em);
+}
+body.swishiq-studio-page #mainContent #gameLabPanel :is(.swishiq-game-lab__histogram-row > span,.swishiq-game-lab__limitation,.swishiq-game-lab__technical-note) {
+  font-size:max(14px,1em);
+}
+body.swishiq-studio-page .swishiq-state {
+  font-size:max(14px,1em);
+}
+
+/* Composite cards keep a readable two/four-column layout below the wide
+   desktop treatment. Let long trait names wrap instead of clipping. */
+@media (max-width:1279px) {
+  body.swishiq-studio-page #compositeLabPanel .swishiq-builder-visual__card .swishiq-builder-visual__label {
+    overflow:visible;
+    overflow-wrap:anywhere;
+    text-overflow:clip;
+    white-space:normal;
+  }
+}
+
+/* Give data tables a clear scan rhythm and comfortable stat-sort controls. */
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) :is(.swishiq-chemistry-lab__roster-table,.swishiq-composite-roster__table) tbody tr:nth-child(even) {
+  background:color-mix(in srgb,var(--studio-surface) 55%,transparent);
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) :is(.swishiq-chemistry-lab__roster-table,.swishiq-composite-roster__table) tbody tr:is(:hover,:focus-within) {
+  background:color-mix(in srgb,var(--studio-accent) 10%,var(--studio-surface));
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) :is(.swishiq-chemistry-lab__roster-table,.swishiq-composite-roster__table) caption {
+  padding:.7rem .8rem;
+  color:var(--swishiq-muted);
+  font-size:14px;
+  line-height:1.4;
+  text-align:left;
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) .swishiq-table-sort {
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:.4rem;
+  min-height:44px;
+  margin:-.2rem -.25rem;
+  padding:.2rem .25rem;
+  border:0;
+  border-radius:4px;
+  background:transparent;
+  color:inherit;
+  font:inherit;
+  text-align:inherit;
+  cursor:pointer;
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) .swishiq-table-sort:hover {
+  color:var(--studio-accent-strong,var(--studio-accent));
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) .swishiq-table-sort:focus-visible {
+  outline:3px solid var(--studio-accent-strong,var(--studio-accent));
+  outline-offset:2px;
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) th:not([aria-sort]) .swishiq-table-sort::after {
+  content:"↕";
+  color:var(--swishiq-muted);
+  font-size:.85em;
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) .swishiq-table-numeric {
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+body.swishiq-studio-page :is(#chemistryLabPanel,#compositeLabPanel) .swishiq-table-source-note {
+  color:var(--swishiq-muted);
+  font-size:14px;
+  font-weight:650;
+}
+
+/* Workbench launcher: each visual workbench copy maps to its existing runtime
+   tab and panel; these cards add scope context without replacing the modules. */
+body.swishiq-studio-page #mainContent > .swishiq-tabs--top {
+  padding:.65rem;
+  border:1px solid var(--studio-line);
+  border-radius:var(--studio-radius);
+  background:var(--studio-surface);
+}
+body.swishiq-studio-page .swishiq-tabs--top .swishiq-tabs__scroll {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.55rem;
+  overflow:visible;
+  padding:0;
+}
+body.swishiq-studio-page .swishiq-tabs--top button {
+  display:grid;
+  grid-template-columns:2rem minmax(0,1fr);
+  grid-template-rows:auto auto;
+  align-items:start;
+  justify-content:start;
+  gap:.2rem .65rem;
+  min-height:6rem;
+  padding:.8rem .85rem 1rem;
+  border:1px solid var(--studio-line);
+  border-radius:.9rem;
+  background:color-mix(in srgb,var(--studio-surface) 96%,var(--studio-blue) 4%);
+  color:var(--studio-ink);
+  text-align:left;
+  scroll-snap-align:start;
+}
+body.swishiq-studio-page .swishiq-tabs--top button:hover {
+  border-color:color-mix(in srgb,var(--studio-blue) 38%,var(--studio-line));
+  background:color-mix(in srgb,var(--studio-blue) 7%,var(--studio-surface));
+}
+body.swishiq-studio-page .swishiq-tabs--top button[aria-pressed="true"] {
+  border-color:color-mix(in srgb,var(--studio-blue) 46%,var(--studio-line));
+  background:color-mix(in srgb,var(--studio-blue) 9%,var(--studio-surface));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--studio-blue) 14%,transparent);
+  color:var(--studio-ink);
+}
+body.swishiq-studio-page.dark-mode .swishiq-tabs--top button[aria-pressed="true"] {
+  border-color:color-mix(in srgb,var(--studio-gold) 40%,var(--studio-line));
+  background:color-mix(in srgb,var(--studio-blue) 23%,var(--studio-surface));
+  color:var(--studio-ink);
+}
+body.swishiq-studio-page .swishiq-tabs--top button::after {
+  right:.85rem;
+  bottom:.55rem;
+  left:3.5rem;
+  height:2px;
+}
+body.swishiq-studio-page .swishiq-tabs--top button[aria-pressed="true"]::after {
+  background:var(--studio-gold);
+}
+body.swishiq-studio-page .swishiq-workbench-card__index {
+  display:grid;
+  grid-row:1 / span 2;
+  place-items:center;
+  width:2rem;
+  height:2rem;
+  border:1px solid color-mix(in srgb,var(--studio-gold) 38%,var(--studio-line));
+  border-radius:.6rem;
+  background:color-mix(in srgb,var(--studio-gold) 12%,var(--studio-surface));
+  color:var(--studio-blue);
+  font-family:"Bebas Neue",Impact,sans-serif;
+  font-size:1rem;
+  line-height:1;
+}
+body.swishiq-studio-page.dark-mode .swishiq-workbench-card__index {
+  color:var(--studio-gold);
+}
+body.swishiq-studio-page .swishiq-workbench-card__label {
+  display:block;
+  align-self:center;
+  min-width:0;
+  font-size:.92rem;
+  font-weight:900;
+  line-height:1.2;
+}
+body.swishiq-studio-page .swishiq-workbench-card__description {
+  display:block;
+  grid-column:2;
+  color:var(--studio-muted);
+  font-size:.74rem;
+  font-weight:600;
+  line-height:1.4;
+  text-align:left;
+}
+body.swishiq-studio-page .swishiq-tabs--top button:focus-visible {
+  outline:3px solid color-mix(in srgb,var(--studio-blue) 60%,var(--studio-gold));
+  outline-offset:2px;
+}
+@media (max-width:900px) {
+  body.swishiq-studio-page .swishiq-tabs--top .swishiq-tabs__scroll {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media (max-width:620px) {
+  body.swishiq-studio-page #mainContent > .swishiq-tabs--top { padding:.5rem; }
+  body.swishiq-studio-page .swishiq-tabs--top .swishiq-tabs__scroll {
+    display:flex;
+    gap:.55rem;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    padding:0 0 .35rem;
+    scroll-snap-type:x proximity;
+    scrollbar-width:thin;
+  }
+  body.swishiq-studio-page .swishiq-tabs--top .swishiq-tabs__scroll::-webkit-scrollbar { display:block; height:5px; }
+  body.swishiq-studio-page .swishiq-tabs--top button {
+    flex:0 0 min(17rem,82vw);
+    min-height:5.75rem;
+    padding:.7rem .75rem .95rem;
+  }
+  body.swishiq-studio-page .swishiq-tabs--top button::after {
+    right:.75rem;
+    bottom:.5rem;
+    left:3.4rem;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  body.swishiq-studio-page .swishiq-tabs--top button,
+  body.swishiq-studio-page .swishiq-tabs--top button::after {
+    scroll-behavior:auto;
+    transition:none;
+  }
+}
+@media (forced-colors:active) {
+  body.swishiq-studio-page .swishiq-tabs--top button {
+    border:1px solid CanvasText;
+    background:Canvas;
+    color:CanvasText;
+  }
+  body.swishiq-studio-page .swishiq-tabs--top button[aria-pressed="true"] {
+    outline:2px solid Highlight;
+    outline-offset:1px;
+  }
+  body.swishiq-studio-page .swishiq-workbench-card__index,
+  body.swishiq-studio-page .swishiq-workbench-card__description {
+    color:CanvasText;
+  }
+  body.swishiq-studio-page .swishiq-tabs--top button[aria-pressed="true"]::after { background:Highlight; }
+}
+
+/* Keep Season Lab's evidence badges beside its title and the mode controls
+   on their own full-width row below them. */
+body.swishiq-studio-page #seasonLabPanel .season-lab-hero {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(10rem,15rem);
+  align-items:start;
+  gap:.75rem 1.2rem;
+}
+body.swishiq-studio-page #seasonLabPanel .season-lab-hero__copy {
+  display:contents;
+  width:auto;
+}
+body.swishiq-studio-page #seasonLabPanel .season-lab-hero__kicker { grid-column:1; grid-row:1; }
+body.swishiq-studio-page #seasonLabPanel .season-lab-hero h2 { grid-column:1; grid-row:2; }
+body.swishiq-studio-page #seasonLabPanel .season-lab-hero__description { grid-column:1; grid-row:3; }
+body.swishiq-studio-page #seasonLabPanel .season-lab-hero__meta {
+  position:static;
+  grid-column:2;
+  grid-row:1 / span 3;
+  width:auto;
+  max-width:none;
+  margin:0;
+  align-self:start;
+}
+body.swishiq-studio-page #seasonLabPanel .season-lab-hero__note { grid-column:1 / -1; grid-row:4; }
+@container season-lab (max-width:760px) {
+  body.swishiq-studio-page #seasonLabPanel .season-lab-hero { grid-template-columns:minmax(0,1fr); }
+  body.swishiq-studio-page #seasonLabPanel .season-lab-hero__meta {
+    grid-column:1;
+    grid-row:4;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  body.swishiq-studio-page #seasonLabPanel .season-lab-hero__note { grid-column:1; grid-row:5; }
+}
+@container season-lab (max-width:560px) {
+  body.swishiq-studio-page #seasonLabPanel .season-lab-hero__meta {
+    grid-template-columns:1fr;
+  }
+}
+
+/* Leave the fixed guide opener a clear gutter beside Chemistry's full-width
+   choice labels on compact layouts. */
+@media (max-width:800px) {
+  body.swishiq-studio-page #chemistryLabPanel .swishiq-chemistry-lab__view-chooser {
+    padding-right:3.5rem;
+  }
+}
+
+/* Keep the palette control directly beneath the Studio intro at every width.
+   It stays a direct hero child so the shared theme module can mount it. */
+body.swishiq-studio-page main .swishiq-hero,
+body.court-themed.swishiq-studio-page main .swishiq-hero {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"copy" "palette";
+  align-items:start;
+  row-gap:.85rem;
+}
+body.swishiq-studio-page main .swishiq-hero > .tool-hero__copy,
+body.court-themed.swishiq-studio-page main .swishiq-hero > .tool-hero__copy {
+  grid-area:copy;
+  width:min(100%,45rem);
+  max-width:45rem;
+}
+body.swishiq-studio-page main .swishiq-hero > .court-team-picker--hero,
+body.court-themed.swishiq-studio-page main .swishiq-hero > .court-team-picker--hero {
+  grid-area:palette;
+  position:relative;
+  inset:auto;
+  z-index:30;
+  justify-self:start;
+  align-self:start;
+  width:min(24rem,100%);
+  max-width:100%;
+  margin:0;
+}
+body.swishiq-studio-page main .swishiq-hero > .court-team-picker--hero .court-team-picker__panel {
+  z-index:31;
+  width:min(24rem,100%);
+  max-width:100%;
+  box-sizing:border-box;
+}
+
+/* Brand each workbench consistently in the desktop rail and mobile strip. */
+body.swishiq-studio-page #studioApp .swishiq-tabs button {
+  grid-template-columns:3.1rem minmax(0,1fr);
+  min-height:4.1rem;
+}
+body.swishiq-studio-page #studioApp .swishiq-workbench-card__icon {
+  display:grid;
+  grid-row:1 / span 2;
+  grid-column:1;
+  place-items:center;
+  width:3rem;
+  height:3rem;
+  overflow:hidden;
+  border:1px solid color-mix(in srgb,var(--studio-gold) 38%,var(--studio-line));
+  border-radius:.68rem;
+  background:var(--studio-raised);
+  box-shadow:0 2px 8px rgba(5,14,31,.16);
+}
+body.swishiq-studio-page #studioApp .swishiq-workbench-card__icon img {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+body.swishiq-studio-page #studioApp .swishiq-tabs button[aria-pressed="true"] .swishiq-workbench-card__icon {
+  border-color:var(--studio-accent);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--studio-accent) 22%,transparent),0 3px 10px rgba(5,14,31,.2);
+}
+@media (max-width:900px) {
+  body.swishiq-studio-page #studioApp .swishiq-workbench-card__icon {
+    grid-row:auto;
+    grid-column:auto;
+    width:2.15rem;
+    height:2.15rem;
+    flex:0 0 2.15rem;
+    border-radius:.52rem;
+  }
+}
+@media (max-width:480px) {
+  body.swishiq-studio-page #studioApp .swishiq-workbench-card__icon {
+    width:1.9rem;
+    height:1.9rem;
+    flex-basis:1.9rem;
+  }
+}
+
+/* Keep the workspace status heading accessible without reserving a blank
+   banner row above each tool's own title. */
+body.swishiq-studio-page #workspace > .swishiq-workspace__heading.sr-only,
+body.swishiq-studio-page #workspace > #workbenchDescription.sr-only {
+  position:absolute;
+  width:1px;
+  height:1px;
+  min-height:0;
+  margin:0;
+  padding:0;
+  border:0;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+
+body.swishiq-studio-page #workspace > :is(#gameLabPanel,#seasonLabPanel,#careerLabPanel) {
+  margin-top:0;
+}
+
+/* Keep the career view in a single reading column at wide desktop sizes too.
+   A legacy three-column grid otherwise sends the recorded summary off to the
+   side of the lookup controls. */
+body.swishiq-studio-page #mainContent #careerLabPanel > :is(
+  .swishiq-career-heading,
+  #careerLabSessionHud,
+  .swishiq-career-dashboard,
+  .swishiq-career-journey,
+  .swishiq-career-results,
+  .swishiq-career-round
+) {
+  grid-column:1 / -1;
+  grid-row:auto;
+  max-height:none;
+  overflow:visible;
+}
+body.swishiq-studio-page #mainContent #careerLabPanel .swishiq-career-dashboard {
+  grid-template-columns:minmax(0,1fr);
+}
+body.swishiq-studio-page #mainContent #careerLabPanel .swishiq-career-dashboard__primary,
+body.swishiq-studio-page #mainContent #careerLabPanel .swishiq-career-dashboard__sidebar {
+  grid-column:1;
+  grid-row:auto;
+  position:static;
+  min-width:0;
+}
+body.swishiq-studio-page #mainContent #careerLabPanel .swishiq-career-dashboard__primary { display:block; }
+
+/* At tablet widths keep the full Composite stat/action row inside its own
+   keyboard-scrollable table viewport. The action cell joins the horizontal
+   track so it cannot cover the last stat while the table is at its left edge. */
+@media (max-width:900px) {
+  body.swishiq-studio-page #mainContent #compositeLabPanel .swishiq-composite-roster__table {
+    min-width:68rem;
+  }
+  body.swishiq-studio-page #mainContent #compositeLabPanel .swishiq-composite-roster__table thead th:last-child,
+  body.swishiq-studio-page #mainContent #compositeLabPanel .swishiq-composite-roster__table tbody td:last-child {
+    position:static;
+    min-width:8rem;
+    max-width:none;
+  }
+}

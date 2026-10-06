@@ -26,6 +26,10 @@ const PACKAGE_IDS = Object.freeze([
 const POOLED_YEARS = Object.freeze(Array.from({ length: 9 }, (_, index) => 2017 + index));
 const PHASES = new Set(['regular', 'in_season_tournament', 'play_in', 'playoffs']);
 const SUPPLEMENTAL_ARTIFACT_ALLOWLIST = Object.freeze({
+  // Game Lab may load the package-indexed team-game history beside its
+  // capability artifacts. It remains supplemental and does not alter the
+  // package's declared capability map or predictive eligibility.
+  gameLabInputs: new Set(['team-games']),
   // Player profile snapshots stay outside this typed view: the current source
   // rows have no season/as-of or resolved player identity. Exact-season player
   // observations can still be loaded beside the complete franchise proof.

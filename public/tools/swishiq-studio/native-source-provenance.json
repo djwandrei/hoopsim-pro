@@ -1,0 +1,627 @@
+{
+  "schemaVersion": 1,
+  "buildProfile": "candidate-12-standalone-vite",
+  "builtAt": "2026-10-05T22:26:22.841Z",
+  "pinTable": {
+    "inputPath": "base44/shared/studioNativeAssets.ts",
+    "inputSha256": "8657161c4db72fb49b2813427838a70f3df98f5a2642ce58c6437ceed9cab34e"
+  },
+  "integrity": {
+    "sourceBytesVerifiedBeforeTransform": true,
+    "runtimeRawJavaScriptHashing": false,
+    "note": "The browser executes Vite output chunks; input hashes are checked during build and linked to emitted chunk hashes here. CSS remains fetched and hash-verified by the existing same-origin runtime transport."
+  },
+  "inputs": [
+    {
+      "inputPath": "/tools/fan-tools.css",
+      "inputBytes": 138273,
+      "inputSha256": "ff6cc19670c6dbfa00fc4f6db493ad66194dbf378cf8af788892bd161b1a7cb3",
+      "output": {
+        "kind": "runtime-same-origin-style",
+        "outputPath": "/tools/fan-tools.css",
+        "outputSha256": "ff6cc19670c6dbfa00fc4f6db493ad66194dbf378cf8af788892bd161b1a7cb3"
+      }
+    },
+    {
+      "inputPath": "/tools/result-passport.js",
+      "inputBytes": 44279,
+      "inputSha256": "f7837df1fae9d0db7acda901f3fd25cf6aa016d331ed595a86c69dd9a4e810f5",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/result-passport-CLlTwY7W.js",
+          "outputSha256": "04d44e42a6b0f882b34d99c545609134df0a2abd071bccb5a70a4a481c16c0c2"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/result-visuals.js",
+      "inputBytes": 25409,
+      "inputSha256": "a92079689f46f911ad883c201cc78c670987ef4c8aee1504278d13cbd1c01255",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/result-visuals-B_Ak-F6e.js",
+          "outputSha256": "1c0503ba9ccc8cbeceb43af4dcf27187981093435b4d90007598aa4f367d8e85"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/shared-result/public-keys.js",
+      "inputBytes": 1498,
+      "inputSha256": "6b28b48123a14ee8fcf876ad7d20f30039151e415dd9cb297508b7bcf529c0b6",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/public-keys-81LiAycw.js",
+          "outputSha256": "d87cf4f90ce641ae3eae01f173b8c47c194ff01bc8595164b29f741d42f5dbfa"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-static-projection.js",
+      "inputBytes": 61238,
+      "inputSha256": "c18248c81b2c977b93f42c23ce7ae49382dfb1455c4128f3935b0389ed035306",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/swishiq-static-projection-CCGXS9oA.js",
+          "outputSha256": "9cb7723cecd29e27854c48c4a8c816bdbcc9bf96bdda055273ec594e6f6f9151"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/advanced-labs.css",
+      "inputBytes": 89104,
+      "inputSha256": "812a6a0bbb89a7cb480e393f2685880499d917ab79fe5789d8236fd2c562da5e",
+      "output": {
+        "kind": "runtime-same-origin-style",
+        "outputPath": "/tools/swishiq-studio/advanced-labs.css",
+        "outputSha256": "812a6a0bbb89a7cb480e393f2685880499d917ab79fe5789d8236fd2c562da5e"
+      }
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/advanced-labs.js",
+      "inputBytes": 264747,
+      "inputSha256": "5e7964003d6a31b87595abd6d5cbef6e7387277539d2d52d3fd0d619d69321a8",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/advanced-labs-BLlZptCh.js",
+          "outputSha256": "691bee61cd1d311d6abcdf8a1dc490022994cb5aef180435b3485b8f576ec9bf"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/chemistry-lab.js",
+      "inputBytes": 169671,
+      "inputSha256": "a5c04da8427df25a2472239e896e2c4edc3d64dab00edd9a31ed7b651b601135",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/chemistry-lab-DBkKGnOU.js",
+          "outputSha256": "4b090c05521b5a613898785e410b0e7d6edc24fd467fa1cbe52f9b9ecaee9cf7"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/composite-public-result-share.js",
+      "inputBytes": 15824,
+      "inputSha256": "53ea37be6f3a89e20eb079225c86fb95c0ccddfd82af0a8060ba274dc4cfaf37",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/composite-public-result-share-CAEdtiz-.js",
+          "outputSha256": "4bf43bfbb7fe9bf14a817c2f5771a24c1fe370c5621fd72e62eb5de2fc29a567"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/candidate10-v4-runtime-adapter.js",
+      "inputBytes": 22105,
+      "inputSha256": "4b87b50498170495cf5c446f7d1091b0197312c5a8a9c26821360e8aae8e201d",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/candidate10-v4-runtime-adapter-DLBXRLBU.js",
+          "outputSha256": "63b536da5579428754cdb763fb0f529cb23786940812cbaf4074a70c02f82b21"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-descriptive-source-consumer.js",
+      "inputBytes": 13029,
+      "inputSha256": "b9b147f8835e1e1701d57872dfb3c663842dc35bd63dc3adea5d27ddfb2da7f4",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-descriptive-source-consumer-D_oPfo1O.js",
+          "outputSha256": "c6b1cbf25483934a414de7ee920732e5f2eea1542f83da95bd81008bf8305fa4"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "inputBytes": 3338,
+      "inputSha256": "75255673400de31557142a65038b7996ffc6496291869c4ea463322878bd4baf",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-identity--1AckiXZ.js",
+          "outputSha256": "c004a9713a9e54eac31b380229e1ac48cd5ac01671f78518a2650d0d5fa27e7a"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "inputBytes": 7711,
+      "inputSha256": "d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-player-name-identity-BhUu3nn2.js",
+          "outputSha256": "e4a860ef156ae5d33daaa65ebbf6cb222abe1eac77d52b96639c588460e5129d"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "inputBytes": 12566,
+      "inputSha256": "7fb5ce6155135ac7ec9d1c7e5f6a7db5c6a78e329415698e86222d0696b7eee0",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-projection-capability-map-Q2YFb78v.js",
+          "outputSha256": "686f03e1bc69785400882c57e53554a6d385bb45db08aa49fa45a30ec16d2bb7"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "inputBytes": 27842,
+      "inputSha256": "8225fde5b9b4b9a347069c724b7b28013fecc5f21c710db2b50623fbaf58332d",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-projection-resolver-CMqgCQf5.js",
+          "outputSha256": "62c262eda3f001c7b0cd88b0c2b54950838c8a50d92a5c026e2cfdfc95369f64"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "inputBytes": 22546,
+      "inputSha256": "39e737644abc8c478bab692320710f0485cc5e52a107c829d1a6664eae495b78",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-public-network-loader-BCAtVhl5.js",
+          "outputSha256": "8197c211bc82924b0f00c60fb381b48314805e3109e6f8df800473bf5d9479be"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-site-consumer-policy.js",
+      "inputBytes": 2812,
+      "inputSha256": "922242f8f51ca906ef5de922bb596baac9465a7349d912fbe2a6c7cd59ceb311",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-site-consumer-policy-Im4C6SGZ.js",
+          "outputSha256": "8e0a070849736b547166b320916d60ac29ca267268e7f88ebb83912ad6121e5a"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "inputBytes": 13877,
+      "inputSha256": "e163bf97d92ca202bbbf46f0afb735eb22e23f2b63f9601b2f36dc0a63c2cc3c",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-studio-runtime-adapter-CiJ6KmoJ.js",
+          "outputSha256": "6ee10bc7abc7bb4d2b3afbae92d0f34e4bc41eaa962877dbb7105b44c5754c05"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "inputBytes": 1275737,
+      "inputSha256": "3f77681775b95b9fba42454d6ed62c785551cdd7db5a439babfbad9d753352bd",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/canonical-v4-studio-runtime-release-pin-Bc96wy4M.js",
+          "outputSha256": "80966bad84985b70079534cab8f5260b617cd69d1fa9fc424b6a140b73b7b567"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/career-simulation-model.js",
+      "inputBytes": 177856,
+      "inputSha256": "cada921d478c3419e050830b1aa6ef0f665574091cd34b83513abfc0a9c440a1",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/career-simulation-model-CCklchgU.js",
+          "outputSha256": "771bdee7156426e56f1e7b578a72810382b16cb624f9664d03f1902a43f71c06"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/career-simulator.js",
+      "inputBytes": 18022,
+      "inputSha256": "849b480398cb7c6b755be404ed17e822f7a817161e4d2d9a0f24ede353987079",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/career-simulation-model-CCklchgU.js",
+          "outputSha256": "771bdee7156426e56f1e7b578a72810382b16cb624f9664d03f1902a43f71c06"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/career-state-source.js",
+      "inputBytes": 16021,
+      "inputSha256": "0e63328ab000221e743c322bb064b4e5583b8bcb901568c599dc1d9888f1a5d8",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/career-state-source-JoFVHFDq.js",
+          "outputSha256": "49feaf5a58d572918cbf288ad55c890514eac316b2bcf2166710efa170bfe22d"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/composite-forge-native.js",
+      "inputBytes": 27773,
+      "inputSha256": "31b673f18eef2daef06abf6c7219887d5e7fc3f00b34cc18c1d0ac48b8861966",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/composite-forge-native-bwuC8K6y.js",
+          "outputSha256": "994e0b6d190b4b29d5c4407293b40c60700284a0ec288d3371fae81f055e7b01"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/composite-forge.js",
+      "inputBytes": 218505,
+      "inputSha256": "3978b2a4e16ed4eff141d65d88985294cddcebd28acdf120a2e4e7759aed9999",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/composite-forge-BiOoC9zD.js",
+          "outputSha256": "ef2b0c30a591361837725c22b6b1080b442c9f0903cd9899f27d1940f00c3f5a"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/context-contract.js",
+      "inputBytes": 3522,
+      "inputSha256": "82528ef429143960f4d09531498e9c3419b591fc2fbe1517aef1d1f00961350f",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/context-contract-DEIGTIN_.js",
+          "outputSha256": "190462f2941bd2b9db6758e8a21d9f56a0e2561ff64cb32ecde93705188ec3e7"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/cross-lab-integration.js",
+      "inputBytes": 55279,
+      "inputSha256": "e2f422ae3a4428367dfeadeeddb71e85a0c6fcf0a8f2ab14d8810f96327da7c8",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/cross-lab-integration-CuMQeBPb.js",
+          "outputSha256": "8ea89afc66fac2255a631249c2bc2a984d50cfa222e900d6ba8813544667a817"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/franchise-cpu-rotation.js",
+      "inputBytes": 22869,
+      "inputSha256": "e5449eb414113949344be3bd4f4e9550672714536b149a4268dd7fea8c794a36",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/franchise-cpu-rotation-DfH1eJua.js",
+          "outputSha256": "63d1b30edf0249c1c30e9031c606a83fb01421ad45f47c682023e98ba07095de"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/franchise-simulation.js",
+      "inputBytes": 133968,
+      "inputSha256": "f8037558beedcc96e9516f2f76be14fa001c32101c65a6dd2aa8c4095bc34908",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/franchise-simulation-DjwZ9YGX.js",
+          "outputSha256": "c76fe2ce941b74b4f5b99067c3a3e0ef8577bc8a5b2ffdf95a903fbd45e97065"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/game-lab-evaluation.js",
+      "inputBytes": 25291,
+      "inputSha256": "01ecbe66fe28823aae1212a848a3eb35e4b1a938a9ade6f2868d3c79f1376022",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/game-lab-evaluation-D8hsp7ih.js",
+          "outputSha256": "a94eb055980fece60ae45e6e0748568a86cfef19ba09c5907fc4d27f7de09b87"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/league-lab.js",
+      "inputBytes": 143960,
+      "inputSha256": "b550c932ca4974b090460dfb4cbae3eeca3351c4a353ba64761203930f0d547a",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/league-lab-B9wTzHgk.js",
+          "outputSha256": "c7588df56895e14e2caaf99aa64a8cee2eb5d09ba3acb56742d4855dff282a29"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/model-calibration.js",
+      "inputBytes": 10499,
+      "inputSha256": "8c65825cf2c14791a87221feb0589457dc25addeb3ca4c984b7099a7820a9840",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/model-calibration-CvnxUZ3Q.js",
+          "outputSha256": "f226cd6b334cd3315f2ab1b1c76f4998a1dfd6f30e742512a0c0cf8731c56a01"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/nba-cup-schedule-completion.js",
+      "inputBytes": 47818,
+      "inputSha256": "a7a16cf81e97053d8ec8e94cf7939b53cb7d58f0b57408b7db3d34e618a1ce29",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/nba-cup-schedule-completion-DPRwcjs4.js",
+          "outputSha256": "e11930a5b9cbea93d95ac7839c404d15a698acc22b0bfec6289f972935aaf790"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/nba-schedule-source.js",
+      "inputBytes": 22848,
+      "inputSha256": "c2db12f4760563c1fa92df0bc0acd204e6f047059a4829e2b8f5bfb6c7cece00",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/nba-schedule-source-DCN8hjOL.js",
+          "outputSha256": "e68a1a5d3b7c25130b22374714548a8eeaae9c9ce81f706f0355477165adfc00"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/possession-simulator.js",
+      "inputBytes": 27667,
+      "inputSha256": "11b2bd7082b1830f56aeecfbe96a1db80dbfead15a88b98a2df71136b88ad061",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/possession-simulator-COGlVEh8.js",
+          "outputSha256": "7e1c62697559f57a62bc85e171f41d755f54d26bd497f3116805a6dd71e01aea"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/public-result-share-client.js",
+      "inputBytes": 27406,
+      "inputSha256": "8d46b4ad8e259c3eeba2440b78cdee00e0ca5df97ae605d3d9d1c78f6cbb1baf",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/public-result-share-client-BaX5ZYAE.js",
+          "outputSha256": "a71b2a09b4bae67153b89b285a62cc0c3aeeb6c0a2d34e400fe4c0715721f477"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/public-result-share-v2.js",
+      "inputBytes": 12898,
+      "inputSha256": "5740b923a2dc978b9c41d9454c48923130c8cf359f7cbd7bd7a20e7cc909ab08",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/public-result-share-v2-Cm3OMhON.js",
+          "outputSha256": "bb8353ee2cc3fb4aebab63e435d9db0399c28682aedb32993b20bbbc2062f1a1"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/public-result-share-v4.js",
+      "inputBytes": 18928,
+      "inputSha256": "23ed314cf3acd0939ec52a932b1a281966517b96470de46f5b328e655d820233",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/public-result-share-v4-Dbva2TLC.js",
+          "outputSha256": "08f417b4b54658da4f1dc21a40da8c8fbb9e618ca6cfc7c378ed9cda3e3dfa80"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/public-result-share.js",
+      "inputBytes": 17570,
+      "inputSha256": "8c681c8163528ca7475623eb33d4c8a929f491923bc82482b88a6526f6f6f18a",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/public-result-share-BfTdwDQH.js",
+          "outputSha256": "0c9061ca557c7f6f61e321ff3761c00faba34e2695fbd396eb6909f5634c5321"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/season-lab-model.js",
+      "inputBytes": 265390,
+      "inputSha256": "44920d1387b47d723c7b56e22d16103f5428c8ac6d3ec127cda92cc02ddc9450",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/season-lab-model-jK3g-j2k.js",
+          "outputSha256": "4f14f39b0737cc066941aef17ac3461556866746edcd502210e23cee25859a09"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/season-simulator.js",
+      "inputBytes": 12583,
+      "inputSha256": "7d3c87278313ed421d77e1f9e359917e54b52e8bcdb8b59d2bbfb5d7ad9cd1c9",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/season-simulator-Dlw3UyRm.js",
+          "outputSha256": "51a64769816c927c4054fdd341f2c6c6c94cad90b82ba2d85b9a24aa737e083f"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/simulation-seed.js",
+      "inputBytes": 2900,
+      "inputSha256": "503d60d1eea095a17c71cdf78132d19f243e195f410f3c43cf09146c1ab4e21a",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/simulation-seed-CMzkIgp7.js",
+          "outputSha256": "f1e9c156ad5289c4d7114e6ae92b55e51258c8a2f99c649833cbccaaf1b05859"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/studio-analysis.js",
+      "inputBytes": 17299,
+      "inputSha256": "3ed6c7f79c62de897a320f0cb24443d6768afea27c71fdc8d4731b2cd057e673",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/studio-analysis-BGeVX--g.js",
+          "outputSha256": "a3663bc29470de99a72e9e9237ab6cc9c39fddb6142b3aa2d181f8af3f67b451"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/engine/swishiq-daily-game-v4-contract.js",
+      "inputBytes": 41958,
+      "inputSha256": "30d3c3974455038dd50b317da4fc87d3c5be15fa1f4266b1e66146abda951152",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/swishiq-daily-game-v4-contract-CeW2fRtH.js",
+          "outputSha256": "4f4bd6fbf1a0726ccd8e67b5841807361bcd65082d9ef9b556dd58a09d794118"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/game-lab.js",
+      "inputBytes": 104131,
+      "inputSha256": "3cfeed5aacc57162ec7070b4b99c8cb50a90b335ce5988c76425e92eee6b570d",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/game-lab-5dBo_0Fy.js",
+          "outputSha256": "f818d59f7527becfc5c6c6a5975ad1516d0a8ae754ec3b7d5c51e8904e529a27"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/integration-bridge.js",
+      "inputBytes": 11422,
+      "inputSha256": "07e65797e6f2f2374a7464db5b582fdb1f90a6ab88c0968acc1060266100e773",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/integration-bridge-B0OqzKr1.js",
+          "outputSha256": "e11f861ee9f006888f69920e4b236846e05dcce79f798d7243397bec7defa6b1"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/player-context.js",
+      "inputBytes": 23019,
+      "inputSha256": "4fe95f851ef46591ce6470539bf1c304efead8f6eed5e30332fb26d6304c0f58",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/player-context-CkBJ8_ZL.js",
+          "outputSha256": "bf12fee48e2772db9f8c90edab5d9566a13d8057648f08e38674ab1a3b289328"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/player-metadata.js",
+      "inputBytes": 1959,
+      "inputSha256": "287fe6f4ca79a475c54aef4fb4ed4d2ee0cd2e40d351292ea0c25890733a4310",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/player-metadata-Bdki-5ER.js",
+          "outputSha256": "7f79139a2ad5e30af9be0b0071b10c04293c698cac6fd51ef4faff50348a25d3"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/react-app/studio-react-labs.css",
+      "inputBytes": 82982,
+      "inputSha256": "b9b93fa1860b049545a1ecfdc213a1154a6e81bceb5420afdeb1fd19b9283fed",
+      "output": {
+        "kind": "runtime-same-origin-style",
+        "outputPath": "/tools/swishiq-studio/react-app/studio-react-labs.css",
+        "outputSha256": "b9b93fa1860b049545a1ecfdc213a1154a6e81bceb5420afdeb1fd19b9283fed"
+      }
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/react-app/studio-react-labs.js",
+      "inputBytes": 2134139,
+      "inputSha256": "44f2d27e97c1ab67e79b13257a6c1a4afa8754151a1fbd26a0d0ec6e20e1cb3c",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/studio-react-labs-jz9Vk7hS.js",
+          "outputSha256": "deace38391278a0afbf8e494e1ceb53c04e2bfd696beb8078d070fba5c4225a9"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/react-game-lab-bridge.js",
+      "inputBytes": 8025,
+      "inputSha256": "b7a46c49075ea0a09702e9d5da76643aa26107bcd68f067d0161bc6531c8009b",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/react-game-lab-bridge-DZqKrG2m.js",
+          "outputSha256": "099045c8fd5ba3c7bead019c2b82ca981837ad1e7f8f9e05e1b5c451358eeac9"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/react-season-lab-bridge.js",
+      "inputBytes": 10076,
+      "inputSha256": "a588f8f2bcd5e3d0a2d51fb7685ad1a1f4525cd8455f9525215069f8de37d702",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/react-season-lab-bridge-DUcFRK01.js",
+          "outputSha256": "fc329931bc70eb090cfea23e23fdffe36deb6f2da1d64e01ec638186263f120c"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/season-lab.js",
+      "inputBytes": 136010,
+      "inputSha256": "d8124963319f7aaacb0510a564fde319fbf53154fe4f5e696ebd7b781be3f947",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/season-lab-CB5pqwtu.js",
+          "outputSha256": "738d17a98f6fcc1d0f0538386b14edd4db3fa2b34ac0c2e60b6af29bdcd3ee89"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/selector-system.js",
+      "inputBytes": 28432,
+      "inputSha256": "2958ec6adfe44eb3ebb4cd19af74970150b4058dae426b5e03ce190ad0480d62",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/selector-system-CccEo-AX.js",
+          "outputSha256": "3c644b57e5d99acb3898258e38121a059e58dd7676861f8b197b9f3b38b770c8"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/simulation-session-ui.js",
+      "inputBytes": 19281,
+      "inputSha256": "2e8296fa24d45652453fae4673a5287a50cda42a9bf5dd8d2701f5906d3fe5f8",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/simulation-session-ui-CMMcNR6O.js",
+          "outputSha256": "18a0d56a3baaaca999364d37d3aedd212c9a811b518a811cbde60b2330ed3423"
+        }
+      ]
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/studio-redesign.css",
+      "inputBytes": 109079,
+      "inputSha256": "2da71cb7ad6f8bf622d61574e66a06095d1b1af25fb38328bc12d2a9998ac563",
+      "output": {
+        "kind": "runtime-same-origin-style",
+        "outputPath": "/tools/swishiq-studio/studio-redesign.css",
+        "outputSha256": "2da71cb7ad6f8bf622d61574e66a06095d1b1af25fb38328bc12d2a9998ac563"
+      }
+    },
+    {
+      "inputPath": "/tools/swishiq-studio/studio.css",
+      "inputBytes": 199114,
+      "inputSha256": "40d6085552e5c5b612fb3cfcb4f6ffa21e223afa561309285e79c1bc2b4635a4",
+      "output": {
+        "kind": "runtime-same-origin-style",
+        "outputPath": "/tools/swishiq-studio/studio.css",
+        "outputSha256": "40d6085552e5c5b612fb3cfcb4f6ffa21e223afa561309285e79c1bc2b4635a4"
+      }
+    }
+  ]
+}

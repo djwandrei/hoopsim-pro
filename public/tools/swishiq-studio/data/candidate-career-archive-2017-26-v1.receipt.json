@@ -1,0 +1,61 @@
+{
+  "format": "djhc-base44-candidate-career-archive-build-receipt-v1",
+  "schemaVersion": 1,
+  "candidate": "Candidate-12",
+  "derivationVersion": "candidate-career-archive-derivation-v1",
+  "sourcePackage": {
+    "packageId": "nba-swishiq-v4-2017-26",
+    "packageVersion": "v4-canonical-20260929-aa835b795d8c",
+    "registrySha256": "5d5719df127efb912add9db59b865892cf02d960d99b9f667268f1fdcef017a5",
+    "registryRevisionSha256": "c6bc7da85d74bd0546a9855b392a7ed9e5a0ddc4aedf058842b6caf370e51f30",
+    "indexPath": "packages/nba-swishiq-v4-2017-26/v4-canonical-20260929-aa835b795d8c/index.json",
+    "indexSha256": "1ff88d54ad6d03d811da20420b04c14d0a89bacead93086e9aacc01b4ebd7c68"
+  },
+  "sourceArtifacts": [
+    {
+      "status": "verified-at-build",
+      "verificationKind": "sha256-byte-check-during-candidate-build",
+      "artifactId": "career-history",
+      "path": "packages/nba-swishiq-v4-2017-26/v4-canonical-20260929-aa835b795d8c/parts/career-history.json",
+      "bytes": 6193753,
+      "rows": 5740,
+      "sha256": "4c44786b1a69de3d7c20679e327555c649a1bb6d96f2e29a039bdff284b91e9d"
+    },
+    {
+      "status": "verified-at-build",
+      "verificationKind": "sha256-byte-check-during-candidate-build",
+      "artifactId": "career-state-workbook",
+      "path": "packages/nba-swishiq-v4-2017-26/v4-canonical-20260929-aa835b795d8c/parts/career-state-workbook.json",
+      "bytes": 12935465,
+      "rows": 5014,
+      "sha256": "017b69dbfaada9de731c5d4051ec158361ec0e163217f67007260ce5fed895ce"
+    },
+    {
+      "status": "verified-at-build",
+      "verificationKind": "sha256-byte-check-during-candidate-build",
+      "artifactId": "player-seasons",
+      "path": "packages/nba-swishiq-v4-2017-26/v4-canonical-20260929-aa835b795d8c/parts/player-seasons.json",
+      "bytes": 127481542,
+      "rows": 8328,
+      "sha256": "536d4a4688818e6166d54e73a0e290fe732fcde04a1d902eb42657e9133ab950",
+      "scannedRows": 8328
+    }
+  ],
+  "output": {
+    "path": "data/candidate-career-archive-2017-26-v1.json",
+    "bytes": 3400073,
+    "rows": 5740,
+    "sha256": "7f0fb5a1da09458eb83b4c39da90bac7634b6561529383467db9bd2c0ebbb168"
+  },
+  "rows": {
+    "scannedPlayerSeasonRows": 8328,
+    "observedRegularSeasonRows": 5740,
+    "careerHistoryIdentityRows": 5740,
+    "joinedStateRows": 5740,
+    "ambiguousPlayerSeasonRows": 0,
+    "heldStateRows": 3,
+    "invalidPhaseOrSeasonStateRows": 0,
+    "duplicateStateIdentityRows": 0
+  },
+  "identityPolicy": "Exact playerRef/team/season match to career-history; exact unique canonical player-name key + season for state rows; ambiguous, invalid, held, and unmatched values remain missing."
+}

@@ -1,0 +1,1234 @@
+{
+  "format": "djhc-swishiq-public-registry-v1",
+  "registryVersion": "swishiq-public-registry-v1",
+  "generatedAt": "2026-09-27T08:13:34.008Z",
+  "packages": [
+    {
+      "packageId": "nba-swishiq-v3-2017-18",
+      "packageVersion": "v3-2017-18-65cf59405443",
+      "packageManifestSha256": "d45f35fccd400e088743fad0bbeb411c88d83b4cc04218f394392210bb167f7c",
+      "sourceLockSha256": "65cf5940544354a9fb133e60e60c608f48accecb1f83f42d56b58aa2eae2a1cd",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2017
+        ],
+        "seasonStartYear": 2017,
+        "seasonEndYear": 2018,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "c1de8b95e30d83075dd89fbd29141dc3b3380fda1d81a416d6004820d966c99b",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "343784fc58dff93848a2c8eeb65ca14ccdd4278a80657bf0e05c769ddb82d5b5",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "chemistry-0003",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "9507925764a5f4429abb0ae065380621dc2a4ef2de0931f665bb7839d9e82a2a",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "cfce544216d14396306bd7b132e14cb76a25ab8962424f241f287edf9e6377d3",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "2a12af92a81cfd1439efb55101068ed8c47d7aaa910c69674638762bb650d3e1",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "8a00c9ac87eeb8db55f0eaa7340f1fbb763d0bf221c3fbe18f670faaaa62abdb",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "f14add0b3585a246668a0bc217e6b23585eeb21778225c0ea60f1be31a944f65",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2017-18/v3-2017-18-65cf59405443/index.json",
+      "projectionContentSha256": "c0b8be6d78adc7e54cc4f764e814a47128a4d8d10eca5ba5e0ad83ad80aed46e"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2017-26",
+      "packageVersion": "v3-2017-26-03acd9d0ff9d",
+      "packageManifestSha256": "98c1c842b8cedcb691453809d5ab6e4b51fc8892a2569e05c348ded5a47130e4",
+      "sourceLockSha256": "03acd9d0ff9daa8a88fd9894ad355d4301b41258583d5e2bd7cf441a8bb84790",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "pooled-window",
+        "seasonStartYears": [
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "seasonStartYear": 2017,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": false
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "3a94a91d26ec3dcd56854eae1cbd8d63059f8ddd32339376c62819d65c33effe",
+          "artifactIds": [
+            "player-seasons",
+            "player-seasons-0002",
+            "player-seasons-0003",
+            "player-seasons-0004",
+            "player-seasons-0005",
+            "player-seasons-0006",
+            "player-seasons-0007",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "unavailable"
+        },
+        "publicAdvancedImpact": {
+          "status": "unavailable"
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "unavailable"
+        },
+        "seasonSimulation": {
+          "status": "unavailable"
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "77898ba9123814f2a33a105ccb5ea3e3f6783fa353943e93e8411071fc6d2373",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "player-seasons-0002",
+            "player-seasons-0003",
+            "player-seasons-0004",
+            "player-seasons-0005",
+            "player-seasons-0006",
+            "player-seasons-0007",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "available",
+          "evidenceSha256": "200f0eecbb55d9da3fdb09d14d39985f1d42f587c2010d9e6773291a3c2f0ef0",
+          "artifactIds": [
+            "career-history",
+            "career-lookup"
+          ]
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "94802733dfa2547df45e7f8c027fad13c7b9584529e412d93de7c85a615350b1",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2017-26/v3-2017-26-03acd9d0ff9d/index.json",
+      "projectionContentSha256": "cffc858a87bc191bc1906120ff225f08ca530bad208c0c0ee99728d211362f35"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2018-19",
+      "packageVersion": "v3-2018-19-bd25068cfee7",
+      "packageManifestSha256": "1ed34e77740d84702390eba9f007e49909a9a6b04bc27ebf9c94a1894c6b8cc4",
+      "sourceLockSha256": "bd25068cfee72b135e4359086e2517c9db594666671217665c33355ea6d20477",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2018
+        ],
+        "seasonStartYear": 2018,
+        "seasonEndYear": 2019,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "923e83829c26c5eb9d56fbe7187f69bddb70721cde39769c2c2bb06445fe1dec",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "57153a64d1775712cd6c30aa549457dd972610c272395adf2390ae4b852abd0d",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "chemistry-0003",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "77391a82cfaea2f9d5676917f8279de6f511601d381015cfe8c579e52fe4d5ee",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "f8b775f66a24dfc3686ff4c9a42c34f2f8eef183333ced7f1705d562ad1214c6",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "09b4c6c5afe009e68a73aa7bfda3198ffafdc4eb859819bd58869758ee224836",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "1b0e0f5913d491d681f9a6c557c9680f14efbb2282f9244d5e749f42805764de",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "dd9c5346752b5480a3ae6b6e9a2ca487475361fa0f49021b63a5c2297d532b6b",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2018-19/v3-2018-19-bd25068cfee7/index.json",
+      "projectionContentSha256": "f9f0fb7b6308abbed13bd5ba08b3284241b9d1d535860e64ff978b0bea496de9"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2019-20",
+      "packageVersion": "v3-2019-20-7eec30f6bd05",
+      "packageManifestSha256": "e79c3b65621ee12100469efc6b19ccfe1b04ede354927df166b398486d20b49d",
+      "sourceLockSha256": "7eec30f6bd050168b1bbe5c37c3a1931817a3559f8eeef6f1527758ec97fe96e",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2019
+        ],
+        "seasonStartYear": 2019,
+        "seasonEndYear": 2020,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "07272e35d036d9170797baec097c3549c8a28dadfcfad5b6167acad109ad3a8f",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "cc08e48824d118624265c733b1a154013fa3e91400e3771f18c7e7684d7bab9b",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "20019553883fbce1c1cf2a91035cf0073877e1f1bd3b13530513d4663d6d6916",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "8b1e390b87f6ac0262d3a000f4bc7e42d681c6df211e033e4fe44201c0478bbe",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "f67c2136a6980d84c40f81a7620bdfc432bd9b6b568ef10a31887e587053e4f6",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "2035e366cc7a4e3696d81919d1951cadd15e864c7f1911e55e3f430369dcb20e",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "6c9d955227958bd5d26cc52215c2afe61e6794367290e9f6a2234cb02f63d984",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2019-20/v3-2019-20-7eec30f6bd05/index.json",
+      "projectionContentSha256": "0367da66992a5193f217c00af44ecd8ca3c8972e48eacaca654b548b54a2af2a"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2020-21",
+      "packageVersion": "v3-2020-21-f8fdc86d16ab",
+      "packageManifestSha256": "d60ad316e90effc35a77de6a6b82e4c1b47818df7ebc3f22860798617dd73e1e",
+      "sourceLockSha256": "f8fdc86d16ab4b637d752a05d3a150c51927f3ba3909c0a5f4dbc730b05741a0",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2020
+        ],
+        "seasonStartYear": 2020,
+        "seasonEndYear": 2021,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "674af5507aaef52f34964898020b28092e27bb4e81f127dac51ed38f9d1fedb9",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "6fd7264fd1f750c6abe76e59c9c7f68417ae113854e7eea4f23f635aef46fc43",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "chemistry-0003",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "b5227cfb9f41f85841650ae8cba305e8adf26c47bbc5425c47f9f3f1edd35cdb",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "7b4aadb55f573f8e58e4fa6fd1d17bcd169f8e6be80a2336529b4f619e655068",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "430f26b56490c9db89e4337ecc84c82e017c407eb8b5c47a6552ce188d4183a5",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "3d70361cedee19dee9ec48ba97a8b0d36f5b5fc40c17ebbbd95f9d3bf53578fa",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "900c88563220d570d1ae4dc6037dff9fbd0d4fc86a9a3e5dc594635bdc850910",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2020-21/v3-2020-21-f8fdc86d16ab/index.json",
+      "projectionContentSha256": "9338faef86d775581fc0e84bb69d896b77d583d8ff61a2e72f056be13ed10c6a"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2021-22",
+      "packageVersion": "v3-2021-22-87a8ca36ebda",
+      "packageManifestSha256": "a7361380731de552abe28e4bf73746fc50b7c9d211ceba919fb21feec68e350c",
+      "sourceLockSha256": "87a8ca36ebdab5438a6a6af58508ff0aa991fb76b78b1d6263b431115df9e74d",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2021
+        ],
+        "seasonStartYear": 2021,
+        "seasonEndYear": 2022,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "c78b789ce1d08339ad6540f0921a4957a32fc708a65f1288828b434f39508639",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "1c83f47969c700c31cebe93d008e4b5197c0e67911ecf784f86752f789de869d",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "chemistry-0003",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "dea50148dd8edcfa55dc0b1b857e7720ec89a3167bf2353a9d67258501fe06e7",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "9d4b0b5eda2543254362b64e91a900d50a25be2a443ae046c5ae7952ec525934",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "45fd897d98e25cd4296b2646f8d08ebe16585a84ef19973d0986d7e4ab486f7c",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "9bbbaeecbd0d429d061d69a7b600f638f7ba9bae530e4b8f160fe33fabf46fe1",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "84d76b6f8d09079666ca47dec72007ae505685d297d2be8cdab8cd76680a42f2",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2021-22/v3-2021-22-87a8ca36ebda/index.json",
+      "projectionContentSha256": "512b294ce0e1853ff860e4c09187fb2b89b0aaec0a5213ca3dfc3f4b04095179"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2022-23",
+      "packageVersion": "v3-2022-23-7fc388477657",
+      "packageManifestSha256": "6fee376d58845430b6a8434fd4a25857bd797a8b60487b3c305a057025c73f69",
+      "sourceLockSha256": "7fc388477657910132fb44187d29952a23feabf95b8e94e1ef381a184cd36ccb",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2022
+        ],
+        "seasonStartYear": 2022,
+        "seasonEndYear": 2023,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "2f0d64cd053082fe673e8972cb30db71c9f637bb21efde7ba29d79c968fd0348",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "a5a3541e4749037e2d2e01f663c05dfe6b744f524e140eff881e7c3a00704f85",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "chemistry-0003",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "c69f8b88a5c040ad87c7ec081d1df3ec71b7f299301516e507f3df1867be7425",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "c4339144e2e5c1d519daa626b61361dcba3ced5ea79be3e1a820792b988fcafe",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "ef3cc88bdadbbca7059d0f783db4c2a34d04c064411f67a4722604e0b85208ea",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "b1452573a7c66d7876a3575ee70b281de2e1008363dd0c0691cf8f40b094b42c",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "0d45b5ad2d6726bc89928f987ca85d938bb4a2ec515a2401d9577aedd0a9ab62",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2022-23/v3-2022-23-7fc388477657/index.json",
+      "projectionContentSha256": "7c51c984716b6c7171a3dd4ae52cf3626d662028b787fab05b397b8e23b22b4e"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2023-24",
+      "packageVersion": "v3-2023-24-cb69595d0b56",
+      "packageManifestSha256": "872c12095554a38fc31d6647dead8427d728d5aff46048949150e525de1d4e7b",
+      "sourceLockSha256": "cb69595d0b56d7c62eb2ec2aee7cbbff44a5343a7dc70c115f98b9fa08167619",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2023
+        ],
+        "seasonStartYear": 2023,
+        "seasonEndYear": 2024,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "9e99931497252c4a21a327516102a75931b7f7260d1bc86138f934930d0193c4",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "eef6f12a09c2ecade50a43dbdd4eb1711afbedfe2cbb80c2ed1033fde0c6d339",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "chemistry-0003",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "dd2529bd1d5c1c7e478aac2f46ffad56e22dd32d05498a6de7437a40bd1693fc",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "db9bb92827d4f016b99b2c3e7683fbb16003ed37ab23075139d6f4f79aab866b",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "18144054894797a2d9d6ba363db402077ccf3c181effd52c09594e2943a67049",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "874f235aa1ec0578de50ef3c19fb8656b86a955ca5fd2657c738032eabf5f945",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "f848113b30ca0d9b423294db5aafbc41339081516888b3d48c8c9ba1f269a965",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2023-24/v3-2023-24-cb69595d0b56/index.json",
+      "projectionContentSha256": "8c7c0e65e5c2c037f1d62c02f9097cfaf0405741a8bfe174fdc87946fb9427dc"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2024-25",
+      "packageVersion": "v3-2024-25-38530a1399ae",
+      "packageManifestSha256": "85d15735cf52afa4f9b12f4fe5cff587d72190d12a908d7ef4c0439c170a1ae3",
+      "sourceLockSha256": "38530a1399aeef2ce1b091d605564df8e76ea7d1d3a01312e2d3213cacfb1124",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2024
+        ],
+        "seasonStartYear": 2024,
+        "seasonEndYear": 2025,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "1333b1393211c64f17aaca554dc937d1bdb1fb1caa7783ebd3dafc82da7ab142",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "1abe907d6f33e9a00e8777c9295f67a3f04f403633b39d9ea9475ced21fac6c4",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "chemistry-0003",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "01b481774e9abc28dfb92de5884d8bec87a9ca5a639ee5e4aa980229f0c7630f",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "255bcc2badcf1bc38e63eb5213438072e35e9195327640b00253735adb77cfb4",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "6633c1d63b8606241d971f7f958a0e51df24c535b26c80f44a21cee3f763a159",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "3ee803c839ec0a96b9fb73c9c76804aa74afd998c50c3d2b78b38c399c4ef0ef",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "f6d1dfce8f695e5565e1fa8eeab11417d6d08149d31a0aeca8062e7f35d70981",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2024-25/v3-2024-25-38530a1399ae/index.json",
+      "projectionContentSha256": "3af01afdad9b462175b4fd392c677f639395b5ce84559b0082851cd63692aacd"
+    },
+    {
+      "packageId": "nba-swishiq-v3-2025-26",
+      "packageVersion": "v3-2025-26-695941fa4242",
+      "packageManifestSha256": "c29595bac7b52865287dcf75935972031ccad09b9cc62f089787c792a3336dd3",
+      "sourceLockSha256": "695941fa424267109603e14bb6297eed554076e81616416bbe1aa66f78a7eea9",
+      "modelId": "swishiq-v3",
+      "normalizer": "swishiq-v3-canonical-normalizer",
+      "metricsVersion": "swishiq-v3-metrics-v1.1",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "status": "published",
+      "capabilities": {
+        "swishiqStudio": {
+          "status": "available",
+          "evidenceSha256": "f18da8e67a14738a8620d8b6351122f3b8821df865285ef05e5b8354fad183c7",
+          "artifactIds": [
+            "player-seasons",
+            "players"
+          ]
+        },
+        "lineupLab": {
+          "status": "available",
+          "evidenceSha256": "5243c76c33b70efecf5eff0a763d952ec0da379855e51a2d3622a326b2872d2e",
+          "artifactIds": [
+            "chemistry",
+            "chemistry-0002",
+            "chemistry-0003",
+            "exact-five-evidence",
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "publicAdvancedImpact": {
+          "status": "available",
+          "evidenceSha256": "91b18778af4b8117c34b4ed02066f7b35ad68f2419f408080349f24f0dcaefdf",
+          "artifactIds": [
+            "lineup-evidence",
+            "player-impact"
+          ]
+        },
+        "chemistry": {
+          "status": "unavailable"
+        },
+        "historicalSeason": {
+          "status": "available",
+          "evidenceSha256": "ac5fb663987c1efeba8798759b6d512e3c95bfcd5e449fcef5d41158c23932ca",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "seasonSimulation": {
+          "status": "available",
+          "evidenceSha256": "d785ac8c653de1f0f1412983d0e671c9c9821aae872640361cbd44e1326a6eba",
+          "artifactIds": [
+            "player-seasons",
+            "roster-memberships",
+            "rules",
+            "team-styles"
+          ]
+        },
+        "compositeRecipe": {
+          "status": "available",
+          "evidenceSha256": "5907fee821ba4e64a722a23558b75f1ea667cbf53f4c88fb703eb75cd8925cef",
+          "artifactIds": [
+            "era-baselines",
+            "player-seasons",
+            "skill-components"
+          ]
+        },
+        "compositeSimulation": {
+          "status": "unavailable"
+        },
+        "careerHistory": {
+          "status": "unavailable"
+        },
+        "careerSimulation": {
+          "status": "unavailable"
+        },
+        "crossEraGames": {
+          "status": "unavailable"
+        },
+        "challengePools": {
+          "status": "available",
+          "evidenceSha256": "4686be6869d65a18a46cde6f1748f63cc810f5e1f385c25075e14fa3a595d826",
+          "artifactIds": [
+            "challenge-pools"
+          ]
+        },
+        "franchise": {
+          "status": "unavailable"
+        },
+        "commissioner": {
+          "status": "unavailable"
+        },
+        "probabilities": {
+          "status": "unavailable"
+        },
+        "virtualPacks": {
+          "status": "unavailable"
+        },
+        "collector": {
+          "status": "unavailable"
+        }
+      },
+      "projectionIndexPath": "packages/nba-swishiq-v3-2025-26/v3-2025-26-695941fa4242/index.json",
+      "projectionContentSha256": "f16b33a7ed09bebe0a4ae32ee9c3be4b1e1f8b5daa6388073730785073720f6d"
+    }
+  ],
+  "registryRevisionSha256": "3145a16006b8b3d73c844ef5dc72ac73a2c9a24de967b8c6af6224fae7103d2b"
+}

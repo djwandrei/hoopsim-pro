@@ -1,0 +1,1 @@
+import{h as e,m as t,n,r,t as i}from"./generateCategoricalChart-BiQOO4NI.js";var a=i({chartName:`BarChart`,GraphicalChild:e,defaultTooltipEventType:`axis`,validateTooltipEventTypes:[`axis`,`item`],axisComponents:[{axisType:`xAxis`,AxisComp:r},{axisType:`yAxis`,AxisComp:n}],formatAxisMap:t});export{a as t};

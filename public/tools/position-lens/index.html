@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Position Lens | DJ's House of Cards &amp; Comics</title>
+  <meta name="description" content="Browse observed player positions and box-score totals for one NBA team and regular season.">
+  <meta name="robots" content="noindex,follow,max-image-preview:large">
+  <meta name="theme-color" content="#1f2fa3">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="../../styles.css?v=20261002c">
+  <link rel="stylesheet" href="../fan-tools.css?v=20260928j&amp;rev=fan-tools-readable-text-14px-v1">
+  <link rel="stylesheet" href="./position-lens.css?v=20260928j&amp;rev=verified-position-lens-v1">
+  <link rel="canonical" href="https://www.djshouseofcards-comics.com/tools/position-lens/">
+  <link rel="manifest" href="../../site.webmanifest?v=20261002c">
+  <script id="seo-structured-data" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://www.djshouseofcards-comics.com/tools/position-lens/#webpage","url":"https://www.djshouseofcards-comics.com/tools/position-lens/","name":"Position Lens | DJ's House of Cards & Comics","description":"Browse observed player positions and box-score totals for one NBA team and regular season.","isPartOf":{"@id":"https://www.djshouseofcards-comics.com/#website"},"inLanguage":"en-US"}</script>
+</head>
+<body class="fan-tools-page position-lens-page dark-mode court-themed" data-page="fan-tools">
+  <script src="../../theme-init.js?v=20261002c"></script>
+  <a class="skip-link" href="#mainContent">Skip to Position Lens</a>
+  <header class="site-header fan-suite-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="DJ's House of Cards &amp; Comics home">
+        <img class="brand-logo" src="../../assets/dj-logo.png" alt="DJ's House of Cards &amp; Comics logo" width="84" height="84" decoding="async" fetchpriority="high">
+        <span class="brand-copy"><span class="brand-script">DJ's House of Cards</span><span class="brand-kicker">&amp; Comics &bull; Trusted Hobby Finds</span></span>
+      </a>
+      <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
+        <ul class="primary-nav__list">
+          <li class="primary-nav__item"><a class="primary-nav__link" href="../../shop.html">Shop</a></li>
+          <li class="primary-nav__item"><a class="primary-nav__link" href="../">Fan Tools</a></li>
+          <li class="primary-nav__item"><a class="primary-nav__link" href="../swishiq-studio/">SwishIQ Studio</a></li>
+          <li class="primary-nav__item"><a class="primary-nav__link" href="../player-card-matchups/">Player &amp; Card Matchups</a></li>
+        </ul>
+      </nav>
+      <button class="nav-toggle" id="navToggle" type="button" aria-controls="siteNav" aria-expanded="false">Menu</button>
+      <button class="theme-toggle theme-toggle--compact" id="themeToggle" type="button" aria-label="Toggle color theme">Dark Mode</button>
+      <nav class="fan-suite-nav" aria-label="Fan tools navigation">
+        <div class="container fan-suite-nav__scroll">
+          <a class="fan-suite-nav__link" href="../">Fan Tools</a>
+          <a class="fan-suite-nav__link" href="../swishiq-studio/">SwishIQ Studio</a>
+          <a class="fan-suite-nav__link" aria-current="page" href="./">Position Lens</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="position-lens-main" id="mainContent" tabindex="-1">
+    <section class="position-lens-hero" aria-labelledby="positionLensTitle">
+      <div>
+        <span class="position-lens-eyebrow">Exact team-season &bull; read only</span>
+        <h1 class="position-lens-title" id="positionLensTitle">Position Lens</h1>
+        <p class="position-lens-lede">Browse observed position assignments and box-score totals for one team in one regular season.</p>
+      </div>
+    </section>
+
+    <p class="position-lens-boundary"><strong>Observed data:</strong> position assignments and box-score totals describe one regular season. This view does not produce modeled role interpretations, fit scores, or hypothetical outcomes.</p>
+
+    <section class="position-lens-workspace" aria-label="Exact-season position roster">
+      <form class="position-lens-form" data-lens-form>
+        <div class="position-lens-field">
+          <label for="positionLensSeason">Season-ending year</label>
+          <input id="positionLensSeason" data-lens-season type="number" min="1949" max="2200" step="1" value="2026" required inputmode="numeric">
+        </div>
+        <button class="position-lens-button" data-lens-verify type="submit">Load season data</button>
+        <p class="position-lens-form-note">Regular season only. Pooled data and neighboring seasons are never substituted.</p>
+      </form>
+
+      <p class="position-lens-status" data-lens-status role="status" aria-live="polite" aria-atomic="true">Loading observed data for the 2025–26 regular season…</p>
+
+      <section class="position-lens-results" data-lens-results hidden aria-labelledby="positionLensResultsTitle">
+        <h2 id="positionLensResultsTitle">Roster view</h2>
+        <p class="position-lens-result-note" data-lens-result-note></p>
+        <div class="position-lens-filters" aria-label="Roster filters">
+          <div class="position-lens-field">
+            <label for="positionLensTeam">Team</label>
+            <select id="positionLensTeam" data-lens-team disabled><option value="">Load a season first</option></select>
+          </div>
+          <div class="position-lens-field">
+            <label for="positionLensPosition">Position assignment</label>
+            <select id="positionLensPosition" data-lens-position disabled><option value="">Choose a team first</option></select>
+          </div>
+          <div class="position-lens-field position-lens-field--search">
+            <label for="positionLensSearch">Player</label>
+            <input id="positionLensSearch" data-lens-search type="search" autocomplete="off" placeholder="Filter this roster" disabled>
+          </div>
+        </div>
+
+        <section class="position-lens-summary" aria-labelledby="positionLensSummaryTitle">
+          <div class="position-lens-section-heading">
+            <h3 id="positionLensSummaryTitle">Position assignments</h3>
+            <p>Each player is grouped once by their listed positions.</p>
+          </div>
+          <div class="position-lens-table-scroll" data-lens-summary-scroll tabindex="0" role="region" aria-label="Scrollable position assignment summary table">
+            <table class="position-lens-table position-lens-table--summary">
+              <caption data-lens-summary-caption>Observed regular-season totals by position assignment</caption>
+              <thead><tr><th scope="col">Position codes</th><th scope="col">Roster members</th><th scope="col">Minutes</th><th scope="col">Points</th></tr></thead>
+              <tbody data-lens-summary-body></tbody>
+            </table>
+          </div>
+          <p class="position-lens-summary-note">Minutes and points are sums of observed player rows in that assignment group; they are descriptive totals, not an assessment of quality or fit.</p>
+        </section>
+
+        <section class="position-lens-roster" aria-labelledby="positionLensRosterTitle">
+          <div class="position-lens-section-heading position-lens-roster-heading">
+            <div><h3 id="positionLensRosterTitle">Observed player-season rows</h3><p data-lens-row-count></p></div>
+            <p>Sort a column to compare the rows. Unavailable values remain last.</p>
+          </div>
+          <p class="position-lens-summary-note">GP means games played. Minutes, points, rebounds, and assists are observed season totals, not per-game rates.</p>
+          <div class="position-lens-table-scroll position-lens-table-scroll--roster" data-lens-roster-scroll tabindex="0" role="region" aria-label="Scrollable observed player-season table. Use Left and Right Arrow to scroll horizontally; Home and End jump to the first and last column.">
+            <table class="position-lens-table position-lens-table--roster">
+              <caption data-lens-roster-caption>Observed regular-season player rows</caption>
+              <thead><tr>
+                <th scope="col" aria-sort="none"><button type="button" data-sort="name">Player</button></th>
+                <th scope="col" aria-sort="none"><button type="button" data-sort="position">Position assignment</button></th>
+                <th scope="col" aria-sort="none"><button type="button" data-sort="games">GP</button></th>
+                <th scope="col" aria-sort="none"><button type="button" data-sort="minutes">Minutes</button></th>
+                <th scope="col" aria-sort="descending"><button type="button" data-sort="points">PTS</button></th>
+                <th scope="col" aria-sort="none"><button type="button" data-sort="rebounds">REB</button></th>
+                <th scope="col" aria-sort="none"><button type="button" data-sort="assists">AST</button></th>
+              </tr></thead>
+              <tbody data-lens-roster-body></tbody>
+            </table>
+          </div>
+        </section>
+
+      </section>
+
+      <p class="position-lens-limits"><strong>Observed:</strong> exact-season roster position assignments and box totals. <strong>Modeled interpretation:</strong> not produced. <strong>Hypothetical fit:</strong> not produced. <strong>Prospective projection:</strong> not produced.</p>
+    </section>
+  </main>
+
+  <footer class="footer site-footer">
+    <div class="container footer-bottom"><span>DJ's House of Cards &amp; Comics &bull; Independent collector storefront</span><a href="../">Return to Fan Tools</a></div>
+  </footer>
+  <button aria-label="Back to top" class="back-to-top" id="backToTop" type="button">&uarr;</button>
+  <script defer src="../../core.js?v=20261002c"></script>
+  <script defer src="../../nav.js?v=20260930f&amp;rev=drawer-fix-v4-webp"></script>
+  <script type="module" src="./position-lens.js?v=20261005a&amp;rev=position-lens-v4-regular-scope-cache-closure-v2"></script>
+<script defer src="../fan-tools-editor-runtime.js?v=20261005b&amp;rev=drag-resize-code-v1"></script>
+  </body>
+</html>

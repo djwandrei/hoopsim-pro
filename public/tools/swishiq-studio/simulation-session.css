@@ -1,0 +1,485 @@
+/* Compact session HUD shared by the data-backed Season and Career Labs. The
+ * simulation engines still own reports, schedules, and as-of state; this
+ * layer only makes the user's current interaction step visible. */
+body.swishiq-studio-page .swishiq-session-hud {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(13rem, .8fr);
+  gap: .75rem 1rem;
+  min-width: 0;
+  margin: 0 0 clamp(1rem, 2.5vw, 1.5rem);
+  padding: .9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--studio-accent, #e8b84c) 42%, var(--swishiq-border, #c8d4e5));
+  border-left: 3px solid var(--studio-accent, #e8b84c);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--swishiq-raised, #fff) 92%, var(--studio-accent, #e8b84c) 8%);
+  box-shadow: 0 10px 24px rgba(16, 27, 57, .1);
+}
+
+body.swishiq-studio-page .swishiq-session-hud__kicker {
+  grid-column: 1 / -1;
+  color: var(--studio-accent-strong, var(--studio-accent, #e8b84c));
+  font-size: .63rem;
+  font-weight: 950;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__title {
+  min-width: 0;
+  margin: 0;
+  color: var(--swishiq-text, #17213b);
+  font-family: var(--font-display, "Bebas Neue", Impact, sans-serif);
+  font-size: clamp(1.25rem, 2.6vw, 1.8rem);
+  line-height: .98;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__status {
+  grid-column: 1;
+  min-width: 0;
+  margin: .15rem 0 0;
+  color: var(--swishiq-muted, #627087);
+  font-size: .78rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__steps {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .4rem;
+  margin: .15rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  min-width: 0;
+  padding: .42rem .5rem;
+  border: 1px solid color-mix(in srgb, var(--swishiq-border, #c8d4e5) 82%, transparent);
+  border-radius: 9px;
+  color: var(--swishiq-muted, #627087);
+  background: color-mix(in srgb, var(--swishiq-surface, #fff) 82%, transparent);
+  font-size: .67rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step-marker {
+  display: inline-grid;
+  flex: 0 0 1.35rem;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: .64rem;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step.is-active {
+  border-color: color-mix(in srgb, var(--studio-accent, #e8b84c) 68%, var(--swishiq-border, #c8d4e5));
+  color: var(--swishiq-text, #17213b);
+  background: color-mix(in srgb, var(--studio-accent, #e8b84c) 15%, var(--swishiq-surface, #fff));
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step.is-complete .swishiq-session-hud__step-marker {
+  color: var(--studio-accent-strong, var(--studio-accent, #e8b84c));
+}
+
+body.swishiq-studio-page .swishiq-session-hud__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .45rem;
+  grid-column: 2;
+  grid-row: 2 / span 2;
+  align-self: center;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__actions button {
+  min-height: 38px;
+  padding: .45rem .68rem;
+  border-radius: 9px;
+  font-size: .73rem;
+  white-space: nowrap;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__provenance {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding-top: .55rem;
+  border-top: 1px solid color-mix(in srgb, var(--swishiq-border, #c8d4e5) 78%, transparent);
+}
+
+body.swishiq-studio-page .swishiq-session-hud__provenance-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .45rem .75rem;
+  margin: 0;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__provenance-item {
+  min-width: 0;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__provenance-item dt {
+  color: var(--swishiq-muted, #627087);
+  font-size: .59rem;
+  font-weight: 950;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__provenance-item dd {
+  margin: .16rem 0 0;
+  color: var(--swishiq-text, #17213b);
+  font-size: .7rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+body.swishiq-studio-page .swishiq-session-hud :is(button, a, select, input, textarea, summary):focus-visible {
+  outline: 3px solid var(--studio-accent-strong, var(--studio-accent, #e8b84c));
+  outline-offset: 2px;
+}
+
+@media (max-width: 680px) {
+  body.swishiq-studio-page .swishiq-session-hud {
+    grid-template-columns: 1fr;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__status,
+  body.swishiq-studio-page .swishiq-session-hud__actions {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__actions {
+    justify-content: flex-start;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__steps,
+  body.swishiq-studio-page .swishiq-session-hud__provenance-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  body.swishiq-studio-page .swishiq-session-hud {
+    padding: .78rem;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__steps,
+  body.swishiq-studio-page .swishiq-session-hud__provenance-list {
+    grid-template-columns: 1fr;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__actions button {
+    flex: 1 1 10rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.swishiq-studio-page .swishiq-session-hud,
+  body.swishiq-studio-page .swishiq-session-hud * {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  body.swishiq-studio-page .swishiq-session-hud,
+  body.swishiq-studio-page .swishiq-session-hud__step,
+  body.swishiq-studio-page .swishiq-session-hud__provenance {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}
+
+/* Phase 5 game-first HUD pass. The session rail is persistent, so it keeps
+ * the objective and live state strong while the provenance stays visually
+ * quiet. It never needs to cover the simulation result or playfield. */
+body.swishiq-studio-page .swishiq-session-hud {
+  position: relative;
+  isolation: isolate;
+  align-items: center;
+  gap: .5rem 1rem;
+  padding: clamp(.72rem, 2vw, 1rem) clamp(.78rem, 2.4vw, 1.2rem);
+  border-width: 1px 1px 1px 4px;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--swishiq-raised, #e8edf7) 78%, var(--studio-accent, #e8b84c) 22%),
+      color-mix(in srgb, var(--swishiq-surface, #fff) 94%, var(--studio-accent, #e8b84c) 6%));
+  box-shadow: 0 14px 30px rgba(7, 17, 36, .14);
+  scroll-margin-block-start: 1rem;
+}
+
+body.swishiq-studio-page .swishiq-session-hud::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 0;
+  width: min(17rem, 42%);
+  background: repeating-linear-gradient(135deg,
+    color-mix(in srgb, var(--studio-accent, #e8b84c) 16%, transparent) 0 1px,
+    transparent 1px 12px);
+  content: "";
+  opacity: .28;
+  pointer-events: none;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .38rem;
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  line-height: 1.2;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__kicker::before {
+  width: .45rem;
+  height: .45rem;
+  flex: 0 0 .45rem;
+  border-radius: 50%;
+  background: var(--studio-accent, #e8b84c);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--studio-accent, #e8b84c) 18%, transparent);
+  content: "";
+}
+
+body.swishiq-studio-page .swishiq-session-hud__title {
+  align-self: end;
+  font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+  line-height: .94;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__status {
+  display: flex;
+  align-items: flex-start;
+  gap: .45rem;
+  align-self: start;
+  max-width: 66ch;
+  margin: .18rem 0 0;
+  line-height: 1.38;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__status::before {
+  width: .48rem;
+  height: .48rem;
+  flex: 0 0 .48rem;
+  margin-top: .32rem;
+  border-radius: 50%;
+  background: var(--studio-accent-strong, var(--studio-accent, #e8b84c));
+  content: "";
+}
+
+body.swishiq-studio-page .swishiq-session-hud[data-session-status="running"] .swishiq-session-hud__status::before {
+  animation: swishiq-session-pulse 1.35s ease-in-out infinite;
+}
+
+body.swishiq-studio-page .swishiq-session-hud[data-session-status="complete"] .swishiq-session-hud__status::before {
+  background: #3f9a7a;
+}
+
+body.swishiq-studio-page .swishiq-session-hud[data-session-status="failed"] .swishiq-session-hud__status::before {
+  background: #c95c6d;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__steps {
+  gap: .35rem;
+  margin-top: .3rem;
+  padding-top: .55rem;
+  border-top: 1px solid color-mix(in srgb, var(--swishiq-border, #c8d4e5) 72%, transparent);
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step {
+  min-height: 2.15rem;
+  padding: .36rem .45rem;
+  border-color: color-mix(in srgb, var(--swishiq-border, #c8d4e5) 86%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--swishiq-surface, #fff) 78%, transparent);
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step-marker {
+  width: 1.3rem;
+  height: 1.3rem;
+  flex-basis: 1.3rem;
+  font-weight: 950;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step.is-active {
+  border-width: 2px;
+  border-color: var(--studio-accent, #e8b84c);
+  background: color-mix(in srgb, var(--studio-accent, #e8b84c) 17%, var(--swishiq-surface, #fff));
+}
+
+body.swishiq-studio-page .swishiq-session-hud__step[aria-current="step"] .swishiq-session-hud__step-marker {
+  color: var(--studio-accent-strong, var(--studio-accent, #e8b84c));
+  background: color-mix(in srgb, var(--studio-accent, #e8b84c) 13%, transparent);
+}
+
+body.swishiq-studio-page .swishiq-session-hud__actions {
+  gap: .4rem;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__actions button {
+  /* Keep every session action inside the 44px touch/pen target used by the
+   * rest of the mobile workbench controls. */
+  min-height: 44px;
+  border-color: color-mix(in srgb, var(--studio-accent, #e8b84c) 55%, var(--swishiq-border, #c8d4e5));
+  background: color-mix(in srgb, var(--studio-accent, #e8b84c) 12%, var(--swishiq-surface, #fff));
+  box-shadow: none;
+  font-weight: 900;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__actions button:hover:not(:disabled) {
+  border-color: var(--studio-accent, #e8b84c);
+  background: color-mix(in srgb, var(--studio-accent, #e8b84c) 20%, var(--swishiq-surface, #fff));
+}
+
+body.swishiq-studio-page .swishiq-session-hud__provenance {
+  padding-top: .65rem;
+}
+
+body.swishiq-studio-page .swishiq-session-hud__provenance-list {
+  gap: .4rem .85rem;
+}
+
+body.swishiq-studio-page .swishiq-session-hud :is(button, a, select, input, textarea, summary):focus-visible {
+  outline: 3px solid var(--studio-accent-strong, var(--studio-accent, #e8b84c));
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--studio-accent, #e8b84c) 18%, transparent);
+}
+
+@keyframes swishiq-session-pulse {
+  0%, 100% { opacity: .55; transform: scale(.88); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@media (max-width: 680px) {
+  body.swishiq-studio-page .swishiq-session-hud {
+    gap: .5rem;
+    padding: .78rem;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__actions {
+    justify-content: flex-start;
+    margin-top: .05rem;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__steps {
+    margin-top: .2rem;
+  }
+}
+
+@media (max-width: 420px) {
+  body.swishiq-studio-page .swishiq-session-hud {
+    margin-bottom: .9rem;
+    padding: .68rem;
+    border-radius: 14px;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__title {
+    font-size: clamp(1.22rem, 6.8vw, 1.55rem);
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .3rem;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__step {
+    align-items: flex-start;
+    min-height: 2.4rem;
+    padding: .34rem .36rem;
+    font-size: .63rem;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__step-marker {
+    width: 1.16rem;
+    height: 1.16rem;
+    flex-basis: 1.16rem;
+    font-size: .58rem;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__actions button {
+    flex: 1 1 10rem;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 360px) {
+  body.swishiq-studio-page .swishiq-session-hud__provenance-list {
+    grid-template-columns: 1fr;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__actions button {
+    flex-basis: 100%;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.swishiq-studio-page .swishiq-session-hud[data-session-status="running"] .swishiq-session-hud__status::before {
+    animation: none;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__step,
+  body.swishiq-studio-page .swishiq-session-hud__actions button {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  body.swishiq-studio-page .swishiq-session-hud {
+    border-color: CanvasText;
+    border-left-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud::before,
+  body.swishiq-studio-page .swishiq-session-hud__kicker::before,
+  body.swishiq-studio-page .swishiq-session-hud__status::before {
+    display: none;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__step,
+  body.swishiq-studio-page .swishiq-session-hud__step.is-active,
+  body.swishiq-studio-page .swishiq-session-hud__provenance {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__step.is-active {
+    border-width: 2px;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud__actions button {
+    border-color: ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+    box-shadow: none;
+  }
+
+  body.swishiq-studio-page .swishiq-session-hud :is(button, a, select, input, textarea, summary):focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "buildProfile": "candidate-12-standalone-vite",
+  "builtAt": "2026-10-05T22:26:22.914Z",
+  "bundleManifest": {
+    "inputPath": "tools/swishiq-studio/engine/game-lab-candidate10-v9-model-bundle.json",
+    "byteLength": 2828,
+    "sha256": "6e773a953e38daf2a0d6d605a1a8d9796021d02f72a4455c831713430b66aecf"
+  },
+  "integrity": {
+    "sourceBytesVerifiedBeforeTransform": true,
+    "runtimeModuleFetch": false,
+    "runtimeRawModuleHashing": false,
+    "note": "The exact five-module closure is read from the digest-pinned Candidate10 bundle manifest, verified byte-for-byte before Vite transforms, and statically bundled into the lazy Candidate10 route. The browser continues to fetch and hash the bundle JSON, checkpoint, manual approval, and V4 data at runtime."
+  },
+  "entryModulePath": "game-lab-candidate10-paired-distribution-v9.mjs",
+  "modules": [
+    {
+      "inputPath": "tools/swishiq-studio/engine/game-lab-native-score-model-candidate10-v5.mjs",
+      "bundlePath": "game-lab-native-score-model-candidate10-v5.mjs",
+      "inputBytes": 38054,
+      "inputSha256": "75f26bbbf31f8745592816e243f3e11ac16281dc1f035aa1f2a46905d6a8acdd",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/Candidate10GameLab-jvmZCUO2.js",
+          "outputSha256": "fb66fabcb377b983a81645114db488f1c7f70e06f79e479c587eca1dc3563dda"
+        }
+      ]
+    },
+    {
+      "inputPath": "tools/swishiq-studio/engine/game-lab-candidate10-paired-distribution-v9.mjs",
+      "bundlePath": "game-lab-candidate10-paired-distribution-v9.mjs",
+      "inputBytes": 10314,
+      "inputSha256": "31681da819afbfbdb06024b55662021597c69fa7dd42488e26fd42dcaebfc12b",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/Candidate10GameLab-jvmZCUO2.js",
+          "outputSha256": "fb66fabcb377b983a81645114db488f1c7f70e06f79e479c587eca1dc3563dda"
+        }
+      ]
+    },
+    {
+      "inputPath": "tools/swishiq-studio/engine/game-lab-native-score-model-candidate10-v3.mjs",
+      "bundlePath": "game-lab-native-score-model-candidate10-v3.mjs",
+      "inputBytes": 36779,
+      "inputSha256": "e6892fd3642f640101cd2323ca0c48fb3882d355ec0fd108a2272defc817b4b4",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/Candidate10GameLab-jvmZCUO2.js",
+          "outputSha256": "fb66fabcb377b983a81645114db488f1c7f70e06f79e479c587eca1dc3563dda"
+        }
+      ]
+    },
+    {
+      "inputPath": "tools/swishiq-studio/engine/game-lab-candidate10-paired-distribution-v1.mjs",
+      "bundlePath": "game-lab-candidate10-paired-distribution-v1.mjs",
+      "inputBytes": 9338,
+      "inputSha256": "a96939d18ffdaeb0a5ede06bf0b90dba719bf0d41e653b9ce12a46750306e70b",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/Candidate10GameLab-jvmZCUO2.js",
+          "outputSha256": "fb66fabcb377b983a81645114db488f1c7f70e06f79e479c587eca1dc3563dda"
+        }
+      ]
+    },
+    {
+      "inputPath": "tools/swishiq-studio/engine/game-lab-candidate10-paired-distribution-v3.mjs",
+      "bundlePath": "game-lab-candidate10-paired-distribution-v3.mjs",
+      "inputBytes": 10252,
+      "inputSha256": "ac9ebb60615b883076b6c962a84f3390e7eb976150ec16bab76ffdef222c99a6",
+      "outputChunks": [
+        {
+          "outputChunk": "assets/Candidate10GameLab-jvmZCUO2.js",
+          "outputSha256": "fb66fabcb377b983a81645114db488f1c7f70e06f79e479c587eca1dc3563dda"
+        }
+      ]
+    }
+  ]
+}

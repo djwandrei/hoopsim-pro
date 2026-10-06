@@ -1,0 +1,9 @@
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+</IfModule>
+
+<IfModule mod_headers.c>
+  <Files "index.html">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </Files>
+</IfModule>

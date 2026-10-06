@@ -15,6 +15,7 @@ import PlayerStatsLog from '@/components/season/PlayerStatsLog';
 import LeagueLeaders from '@/components/season/LeagueLeaders';
 import LeagueAwards from '@/components/season/LeagueAwards';
 import SeasonSummaryPanel from '@/components/season/SeasonSummaryPanel';
+import SeasonHistoryPanel from '@/components/season/SeasonHistoryPanel';
 import '@/components/season/seasonTables.css';
 
 export default function SeasonLab() {
@@ -101,6 +102,7 @@ export default function SeasonLab() {
             hasResults={Boolean(sim.result)}
             championName={championName}
           />
+          <SeasonHistoryPanel year={year} hasResults={Boolean(sim.result)} result={sim.result} championName={championName} />
           <div key={tab} className="season-view-enter">
             {tab === 'hub' && (
               <div className="space-y-4">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch } from '@/components/ui/switch';
-import { Calendar, Gauge, Loader2, Play, Repeat, Trophy } from 'lucide-react';
+import { Calendar, Dices, Gauge, Loader2, Play, Repeat, Trophy } from 'lucide-react';
 
 const BLEND_OPTIONS = [
   ['0.5', 'Balanced'],
@@ -72,6 +72,37 @@ export default function LeagueControls({
           {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
           {running ? 'Simulating…' : hasResults ? 'Run new replay' : 'Run season replay'}
         </button>
+      </div>
+
+      <div className="mt-3 grid gap-3 border-t border-[var(--myna-border)] pt-3 sm:grid-cols-2 lg:grid-cols-4">
+        <label className="block">
+          <span className={labelCls}><Calendar className="mr-1 inline h-3 w-3" />Horizon</span>
+          <select className={fieldCls} value={setup.horizon} onChange={event => onSetupChange({ ...setup, horizon: event.target.value })} disabled={running} aria-label="Horizon">
+            <option value="team">One game per team</option>
+            <option value="short">Short schedule</option>
+            <option value="full">Full schedule</option>
+          </select>
+        </label>
+        <label className="block">
+          <span className={labelCls}><Calendar className="mr-1 inline h-3 w-3" />Schedule source</span>
+          <select className={fieldCls} value={setup.scheduleSource} onChange={event => onSetupChange({ ...setup, scheduleSource: event.target.value })} disabled={running} aria-label="Schedule source">
+            <option value="actual">Actual NBA schedule</option>
+            <option value="round-robin">Generated round-robin</option>
+          </select>
+        </label>
+        <label className="block">
+          <span className={labelCls}><Trophy className="mr-1 inline h-3 w-3" />Series length</span>
+          <select className={fieldCls} value={setup.series} onChange={event => onSetupChange({ ...setup, series: event.target.value })} disabled={running} aria-label="Playoff series length">
+            <option value="7">Best of 7</option>
+            <option value="5">Best of 5</option>
+            <option value="3">Best of 3</option>
+            <option value="1">One game</option>
+          </select>
+        </label>
+        <label className="block">
+          <span className={labelCls}><Dices className="mr-1 inline h-3 w-3" />Replay seed</span>
+          <input type="text" maxLength={80} className={fieldCls} placeholder="Leave blank for a new run" value={setup.seed} onChange={event => onSetupChange({ ...setup, seed: event.target.value })} disabled={running} aria-label="Replay seed" />
+        </label>
       </div>
 
       {running && (

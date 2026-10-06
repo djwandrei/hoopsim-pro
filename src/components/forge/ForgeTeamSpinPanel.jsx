@@ -1,6 +1,5 @@
 import React from 'react';
 import ForgeReel from '@/components/forge/ForgeReel';
-import TeamMark from '@/components/studio/TeamMark';
 
 // Left panel of the Team Forge: TEAM / PLAYER reels and the spin or respin
 // controls only — the revealed player lives in the wide showcase beside it.

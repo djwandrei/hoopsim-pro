@@ -1,5 +1,4 @@
 import React from 'react';
-import { Ban } from 'lucide-react';
 import CourtFloor from '@/components/dailyGames/CourtFloor';
 import CourtPlayerMarker from '@/components/dailyGames/CourtPlayerMarker';
 import { allocateCourtSlots, projectCourt } from '@/components/dailyGames/courtGeometry';

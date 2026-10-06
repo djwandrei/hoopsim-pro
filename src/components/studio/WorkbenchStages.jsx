@@ -1,5 +1,4 @@
 import React from 'react';
-import { Check } from 'lucide-react';
 export default function WorkbenchStages({ steps, current, state }) {
   const active = state && state !== 'ready' ? 0 : current;
   const loading = state === 'idle' || state === 'loading';

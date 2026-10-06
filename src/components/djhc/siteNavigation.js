@@ -9,6 +9,7 @@ export const FAN_TOOLS = [
   ['/tools/player-card-matchups/','Player & Cards','card-matchups-emblem-20260911.png'],
   ['/tools/virtual-pack-opening/','Virtual Packs','card-matchups-emblem-20260911.png'],
   ['/tools/collection-lineup-builder/','Collection Builder',null],
+  ['/tools/team-dna-atlas/','Team DNA Atlas',null],
   ['/tools/trade-package-builder/','Trade Packages',null],
   ['/tools/position-lens/','Position Lens',null],
   ['/tools/roster-fit-simulator/','Roster Fit',null],

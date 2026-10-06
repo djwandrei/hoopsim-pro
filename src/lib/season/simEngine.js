@@ -263,7 +263,7 @@ export function runRepeat(league, schedule, { seed = 1, playoffs = true, defense
       pace: s.games ? s.poss / s.games : 0,
     };
   }).sort((a, b) => b.winPct - a.winPct || b.pd - a.pd);
-  const bracket = playoffs ? simulatePlayoffs(league, standings, rng, { defenseWeight }) : null;
+  const bracket = playoffs ? simulatePlayoffs(league, standings, rng, { defenseWeight, bestOf }) : null;
   return { seed, standings, games, bracket };
 }
 
@@ -302,8 +302,9 @@ function bracketPairs(count) {
   return pairs;
 }
 
-function simulatePlayoffs(league, standings, rng, { defenseWeight, leagueDef }) {
+function simulatePlayoffs(league, standings, rng, { defenseWeight, leagueDef, bestOf: seriesBestOf }) {
   const options = { defenseWeight, homeCourt: 1.6, leagueDef };
+  const bestOf = seriesBestOf || 7;
   const reach = {};
   const rounds = [];
   const conferenceChamps = [];
@@ -351,7 +352,7 @@ function simulatePlayoffs(league, standings, rng, { defenseWeight, leagueDef }) 
       const name = roundName(left);
       const winners = [];
       for (const [first, second] of pending) {
-        const series = simSeries(first, second, 7, rng, options);
+        const series = simSeries(first, second, bestOf, rng, options);
         seriesLog.push({ round: name, higher: series.higher.code, lower: series.lower.code, higherSeed: series.higher.seed, lowerSeed: series.lower.seed, winner: series.winner.code, games: series.results });
         reach[series.loser.code] = reachName(left);
         winners.push(series.winner);
@@ -365,7 +366,7 @@ function simulatePlayoffs(league, standings, rng, { defenseWeight, leagueDef }) 
     rounds.push({ conference, playIn, series: seriesLog });
     conferenceChamps.push(conferenceChamp);
   }
-  const finals = simSeries(conferenceChamps[0], conferenceChamps[1], 7, rng, options);
+  const finals = simSeries(conferenceChamps[0], conferenceChamps[1], bestOf, rng, options);
   reach[finals.loser.code] = 'finals';
   reach[finals.winner.code] = 'champion';
   return { rounds, finals: { higher: finals.higher.code, lower: finals.lower.code, higherSeed: finals.higher.seed, lowerSeed: finals.lower.seed, games: finals.results, winner: finals.winner.code }, champion: finals.winner.code, reach };

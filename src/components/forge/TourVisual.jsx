@@ -1,6 +1,5 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine, Cell, CartesianGrid } from 'recharts';
-import MetricTile from '@/components/studio/MetricTile';
 
 // Horizontal, sorted margin chart: every opponent on its own row, wins in
 // gold above the zero line, losses in trim below — much easier to scan than

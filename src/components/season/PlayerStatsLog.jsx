@@ -5,6 +5,8 @@ import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
 const STATS = [['pts', 'PTS'], ['reb', 'REB'], ['ast', 'AST'], ['stl', 'STL'], ['blk', 'BLK']];
+const PER_GAME_LABELS = { pts: 'PPG', reb: 'RPG', ast: 'APG', stl: 'SPG', blk: 'BPG' };
+const PER_GAME_TITLES = { pts: 'Points per game', reb: 'Rebounds per game', ast: 'Assists per game', stl: 'Steals per game', blk: 'Blocks per game' };
 
 // Historical player stats log: every simulated game line for the focused team,
 // with sortable per-player averages and accent-chipped career-high cells.
@@ -64,6 +66,12 @@ export default function PlayerStatsLog({ team, simGames }) {
   const teamPalette = paletteForTeam(team.code);
   const headCell = 'px-2.5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
   const sortIcon = key => sort.key === key ? (sort.dir === 'desc' ? <ArrowDown className="h-3 w-3 text-[var(--myna-accent)]" /> : <ArrowUp className="h-3 w-3 text-[var(--myna-accent)]" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />;
+  const sortTh = (key, children, title, className = headCell) => (
+    <th scope="col" aria-sort={sort.key === key ? (sort.dir === 'desc' ? 'descending' : 'ascending') : 'none'} className={className} title={title}>{children}</th>
+  );
+  const headButton = (key, label) => (
+    <button type="button" onClick={() => changeSort(key)} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">{label}{sortIcon(key)}</button>
+  );
   const maxPts = Math.max(...log.averages.map(player => player.avgs.pts), 1);
 
   return (
@@ -80,12 +88,10 @@ export default function PlayerStatsLog({ team, simGames }) {
           <table className="w-full">
             <thead>
               <tr>
-                <th className={`${headCell} text-left`}>
-                  <button type="button" onClick={() => changeSort('name')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">Player{sortIcon('name')}</button>
-                </th>
-                <th className={headCell}><button type="button" onClick={() => changeSort('gp')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">GP{sortIcon('gp')}</button></th>
-                <th className={headCell}><button type="button" onClick={() => changeSort('mpg')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">MPG{sortIcon('mpg')}</button></th>
-                {STATS.map(([stat, label]) => <th key={stat} className={headCell}><button type="button" onClick={() => changeSort(stat)} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">{label + (stat === 'pts' ? 'G' : 'PG')}{sortIcon(stat)}</button></th>)}
+                {sortTh('name', <button type="button" onClick={() => changeSort('name')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">Player{sortIcon('name')}</button>, 'Player name', `${headCell} text-left`)}
+                {sortTh('gp', <button type="button" onClick={() => changeSort('gp')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">GP{sortIcon('gp')}</button>, 'Games played')}
+                {sortTh('mpg', <button type="button" onClick={() => changeSort('mpg')} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">MPG{sortIcon('mpg')}</button>, 'Minutes per game')}
+                {STATS.map(([stat]) => sortTh(stat, <button type="button" onClick={() => changeSort(stat)} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">{PER_GAME_LABELS[stat]}{sortIcon(stat)}</button>, PER_GAME_TITLES[stat]))}
               </tr>
             </thead>
             <tbody>

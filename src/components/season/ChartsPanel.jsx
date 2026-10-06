@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ReferenceLine, ScatterChart, Scatter, ZAxis, Cell,
+  ReferenceLine, ScatterChart, Scatter, ZAxis, Cell, LabelList,
 } from 'recharts';
 
 const tooltipStyle = { backgroundColor:'hsl(var(--card))', border:'1px solid hsl(var(--border))', color:'hsl(var(--foreground))', borderRadius:10, fontSize:12 };
@@ -30,7 +30,7 @@ function WinDistribution({ summary, focusCode, actualWins }) {
         <h3 className="chart-frame__title">WIN DISTRIBUTION · {focusCode}</h3>
         <span className="text-xs text-muted-foreground">{focus.winsList.length} replays · median {focus.wins.toFixed(1)}</span>
       </div>
-      <div className="mt-3 h-56">
+      {data.length ? <div className="mt-3 h-56">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 12, right: 8, left: -14, bottom: 8 }}>
             <CartesianGrid stroke="hsl(var(--border) / .25)" vertical={false} />
@@ -39,10 +39,12 @@ function WinDistribution({ summary, focusCode, actualWins }) {
             <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'hsl(var(--court-royal) / .13)' }} formatter={value => [`${value} replays`, 'Simulated seasons']} labelFormatter={label => `${label} wins`} />
             {Number.isFinite(actualWins) && <ReferenceLine x={`${Math.floor(actualWins / 4) * 4}–${Math.floor(actualWins / 4) * 4 + 3}`} stroke="hsl(var(--court-positive))" strokeDasharray="4 3" label={{ value: 'Actual', fill: 'hsl(var(--court-positive))', fontSize: 10, position: 'top' }} />}
             <ReferenceLine x={`${Math.floor(focus.wins / 4) * 4}–${Math.floor(focus.wins / 4) * 4 + 3}`} stroke="hsl(var(--court-accent))" label={{ value: 'Median', fill: 'hsl(var(--court-accent))', fontSize: 10, position: 'top' }} />
-            <Bar dataKey="wins" fill="hsl(var(--court-royal))" radius={[4, 4, 0, 0]} animationDuration={600} />
+            <Bar dataKey="wins" fill="hsl(var(--court-royal))" radius={[4, 4, 0, 0]} animationDuration={600}>
+              <LabelList dataKey="wins" position="top" style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10, fontFamily: 'var(--font-mono)' }} />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
-      </div>
+      </div> : <div className="chart-frame__empty mt-3">No replay seasons recorded yet — run a replay to fill this out.</div>}
       <p className="chart-frame__caption">Where every replay season landed. Gold line marks the median outcome; green dashed marks the actual season.</p>
     </div>
   );
@@ -50,10 +52,21 @@ function WinDistribution({ summary, focusCode, actualWins }) {
 
 function NetScatter({ summary, focusCode }) {
   const data = summary.map(row => ({
-    code: row.code, ortg: Number(row.ortg.toFixed(1)), drtg: Number(row.drtg.toFixed(1)),
+    code: row.code, name: row.name || row.code, ortg: Number(row.ortg.toFixed(1)), drtg: Number(row.drtg.toFixed(1)),
     net: Number((row.ortg - row.drtg).toFixed(1)),
     focus: row.code === focusCode,
   }));
+  const netTip = ({ active, payload }) => {
+    if (!active || !payload?.length) return null;
+    const t = payload[0].payload;
+    return (
+      <div className="rounded-lg border border-border/50 bg-card px-3 py-2 text-xs shadow-xl">
+        <p className="font-semibold text-foreground">{t.name}</p>
+        <p className="mt-1 font-mono text-muted-foreground">ORtg {t.ortg.toFixed(1)} · DRtg {t.drtg.toFixed(1)}</p>
+        <p className="font-mono font-semibold" style={{ color: t.net >= 0 ? 'hsl(var(--court-positive))' : 'hsl(var(--court-trim-ink))' }}>{t.net >= 0 ? '+' : ''}{t.net.toFixed(1)} net rating</p>
+      </div>
+    );
+  };
   return (
     <div className="chart-frame rise-in court-panel-hover" style={{ '--rise-delay': '90ms' }}>
       <div className="chart-frame__head">
@@ -67,7 +80,7 @@ function NetScatter({ summary, focusCode }) {
             <XAxis type="number" dataKey="ortg" name="ORtg" tick={axisTick} domain={['dataMin - 1', 'dataMax + 1']} label={{ value: 'Offensive rating →', position: 'insideBottom', offset: -8, ...axisLabel }} />
             <YAxis type="number" dataKey="drtg" name="DRtg" tick={axisTick} domain={['dataMin - 1', 'dataMax + 1']} reversed label={{ value: 'Defensive rating ↓ better', angle: -90, position: 'insideLeft', offset: 14, ...axisLabel }} />
             <ZAxis dataKey="net" range={[30, 30]} />
-            <Tooltip contentStyle={tooltipStyle} formatter={(value, name) => [value.toFixed ? value.toFixed(1) : value, name]} />
+            <Tooltip content={netTip} cursor={{ strokeDasharray: '3 3' }} />
             <Scatter data={data} shape="circle" animationDuration={600}>
               {data.map(entry => (
                 <Cell key={entry.code} fill={entry.focus ? 'hsl(var(--court-accent))' : 'hsl(var(--court-royal))'} stroke={entry.focus ? 'hsl(var(--court-focus))' : 'none'} strokeWidth={2} />

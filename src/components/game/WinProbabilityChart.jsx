@@ -96,6 +96,7 @@ export default function WinProbabilityChart({ events, count, homeCode, awayCode 
           </AreaChart>
         </ResponsiveContainer>
       </div>
+      <p className="mt-2 text-[10.4px] leading-relaxed myna-muted">Lead-protection estimate: the same margin is worth more with less time remaining. Vertical ticks mark quarter breaks.</p>
     </section>
   );
 }

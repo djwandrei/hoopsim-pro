@@ -17,8 +17,11 @@ export default function TeamRosterTable({ team, actualWins }) {
   const changeSort = key => setSort(current => ({ key, dir: current.key === key ? (current.dir === 'desc' ? 'asc' : 'desc') : 'desc' }));
   const headCell = 'px-2.5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] myna-muted';
   const sortIcon = key => sort.key === key ? (sort.dir === 'desc' ? <ArrowDown className="h-3 w-3 text-[var(--myna-accent)]" /> : <ArrowUp className="h-3 w-3 text-[var(--myna-accent)]" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />;
-  const headButton = (key, label, alignRight = true) => (
-    <button type="button" onClick={() => changeSort(key)} className={`inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)] ${alignRight ? '' : ''}`}>{label}{sortIcon(key)}</button>
+  const headButton = (key, label) => (
+    <button type="button" onClick={() => changeSort(key)} className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[var(--myna-accent)]">{label}{sortIcon(key)}</button>
+  );
+  const sortTh = (key, label, title, className = headCell) => (
+    <th scope="col" aria-sort={sort.key === key ? (sort.dir === 'desc' ? 'descending' : 'ascending') : 'none'} className={className} title={title}>{headButton(key, label)}</th>
   );
   return (
     <section className="myna-panel overflow-hidden" aria-label={`${team.name} roster`}>
@@ -33,15 +36,15 @@ export default function TeamRosterTable({ team, actualWins }) {
         <table className="w-full text-xs">
           <thead>
             <tr>
-              <th className={`${headCell} text-left`}>{headButton('name', 'Player')}</th>
+              {sortTh('name', 'Player', 'Player name', `${headCell} text-left`)}
               <th className={`${headCell} text-left`}>Pos</th>
-              <th className={headCell}>{headButton('games', 'GP')}</th>
-              <th className={`${headCell} text-right`}>{headButton('mpg', 'MPG')}</th>
-              <th className={headCell}>{headButton('pts', 'PTS')}</th>
-              <th className={headCell}>{headButton('reb', 'REB')}</th>
-              <th className={headCell}>{headButton('ast', 'AST')}</th>
-              <th className={headCell}>{headButton('stl', 'STL')}</th>
-              <th className={headCell}>{headButton('blk', 'BLK')}</th>
+              {sortTh('games', 'GP', 'Games played')}
+              {sortTh('mpg', 'MPG', 'Minutes per game', `${headCell} text-right`)}
+              {sortTh('pts', 'PTS', 'Points per game')}
+              {sortTh('reb', 'REB', 'Rebounds per game')}
+              {sortTh('ast', 'AST', 'Assists per game')}
+              {sortTh('stl', 'STL', 'Steals per game')}
+              {sortTh('blk', 'BLK', 'Blocks per game')}
             </tr>
           </thead>
           <tbody>

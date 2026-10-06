@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { fail, requireGate, ensureWallet } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta } from '../../shared/realBookCore.ts';
 
 // Withdrawal request: moves funds from the available balance into a pending
 // payout queue with an immutable ledger entry. Standard policy: one pending
@@ -26,9 +26,14 @@ export default async function(req) {
       return fail('You have open wagers — unsettled funds can\'t be withdrawn until your bets settle.', 'open_bets', 409);
     }
     if (amountCents > balance) return fail('Withdrawal exceeds your available balance.', 'insufficient_balance', 402);
+    // Compare-and-set on the balance serializes concurrent withdrawal
+    // requests: the second of two racing requests re-reads and re-checks
+    // instead of double-debiting or double-queuing a payout.
     const pending = (Number(wallet.pending_withdrawal_cents) || 0) + amountCents;
-    const newBalance = balance - amountCents;
-    await base44.asServiceRole.entities.RealWallet.update(wallet.id, { balance_cents: newBalance, pending_withdrawal_cents: pending });
+    const debit = await applyWalletDelta(base44, wallet, -amountCents, { pending_withdrawal_cents: pending });
+    if (debit.error === 'insufficient') return fail('Withdrawal exceeds your available balance.', 'insufficient_balance', 402);
+    if (debit.error) return fail('The wallet is busy — try again in a moment.', 'wallet_busy', 503);
+    const newBalance = debit.balance;
     await base44.asServiceRole.entities.RealTransaction.create({
       created_by_id: gate.user.id,
       type: 'withdrawal', amount_cents: amountCents, status: 'requested',

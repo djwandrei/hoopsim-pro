@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { secrets } from 'base44:runtime';
-import { fail, requireGate, ensureWallet } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta } from '../../shared/realBookCore.ts';
 
 // Verifies a completed Stripe Checkout Session server-side and credits the
 // real-money wallet exactly once (idempotent by session id), so the balance
@@ -34,11 +34,11 @@ export default async function(req) {
     const amountCents = Number(session.amount_total) || 0;
     if (amountCents <= 0) return fail('Stripe reported no payment amount.', 'stripe_error', 502);
     const wallet = await ensureWallet(base44, gate.user.id);
-    const balance = (Number(wallet.balance_cents) || 0) + amountCents;
-    await base44.asServiceRole.entities.RealWallet.update(wallet.id, {
-      balance_cents: balance,
+    const credit = await applyWalletDelta(base44, wallet, amountCents, {
       lifetime_deposited_cents: (Number(wallet.lifetime_deposited_cents) || 0) + amountCents,
     });
+    if (credit.error) return fail('Payment verified, but crediting the wallet hit contention — your deposit will be applied on the next visit.', 'wallet_busy', 503);
+    const balance = credit.balance;
     await base44.asServiceRole.entities.RealTransaction.create({
       created_by_id: gate.user.id,
       type: 'deposit', amount_cents: amountCents, status: 'completed', ref: sessionId,

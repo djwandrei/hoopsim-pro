@@ -8,6 +8,21 @@ import { secrets } from 'base44:runtime';
  */
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' };
 
+// The relay serves public odds data but spends the app's paid API quota, so
+// it is throttled per caller IP: a sliding 60-second window, best-effort
+// (in-memory) since the relay itself is stateless.
+const RATE_WINDOW_MS = 60000;
+const RATE_MAX_CALLS = 30;
+const rateHits = new Map();
+function isRateLimited(ip) {
+  const now = Date.now();
+  const hits = (rateHits.get(ip) || []).filter(ts => now - ts < RATE_WINDOW_MS);
+  hits.push(now);
+  rateHits.set(ip, hits);
+  if (rateHits.size > 1000) for (const [key, times] of rateHits) if (times.every(ts => now - ts >= RATE_WINDOW_MS)) rateHits.delete(key);
+  return hits.length > RATE_MAX_CALLS;
+}
+
 function parseBooks(event) {
   const rows = [];
   for (const book of event.bookmakers || []) {
@@ -52,6 +67,10 @@ export default async function(req) {
       return new Response(null, { status: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' } });
     }
     if (req.method !== 'POST') return Response.json({ error: 'POST only.' }, { status: 405, headers: CORS });
+    const ip = (req.headers.get('x-forwarded-for') || '').split(',')[0].trim() || req.headers.get('cf-connecting-ip') || 'unknown';
+    if (isRateLimited(ip)) {
+      return Response.json({ error: 'Too many refreshes — the odds feed is cooling down for a minute.', code: 'rate_limited' }, { status: 429, headers: CORS });
+    }
     const apiKey = secrets.get('ODDS_API_KEY');
     if (!apiKey) {
       return Response.json({ error: 'The live odds feed is not connected yet. Add ODDS_API_KEY in the app dashboard Secrets page (free key at theoddsapi.com).', code: 'odds_feed_not_configured' }, { status: 503, headers: CORS });

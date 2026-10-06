@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { parlayAmerican, teaserPrice, roundRobinCombos, TEASER_POINTS, profitCents, bestOffer } from '../../shared/realBetsMath.ts';
-import { fail, requireGate, ensureWallet, lostTodayCents } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta, lostTodayCents } from '../../shared/realBookCore.ts';
 
 // Real-money bet placement. Standard sportsbook policies enforced here:
 // the server re-reads the live board and re-prices every leg (client prices
@@ -109,6 +109,10 @@ export default async function(req) {
     const wallet = await ensureWallet(base44, gate.user.id);
     const balance = Number(wallet.balance_cents) || 0;
     if (outlay > balance) return fail('Not enough real-money balance for this wager — deposit first.', 'insufficient_balance', 402);
+    const debit = await applyWalletDelta(base44, wallet, -outlay);
+    if (debit.error === 'insufficient') return fail('Not enough real-money balance for this wager — deposit first.', 'insufficient_balance', 402);
+    if (debit.error) return fail('The wallet is busy — try again in a moment.', 'wallet_busy', 503);
+    const newBalance = debit.balance;
     const price = mode === 'teaser' ? teaserPrice(legs.length)
       : mode === 'roundrobin' ? parlayAmerican(combos[0])
       : legs.length > 1 ? parlayAmerican(legs) : legs[0].price;
@@ -143,8 +147,6 @@ export default async function(req) {
       };
       created = [await base44.asServiceRole.entities.RealBet.create(record)];
     }
-    const newBalance = balance - outlay;
-    await base44.asServiceRole.entities.RealWallet.update(wallet.id, { balance_cents: newBalance });
     await base44.asServiceRole.entities.RealTransaction.create({
       created_by_id: gate.user.id,
       type: 'bet', amount_cents: -outlay, status: 'completed',

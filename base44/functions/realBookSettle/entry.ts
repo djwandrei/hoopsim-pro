@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { gradeBet, profitCents } from '../../shared/realBetsMath.ts';
-import { fail, requireGate, ensureWallet } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta } from '../../shared/realBookCore.ts';
 
 // Server-side settlement against official finals (via the existing
 // swishiqOddsFeed relay, so scores never come from the client). Credits
@@ -30,12 +30,14 @@ export default async function(req) {
     const wallet = await ensureWallet(base44, gate.user.id);
     let balance = Number(wallet.balance_cents) || 0;
     let settled = 0;
+    let totalReturned = 0;
     for (const bet of open.items) {
       const result = gradeBet(bet, finalsFor);
       if (!result) continue;
       const returned = result.status === 'won' ? bet.stake_cents + profitCents(bet.stake_cents, result.price)
         : result.status === 'push' ? bet.stake_cents : 0;
       balance += returned;
+      totalReturned += returned;
       await base44.asServiceRole.entities.RealBet.update(bet.id, {
         status: result.status, price_american: result.price,
         settled_profit_cents: returned - bet.stake_cents,
@@ -50,7 +52,12 @@ export default async function(req) {
       }
       settled++;
     }
-    if (settled > 0) await base44.asServiceRole.entities.RealWallet.update(wallet.id, { balance_cents: balance });
+    // Single compare-and-set credit for the whole batch: even if a deposit
+    // or another settlement lands mid-batch, the payout is never lost.
+    if (totalReturned > 0) {
+      const credit = await applyWalletDelta(base44, wallet, totalReturned);
+      if (credit.error) return fail('Settlement completed but the wallet credit hit an error — contact support with your bet details.', 'wallet_busy', 503);
+    }
     return Response.json({ settled });
   } catch (error) {
     return Response.json({ error: error?.message || 'Settlement failed.' }, { status: 500 });

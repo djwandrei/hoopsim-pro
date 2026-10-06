@@ -49,14 +49,42 @@ export async function requireGate(base44) {
 
 // Wallet reads run user-scoped (owner RLS); the create is service-role with
 // the owner id stamped explicitly, since the wallet is admin-write-only.
+// After the create we re-read, so two concurrent first-touches can't leave a
+// duplicate wallet behind.
 export async function ensureWallet(base44, userId) {
   const page = await base44.entities.RealWallet.filter({});
   const wallet = (page.items || [])[0];
   if (wallet) return wallet;
-  return base44.asServiceRole.entities.RealWallet.create({
+  await base44.asServiceRole.entities.RealWallet.create({
     created_by_id: userId,
     balance_cents: 0, pending_withdrawal_cents: 0, lifetime_deposited_cents: 0, lifetime_withdrawn_cents: 0,
   });
+  const again = await base44.entities.RealWallet.filter({});
+  const created = (again.items || [])[0];
+  if (!created) throw new Error('Could not create the wallet.');
+  return created;
+}
+
+// Atomic wallet delta via compare-and-set: the conditional update only
+// applies when the balance still equals what we read, so concurrent bets,
+// deposits, settlements and withdrawals can never silently overwrite each
+// other's balance changes (lost-update race). Retries on contention.
+export async function applyWalletDelta(base44, wallet, deltaCents, extraSet = {}) {
+  let current = wallet;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const fromBalance = Number(current.balance_cents) || 0;
+    const nextBalance = fromBalance + deltaCents;
+    if (nextBalance < 0) return { error: 'insufficient' };
+    const result = await base44.asServiceRole.entities.RealWallet.updateMany(
+      { id: current.id, balance_cents: fromBalance },
+      { $set: { balance_cents: nextBalance, ...extraSet } }
+    );
+    if (Number(result?.updated) > 0) return { balance: nextBalance };
+    const fresh = await base44.asServiceRole.entities.RealWallet.get(current.id);
+    if (!fresh) return { error: 'missing' };
+    current = fresh;
+  }
+  return { error: 'contention' };
 }
 
 export async function depositedTodayCents(base44) {

@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { fail, requireGate, ensureWallet } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta } from '../../shared/realBookCore.ts';
 
 // Self-exclusion / cool-off, enforced server-side so a client flag can never
 // be flipped back. Immediate effect; open wagers are voided with stakes
@@ -31,12 +31,13 @@ export default async function(req) {
       refunded += Number(bet.stake_cents) || 0;
       await base44.asServiceRole.entities.RealBet.update(bet.id, { status: 'void', settled_profit_cents: 0 });
     }
-    if (refunded > 0) balance += refunded;
     await base44.asServiceRole.entities.RealMoneyProfile.update(profile.id, {
       self_excluded: true, self_excluded_at: new Date().toISOString(), self_excluded_until: until,
     });
     if (refunded > 0) {
-      await base44.asServiceRole.entities.RealWallet.update(wallet.id, { balance_cents: balance });
+      const credit = await applyWalletDelta(base44, wallet, refunded);
+      if (credit.error) return fail('Self-exclusion is active, but the refund credit hit an error — contact support with your account details.', 'wallet_busy', 503);
+      balance = credit.balance;
       await base44.asServiceRole.entities.RealTransaction.create({
         created_by_id: gate.user.id,
         type: 'void', amount_cents: refunded, status: 'completed',

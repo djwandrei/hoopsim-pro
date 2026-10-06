@@ -10,7 +10,7 @@ import { stableHash } from '@/components/spin/engine/scenarioContract';
 
 const SPIN_LIMIT = 1000;
 const SPIN_ANIMATION_MS = 700;
-const DEFAULT_SETTINGS = Object.freeze({ seed: '', roleValue: 'all', team: 'all', weight: 'uniform', metric: 'none', metricMin: '', metricMax: '', minGames: '' });
+const DEFAULT_SETTINGS = Object.freeze({ seed: '', roleValue: 'all', teams: [], positions: [], weight: 'uniform', metric: 'none', metricMin: '', metricMax: '', minGames: '', minMinutes: '' });
 
 const clean = value => String(value ?? '').trim();
 
@@ -26,13 +26,14 @@ function stableKey(entry) {
 
 function filterRuleFrom(settings) {
   const rule = {};
-  if (settings.team !== 'all') rule.teams = [settings.team];
+  if (Array.isArray(settings.positions) && settings.positions.length) rule.positions = [...settings.positions];
   if (settings.metric !== 'none') {
     const minimum = clean(settings.metricMin) === '' ? null : Number(settings.metricMin);
     const maximum = clean(settings.metricMax) === '' ? null : Number(settings.metricMax);
     if (minimum !== null || maximum !== null) rule.minMetrics = [{ key: settings.metric, minimum, maximum }];
   }
   if (clean(settings.minGames) !== '') rule.minGames = Number(settings.minGames);
+  if (clean(settings.minMinutes) !== '') rule.minMinutes = Number(settings.minMinutes);
   return rule;
 }
 
@@ -57,7 +58,8 @@ export default function useSpinDraw({ source, year, excluded, onSelection }) {
     const effectiveSeed = clean(s.seed) || ctx.seed;
     setSettings(current => current.seed === effectiveSeed ? current : { ...current, seed: effectiveSeed });
     const role = ctx.options.find(option => option.value === s.roleValue) || ctx.options[0];
-    const scopedEntries = s.team === 'all' ? ctx.entries : ctx.entries.filter(entry => (entry.teamCodes || []).includes(s.team) || entry.teamCode === s.team);
+    const wantedTeams = Array.isArray(s.teams) ? s.teams : [];
+    const scopedEntries = !wantedTeams.length ? ctx.entries : ctx.entries.filter(entry => wantedTeams.some(team => (entry.teamCodes || []).includes(team) || entry.teamCode === team));
     let result;
     try {
       result = buildSeededPool({ entries: scopedEntries, packageRef: ctx.packageRef, seed: effectiveSeed, eligibility: { ...role.eligibility, ...filterRuleFrom(s) }, uniquePlayerKey: 'playerRef' });
@@ -79,6 +81,13 @@ export default function useSpinDraw({ source, year, excluded, onSelection }) {
     runRebuild();
     return () => { clearTimeout(timerRef.current); };
   }, [source, year, excludedKey, runRebuild]);
+
+  const resetSettings = useCallback(() => {
+    setSettings({ ...DEFAULT_SETTINGS });
+    setDirty(true);
+    setPool({ status: 'dirty' });
+    stateRef.current.onSelection(null);
+  }, []);
 
   const changeSettings = useCallback(updates => {
     setSettings(current => ({ ...current, ...updates }));
@@ -118,15 +127,10 @@ export default function useSpinDraw({ source, year, excluded, onSelection }) {
     return result;
   }, []);
 
-  const entriesForOptions = useMemo(() => {
-    if (context.error) return [];
-    const excludedSet = new Set(excluded);
-    return context.entries.filter(entry => !excludedSet.has(entry.playerRef));
-  }, [context, excluded]);
-  const teamOptions = useMemo(() => [...new Set(entriesForOptions.flatMap(entry => entry.teamCodes || []))].sort(), [entriesForOptions]);
+  const teamOptions = useMemo(() => [...new Set((context.error ? [] : context.entries).flatMap(entry => entry.teamCodes || []))].sort(), [context]);
 
   return {
-    settings, changeSettings, rebuild: runRebuild, spin,
+    settings, changeSettings, resetSettings, rebuild: runRebuild, spin,
     pool, history, dirty, spinning,
     roleOptions: context.error ? [] : context.options,
     teamOptions,

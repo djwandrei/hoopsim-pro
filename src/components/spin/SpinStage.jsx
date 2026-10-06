@@ -5,7 +5,7 @@ import PlayerPortrait from '@/components/players/PlayerPortrait';
 
 // The draft-show stage: spotlight lottery wheel, gold spin CTA, and the
 // selected player announced with a broadcast lower-third ride-in.
-export default function SpinStage({ pool, latest, spinning, historyCount, onSpin, roleLabel }) {
+export default function SpinStage({ pool, latest, spinning, historyCount, history = [], onSpin, roleLabel }) {
   const ready = pool?.status === 'ready';
   const eligible = ready ? pool.entries.length : null;
   const remaining = ready ? Math.max(0, eligible - historyCount) : 0;
@@ -48,6 +48,7 @@ export default function SpinStage({ pool, latest, spinning, historyCount, onSpin
           <h3 className="spin-pick__name">{pool?.status === 'ready' ? 'Ready when you are' : pool?.status === 'dirty' ? 'Pool settings changed' : 'Wheel is idle'}</h3>
           <p className="spin-pick__context">{pool?.status === 'ready' ? 'Spin the wheel to put the first player on stage.' : pool?.reason || 'Your first pick will appear here.'}</p>
         </div>}
+        {history.length > 1 && <div className="spin-past" aria-label="Previous picks"><span className="spin-past__label">Previous</span>{history.slice(0, -1).slice(-3).reverse().map(item => <span key={item.number} className="spin-past__chip">#{String(item.number).padStart(2, '0')} {item.player?.name}</span>)}</div>}
         <p className="spin-stage__status" role="status">{status}</p>
       </div>
     </div>

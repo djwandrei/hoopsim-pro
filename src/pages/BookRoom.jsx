@@ -1,39 +1,69 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
-import OddsBoard from '@/components/book/OddsBoard';
+import OddsBoard, { gamePrices, bestPriceFor } from '@/components/book/OddsBoard';
 import BetSlip from '@/components/book/BetSlip';
 import BetTracker from '@/components/book/BetTracker';
 import OddsSetupState from '@/components/book/OddsSetupState';
-import { loadBook, saveBook, resetBook } from '@/lib/bookRoom/betsStore';
-import { gradeBet, profitFor } from '@/components/book/betsMath';
+import WalletPanel from '@/components/book/WalletPanel';
+import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsStore';
+import { gradeBet, profitFor, parlayAmerican, cashOutValue } from '@/components/book/betsMath';
 import { base44 } from '@/api/base44Client';
-import { Wallet, AlertTriangle, RefreshCcw } from 'lucide-react';
+import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
-// Book Room — live NBA odds board + play-money bet tracking. Prices are real
-// sportsbook lines from the swishiqOddsFeed relay; wagers settle against real
-// finals in studio credits only.
+const BONUS_AMOUNT = 250;
+const BONUS_COOLDOWN = 24 * 3600 * 1000;
+
+// Book Room — a full play-money sportsbook on real NBA lines: odds board with
+// movement arrows and a daily odds boost, parlay-capable bet slip, early
+// cash-out, and a SwishIQ Credits wallet. No real-money wagering.
 export default function BookRoom() {
-  usePageMeta({ title: 'Book Room — SwishIQ Studio', description: 'Real NBA money lines, spreads and totals from live sportsbooks, with a play-money bet slip and live bet tracking that settles against real finals.' });
+  usePageMeta({ title: 'Book Room — SwishIQ Studio', description: 'A full play-money sportsbook: live NBA money lines, spreads and totals with parlay slips, odds boosts, early cash-out and a tracked SwishIQ Credits wallet.' });
   const [tab, setTab] = useState('board');
+  const [format, setFormat] = useState(() => { try { return localStorage.getItem('swishiq-odds-format') || 'american'; } catch { return 'american'; } });
   const [book, setBook] = useState(loadBook);
   const [feed, setFeed] = useState({ state: 'loading', games: [], quota: null, error: null, setup: false });
-  const [slip, setSlip] = useState(null);
+  const [slipLegs, setSlipLegs] = useState([]);
+  const [movement, setMovement] = useState({});
+  const [boosts, setBoosts] = useState({});
   const [checking, setChecking] = useState(false);
+  const prevPricesRef = useRef(null);
 
   useEffect(() => saveBook(book), [book]);
+  useEffect(() => { try { localStorage.setItem('swishiq-odds-format', format); } catch { /* ignore */ } }, [format]);
 
   const loadOdds = useCallback(async () => {
     setFeed(current => ({ ...current, state: 'loading' }));
     try {
       const response = await base44.functions.invoke('swishiqOddsFeed', { kind: 'odds' });
-      setFeed({ state: 'ready', games: response.data?.games || [], quota: response.data?.quota ?? null, error: null, setup: false });
+      const games = response.data?.games || [];
+      const prices = {};
+      for (const game of games) Object.assign(prices, gamePrices(game));
+      const trend = {};
+      const previous = prevPricesRef.current;
+      if (previous) for (const [key, offer] of Object.entries(prices)) {
+        const before = previous[key];
+        if (before && offer.price !== before.price) trend[key] = offer.price > before.price ? 'up' : 'down';
+      }
+      prevPricesRef.current = prices;
+      setMovement(trend);
+      const candidates = Object.entries(prices).filter(([, offer]) => offer.price >= -250 && offer.price <= 200);
+      if (candidates.length) {
+        const [key, offer] = candidates[Math.floor(Math.random() * candidates.length)];
+        setBoosts({ [key]: offer.price + 100 });
+      } else setBoosts({});
+      setFeed({ state: 'ready', games, quota: response.data?.quota ?? null, error: null, setup: false });
     } catch (error) {
       const data = error?.response?.data || {};
       setFeed({ state: data.code === 'odds_feed_not_configured' ? 'setup' : 'error', games: [], quota: null, error: data.error || error?.message || 'The odds feed is unavailable.', setup: data.code === 'odds_feed_not_configured' });
     }
   }, []);
+
+  const priceForLeg = useCallback(leg => {
+    const game = feed.games.find(item => item.eventKey === leg.eventKey);
+    return game ? bestPriceFor(game, leg) : null;
+  }, [feed.games]);
 
   const checkFinals = useCallback(async () => {
     setChecking(true);
@@ -41,21 +71,19 @@ export default function BookRoom() {
       const response = await base44.functions.invoke('swishiqOddsFeed', { kind: 'scores' });
       const finals = response.data?.finals || [];
       setBook(current => {
+        const entries = [];
         let bankroll = current.bankroll, changed = false;
         const bets = current.bets.map(bet => {
           if (bet.status !== 'open') return bet;
-          const final = finals.find(item => item.eventKey === bet.eventKey);
-          const result = final ? gradeBet(bet, final) : null;
+          const result = gradeBet(bet, key => finals.find(item => item.eventKey === key));
           if (!result) return bet;
           changed = true;
           const returned = result === 'won' ? bet.stake + profitFor(bet.stake, bet.price) : result === 'push' ? bet.stake : 0;
+          bankroll += returned;
+          entries.push({ id: `settle-${bet.id}`, at: new Date().toISOString(), type: result === 'push' ? 'void' : 'payout', label: `${result === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`, amount: returned });
           return { ...bet, status: result, settledAt: new Date().toISOString(), profit: returned - bet.stake };
         });
-        if (changed) {
-          for (const [index, bet] of bets.entries()) if (bet.status !== 'open' && current.bets[index].status === 'open') bankroll += bet.status === 'won' ? bet.stake + profitFor(bet.stake, bet.price) : bet.status === 'push' ? bet.stake : 0;
-          return { ...current, bankroll, bets };
-        }
-        return current;
+        return changed ? { ...current, bankroll, bets, ledger: pushLedger(current.ledger, entries) } : current;
       });
     } catch { /* finals need the connected feed */ }
     setChecking(false);
@@ -64,40 +92,66 @@ export default function BookRoom() {
   useEffect(() => { loadOdds(); }, [loadOdds]);
 
   const openCount = book.bets.filter(bet => bet.status === 'open').length;
-  // Live tracking: while games the book is exposed to are out, re-check finals
-  // every minute so settled results land without a manual refresh.
+  // Live tracking: re-check finals every minute while the book is exposed.
   useEffect(() => {
     if (feed.state !== 'ready' || openCount === 0) return;
     const id = setInterval(checkFinals, 60000);
     return () => clearInterval(id);
   }, [feed.state, openCount, checkFinals]);
 
-  const placeBet = selection => {
-    const bet = { id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, placedAt: new Date().toISOString(), eventKey: selection.eventKey, matchup: selection.matchup, commenceTime: selection.commenceTime, market: selection.market, pickSide: selection.pickSide || null, totalPick: selection.totalPick || null, label: selection.label, line: selection.line ?? null, price: selection.price, stake: selection.stake, bookTitle: selection.book, status: 'open', settledAt: null, profit: null };
-    setBook(current => ({ ...current, bankroll: current.bankroll - selection.stake, bets: [bet, ...current.bets] }));
-    setSlip(null);
+  const bonusReady = !book.lastBonusAt || Date.now() - Date.parse(book.lastBonusAt) > BONUS_COOLDOWN;
+  const claimBonus = () => {
+    if (!bonusReady) return;
+    const at = new Date().toISOString();
+    setBook(current => ({ ...current, bankroll: current.bankroll + BONUS_AMOUNT, lastBonusAt: at, ledger: pushLedger(current.ledger, { id: `bonus-${Date.now()}`, at, type: 'bonus', label: 'Daily sportsbook bonus', amount: BONUS_AMOUNT }) }));
+  };
+
+  const placeBet = ({ legs, stake }) => {
+    const price = legs.length > 1 ? parlayAmerican(legs) : legs[0].price;
+    const commence = legs.map(leg => Date.parse(leg.commenceTime)).filter(Number.isFinite).sort((a, b) => a - b)[0];
+    const seen = new Set();
+    const matchup = legs.map(leg => leg.matchup).filter(item => !seen.has(item) && seen.add(item)).join(' + ');
+    const bet = { id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, placedAt: new Date().toISOString(), legs, parlay: legs.length > 1, price, stake, eventKey: legs[0].eventKey, matchup, commenceTime: Number.isFinite(commence) ? new Date(commence).toISOString() : legs[0].commenceTime, bookTitle: legs[0].book, status: 'open', settledAt: null, profit: null };
+    const at = new Date().toISOString();
+    setBook(current => ({ ...current, bankroll: current.bankroll - stake, bets: [bet, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bet.id}`, at, type: 'bet', label: `Wager: ${matchup}`, amount: -stake }) }));
+    setSlipLegs([]);
   };
 
   const settleBet = (id, result) => setBook(current => {
     const bet = current.bets.find(item => item.id === id);
     if (!bet || bet.status !== 'open') return current;
     const returned = result === 'won' ? bet.stake + profitFor(bet.stake, bet.price) : result === 'push' ? bet.stake : 0;
-    return { ...current, bankroll: current.bankroll + returned, bets: current.bets.map(item => item.id === id ? { ...item, status: result, settledAt: new Date().toISOString(), profit: returned - bet.stake } : item) };
+    const at = new Date().toISOString();
+    const entry = result === 'push' ? { id: `void-${id}`, at, type: 'void', label: `Push: ${bet.matchup}`, amount: returned } : { id: `payout-${id}`, at, type: 'payout', label: `Won: ${bet.matchup}`, amount: returned };
+    return { ...current, bankroll: current.bankroll + returned, bets: current.bets.map(item => item.id === id ? { ...item, status: result, settledAt: at, profit: returned - bet.stake } : item), ledger: pushLedger(current.ledger, entry) };
   });
 
   const voidBet = id => setBook(current => {
     const bet = current.bets.find(item => item.id === id);
     if (!bet || bet.status !== 'open') return current;
-    return { ...current, bankroll: current.bankroll + bet.stake, bets: current.bets.filter(item => item.id !== id) };
+    const at = new Date().toISOString();
+    return { ...current, bankroll: current.bankroll + bet.stake, bets: current.bets.filter(item => item.id !== id), ledger: pushLedger(current.ledger, { id: `void-${id}`, at, type: 'void', label: `Voided: ${bet.matchup}`, amount: bet.stake }) };
+  });
+
+  const cashOutBet = id => setBook(current => {
+    const bet = current.bets.find(item => item.id === id);
+    if (!bet || bet.status !== 'open') return current;
+    const value = cashOutValue(bet, priceForLeg);
+    if (!Number.isFinite(value)) return current;
+    const at = new Date().toISOString();
+    return { ...current, bankroll: current.bankroll + value, bets: current.bets.map(item => item.id === id ? { ...item, status: 'cashedout', settledAt: at, profit: value - bet.stake } : item), ledger: pushLedger(current.ledger, { id: `cashout-${id}`, at, type: 'cashout', label: `Cashed out: ${bet.matchup}`, amount: value }) };
   });
 
   const headerState = feed.state === 'loading' ? 'loading' : feed.state === 'ready' ? 'ready' : 'error';
   const headerStatus = feed.state === 'ready' ? `${feed.games.length} games priced` : feed.state === 'setup' ? 'Feed not connected · tracking still works' : feed.state === 'error' ? 'Feed unavailable' : null;
   const tabs = [['board', 'Odds board'], ['bets', openCount ? `My bets · ${openCount}` : 'My bets']];
   return <StudioShell active="/book">
-    <WorkbenchHeader title="BOOK ROOM" description="Live NBA money lines, spreads and totals from real sportsbooks. Price a wager on the slip, track every open position as games go final, and settle against real results — in a play-money bankroll, never real stakes." steps={['Read the board', 'Price a wager', 'Track & settle']} current={tab === 'bets' ? 2 : slip ? 1 : 0} state={headerState} status={headerStatus} />
+    <WorkbenchHeader title="BOOK ROOM" description="A full play-money sportsbook on real NBA lines. Stack singles and same-game legs into parlays, ride live price movement and daily odds boosts, cash out early, and settle against real finals — all in SwishIQ Credits, never real stakes." steps={['Read the board', 'Price a wager', 'Track & settle']} current={tab === 'bets' ? 2 : slipLegs.length ? 1 : 0} state={headerState} status={headerStatus} />
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
-      <div className="flex flex-wrap items-center gap-2">{tabs.map(([value, label]) => <button key={value} type="button" onClick={() => setTab(value)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors ${tab === value ? 'border-gold/40 bg-gold/10 text-gold' : 'border-border/50 text-muted-foreground hover:bg-raised hover:text-foreground'}`}>{label}</button>)}</div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">{tabs.map(([value, label]) => <button key={value} type="button" onClick={() => setTab(value)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors ${tab === value ? 'border-gold/40 bg-gold/10 text-gold' : 'border-border/50 text-muted-foreground hover:bg-raised hover:text-foreground'}`}>{label}</button>)}</div>
+        <div className="flex items-center gap-1 rounded-lg border border-border/50 p-1">{['american', 'decimal'].map(option => <button key={option} type="button" onClick={() => setFormat(option)} className={`rounded-md px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest transition-colors ${format === option ? 'bg-gold/15 text-gold' : 'text-muted-foreground hover:text-foreground'}`}>{option}</button>)}</div>
+      </div>
       {tab === 'board' ? <div className="grid items-start gap-5 lg:grid-cols-3">
         <div className="min-w-0 space-y-4 lg:col-span-2">
           {feed.state === 'setup' ? <OddsSetupState onRetry={loadOdds} /> :
@@ -107,18 +161,15 @@ export default function BookRoom() {
               <button type="button" onClick={loadOdds} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gold hover:bg-gold/20"><RefreshCcw className="h-3.5 w-3.5" aria-hidden="true" />Retry</button>
             </section> :
               feed.state === 'loading' ? <div className="court-panel grid place-items-center p-14 text-sm text-muted-foreground">Loading live prices…</div> :
-                <OddsBoard games={feed.games} quota={feed.quota} onPick={setSlip} onRefresh={loadOdds} loading={feed.state === 'loading'} />}
+                <OddsBoard games={feed.games} quota={feed.quota} movement={movement} boosts={boosts} format={format} onPick={leg => setSlipLegs(current => [...current, leg])} onRefresh={loadOdds} loading={feed.state === 'loading'} />}
         </div>
         <div className="min-w-0 space-y-4">
-          <BetSlip slip={slip} bankroll={book.bankroll} onPlace={placeBet} onClear={() => setSlip(null)} />
-          <section className="court-panel flex items-center gap-3 p-4" aria-label="Bankroll">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gold/40 bg-gold/10"><Wallet className="h-5 w-5 text-gold" aria-hidden="true" /></span>
-            <div><p className="bcast-kicker mb-0.5">Studio bankroll</p><p className="font-display text-2xl tracking-wide text-foreground">{book.bankroll.toLocaleString()} cr</p></div>
-          </section>
+          <BetSlip legs={slipLegs} bankroll={book.bankroll} format={format} onRemoveLeg={index => setSlipLegs(current => current.filter((_, i) => i !== index))} onClear={() => setSlipLegs([])} onPlace={placeBet} />
+          <WalletPanel bankroll={book.bankroll} ledger={book.ledger} bonusReady={bonusReady} onClaim={claimBonus} />
         </div>
       </div> :
-        <BetTracker book={book} onSettle={settleBet} onVoid={voidBet} onCheckFinals={checkFinals} checking={checking} feedReady={feed.state === 'ready'} onReset={() => setBook(resetBook())} />}
-      <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Play-money book: wagers are tracked in studio credits and settle against real sportsbook results — no real-money wagering happens here. Prices are the best available across connected books at last refresh.</p>
+        <BetTracker book={book} format={format} cashOutFor={bet => cashOutValue(bet, priceForLeg)} onSettle={settleBet} onVoid={voidBet} onCashOut={cashOutBet} onCheckFinals={checkFinals} checking={checking} feedReady={feed.state === 'ready'} onReset={() => setBook(resetBook())} />}
+      <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Play-money book: wagers are tracked in SwishIQ Credits and settle against real sportsbook results — no real-money wagering happens here. Prices are the best available across connected books at last refresh; boosts apply to new wagers only and cash-out uses the unboosted live market.</p>
     </main>
   </StudioShell>;
 }

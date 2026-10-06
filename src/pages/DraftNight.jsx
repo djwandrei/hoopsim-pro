@@ -18,6 +18,7 @@ import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import useDailyGameBoard from '@/hooks/useDailyGameBoard';
 import { revealSwishIQDailyGame, revealNoticeFor, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
 import { createRunStore } from '@/lib/dailyGames/runStorage';
+import { encodeSharedRun, decodeSharedRun } from '@/lib/dailyGames/resultShare';
 import '@/components/dailyGames/dailyGames.css';
 
 const RUN_STORE = createRunStore('swishiq-studio-draft-night');
@@ -42,11 +43,29 @@ export default function DraftNight() {
   const lockRef = useRef(null);
   const resultRef = useRef(null);
   const interacted = useRef(false);
+  // A ?result= link replays a friend's locked picks and re-verifies them —
+  // only consumed when its board seed matches the loaded board.
+  const [sharedRun] = useState(() => decodeSharedRun(window.location.search));
+  const sharedRunRef = useRef(sharedRun && sharedRun.gameKind === 'draft-night' ? sharedRun : null);
+  const autoRevealRef = useRef(false);
   const {
     seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, league,
   } = useDailyGameBoard({
     gameKind: 'draft-night',
     onBoardReady: (loaded) => {
+      const shared = sharedRunRef.current;
+      if (shared) {
+        if (shared.seed !== loaded.dailySeed) { setSeed(shared.seed); return; }
+        sharedRunRef.current = null;
+        const sharedPicks = shared.picks && typeof shared.picks === 'object' ? shared.picks : {};
+        setPicks(sharedPicks);
+        setOutcome(null);
+        autoRevealRef.current = true;
+        setNotice('Viewing a shared run — the locked picks replay and re-verify against the evaluator.');
+        const firstOpen = loaded.deck.rounds.findIndex(round => !sharedPicks[round.roundId]);
+        setActiveIndex(firstOpen >= 0 ? firstOpen : loaded.deck.rounds.length);
+        return;
+      }
       const store = RUN_STORE.read(loaded.dailySeed);
       const storedPicks = store.picks && typeof store.picks === 'object' ? store.picks : {};
       setPicks(storedPicks);
@@ -138,6 +157,13 @@ export default function DraftNight() {
       resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [outcome]);
+  // Shared runs reveal themselves once the replayed picks are all locked.
+  useEffect(() => {
+    if (autoRevealRef.current && board && allPicked && !outcome && !pending) {
+      autoRevealRef.current = false;
+      reveal();
+    }
+  }, [board, allPicked, outcome, pending, reveal]);
 
   return (
     <GameShell>
@@ -240,6 +266,7 @@ export default function DraftNight() {
                 otherGamePath="/fix-the-five"
                 otherGameTitle="Fix the Five"
                 onReplay={replay}
+                sharedResult={outcome ? encodeSharedRun({ gameKind: 'draft-night', seed: presentation.dailySeed, picks }) : null}
               />
             )}
             {notice && <p className="dg-notice" role="alert"><AlertTriangle className="h-3.5 w-3.5 shrink-0 text-trim-ink" />{notice}</p>}

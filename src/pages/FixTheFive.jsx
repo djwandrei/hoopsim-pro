@@ -17,6 +17,7 @@ import useDailyGameBoard from '@/hooks/useDailyGameBoard';
 import usePageMeta from '@/hooks/usePageMeta';
 import { revealSwishIQDailyGame, revealNoticeFor, gamePointsForOutcome } from '@/lib/dailyGames/boardSource';
 import { createRunStore } from '@/lib/dailyGames/runStorage';
+import { encodeSharedRun, decodeSharedRun } from '@/lib/dailyGames/resultShare';
 import '@/components/dailyGames/dailyGames.css';
 
 const RUN_STORE = createRunStore('swishiq-studio-fix-the-five');
@@ -40,11 +41,29 @@ export default function FixTheFive() {
   const lockRef = useRef(null);
   const resultsRef = useRef(null);
   const interacted = useRef(false);
+  // A ?result= link replays a friend's locked picks and re-verifies them —
+  // only consumed when its board seed matches the loaded board.
+  const [sharedRun] = useState(() => decodeSharedRun(window.location.search));
+  const sharedRunRef = useRef(sharedRun && sharedRun.gameKind === 'fix-the-five' ? sharedRun : null);
+  const autoRevealRef = useRef(false);
   const {
     seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, league,
   } = useDailyGameBoard({
     gameKind: 'fix-the-five',
     onBoardReady: (loaded) => {
+      const shared = sharedRunRef.current;
+      if (shared) {
+        if (shared.seed !== loaded.dailySeed) { setSeed(shared.seed); return; }
+        sharedRunRef.current = null;
+        const sharedPicks = shared.picks && typeof shared.picks === 'object' ? shared.picks : {};
+        setSelections(sharedPicks);
+        setOutcomes({});
+        autoRevealRef.current = true;
+        setNotice('Viewing a shared run — the locked picks replay and re-verify against the evaluator.');
+        const firstOpen = loaded.challenges.findIndex((challenge) => !sharedPicks[challenge.challengeId]);
+        setActiveIndex(firstOpen >= 0 ? firstOpen : loaded.challenges.length);
+        return;
+      }
       const store = RUN_STORE.read(loaded.dailySeed);
       const storedSelections = store.selections && typeof store.selections === 'object' ? store.selections : {};
       const storedOutcomes = store.outcomes && typeof store.outcomes === 'object' ? store.outcomes : {};
@@ -150,6 +169,13 @@ export default function FixTheFive() {
       resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [completedCount, challenges.length]);
+  // Shared runs reveal themselves once the replayed picks are all locked.
+  useEffect(() => {
+    if (autoRevealRef.current && board && allPicked && completedCount < challenges.length && !pending) {
+      autoRevealRef.current = false;
+      reveal();
+    }
+  }, [board, allPicked, completedCount, challenges.length, pending, reveal]);
 
   return (
     <GameShell>
@@ -280,7 +306,8 @@ export default function FixTheFive() {
                 })}
                 otherGamePath="/draft-night"
                 otherGameTitle="Draft Night"
-                onReplay={replay} />
+                onReplay={replay}
+                sharedResult={completedCount === challenges.length ? encodeSharedRun({ gameKind: 'fix-the-five', seed: presentation.dailySeed, picks: selections }) : null} />
               
                 </>
             }

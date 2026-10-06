@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Check, History, Link2, Trophy } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function CompletionPanel({ total, max, entries, otherGamePath, otherGameTitle, onReplay, seed }) {
+export default function CompletionPanel({ total, max, entries, otherGamePath, otherGameTitle, onReplay, seed, sharedResult }) {
   const [copied, setCopied] = useState(false);
+  const [copiedResult, setCopiedResult] = useState(false);
   const pct = max > 0 ? Math.round((total / max) * 100) : 0;
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -33,6 +34,16 @@ export default function CompletionPanel({ total, max, entries, otherGamePath, ot
     } catch { /* clipboard unavailable */ }
   };
 
+  // The verified-result link carries the locked picks (?result=), so the
+  // recipient's page replays the run and re-verifies the same scores.
+  const shareResult = async () => {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?result=${sharedResult}`);
+      setCopiedResult(true);
+      setTimeout(() => setCopiedResult(false), 2000);
+    } catch { /* clipboard unavailable */ }
+  };
+
   return (
     <section className="dg-complete" aria-label="Run complete">
       <div className="dg-complete__hero">
@@ -47,6 +58,11 @@ export default function CompletionPanel({ total, max, entries, otherGamePath, ot
           {seed && (
             <button type="button" onClick={shareBoard} className="inline-flex items-center gap-2 rounded-lg border border-border/40 bg-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground hover:border-gold/40 hover:text-gold">
               {copied ? <Check className="h-3.5 w-3.5" /> : <Link2 className="h-3.5 w-3.5" />} {copied ? 'Link copied' : 'Copy board link'}
+            </button>
+          )}
+          {sharedResult && (
+            <button type="button" onClick={shareResult} className="inline-flex items-center gap-2 rounded-lg border border-border/40 bg-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground hover:border-gold/40 hover:text-gold">
+              {copiedResult ? <Check className="h-3.5 w-3.5" /> : <Link2 className="h-3.5 w-3.5" />} {copiedResult ? 'Link copied' : 'Copy result link'}
             </button>
           )}
           <button type="button" onClick={onReplay} className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gold hover:bg-gold/20">

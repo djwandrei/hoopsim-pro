@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { gradeBet, profitCents } from '../../shared/realBetsMath.ts';
-import { fail, requireGate, ensureWallet, applyWalletDelta } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta, isRateLimited, audit } from '../../shared/realBookCore.ts';
 
 // Server-side settlement against official finals (via the existing
 // swishiqOddsFeed relay, so scores never come from the client). Credits
@@ -13,6 +13,7 @@ export default async function(req) {
     const base44 = createClientFromRequest(req);
     const gate = await requireGate(base44);
     if (gate.error) return gate.error;
+    if (isRateLimited(`settle:${gate.user.id}`, 10)) return fail('Too many settlement checks — try again in a moment.', 'rate_limited', 429);
     const open = await base44.entities.RealBet.filter({ status: 'open' }, { limit: 100 });
     if (!(open.items || []).length) return Response.json({ settled: 0 });
     let finals = [];
@@ -58,6 +59,7 @@ export default async function(req) {
       const credit = await applyWalletDelta(base44, wallet, totalReturned);
       if (credit.error) return fail('Settlement completed but the wallet credit hit an error — contact support with your bet details.', 'wallet_busy', 503);
     }
+    if (settled > 0) audit('settlement.batch', { user: gate.user.id, settled, credited_cents: totalReturned });
     return Response.json({ settled });
   } catch (error) {
     return Response.json({ error: error?.message || 'Settlement failed.' }, { status: 500 });

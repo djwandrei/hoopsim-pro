@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { secrets } from 'base44:runtime';
-import { fail, requireGate, depositedTodayCents } from '../../shared/realBookCore.ts';
+import { fail, requireGate, depositedTodayCents, isRateLimited, audit } from '../../shared/realBookCore.ts';
 
 // Real-money deposit: creates a Stripe Checkout Session (mode: payment) from
 // the operator's own Stripe account. Enforces the eligibility gate, deposit
@@ -15,6 +15,7 @@ export default async function(req) {
     const base44 = createClientFromRequest(req);
     const gate = await requireGate(base44);
     if (gate.error) return gate.error;
+    if (isRateLimited(`checkout:${gate.user.id}`, 10)) return fail('Too many deposit attempts — try again in a minute.', 'rate_limited', 429);
     const body = await req.json().catch(() => ({}));
     const amountCents = Math.round(Number(body?.amountCents));
     if (!Number.isFinite(amountCents) || amountCents < MIN_DEPOSIT_CENTS || amountCents > MAX_DEPOSIT_CENTS) {
@@ -31,8 +32,20 @@ export default async function(req) {
         return fail(`Daily deposit limit reached: $${(today / 100).toFixed(2)} of $${(limit / 100).toFixed(2)} deposited today.`, 'daily_limit', 422);
       }
     }
+    // The success/cancel redirect origin is allowlisted, never taken raw from
+    // the client: it must match the serving host, a base44 host, localhost
+    // (preview) — otherwise the operator's fallback origin is used.
     const rawOrigin = typeof body?.origin === 'string' ? body.origin : '';
-    const origin = /^https:\/\//.test(rawOrigin) ? rawOrigin.replace(/\/+$/, '') : FALLBACK_ORIGIN;
+    let origin = FALLBACK_ORIGIN;
+    try {
+      const parsed = new URL(rawOrigin);
+      const host = req.headers.get('host') || '';
+      if (parsed.protocol === 'https:' && (
+        parsed.host === host ||
+        parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1' ||
+        parsed.hostname.endsWith('.base44.app') || parsed.hostname.endsWith('.base44.dev')
+      )) origin = parsed.origin;
+    } catch { /* keep fallback origin */ }
     const params = new URLSearchParams();
     params.set('mode', 'payment');
     params.set('success_url', `${origin}/real-book?deposit_session={CHECKOUT_SESSION_ID}`);

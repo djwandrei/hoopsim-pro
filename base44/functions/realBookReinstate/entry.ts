@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { fail } from '../../shared/realBookCore.ts';
+import { fail, audit } from '../../shared/realBookCore.ts';
 
 // Reinstatement request: honored only after the minimum self-exclusion
 // period has fully elapsed; the operator may still re-verify eligibility.
@@ -26,6 +26,7 @@ export default async function(req) {
       return fail(`Reinstatement is available after ${new Date(until).toLocaleDateString()}.`, 'cooling_off', 403);
     }
     await base44.asServiceRole.entities.RealMoneyProfile.update(profile.id, { self_excluded: false, self_excluded_until: null });
+    audit('exclusion.reinstated', { user: user.id });
     return Response.json({ reinstated: true });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not process reinstatement.' }, { status: 500 });

@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { parlayAmerican, teaserPrice, roundRobinCombos, TEASER_POINTS, profitCents, bestOffer } from '../../shared/realBetsMath.ts';
-import { fail, requireGate, ensureWallet, applyWalletDelta, lostTodayCents } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta, isRateLimited, audit, lostTodayCents } from '../../shared/realBookCore.ts';
 
 // Real-money bet placement. Standard sportsbook policies enforced here:
 // the server re-reads the live board and re-prices every leg (client prices
@@ -50,6 +50,7 @@ export default async function(req) {
     const base44 = createClientFromRequest(req);
     const gate = await requireGate(base44);
     if (gate.error) return gate.error;
+    if (isRateLimited(`place:${gate.user.id}`, 12)) return fail('Too many wagers in a minute — slow down.', 'rate_limited', 429);
     const body = await req.json().catch(() => ({}));
     const legs = cleanLegs(body?.legs);
     if (legs === null) return fail('Those legs are not valid prices from the board.');
@@ -92,6 +93,7 @@ export default async function(req) {
         return fail(`The line moved: ${leg.label || 'your pick'} is now at ${moved}. Refresh and re-price your pick.`, 'line_moved', 409);
       }
       if (leg.price > offer.price + LINE_TOLERANCE) {
+        audit('denied.erroneous_line', { user: gate.user.id, event: leg.eventKey });
         return fail('That price is stale — the market has moved. Refresh and re-price your pick.', 'erroneous_line', 409);
       }
       leg.price = offer.price;
@@ -147,6 +149,7 @@ export default async function(req) {
       };
       created = [await base44.asServiceRole.entities.RealBet.create(record)];
     }
+    audit('bet.placed', { user: gate.user.id, mode, legs: legs.length, stake_cents: stakeCents, outlay_cents: outlay });
     await base44.asServiceRole.entities.RealTransaction.create({
       created_by_id: gate.user.id,
       type: 'bet', amount_cents: -outlay, status: 'completed',

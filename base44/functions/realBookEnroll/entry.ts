@@ -34,12 +34,16 @@ export default async function(req) {
     if ((existing.items || []).length > 0) return Response.json({ profile: existing.items[0], alreadyEnrolled: true });
     // Admin-write-only entity: enrollment is the only server path that mints
     // a profile, so the 21+/state checks can never be bypassed directly.
-    const profile = await base44.asServiceRole.entities.RealMoneyProfile.create({
+    await base44.asServiceRole.entities.RealMoneyProfile.create({
       created_by_id: user.id,
       dob, state, terms_version: TERMS_VERSION, acknowledged_at: new Date().toISOString(),
       self_excluded: false, daily_deposit_limit_cents: 50000, daily_loss_limit_cents: 100000,
     });
-    return Response.json({ profile });
+    // Re-read after create, so concurrent enrolls can't leave two profiles.
+    const createdPage = await base44.entities.RealMoneyProfile.filter({});
+    const profile = (createdPage.items || [])[0];
+    audit('enroll.created', { user: user.id, state });
+    return Response.json({ profile: profile || null });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not complete enrollment.' }, { status: 500 });
   }

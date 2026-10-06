@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { fail, requireGate, ensureWallet, applyWalletDelta } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta, audit } from '../../shared/realBookCore.ts';
 
 // Self-exclusion / cool-off, enforced server-side so a client flag can never
 // be flipped back. Immediate effect; open wagers are voided with stakes
@@ -45,6 +45,7 @@ export default async function(req) {
         balance_after_cents: balance,
       });
     }
+    audit('exclusion.activated', { user: gate.user.id, days: permanent ? 'permanent' : days, refunded_bets: items.length, refunded_cents: refunded });
     return Response.json({ permanent, self_excluded_until: until, refunded_bets: items.length, refunded_cents: refunded });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not activate self-exclusion.' }, { status: 500 });

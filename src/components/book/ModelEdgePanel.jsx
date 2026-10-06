@@ -11,7 +11,6 @@ const bestMoneyline = (game, side) => {
   }
   return best;
 };
-const edgeClass = edge => edge >= 3 ? 'border-positive/60 bg-positive/10 text-positive' : edge <= -3 ? 'border-trim/50 bg-trim/10 text-trim-ink' : 'border-border/50 text-muted-foreground';
 const edgeText = edge => `${edge >= 0 ? '+' : ''}${edge.toFixed(1)}`;
 
 // Featured edges: the studio sim's strongest disagreements with the market,

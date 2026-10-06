@@ -199,7 +199,6 @@ export default function BookRoom() {
       links={[
         { label: 'Buy credits', Icon: Coins, onClick: () => setShowBuy(true), gold: true },
         { to: '/account', label: 'Account', Icon: UserRound },
-        { to: '/real-book', label: 'Real-money mode', Icon: ShieldCheck, accent: true },
       ]} />
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
       {view === 'wallet' && <WalletPanel bankroll={book.bankroll} ledger={book.ledger} bonusReady={bonusReady} onClaim={claimBonus} />}

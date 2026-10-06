@@ -21,7 +21,6 @@ const GameLab = lazy(() => import('@/pages/GameLab'));
 const CareerLab = lazy(() => import('@/pages/CareerLab'));
 const SpinRoom = lazy(() => import('@/pages/SpinRoom'));
 const BookRoom = lazy(() => import('@/pages/BookRoom'));
-const RealBook = lazy(() => import('@/pages/RealBook'));
 const FixTheFive = lazy(() => import('@/pages/FixTheFive'));
 const DraftNight = lazy(() => import('@/pages/DraftNight'));
 const LineupLab = lazy(() => import('@/pages/LineupLab'));
@@ -52,7 +51,6 @@ function App() {
             <Route path="/career" element={<CareerLab />} />
             <Route path="/spin" element={<SpinRoom />} />
             <Route path="/book" element={<BookRoom />} />
-            <Route path="/real-book" element={<RealBook />} />
             <Route path="/fix-the-five" element={<FixTheFive />} />
             <Route path="/draft-night" element={<DraftNight />} />
             <Route path="/lineup-lab" element={<LineupLab />} />

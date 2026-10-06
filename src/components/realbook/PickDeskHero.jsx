@@ -2,7 +2,7 @@ import React from 'react';
 import { Circle, Loader2 } from 'lucide-react';
 import { Image } from '@/components/ui/image';
 
-export const PICK_DESK_LOGO = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/bf4b5fcca_070bcbcb-882f-4ac4-945a-922e932e9550.png';
+export const PICK_DESK_LOGO = 'https://base44.app/api/apps/6abc41d86dabd382371f49ea/files/mp/public/6abc41d86dabd382371f49ea/6236418b9_pick-desk-logo-transparent.png';
 
 const chip = 'inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest';
 

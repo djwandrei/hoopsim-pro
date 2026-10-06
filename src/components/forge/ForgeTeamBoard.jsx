@@ -24,7 +24,7 @@ export default function ForgeTeamBoard({ slots, picks, reveal, revealPositions =
     return <button key={slot.key} type="button" disabled={!live} onClick={() => onAssign(slot.key)}
       className={`flex min-h-14 w-full items-center gap-3 rounded-lg border border-dashed px-2.5 py-2 text-left transition-colors ${fit ? 'cursor-pointer border-gold/70 bg-gold/10 shadow-[0_0_14px_rgba(233,185,73,0.16)]' : live ? 'cursor-pointer border-gold/50 bg-gold/5 wheel-chip-active' : 'cursor-default border-border/30 bg-canvas/20'}`}>
       <span className={`w-12 shrink-0 rounded-md border py-1 text-center font-mono text-[9px] font-semibold uppercase tracking-wider ${fit || live ? 'border-gold/40 bg-gold/10 text-gold' : 'border-border/25 text-muted-foreground'}`}>{slot.label}</span>
-      <p className={`min-w-0 flex-1 text-[11px] font-semibold uppercase tracking-wider ${fit || live ? 'text-gold' : 'text-muted-foreground/60'}`}>{fit ? '★ Suggested fit — place here' : live ? 'Place here' : 'Open'}</p>
+      <p className={`min-w-0 flex-1 text-[11px] font-semibold uppercase tracking-wider ${fit || live ? 'text-gold' : 'text-muted-foreground/85'}`}>{fit ? '★ Suggested fit — place here' : live ? 'Place here' : 'Open'}</p>
       <span className="shrink-0 rounded-md border border-border/25 bg-canvas/40 px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-muted-foreground/70">{slot.minutes} min</span>
     </button>;
   };

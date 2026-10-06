@@ -2,12 +2,25 @@ import { useCallback, useState } from 'react';
 import { simSingleGame } from '@/lib/season/simEngine';
 
 const SERIES_PATTERN = [1, 2, 5, 7]; // home team hosts these game numbers in a 2-2-1-1-1 format
+const SERIES_HISTORY_KEY = 'swishiq-game-lab-series';
+
+// Live behavior: the last played series survives a page reload within the
+// browser session (sessionStorage), so a refresh doesn't discard it.
+const readStoredSeries = () => {
+  try {
+    const raw = sessionStorage.getItem(SERIES_HISTORY_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+};
+const storeSeries = value => {
+  try { sessionStorage.setItem(SERIES_HISTORY_KEY, JSON.stringify(value)); } catch { /* storage unavailable */ }
+};
 
 export default function useGameSim() {
   const [seed, setSeed] = useState('7');
   const [neutral, setNeutral] = useState(false);
   const [game, setGame] = useState(null);
-  const [series, setSeries] = useState(null);
+  const [series, setSeries] = useState(readStoredSeries);
 
   const runGame = useCallback((league, home, away) => {
     if (!league || !home || !away) return;
@@ -35,12 +48,15 @@ export default function useGameSim() {
       else { if (hostWon) awayWins += 1; else homeWins += 1; }
       games.push({ game: number, host: host.code, visitor: visitor.code, hostPts, visitorPts, ot: result.ot });
     }
-    setSeries({ home: home.code, away: away.code, homeWins, awayWins, games });
+    const result = { home: home.code, away: away.code, homeWins, awayWins, games };
+    storeSeries(result);
+    setSeries(result);
   }, [seed, neutral]);
 
   const reset = useCallback(() => {
     setGame(null);
     setSeries(null);
+    try { sessionStorage.removeItem(SERIES_HISTORY_KEY); } catch { /* ignore */ }
   }, []);
 
   return { seed, setSeed, neutral, setNeutral, game, series, runGame, runSeries, reset };

@@ -66,7 +66,7 @@ export default function RecordedCareerChart({ seasons }) {
           <span className="font-mono">{row.label}</span>
         </button>
       ) : (
-        <span key={row.year} className="shrink-0 rounded-lg border border-dashed border-border/30 px-2.5 py-1.5 text-[10px] text-muted-foreground/60">{row.label} · no record</span>
+        <span key={row.year} className="shrink-0 rounded-lg border border-dashed border-border/30 px-2.5 py-1.5 text-[10px] text-muted-foreground/85">{row.label} · no record</span>
       ))}
     </div>
     <div className="mt-4 grid gap-3 sm:grid-cols-3">

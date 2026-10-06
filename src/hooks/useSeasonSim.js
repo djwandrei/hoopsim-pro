@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 import { runRepeat, aggregateRepeats, summarizeAggregate, buildGeneratedSchedule } from '@/lib/season/simEngine';
 
-// Scoring-mix presets: share of own offense vs opponent defense in expected ORtg.
-const BLEND_WEIGHT = { '0.5': 0.8, '0.65': 0.35, '0.35': 1.1 };
+// Scoring-mix presets: share of own offense vs opponent defense in expected
+// ORtg — the live managed-mix contract (defense share = 1 − own share).
+const BLEND_WEIGHT = { '0.5': [0.5, 0.5], '0.65': [0.65, 0.35], '0.35': [0.35, 0.65] };
 
 // Replay seed text → deterministic uint32: numeric text passes through,
 // anything else is FNV-hashed, and blank means a fresh random run.
@@ -44,7 +45,7 @@ export default function useSeasonSim() {
     if (!league || !schedule?.length) return;
     const repeats = setup.repeats;
     const seedBase = seedToNumber(setup.seed, Math.floor(Math.random() * 4294960000));
-    const defenseWeight = BLEND_WEIGHT[setup.blend] ?? 0.8;
+    const [offenseWeight, defenseWeight] = BLEND_WEIGHT[setup.blend] ?? [0.5, 0.5];
     const bestOf = Number(setup.series) || 7;
     const effective = setup.scheduleSource === 'round-robin'
       ? applyHorizon(buildGeneratedSchedule(league.teams, seedBase), setup.horizon)
@@ -61,7 +62,7 @@ export default function useSeasonSim() {
       const step = () => {
         const stop = Math.min(done + chunk, repeats);
         for (; done < stop; done += 1) {
-          const replay = runRepeat(league, effective, { seed: seedBase + done, playoffs: setup.playoffs, defenseWeight, bestOf });
+          const replay = runRepeat(league, effective, { seed: seedBase + done, playoffs: setup.playoffs, offenseWeight, defenseWeight, bestOf });
           agg = aggregateRepeats(agg, replay);
           lastGames = replay.games.map(({ at, home, away, homePts, awayPts, ot, actual, boxHome, boxAway }) => ({ at, home, away, homePts, awayPts, ot, actual, boxHome, boxAway }));
           if (replay.bracket?.champion) champion = replay.bracket.champion;

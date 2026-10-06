@@ -28,7 +28,7 @@ export default function BucketBoard({ buckets, picks, activeKey, onUndo, complet
           <p className="shrink-0 font-display text-xl leading-none text-gold" aria-label={`${pick.value} DJHC rating`}>{bucket.fmt(pick.value)}</p>
           <span className={`w-8 shrink-0 rounded-md border py-0.5 text-center font-mono text-xs ${showGrades && grade ? 'border-gold/30 bg-gold/10 text-gold' : 'border-border/20 text-muted-foreground'}`}>{showGrades && grade ? grade : '·'}</span>
           {!complete && <button type="button" aria-label={`Release ${pick.player.name} from ${bucket.label}`} onClick={() => onUndo(bucket.key)} className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-raised hover:text-trim"><X className="h-3.5 w-3.5" /></button>}
-        </div> : <p className={`flex-1 font-mono text-[11px] ${active ? 'text-gold' : 'text-muted-foreground/60'}`}>{active ? '▸ Wheel landed — keep or respin the offer' : 'EMPTY'}</p>}
+        </div> : <p className={`flex-1 font-mono text-[11px] ${active ? 'text-gold' : 'text-muted-foreground/85'}`}>{active ? '▸ Wheel landed — keep or respin the offer' : 'EMPTY'}</p>}
       </div>;
     })}
   </div>;

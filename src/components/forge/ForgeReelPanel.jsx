@@ -31,7 +31,7 @@ export default function ForgeReelPanel({
       {spinning ? 'Spinning…' : armedSkill ? `Spin for ${armedSkill.label}` : filled.length ? 'Spin again' : 'Spin'}
     </button>}
     {landed && <div className="mt-1.5 grid grid-cols-[1fr,auto,1fr] items-stretch gap-1.5">
-      <button type="button" onClick={onRespinTeam} disabled={!teamRespins || spinning} className="flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-lg border border-trim/40 bg-trim/10 px-1 text-[10px] font-semibold uppercase tracking-wider text-trim transition-colors hover:bg-trim/20 disabled:cursor-not-allowed disabled:opacity-40">
+      <button type="button" onClick={onRespinTeam} disabled={!teamRespins || spinning} className="flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-lg border border-trim/40 bg-trim/10 px-1 text-[10px] font-semibold uppercase tracking-wider text-trim-ink transition-colors hover:bg-trim/20 disabled:cursor-not-allowed disabled:opacity-40">
         <span>Respin team</span><span className="font-mono text-[9px] opacity-80">{teamRespins} left</span>
       </button>
       <div className="w-px bg-border/30" />

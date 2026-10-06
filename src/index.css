@@ -250,5 +250,21 @@ body.dark-mode .studio-workspace tbody tr:nth-child(even) { background: transpar
 .season-view-enter { animation: season-view-in .32s cubic-bezier(.2, .8, .3, 1) both; }
 @media (prefers-reduced-motion: reduce) { .season-view-enter { animation: none; } }
 
+/* === Accessibility & readability pass === */
+/* Readability floor: 8px/9px utility micro-labels (chips, kickers, table
+   headers) sit below the ~10px legibility floor on desktop — lift every one
+   inside the studio to a 10.4px floor without touching the source classes. */
+.studio-workspace [class*="text-[8px]"], .studio-workspace [class*="text-[9px]"] { font-size: .65rem; }
+/* Human factors: on touch devices, widen the tap area of compact icon/text
+   controls without shifting layout (expanded hit box, not padding). */
+@media (pointer: coarse) {
+  .studio-workspace button:not([class*="absolute"]):not([class*="fixed"]) { position: relative; }
+  .studio-workspace button:not([class*="absolute"]):not([class*="fixed"])::after { content: ''; position: absolute; inset: -4px; }
+}
+/* Reduced-motion users still need to see the wheel landed state (no animation) */
+@media (prefers-reduced-motion: reduce) {
+  .wheel-spinning, .wheel-chip-active { box-shadow: 0 0 12px hsl(var(--court-accent) / .35); }
+}
+
 /* Drawer fallback tile for fan tools the live site lists without an emblem asset */
 .tool-emblem-fallback { display: grid; place-items: center; border-radius: .6rem; border: 1px solid hsl(var(--court-royal) / .5); background: hsl(var(--court-royal) / .14); color: hsl(var(--court-glass)); font-family: var(--font-display); font-size: 1.1rem; letter-spacing: .04em; }

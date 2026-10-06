@@ -33,7 +33,7 @@ export default function ForgeOvrPanel({ picks, overall, showGrades, onUndo }) {
     <div className="mt-4 space-y-1.5">
       {SKILLS.map(skill => {
         const pick = picks[skill.key];
-        if (!pick) return <p key={skill.key} className="px-2 py-1 text-center font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/45">{skill.label}</p>;
+        if (!pick) return <p key={skill.key} className="px-2 py-1 text-center font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/75">{skill.label}</p>;
         return <div key={`${skill.key}:filled`} className="slot-pop flex items-center gap-2 rounded-lg border border-border/25 bg-raised/40 px-2 py-1.5">
           <PlayerPortrait player={pick.player} className="h-8 w-8" frameless />
           <div className="min-w-0 flex-1 text-left">

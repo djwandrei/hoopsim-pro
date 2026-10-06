@@ -50,6 +50,9 @@ export default function RealBook() {
       setWallet((walletPage.items || [])[0] || null);
       setBets(betsPage.items || []);
       setTransactions(txPage.items || []);
+    } catch {
+      // A transient load failure keeps the previous view instead of throwing
+      // an unhandled rejection; the next action re-runs this load.
     } finally {
       setLoading(false);
     }
@@ -94,7 +97,7 @@ export default function RealBook() {
   };
 
   const startDeposit = cents => run(async () => {
-    const response = await base44.functions.invoke('realBookCheckout', { amountCents: cents, origin: window.location.origin });
+    const response = await base44.functions.invoke('realBookCheckout', { amountCents: cents, origin: window.location.origin, pagePath: window.location.pathname });
     if (response.data?.url) window.location.href = response.data.url;
     else throw new Error('Could not start the deposit.');
   });

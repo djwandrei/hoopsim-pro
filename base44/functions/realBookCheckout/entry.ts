@@ -46,10 +46,19 @@ export default async function(req) {
         parsed.hostname.endsWith('.base44.app') || parsed.hostname.endsWith('.base44.dev')
       )) origin = parsed.origin;
     } catch { /* keep fallback origin */ }
+    // The page path comes from the client (the app can serve the book under a
+    // base path on site/custom-domain deploys, where a bare /real-book would
+    // land on a 404 and the deposit would never verify). It is strictly
+    // validated — root-relative, ending in /real-book, no traversal — and the
+    // origin itself is allowlisted above, so the redirect can never escape.
+    const rawPath = typeof body?.pagePath === 'string' ? body.pagePath : '/real-book';
+    const cleanPath = rawPath.replace(/[?#].*$/, '');
+    const pagePath = /^\/(?:[A-Za-z0-9._-]+\/)*real-book$/.test(cleanPath) && !cleanPath.includes('..')
+      ? cleanPath : '/real-book';
     const params = new URLSearchParams();
     params.set('mode', 'payment');
-    params.set('success_url', `${origin}/real-book?deposit_session={CHECKOUT_SESSION_ID}`);
-    params.set('cancel_url', `${origin}/real-book?deposit=cancelled`);
+    params.set('success_url', `${origin}${pagePath}?deposit_session={CHECKOUT_SESSION_ID}`);
+    params.set('cancel_url', `${origin}${pagePath}?deposit=cancelled`);
     params.set('customer_email', gate.user.email);
     params.set('client_reference_id', gate.user.id);
     params.set('metadata[app_user]', gate.user.id);

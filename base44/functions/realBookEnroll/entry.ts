@@ -46,11 +46,17 @@ export default async function(req) {
       dob, state, terms_version: TERMS_VERSION, acknowledged_at: new Date().toISOString(),
       self_excluded: false, daily_deposit_limit_cents: 50000, daily_loss_limit_cents: 100000,
     });
-    // Re-read after create, so concurrent enrolls can't leave two profiles.
+    // Re-read after create, so concurrent enrolls can't leave two profiles;
+    // if a race did mint duplicates, only the first survives.
     const createdPage = await base44.entities.RealMoneyProfile.filter({});
-    const profile = (createdPage.items || [])[0];
+    const items = createdPage.items || [];
+    const profile = items[0] || null;
+    if (items.length > 1) {
+      await base44.asServiceRole.entities.RealMoneyProfile.deleteMany({ created_by_id: user.id, id: { $ne: profile.id } });
+      audit('enroll.duplicate_profiles_removed', { user: user.id, count: items.length - 1 });
+    }
     audit('enroll.created', { user: user.id, state });
-    return Response.json({ profile: profile || null });
+    return Response.json({ profile });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not complete enrollment.' }, { status: 500 });
   }

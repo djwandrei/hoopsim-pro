@@ -62,8 +62,9 @@ function espnGames(events) {
   return games;
 }
 
-function espnFinals(events) {
+async function espnFinals(events) {
   const finals = [];
+  let boxes = 0;
   for (const event of events || []) {
     if (!event.status?.type?.completed) continue;
     const comp = event.competitions?.[0] || {};
@@ -71,9 +72,79 @@ function espnFinals(events) {
     const away = comp.competitors?.find(c => c.homeAway === 'away');
     const homeScore = Number(home?.score), awayScore = Number(away?.score);
     if (!home?.team || !away?.team || !Number.isFinite(homeScore) || !Number.isFinite(awayScore)) continue;
-    finals.push({ eventKey: event.id, home: home.team.displayName, away: away.team.displayName, homeScore, awayScore });
+    const final = { eventKey: event.id, home: home.team.displayName, away: away.team.displayName, homeScore, awayScore };
+    // Box-score player points ride along so "N+ points" prop legs can grade
+    // (capped so a heavy slate never balloons the relay).
+    if (boxes < 12) { final.pointsByPlayer = await espnBoxPoints(event); boxes += 1; }
+    finals.push(final);
   }
   return finals;
+}
+
+// Player prop milestones from ESPN's core odds feed — athlete-scoped
+// "Points Milestones" (e.g. Julius Randle 10+ points at -209), grouped per
+// player per game. Keyless, same source as the game odds.
+async function espnProps(events) {
+  const games = [];
+  for (const event of events || []) {
+    if (event.status?.type?.completed) continue;
+    const comp = event.competitions?.[0] || {};
+    const home = comp.competitors?.find(c => c.homeAway === 'home')?.team?.displayName;
+    const away = comp.competitors?.find(c => c.homeAway === 'away')?.team?.displayName;
+    if (!home || !away) continue;
+    try {
+      const oddsUrl = `https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/${event.id}/competitions/${event.id}/odds`;
+      const odds = await fetch(oddsUrl, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null);
+      const first = odds?.items?.[0] || odds;
+      if (!first?.propBets?.$ref) continue;
+      const board = await fetch(first.propBets.$ref, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null);
+      const names = new Map();
+      const byPlayer = new Map();
+      for (const item of board?.items || []) {
+        const full = item.$ref ? await fetch(item.$ref, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null).catch(() => null) : item;
+        if (!full || full.type?.name !== 'Points Milestones') continue;
+        let player = names.get(full.athlete?.$ref);
+        if (player === undefined) {
+          player = full.athlete?.$ref
+            ? await fetch(full.athlete.$ref, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null).catch(() => null)
+            : null;
+          player = player?.displayName || null;
+          names.set(full.athlete?.$ref, player);
+        }
+        const line = parseInt(String(full.odds?.total?.value ?? full.current?.target?.displayValue ?? ''), 10);
+        const price = espnPrice(full.odds?.american?.value);
+        if (!player || !Number.isFinite(line) || price == null) continue;
+        const entry = byPlayer.get(player) || { player, options: [] };
+        if (!entry.options.some(option => option.line === line)) entry.options.push({ line, price });
+        byPlayer.set(player, entry);
+      }
+      const props = [...byPlayer.values()];
+      if (props.length) games.push({ eventKey: event.id, commenceTime: event.date, home, away, props });
+    } catch { /* a game without props doesn't sink the feed */ }
+  }
+  return games;
+}
+
+// Per-player points from the official box score of a finished game, keyed by
+// the athlete's display name — used to settle "N+ points" prop legs.
+async function espnBoxPoints(event) {
+  try {
+    const sum = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${event.id}&region=us&lang=en&contentorigin=espn`, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null);
+    const points = {};
+    for (const team of sum?.boxscore?.players || []) {
+      for (const group of team.statistics || []) {
+        const labels = group.labels || group.keys || [];
+        const ptsIndex = labels.findIndex(label => /^(pts|points)$/i.test(String(label)));
+        if (ptsIndex < 0) continue;
+        for (const entry of group.athletes || []) {
+          const name = entry.athlete?.displayName;
+          const pts = Number(entry.stats?.[ptsIndex]);
+          if (name && Number.isFinite(pts) && points[name] == null) points[name] = pts;
+        }
+      }
+    }
+    return points;
+  } catch { return {}; }
 }
 
 async function espnScoreboard(daysBack) {
@@ -101,9 +172,10 @@ export default async function(req) {
       return Response.json({ error: 'Too many refreshes — the odds feed is cooling down for a minute.', code: 'rate_limited' }, { status: 429, headers: CORS });
     }
     const body = await req.json().catch(() => ({}));
-    const kind = body?.kind === 'scores' ? 'scores' : 'odds';
+    const kind = body?.kind === 'scores' ? 'scores' : body?.kind === 'props' ? 'props' : 'odds';
     const events = await espnScoreboard(kind === 'scores' ? 2 : 0);
-    if (kind === 'scores') return Response.json({ finals: espnFinals(events), quota: null }, { headers: CORS });
+    if (kind === 'scores') return Response.json({ finals: await espnFinals(events), quota: null }, { headers: CORS });
+    if (kind === 'props') return Response.json({ games: await espnProps(events), quota: null }, { headers: CORS });
     return Response.json({ games: espnGames(events), quota: null }, { headers: CORS });
   } catch (error) {
     return Response.json({ error: error?.message || 'The odds feed is unavailable.', code: 'odds_feed_error' }, { status: 502, headers: CORS });

@@ -27,14 +27,14 @@ export default function ForgeRosterBoard({ team, roster, selectedRef, onPick }) 
       <table className="w-full text-sm">
         <thead><tr>
           {head('name','Player','text-left')}{head('pos','Pos')}{head('games','G')}{head('pts','PTS')}
-          {SKILLS.map(skill => head(skill.key, skill.metric))}
+          {SKILLS.map(skill => head(skill.key, skill.label))}
         </tr></thead>
         <tbody>
           {sorted.map(player => <tr key={player.playerRef} onClick={() => onPick(player)} className={`cursor-pointer transition-colors ${selectedRef === player.playerRef ? 'bg-gold/10 ring-1 ring-inset ring-gold/50' : 'hover:bg-gold/5'}`}>
             <td className="text-left"><span className="flex items-center gap-2"><PlayerPortrait player={player} className="h-7 w-7 shrink-0" /><span className="truncate text-xs font-bold">{player.name}</span></span></td>
             <td className="text-center font-mono text-[10px]">{player.positions?.[0] || '—'}</td>
             <td className="text-center font-mono text-xs">{player.games}</td>
-            <td className="text-center font-mono text-xs">{player.pts.toFixed(1)}</td>
+            <td className="text-center font-mono text-xs">{Number.isFinite(player.pts) ? player.pts.toFixed(1) : '—'}</td>
             {SKILLS.map(skill => <td key={skill.key} className="text-center font-mono text-xs">{skill.fmt(player[skill.key])}</td>)}
           </tr>)}
           {!roster.length && <tr><td colSpan={4 + SKILLS.length} className="text-center text-xs text-muted-foreground">Every player here is already drafted — respin the team.</td></tr>}

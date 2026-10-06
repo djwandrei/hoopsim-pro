@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Loader2, Play } from 'lucide-react';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
-import { buildForgePool, forgeMax } from '@/components/forge/forgePool';
+import { buildForgePool } from '@/components/forge/forgePool';
 import { simulateForgeSeason } from '@/components/forge/forgeTeamSim';
 import ForgeTeamSpinPanel from '@/components/forge/ForgeTeamSpinPanel';
 import ForgeTeamPickPanel from '@/components/forge/ForgeTeamPickPanel';
@@ -30,7 +30,6 @@ const SPIN_MS = 1250;
 // into the eight-man rotation, then simulate the season and chase perfection.
 export default function ForgeTeamDraft({ source, league, pickMode = false }) {
   const allPool = useMemo(() => buildForgePool(source), [source]);
-  const leagueMax = useMemo(() => forgeMax(allPool), [allPool]);
   const [phase, setPhase] = useState('setup');
   const [picks, setPicks] = useState({});
   const [reveal, setReveal] = useState(null);
@@ -113,7 +112,7 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
   const runSeason = nextPicks => {
     setPhase('simulating');
     timer.current = window.setTimeout(() => {
-      const sim = simulateForgeSeason({ league, pool: allPool, leagueMax, picks: nextPicks, slots: TEAM_SLOTS, seed: Math.floor(Math.random() * 2 ** 31) });
+      const sim = simulateForgeSeason({ league, pool: allPool, picks: nextPicks, slots: TEAM_SLOTS, seed: Math.floor(Math.random() * 2 ** 31) });
       setResult(sim);
       setPhase('complete');
       if (sim.perfect) confetti({ particleCount: 240, spread: 100, origin: { y: 0.55 }, colors: ['#E9B949','#3E63DD','#D63A4B'] });

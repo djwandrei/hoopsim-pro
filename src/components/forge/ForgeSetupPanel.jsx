@@ -22,7 +22,7 @@ export default function ForgeSetupPanel({ kicker, title, intro, group, onGroup, 
         {index < steps.length - 1 && <ChevronRight className="h-3 w-3 text-gold/50" aria-hidden="true" />}
       </li>)}
     </ol>}
-    <div className="mt-4 flex flex-wrap justify-center gap-2">{SKILLS.map(skill => <span key={skill.key} className="flex items-center gap-1.5 rounded-lg border border-border/25 bg-canvas/30 px-3 py-1.5 text-[11px]"><span className="inline-block h-1.5 w-1.5 rounded-full bg-gold/70" aria-hidden="true" />{skill.label} <span className="font-mono text-[10px] text-muted-foreground">{skill.metric}</span></span>)}</div>
+    <div className="mt-4 flex flex-wrap justify-center gap-2">{SKILLS.map(skill => <span key={skill.key} className="flex items-center gap-1.5 rounded-lg border border-border/25 bg-canvas/30 px-3 py-1.5 text-[11px]"><span className="inline-block h-1.5 w-1.5 rounded-full bg-gold/70" aria-hidden="true" />{skill.label} <span className="font-mono text-[10px] text-muted-foreground">{skill.basis}</span></span>)}</div>
     <p className="mt-3 text-center text-xs text-muted-foreground">{poolCount} {group.toLowerCase()} seasons in the pool{respinNote ? ` · ${respinNote}` : ''}</p>
     <div className="mt-5 text-center"><button type="button" onClick={onStart} disabled={!poolCount} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:translate-y-px hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40"><Play className="h-4 w-4" />Start drafting</button></div>
   </div>;

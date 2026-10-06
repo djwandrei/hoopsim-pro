@@ -70,7 +70,7 @@ export default function BookRoom() {
           const payoutPrice = Number.isFinite(result.price) ? result.price : bet.price;
           const returned = result.status === 'won' ? bet.stake + profitFor(bet.stake, payoutPrice) : result.status === 'push' ? bet.stake : 0;
           bankroll += returned;
-          entries.push({ id: `settle-${bet.id}`, at: new Date().toISOString(), type: result.status === 'push' ? 'void' : 'payout', label: `${result.status === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`, amount: returned });
+          if (returned > 0) entries.push({ id: `settle-${bet.id}`, at: new Date().toISOString(), type: result.status === 'push' ? 'void' : 'payout', label: `${result.status === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`, amount: returned });
           return { ...bet, status: result.status, price: payoutPrice, settledAt: new Date().toISOString(), profit: returned - bet.stake };
         });
         return changed ? { ...current, bankroll, bets, ledger: pushLedger(current.ledger, entries) } : current;
@@ -139,8 +139,10 @@ export default function BookRoom() {
     if (!bet || bet.status !== 'open') return current;
     const returned = result === 'won' ? bet.stake + profitFor(bet.stake, bet.price) : result === 'push' ? bet.stake : 0;
     const at = new Date().toISOString();
-    const entry = result === 'push' ? { id: `void-${id}`, at, type: 'void', label: `Push: ${bet.matchup}`, amount: returned } : { id: `payout-${id}`, at, type: 'payout', label: `Won: ${bet.matchup}`, amount: returned };
-    return { ...current, bankroll: current.bankroll + returned, bets: current.bets.map(item => item.id === id ? { ...item, status: result, settledAt: at, profit: returned - bet.stake } : item), ledger: pushLedger(current.ledger, entry) };
+    const entry = returned > 0 ? (result === 'push'
+      ? { id: `void-${id}`, at, type: 'void', label: `Push: ${bet.matchup}`, amount: returned }
+      : { id: `payout-${id}`, at, type: 'payout', label: `Won: ${bet.matchup}`, amount: returned }) : null;
+    return { ...current, bankroll: current.bankroll + returned, bets: current.bets.map(item => item.id === id ? { ...item, status: result, settledAt: at, profit: returned - bet.stake } : item), ledger: entry ? pushLedger(current.ledger, entry) : current.ledger };
   });
 
   const voidBet = id => setBook(current => {

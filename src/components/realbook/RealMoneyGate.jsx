@@ -43,7 +43,7 @@ export default function RealMoneyGate({ onAccepted }) {
       await base44.functions.invoke('realBookEnroll', { dob, state });
       onAccepted();
     } catch (caught) {
-      setError(caught?.message || 'Could not save your eligibility details. Try again.');
+      setError(caught?.response?.data?.error || caught?.message || 'Could not save your eligibility details. Try again.');
     }
     setBusy(false);
   };

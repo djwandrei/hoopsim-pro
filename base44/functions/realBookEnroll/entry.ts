@@ -32,7 +32,10 @@ export default async function(req) {
     if (!ELIGIBLE_STATES.has(state)) return fail('Online sports wagering is not licensed in that state.', 'state_not_licensed', 403);
     const existing = await base44.entities.RealMoneyProfile.filter({});
     if ((existing.items || []).length > 0) return Response.json({ profile: existing.items[0], alreadyEnrolled: true });
-    const profile = await base44.entities.RealMoneyProfile.create({
+    // Admin-write-only entity: enrollment is the only server path that mints
+    // a profile, so the 21+/state checks can never be bypassed directly.
+    const profile = await base44.asServiceRole.entities.RealMoneyProfile.create({
+      created_by_id: user.id,
       dob, state, terms_version: TERMS_VERSION, acknowledged_at: new Date().toISOString(),
       self_excluded: false, daily_deposit_limit_cents: 50000, daily_loss_limit_cents: 100000,
     });

@@ -28,7 +28,7 @@ export default async function(req) {
     if (session.payment_status !== 'paid') return fail('Payment not completed yet.', 'unpaid', 402);
     const existing = await base44.entities.RealTransaction.filter({ ref: sessionId, type: 'deposit' });
     if ((existing.items || []).length > 0) {
-      const wallet = await ensureWallet(base44);
+      const wallet = await ensureWallet(base44, gate.user.id);
       return Response.json({ wallet, alreadyRecorded: true });
     }
     const amountCents = Number(session.amount_total) || 0;

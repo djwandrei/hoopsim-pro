@@ -8,6 +8,8 @@ import useSeasonSource from '@/hooks/useSeasonSource';
 import useBookFeed from '@/hooks/useBookFeed';
 import RealMoneyGate from '@/components/realbook/RealMoneyGate';
 import RealWalletPanel from '@/components/realbook/RealWalletPanel';
+import RealBetSlip from '@/components/realbook/RealBetSlip';
+import RealBetList from '@/components/realbook/RealBetList';
 import PickDeskHero from '@/components/realbook/PickDeskHero';
 import PickDeskStrip from '@/components/realbook/PickDeskStrip';
 import PickDeskBoard from '@/components/realbook/PickDeskBoard';
@@ -15,7 +17,7 @@ import PickSlipRail from '@/components/realbook/PickSlipRail';
 import { dollars } from '@/components/realbook/realFormat';
 import { modelEdgePct } from '@/lib/bookRoom/modelEdge';
 import { base44 } from '@/api/base44Client';
-import { AlertTriangle, Loader2, ShieldAlert, RefreshCcw } from 'lucide-react';
+import { AlertTriangle, Loader2, ShieldAlert, RefreshCcw, Dice5, UserRound, Wallet } from 'lucide-react';
 
 // Real-Money Book — the restricted variant of the sportsbook, structured as
 // the Pick Desk: hero + section strip, game cards, Pick Slip rail. Real
@@ -150,11 +152,15 @@ export default function RealBook() {
   </section></main></StudioShell>;
 
   const balanceCents = Number(wallet?.balance_cents) || 0;
+  const openCount = bets.filter(bet => bet.status === 'open').length;
   const headerState = feed.state === 'loading' ? 'loading' : feed.state === 'ready' ? 'ready' : 'error';
   const headerStatus = feed.state === 'ready' ? `${feed.games.length} games priced` : feed.state === 'setup' ? 'Odds feed not connected' : 'Feed unavailable';
   return <StudioShell active="/book">
-    <PickDeskHero games={feed.state === 'ready' ? feed.games : null} balanceCents={balanceCents} status={headerStatus} state={headerState} />
-    <PickDeskStrip tab={view} onTab={setView} balanceCents={balanceCents} format={format} onFormat={setFormat} />
+    <PickDeskHero games={feed.state === 'ready' ? feed.games : null} status={headerStatus} state={headerState}
+      balance={<span className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2" aria-label="Real-money balance"><Wallet className="h-3.5 w-3.5 text-gold" aria-hidden="true" /><span className="font-mono text-xs font-bold text-gold">{dollars(balanceCents)}</span></span>} />
+    <PickDeskStrip tab={view} onTab={setView} format={format} onFormat={setFormat}
+      balance={<span className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 font-mono text-xs font-bold text-gold" aria-label="Real-money balance">{dollars(balanceCents)}</span>}
+      links={[{ to: '/book', label: 'Play-money', Icon: Dice5 }, { to: '/account', label: 'Account', Icon: UserRound }]} />
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
       {notice && <div className={`flex items-start gap-3 rounded-xl border p-3 text-xs leading-relaxed ${notice.tone === 'ok' ? 'border-positive/40 bg-positive/10 text-foreground' : 'border-trim/40 bg-trim/10 text-foreground'}`} role="status"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" /><p className="min-w-0 flex-1">{notice.text}</p><button type="button" onClick={() => setNotice(null)} className="shrink-0 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground">Dismiss</button></div>}
       {view === 'wallet' && <RealWalletPanel wallet={wallet} profile={profile} transactions={transactions} busy={busy} onDeposit={startDeposit} onWithdraw={requestWithdrawal} onLimits={saveLimits} onSelfExclude={selfExclude} />}
@@ -171,7 +177,9 @@ export default function RealBook() {
                   <PickDeskBoard games={feed.games} quota={feed.quota} movement={movement} boosts={{}} format={format} model={model} onPick={addLeg} onRefresh={loadOdds} loading={feed.state === 'loading'} />}
         </div>
         <div className="min-w-0 self-start lg:sticky lg:top-[calc(var(--djhc-header-h,0px)+1rem)]">
-          <PickSlipRail legs={slipLegs} wallet={wallet} format={format} busy={busy} onRemoveLeg={index => setSlipLegs(current => current.filter((_, i) => i !== index))} onClear={() => setSlipLegs([])} onPlace={placeRealBet} bets={bets} onSettle={settleOpen} settling={busy} feedReady={feed.state === 'ready'} />
+          <PickSlipRail legsCount={slipLegs.length} openCount={openCount}
+            slip={<RealBetSlip legs={slipLegs} wallet={wallet} format={format} busy={busy} onRemoveLeg={index => setSlipLegs(current => current.filter((_, i) => i !== index))} onClear={() => setSlipLegs([])} onPlace={placeRealBet} />}
+            bets={<RealBetList bets={bets} format={format} feedReady={feed.state === 'ready'} settling={busy} onSettle={settleOpen} />} />
         </div>
       </div>}
       <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Restricted real-money mode: 21+ and licensed-state attestation recorded with your account; balances, prices, limits and settlement are enforced server-side against official finals. If gambling stops being fun, call 1-800-GAMBLER.</p>

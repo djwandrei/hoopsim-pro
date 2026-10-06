@@ -35,12 +35,13 @@ function PriceCell({ cell, format }) {
 
 // Pick Desk board: mockup-style game cards — "Game N" header with a gold
 // NBA badge and tip time, then team rows across Spread / Total / Money cells.
-export default function PickDeskBoard({ games, quota, movement, boosts, format, model, onPick, onRefresh, loading }) {
+export default function PickDeskBoard({ games, quota, movement, boosts, format, model, bookFilter = '', onBookFilter, onPick, onRefresh, loading }) {
   const now = Date.now();
   const live = games.filter(game => Date.parse(game.commenceTime) <= now);
   const upcoming = games.filter(game => Date.parse(game.commenceTime) > now);
 
   const renderGame = (game, index) => {
+    const books = (game.books || []).filter(book => !bookFilter || book.key === bookFilter);
     const modelData = model?.byEvent?.[game.eventKey];
     const apply = (market, side, offer) => {
       if (!offer) return null;
@@ -62,18 +63,18 @@ export default function PickDeskBoard({ games, quota, movement, boosts, format, 
       };
     };
     const awayCode = CODE_BY_NAME[game.away], homeCode = CODE_BY_NAME[game.home];
-    const awaySpread = bestSpread(game.books, 'away'), homeSpread = bestSpread(game.books, 'home');
-    const over = bestTotal(game.books, 'over'), under = bestTotal(game.books, 'under');
+    const awaySpread = bestSpread(books, 'away'), homeSpread = bestSpread(books, 'home');
+    const over = bestTotal(books, 'over'), under = bestTotal(books, 'under');
     const cells = {
       awaySp: cell('spread', 'away', awaySpread, `Spread ${spreadText(awaySpread)}`, awaySpread ? `${game.away} ${spreadText(awaySpread)}` : ''),
       homeSp: cell('spread', 'home', homeSpread, `Spread ${spreadText(homeSpread)}`, homeSpread ? `${game.home} ${spreadText(homeSpread)}` : ''),
       over: cell('total', 'over', over, over ? `O ${over.line}` : 'Total', over ? `Over ${over.line}` : ''),
       under: cell('total', 'under', under, under ? `U ${under.line}` : 'Total', under ? `Under ${under.line}` : ''),
-      awayMl: cell('moneyline', 'away', bestMoneyline(game.books, 'away'), 'Money', `${game.away} ML`),
-      homeMl: cell('moneyline', 'home', bestMoneyline(game.books, 'home'), 'Money', `${game.home} ML`),
+      awayMl: cell('moneyline', 'away', bestMoneyline(books, 'away'), 'Money', `${game.away} ML`),
+      homeMl: cell('moneyline', 'home', bestMoneyline(books, 'home'), 'Money', `${game.home} ML`),
     };
     const gameLive = Date.parse(game.commenceTime) <= now;
-    const bookCount = (game.books || []).length;
+    const bookCount = books.length;
     return <article key={game.eventKey} className="book-card court-panel p-4">
       <header className="flex flex-wrap items-center gap-2">
         <p className="font-display text-lg tracking-wide text-foreground">Game {index + 1}</p>
@@ -103,8 +104,12 @@ export default function PickDeskBoard({ games, quota, movement, boosts, format, 
 
   return <section className="space-y-4" aria-label="Pick Desk board">
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <p className="bcast-kicker">Live feed · best price per side</p>
+      <p className="bcast-kicker">Live feed · {bookFilter ? 'your book' : 'best price per side'}</p>
       <div className="flex flex-wrap items-center gap-2">
+        {onBookFilter && <select className="studio-select w-auto" value={bookFilter} aria-label="Shop lines by book" onChange={event => onBookFilter(event.target.value)}>
+          <option value="">All books (best price)</option>
+          {bookOptions(games).map(book => <option key={book.key} value={book.key}>{book.title}</option>)}
+        </select>}
         <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>{quota != null ? `${quota} feed calls left` : 'Real sportsbook prices'}</span>
         <button type="button" onClick={onRefresh} disabled={loading} className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20 disabled:opacity-40">
           <RefreshCcw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />Refresh

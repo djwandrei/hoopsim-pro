@@ -36,14 +36,14 @@ export default function RealWalletPanel({ wallet, profile, transactions, busy, o
       <div className="flex flex-wrap items-center gap-1.5">
         {[25, 50, 100, 250].map(amount => <button key={amount} type="button" disabled={busy} onClick={() => onDeposit(amount * 100)} className="rounded-md border border-border/50 px-3 py-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:border-gold/50 hover:text-gold disabled:opacity-40">${amount}</button>)}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <input type="number" min="10" max="2000" step="1" value={depositDollars} onChange={event => setDepositDollars(event.target.value)} placeholder="Custom amount ($10–$2,000)" className="studio-select" />
         <button type="button" disabled={busy || !Number.isFinite(depositValue) || depositValue < 1000 || depositValue > 200000} onClick={() => onDeposit(depositValue)} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-gradient-to-r from-gold to-goldSoft px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-canvas shadow-lg shadow-gold/20 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">{busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Deposit'}</button>
       </div>
     </div>
     <div className="mt-4 space-y-2">
       <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Request withdrawal (min $20 · one pending payout at a time · unsettled wagers block payouts)</p>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <input type="number" min="20" step="1" value={withdrawDollars} onChange={event => setWithdrawDollars(event.target.value)} placeholder="Amount" className="studio-select" />
         <button type="button" disabled={busy || pending > 0 || !Number.isFinite(withdrawValue) || withdrawValue < 2000 || withdrawValue > balance} onClick={() => onWithdraw(withdrawValue)} className="shrink-0 rounded-lg border border-border/50 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-widest text-foreground transition-colors hover:border-gold/50 hover:text-gold disabled:cursor-not-allowed disabled:opacity-40">Withdraw</button>
       </div>

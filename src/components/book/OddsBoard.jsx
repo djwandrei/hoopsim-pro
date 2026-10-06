@@ -159,7 +159,7 @@ export default function OddsBoard({ games, quota, movement, boosts, format, mode
   return <section className="space-y-4" aria-label="Odds board">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div><p className="bcast-kicker mb-1">Live feed · {bookFilter ? 'your book' : 'best price per side'}</p><h2 className="font-display text-xl tracking-wide text-foreground">THE BOARD</h2></div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <select className="studio-select w-auto" value={bookFilter} aria-label="Shop lines by book" onChange={event => onBookFilter(event.target.value)}>
           <option value="">All books (best price)</option>
           {bookOptions(games).map(book => <option key={book.key} value={book.key}>{book.title}</option>)}

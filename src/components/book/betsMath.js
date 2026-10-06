@@ -36,6 +36,25 @@ export function parlayAmerican(legs) {
   return decimalToAmerican(parlayDecimal(legs));
 }
 
+// 6-point teaser: spreads move 6 toward the bettor, totals move 6 in the
+// picked direction, and payout comes from the standard teaser pay table.
+export const TEASER_POINTS = 6;
+const TEASER_PAYTABLE = { 2: -110, 3: 150, 4: 260, 5: 450, 6: 700, 7: 900, 8: 1000 };
+export function teaserPrice(legCount) {
+  return TEASER_PAYTABLE[Math.min(Math.max(legCount, 2), 8)] ?? null;
+}
+
+// Every 2-leg (or size-leg) combination of the slip legs, for round robins.
+export function roundRobinCombos(legs, size = 2) {
+  const combos = [];
+  const build = (start, current) => {
+    if (current.length === size) { combos.push(current); return; }
+    for (let index = start; index < legs.length; index++) build(index + 1, [...current, legs[index]]);
+  };
+  build(0, []);
+  return combos;
+}
+
 export function formatCommence(iso) {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return 'TBD';
@@ -76,7 +95,11 @@ export function gradeLeg(leg, final) {
 // Grade a bet (single or parlay) given a resolver eventKey → final scores.
 // Parlay rules: any lost leg loses the bet; a push leg pushes the whole slip.
 export function gradeBet(bet, finalFor) {
-  const legs = bet.legs?.length ? bet.legs : [bet];
+  const raw = bet.legs?.length ? bet.legs : [bet];
+  // Teaser legs are graded on their adjusted (moved) lines.
+  const legs = bet.teaser ? raw.map(leg => leg.market === 'spread'
+    ? { ...leg, line: Number(leg.line) + bet.teaserPoints }
+    : leg.market === 'total' ? { ...leg, line: Number(leg.line) + (leg.totalPick === 'under' ? bet.teaserPoints : -bet.teaserPoints) } : leg) : raw;
   let anyLost = false, anyPush = false;
   for (const leg of legs) {
     const final = finalFor(leg.eventKey ?? bet.eventKey);

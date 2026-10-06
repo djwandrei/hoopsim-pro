@@ -2,18 +2,34 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
-import OddsBoard, { gamePrices, bestPriceFor } from '@/components/book/OddsBoard';
+import OddsBoard, { gamePrices, bestPriceFor, bookOptions } from '@/components/book/OddsBoard';
 import BetSlip from '@/components/book/BetSlip';
 import BetTracker from '@/components/book/BetTracker';
 import OddsSetupState from '@/components/book/OddsSetupState';
 import WalletPanel from '@/components/book/WalletPanel';
 import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsStore';
-import { gradeBet, profitFor, parlayAmerican, cashOutValue } from '@/components/book/betsMath';
+import { gradeBet, profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRobinCombos, TEASER_POINTS } from '@/components/book/betsMath';
 import { base44 } from '@/api/base44Client';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
 const BONUS_AMOUNT = 250;
 const BONUS_COOLDOWN = 24 * 3600 * 1000;
+
+const earliestCommence = legs => {
+  const times = legs.map(leg => Date.parse(leg.commenceTime)).filter(Number.isFinite).sort((a, b) => a - b);
+  return times.length ? new Date(times[0]).toISOString() : legs[0].commenceTime;
+};
+const makeBet = (legs, stake, price, extra = {}) => ({
+  id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  placedAt: new Date().toISOString(),
+  legs, parlay: legs.length > 1, price, stake,
+  eventKey: legs[0].eventKey,
+  matchup: [...new Set(legs.map(leg => leg.matchup))].join(' + '),
+  commenceTime: earliestCommence(legs),
+  bookTitle: legs[0].book,
+  status: 'open', settledAt: null, profit: null,
+  ...extra,
+});
 
 // Book Room — a full play-money sportsbook on real NBA lines: odds board with
 // movement arrows and a daily odds boost, parlay-capable bet slip, early
@@ -25,6 +41,7 @@ export default function BookRoom() {
   const [book, setBook] = useState(loadBook);
   const [feed, setFeed] = useState({ state: 'loading', games: [], quota: null, error: null, setup: false });
   const [slipLegs, setSlipLegs] = useState([]);
+  const [bookFilter, setBookFilter] = useState('');
   const [movement, setMovement] = useState({});
   const [boosts, setBoosts] = useState({});
   const [checking, setChecking] = useState(false);
@@ -106,14 +123,21 @@ export default function BookRoom() {
     setBook(current => ({ ...current, bankroll: current.bankroll + BONUS_AMOUNT, lastBonusAt: at, ledger: pushLedger(current.ledger, { id: `bonus-${Date.now()}`, at, type: 'bonus', label: 'Daily sportsbook bonus', amount: BONUS_AMOUNT }) }));
   };
 
-  const placeBet = ({ legs, stake }) => {
-    const price = legs.length > 1 ? parlayAmerican(legs) : legs[0].price;
-    const commence = legs.map(leg => Date.parse(leg.commenceTime)).filter(Number.isFinite).sort((a, b) => a - b)[0];
-    const seen = new Set();
-    const matchup = legs.map(leg => leg.matchup).filter(item => !seen.has(item) && seen.add(item)).join(' + ');
-    const bet = { id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, placedAt: new Date().toISOString(), legs, parlay: legs.length > 1, price, stake, eventKey: legs[0].eventKey, matchup, commenceTime: Number.isFinite(commence) ? new Date(commence).toISOString() : legs[0].commenceTime, bookTitle: legs[0].book, status: 'open', settledAt: null, profit: null };
+  const placeBet = ({ legs, stake, mode = 'parlay' }) => {
     const at = new Date().toISOString();
-    setBook(current => ({ ...current, bankroll: current.bankroll - stake, bets: [bet, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bet.id}`, at, type: 'bet', label: `Wager: ${matchup}`, amount: -stake }) }));
+    if (mode === 'roundrobin') {
+      const combos = roundRobinCombos(legs, 2);
+      const price = parlayAmerican(combos[0]);
+      const outlay = stake * combos.length;
+      const bets = combos.map(combo => makeBet(combo, stake, price, { roundRobin: true }));
+      setBook(current => ({ ...current, bankroll: current.bankroll - outlay, bets: [...bets, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bets[0].id}`, at, type: 'bet', label: `Round robin: ${legs.length} legs × ${combos.length} combos`, amount: -outlay }) }));
+    } else if (mode === 'teaser') {
+      const bet = makeBet(legs, stake, teaserPrice(legs.length), { teaser: true, teaserPoints: TEASER_POINTS, parlay: false });
+      setBook(current => ({ ...current, bankroll: current.bankroll - stake, bets: [bet, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bet.id}`, at, type: 'bet', label: `Teaser: ${bet.matchup}`, amount: -stake }) }));
+    } else {
+      const bet = makeBet(legs, stake, legs.length > 1 ? parlayAmerican(legs) : legs[0].price);
+      setBook(current => ({ ...current, bankroll: current.bankroll - stake, bets: [bet, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bet.id}`, at, type: 'bet', label: `Wager: ${bet.matchup}`, amount: -stake }) }));
+    }
     setSlipLegs([]);
   };
 
@@ -161,7 +185,7 @@ export default function BookRoom() {
               <button type="button" onClick={loadOdds} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gold hover:bg-gold/20"><RefreshCcw className="h-3.5 w-3.5" aria-hidden="true" />Retry</button>
             </section> :
               feed.state === 'loading' ? <div className="court-panel grid place-items-center p-14 text-sm text-muted-foreground">Loading live prices…</div> :
-                <OddsBoard games={feed.games} quota={feed.quota} movement={movement} boosts={boosts} format={format} onPick={leg => setSlipLegs(current => [...current, leg])} onRefresh={loadOdds} loading={feed.state === 'loading'} />}
+                <OddsBoard games={feed.games} quota={feed.quota} movement={movement} boosts={boosts} format={format} bookFilter={bookFilter} onBookFilter={setBookFilter} bookOptions={bookOptions(feed.games)} onPick={leg => setSlipLegs(current => [...current, leg])} onRefresh={loadOdds} loading={feed.state === 'loading'} />}
         </div>
         <div className="min-w-0 space-y-4">
           <BetSlip legs={slipLegs} bankroll={book.bankroll} format={format} onRemoveLeg={index => setSlipLegs(current => current.filter((_, i) => i !== index))} onClear={() => setSlipLegs([])} onPlace={placeBet} />

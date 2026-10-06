@@ -1,6 +1,8 @@
 import React from 'react';
 import { CalendarClock, RefreshCcw, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { formatOdds, formatCommence, pickKey } from '@/components/book/betsMath';
+import { modelEdgePct, CODE_BY_NAME } from '@/lib/bookRoom/modelEdge';
+import TeamMark from '@/components/studio/TeamMark';
 
 export function bestMoneyline(books, side) {
   let best = null;
@@ -50,80 +52,100 @@ export function gamePrices(game) {
   return prices;
 }
 
-function PickButton({ label, offer, format, onPick }) {
-  return <button type="button" onClick={onPick} className="flex min-w-0 flex-col items-start gap-0.5 rounded-lg border border-border/50 bg-raised/40 px-3 py-2 text-left transition-colors hover:border-gold/50 hover:bg-gold/10">
-    <span className="flex w-full items-center gap-1.5">
-      <span className="min-w-0 flex-1 truncate text-[11px] font-semibold text-foreground">{label}</span>
-      {offer.trend === 'up' && <ArrowUpRight className="h-3 w-3 shrink-0 text-positive" aria-label="Price moved up" />}
-      {offer.trend === 'down' && <ArrowDownRight className="h-3 w-3 shrink-0 text-trim-ink" aria-label="Price moved down" />}
-      {offer.boosted && <span className="shrink-0 rounded border border-gold/60 bg-gold/20 px-1 py-px text-[9px] font-bold uppercase text-gold">Boost</span>}
-    </span>
-    <span className="font-mono text-xs font-semibold text-gold">{formatOdds(offer.price, format)}{offer.book && <span className="ml-1.5 text-[10px] font-normal text-muted-foreground">{offer.book}</span>}</span>
+// Distinct bookmakers across the board, for the line-shopping filter.
+export function bookOptions(games) {
+  const options = [];
+  for (const game of games || []) for (const book of game.books || []) if (!options.some(option => option.key === book.key)) options.push({ key: book.key, title: book.title });
+  return options;
+}
+
+function PriceButton({ label, offer, format, edge, onPick }) {
+  if (!offer) return <div className="grid h-11 place-items-center rounded-lg border border-dashed border-border/40 text-[11px] text-muted-foreground">—</div>;
+  return <button type="button" onClick={onPick} className="flex h-11 min-w-0 items-center gap-1.5 rounded-lg border border-border/50 bg-raised/50 px-2 text-left transition-all hover:border-gold/60 hover:bg-gold/10">
+    <span className="min-w-0 flex-1 truncate text-[11px] font-semibold text-foreground">{label}</span>
+    {Number.isFinite(edge) && Math.abs(edge) >= 2 && <span className={`shrink-0 font-mono text-[10px] ${edge >= 3 ? 'text-positive' : edge <= -3 ? 'text-trim-ink' : 'text-muted-foreground'}`} title="Studio model edge vs this price">{edge >= 0 ? '+' : ''}{edge.toFixed(1)}</span>}
+    {offer.trend === 'up' && <ArrowUpRight className="h-3 w-3 shrink-0 text-positive" aria-label="Price moved up" />}
+    {offer.trend === 'down' && <ArrowDownRight className="h-3 w-3 shrink-0 text-trim-ink" aria-label="Price moved down" />}
+    {offer.boosted && <span className="shrink-0 rounded bg-gold/25 px-1 py-px font-mono text-[9px] font-bold text-gold" title="Daily odds boost">B</span>}
+    <span className="shrink-0 font-mono text-xs font-bold text-gold">{formatOdds(offer.price, format)}</span>
   </button>;
 }
 
-// The odds board: live and upcoming NBA games with the best available price
-// per side, line shopping by bookmaker, movement arrows and a daily boost.
-export default function OddsBoard({ games, quota, movement, boosts, format, bookFilter, onBookFilter, onPick, onRefresh, loading }) {
+function TeamLine({ code, name }) {
+  return <div className="flex items-center gap-2">
+    <TeamMark code={code} name={name} className="h-8 w-8 text-[11px]" />
+    <span className="min-w-0 flex-1 truncate text-xs font-semibold text-foreground">{name}</span>
+  </div>;
+}
+
+function MarketColumn({ label, picks }) {
+  return <div className="space-y-1.5">
+    <p className="text-center text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
+    {picks.map((pick, index) => <PriceButton key={index} {...pick} />)}
+  </div>;
+}
+
+// The odds board: sportsbook-style game cards — teams left, three dense
+// market columns right, live pricing, movement arrows, book shopping and
+// inline studio-model edge chips on every price.
+export default function OddsBoard({ games, quota, movement, boosts, format, model, bookFilter, onBookFilter, onPick, onRefresh, loading }) {
   const now = Date.now();
   const live = games.filter(game => Date.parse(game.commenceTime) <= now);
   const upcoming = games.filter(game => Date.parse(game.commenceTime) > now);
   const renderGame = game => {
     const books = (game.books || []).filter(book => !bookFilter || book.key === bookFilter);
+    const modelData = model?.byEvent?.[game.eventKey];
     const apply = (market, side, offer) => {
       if (!offer) return null;
       const key = pickKey(game.eventKey, market, side);
       const boosted = boosts?.[key];
       return { ...offer, price: Number.isFinite(boosted) ? boosted : offer.price, boosted: Number.isFinite(boosted), key, trend: movement?.[key] || null };
     };
-    const homeMl = apply('moneyline', 'home', bestMoneyline(books, 'home'));
+    const edgeFor = (market, side, offer) => {
+      if (!modelData || !offer || !Number.isFinite(Number(offer.price))) return null;
+      const leg = { market, eventKey: game.eventKey, ...(market === 'total' ? { totalPick: side } : { pickSide: side }), ...(offer.line != null ? { line: offer.line } : {}) };
+      return modelEdgePct(modelData, leg, Number(offer.price));
+    };
+    const build = (market, side, offer, label) => offer ? {
+      label, offer, edge: edgeFor(market, side, offer),
+      onPick: () => onPick({ eventKey: game.eventKey, matchup: `${game.away} @ ${game.home}`, commenceTime: game.commenceTime, market, ...(market === 'total' ? { totalPick: side } : { pickSide: side }), label, ...(offer.line != null ? { line: offer.line } : {}), price: offer.price, book: offer.book }),
+    } : null;
+    const homeCode = CODE_BY_NAME[game.home], awayCode = CODE_BY_NAME[game.away];
     const awayMl = apply('moneyline', 'away', bestMoneyline(books, 'away'));
-    const homeSpread = apply('spread', 'home', bestSpread(books, 'home'));
+    const homeMl = apply('moneyline', 'home', bestMoneyline(books, 'home'));
     const awaySpread = apply('spread', 'away', bestSpread(books, 'away'));
+    const homeSpread = apply('spread', 'home', bestSpread(books, 'home'));
     const over = apply('total', 'over', bestTotal(books, 'over'));
     const under = apply('total', 'under', bestTotal(books, 'under'));
-    const base = { eventKey: game.eventKey, matchup: `${game.away} @ ${game.home}`, commenceTime: game.commenceTime };
+    const gameLive = Date.parse(game.commenceTime) <= now;
     return <article key={game.eventKey} className="court-panel p-4">
-      <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="font-display text-lg tracking-wide text-foreground">{game.away} <span className="text-muted-foreground">@</span> {game.home}</h3>
-        <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-          {Date.parse(game.commenceTime) <= now && <><span className="h-2 w-2 animate-pulse rounded-full bg-trim" aria-hidden="true" /><span className="text-trim-ink">Live</span></>}
+      <div className="grid gap-3 sm:grid-cols-[11rem_1fr] sm:gap-5">
+        <div className="space-y-2">
+          <TeamLine code={awayCode} name={game.away} />
+          <TeamLine code={homeCode} name={game.home} />
+        </div>
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+          <MarketColumn label="Moneyline" picks={[awayMl && { label: awayCode, offer: awayMl, format, onPick: build('moneyline', 'away', awayMl, `${game.away} ML`).onPick }, homeMl && { label: homeCode, offer: homeMl, format, onPick: build('moneyline', 'home', homeMl, `${game.home} ML`).onPick }].filter(Boolean).length === 2 ? [awayMl && { label: awayCode, offer: awayMl, format, edge: edgeFor('moneyline', 'away', awayMl), onPick: build('moneyline', 'away', awayMl, `${game.away} ML`).onPick }, homeMl && { label: homeCode, offer: homeMl, format, edge: edgeFor('moneyline', 'home', homeMl), onPick: build('moneyline', 'home', homeMl, `${game.home} ML`).onPick }].filter(Boolean) : []} />
+          <MarketColumn label="Spread" picks={[awaySpread && { label: `${awayCode} ${awaySpread.point > 0 ? '+' : ''}${awaySpread.point}`, offer: awaySpread, format, edge: edgeFor('spread', 'away', awaySpread), onPick: build('spread', 'away', awaySpread, `${game.away} ${awaySpread.point > 0 ? '+' : ''}${awaySpread.point}`).onPick }, homeSpread && { label: `${homeCode} ${homeSpread.point > 0 ? '+' : ''}${homeSpread.point}`, offer: homeSpread, format, edge: edgeFor('spread', 'home', homeSpread), onPick: build('spread', 'home', homeSpread, `${game.home} ${homeSpread.point > 0 ? '+' : ''}${homeSpread.point}`).onPick }].filter(Boolean)} />
+          <MarketColumn label="Total" picks={[over && { label: `O ${over.line}`, offer: over, format, edge: edgeFor('total', 'over', over), onPick: build('total', 'over', over, `Over ${over.line}`).onPick }, under && { label: `U ${under.line}`, offer: under, format, edge: edgeFor('total', 'under', under), onPick: build('total', 'under', under, `Under ${under.line}`).onPick }].filter(Boolean)} />
+        </div>
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-border/30 pt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5 normal-case tracking-normal">
+          {gameLive && <><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-trim" aria-hidden="true" /><span className="font-semibold uppercase tracking-widest text-trim-ink">Live</span></>}
           <CalendarClock className="h-3 w-3" aria-hidden="true" />{formatCommence(game.commenceTime)}
         </span>
-      </header>
-      {books.length === 0 ? <p className="mt-3 text-xs text-muted-foreground">{bookFilter ? 'Your selected book has no prices for this game.' : 'No books have posted prices for this game yet.'}</p> :
-        <div className="mt-3 space-y-3">
-          <div>
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Moneyline</p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <PickButton label={game.home} offer={homeMl} format={format} onPick={() => onPick({ ...base, market: 'moneyline', pickSide: 'home', label: `${game.home} ML`, price: homeMl.price, book: homeMl.book })} />
-              <PickButton label={game.away} offer={awayMl} format={format} onPick={() => onPick({ ...base, market: 'moneyline', pickSide: 'away', label: `${game.away} ML`, price: awayMl.price, book: awayMl.book })} />
-            </div>
-          </div>
-          {(homeSpread || awaySpread) && <div>
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Spread</p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {homeSpread && <PickButton label={`${game.home} ${homeSpread.point > 0 ? '+' : ''}${homeSpread.point}`} offer={homeSpread} format={format} onPick={() => onPick({ ...base, market: 'spread', pickSide: 'home', label: `${game.home} ${homeSpread.point > 0 ? '+' : ''}${homeSpread.point}`, line: homeSpread.point, price: homeSpread.price, book: homeSpread.book })} />}
-              {awaySpread && <PickButton label={`${game.away} ${awaySpread.point > 0 ? '+' : ''}${awaySpread.point}`} offer={awaySpread} format={format} onPick={() => onPick({ ...base, market: 'spread', pickSide: 'away', label: `${game.away} ${awaySpread.point > 0 ? '+' : ''}${awaySpread.point}`, line: awaySpread.point, price: awaySpread.price, book: awaySpread.book })} />}
-            </div>
-          </div>}
-          {(over || under) && <div>
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Total</p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {over && <PickButton label={`Over ${over.line}`} offer={over} format={format} onPick={() => onPick({ ...base, market: 'total', totalPick: 'over', label: `Over ${over.line}`, line: over.line, price: over.price, book: over.book })} />}
-              {under && <PickButton label={`Under ${under.line}`} offer={under} format={format} onPick={() => onPick({ ...base, market: 'total', totalPick: 'under', label: `Under ${under.line}`, line: under.line, price: under.price, book: under.book })} />}
-            </div>
-          </div>}
-        </div>}
+        <span>{books.length} book{books.length === 1 ? '' : 's'}{modelData ? ' · simmed' : ''}</span>
+      </div>
     </article>;
   };
   return <section className="space-y-4" aria-label="Odds board">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div><p className="bcast-kicker mb-1">Live feed · {bookFilter ? 'your book' : 'best price per side'}</p><h2 className="font-display text-xl tracking-wide text-foreground">THE BOARD</h2></div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <select className="studio-select w-auto" value={bookFilter} aria-label="Shop lines by book" onChange={event => onBookFilter(event.target.value)}>
           <option value="">All books (best price)</option>
-          {(bookOptions(games)).map(book => <option key={book.key} value={book.key}>{book.title}</option>)}
+          {bookOptions(games).map(book => <option key={book.key} value={book.key}>{book.title}</option>)}
         </select>
         <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>{quota != null ? `${quota} feed calls left` : 'Real sportsbook prices'}</span>
         <button type="button" onClick={onRefresh} disabled={loading} className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20 disabled:opacity-40">
@@ -133,19 +155,12 @@ export default function OddsBoard({ games, quota, movement, boosts, format, book
     </div>
     {live.length > 0 && <div>
       <p className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-trim-ink"><span className="h-2 w-2 animate-pulse rounded-full bg-trim" aria-hidden="true" />Live now · {live.length}</p>
-      <div className="space-y-4">{live.map(renderGame)}</div>
+      <div className="space-y-3">{live.map(renderGame)}</div>
     </div>}
     {upcoming.length > 0 && <div>
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Upcoming · {upcoming.length}</p>
-      <div className="space-y-4">{upcoming.map(renderGame)}</div>
+      <div className="space-y-3">{upcoming.map(renderGame)}</div>
     </div>}
     {games.length === 0 && <div className="court-panel grid place-items-center p-10 text-sm text-muted-foreground">No NBA games on the board right now.</div>}
   </section>;
-}
-
-// Distinct bookmakers across the board, for the line-shopping filter.
-export function bookOptions(games) {
-  const options = [];
-  for (const game of games || []) for (const book of game.books || []) if (!options.some(option => option.key === book.key)) options.push({ key: book.key, title: book.title });
-  return options;
 }

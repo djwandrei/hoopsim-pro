@@ -1,17 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
-import { Image } from '@/components/ui/image';
-
-import { forgeSilhouette } from '@/components/studio/teamAssets';
-const SILHOUETTE_LIGHT = forgeSilhouette('light');
-const SILHOUETTE_DARK = forgeSilhouette('dark');
-const Silhouette = () => (
-  <>
-    <Image src={SILHOUETTE_LIGHT} alt="" fittingType="fit" className="h-full w-full opacity-15 dark:hidden" />
-    <Image src={SILHOUETTE_DARK} alt="" fittingType="fit" className="hidden h-full w-full opacity-25 [filter:invert(1)] dark:block" />
-  </>
-);
+import ForgeFigure3D from '@/components/forge/ForgeFigure3D';
 
 const initials = pick => (pick?.player?.name || '?').split(/\s+/).filter(Boolean).map(word => word[0]).slice(0, 2).join('');
 
@@ -40,7 +30,7 @@ export default function ForgeBuildWheel({ picks, overall, selectedKey, spinning 
       })}
     </div>
     <div className="absolute inset-[26%] flex flex-col items-center justify-center rounded-full border-2 border-gold/50 bg-canvas shadow-[0_0_30px_hsl(var(--court-accent)/0.2)]">
-      <div className="absolute inset-[12%] text-gold/15"><Silhouette /></div>
+      <div className="absolute inset-[10%]"><ForgeFigure3D filled={SKILLS.filter(skill => picks[skill.key]).length} complete={Boolean(overall)} /></div>
       <motion.span key={overall ?? 'none'} initial={{ scale:1.3, opacity:.3 }} animate={{ scale:1, opacity:1 }} transition={{ type:'spring', stiffness:320, damping:18 }} className="relative font-display text-4xl leading-none text-gold">{overall ?? '—'}</motion.span>
       <span className="relative mt-1 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">OVR</span>
     </div>

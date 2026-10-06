@@ -1,12 +1,6 @@
 import React from 'react';
-import { Image } from '@/components/ui/image';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
-import { forgeSilhouette } from '@/components/studio/teamAssets';
-
-// User-provided silhouette art: filled black mark for light mode, thin outline
-// for dark mode (inverted to light lines so it reads on the dark canvas).
-const SILHOUETTE_LIGHT = forgeSilhouette('light');
-const SILHOUETTE_DARK = forgeSilhouette('dark');
+import ForgeFigure3D from '@/components/forge/ForgeFigure3D';
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {
@@ -38,8 +32,7 @@ export default function ForgeStage({ mode, picks, reveal, selectedKey, onSelect,
     <div className="relative z-10 flex w-full min-w-0 flex-1 items-center justify-center px-4 py-6">
       <div className="relative h-72 w-full max-w-xs sm:h-96 sm:max-w-sm">
         <div aria-hidden="true" className="absolute -inset-8" style={{ background: 'radial-gradient(50% 46% at 50% 44%, hsl(var(--court-royal) / 0.35), transparent 72%), radial-gradient(70% 52% at 50% 100%, hsl(var(--court-accent) / 0.12), transparent 72%)' }} />
-        <Image src={SILHOUETTE_LIGHT} alt="" fittingType="fit" className="absolute inset-0 h-full w-full dark:hidden" />
-        <Image src={SILHOUETTE_DARK} alt="" fittingType="fit" className="absolute inset-0 hidden h-full w-full dark:block [filter:invert(1)]" />
+        <ForgeFigure3D filled={SKILLS.filter(skill => picks[skill.key]).length} spinning={spinning} className="absolute inset-0 h-full w-full" />
         {SKILLS.map((skill) => {
           const layout = CHIP_LAYOUT[skill.key] || { side: 'left', top: 50 };
           const pick = picks[skill.key];

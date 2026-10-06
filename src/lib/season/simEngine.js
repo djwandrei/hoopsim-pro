@@ -115,8 +115,14 @@ export function seasonLabel(year) {
   return `${year}\u2013${String(Number(year) + 1).slice(-2)}`;
 }
 
-function expectedOrtg(off, oppDef, leagueDef, weight) {
-  return off + (oppDef - leagueDef) * weight;
+// Live pinned model (season-lab-model): matchup weights are 0.5 own-offense /
+// 0.5 opponent-defense at rate scale 2 — each side's delta from the league
+// mean is applied at full strength, so strong teams keep their real gap.
+// Managed blends (0.35 / 0.65) tilt one side up and the other down.
+function expectedOrtg(off, oppDef, leagueOff, leagueDef, offenseWeight, defenseWeight) {
+  return leagueOff
+    + (off - leagueOff) * offenseWeight * 2
+    + (oppDef - leagueDef) * defenseWeight * 2;
 }
 
 function shootTotals(team, opp, poss, pts, rng) {
@@ -185,16 +191,19 @@ function scorePoints(ortg, poss, rng) {
   return Math.max(62, Math.round(ortg * poss / 100 + gauss(rng) * 11));
 }
 
-function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutral = false, log = false, leagueDef = 112 } = {}) {
-  const poss = clamp((home.pace + away.pace) / 2, 88, 112);
+function simGame(home, away, rng, { defenseWeight = 0.5, offenseWeight = 0.5, homeCourt = 1.6, neutral = false, log = false, leagueDef = 112, leagueOff = 112 } = {}) {
+  // Live pace envelope (NATIVE_PACE): floor 70, ceiling 110.
+  const poss = clamp((home.pace + away.pace) / 2, 70, 110);
   const hca = neutral ? 0 : homeCourt;
-  const ortgH = expectedOrtg(home.off, away.def, leagueDef, defenseWeight) + hca;
-  const ortgA = expectedOrtg(away.off, home.def, leagueDef, defenseWeight);
+  const ortgH = expectedOrtg(home.off, away.def, leagueOff, leagueDef, offenseWeight, defenseWeight) + hca;
+  const ortgA = expectedOrtg(away.off, home.def, leagueOff, leagueDef, offenseWeight, defenseWeight);
   const regulationHome = scorePoints(ortgH, poss, rng);
   const regulationAway = scorePoints(ortgA, poss, rng);
   let hp = regulationHome; let ap = regulationAway;
   const overtime = [];
-  while (hp === ap) {
+  // Live policy caps overtime at six periods (maxOvertimes: 6); any residue
+  // resolves with a seeded coin flip so records never contain ties.
+  while (hp === ap && overtime.length < 6) {
     const otPoss = poss * 5 / 48;
     const period = {
       home: Math.max(0, Math.round(ortgH * otPoss / 100 + gauss(rng) * 3)),
@@ -202,6 +211,7 @@ function simGame(home, away, rng, { defenseWeight = 0.8, homeCourt = 1.6, neutra
     };
     overtime.push(period); hp += period.home; ap += period.away;
   }
+  if (hp === ap) { if (rng() < 0.5) hp += 1; else ap += 1; }
   const ot = overtime.length;
   const gameMinutes = 48 + ot * 5;
   const totalPoss = poss * gameMinutes / 48;

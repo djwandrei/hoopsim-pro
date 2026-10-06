@@ -58,16 +58,25 @@ export async function requireGate(base44) {
 // After the create we re-read, so two concurrent first-touches can't leave a
 // duplicate wallet behind.
 export async function ensureWallet(base44, userId) {
-  const page = await base44.entities.RealWallet.filter({});
+  // Oldest-wins ordering plus duplicate cleanup: a rare create/create race
+  // could mint two wallets, and record order is unspecified — sorting by
+  // created_date keeps every read on the same record, and the extras are
+  // removed so balances can never diverge across wallets.
+  const page = await base44.entities.RealWallet.filter({}, { sort: 'created_date' });
   const wallet = (page.items || [])[0];
   if (wallet) return wallet;
   await base44.asServiceRole.entities.RealWallet.create({
     created_by_id: userId,
     balance_cents: 0, pending_withdrawal_cents: 0, lifetime_deposited_cents: 0, lifetime_withdrawn_cents: 0,
   });
-  const again = await base44.entities.RealWallet.filter({});
-  const created = (again.items || [])[0];
+  const again = await base44.entities.RealWallet.filter({}, { sort: 'created_date' });
+  const items = again.items || [];
+  const created = items[0];
   if (!created) throw new Error('Could not create the wallet.');
+  if (items.length > 1) {
+    await base44.asServiceRole.entities.RealWallet.deleteMany({ created_by_id: userId, id: { $ne: created.id } });
+    audit('wallet.duplicates_removed', { user: userId, count: items.length - 1 });
+  }
   return created;
 }
 

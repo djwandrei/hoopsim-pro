@@ -1,1 +1,0 @@
-import{g as e,u as t}from"./index-jbITYgWM.js";var n=e(t(),1),r=`djhc:swishiq:studio-season:v1:base44`;function i(e=2025){let[t,i]=(0,n.useState)(()=>{try{let t=Number(localStorage.getItem(r));return t>=2017&&t<=2025?t:e}catch{return e}});return[t,e=>{i(e);try{localStorage.setItem(r,String(e))}catch{}}]}export{i as t};

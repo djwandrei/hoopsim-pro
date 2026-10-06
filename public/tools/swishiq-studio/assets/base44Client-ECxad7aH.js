@@ -1,1 +1,0 @@
-var e=()=>null,t=()=>null,n=null;try{n=e({appId:void 0,token:t(),functionsVersion:void 0,serverUrl:``,appBaseUrl:void 0})}catch{n=null}var r=n;export{r as base44};

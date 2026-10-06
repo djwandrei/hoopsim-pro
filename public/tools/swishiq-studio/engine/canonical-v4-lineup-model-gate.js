@@ -5,11 +5,10 @@ export const CANONICAL_V4_LINEUP_MODEL_GATE_FORMAT = 'djhc-swishiq-v4-lineup-mod
 export const CANONICAL_V4_LINEUP_MODEL_GATE_VERSION = 'swishiq-v4-lineup-model-execution-gate-v1';
 
 /**
- * Keep Lineup execution tied to the reviewed V4 release pin. Exact-season
- * inputs are verified by the Lineup data adapter; DJHC has authorized this
- * route to run as a retrospective historical optimizer without a separate
- * per-tool predictive-validation receipt. This gate does not certify a
- * prospective forecast or relax registry, package, or artifact hash checks.
+ * Keep the existing Lineup route available before V4 cutover. After any V4
+ * release pin is supplied, block V3 inputs and solver execution until a
+ * separate exact-scope Lineup input adapter and model-specific validation
+ * receipt are wired and reviewed.
  */
 export function canonicalV4LineupModelExecutionAvailability({
   releasePin = CANONICAL_V4_STUDIO_RUNTIME_RELEASE_PIN,
@@ -40,24 +39,16 @@ export function canonicalV4LineupModelExecutionAvailability({
     });
   }
 
-  if (!policy.releaseReady) return Object.freeze({
+  return Object.freeze({
     format: CANONICAL_V4_LINEUP_MODEL_GATE_FORMAT,
     version: CANONICAL_V4_LINEUP_MODEL_GATE_VERSION,
     available: false,
     v4Required: true,
     sourceMode: 'canonical-v4-required',
-    code: 'lineup-v4-release-invalid',
+    code: policy.releaseReady ? 'lineup-v4-validation-not-configured' : 'lineup-v4-release-invalid',
     modelExecution: 'blocked',
-    reason: 'The supplied V4 release pin is incomplete. Lineup data and model execution are unavailable; V3 was not loaded.',
-  });
-  return Object.freeze({
-    format: CANONICAL_V4_LINEUP_MODEL_GATE_FORMAT,
-    version: CANONICAL_V4_LINEUP_MODEL_GATE_VERSION,
-    available: true,
-    v4Required: true,
-    sourceMode: 'canonical-v4-owner-certified-historical',
-    modelExecution: 'djhc-owner-certified-historical-optimization',
-    predictiveValidationStatus: 'not-claimed-historical-descriptive-inputs',
-    reason: 'DJHC owner-certified historical optimization is enabled for a verified exact V4 team-season. It does not claim a prospective forecast or independent predictive validation.',
+    reason: policy.releaseReady
+      ? 'V4 is selected, but exact Lineup inputs and a Lineup-specific predictive-validation receipt are not configured. V3 was not loaded and the optimizer did not run.'
+      : 'The supplied V4 release pin is incomplete. Lineup data and model execution are unavailable; V3 was not loaded.',
   });
 }

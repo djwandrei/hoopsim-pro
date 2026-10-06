@@ -1,1 +1,0 @@
-import{C as e}from"./TeamPalettePicker-0LfeSiOO.js";var t=e(`ChevronRight`,[[`path`,{d:`m9 18 6-6-6-6`,key:`mthhwq`}]]);export{t};

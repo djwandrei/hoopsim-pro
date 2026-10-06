@@ -59,7 +59,7 @@ export default function PlayerStatsChart({ teamA, teamB }) {
         <div className="flex gap-1 rounded-xl border border-[var(--myna-border)] bg-[var(--myna-canvas)] p-1">
           {STATS.map(option => (
             <button key={option.key} type="button" aria-pressed={stat === option.key} onClick={() => setStat(option.key)}
-              className={`min-h-8 rounded-lg px-3 font-mono text-[11px] font-bold transition-colors ${stat === option.key ? 'bg-[var(--myna-accent)] text-[var(--myna-on-accent)]' : 'text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`}
+              className={`min-h-9 rounded-lg px-3 font-mono text-[11px] font-bold transition-colors ${stat === option.key ? 'bg-[var(--myna-accent)] text-[var(--myna-on-accent)]' : 'text-[var(--myna-muted)] hover:bg-[var(--myna-raised)]'}`}
             >
               {option.label}
             </button>

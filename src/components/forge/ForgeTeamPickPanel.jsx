@@ -15,7 +15,7 @@ export default function ForgeTeamPickPanel({
     {!pending && <button type="button" onClick={onSpin} disabled={spinning} className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg bg-primary text-sm font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40">
       {spinning ? 'Spinning…' : activeTeam ? 'Spin again' : 'Spin'}
     </button>}
-    {activeTeam && <button type="button" onClick={onRespinTeam} disabled={!teamRespins || spinning} className="mt-1.5 flex min-h-10 w-full flex-col items-center justify-center gap-0.5 rounded-lg border border-trim/40 bg-trim/10 px-1 text-[10px] font-semibold uppercase tracking-wider text-trim transition-colors hover:bg-trim/20 disabled:cursor-not-allowed disabled:opacity-40">
+    {activeTeam && <button type="button" onClick={onRespinTeam} disabled={!teamRespins || spinning} className="mt-1.5 flex min-h-10 w-full flex-col items-center justify-center gap-0.5 rounded-lg border border-trim/40 bg-trim/10 px-1 text-[10px] font-semibold uppercase tracking-wider text-trim-ink transition-colors hover:bg-trim/20 disabled:cursor-not-allowed disabled:opacity-40">
       <span>Respin team</span><span className="font-mono text-[9px] opacity-80">{teamRespins} left</span>
     </button>}
     <p className="mt-4 text-center text-[10px] leading-relaxed text-muted-foreground">Spin lands on a random team — their full roster lands in the board. Pick any player, then tap an open rotation spot. Team respins are shared across the draft.</p>

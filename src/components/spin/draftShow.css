@@ -1,0 +1,42 @@
+/* === Spin Room — draft-show broadcast stage === */
+.spin-stage { position: relative; overflow: hidden; border-radius: 1rem; border: 1px solid hsl(var(--border) / .35); background: radial-gradient(120% 80% at 50% -10%, hsl(var(--court-accent) / .12), transparent 60%), linear-gradient(165deg, hsl(var(--court-surface)), hsl(var(--court-canvas)) 70%); box-shadow: 0 24px 60px hsl(var(--court-canvas) / .5); }
+.spin-stage::before { content: ''; position: absolute; top: 0; left: 12px; right: 12px; height: 2px; border-radius: 999px; background: linear-gradient(90deg, hsl(var(--court-accent) / .9), hsl(var(--court-accent) / .4) 45%, transparent 85%); pointer-events: none; }
+.spin-stage__spot { position: absolute; top: -25%; left: 18%; width: 64%; height: 80%; pointer-events: none; background: radial-gradient(closest-side, hsl(var(--court-accent) / .14), transparent 75%); animation: spin-spot 5s ease-in-out infinite; }
+@keyframes spin-spot { 0%,100% { opacity: .7; } 50% { opacity: 1; } }
+.spin-stage__head { position: relative; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.5rem 1.5rem 0; }
+.spin-stage__title { margin-top: .4rem; font-family: var(--font-display); font-size: clamp(1.9rem, 4vw, 2.6rem); letter-spacing: .05em; line-height: 1.05; }
+.spin-stage__intro { margin-top: .35rem; font-size: .75rem; line-height: 1.7; color: hsl(var(--muted-foreground)); max-width: 46ch; }
+.spin-stage__grid { position: relative; display: grid; gap: 1.75rem; align-items: center; padding: 1.5rem; }
+@media (min-width: 768px) { .spin-stage__grid { grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); } }
+.spin-stage__rotor { display: grid; justify-items: center; gap: 1rem; text-align: center; }
+.spin-wheel { position: relative; width: min(100%, 13rem); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; border: .5rem solid hsl(var(--court-canvas)); outline: 1px solid hsl(var(--court-accent) / .55); background: repeating-conic-gradient(hsl(var(--court-royal)) 0deg 30deg, hsl(var(--court-raised)) 30deg 60deg, hsl(var(--court-accent)) 60deg 90deg, hsl(var(--court-trim)) 90deg 120deg); box-shadow: 0 0 34px hsl(var(--court-accent) / .2), inset 0 0 26px hsl(var(--court-canvas) / .55); }
+.spin-wheel::before { content: ''; position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(closest-side, transparent 55%, hsl(var(--court-accent) / .18)); pointer-events: none; }
+.spin-wheel::after { content: ''; position: absolute; top: -.85rem; width: 0; height: 0; border-left: .45rem solid transparent; border-right: .45rem solid transparent; border-top: 1.1rem solid hsl(var(--foreground)); }
+.spin-wheel > span { display: grid; place-items: center; width: 36%; aspect-ratio: 1; border-radius: 50%; background: hsl(var(--court-canvas)); border: 2px solid hsl(var(--court-accent)); color: hsl(var(--court-accent)); font-family: var(--font-display); font-size: 1.4rem; letter-spacing: .1em; }
+.spin-wheel--spinning { animation: spin-wheel-turn .7s cubic-bezier(.25, .7, .3, 1); box-shadow: 0 0 52px hsl(var(--court-accent) / .45); }
+@keyframes spin-wheel-turn { from { transform: rotate(0deg); } to { transform: rotate(960deg); } }
+.spin-stage__cta { position: relative; overflow: hidden; width: 100%; max-width: 17rem; min-height: 2.9rem; border-radius: .6rem; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.spin-stage__cta:disabled { opacity: .4; cursor: not-allowed; }
+.spin-stage__note { font-size: .75rem; line-height: 1.6; color: hsl(var(--muted-foreground)); max-width: 20rem; }
+.spin-stage__outcome { display: grid; gap: .9rem; min-width: 0; }
+.spin-pick { position: relative; border: 1px solid hsl(var(--court-accent) / .35); border-radius: .8rem; background: hsl(var(--court-canvas) / .65); padding: 1.4rem 1.5rem; }
+.spin-pick--idle { border-style: dashed; border-color: hsl(var(--border) / .5); background: hsl(var(--court-canvas) / .4); }
+.spin-pick__kicker { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.spin-pick--idle .spin-pick__kicker { color: hsl(var(--muted-foreground)); }
+.spin-pick__row { display: flex; align-items: center; gap: 1.1rem; margin-top: .9rem; }
+.spin-pick__name { margin-top: .5rem; font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.05; letter-spacing: .03em; }
+.spin-pick--idle .spin-pick__name { color: hsl(var(--muted-foreground)); font-size: 1.5rem; }
+.spin-pick__context { margin-top: .5rem; font-size: .75rem; color: hsl(var(--muted-foreground)); }
+.spin-pick__teams { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .8rem; }
+.spin-pick__team { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid hsl(var(--border) / .4); border-radius: .5rem; padding: .25rem .55rem; font-size: .72rem; }
+.spin-stage__status { border-top: 1px solid hsl(var(--border) / .3); padding-top: .8rem; font-size: .72rem; color: hsl(var(--muted-foreground)); font-variant-numeric: tabular-nums; }
+/* Control desk */
+.spin-desk { padding: 1.25rem 1.5rem 1.5rem; }
+.spin-desk__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .8rem; }
+.spin-desk__title { margin-top: .35rem; font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .05em; }
+.spin-desk__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .8rem; margin-top: 1.1rem; }
+.spin-desk__field { display: grid; gap: .4rem; font-size: .72rem; color: hsl(var(--muted-foreground)); min-width: 0; }
+.spin-desk__field input, .spin-desk__field select { width: 100%; min-height: 2.5rem; border-radius: .5rem; border: 1px solid hsl(var(--input)); background: hsl(var(--court-raised) / .5); padding: .5rem .7rem; color: hsl(var(--foreground)); font-size: .8rem; }
+.spin-desk__apply { margin-top: 1.1rem; width: 100%; min-height: 2.75rem; border-radius: .6rem; border: 1px solid hsl(var(--court-accent) / .45); background: hsl(var(--court-accent) / .1); color: hsl(var(--court-accent)); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; transition: background-color .15s ease; }
+.spin-desk__apply:hover { background: hsl(var(--court-accent) / .2); }
+@media (prefers-reduced-motion: reduce) { .spin-stage__spot, .spin-wheel--spinning, .spin-pick.broadcast-in-l { animation: none !important; } }

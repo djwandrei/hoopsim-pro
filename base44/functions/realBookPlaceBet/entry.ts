@@ -115,12 +115,14 @@ export default async function(req) {
       return fail(`Maximum payout per wager is $${maxPayoutLabel} — reduce the stake.`, 'max_payout', 422);
     }
     const outlay = mode === 'roundrobin' ? stakeCents * combos.length : stakeCents;
-    const lossLimit = Number(gate.profile.daily_loss_limit_cents) || 0;
-    if (lossLimit > 0) {
-      const lostToday = await lostTodayCents(base44);
-      if (lostToday + outlay > lossLimit) {
-        return fail(`Daily loss limit would be exceeded: $${(lostToday / 100).toFixed(2)} lost today of a $${(lossLimit / 100).toFixed(2)} limit.`, 'daily_loss_limit', 422);
-      }
+    // A $0 loss limit blocks all wagering — enforced whenever it is set
+    // (including zero), never treated as "no limit".
+    const lossLimit = Math.max(0, Number(gate.profile.daily_loss_limit_cents) || 0);
+    const lostToday = await lostTodayCents(base44);
+    if (lostToday + outlay > lossLimit) {
+      return fail(lossLimit === 0
+        ? 'Your daily loss limit is $0 — wagering is blocked until you raise it (increases take effect in 24 hours).'
+        : `Daily loss limit would be exceeded: $${(lostToday / 100).toFixed(2)} lost today of a $${(lossLimit / 100).toFixed(2)} limit.`, 'daily_loss_limit', 422);
     }
     const wallet = await ensureWallet(base44, gate.user.id);
     const balance = Number(wallet.balance_cents) || 0;

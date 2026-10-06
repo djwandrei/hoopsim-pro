@@ -25,12 +25,14 @@ export default async function(req) {
     if (!key) {
       return fail('Real-money deposits are not connected yet: add STRIPE_SECRET_KEY on the dashboard Secrets page.', 'payments_not_configured', 503);
     }
-    const limit = Number(gate.profile.daily_deposit_limit_cents) || 0;
-    if (limit > 0) {
-      const today = await depositedTodayCents(base44);
-      if (today + amountCents > limit) {
-        return fail(`Daily deposit limit reached: $${(today / 100).toFixed(2)} of $${(limit / 100).toFixed(2)} deposited today.`, 'daily_limit', 422);
-      }
+    // A $0 limit blocks deposits entirely — the limit is enforced whenever it
+    // is set (including zero), never treated as "no limit".
+    const limit = Math.max(0, Number(gate.profile.daily_deposit_limit_cents) || 0);
+    const today = await depositedTodayCents(base44);
+    if (today + amountCents > limit) {
+      return fail(limit === 0
+        ? 'Your daily deposit limit is $0 — deposits are blocked until you raise it (increases take effect in 24 hours).'
+        : `Daily deposit limit reached: $${(today / 100).toFixed(2)} of $${(limit / 100).toFixed(2)} deposited today.`, 'daily_limit', 422);
     }
     // The success/cancel redirect origin is allowlisted, never taken raw from
     // the client: it must match the serving host, a base44 host, localhost

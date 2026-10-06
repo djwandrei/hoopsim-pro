@@ -18,7 +18,7 @@ import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsSt
 import { gradeBet, profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRobinCombos, TEASER_POINTS } from '@/components/book/betsMath';
 import { modelEdgePct } from '@/lib/bookRoom/modelEdge';
 import { base44 } from '@/api/base44Client';
-import { AlertTriangle, Coins, RefreshCcw, ShieldCheck, UserRound, Wallet } from 'lucide-react';
+import { AlertTriangle, Coins, RefreshCcw, UserRound, Wallet } from 'lucide-react';
 
 const BONUS_AMOUNT = 250;
 const BONUS_COOLDOWN = 24 * 3600 * 1000;

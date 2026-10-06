@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
@@ -15,6 +15,7 @@ import useCareerPool from '@/components/players/useCareerPool';
 import useSeasonSource from '@/hooks/useSeasonSource';
 
 export default function PlayerLab() {
+  const { pathname } = useLocation();
   const { year,setYear,years,source,state,error,retry } = useSeasonSource();
   const [selectedIds,setSelectedIds] = useState([]);
   const [phase,setPhase] = useState('regular');

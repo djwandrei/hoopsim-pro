@@ -1,4 +1,4 @@
-import { Users, FlaskConical, Swords, Zap, CalendarRange, LineChart, Disc3 } from 'lucide-react';
+import { Users, FlaskConical, Swords, Zap, CalendarRange, LineChart, Disc3, Banknote } from 'lucide-react';
 const EMBLEMS = 'https://www.djshouseofcards-comics.com/tools/swishiq-studio/assets/workbench-icons/';
 export const WORKBENCHES = [
   { path: '/players', icon: Users, emblem: `${EMBLEMS}player-blueprint-icon.webp`, title: 'Player Blueprint', tag: 'ATLAS & DOSSIERS', description: 'Scope the interactive league charts, then pin players to open their full observed dossiers.', flow: 'Atlas → Scope → Dossier', children: [{ path: '/players', title: 'League Atlas' }, { path: '/players/dossier', title: 'Player Dossier' }] },
@@ -8,6 +8,7 @@ export const WORKBENCHES = [
   { path: '/season', icon: CalendarRange, emblem: `${EMBLEMS}season-lab-icon.webp`, title: 'Season Lab', tag: 'SEASON REPLAYS', description: 'Replay the real schedule, review the fixed 16-team postseason, and follow the original season history.', flow: 'Schedule → Replay → Season history' },
   { path: '/career', icon: LineChart, emblem: `${EMBLEMS}career-lab-icon.webp`, title: 'Career Lab', tag: 'RECORDED CAREER HISTORY', description: 'Follow observed seasons and team stints across the original pooled 2017–26 archive.', flow: 'Player → Career path → History' },
   { path: '/spin', icon: Disc3, emblem: `${EMBLEMS}spin-room-icon.webp`, title: 'Spin Room', tag: 'ROLE DRAFT & DISCOVERY', description: 'Build a seeded player pool, set exclusions, and reveal repeatable no-repeat picks.', flow: 'Pool → Draw → Selection' },
+  { path: '/book', icon: Banknote, title: 'Book Room', tag: 'ODDS & BET TRACKING', description: 'Read real NBA money lines, spreads and totals, price wagers on the slip, and track every open bet to settlement with a play-money bankroll.', flow: 'Board → Bet slip → Track & settle' },
 ];
 
 // Daily games live outside the SwishIQ workbench system: not in the studio

@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
-import { fail } from '../../shared/realBookCore.ts';
+import { fail, audit } from '../../shared/realBookCore.ts';
 
 // Enrollment into the real-money book — validated server-side, so a client
 // can never enroll itself underage or from an unlicensed jurisdiction.

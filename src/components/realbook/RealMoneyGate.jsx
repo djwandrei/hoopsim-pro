@@ -28,10 +28,11 @@ export default function RealMoneyGate({ onAccepted }) {
   const [ageOk, setAgeOk] = useState(false);
   const [termsOk, setTermsOk] = useState(false);
   const [rgOk, setRgOk] = useState(false);
+  const [fundsOk, setFundsOk] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const age = dob ? ageFromDob(dob) : null;
-  const valid = age !== null && age >= 21 && Boolean(state) && ageOk && termsOk && rgOk;
+  const valid = age !== null && age >= 21 && Boolean(state) && ageOk && termsOk && rgOk && fundsOk;
 
   const submit = async event => {
     event.preventDefault();
@@ -69,6 +70,7 @@ export default function RealMoneyGate({ onAccepted }) {
         <label className="flex items-start gap-2.5"><input type="checkbox" checked={ageOk} onChange={event => setAgeOk(event.target.checked)} className="mt-0.5" /><span>I am at least 21 years old and will be physically located in my selected state whenever I wager.</span></label>
         <label className="flex items-start gap-2.5"><input type="checkbox" checked={termsOk} onChange={event => setTermsOk(event.target.checked)} className="mt-0.5" /><span>I accept the real-money house rules: official finals settle every wager, correlated same-game parlays are refused, maximum $500 staked per combo, and withdrawal requests are paid out within five business days.</span></label>
         <label className="flex items-start gap-2.5"><input type="checkbox" checked={rgOk} onChange={event => setRgOk(event.target.checked)} className="mt-0.5" /><span>I understand wagering carries a risk of loss. Daily deposit and loss limits apply and self-exclusion is available at any time. Problem gambling help: 1-800-GAMBLER.</span></label>
+        <label className="flex items-start gap-2.5"><input type="checkbox" checked={fundsOk} onChange={event => setFundsOk(event.target.checked)} className="mt-0.5" /><span>The funds I deposit are my own and from a lawful source; I am not wagering with or on behalf of any third party.</span></label>
       </div>
       {error && <p className="text-xs font-semibold text-trim-ink" role="alert">{error}</p>}
       <button type="submit" disabled={!valid || busy} className="w-full rounded-lg bg-gradient-to-r from-gold to-goldSoft py-2.5 text-xs font-bold uppercase tracking-widest text-canvas shadow-lg shadow-gold/20 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">{busy ? 'Verifying…' : 'Enter the real-money book'}</button>

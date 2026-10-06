@@ -58,6 +58,6 @@ export default function RealBetSlip({ legs, wallet, format, onRemoveLeg, onClear
     </div>
     {stakeDollars !== '' && !valid && <p className="mt-2 text-[11px] text-trim-ink">Stake must be $1–$500 per combo and within your available balance.</p>}
     <button type="button" disabled={!valid || busy} onClick={() => onPlace({ legs, stakeCents, mode })} className="mt-3 w-full rounded-lg bg-gradient-to-r from-gold to-goldSoft py-2.5 text-xs font-bold uppercase tracking-widest text-canvas shadow-lg shadow-gold/20 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">{busy ? 'Placing…' : 'Place real-money bet'}</button>
-    <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">Settled by official finals. No cash-out in this mode. 21+ · Gambling problem? Call 1-800-GAMBLER.</p>
+    <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">Settled by official finals. Wagers can't be cancelled once placed; the book accepts at the live market price and refuses stale or moved lines. Max payout $25,000 per combo. No cash-out in this mode. 21+ · Gambling problem? Call 1-800-GAMBLER.</p>
   </section>;
 }

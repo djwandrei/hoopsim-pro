@@ -104,12 +104,19 @@ export default function RealBook() {
     await loadAccount();
   });
   const saveLimits = ({ depositCents, lossCents }) => run(async () => {
-    await base44.entities.RealMoneyProfile.update(profile.id, { daily_deposit_limit_cents: depositCents, daily_loss_limit_cents: lossCents });
-    setNotice({ tone: 'ok', text: 'Responsible-gaming limits updated.' });
+    const response = await base44.functions.invoke('realBookUpdateLimits', { depositCents, lossCents });
+    setNotice({ tone: 'ok', text: response.data?.pending ? 'Limits saved — decreases applied immediately; increases take effect in 24 hours.' : 'Responsible-gaming limits updated.' });
     await loadAccount();
   });
   const selfExclude = () => run(async () => {
-    await base44.entities.RealMoneyProfile.update(profile.id, { self_excluded: true, self_excluded_at: new Date().toISOString() });
+    const response = await base44.functions.invoke('realBookSelfExclude', {});
+    const refunded = response.data?.refunded_cents || 0;
+    setNotice({ tone: 'ok', text: `Self-exclusion active through ${response.data?.self_excluded_until ? new Date(response.data.self_excluded_until).toLocaleDateString() : 'at least seven days'}${refunded ? ` — ${dollars(refunded)} in open wagers refunded.` : '.'}` });
+    await loadAccount();
+  });
+  const reinstate = () => run(async () => {
+    await base44.functions.invoke('realBookReinstate', {});
+    setNotice({ tone: 'ok', text: 'Self-exclusion lifted — the real-money book is available again.' });
     await loadAccount();
   });
   const placeRealBet = ({ legs, stakeCents, mode }) => run(async () => {
@@ -132,7 +139,8 @@ export default function RealBook() {
   if (profile.self_excluded) return <StudioShell active="/book"><WorkbenchHeader title="REAL-MONEY BOOK" description="Self-exclusion is active on your account." state="ready" status="Self-excluded" /><main className="mx-auto max-w-7xl px-4 py-6 sm:px-6"><section className="court-panel mx-auto max-w-2xl p-6" role="alert">
     <p className="bcast-kicker mb-2 text-trim-ink"><ShieldAlert className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" />Self-exclusion active</p>
     <h2 className="font-display text-2xl tracking-wide text-foreground">YOU'RE LOCKED OUT</h2>
-    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">Since {profile.self_excluded_at ? new Date(profile.self_excluded_at).toLocaleString() : 'now'}, deposits, withdrawals and wagers are refused on this account. If gambling is causing a problem for you or someone close to you, help is available around the clock at <span className="font-semibold text-foreground">1-800-GAMBLER</span>.</p>
+    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">Since {profile.self_excluded_at ? new Date(profile.self_excluded_at).toLocaleString() : 'now'}, deposits, withdrawals and wagers are refused on this account{profile.self_excluded_until ? ` until at least ${new Date(profile.self_excluded_until).toLocaleDateString()}` : ' until reinstatement'}. If gambling is causing a problem for you or someone close to you, help is available around the clock at <span className="font-semibold text-foreground">1-800-GAMBLER</span>.</p>
+    {profile.self_excluded_until && Date.now() >= Date.parse(profile.self_excluded_until) && <button type="button" onClick={reinstate} disabled={busy} className="mt-4 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20 disabled:opacity-40">Request reinstatement</button>}
   </section></main></StudioShell>;
 
   const balanceCents = Number(wallet?.balance_cents) || 0;
@@ -163,7 +171,7 @@ export default function RealBook() {
                 <button type="button" onClick={loadOdds} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gold hover:bg-gold/20"><RefreshCcw className="h-3.5 w-3.5" aria-hidden="true" />Retry</button>
               </section> :
                 feed.state === 'loading' ? <div className="court-panel grid place-items-center p-14 text-sm text-muted-foreground">Loading live prices…</div> :
-                  <OddsBoard games={feed.games} quota={feed.quota} movement={movement} boosts={boosts} format={format} model={model} bookFilter="" onBookFilter={() => {}} onPick={addLeg} onRefresh={loadOdds} loading={feed.state === 'loading'} />}
+                  <OddsBoard games={feed.games} quota={feed.quota} movement={movement} boosts={{}} format={format} model={model} bookFilter="" onBookFilter={() => {}} onPick={addLeg} onRefresh={loadOdds} loading={feed.state === 'loading'} />}
           </div>
         </div>
         <div className="min-w-0 self-start lg:sticky lg:top-[calc(var(--djhc-header-h,0px)+1rem)]">

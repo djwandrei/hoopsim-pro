@@ -8,6 +8,7 @@ const STATUS_META = {
   won: { label: 'Won', className: 'border-positive/60 text-positive', icon: CheckCircle2 },
   lost: { label: 'Lost', className: 'border-trim/60 text-trim-ink', icon: XCircle },
   push: { label: 'Push', className: 'border-border/60 text-muted-foreground', icon: Handshake },
+  void: { label: 'Void', className: 'border-border/60 text-muted-foreground', icon: Handshake },
   cashedout: { label: 'Cashed out', className: 'border-border/60 text-muted-foreground', icon: CircleDashed },
 };
 const MODE_LABEL = { single: 'Single', parlay: 'Parlay', roundrobin: 'Round robin', teaser: 'Teaser' };

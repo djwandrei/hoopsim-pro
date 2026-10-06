@@ -41,14 +41,14 @@ export default function RealWalletPanel({ wallet, profile, transactions, busy, o
       </div>
     </div>
     <div className="mt-4 space-y-2">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Request withdrawal (min $20)</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Request withdrawal (min $20 · one pending payout at a time · unsettled wagers block payouts)</p>
       <div className="flex items-center gap-2">
         <input type="number" min="20" step="1" value={withdrawDollars} onChange={event => setWithdrawDollars(event.target.value)} placeholder="Amount" className="studio-select" />
-        <button type="button" disabled={busy || !Number.isFinite(withdrawValue) || withdrawValue < 2000 || withdrawValue > balance} onClick={() => onWithdraw(withdrawValue)} className="shrink-0 rounded-lg border border-border/50 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-widest text-foreground transition-colors hover:border-gold/50 hover:text-gold disabled:cursor-not-allowed disabled:opacity-40">Withdraw</button>
+        <button type="button" disabled={busy || pending > 0 || !Number.isFinite(withdrawValue) || withdrawValue < 2000 || withdrawValue > balance} onClick={() => onWithdraw(withdrawValue)} className="shrink-0 rounded-lg border border-border/50 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-widest text-foreground transition-colors hover:border-gold/50 hover:text-gold disabled:cursor-not-allowed disabled:opacity-40">Withdraw</button>
       </div>
     </div>
     <div className="mt-4 space-y-2">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Responsible-gaming limits (per UTC day)</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Responsible-gaming limits (per UTC day · decreases apply now, increases after 24h)</p>
       <div className="grid gap-2 sm:grid-cols-2">
         <label className="block"><span className="mb-1 block text-[11px] text-muted-foreground">Daily deposit limit ($)</span><input type="number" min="10" step="1" value={depositLimit} onChange={event => setDepositLimit(event.target.value)} className="studio-select" /></label>
         <label className="block"><span className="mb-1 block text-[11px] text-muted-foreground">Daily loss limit ($)</span><input type="number" min="0" step="1" value={lossLimit} onChange={event => setLossLimit(event.target.value)} className="studio-select" /></label>
@@ -57,7 +57,7 @@ export default function RealWalletPanel({ wallet, profile, transactions, busy, o
     </div>
     <div className="mt-4 rounded-xl border border-trim/40 bg-trim/5 p-3">
       <p className="mb-1.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-trim-ink"><ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />Self-exclusion</p>
-      <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">Excludes you from the real-money book immediately — deposits, withdrawals and wagers are all refused. Take a break whenever you need one.</p>
+      <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">Excludes you from the real-money book immediately — deposits, withdrawals and wagers are all refused, and open wagers are voided with stakes refunded. Minimum 7-day exclusion.</p>
       <button type="button" disabled={busy} onClick={() => { if (window.confirm('Self-exclude now? You will be locked out of the real-money book immediately.')) onSelfExclude(); }} className="w-full rounded-lg border border-trim/50 bg-trim/10 py-2 text-[11px] font-semibold uppercase tracking-widest text-trim-ink transition-colors hover:bg-trim/20 disabled:opacity-40">Self-exclude immediately</button>
     </div>
     <div className="mt-4">

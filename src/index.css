@@ -309,3 +309,14 @@ body.dark-mode .studio-workspace tbody tr:nth-child(even) { background: transpar
 .studio-workspace tbody td:first-child { font-weight: 500; color: hsl(var(--foreground)); }
 .studio-workspace tbody tr:last-child td { border-bottom: 1px solid hsl(var(--border) / .35); }
 .studio-workspace td { transition: background-color .15s ease, color .15s ease; }
+
+/* === Game sim drama layer === */
+/* Final scores land with a rising tally; winners glow; the buzzer flashes */
+@keyframes score-pop { 0% { transform: scale(1.5); } 60% { transform: scale(.96); } 100% { transform: scale(1); } }
+.score-pop { animation: score-pop .38s cubic-bezier(.2, .8, .3, 1.25); }
+@keyframes winner-glow { 0%,100% { box-shadow: 0 0 0 hsl(var(--court-accent) / 0); } 50% { box-shadow: 0 0 34px hsl(var(--court-accent) / .3); } }
+.winner-glow { animation: winner-glow 2.4s ease-in-out infinite; }
+@keyframes buzzer-flash { 0% { background: hsl(var(--court-accent) / .4); border-color: hsl(var(--court-accent) / .8); } 100% { background: transparent; } }
+.buzzer-flash { animation: buzzer-flash 1.2s ease-out both; }
+@keyframes shine-sweep { from { transform: translateX(-140%); } to { transform: translateX(320%); } }
+.shine-sweep::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 32%; background: linear-gradient(100deg, transparent, hsl(220 38% 97% / .14), transparent); animation: shine-sweep 3s ease-in-out infinite; pointer-events: none; }

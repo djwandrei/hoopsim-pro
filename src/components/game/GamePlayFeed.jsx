@@ -54,6 +54,16 @@ export default function GamePlayFeed({ game, home, away, onComplete, onProgress 
   const visible = events.slice(Math.max(0, count - 16), count);
   const live = count < events.length;
   const pct = Math.round((count / events.length) * 100);
+  // Unanswered scoring run by one side over the trailing possessions (≥6 pts).
+  const run = (() => {
+    let team = null; let pts = 0;
+    for (let i = count - 1; i >= 0; i -= 1) {
+      const event = events[i];
+      if (!event.side || !(event.pts > 0) || (team && event.side !== team)) break;
+      team = event.side; pts += event.pts;
+    }
+    return team && pts >= 6 ? { team, pts } : null;
+  })();
 
   return (
     <section className="myna-panel p-4" aria-label="Live play-by-play feed">
@@ -76,12 +86,13 @@ export default function GamePlayFeed({ game, home, away, onComplete, onProgress 
 
       <div className="my-3 flex items-center justify-center gap-4">
         <span className="myna-display text-2xl" style={{ color: 'var(--matchup-away-color)' }}>{away.code}</span>
-        <span className="myna-mono text-5xl font-bold" style={{ color: 'var(--matchup-away-color)' }}>{score[1]}</span>
+        <span key={`away-${score[1]}`} className="score-pop myna-mono text-5xl font-bold" style={{ color: 'var(--matchup-away-color)' }}>{score[1]}</span>
         <span className="myna-mono myna-muted rounded-full border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3 py-1 text-[10px] tracking-[0.2em]">{current ? `${current.q} · ${live ? current.clock : 'FINAL'}` : 'PREGAME'}</span>
-        <span className="myna-mono text-5xl font-bold" style={{ color: 'var(--matchup-home-color)' }}>{score[0]}</span>
+        <span key={`home-${score[0]}`} className="score-pop myna-mono text-5xl font-bold" style={{ color: 'var(--matchup-home-color)' }}>{score[0]}</span>
         <span className="myna-display text-2xl" style={{ color: 'var(--matchup-home-color)' }}>{home.code}</span>
       </div>
       <div className="myna-bar"><span style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${awayPalette.primary}, ${homePalette.primary})` }} /></div>
+      {run && <div className="mt-2 flex justify-center"><span className="bcast-lowerthird">{run.team === 'home' ? home.code : away.code} · {run.pts}–0 RUN</span></div>}
 
       <div className="mt-3">
         <WinProbabilityChart events={events} count={count} homeCode={home.code} awayCode={away.code} />
@@ -93,7 +104,7 @@ export default function GamePlayFeed({ game, home, away, onComplete, onProgress 
           const palette = event.side ? (isHome ? homePalette : awayPalette) : null;
           const newest = i === visible.length - 1;
           return (
-            <div key={count - visible.length + i} data-team-theme={palette ? (isHome ? home.code : away.code) : undefined} style={palette ? teamThemeVars(isHome ? home.code : away.code, mode) : undefined} className={`flex items-center gap-2 rounded-lg border border-border/25 bg-canvas/50 px-2.5 py-1.5 text-xs ${newest && event.side ? (isHome ? 'broadcast-in-l' : 'broadcast-in-r') : ''}`}>
+            <div key={count - visible.length + i} data-team-theme={palette ? (isHome ? home.code : away.code) : undefined} style={palette ? teamThemeVars(isHome ? home.code : away.code, mode) : undefined}           className={`flex items-center gap-2 rounded-lg border border-border/25 bg-canvas/50 px-2.5 py-1.5 text-xs ${newest && event.type === 'final' ? 'buzzer-flash ' : ''}${newest && event.side && event.pts > 0 ? 'score-pop ' : ''}${newest && event.side ? (isHome ? 'broadcast-in-l' : 'broadcast-in-r') : ''}`}>
               <span className="myna-mono w-14 shrink-0 text-[10px] myna-muted">{event.q} {event.clock}</span>
               <span className="h-6 w-1 shrink-0 rounded-full" style={{ background: palette ? palette.primary : 'hsl(var(--court-accent))' }} />
               <span className="min-w-0 flex-1 truncate" title={event.text} style={event.type === 'period' || event.type === 'final' ? { color: 'hsl(var(--court-accent))' } : undefined}>{event.text}</span>

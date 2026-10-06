@@ -37,10 +37,11 @@ export default function GameRecap({ game, home, away }) {
 
   return (
     <section className="court-panel overflow-hidden" aria-label="Post-game recap">
-      <div className="p-5">
+      <div data-team-theme={winner.code} style={{ ...teamThemeVars(winner.code, mode), background: 'linear-gradient(115deg, color-mix(in srgb, var(--team-primary) 16%, transparent), transparent 65%)' }} className="shine-sweep relative overflow-hidden p-5">
         <span className="court-kicker">Post-game recap</span>
         <h2 className="court-display mt-1 text-3xl">{winner.name} take it {wPts}–{lPts}{otLabel}</h2>
         <span className="hero-rule mt-2" />
+        <p className="myna-mono mt-2 text-[10px] uppercase tracking-[0.18em]" style={{ color: 'var(--team-ink)' }}>{winner.code} close it out by {wPts - lPts}{game.ot ? ` · ${game.ot === 1 ? 'overtime' : `${game.ot}OT`} thriller` : ''}</p>
         {mvp && (
           <div data-team-theme={mvp.team} style={teamThemeVars(mvp.team, mode)} className="mt-3 inline-flex max-w-full items-center gap-2 rounded-lg border px-3 py-1.5 text-xs">
             <Crown className="h-3.5 w-3.5 shrink-0" />

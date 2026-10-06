@@ -24,7 +24,7 @@ function TeamLiveTable({ code, lines, mode }) {
           {lines.map(line => (
             <tr key={line.name} className="border-t border-[var(--myna-border)]">
               <td className="px-2 py-1 text-left font-medium">{line.name}</td>
-              <td className={`${cell} myna-mono font-semibold`} style={line.pts >= 10 ? { color: 'var(--team-ink)' } : undefined}>{line.pts}</td>
+              <td className={`${cell} myna-mono font-semibold`} style={line.pts >= 15 ? { color: 'var(--team-ink)', textShadow: '0 0 12px color-mix(in srgb, var(--team-primary) 60%, transparent)' } : line.pts >= 10 ? { color: 'var(--team-ink)' } : undefined}>{line.pts}{line.pts >= 15 && <span aria-hidden className="ml-1 inline-block h-1 w-1 rounded-full bg-trim align-middle animate-pulse" />}</td>
               <td className={`${cell} myna-mono`}>{line.reb}</td>
               <td className={`${cell} myna-mono`}>{line.ast}</td>
               <td className={`${cell} myna-mono`}>{line.stl}</td>

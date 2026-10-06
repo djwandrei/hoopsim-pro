@@ -130,7 +130,7 @@ export function prepareRows(rows: HarvestRow[], setInfo: SetInfo, poolNames: str
       cardNumber,
       variant,
       imageUrl: scanUrl,
-      grade: price10 != null ? 'PSA 10' : null,
+      grade: price10 != null ? '10' : null,
       tier,
       valueCents: price10,
       source: 'psa',

@@ -24,9 +24,9 @@ export default function ChemistryLab() {
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
       <SourceStatus state={season.state} error={season.error} year={season.year} years={season.years} onYearChange={season.setYear} onRetry={season.retry} />
       {season.state === 'ready' && <React.Fragment>
-        <div className="flex w-fit gap-1 rounded-xl border border-border/30 bg-card p-1">
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Chemistry views">
           {[['pair', 'Player comparison'], ['combinations', 'Observed lineups']].map(([value, label]) => (
-            <button key={value} type="button" aria-pressed={view === value} onClick={() => setView(value)} className={`flex min-h-10 items-center gap-2 rounded-lg border px-4 text-xs transition-colors ${view === value ? 'border-gold/30 bg-gradient-to-r from-gold/15 to-royal/10 font-semibold text-gold' : 'border-transparent font-medium text-muted-foreground hover:bg-raised hover:text-foreground'}`}>{value === 'combinations' ? <Users className="h-3.5 w-3.5" /> : null}{label}</button>
+            <button key={value} type="button" role="tab" aria-selected={view === value} onClick={() => setView(value)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${view === value ? 'border-gold/60 bg-gradient-to-r from-gold/15 to-royal/10 text-gold shadow-[0_0_18px_rgba(233,185,73,0.12)]' : 'border-border/30 text-muted-foreground hover:border-gold/40 hover:text-gold'}`}>{label}</button>
           ))}
         </div>
         {view === 'combinations' && chemistry.progress && <p role="status" className="court-panel flex items-center gap-3 p-4 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin text-gold" />{chemistry.progress}</p>}

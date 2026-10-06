@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import usePageMeta from '@/hooks/usePageMeta';
 import { ChevronDown } from 'lucide-react';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
 import StudioShell from '@/components/studio/StudioShell';
@@ -22,6 +23,7 @@ const CAREER_TABS = [['overview', 'CAREER PATH'], ['history', 'SEASON LEDGER'], 
 
 // Career Lab, rebuilt on the MyNBA-style hub shell used by Season and Game Lab.
 export default function CareerLab() {
+  usePageMeta({ title: 'Career Lab — SwishIQ Studio', description: 'Browse the full career archive: season trends, team changes, biographies and awards.' });
   const { source, players, state, error, retry } = useCareerArchive();
   const [player, setPlayer] = useState(null);
   const [view, setView] = useState('overview');

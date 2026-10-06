@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
@@ -11,6 +12,7 @@ import { observedPlayers } from '@/lib/season/labs';
 import SpinPoolBoard from '@/components/spin/SpinPoolBoard';
 import SpinHistory from '@/components/spin/SpinHistory';
 export default function SpinRoom() {
+  usePageMeta({ title: 'Spin Room — SwishIQ Studio', description: 'Spin the wheel to draft seeded player scenarios from real season data, with verifiable receipts.' });
   const { year,setYear,years,source,state,error,retry } = useSeasonSource();
   const [excluded,setExcluded] = useState([]);
   const [latest,setLatest] = useState(null);

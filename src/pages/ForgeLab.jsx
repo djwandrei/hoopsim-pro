@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
@@ -16,6 +17,7 @@ const DRAFT_MODES = [
 ];
 
 export default function ForgeLab() {
+  usePageMeta({ title: 'Forge Lab — SwishIQ Studio', description: 'Forge composite players and teams from real season data with live 3D build feedback.' });
   const data = useSeasonSource();
   const [mode, setMode] = useState('wheel');
   const Draft = mode === 'pick' ? ForgePickDraft : mode === 'team' || mode === 'teamPick' ? ForgeTeamDraft : ForgeBucketDraft;

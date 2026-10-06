@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import usePageMeta from '@/hooks/usePageMeta';
 import { AlertTriangle, Lock, Sparkles } from 'lucide-react';
 import GameShell from '@/components/dailyGames/GameShell';
 import LineupSimPanel from '@/components/dailyGames/LineupSimPanel';
@@ -30,6 +31,7 @@ function DraftSimPanel(props) {
 }
 
 export default function DraftNight() {
+  usePageMeta({ title: 'Draft Night — SwishIQ Studio', description: 'Build a five-player roster from the night’s board, lock it in, and see the verified simulation.' });
   const [picks, setPicks] = useState({});
   const [outcome, setOutcome] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);

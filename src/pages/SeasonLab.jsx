@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
@@ -19,6 +20,7 @@ import SeasonHistoryPanel from '@/components/season/SeasonHistoryPanel';
 import '@/components/season/seasonTables.css';
 
 export default function SeasonLab() {
+  usePageMeta({ title: 'Season Lab — SwishIQ Studio', description: 'Explore any published NBA season: standings, brackets, schedules, leaders and full season simulation.' });
   const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
   const sim = useSeasonSim();
   const [tab, setTab] = useState('hub');

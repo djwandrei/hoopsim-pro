@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -7,20 +8,23 @@ import { AuthProvider } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import { STANDALONE, SITE_BASE } from '@/lib/deployConfig';
+import RouteFallback from '@/components/studio/RouteFallback';
 // Add page imports here
+// Route code-splitting: the studio home stays eager; every workbench and
+// daily game loads on first visit so the landing paint stays light.
 import StudioHome from '@/pages/StudioHome';
-import SeasonLab from '@/pages/SeasonLab';
-import PlayerLab from '@/pages/PlayerLab';
-import ChemistryLab from '@/pages/ChemistryLab';
-import ForgeLab from '@/pages/ForgeLab';
-import GameLab from '@/pages/GameLab';
-import CareerLab from '@/pages/CareerLab';
-import SpinRoom from '@/pages/SpinRoom';
-import FixTheFive from '@/pages/FixTheFive';
-import DraftNight from '@/pages/DraftNight';
-import LineupLab from '@/pages/LineupLab';
-import LineupSharedResult from '@/pages/LineupSharedResult';
-import PoolRedesignMockup from '@/pages/PoolRedesignMockup';
+const SeasonLab = lazy(() => import('@/pages/SeasonLab'));
+const PlayerLab = lazy(() => import('@/pages/PlayerLab'));
+const ChemistryLab = lazy(() => import('@/pages/ChemistryLab'));
+const ForgeLab = lazy(() => import('@/pages/ForgeLab'));
+const GameLab = lazy(() => import('@/pages/GameLab'));
+const CareerLab = lazy(() => import('@/pages/CareerLab'));
+const SpinRoom = lazy(() => import('@/pages/SpinRoom'));
+const FixTheFive = lazy(() => import('@/pages/FixTheFive'));
+const DraftNight = lazy(() => import('@/pages/DraftNight'));
+const LineupLab = lazy(() => import('@/pages/LineupLab'));
+const LineupSharedResult = lazy(() => import('@/pages/LineupSharedResult'));
+const PoolRedesignMockup = lazy(() => import('@/pages/PoolRedesignMockup'));
 
 // Public studio: no login gate — every route is open. On the site the router
 // lives under /tools/swishiq-studio/ so existing site links keep working.
@@ -30,6 +34,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router basename={STANDALONE ? SITE_BASE : undefined}>
           <ScrollToTop />
+          <Suspense fallback={<RouteFallback />}>
           <Routes>
             {/* Add your page Route elements here */}
             <Route path="/" element={<StudioHome />} />
@@ -47,6 +52,7 @@ function App() {
             <Route path="/pool-mockup" element={<PoolRedesignMockup />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
+          </Suspense>
           <Toaster />
         </Router>
       </QueryClientProvider>

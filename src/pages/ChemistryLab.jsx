@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import usePageMeta from '@/hooks/usePageMeta';
 import { Loader2 } from 'lucide-react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
@@ -12,6 +13,7 @@ const DESCRIPTION = 'Compare a pair’s full-season profiles, play the compariso
 const STEPS = ['Pair profiles', 'Compare & challenge', 'Observed combinations'];
 
 export default function ChemistryLab() {
+  usePageMeta({ title: 'Chemistry Lab — SwishIQ Studio', description: 'Rate and explore two-man lineup chemistry across any published NBA season.' });
   const season = useSeasonSource();
   const entry = season.source?.entry;
   const chemistry = useChemistryData(entry);

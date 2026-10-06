@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
@@ -17,6 +18,7 @@ import PreGameDisclosure from '@/components/game/PreGameDisclosure';
 import LiveBoxScore from '@/components/game/LiveBoxScore';
 
 export default function GameLab() {
+  usePageMeta({ title: 'Game Lab — SwishIQ Studio', description: 'Simulate any NBA matchup or full seven-game series with live play-by-play and series momentum.' });
   const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
   const sim = useGameSim();
   const [tab, setTab] = useState('game');

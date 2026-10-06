@@ -23,7 +23,7 @@ export default function RealWalletPanel({ wallet, profile, transactions, busy, o
     <div className="grid gap-3 sm:grid-cols-2">
       <div className="rounded-xl border border-gold/30 bg-gold/5 p-3">
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Available balance</p>
-        <p className="font-display text-3xl text-gold">{dollars(balance)}</p>
+        <p className="broadcast-gradient-text font-display text-3xl">{dollars(balance)}</p>
       </div>
       <div className="rounded-xl border border-border/40 bg-raised/40 p-3 text-[11px] leading-relaxed text-muted-foreground">
         <p>Pending payout: <span className="font-mono text-foreground">{dollars(pending)}</span></p>

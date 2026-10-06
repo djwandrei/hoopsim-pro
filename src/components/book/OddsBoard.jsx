@@ -59,35 +59,38 @@ export function bookOptions(games) {
   return options;
 }
 
-function PriceButton({ label, offer, format, edge, onPick }) {
-  if (!offer) return <div className="grid h-11 place-items-center rounded-lg border border-dashed border-border/40 text-[11px] text-muted-foreground">—</div>;
-  return <button type="button" onClick={onPick} className="flex h-11 min-w-0 items-center gap-1.5 rounded-lg border border-border/50 bg-raised/50 px-2 text-left transition-all hover:border-gold/60 hover:bg-gold/10">
-    <span className="min-w-0 flex-1 truncate text-[11px] font-semibold text-foreground">{label}</span>
-    {Number.isFinite(edge) && Math.abs(edge) >= 2 && <span className={`shrink-0 font-mono text-[10px] ${edge >= 3 ? 'text-positive' : edge <= -3 ? 'text-trim-ink' : 'text-muted-foreground'}`} title="Studio model edge vs this price">{edge >= 0 ? '+' : ''}{edge.toFixed(1)}</span>}
-    {offer.trend === 'up' && <ArrowUpRight className="h-3 w-3 shrink-0 text-positive" aria-label="Price moved up" />}
-    {offer.trend === 'down' && <ArrowDownRight className="h-3 w-3 shrink-0 text-trim-ink" aria-label="Price moved down" />}
-    {offer.boosted && <span className="shrink-0 rounded bg-gold/25 px-1 py-px font-mono text-[9px] font-bold text-gold" title="Daily odds boost">B</span>}
-    <span className="shrink-0 font-mono text-xs font-bold text-gold">{formatOdds(offer.price, format)}</span>
+const spreadLabel = offer => (offer && Number.isFinite(offer.point) ? `${offer.point > 0 ? '+' : ''}${offer.point}` : '');
+
+// One price cell, sportsbook-style: the pick label sits above the mono price,
+// with the model edge, movement arrow and boost chip inline.
+function PriceButton({ cell, format }) {
+  if (!cell?.offer) return <div className="book-price-btn book-price-btn--empty" role="presentation">—</div>;
+  const { label, offer, edge, onPick } = cell;
+  return <button type="button" onClick={onPick} className="book-price-btn" aria-label={`Add ${label} at ${formatOdds(offer.price, format)}`}>
+    <span className="book-price-btn__label">
+      {label}
+      {Number.isFinite(edge) && Math.abs(edge) >= 2 && <span className={edge >= 3 ? 'text-positive' : edge <= -3 ? 'text-trim-ink' : 'text-muted-foreground'} title="Studio model edge vs this price">{edge >= 0 ? '+' : ''}{edge.toFixed(1)}</span>}
+    </span>
+    <span className="book-price-btn__price">
+      {offer.trend === 'up' && <ArrowUpRight className="h-3 w-3 shrink-0 text-positive" aria-label="Price moved up" />}
+      {offer.trend === 'down' && <ArrowDownRight className="h-3 w-3 shrink-0 text-trim-ink" aria-label="Price moved down" />}
+      {offer.boosted && <span className="book-boost" title="Daily odds boost">B</span>}
+      {formatOdds(offer.price, format)}
+    </span>
   </button>;
 }
 
-function TeamLine({ code, name }) {
-  return <div className="flex items-center gap-2">
-    <TeamMark code={code} name={name} className="h-8 w-8 text-[11px]" />
-    <span className="min-w-0 flex-1 truncate text-xs font-semibold text-foreground">{name}</span>
+function TeamCell({ code, name }) {
+  return <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+    <TeamMark code={code} name={name} className="h-7 w-7 shrink-0 text-[10px]" />
+    <span className="hidden min-w-0 truncate text-xs font-semibold text-foreground sm:block">{name}</span>
+    <span className="truncate text-[11px] font-semibold text-foreground sm:hidden">{code}</span>
   </div>;
 }
 
-function MarketColumn({ label, picks }) {
-  return <div className="space-y-1.5">
-    <p className="text-center text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-    {picks.map((pick, index) => <PriceButton key={index} {...pick} />)}
-  </div>;
-}
-
-// The odds board: sportsbook-style game cards — teams left, three dense
-// market columns right, live pricing, movement arrows, book shopping and
-// inline studio-model edge chips on every price.
+// The odds board: sportsbook-style game cards — matchup header, then a
+// DK/BetMGM-aligned market grid (team rows × ML/Spread/Total columns) with
+// live pricing, movement arrows, book shopping and inline model-edge chips.
 export default function OddsBoard({ games, quota, movement, boosts, format, model, bookFilter, onBookFilter, onPick, onRefresh, loading }) {
   const now = Date.now();
   const live = games.filter(game => Date.parse(game.commenceTime) <= now);
@@ -106,37 +109,51 @@ export default function OddsBoard({ games, quota, movement, boosts, format, mode
       const leg = { market, eventKey: game.eventKey, ...(market === 'total' ? { totalPick: side } : { pickSide: side }), ...(offer.line != null ? { line: offer.line } : {}) };
       return modelEdgePct(modelData, leg, Number(offer.price));
     };
-    const build = (market, side, offer, label) => offer ? {
-      label, offer, edge: edgeFor(market, side, offer),
-      onPick: () => onPick({ eventKey: game.eventKey, matchup: `${game.away} @ ${game.home}`, commenceTime: game.commenceTime, market, ...(market === 'total' ? { totalPick: side } : { pickSide: side }), label, ...(offer.line != null ? { line: offer.line } : {}), price: offer.price, book: offer.book }),
-    } : null;
-    const homeCode = CODE_BY_NAME[game.home], awayCode = CODE_BY_NAME[game.away];
-    const awayMl = apply('moneyline', 'away', bestMoneyline(books, 'away'));
-    const homeMl = apply('moneyline', 'home', bestMoneyline(books, 'home'));
-    const awaySpread = apply('spread', 'away', bestSpread(books, 'away'));
-    const homeSpread = apply('spread', 'home', bestSpread(books, 'home'));
-    const over = apply('total', 'over', bestTotal(books, 'over'));
-    const under = apply('total', 'under', bestTotal(books, 'under'));
+    const cell = (market, side, offer, label, pickLabel) => {
+      const priced = apply(market, side, offer);
+      if (!priced) return null;
+      return {
+        label, offer: priced, edge: edgeFor(market, side, priced),
+        onPick: () => onPick({ eventKey: game.eventKey, matchup: `${game.away} @ ${game.home}`, commenceTime: game.commenceTime, market, ...(market === 'total' ? { totalPick: side } : { pickSide: side }), label: pickLabel, ...(priced.line != null ? { line: priced.line } : {}), price: priced.price, book: priced.book }),
+      };
+    };
+    const awayCode = CODE_BY_NAME[game.away], homeCode = CODE_BY_NAME[game.home];
+    const cells = {
+      awayMl: cell('moneyline', 'away', bestMoneyline(books, 'away'), awayCode, `${game.away} ML`),
+      homeMl: cell('moneyline', 'home', bestMoneyline(books, 'home'), homeCode, `${game.home} ML`),
+      awaySp: cell('spread', 'away', bestSpread(books, 'away'), `${awayCode} ${spreadLabel(bestSpread(books, 'away'))}`, `${game.away} ${spreadLabel(bestSpread(books, 'away'))}`),
+      homeSp: cell('spread', 'home', bestSpread(books, 'home'), `${homeCode} ${spreadLabel(bestSpread(books, 'home'))}`, `${game.home} ${spreadLabel(bestSpread(books, 'home'))}`),
+      over: cell('total', 'over', bestTotal(books, 'over'), `O ${bestTotal(books, 'over')?.line ?? ''}`, bestTotal(books, 'over') ? `Over ${bestTotal(books, 'over').line}` : ''),
+      under: cell('total', 'under', bestTotal(books, 'under'), `U ${bestTotal(books, 'under')?.line ?? ''}`, bestTotal(books, 'under') ? `Under ${bestTotal(books, 'under').line}` : ''),
+    };
     const gameLive = Date.parse(game.commenceTime) <= now;
-    return <article key={game.eventKey} className="court-panel p-4">
-      <div className="grid gap-3 sm:grid-cols-[11rem_1fr] sm:gap-5">
-        <div className="space-y-2">
-          <TeamLine code={awayCode} name={game.away} />
-          <TeamLine code={homeCode} name={game.home} />
-        </div>
-        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-          <MarketColumn label="Moneyline" picks={[awayMl && { label: awayCode, offer: awayMl, format, edge: edgeFor('moneyline', 'away', awayMl), onPick: build('moneyline', 'away', awayMl, `${game.away} ML`).onPick }, homeMl && { label: homeCode, offer: homeMl, format, edge: edgeFor('moneyline', 'home', homeMl), onPick: build('moneyline', 'home', homeMl, `${game.home} ML`).onPick }].filter(Boolean)} />
-          <MarketColumn label="Spread" picks={[awaySpread && { label: `${awayCode} ${awaySpread.point > 0 ? '+' : ''}${awaySpread.point}`, offer: awaySpread, format, edge: edgeFor('spread', 'away', awaySpread), onPick: build('spread', 'away', awaySpread, `${game.away} ${awaySpread.point > 0 ? '+' : ''}${awaySpread.point}`).onPick }, homeSpread && { label: `${homeCode} ${homeSpread.point > 0 ? '+' : ''}${homeSpread.point}`, offer: homeSpread, format, edge: edgeFor('spread', 'home', homeSpread), onPick: build('spread', 'home', homeSpread, `${game.home} ${homeSpread.point > 0 ? '+' : ''}${homeSpread.point}`).onPick }].filter(Boolean)} />
-          <MarketColumn label="Total" picks={[over && { label: `O ${over.line}`, offer: over, format, edge: edgeFor('total', 'over', over), onPick: build('total', 'over', over, `Over ${over.line}`).onPick }, under && { label: `U ${under.line}`, offer: under, format, edge: edgeFor('total', 'under', under), onPick: build('total', 'under', under, `Under ${under.line}`).onPick }].filter(Boolean)} />
-        </div>
-      </div>
-      <div className="mt-3 flex items-center justify-between gap-2 border-t border-border/30 pt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5 normal-case tracking-normal">
-          {gameLive && <><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-trim" aria-hidden="true" /><span className="font-semibold uppercase tracking-widest text-trim-ink">Live</span></>}
+    return <article key={game.eventKey} className="book-card court-panel p-4">
+      <header className="flex items-center justify-between gap-2 border-b border-border/30 pb-2.5">
+        <p className="min-w-0 truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{game.away} @ {game.home}</p>
+        <span className="inline-flex shrink-0 items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+          {gameLive && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-trim" aria-hidden="true" />}
+          {gameLive && <span className="font-semibold text-trim-ink">Live</span>}
           <CalendarClock className="h-3 w-3" aria-hidden="true" />{formatCommence(game.commenceTime)}
         </span>
-        <span>{books.length} book{books.length === 1 ? '' : 's'}{modelData ? ' · simmed' : ''}</span>
+      </header>
+      <div className="mt-3 grid grid-cols-[3.4rem_repeat(3,minmax(0,1fr))] items-stretch gap-1.5 sm:grid-cols-[8rem_repeat(3,minmax(0,1fr))] sm:gap-2">
+        <span aria-hidden="true" />
+        <p className="book-market-head">ML</p>
+        <p className="book-market-head">Spread</p>
+        <p className="book-market-head">Total</p>
+        <TeamCell code={awayCode} name={game.away} />
+        <PriceButton cell={cells.awayMl} format={format} />
+        <PriceButton cell={cells.awaySp} format={format} />
+        <PriceButton cell={cells.over} format={format} />
+        <TeamCell code={homeCode} name={game.home} />
+        <PriceButton cell={cells.homeMl} format={format} />
+        <PriceButton cell={cells.homeSp} format={format} />
+        <PriceButton cell={cells.under} format={format} />
       </div>
+      <footer className="mt-3 flex items-center justify-between gap-2 border-t border-border/30 pt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+        <span>{books.length} book{books.length === 1 ? '' : 's'} · best price per side</span>
+        <span>{modelData ? 'simmed · edge chips live' : 'no sim data'}</span>
+      </footer>
     </article>;
   };
   return <section className="space-y-4" aria-label="Odds board">

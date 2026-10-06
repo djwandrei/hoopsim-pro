@@ -15,7 +15,7 @@ export default function WalletPanel({ bankroll, ledger, bonusReady, onClaim }) {
       {bonusReady ? <button type="button" onClick={onClaim} className="inline-flex items-center gap-1.5 rounded-lg border border-positive/50 bg-positive/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-positive transition-colors hover:bg-positive/20"><Gift className="h-3.5 w-3.5" aria-hidden="true" />Claim +250 daily bonus</button> :
         <span className="rounded-lg border border-border/50 px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">Daily bonus on cooldown</span>}
     </div>
-    <p className="mt-1 font-display text-3xl tracking-wide text-foreground">{bankroll.toLocaleString()} cr</p>
+    <p className="broadcast-gradient-text mt-1 font-display text-3xl tracking-wide">{bankroll.toLocaleString()} cr</p>
     <p className="mt-1 text-[11px] text-muted-foreground">Play-money currency for this studio's book. A fresh +250 credit grant unlocks every 24 hours.</p>
     {shown.length > 0 && <div className="mt-3 border-t border-border/30 pt-3">
       <p className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground"><History className="h-3 w-3" aria-hidden="true" />Recent movements</p>

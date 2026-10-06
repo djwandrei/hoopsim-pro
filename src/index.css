@@ -324,3 +324,25 @@ body.dark-mode .studio-workspace tbody tr:nth-child(even) { background: transpar
 /* === Final design pass: one gentle entrance for every studio page's content === */
 .studio-workspace main { animation: rise-in .45s cubic-bezier(.2, .8, .3, 1) both; }
 @media (prefers-reduced-motion: reduce) { .studio-workspace main { animation: none; } }
+
+/* === Book Room & Real-Money Book: shared sportsbook design layer === */
+/* Board cards: quieter base, brighter hover, aligned market grid */
+.book-card { transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.book-card:hover { border-color: hsl(var(--court-accent) / .35); box-shadow: 0 14px 34px hsl(var(--court-canvas) / .5); transform: translateY(-1px); }
+.book-market-head { align-self: end; padding-bottom: .1rem; text-align: center; font-size: .65rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+/* Price cells: stacked label-over-price buttons, shared by both books */
+.book-price-btn { display: flex; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: .1rem; min-height: 3.1rem; border-radius: .6rem; border: 1px solid hsl(var(--border) / .5); background: linear-gradient(180deg, hsl(var(--court-raised) / .55), hsl(var(--court-raised) / .25)); padding: .35rem .5rem; transition: border-color .15s ease, background-color .15s ease, transform .12s ease, box-shadow .15s ease; }
+.book-price-btn:hover { border-color: hsl(var(--court-accent) / .6); background: hsl(var(--court-accent) / .09); transform: translateY(-1px); box-shadow: 0 6px 16px hsl(var(--court-canvas) / .45); }
+.book-price-btn:active { transform: translateY(0); }
+.book-price-btn__label { display: flex; max-width: 100%; align-items: baseline; gap: .3rem; overflow: hidden; font-size: .6rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: hsl(var(--muted-foreground)); white-space: nowrap; }
+.book-price-btn__price { display: inline-flex; align-items: center; gap: .3rem; font-family: var(--font-mono); font-size: .85rem; font-weight: 700; color: hsl(var(--court-accent)); font-variant-numeric: tabular-nums; }
+.book-price-btn--empty { display: grid; place-items: center; border-style: dashed; color: hsl(var(--muted-foreground) / .55); }
+.book-boost { display: inline-grid; place-items: center; border-radius: .25rem; background: hsl(var(--court-accent) / .25); padding: 0 .22rem; font-family: var(--font-mono); font-size: .55rem; font-weight: 700; color: hsl(var(--court-accent)); }
+/* Slip payout summary: ticket treatment with perforated edges */
+.slip-ticket { position: relative; border: 1px dashed hsl(var(--court-accent) / .45); border-radius: .7rem; background: hsl(var(--court-canvas) / .55); padding: .95rem 1.1rem; }
+.slip-ticket::before, .slip-ticket::after { content: ''; position: absolute; top: 50%; width: .9rem; height: .9rem; transform: translateY(-50%); border-radius: 50%; background: hsl(var(--card)); border: 1px dashed hsl(var(--court-accent) / .45); }
+.slip-ticket::before { left: -.5rem; }
+.slip-ticket::after { right: -.5rem; }
+/* Gold CTA: one shared shine treatment */
+.book-cta { position: relative; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .book-card, .book-price-btn { transition: none; } }

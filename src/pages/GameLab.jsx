@@ -16,6 +16,8 @@ import SeriesBoard from '@/components/game/SeriesBoard';
 import GameMatchupTheme from '@/components/game/GameMatchupTheme';
 import PreGameDisclosure from '@/components/game/PreGameDisclosure';
 import LiveBoxScore from '@/components/game/LiveBoxScore';
+import SavedResultsShelf from '@/components/game/SavedResultsShelf';
+import { loadSavedResults, saveSavedResult, removeSavedResult } from '@/lib/savedResults';
 
 export default function GameLab() {
   usePageMeta({ title: 'Game Lab — SwishIQ Studio', description: 'Simulate any NBA matchup or full seven-game series with live play-by-play and series momentum.' });
@@ -56,6 +58,30 @@ export default function GameLab() {
   }, [tab, a, b, sim.seed, sim.neutral]);
   const shareLink = React.useCallback(() => navigator.clipboard.writeText(window.location.href), []);
 
+  // Saved-results shelf: pin completed games and series by their call and
+  // re-open them later. Opening a call from another season switches the
+  // season source first, then replays the call once that league is ready.
+  const [saved, setSaved] = useState(loadSavedResults);
+  const [pendingOpen, setPendingOpen] = useState(null);
+  const openSaved = entry => {
+    if (entry.year !== year) setYear(entry.year);
+    setTab(entry.kind === 'series' ? 'series' : 'game');
+    setA(entry.a);
+    setB(entry.b);
+    sim.setSeed(entry.seed);
+    sim.setNeutral(Boolean(entry.neutral));
+    setPendingOpen(entry);
+  };
+  useEffect(() => {
+    if (!pendingOpen || !league || year !== pendingOpen.year) return;
+    const home = league.byCode.get(pendingOpen.a);
+    const away = league.byCode.get(pendingOpen.b);
+    setPendingOpen(null);
+    if (!home || !away) return;
+    if (pendingOpen.kind === 'series') sim.runSeries(league, home, away, { seed: pendingOpen.seed, neutral: pendingOpen.neutral });
+    else sim.runGame(league, home, away, { seed: pendingOpen.seed, neutral: pendingOpen.neutral });
+  }, [pendingOpen, league, year, sim]);
+
   if (state !== 'ready' || !league) {
     return (
       <StudioShell active="/game" followTeam="djhc">
@@ -74,6 +100,26 @@ export default function GameLab() {
   const breakdown = simProps => (
     <MatchupBreakdown league={league} source={source} year={year} a={a} b={b} onA={setA} onB={setB} teamA={home} teamB={away} {...simProps} />
   );
+
+  // The current finished result, expressed as a shelf entry (same call that
+  // produced it), so "save" pins exactly what the user is looking at.
+  const currentResult = sim.game
+    ? {
+      id: `game-${sim.game.home}-${sim.game.away}-${sim.seed}-${sim.neutral ? 1 : 0}`,
+      kind: 'game', a: sim.game.home, b: sim.game.away,
+      seed: String(sim.seed), neutral: sim.neutral, year, saved: Date.now(),
+      label: `${league.byCode.get(sim.game.away)?.name || sim.game.away} @ ${league.byCode.get(sim.game.home)?.name || sim.game.home}`,
+      score: `${sim.game.awayPts}–${sim.game.homePts}`,
+    }
+    : sim.series
+      ? {
+        id: `series-${sim.series.home}-${sim.series.away}-${sim.seed}-${sim.neutral ? 1 : 0}`,
+        kind: 'series', a: sim.series.home, b: sim.series.away,
+        seed: String(sim.seed), neutral: sim.neutral, year, saved: Date.now(),
+        label: `${league.byCode.get(sim.series.home)?.name || sim.series.home} vs ${league.byCode.get(sim.series.away)?.name || sim.series.away}`,
+        score: `${sim.series.homeWins}–${sim.series.awayWins}`,
+      }
+      : null;
 
   return (
     <StudioShell active="/game" followTeam="djhc">
@@ -129,6 +175,14 @@ export default function GameLab() {
             </div>
           }
         </MyNbaHub>
+        <SavedResultsShelf
+          entries={saved}
+          canSave={Boolean(currentResult)}
+          onSave={() => currentResult && setSaved(saveSavedResult(currentResult))}
+          onOpen={openSaved}
+          onRemove={id => setSaved(removeSavedResult(id))}
+          year={year}
+        />
       </main>
     </GameMatchupTheme>
       </StudioShell>);

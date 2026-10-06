@@ -22,15 +22,22 @@ export default function useGameSim(initial = {}) {
   const [game, setGame] = useState(null);
   const [series, setSeries] = useState(readStoredSeries);
 
-  const runGame = useCallback((league, home, away) => {
+  // An optional override lets a caller replay a saved call without waiting
+  // for the seed/neutral state setters to commit (e.g. the results shelf).
+  const runGame = useCallback((league, home, away, override = {}) => {
     if (!league || !home || !away) return;
-    const result = simSingleGame(league, home, away, { seed: Number(seed) || 1, neutral, log: true });
+    const result = simSingleGame(league, home, away, {
+      seed: Number(override.seed ?? seed) || 1,
+      neutral: override.neutral ?? neutral,
+      log: true,
+    });
     setGame({ ...result, home: home.code, away: away.code, stamp: Date.now() });
   }, [seed, neutral]);
 
-  const runSeries = useCallback((league, home, away) => {
+  const runSeries = useCallback((league, home, away, override = {}) => {
     if (!league || !home || !away) return;
-    const baseSeed = Number(seed) || 1;
+    const baseSeed = Number(override.seed ?? seed) || 1;
+    const useNeutral = override.neutral ?? neutral;
     const games = [];
     let homeWins = 0;
     let awayWins = 0;
@@ -40,7 +47,7 @@ export default function useGameSim(initial = {}) {
       const homeHosts = SERIES_PATTERN.includes(number);
       const host = homeHosts ? home : away;
       const visitor = homeHosts ? away : home;
-      const result = simSingleGame(league, host, visitor, { seed: baseSeed + number * 100, neutral });
+      const result = simSingleGame(league, host, visitor, { seed: baseSeed + number * 100, neutral: useNeutral });
       const hostPts = result.homePts;
       const visitorPts = result.awayPts;
       const hostWon = hostPts > visitorPts;

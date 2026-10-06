@@ -17,6 +17,8 @@ import LeagueLeaders from '@/components/season/LeagueLeaders';
 import LeagueAwards from '@/components/season/LeagueAwards';
 import SeasonSummaryPanel from '@/components/season/SeasonSummaryPanel';
 import SeasonHistoryPanel from '@/components/season/SeasonHistoryPanel';
+import SeasonCompare from '@/components/season/SeasonCompare';
+import { actualRecordsFrom } from '@/lib/season/seasonRecords';
 import '@/components/season/seasonTables.css';
 
 export default function SeasonLab() {
@@ -36,22 +38,7 @@ export default function SeasonLab() {
     if (code) window.dispatchEvent(new CustomEvent('djhc-court-team-follow', { detail: code }));
   }, [league, focus]);
 
-  const actualRecords = useMemo(() => {
-    const map = new Map();
-    for (const game of source?.schedule || []) {
-      if (!game.actual) continue;
-      const homeWon = game.actual.home > game.actual.away;
-      const winner = homeWon ? game.home : game.away;
-      const loser = homeWon ? game.away : game.home;
-      if (!map.has(winner)) map.set(winner, { w: 0, l: 0, gp: 0 });
-      if (!map.has(loser)) map.set(loser, { w: 0, l: 0, gp: 0 });
-      const winRow = map.get(winner);
-      const lossRow = map.get(loser);
-      winRow.w += 1; winRow.gp += 1;
-      lossRow.l += 1; lossRow.gp += 1;
-    }
-    return map;
-  }, [source]);
+  const actualRecords = useMemo(() => actualRecordsFrom(source?.schedule || []), [source]);
 
   if (state !== 'ready' || !league) {
     return (
@@ -119,6 +106,9 @@ export default function SeasonLab() {
             )}
             {tab === 'standings' && (
               <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} />
+            )}
+            {tab === 'compare' && (
+              <SeasonCompare year={year} source={source} league={league} focusCode={team.code} onFocusChange={setFocus} />
             )}
             {tab === 'bracket' && (
               <PlayoffBracket bracket={sim.result?.bracket} onFocusChange={setFocus} />

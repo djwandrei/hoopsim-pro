@@ -19,11 +19,14 @@ export default function BetSlip({ legs, bankroll, format, onRemoveLeg, onClear, 
   const rrEligible = legs.length >= 3;
   const mode = modeChoice === 'teaser' && teaserEligible ? 'teaser' : modeChoice === 'roundrobin' && rrEligible ? 'roundrobin' : 'parlay';
   const combos = mode === 'roundrobin' ? roundRobinCombos(legs, 2) : [];
-  const price = mode === 'teaser' ? teaserPrice(legs.length) : parlayAmerican(mode === 'roundrobin' ? combos[0] : legs);
+  // Real round robins price every 2-leg combo at its own combined price.
+  const comboPrices = mode === 'roundrobin' ? combos.map(parlayAmerican) : [];
+  const price = mode === 'teaser' ? teaserPrice(legs.length) : mode === 'roundrobin' ? comboPrices[0] : parlayAmerican(legs);
   const value = Number(stake);
   const outlay = Number.isFinite(value) && value > 0 && mode === 'roundrobin' ? value * combos.length : value;
   const valid = Number.isFinite(value) && value > 0 && outlay <= bankroll;
-  const win = valid ? profitFor(value, price) : null;
+  const win = valid ? (mode === 'roundrobin' ? combos.reduce((sum, _, index) => sum + profitFor(value, comboPrices[index]), 0) : profitFor(value, price)) : null;
+  const totalReturn = valid ? value + win : null;
   return <section className="court-panel p-4" aria-label="Bet slip">
     <div className="flex items-center justify-between gap-2">
       <p className="bcast-kicker">{legs.length > 1 ? (mode === 'roundrobin' ? `Round robin · ${combos.length} combos` : `${legs.length}-leg ${MODE_LABEL[mode].toLowerCase()}`) : `Bet slip · 1 pick`}</p>
@@ -35,10 +38,11 @@ export default function BetSlip({ legs, bankroll, format, onRemoveLeg, onClear, 
       <span className="shrink-0 font-mono text-xs font-bold text-gold">{formatOdds(leg.price, format)}</span>
       <button type="button" onClick={() => onRemoveLeg(index)} aria-label={`Remove ${leg.label} from slip`} className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:text-trim-ink"><X className="h-3.5 w-3.5" aria-hidden="true" /></button>
     </li>)}</ul>
+    <p className="mt-2 text-[10px] uppercase tracking-widest text-muted-foreground">One pick per game — correlated same-game parlays aren't offered.</p>
     {legs.length >= 2 && <div className="mt-2 flex flex-wrap gap-1.5">
       {['parlay', ...(rrEligible ? ['roundrobin'] : []), ...(teaserEligible ? ['teaser'] : [])].map(option => <button key={option} type="button" onClick={() => setModeChoice(option)} className={`rounded-md border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-colors ${mode === option ? 'border-gold/50 bg-gold/15 text-gold' : 'border-border/50 text-muted-foreground hover:text-foreground'}`}>{MODE_LABEL[option]}</button>)}
     </div>}
-    {legs.length > 1 && mode !== 'teaser' && <p className="mt-2 rounded-lg border border-gold/30 bg-gold/5 px-3 py-2 text-[11px] text-muted-foreground">Combined price <span className="font-mono font-semibold text-gold">{formatOdds(price, format)}</span> — {mode === 'roundrobin' ? `every 2-leg combo is its own ${formatOdds(price, format)} parlay, staked per combo.` : 'every leg must win for the parlay to pay.'}</p>}
+    {legs.length > 1 && mode !== 'teaser' && <p className="mt-2 rounded-lg border border-gold/30 bg-gold/5 px-3 py-2 text-[11px] text-muted-foreground">Combined price <span className="font-mono font-semibold text-gold">{formatOdds(price, format)}</span> — {mode === 'roundrobin' ? `every 2-leg combo is its own parlay at its own price (${comboPrices.map(comboPrice => formatOdds(comboPrice, format)).join(', ')}), staked per combo.` : 'every leg must win for the parlay to pay.'}</p>}
     {mode === 'teaser' && <p className="mt-2 rounded-lg border border-gold/30 bg-gold/5 px-3 py-2 text-[11px] text-muted-foreground">6-point teaser: spreads get +6, totals move 6 in your favor, payout <span className="font-mono font-semibold text-gold">{formatOdds(price, format)}</span> — every leg must still win.</p>}
     <label className="mt-3 block">
       <span className="mb-1.5 flex items-baseline justify-between text-xs"><span className="font-medium text-muted-foreground">Stake (credits)</span><span className="font-mono text-[11px] text-gold">{bankroll.toLocaleString()} available{mode === 'roundrobin' ? ` · ${combos.length}× combos` : ''}</span></span>
@@ -47,7 +51,7 @@ export default function BetSlip({ legs, bankroll, format, onRemoveLeg, onClear, 
     <div className="mt-2 flex gap-1.5">{[10, 25, 50, 100].map(amount => <button key={amount} type="button" onClick={() => setStake(String(amount))} className="rounded-md border border-border/50 px-2.5 py-1 font-mono text-[11px] text-muted-foreground transition-colors hover:border-gold/50 hover:text-gold">{amount}</button>)}</div>
     <div className="mt-3 rounded-lg border border-border/40 bg-raised/40 p-3 text-xs">
       {mode === 'roundrobin' && <div className="flex justify-between"><span className="text-muted-foreground">Total outlay</span><span className="font-mono text-foreground">{valid ? `${outlay.toLocaleString()} cr` : '—'}</span></div>}
-      <div className={`flex justify-between ${mode === 'roundrobin' ? 'mt-1' : ''}`}><span className="text-muted-foreground">To return{mode === 'roundrobin' ? ' per combo' : ''}</span><span className="font-mono text-foreground">{valid ? `${(value + win).toLocaleString(undefined, { maximumFractionDigits: 2 })} cr` : '—'}</span></div>
+      <div className={`flex justify-between ${mode === 'roundrobin' ? 'mt-1' : ''}`}><span className="text-muted-foreground">To return if all win</span><span className="font-mono text-foreground">{valid ? `${totalReturn.toLocaleString(undefined, { maximumFractionDigits: 2 })} cr` : '—'}</span></div>
       <div className="mt-1 flex justify-between"><span className="text-muted-foreground">Profit if it wins</span><span className="font-mono font-semibold text-positive">{valid ? `+${win.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '—'}</span></div>
     </div>
     {stake !== '' && !valid && <p className="mt-2 text-[11px] text-trim-ink">Enter a stake between 1 and your bankroll.</p>}

@@ -93,29 +93,37 @@ export function gradeLeg(leg, final) {
 }
 
 // Grade a bet (single or parlay) given a resolver eventKey → final scores.
-// Parlay rules: any lost leg loses the bet; a push leg pushes the whole slip.
+// Rules: a lost leg loses the bet. A pushed parlay leg is removed and the
+// slip reprices on the remaining legs (a single-leg push grades the bet a
+// push). Teasers follow the classic rule: any pushed leg pushes the teaser.
+// Returns { status, price } so reduced parlays pay at their reduced price.
 export function gradeBet(bet, finalFor) {
   const raw = bet.legs?.length ? bet.legs : [bet];
   // Teaser legs are graded on their adjusted (moved) lines.
   const legs = bet.teaser ? raw.map(leg => leg.market === 'spread'
     ? { ...leg, line: Number(leg.line) + bet.teaserPoints }
     : leg.market === 'total' ? { ...leg, line: Number(leg.line) + (leg.totalPick === 'under' ? bet.teaserPoints : -bet.teaserPoints) } : leg) : raw;
-  let anyLost = false, anyPush = false;
+  const results = [];
   for (const leg of legs) {
     const final = finalFor(leg.eventKey ?? bet.eventKey);
     if (!final) return null;
     const result = gradeLeg(leg, final);
     if (!result) return null;
-    if (result === 'lost') anyLost = true;
-    else if (result === 'push') anyPush = true;
+    results.push(result);
   }
-  if (anyLost) return 'lost';
-  if (anyPush) return 'push';
-  return 'won';
+  if (results.includes('lost')) return { status: 'lost', price: bet.price };
+  const kept = legs.filter((_, index) => results[index] !== 'push');
+  if (kept.length === 0) return { status: 'push', price: bet.price };
+  if (kept.length === legs.length) return { status: 'won', price: bet.price };
+  if (bet.teaser) return { status: 'push', price: bet.price };
+  return { status: 'won', price: kept.length === 1 ? kept[0].price : parlayAmerican(kept) };
 }
 
 // Early cash-out: the bet's potential return discounted by the pick's live
-// price. Returns null when any leg is no longer priced on the board.
+// price, paid at a slight house margin (no win-only floor — like real books,
+// a losing position cashes out below stake). Returns null when any leg is no
+// longer priced on the board.
+export const CASH_OUT_MARGIN = 0.95;
 export function cashOutValue(bet, currentPriceFor) {
   const legs = bet.legs?.length ? bet.legs : [bet];
   const potential = bet.stake * americanToDecimal(bet.price);
@@ -125,6 +133,6 @@ export function cashOutValue(bet, currentPriceFor) {
     if (!Number.isFinite(price)) return null;
     current *= americanToDecimal(price);
   }
-  const value = potential / current;
-  return Math.round(Math.max(value, bet.stake * 0.5) * 100) / 100;
+  const value = potential / current * CASH_OUT_MARGIN;
+  return Math.round(Math.max(value, 0.1) * 100) / 100;
 }

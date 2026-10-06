@@ -125,10 +125,12 @@ export default function BookRoom() {
           const result = gradeBet(bet, key => finals.find(item => item.eventKey === key));
           if (!result) return bet;
           changed = true;
-          const returned = result === 'won' ? bet.stake + profitFor(bet.stake, bet.price) : result === 'push' ? bet.stake : 0;
+          // Reduced parlays pay at their reduced price.
+          const payoutPrice = Number.isFinite(result.price) ? result.price : bet.price;
+          const returned = result.status === 'won' ? bet.stake + profitFor(bet.stake, payoutPrice) : result.status === 'push' ? bet.stake : 0;
           bankroll += returned;
-          entries.push({ id: `settle-${bet.id}`, at: new Date().toISOString(), type: result === 'push' ? 'void' : 'payout', label: `${result === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`, amount: returned });
-          return { ...bet, status: result, settledAt: new Date().toISOString(), profit: returned - bet.stake };
+          entries.push({ id: `settle-${bet.id}`, at: new Date().toISOString(), type: result.status === 'push' ? 'void' : 'payout', label: `${result.status === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`, amount: returned });
+          return { ...bet, status: result.status, price: payoutPrice, settledAt: new Date().toISOString(), profit: returned - bet.stake };
         });
         return changed ? { ...current, bankroll, bets, ledger: pushLedger(current.ledger, entries) } : current;
       });
@@ -157,9 +159,9 @@ export default function BookRoom() {
     const at = new Date().toISOString();
     if (mode === 'roundrobin') {
       const combos = roundRobinCombos(legs, 2);
-      const price = parlayAmerican(combos[0]);
       const outlay = stake * combos.length;
-      const bets = combos.map(combo => makeBet(combo, stake, price, { roundRobin: true }));
+      // Each combo is its own parlay at its own combined price.
+      const bets = combos.map(combo => makeBet(combo, stake, parlayAmerican(combo), { roundRobin: true }));
       setBook(current => ({ ...current, bankroll: current.bankroll - outlay, bets: [...bets, ...current.bets], ledger: pushLedger(current.ledger, { id: `bet-${bets[0].id}`, at, type: 'bet', label: `Round robin: ${legs.length} legs × ${combos.length} combos`, amount: -outlay }) }));
     } else if (mode === 'teaser') {
       const bet = makeBet(legs, stake, teaserPrice(legs.length), { teaser: true, teaserPoints: TEASER_POINTS, parlay: false });
@@ -173,7 +175,9 @@ export default function BookRoom() {
 
   // Picks carry the studio model's edge vs the taken price straight into the
   // slip, the placed bet and the settled ledger.
+  // Real books don't take correlated same-game parlays: one pick per event.
   const addLeg = leg => {
+    if (slipLegs.some(existing => existing.eventKey === leg.eventKey)) return;
     const modelData = model?.byEvent?.[leg.eventKey];
     const edge = modelData ? modelEdgePct(modelData, leg, leg.price) : null;
     setSlipLegs(current => [...current, Number.isFinite(edge) ? { ...leg, modelEdge: edge } : leg]);

@@ -24,20 +24,21 @@ export default async function(req) {
     const until = permanent ? null : new Date(Date.now() + DURATION_MS[days]).toISOString();
     const open = await base44.entities.RealBet.filter({ status: 'open' }, { limit: 100 });
     const items = open.items || [];
-    const wallet = await ensureWallet(base44);
+    const wallet = await ensureWallet(base44, gate.user.id);
     let balance = Number(wallet.balance_cents) || 0;
     let refunded = 0;
     for (const bet of items) {
       refunded += Number(bet.stake_cents) || 0;
-      await base44.entities.RealBet.update(bet.id, { status: 'void', settled_profit_cents: 0 });
+      await base44.asServiceRole.entities.RealBet.update(bet.id, { status: 'void', settled_profit_cents: 0 });
     }
     if (refunded > 0) balance += refunded;
     await base44.asServiceRole.entities.RealMoneyProfile.update(profile.id, {
       self_excluded: true, self_excluded_at: new Date().toISOString(), self_excluded_until: until,
     });
     if (refunded > 0) {
-      await base44.entities.RealWallet.update(wallet.id, { balance_cents: balance });
-      await base44.entities.RealTransaction.create({
+      await base44.asServiceRole.entities.RealWallet.update(wallet.id, { balance_cents: balance });
+      await base44.asServiceRole.entities.RealTransaction.create({
+        created_by_id: gate.user.id,
         type: 'void', amount_cents: refunded, status: 'completed',
         label: `Refund on self-exclusion: ${items.length} open bet${items.length === 1 ? '' : 's'}`,
         balance_after_cents: balance,

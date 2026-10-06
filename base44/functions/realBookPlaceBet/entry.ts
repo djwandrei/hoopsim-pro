@@ -7,7 +7,7 @@ import { fail, requireGate, ensureWallet, lostTodayCents } from '../../shared/re
 // are never trusted), refuses started games, expired prices, moved lines and
 // palpable errors, bans correlated same-game parlays, applies the $25,000
 // max-payout cap, the daily loss limit and the balance check, then debits
-// the wallet and writes immutable ledger entries.
+// the wallet and writes immutable ledger entries — all via the service role.
 const MIN_STAKE_CENTS = 100;
 const MAX_STAKE_CENTS = 50000;
 const MAX_LEGS = 8;
@@ -106,7 +106,7 @@ export default async function(req) {
         return fail(`Daily loss limit would be exceeded: $${(lostToday / 100).toFixed(2)} lost today of a $${(lossLimit / 100).toFixed(2)} limit.`, 'daily_loss_limit', 422);
       }
     }
-    const wallet = await ensureWallet(base44);
+    const wallet = await ensureWallet(base44, gate.user.id);
     const balance = Number(wallet.balance_cents) || 0;
     if (outlay > balance) return fail('Not enough real-money balance for this wager — deposit first.', 'insufficient_balance', 402);
     const price = mode === 'teaser' ? teaserPrice(legs.length)
@@ -123,6 +123,7 @@ export default async function(req) {
     }
     const matchup = [...new Set(legs.map(leg => leg.matchup))].join(' + ') || legs[0].eventKey;
     const common = {
+      created_by_id: gate.user.id,
       event_key: legs[0].eventKey, matchup, commence_time: legs[0].commenceTime,
       status: 'open', settled_profit_cents: null,
     };
@@ -132,7 +133,7 @@ export default async function(req) {
         ...common, legs: combo, mode: 'roundrobin', round_robin: true,
         teaser: false, teaser_points: null, stake_cents: stakeCents, price_american: parlayAmerican(combo),
       }));
-      created = await base44.entities.RealBet.bulkCreate(records);
+      created = await base44.asServiceRole.entities.RealBet.bulkCreate(records);
     } else {
       const record = {
         ...common, legs,
@@ -140,11 +141,12 @@ export default async function(req) {
         round_robin: false, teaser: mode === 'teaser', teaser_points: mode === 'teaser' ? TEASER_POINTS : null,
         stake_cents: stakeCents, price_american: price,
       };
-      created = [await base44.entities.RealBet.create(record)];
+      created = [await base44.asServiceRole.entities.RealBet.create(record)];
     }
     const newBalance = balance - outlay;
-    await base44.entities.RealWallet.update(wallet.id, { balance_cents: newBalance });
-    await base44.entities.RealTransaction.create({
+    await base44.asServiceRole.entities.RealWallet.update(wallet.id, { balance_cents: newBalance });
+    await base44.asServiceRole.entities.RealTransaction.create({
+      created_by_id: gate.user.id,
       type: 'bet', amount_cents: -outlay, status: 'completed',
       label: mode === 'roundrobin' ? `Round robin: ${legs.length} legs × ${combos.length} combos`
         : mode === 'teaser' ? `Teaser: ${matchup}` : `Wager: ${matchup}`,

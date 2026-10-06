@@ -4,7 +4,9 @@ import { fail, requireGate, ensureWallet } from '../../shared/realBookCore.ts';
 
 // Server-side settlement against official finals (via the existing
 // swishiqOddsFeed relay, so scores never come from the client). Credits
-// winners and pushes to the wallet and writes immutable ledger entries.
+// winners and pushes to the wallet and writes immutable ledger entries —
+// all through the service role; the open-bet read stays user-scoped so a
+// user can only ever settle their own wagers.
 export default async function(req) {
   try {
     if (req.method !== 'POST') return fail('POST only.', null, 405);
@@ -25,7 +27,7 @@ export default async function(req) {
       return fail(error?.response?.data?.error || 'Could not fetch official finals.', 'odds_feed_error', 502);
     }
     const finalsFor = key => finals.find(item => item.eventKey === key) || null;
-    const wallet = await ensureWallet(base44);
+    const wallet = await ensureWallet(base44, gate.user.id);
     let balance = Number(wallet.balance_cents) || 0;
     let settled = 0;
     for (const bet of open.items) {
@@ -34,12 +36,13 @@ export default async function(req) {
       const returned = result.status === 'won' ? bet.stake_cents + profitCents(bet.stake_cents, result.price)
         : result.status === 'push' ? bet.stake_cents : 0;
       balance += returned;
-      await base44.entities.RealBet.update(bet.id, {
+      await base44.asServiceRole.entities.RealBet.update(bet.id, {
         status: result.status, price_american: result.price,
         settled_profit_cents: returned - bet.stake_cents,
       });
       if (returned > 0) {
-        await base44.entities.RealTransaction.create({
+        await base44.asServiceRole.entities.RealTransaction.create({
+          created_by_id: gate.user.id,
           type: result.status === 'push' ? 'void' : 'payout', amount_cents: returned, status: 'completed',
           bet_id: bet.id, label: `${result.status === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`,
           balance_after_cents: balance,
@@ -47,7 +50,7 @@ export default async function(req) {
       }
       settled++;
     }
-    if (settled > 0) await base44.entities.RealWallet.update(wallet.id, { balance_cents: balance });
+    if (settled > 0) await base44.asServiceRole.entities.RealWallet.update(wallet.id, { balance_cents: balance });
     return Response.json({ settled });
   } catch (error) {
     return Response.json({ error: error?.message || 'Settlement failed.' }, { status: 500 });

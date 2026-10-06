@@ -1,6 +1,9 @@
 // Shared server helpers for the real-money book functions: error shaping,
 // eligibility-gate enforcement, wallet access and daily RG-limit aggregates.
 // Every real-book function runs these before touching money.
+// Money-bearing entities (wallet, bets, transactions) are admin-write-only
+// under RLS, so all mutations here go through the service role after the
+// user is authenticated and gated — the user token can read, never write.
 import { startOfTodayUtc } from './realBetsTime.ts';
 
 export function fail(message, code, status = 400) {
@@ -44,11 +47,14 @@ export async function requireGate(base44) {
   return { user, profile: resolved };
 }
 
-export async function ensureWallet(base44) {
+// Wallet reads run user-scoped (owner RLS); the create is service-role with
+// the owner id stamped explicitly, since the wallet is admin-write-only.
+export async function ensureWallet(base44, userId) {
   const page = await base44.entities.RealWallet.filter({});
   const wallet = (page.items || [])[0];
   if (wallet) return wallet;
-  return base44.entities.RealWallet.create({
+  return base44.asServiceRole.entities.RealWallet.create({
+    created_by_id: userId,
     balance_cents: 0, pending_withdrawal_cents: 0, lifetime_deposited_cents: 0, lifetime_withdrawn_cents: 0,
   });
 }

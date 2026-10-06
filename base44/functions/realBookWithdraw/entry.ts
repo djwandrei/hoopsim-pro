@@ -16,7 +16,7 @@ export default async function(req) {
     const body = await req.json().catch(() => ({}));
     const amountCents = Math.round(Number(body?.amountCents));
     if (!Number.isFinite(amountCents) || amountCents < MIN_WITHDRAWAL_CENTS) return fail('Withdrawals start at $20.');
-    const wallet = await ensureWallet(base44);
+    const wallet = await ensureWallet(base44, gate.user.id);
     const balance = Number(wallet.balance_cents) || 0;
     if (Number(wallet.pending_withdrawal_cents) > 0) {
       return fail('A withdrawal is already pending review — one request at a time.', 'withdrawal_pending', 409);
@@ -28,8 +28,9 @@ export default async function(req) {
     if (amountCents > balance) return fail('Withdrawal exceeds your available balance.', 'insufficient_balance', 402);
     const pending = (Number(wallet.pending_withdrawal_cents) || 0) + amountCents;
     const newBalance = balance - amountCents;
-    await base44.entities.RealWallet.update(wallet.id, { balance_cents: newBalance, pending_withdrawal_cents: pending });
-    await base44.entities.RealTransaction.create({
+    await base44.asServiceRole.entities.RealWallet.update(wallet.id, { balance_cents: newBalance, pending_withdrawal_cents: pending });
+    await base44.asServiceRole.entities.RealTransaction.create({
+      created_by_id: gate.user.id,
       type: 'withdrawal', amount_cents: amountCents, status: 'requested',
       label: 'Withdrawal request — payout pending', balance_after_cents: newBalance,
     });

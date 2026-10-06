@@ -33,13 +33,14 @@ export default async function(req) {
     }
     const amountCents = Number(session.amount_total) || 0;
     if (amountCents <= 0) return fail('Stripe reported no payment amount.', 'stripe_error', 502);
-    const wallet = await ensureWallet(base44);
+    const wallet = await ensureWallet(base44, gate.user.id);
     const balance = (Number(wallet.balance_cents) || 0) + amountCents;
-    await base44.entities.RealWallet.update(wallet.id, {
+    await base44.asServiceRole.entities.RealWallet.update(wallet.id, {
       balance_cents: balance,
       lifetime_deposited_cents: (Number(wallet.lifetime_deposited_cents) || 0) + amountCents,
     });
-    await base44.entities.RealTransaction.create({
+    await base44.asServiceRole.entities.RealTransaction.create({
+      created_by_id: gate.user.id,
       type: 'deposit', amount_cents: amountCents, status: 'completed', ref: sessionId,
       label: 'Stripe deposit', balance_after_cents: balance,
     });

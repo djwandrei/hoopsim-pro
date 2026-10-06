@@ -72,22 +72,30 @@ export async function ensureWallet(base44, userId) {
 }
 
 // Atomic wallet delta via compare-and-set: the conditional update only
-// applies when the balance still equals what we read, so concurrent bets,
-// deposits, settlements and withdrawals can never silently overwrite each
-// other's balance changes (lost-update race). Retries on contention.
-export async function applyWalletDelta(base44, wallet, deltaCents, extraSet = {}) {
+// applies when the balance (and every guarded field) still equals what was
+// read, so concurrent bets, deposits, settlements and withdrawals can never
+// silently overwrite each other's changes (lost-update race). Companion
+// counters ride along as $inc inside the same atomic update, and a guard
+// mismatch (a racing request already changed a guarded field) is reported to
+// the caller instead of retried, so idempotency checks stay race-free.
+export async function applyWalletDelta(base44, wallet, deltaCents, { inc = {}, guard = {} } = {}) {
   let current = wallet;
   for (let attempt = 0; attempt < 4; attempt++) {
     const fromBalance = Number(current.balance_cents) || 0;
     const nextBalance = fromBalance + deltaCents;
     if (nextBalance < 0) return { error: 'insufficient' };
+    const update = { $set: { balance_cents: nextBalance } };
+    if (Object.keys(inc).length) update.$inc = inc;
     const result = await base44.asServiceRole.entities.RealWallet.updateMany(
-      { id: current.id, balance_cents: fromBalance },
-      { $set: { balance_cents: nextBalance, ...extraSet } }
+      { id: current.id, balance_cents: fromBalance, ...guard },
+      update
     );
     if (Number(result?.updated) > 0) return { balance: nextBalance };
     const fresh = await base44.asServiceRole.entities.RealWallet.get(current.id);
     if (!fresh) return { error: 'missing' };
+    for (const field of Object.keys(guard)) {
+      if ((Number(fresh[field]) || 0) !== Number(guard[field])) return { error: 'guard', wallet: fresh };
+    }
     current = fresh;
   }
   return { error: 'contention' };

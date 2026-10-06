@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { secrets } from 'base44:runtime';
-import { fail, requireGate, ensureWallet, applyWalletDelta, audit } from '../../shared/realBookCore.ts';
+import { fail, requireGate, ensureWallet, applyWalletDelta, audit, depositedTodayCents } from '../../shared/realBookCore.ts';
 
 // Verifies a completed Stripe Checkout Session server-side and credits the
 // real-money wallet exactly once (idempotent by session id), so the balance
@@ -33,11 +33,34 @@ export default async function(req) {
     }
     const amountCents = Number(session.amount_total) || 0;
     if (amountCents <= 0) return fail('Stripe reported no payment amount.', 'stripe_error', 502);
+    // The daily deposit limit is re-checked at verification time, so sessions
+    // created before the limit was reached can't be cashed in afterwards.
+    const limit = Number(gate.profile.daily_deposit_limit_cents) || 0;
+    if (limit > 0) {
+      const today = await depositedTodayCents(base44);
+      if (today + amountCents > limit) {
+        audit('denied.daily_deposit_limit', { user: gate.user.id, cents: amountCents });
+        return fail(`This deposit would exceed your daily deposit limit: $${(today / 100).toFixed(2)} of $${(limit / 100).toFixed(2)} already deposited today. The payment will be refunded — contact support.`, 'daily_limit', 422);
+      }
+    }
     const wallet = await ensureWallet(base44, gate.user.id);
+    // Idempotency is atomic, not check-then-act: the credit only applies while
+    // the lifetime deposit total still matches the read. A concurrent
+    // verification of the same session loses this race, re-checks the ledger
+    // below, and reports the deposit as already recorded — never double-credit.
     const credit = await applyWalletDelta(base44, wallet, amountCents, {
-      lifetime_deposited_cents: (Number(wallet.lifetime_deposited_cents) || 0) + amountCents,
+      inc: { lifetime_deposited_cents: amountCents },
+      guard: { lifetime_deposited_cents: Number(wallet.lifetime_deposited_cents) || 0 },
     });
-    if (credit.error) return fail('Payment verified, but crediting the wallet hit contention — your deposit will be applied on the next visit.', 'wallet_busy', 503);
+    if (credit.error === 'guard') {
+      const replay = await base44.entities.RealTransaction.filter({ ref: sessionId, type: 'deposit' });
+      if ((replay.items || []).length > 0) {
+        const fresh = await ensureWallet(base44, gate.user.id);
+        return Response.json({ wallet: fresh, alreadyRecorded: true });
+      }
+      return fail('Payment verified, but crediting the wallet hit contention — retry to apply your deposit.', 'wallet_busy', 503);
+    }
+    if (credit.error) return fail('Payment verified, but crediting the wallet hit contention — retry to apply your deposit.', 'wallet_busy', 503);
     const balance = credit.balance;
     audit('deposit.credited', { user: gate.user.id, cents: amountCents, session: sessionId });
     await base44.asServiceRole.entities.RealTransaction.create({

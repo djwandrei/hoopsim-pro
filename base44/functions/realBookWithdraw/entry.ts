@@ -27,11 +27,14 @@ export default async function(req) {
       return fail('You have open wagers — unsettled funds can\'t be withdrawn until your bets settle.', 'open_bets', 409);
     }
     if (amountCents > balance) return fail('Withdrawal exceeds your available balance.', 'insufficient_balance', 402);
-    // Compare-and-set on the balance serializes concurrent withdrawal
-    // requests: the second of two racing requests re-reads and re-checks
+    // Compare-and-set guards BOTH the balance and the zero-pending state: the
+    // second of two racing requests loses the CAS (pending is no longer 0)
     // instead of double-debiting or double-queuing a payout.
-    const pending = (Number(wallet.pending_withdrawal_cents) || 0) + amountCents;
-    const debit = await applyWalletDelta(base44, wallet, -amountCents, { pending_withdrawal_cents: pending });
+    const debit = await applyWalletDelta(base44, wallet, -amountCents, {
+      inc: { pending_withdrawal_cents: amountCents },
+      guard: { pending_withdrawal_cents: 0 },
+    });
+    if (debit.error === 'guard') return fail('A withdrawal is already pending review — one request at a time.', 'withdrawal_pending', 409);
     if (debit.error === 'insufficient') return fail('Withdrawal exceeds your available balance.', 'insufficient_balance', 402);
     if (debit.error) return fail('The wallet is busy — try again in a moment.', 'wallet_busy', 503);
     const newBalance = debit.balance;
@@ -41,7 +44,7 @@ export default async function(req) {
       type: 'withdrawal', amount_cents: amountCents, status: 'requested',
       label: 'Withdrawal request — payout pending', balance_after_cents: newBalance,
     });
-    return Response.json({ wallet: { ...wallet, balance_cents: newBalance, pending_withdrawal_cents: pending } });
+    return Response.json({ wallet: { ...wallet, balance_cents: newBalance, pending_withdrawal_cents: amountCents } });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not request the withdrawal.' }, { status: 500 });
   }

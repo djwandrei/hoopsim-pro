@@ -34,11 +34,11 @@ function Half({ team, pts, won, label, side }) {
 }
 
 export default function GameScoreboard({ league, game }) {
+  const { mode = 'dark' } = useCourtTheme() || {};
   const home = league.byCode.get(game.home);
   const away = league.byCode.get(game.away);
   if (!home || !away) return null;
   const homeWon = game.homePts > game.awayPts;
-  const { mode = 'dark' } = useCourtTheme() || {};
   const winnerCode = homeWon ? home.code : away.code;
   const margin = Math.abs(game.homePts - game.awayPts);
   // Quarter-by-quarter line score, derived from the play-by-play score trail.

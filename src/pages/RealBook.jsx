@@ -108,10 +108,12 @@ export default function RealBook() {
     setNotice({ tone: 'ok', text: response.data?.pending ? 'Limits saved — decreases applied immediately; increases take effect in 24 hours.' : 'Responsible-gaming limits updated.' });
     await loadAccount();
   });
-  const selfExclude = () => run(async () => {
-    const response = await base44.functions.invoke('realBookSelfExclude', {});
+  const selfExclude = days => run(async () => {
+    const response = await base44.functions.invoke('realBookSelfExclude', { days });
     const refunded = response.data?.refunded_cents || 0;
-    setNotice({ tone: 'ok', text: `Self-exclusion active through ${response.data?.self_excluded_until ? new Date(response.data.self_excluded_until).toLocaleDateString() : 'at least seven days'}${refunded ? ` — ${dollars(refunded)} in open wagers refunded.` : '.'}` });
+    setNotice({ tone: 'ok', text: response.data?.permanent
+      ? `Permanent self-exclusion active${refunded ? ` — ${dollars(refunded)} in open wagers refunded.` : '.'}`
+      : `Exclusion active through ${response.data?.self_excluded_until ? new Date(response.data.self_excluded_until).toLocaleDateString() : 'seven days'}${refunded ? ` — ${dollars(refunded)} in open wagers refunded.` : '.'}` });
     await loadAccount();
   });
   const reinstate = () => run(async () => {

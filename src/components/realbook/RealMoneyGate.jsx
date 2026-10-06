@@ -40,10 +40,7 @@ export default function RealMoneyGate({ onAccepted }) {
     setBusy(true);
     setError('');
     try {
-      await base44.entities.RealMoneyProfile.create({
-        dob, state, terms_version: TERMS_VERSION, acknowledged_at: new Date().toISOString(),
-        self_excluded: false, daily_deposit_limit_cents: 50000, daily_loss_limit_cents: 100000,
-      });
+      await base44.functions.invoke('realBookEnroll', { dob, state });
       onAccepted();
     } catch (caught) {
       setError(caught?.message || 'Could not save your eligibility details. Try again.');

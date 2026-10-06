@@ -11,6 +11,7 @@ const TYPE_LABEL = { deposit: 'Deposit', withdrawal: 'Withdrawal', bet: 'Wager',
 export default function RealWalletPanel({ wallet, profile, transactions, busy, onDeposit, onWithdraw, onLimits, onSelfExclude }) {
   const [depositDollars, setDepositDollars] = useState('');
   const [withdrawDollars, setWithdrawDollars] = useState('');
+  const [exclusionDays, setExclusionDays] = useState('7');
   const [depositLimit, setDepositLimit] = useState(() => String(((Number(profile?.daily_deposit_limit_cents) || 0) / 100).toFixed(0)));
   const [lossLimit, setLossLimit] = useState(() => String(((Number(profile?.daily_loss_limit_cents) || 0) / 100).toFixed(0)));
   const balance = Number(wallet?.balance_cents) || 0;
@@ -57,8 +58,17 @@ export default function RealWalletPanel({ wallet, profile, transactions, busy, o
     </div>
     <div className="mt-4 rounded-xl border border-trim/40 bg-trim/5 p-3">
       <p className="mb-1.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-trim-ink"><ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />Self-exclusion</p>
-      <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">Excludes you from the real-money book immediately — deposits, withdrawals and wagers are all refused, and open wagers are voided with stakes refunded. Minimum 7-day exclusion.</p>
-      <button type="button" disabled={busy} onClick={() => { if (window.confirm('Self-exclude now? You will be locked out of the real-money book immediately.')) onSelfExclude(); }} className="w-full rounded-lg border border-trim/50 bg-trim/10 py-2 text-[11px] font-semibold uppercase tracking-widest text-trim-ink transition-colors hover:bg-trim/20 disabled:opacity-40">Self-exclude immediately</button>
+      <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">Excludes you from the real-money book immediately — deposits, withdrawals and wagers are all refused, and open wagers are voided with stakes refunded. Cool-offs apply for the full chosen period.</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <select value={exclusionDays} onChange={event => setExclusionDays(event.target.value)} className="studio-select w-auto flex-1" aria-label="Exclusion period">
+          <option value="1">1-day cool-off</option>
+          <option value="3">3-day cool-off</option>
+          <option value="7">7-day self-exclusion</option>
+          <option value="30">30-day self-exclusion</option>
+          <option value="permanent">Permanent self-exclusion</option>
+        </select>
+        <button type="button" disabled={busy} onClick={() => { if (window.confirm('Lock out of the real-money book now? Open wagers are voided and refunded.')) onSelfExclude(exclusionDays === 'permanent' ? 'permanent' : Number(exclusionDays)); }} className="shrink-0 rounded-lg border border-trim/50 bg-trim/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-trim-ink transition-colors hover:bg-trim/20 disabled:opacity-40">Lock out now</button>
+      </div>
     </div>
     <div className="mt-4">
       <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Recent activity</p>

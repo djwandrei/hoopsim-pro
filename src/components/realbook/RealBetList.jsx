@@ -38,7 +38,8 @@ export default function RealBetList({ bets, format, onSettle, settling, feedRead
       </li>)}</ul>
       <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-border/30 pt-2 text-[11px]">
         <span className="text-muted-foreground">Stake <span className="font-mono font-semibold text-foreground">{dollars(bet.stake_cents)}</span></span>
-        {bet.status !== 'open' && <span className="text-muted-foreground">Result <span className={`font-mono font-semibold ${Number(bet.settled_profit_cents) >= 0 ? 'text-positive' : 'text-trim-ink'}`}>{signedDollars(bet.settled_profit_cents)}</span></span>}
+        {bet.status === 'void' ? <span className="text-muted-foreground">Void — <span className="font-mono font-semibold text-foreground">{dollars(bet.stake_cents)}</span> refunded</span>
+          : bet.status !== 'open' && <span className="text-muted-foreground">Result <span className={`font-mono font-semibold ${Number(bet.settled_profit_cents) >= 0 ? 'text-positive' : 'text-trim-ink'}`}>{signedDollars(bet.settled_profit_cents)}</span></span>}
       </div>
     </article>;
   };

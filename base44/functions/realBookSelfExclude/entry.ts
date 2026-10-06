@@ -1,10 +1,11 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { fail, requireGate, ensureWallet } from '../../shared/realBookCore.ts';
 
-// Self-exclusion, enforced server-side so a client flag can never be flipped
-// back. Immediate effect, minimum 7-day exclusion, and open wagers are
-// voided with stakes refunded.
-const MIN_EXCLUSION_MS = 7 * 24 * 3600 * 1000;
+// Self-exclusion / cool-off, enforced server-side so a client flag can never
+// be flipped back. Immediate effect; open wagers are voided with stakes
+// refunded. Durations: 1-day and 3-day cool-offs, 7-day and 30-day
+// self-exclusions, or permanent exclusion.
+const DURATION_MS = { 1: 86400000, 3: 3 * 86400000, 7: 7 * 86400000, 30: 30 * 86400000 };
 
 export default async function(req) {
   try {
@@ -14,7 +15,13 @@ export default async function(req) {
     if (gate.error) return gate.error;
     const profile = gate.profile;
     if (profile.self_excluded) return fail('Self-exclusion is already active.', 'already_excluded', 409);
-    const until = new Date(Date.now() + MIN_EXCLUSION_MS).toISOString();
+    const body = await req.json().catch(() => ({}));
+    const permanent = body?.days === 'permanent';
+    const days = Number(body?.days ?? 7);
+    if (!permanent && !DURATION_MS[days]) {
+      return fail('Choose a 1, 3, 7 or 30 day cool-off, or permanent self-exclusion.', 'invalid_duration', 400);
+    }
+    const until = permanent ? null : new Date(Date.now() + DURATION_MS[days]).toISOString();
     const open = await base44.entities.RealBet.filter({ status: 'open' }, { limit: 100 });
     const items = open.items || [];
     const wallet = await ensureWallet(base44);
@@ -36,7 +43,7 @@ export default async function(req) {
         balance_after_cents: balance,
       });
     }
-    return Response.json({ self_excluded_until: until, refunded_bets: items.length, refunded_cents: refunded });
+    return Response.json({ permanent, self_excluded_until: until, refunded_bets: items.length, refunded_cents: refunded });
   } catch (error) {
     return Response.json({ error: error?.message || 'Could not activate self-exclusion.' }, { status: 500 });
   }

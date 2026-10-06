@@ -19,7 +19,10 @@ export default async function(req) {
     if (!profile) return fail('No real-money profile on this account.', 'gate_required', 403);
     if (!profile.self_excluded) return fail('Self-exclusion is not active.', 'not_excluded', 409);
     const until = Date.parse(profile.self_excluded_until || '');
-    if (Number.isFinite(until) && until > Date.now()) {
+    if (!Number.isFinite(until)) {
+      return fail('Permanent self-exclusion can only be reviewed by the operator — contact support.', 'permanent', 403);
+    }
+    if (until > Date.now()) {
       return fail(`Reinstatement is available after ${new Date(until).toLocaleDateString()}.`, 'cooling_off', 403);
     }
     await base44.asServiceRole.entities.RealMoneyProfile.update(profile.id, { self_excluded: false, self_excluded_until: null });

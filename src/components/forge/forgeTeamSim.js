@@ -1,4 +1,3 @@
-import { SKILLS } from '@/components/forge/bapSkills';
 import { forgePlayerScore } from '@/components/forge/forgePool';
 import { mulberry32, buildGeneratedSchedule, runRepeat } from '@/lib/season/simEngine';
 
@@ -52,6 +51,12 @@ export function simulateForgeSeason({ league, pool, picks, slots, seed }) {
     }
   };
   for (const round of season.bracket?.rounds || []) {
+    // Play-in games count toward the playoff record too (one game each).
+    for (const playInGame of round.playIn || []) {
+      if (playInGame.home !== 'FRG' && playInGame.away !== 'FRG') continue;
+      tally([{ home: playInGame.home, homePts: playInGame.homePts, away: playInGame.away, awayPts: playInGame.awayPts }]);
+      if (playInGame.winner !== 'FRG') eliminated = eliminated || 'the Play-In';
+    }
     for (const series of round.series || []) {
       if (series.higher !== 'FRG' && series.lower !== 'FRG') continue;
       tally(series.games || []);

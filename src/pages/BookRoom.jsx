@@ -13,7 +13,8 @@ import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsSt
 import { gradeBet, profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRobinCombos, TEASER_POINTS } from '@/components/book/betsMath';
 import { CODE_BY_NAME, runModelGame, modelEdgePct } from '@/lib/bookRoom/modelEdge';
 import { base44 } from '@/api/base44Client';
-import { AlertTriangle, RefreshCcw, Wallet } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { AlertTriangle, RefreshCcw, ShieldCheck, Wallet } from 'lucide-react';
 
 const BONUS_AMOUNT = 250;
 const BONUS_COOLDOWN = 24 * 3600 * 1000;
@@ -219,6 +220,7 @@ export default function BookRoom() {
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2" aria-label="Bankroll"><Wallet className="h-3.5 w-3.5 text-gold" aria-hidden="true" /><span className="font-mono text-xs font-bold text-gold">{book.bankroll.toLocaleString()} cr</span></span>
           <div className="flex items-center gap-1 rounded-lg border border-border/50 p-1">{['american', 'decimal'].map(option => <button key={option} type="button" onClick={() => setFormat(option)} className={`rounded-md px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest transition-colors ${format === option ? 'bg-gold/15 text-gold' : 'text-muted-foreground hover:text-foreground'}`}>{option}</button>)}</div>
+          <Link to="/real-book" className="inline-flex items-center gap-2 rounded-lg border border-positive/50 bg-positive/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-positive transition-colors hover:bg-positive/20"><ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />Real-money mode</Link>
         </div>
       </div>
       {tab === 'board' ? <div className="grid items-start gap-5 lg:grid-cols-3">

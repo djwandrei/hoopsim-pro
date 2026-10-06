@@ -5,15 +5,15 @@ import { ShieldCheck } from 'lucide-react';
 // verified local modules, the relay that streams the live site's pinned
 // season data, and the standing rule that no season packages are stored here.
 const FACTS = [
-  ['31/31', 'Emblems & logos verified by SHA-256'],
-  ['9', 'Studio engine modules, release-pinned'],
-  ['11', 'Lineup Lab solver modules'],
-  ['4', 'Relay functions streaming the live site'],
-];
+['31/31', 'Emblems & logos verified by SHA-256'],
+['9', 'Studio engine modules, release-pinned'],
+['11', 'Lineup Lab solver modules'],
+['4', 'Relay functions streaming the live site']];
+
 
 export default function HubSourcePanel() {
   return <section className="mt-12" aria-labelledby="source-heading">
-    <div className="court-panel relative overflow-hidden p-5 sm:p-6">
+    <div className="court-panel relative overflow-hidden p-5 sm:p-6 hidden">
       <div className="relative flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="bcast-kicker mb-2">Verified source</p>

@@ -320,3 +320,7 @@ body.dark-mode .studio-workspace tbody tr:nth-child(even) { background: transpar
 .buzzer-flash { animation: buzzer-flash 1.2s ease-out both; }
 @keyframes shine-sweep { from { transform: translateX(-140%); } to { transform: translateX(320%); } }
 .shine-sweep::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 32%; background: linear-gradient(100deg, transparent, hsl(220 38% 97% / .14), transparent); animation: shine-sweep 3s ease-in-out infinite; pointer-events: none; }
+
+/* === Final design pass: one gentle entrance for every studio page's content === */
+.studio-workspace main { animation: rise-in .45s cubic-bezier(.2, .8, .3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .studio-workspace main { animation: none; } }

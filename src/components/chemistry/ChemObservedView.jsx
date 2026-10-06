@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RotateCcw, Search } from 'lucide-react';
 import { comboKindLabel } from './chemistryFormat';
 import ChemComboCard from './ChemComboCard';
 
@@ -28,9 +28,18 @@ export default function ChemObservedView({ observed, pair, chem }) {
   const safePage = Math.min(page, pageCount - 1);
   const visible = filtered.slice(safePage * OBSERVED_PAGE_SIZE, safePage * OBSERVED_PAGE_SIZE + OBSERVED_PAGE_SIZE);
   const statsByTeamRef = useMemo(() => new Map(pair.rows.map(row => [`${row.teamCode}|${row.playerRef}`, row])), [pair.rows]);
+  const hasFilters = Boolean(team || groupSize || kind || playerRef || query);
+  const clearFilters = () => { setTeam(''); setGroupSize(''); setKind(''); setPlayerRef(''); setQuery(''); setPage(0); };
   return <div className="space-y-5">
     <section className="court-panel p-4 sm:p-5">
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="court-display text-xl text-foreground">Observed lineups</h3>
+        <p className="font-mono text-[10.4px] uppercase tracking-widest text-muted-foreground">
+          {filtered.length.toLocaleString()} found
+          {hasFilters && <button type="button" onClick={clearFilters} className="ml-3 inline-flex min-h-6 items-center gap-1 text-gold transition-colors hover:text-goldSoft"><RotateCcw className="h-3 w-3" />Clear</button>}
+        </p>
+      </div>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <label className="block"><span className="studio-control-label">Team</span>
           <select className={selectClass} value={team} onChange={event => { setTeam(event.target.value); setPlayerRef(''); setPage(0); }}>
             <option value="">All teams</option>
@@ -62,15 +71,17 @@ export default function ChemObservedView({ observed, pair, chem }) {
           </select>
         </label>
       </div>
-      <p className="mt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{filtered.length.toLocaleString()} observed lineups · page {safePage + 1} of {pageCount}</p>
     </section>
-    <div className="grid gap-4 lg:grid-cols-2">
-      {visible.map(row => <ChemComboCard key={row.id} row={row} statsByTeamRef={statsByTeamRef} />)}
-      {!visible.length && <p className="court-panel p-6 text-center text-sm text-muted-foreground lg:col-span-2">No observed lineups match the current filters.</p>}
+    <div className="grid gap-4 sm:grid-cols-2">
+      {visible.map((row, index) => <ChemComboCard key={row.id} row={row} statsByTeamRef={statsByTeamRef} index={index} />)}
+      {!visible.length && <p className="court-panel p-6 text-center text-sm text-muted-foreground sm:col-span-2">No observed lineups match the current filters.</p>}
     </div>
-    <div className="flex items-center justify-center gap-3">
-      <button type="button" onClick={() => setPage(value => Math.max(0, value - 1))} disabled={safePage === 0} className="flex min-h-9 items-center gap-1 rounded-lg border border-border/50 px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40"><ChevronLeft className="h-3.5 w-3.5" />Previous</button>
-      <button type="button" onClick={() => setPage(value => Math.min(pageCount - 1, value + 1))} disabled={safePage >= pageCount - 1} className="flex min-h-9 items-center gap-1 rounded-lg border border-border/50 px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40">Next<ChevronRight className="h-3.5 w-3.5" /></button>
-    </div>
+    {filtered.length > OBSERVED_PAGE_SIZE && <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/30 pt-3">
+      <p className="font-mono text-[10.4px] uppercase tracking-widest text-muted-foreground">Page {safePage + 1} of {pageCount}</p>
+      <div className="flex items-center gap-2">
+        <button type="button" onClick={() => setPage(value => Math.max(0, value - 1))} disabled={safePage === 0} className="flex min-h-9 items-center gap-1 rounded-lg border border-border/50 px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40"><ChevronLeft className="h-3.5 w-3.5" />Previous</button>
+        <button type="button" onClick={() => setPage(value => Math.min(pageCount - 1, value + 1))} disabled={safePage >= pageCount - 1} className="flex min-h-9 items-center gap-1 rounded-lg border border-border/50 px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40">Next<ChevronRight className="h-3.5 w-3.5" /></button>
+      </div>
+    </div>}
   </div>;
 }

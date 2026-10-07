@@ -205,9 +205,10 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
 
   return <section aria-label="Forge draft game" className="space-y-4">
     {phase === 'setup' && <ForgeSetupPanel kicker={copy.kicker} title={copy.title} intro={copy.intro} group={group} onGroup={setGroup} poolCount={pool.length} onStart={start} steps={MODE_STEPS[mode]} />}
-    {/* Drafting is one screen: reels, silhouette stage, landed-player profile
-        and the forge dashboard sit side by side from the lg breakpoint up. */}
-    {phase === 'drafting' && <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,16rem),minmax(0,1fr),minmax(0,17rem),minmax(0,14rem)]">
+    {/* Drafting reads as before: reels · silhouette stage · forge dashboard
+        in one row, with the landed-player profile full width underneath. */}
+    {phase === 'drafting' && <div className="space-y-4">
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,13.5rem)] xl:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,15rem)]">
       <ForgeReelPanel
         armedSkill={selectedSkill}
         showGrades={showGrades} onToggleGrades={() => setShowGrades(value => !value)}
@@ -224,8 +225,9 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
         reveal={reveal} selectedKey={selectedKey}
         onSelect={selectSkill} onAssign={assign} showGrades={showGrades}
       />
-      <ForgePlayerCard player={reveal} note={revealNote} />
       <ForgeOvrPanel picks={picks} overall={liveOvr} showGrades={showGrades} onUndo={undo} />
+      </div>
+      <ForgePlayerCard player={reveal} note={revealNote} />
     </div>}
     {/* Build complete: the wheel, summary tiles and share rail sit beside the
         full slot list, so the whole composite reads on one screen. */}

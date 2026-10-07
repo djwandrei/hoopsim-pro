@@ -69,17 +69,25 @@ export default function useNativeGameSim(initial = {}) {
     if (!league || !home || !away) return;
     const report = await run(home, away, override.packageRef, 'game');
     if (!report) return;
-    const result = mapNativeGameReport(report, home.code, away.code);
-    setGame({ ...result, seed, neutral: override.neutral ?? neutral, stamp: Date.now() });
+    try {
+      const result = mapNativeGameReport(report, home.code, away.code);
+      setGame({ ...result, seed, neutral: override.neutral ?? neutral, stamp: Date.now() });
+    } catch (e) {
+      setError(e?.message || 'The simulated game could not be displayed.');
+    }
   }, [run, seed, neutral]);
 
   const runSeries = useCallback(async (league, home, away, override = {}) => {
     if (!league || !home || !away) return;
     const report = await run(home, away, override.packageRef, 'best_of_7');
     if (!report) return;
-    const result = mapNativeSeriesReport(report, home.code, away.code);
-    storeSeries(result);
-    setSeries(result);
+    try {
+      const result = mapNativeSeriesReport(report, home.code, away.code);
+      storeSeries(result);
+      setSeries(result);
+    } catch (e) {
+      setError(e?.message || 'The simulated series could not be displayed.');
+    }
   }, [run]);
 
   const reset = useCallback(() => {

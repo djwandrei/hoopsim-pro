@@ -18,6 +18,7 @@ import GameMatchupTheme from '@/components/game/GameMatchupTheme';
 import PreGameDisclosure from '@/components/game/PreGameDisclosure';
 import LiveBoxScore from '@/components/game/LiveBoxScore';
 import SavedResultsShelf from '@/components/game/SavedResultsShelf';
+import SimErrorBanner from '@/components/game/SimErrorBanner';
 import { loadSavedResults, saveSavedResult, removeSavedResult } from '@/lib/savedResults';
 import { trackGa4 } from '@/lib/gaBridge';
 
@@ -142,6 +143,7 @@ export default function GameLab() {
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
       <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: review the matchup intel, then sim single games and 7-game series." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">
+        <SimErrorBanner error={sim.error} />
         <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&
           <div className="space-y-4">

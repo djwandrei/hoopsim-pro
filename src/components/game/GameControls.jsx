@@ -16,8 +16,6 @@ export default function GameControls({ settings, onSettingsChange, onRunSeries, 
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
-  // Advanced preset: one toggle flips the Monte Carlo depth to the engine max.
-  const advanced = Number(settings.trials) >= 5000;
   const change = (key, value) => onSettingsChange(current => ({ ...current, [key]: value }));
   return (
     <section className="myna-panel flex flex-wrap items-center justify-between gap-x-5 gap-y-3 px-4 py-3" aria-label="Simulation controls">
@@ -31,20 +29,15 @@ export default function GameControls({ settings, onSettingsChange, onRunSeries, 
           <input type="number" min={90} max={110} step={1} value={settings.possessions} disabled={running} onChange={event => change('possessions', Math.min(110, Math.max(90, Number(event.target.value) || 90)))} className={fieldCls} aria-label="Possessions per game" />
           <span className={hintCls}>Game length — possessions per team.</span>
         </label>
-        <label className={labelCls} title="How many Monte Carlo games the engine plays to estimate the win odds — more trials mean steadier odds.">
+        <label className={labelCls} title="How many Monte Carlo games the engine plays to estimate the win odds — up to 5,000. More trials mean steadier, sharper odds.">
           <span>TRIALS</span>
-          <input type="number" min={100} max={5000} step={100} value={settings.trials} disabled={running || advanced} onChange={event => change('trials', event.target.value)} className={fieldCls} aria-label="Monte Carlo trials" />
-          <span className={hintCls}>Simulated games behind the odds — more is steadier.</span>
+          <input type="number" min={100} max={5000} step={100} value={settings.trials} disabled={running} onChange={event => change('trials', event.target.value)} className={fieldCls} aria-label="Monte Carlo trials" />
+          <span className={hintCls}>Simulated games behind the odds — up to 5,000. More is steadier.</span>
         </label>
-        <label className={labelCls} title="Advanced mode runs the maximum 5,000 Monte Carlo trials — slower, but the sharpest win odds.">
-          <span>ADVANCED</span>
-          <button type="button" role="switch" aria-checked={advanced} disabled={running} onClick={() => change('trials', advanced ? 1000 : 5000)} className={`myna-mono inline-flex min-h-10 items-center rounded-lg border px-3 text-[11px] font-bold transition-colors disabled:opacity-55 ${advanced ? 'border-[var(--myna-accent)] bg-[color-mix(in_srgb,var(--myna-accent)_18%,transparent)] text-[var(--myna-accent)]' : 'border-[var(--myna-border)] text-[var(--myna-muted)] hover:text-[var(--myna-accent)]'}`}>{advanced ? '5K RUNS' : 'OFF'}</button>
-          <span className={hintCls}>One-tap max depth — 5,000 trials.</span>
-        </label>
-        <label className={labelCls} title="How strongly the offense hunts its best looks: 0 is balanced against the defense, 1 leans fully into the attack.">
+        <label className={labelCls} title="How hard each offense concentrates its attack. At 0, both teams spread looks evenly across every defender. At 1, each offense funnels possessions toward its best matchup — usually a star attacking a weaker defender — while the opposing defense is stretched thinner covering it. Higher weight raises the better offense's ceiling and adds game-to-game variance; lower weight averages things out.">
           <span>WEIGHT</span>
           <input type="number" min={0} max={1} step={0.05} value={settings.attackWeight} disabled={running} onChange={event => change('attackWeight', event.target.value)} className={fieldCls} aria-label="Offense attack weight" />
-          <span className={hintCls}>0 balances the defense · 1 hunts the best shots.</span>
+          <span className={hintCls}>0 spreads every look evenly · 1 funnels possessions to each offense's best matchup.</span>
         </label>
       </div>
       <div className="flex flex-wrap items-center gap-3">

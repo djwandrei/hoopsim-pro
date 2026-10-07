@@ -32,6 +32,7 @@ const VirtualPacks = lazy(() => import('@/pages/VirtualPacks'));
 const Workshop = lazy(() => import('@/pages/Workshop'));
 const Account = lazy(() => import('@/pages/Account'));
 const Playbook = lazy(() => import('@/pages/Playbook'));
+const ForgeModelCompare = lazy(() => import('@/pages/ForgeModelCompare'));
 
 // Public studio: no login gate — every route is open. On the site the router
 // lives under /tools/swishiq-studio/ so existing site links keep working.
@@ -50,6 +51,7 @@ function App() {
             <Route path="/players/*" element={<PlayerLab />} />
             <Route path="/chemistry" element={<ChemistryLab />} />
             <Route path="/forge" element={<ForgeLab />} />
+            <Route path="/forge-models" element={<ForgeModelCompare />} />
             <Route path="/game" element={<GameLab />} />
             <Route path="/career" element={<CareerLab />} />
             <Route path="/spin" element={<SpinRoom />} />

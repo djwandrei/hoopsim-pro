@@ -17,6 +17,9 @@ const tip = ({ active, payload, label }) => {
 };
 
 const lastName = name => (name || '').split(' ').slice(-1)[0] || '—';
+// Chart categories are keyed by name: two players sharing a surname (across
+// either roster) would collapse into one bar row, so those show an initial.
+const initial = name => `${((name || ' ').trim()[0] || '').toUpperCase()}.`;
 
 const STATS = [
   { key: 'pts', label: 'PTS', title: 'TOP SCORERS ON THE BOARD' },
@@ -35,9 +38,15 @@ export default function PlayerStatsChart({ teamA, teamB }) {
       ...(teamA.roster || []).map(player => ({ ...player, team: teamA.code })),
       ...(teamB.roster || []).map(player => ({ ...player, team: teamB.code })),
     ].sort((x, y) => y[stat] - x[stat]).slice(0, 10);
+    const surnameCounts = combined.reduce((acc, player) => {
+      acc[lastName(player.name)] = (acc[lastName(player.name)] || 0) + 1;
+      return acc;
+    }, {});
     return {
       data: combined.map(player => ({
-        name: lastName(player.name),
+        name: surnameCounts[lastName(player.name)] > 1
+          ? `${initial(player.name)} ${lastName(player.name)}`
+          : lastName(player.name),
         teamColor: paletteForTeam(player.team).primary,
         teamInk: teamThemeVars(player.team, mode)['--team-ink'],
         value: player[stat],

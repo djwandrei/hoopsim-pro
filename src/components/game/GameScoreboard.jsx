@@ -44,8 +44,13 @@ export default function GameScoreboard({ league, game }) {
   // Quarter-by-quarter line score, derived from the play-by-play score trail.
   const lineScore = [];
   let prev = [0, 0];
+  const seenQuarters = new Set();
   for (const event of game.pbp || []) {
-    if ((event.type === 'period' || event.type === 'final') && event.score) {
+    // The native report appends a final row that repeats the last period's
+    // label (Q4 on a regulation game): skip repeats so the line score shows
+    // one column per period, keeping the final row's OT delta when needed.
+    if ((event.type === 'period' || event.type === 'final') && event.score && !seenQuarters.has(event.q)) {
+      seenQuarters.add(event.q);
       lineScore.push({ q: event.q, a: event.score[1] - prev[1], h: event.score[0] - prev[0] });
       prev = event.score;
     }

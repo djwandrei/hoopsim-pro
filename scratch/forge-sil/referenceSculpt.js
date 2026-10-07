@@ -1,5 +1,5 @@
-import { referenceLoft } from '@/components/forge/referenceLoft';
-import { REFERENCE_BALL, REFERENCE_PARTS } from '@/components/forge/referencePose';
+import { referenceLoft } from './referenceLoft';
+import { REFERENCE_BALL, REFERENCE_PARTS } from './referencePose';
 
 export function buildReferenceSculpt({ addMesh, goldRec, deepRec }) {
   for (const part of REFERENCE_PARTS) {
@@ -19,32 +19,33 @@ export function buildReferenceSculpt({ addMesh, goldRec, deepRec }) {
     addMesh(thigh.key, leg, [upper.mat]);
     addMesh(shin.key, leg, [lower.mat]);
   }
-  // Four fingers curl from the palm up over the front-top of the ball.
+  // Four curled fingers sit against the ball's actual surface, not beneath it.
   const grip = goldRec().mat;
   for (let i = 0; i < 4; i += 1) {
-    const z = .44 + i * .022, shortening = Math.abs(i - 1.5) * .006;
+    const z = -.16 + i * .028, shortening = Math.abs(i - 1.5) * .008;
     addMesh('arm-r', referenceLoft([
-      [-.108,2.49-shortening,z,.011,.01], [-.122,2.545-shortening,z+.006,.011,.009],
-      [-.138,2.61-shortening,z+.012,.009,.008], [-.148,2.665-shortening,z+.016,.004,.004]
+      [-.342,2.503-shortening,z,.011,.01], [-.325,2.562-shortening,z,.011,.009],
+      [-.3,2.63-shortening,z,.009,.008], [-.272,2.685-shortening,z,.008,.007],
+      [-.253,2.694-shortening,z,.003,.003]
     ], grip, [0,0,1]));
   }
   addMesh('arm-r', referenceLoft([
-    [-.05,2.49,.45,.014,.012], [-.062,2.51,.48,.012,.01],
-    [-.076,2.535,.51,.009,.008], [-.088,2.552,.535,.004,.004]
+    [-.345,2.5,-.205,.017,.015], [-.328,2.49,-.163,.015,.012],
+    [-.302,2.495,-.118,.011,.01], [-.286,2.515,-.086,.004,.004]
   ], grip));
   // Open trailing hand: palm already continues from the forearm; fingers splay.
   const trailing = goldRec().mat;
   for (let i = 0; i < 4; i += 1) {
-    const x = .228 + i * .012, z = .02 + i * .012;
-    const length = [.09,.12,.11,.08][i];
+    const x = .42 + i * .014, z = .018 + i * .013;
+    const length = [.075,.098,.09,.066][i];
     addMesh('arm-l', referenceLoft([
-      [x,1.485,z,.01,.009], [x+.018,1.44,z+.007,.009,.008],
-      [x+.04,1.485-length,z+.014,.007,.006], [x+.05,1.475-length,z+.012,.002,.002]
+      [x,1.44,z,.01,.009], [x+.02,1.395,z+.008,.009,.008],
+      [x+.045,1.44-length,z+.017,.007,.006], [x+.056,1.43-length,z+.015,.002,.002]
     ], trailing));
   }
   addMesh('arm-l', referenceLoft([
-    [.212,1.51,.032,.015,.012], [.208,1.478,.068,.012,.01],
-    [.212,1.44,.086,.008,.007], [.226,1.42,.084,.003,.003]
+    [.408,1.47,.03,.015,.012], [.4,1.435,.072,.012,.01],
+    [.404,1.392,.092,.008,.007], [.419,1.37,.089,.003,.003]
   ], trailing));
   return { ball: REFERENCE_BALL };
 }

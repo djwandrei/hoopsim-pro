@@ -151,12 +151,12 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const ballGroup = new THREE.Group();
     ballGroup.position.set(...ballPos);
     const ballMat = makeMat(BALL_LIT, BALL_HIDE, 0.35, 0.5);
-    const ballMesh = new THREE.Mesh(new THREE.SphereGeometry(0.175, 28, 22), ballMat.mat);
+    const ballMesh = new THREE.Mesh(new THREE.SphereGeometry(0.095, 28, 22), ballMat.mat);
     ballMesh.castShadow = true;
     ballGroup.add(ballMesh);
     const seamMat = silhouette ? null : new THREE.MeshStandardMaterial({ color: 0x6b2a10, roughness: 0.6, metalness: 0.1 });
     (silhouette ? [] : [[Math.PI / 2, 0, 0], [0.4, 0, Math.PI / 2], [Math.PI / 2.6, Math.PI / 3, 0.3]]).forEach(rot => {
-      const seam = new THREE.Mesh(new THREE.TorusGeometry(0.176, 0.007, 8, 40), seamMat);
+      const seam = new THREE.Mesh(new THREE.TorusGeometry(0.096, 0.004, 8, 40), seamMat);
       seam.rotation.set(...rot);
       ballGroup.add(seam);
     });

@@ -34,7 +34,7 @@ export const FAN_TOOLS = [
   return {path,label,route:TOOL_ROUTES[path]||null,href:local?path.replace(/\/+$/,''):SITE+path,emblem};
 });
 // Tools with no in-app page, hidden from the header drawer menu.
-export const DRAWER_HIDDEN = ['Position Lens','Roster Fit','Franchise Rebuild','Collection Builder','Team DNA Atlas','Workshop','Lineup DNA'];
+export const DRAWER_HIDDEN = ['Position Lens','Roster Fit','Trade Packages','Franchise Rebuild','Collection Builder','Team DNA Atlas','Workshop','Lineup DNA'];
 export const FOOTER_GROUPS = [
   {title:'Browse',key:'browse',links:[['Shop',SITE+'/shop.html'],['Sports Cards',SITE+'/sports-cards.html'],['Comics',SITE+'/comics.html'],['Collectibles',SITE+'/collectibles.html'],['Sell or Trade',SITE+'/sell-trade-want-list.html']]},
   {title:'Help & Policies',key:'support',links:[['Contact DJ',SITE+'/contact.html'],['Shipping',SITE+'/shipping.html'],['Returns',SITE+'/returns.html'],['Policies & Authenticity',SITE+'/policies.html']]},

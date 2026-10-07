@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { buildReferenceSculpt } from '@/components/forge/referenceSculpt';
 
 // Sculpt variants for the Forge 3D figure. Every variant fills the same nine
 // forge segments (shin-l, shin-r, thigh-l, thigh-r, shorts, torso, arm-l,
@@ -296,84 +297,8 @@ function buildFaceted({ addMesh, segCache, goldRec, deepRec }) {
   return { ball: [0.65, 2.27, 0.48] };
 }
 
-// ─── Reference silhouette ───────────────────────────────────────────────────
-// Modeled on the one-hand dunk reference shot: tank jersey, knee-length
-// shorts, lean athletic build, right arm extended straight up with the ball,
-// left arm trailing out and down, right knee driving forward, left leg kicked
-// back — a leap frozen at takeoff.
-function buildReference({ addMesh, segCache, goldRec, deepRec }) {
-  const P = {
-    head: [0.04, 2.32, 0.05],
-    neckA: [0.02, 2.18, 0.04], neckB: [0, 2.02, 0.02],
-    shoulderR: [0.32, 2.0, 0.02], shoulderL: [-0.3, 2.0, 0],
-    elbowR: [0.42, 2.32, 0.1], wristR: [0.48, 2.6, 0.16],
-    elbowL: [-0.52, 1.68, -0.06], wristL: [-0.68, 1.34, -0.12],
-    hipR: [0.13, 1.24, 0.02], hipL: [-0.13, 1.22, -0.02],
-    kneeR: [0.26, 0.74, 0.22], ankleR: [0.24, 0.24, 0.12],
-    kneeL: [-0.2, 0.66, -0.16], ankleL: [-0.32, 0.2, -0.3],
-  };
-
-  // Legs: lean limbs, right knee driving forward, left leg trailing back
-  addMesh('thigh-r', limbBetween(P.hipR, P.kneeR, 0.125, 0.09, goldRec().mat));
-  addMesh('thigh-l', limbBetween(P.hipL, P.kneeL, 0.12, 0.085, goldRec().mat));
-  addMesh('shin-r', limbBetween(P.kneeR, P.ankleR, 0.08, 0.05, goldRec().mat));
-  addMesh('shin-l', limbBetween(P.kneeL, P.ankleL, 0.075, 0.048, goldRec().mat));
-  addMesh('thigh-r', muscleAt([0.2, 1.0, 0.14], 0.095, [1, 1.35, 0.9], goldRec().mat));
-  addMesh('thigh-l', muscleAt([-0.17, 0.94, -0.1], 0.09, [1, 1.35, 0.9], goldRec().mat));
-  addMesh('shin-r', muscleAt([0.25, 0.48, 0.17], 0.07, [1, 1.4, 0.85], goldRec().mat));
-  addMesh('shin-l', muscleAt([-0.27, 0.42, -0.24], 0.065, [1, 1.4, 0.85], goldRec().mat));
-
-  // Shoes: toe forward on the drive leg, trailing back on the kick leg
-  addMesh('shin-r', muscleAt([P.ankleR[0], 0.21, P.ankleR[2] + 0.1], 0.08, [0.85, 0.6, 1.9], goldRec().mat));
-  addMesh('shin-l', muscleAt([P.ankleL[0] - 0.02, 0.17, P.ankleL[2] - 0.1], 0.08, [0.85, 0.6, 1.9], goldRec().mat));
-
-  // Knee-length shorts
-  segCache.shortMat = deepRec().mat;
-  addMesh('shorts', latheMesh([[0.02, 0.86], [0.16, 0.9], [0.24, 1.0], [0.245, 1.12], [0.22, 1.24]], segCache.shortMat));
-  const waistband = new THREE.Mesh(new THREE.TorusGeometry(0.215, 0.022, 10, 28), segCache.shortMat);
-  waistband.position.set(0, 1.25, 0); waistband.rotation.x = Math.PI / 2; waistband.scale.set(1, 0.72, 1); waistband.castShadow = true;
-  addMesh('shorts', waistband);
-
-  // Tank jersey with shoulder straps
-  segCache.torsoMat = goldRec().mat;
-  addMesh('torso', latheMesh([[0.17, 1.2], [0.19, 1.28], [0.21, 1.38], [0.245, 1.5], [0.27, 1.64], [0.28, 1.76], [0.25, 1.9], [0.16, 1.98], [0.09, 2.04]], segCache.torsoMat));
-  addMesh('torso', capsuleBetween([0.13, 2.0, 0.07], [0.13, 1.99, -0.06], 0.045, segCache.torsoMat));
-  addMesh('torso', capsuleBetween([-0.13, 2.0, 0.07], [-0.13, 1.99, -0.06], 0.045, segCache.torsoMat));
-  const pecL = muscleAt([-0.12, 1.72, 0.1], 0.14, [1, 0.55, 0.5], segCache.torsoMat);
-  const pecR = muscleAt([0.12, 1.72, 0.1], 0.14, [1, 0.55, 0.5], segCache.torsoMat);
-  addMesh('torso', pecL); addMesh('torso', pecR);
-  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.095, 0.02, 10, 24), deepRec().mat);
-  collar.position.set(0, 2.01, 0.02); collar.rotation.x = Math.PI / 2; collar.scale.set(1.3, 0.72, 1); collar.castShadow = true;
-  addMesh('torso', collar);
-
-  // Arms: bare, right extended straight up with the ball, left trailing out
-  addMesh('arm-r', sphereAt([P.shoulderR[0] + 0.02, P.shoulderR[1] + 0.03, 0], 0.105, goldRec().mat));
-  addMesh('arm-l', sphereAt([P.shoulderL[0] - 0.02, P.shoulderL[1] + 0.03, 0], 0.1, goldRec().mat));
-  addMesh('arm-r', limbBetween(P.shoulderR, P.elbowR, 0.075, 0.055, goldRec().mat));
-  addMesh('arm-l', limbBetween(P.shoulderL, P.elbowL, 0.072, 0.054, goldRec().mat));
-  addMesh('arm-r', limbBetween(P.elbowR, P.wristR, 0.055, 0.042, goldRec().mat));
-  addMesh('arm-l', limbBetween(P.elbowL, P.wristL, 0.054, 0.04, goldRec().mat));
-  addMesh('arm-r', muscleAt(P.wristR, 0.052, [0.85, 1, 1.1], goldRec().mat));
-  addMesh('arm-l', muscleAt(P.wristL, 0.05, [0.85, 1, 1.1], goldRec().mat));
-
-  // Joints
-  addMesh('thigh-r', sphereAt(P.kneeR, 0.08, goldRec().mat));
-  addMesh('thigh-l', sphereAt(P.kneeL, 0.075, goldRec().mat));
-  addMesh('shin-r', sphereAt(P.ankleR, 0.05, goldRec().mat));
-  addMesh('shin-l', sphereAt(P.ankleL, 0.048, goldRec().mat));
-  addMesh('arm-r', sphereAt(P.elbowR, 0.052, goldRec().mat));
-  addMesh('arm-l', sphereAt(P.elbowL, 0.05, goldRec().mat));
-  addMesh('thigh-r', sphereAt(P.hipR, 0.085, deepRec().mat));
-  addMesh('thigh-l', sphereAt(P.hipL, 0.085, deepRec().mat));
-
-  // Head: egg skull with jaw taper on a natural neck, chin lifted slightly
-  addMesh('head', capsuleBetween(P.neckA, P.neckB, 0.055, goldRec().mat));
-  const head = sphereAt(P.head, 0.185, goldRec().mat);
-  head.scale.set(0.85, 1.05, 0.92);
-  head.rotation.x = -0.12;
-  addMesh('head', head);
-  const jaw = muscleAt([0.03, 2.24, 0.07], 0.12, [0.78, 0.55, 0.85], goldRec().mat);
-  addMesh('head', jaw);
-
-  return { ball: [0.51, 2.73, 0.19] };
+// The reference body is a separate, continuous anatomical sculpt, not the
+// cylinder/sphere construction retained for the older comparison variants.
+function buildReference(api) {
+  return buildReferenceSculpt(api);
 }

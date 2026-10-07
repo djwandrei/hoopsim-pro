@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { buildFigureBody } from '@/components/forge/forgeFigureModels';
+import { configureSilhouetteMaterial } from '@/components/forge/forgeSilhouetteMaterial';
+import ReferenceFigureFallback from '@/components/forge/ReferenceFigureFallback';
 
 // Real-time 3D player figure rendered with three.js. The body sculpt is one
 // of four variants (see forgeFigureModels.js): 'reference' — the dunk-pose
@@ -69,9 +71,19 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     host.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 60);
-    camera.position.set(0.55, 1.55, 6.1);
-    camera.lookAt(0.16, variant === 'reference' ? 1.45 : 1.32, 0);
+    const silhouette = variant === 'reference';
+    // Fixed three-quarter view corresponding to the left view of the reference.
+    // Orthographic projection keeps the reconstructed limb proportions stable.
+    const camera = silhouette
+      ? new THREE.OrthographicCamera(-1.48, 1.48, 1.48, -1.48, 0.1, 60)
+      : new THREE.PerspectiveCamera(30, 1, 0.1, 60);
+    if (silhouette) {
+      camera.position.set(-4.3, 1.65, 6.6);
+      camera.lookAt(-0.08, 1.48, -0.13);
+    } else {
+      camera.position.set(0.55, 1.55, 6.1);
+      camera.lookAt(0.16, 1.32, 0);
+    }
 
     // Lighting rig: warm upper-left key with shadows, cool rim from behind,
     // gentle frontal fill and a low hemisphere base.
@@ -101,10 +113,10 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     // steel and molten gold (color, emissive intensity, metalness, roughness).
     // The faceted variant requests flat shading for chiseled planes.
     const flat = variant === 'faceted';
-    const silhouette = variant === 'reference';
     const makeMat = (litColor, unlitColor, metalLit, roughLit) => {
-      const mat = new THREE.MeshStandardMaterial({ color: (silhouette ? SIL : unlitColor).clone(), metalness: silhouette ? 0.08 : 0.85, roughness: silhouette ? 0.92 : 0.42, emissive: litColor.clone(), emissiveIntensity: silhouette ? 0 : 0.04, flatShading: flat });
-      return { mat, litColor: litColor.clone(), unlitColor: (silhouette ? SIL : unlitColor).clone(), metalLit, roughLit, unlitEmissive: silhouette ? 0 : 0.04, wasLit: false, flashT: null };
+      const mat = new THREE.MeshStandardMaterial({ color: (silhouette ? SIL : unlitColor).clone(), metalness: silhouette ? 0 : 0.85, roughness: silhouette ? 1 : 0.42, emissive: silhouette ? SIL.clone() : litColor.clone(), emissiveIntensity: silhouette ? 0 : 0.04, flatShading: flat });
+      const rimStrength = silhouette ? configureSilhouetteMaterial(mat) : null;
+      return { mat, rimStrength, litColor: (silhouette ? SIL : litColor).clone(), unlitColor: (silhouette ? SIL : unlitColor).clone(), metalLit, roughLit, unlitEmissive: silhouette ? 0 : 0.04, wasLit: false, flashT: null };
     };
     const goldMat = () => makeMat(GOLD, STEEL, 0.55, 0.28);
     const deepMat = () => makeMat(GOLD_DEEP, STEEL_DARK, 0.6, 0.34);
@@ -112,15 +124,19 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const figure = new THREE.Group();
     const segments = SEGMENT_ORDER.map(key => ({ key, mats: [], meshes: [] }));
     const seg = key => segments.find(item => item.key === key);
-    const addMesh = (key, mesh) => { figure.add(mesh); const s = seg(key); s.meshes.push(mesh); s.mats.push(...(Array.isArray(mesh.material) ? mesh.material : [mesh.material]).map(mat => recOf(mat))); };
     const recsByKey = new Map();
-    const recOf = mat => {
-      if (!recsByKey.has(mat)) recsByKey.set(mat, mat === segCache.shortMat ? deepRec() : goldRec());
-      return recsByKey.get(mat);
+    const register = rec => { recsByKey.set(rec.mat, rec); return rec; };
+    const goldRec = () => register(goldMat());
+    const deepRec = () => register(deepMat());
+    const addMesh = (key, mesh) => {
+      figure.add(mesh);
+      const s = seg(key);
+      s.meshes.push(mesh);
+      for (const mat of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+        const rec = recsByKey.get(mat);
+        if (rec && !s.mats.includes(rec)) s.mats.push(rec);
+      }
     };
-    let goldRecStore = null, deepRecStore = null;
-    const goldRec = () => (goldRecStore ||= goldMat());
-    const deepRec = () => (deepRecStore ||= deepMat());
     const segCache = {};
 
     // Sculpt the nine-segment body from the selected variant; the variant
@@ -136,8 +152,8 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const ballMesh = new THREE.Mesh(new THREE.SphereGeometry(0.175, 28, 22), ballMat.mat);
     ballMesh.castShadow = true;
     ballGroup.add(ballMesh);
-    const seamMat = new THREE.MeshStandardMaterial({ color: 0x6b2a10, roughness: 0.6, metalness: 0.1 });
-    [[Math.PI / 2, 0, 0], [0.4, 0, Math.PI / 2], [Math.PI / 2.6, Math.PI / 3, 0.3]].forEach(rot => {
+    const seamMat = silhouette ? null : new THREE.MeshStandardMaterial({ color: 0x6b2a10, roughness: 0.6, metalness: 0.1 });
+    (silhouette ? [] : [[Math.PI / 2, 0, 0], [0.4, 0, Math.PI / 2], [Math.PI / 2.6, Math.PI / 3, 0.3]]).forEach(rot => {
       const seam = new THREE.Mesh(new THREE.TorusGeometry(0.176, 0.007, 8, 40), seamMat);
       seam.rotation.set(...rot);
       ballGroup.add(seam);
@@ -153,6 +169,8 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const trim = new THREE.Mesh(new THREE.TorusGeometry(0.92, 0.016, 10, 60), new THREE.MeshStandardMaterial({ color: 0xE9B949, metalness: 0.8, roughness: 0.25, emissive: 0xE9B949, emissiveIntensity: 0.25 }));
     trim.rotation.x = Math.PI / 2;
     trim.position.y = 0.005;
+    // The reference is an airborne dunk, not a standing mannequin.
+    pedestal.visible = trim.visible = !silhouette;
     figure.add(pedestal, trim);
 
     // Forge floor: shadow catcher plus a molten contact glow under the figure.
@@ -164,6 +182,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const contactGlow = new THREE.Mesh(new THREE.CircleGeometry(0.95, 40), new THREE.MeshBasicMaterial({ color: 0xE9B949, transparent: true, opacity: 0, depthWrite: false }));
     contactGlow.rotation.x = -Math.PI / 2;
     contactGlow.position.y = -0.085;
+    contactGlow.visible = !silhouette;
     scene.add(contactGlow);
 
     // Aura sprite + ember particles
@@ -200,7 +219,10 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       const width = host.clientWidth, height = host.clientHeight;
       if (!width || !height) return;
       renderer.setSize(width, height, false);
-      camera.aspect = width / height;
+      if (camera.isOrthographicCamera) {
+        camera.left = -1.48 * width / height;
+        camera.right = 1.48 * width / height;
+      } else camera.aspect = width / height;
       camera.updateProjectionMatrix();
     };
     const observer = new ResizeObserver(resize);
@@ -221,7 +243,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
 
       // Motion: slow display rotation (faster + emissive pulse while spinning),
       // gentle idle bob — none for reduced-motion users.
-      if (!reducedMotion) {
+      if (!reducedMotion && !silhouette) {
         figure.rotation.y += (s.spinning ? 0.055 : 0.006);
         figure.position.y = Math.sin(t * 1.3) * 0.014;
       }
@@ -241,6 +263,11 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       for (const segment of segments) {
         for (const rec of segment.mats) {
           const flash = rec.flashT != null ? Math.max(0, 1 - (t - rec.flashT) * 2.2) : 0;
+          if (rec.rimStrength) {
+            const edgeTarget = rec.wasLit ? Math.min(1, 0.6 + flash * 0.4 + pulse) : 0;
+            rec.rimStrength.value += (edgeTarget - rec.rimStrength.value) * 0.12;
+            continue;
+          }
           const targetEmissive = (rec.wasLit ? 0.3 + 0.55 * progress + flash * 1.5 : rec.unlitEmissive) + pulse;
           rec.mat.emissiveIntensity += (targetEmissive - rec.mat.emissiveIntensity) * 0.12;
           rec.mat.color.lerp(rec.wasLit ? rec.litColor : rec.unlitColor, 0.09);
@@ -252,11 +279,12 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       // Ball ignition on completion
       const ballLit = s.complete;
       ballMat.wasLit = ballLit;
+      if (ballMat.rimStrength) ballMat.rimStrength.value += ((ballLit ? 1 : 0) - ballMat.rimStrength.value) * 0.08;
       ballMat.mat.emissiveIntensity += ((ballLit ? 0.75 + pulse : 0.05) - ballMat.mat.emissiveIntensity) * 0.08;
       ballMat.mat.color.lerp(ballLit ? BALL_LIT : BALL_HIDE, 0.08);
       ballMat.mat.emissive.lerp(ballLit ? new THREE.Color('#ff9147') : GOLD, 0.08);
       ballLight.intensity += ((ballLit ? 1.15 : 0) - ballLight.intensity) * 0.08;
-      ballGroup.rotation.y += 0.008;
+      if (!silhouette && !reducedMotion) ballGroup.rotation.y += 0.008;
 
       // Aura, embers, halo
       auraLight.intensity += ((0.12 + 0.75 * progress + (s.complete ? 0.4 : 0)) - auraLight.intensity) * 0.08;
@@ -289,10 +317,12 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       renderer.dispose();
       host.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [variant]);
 
-  if (failed) return <FallbackFigure filled={filled} total={total} className={className} />;
-  return <div ref={hostRef} role="img" aria-label={`Composite player forged ${filled} of ${total} skills`} className={`forge-figure ${className}`} />;
+  if (failed) return variant === 'reference'
+    ? <ReferenceFigureFallback filled={filled} total={total} className={className} />
+    : <FallbackFigure filled={filled} total={total} className={className} />;
+  return <div ref={hostRef} role="img" aria-label={`Composite player in the reference dunk pose, forged ${filled} of ${total} skills`} className={`forge-figure h-full w-full ${className}`} />;
 }
 
 // Static silhouette for environments without WebGL.

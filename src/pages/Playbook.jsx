@@ -32,14 +32,12 @@ export default function Playbook() {
   const [speed, setSpeed] = useState(1);
   const [mirrored, setMirrored] = useState(false);
 
-  const play = useMemo(() => (library ? findPlay(library, playId) || library.categories[0].plays[0] : null), [library, playId]);
+  const play = useMemo(() => (library ? findPlay(library, playId) || library.categories[0]?.plays[0] : null), [library, playId]);
   const animation = useMemo(() => (play ? buildFrames(play) : null), [play]);
   const frames = useMemo(() => (animation ? [{ ...animation.setup }, ...animation.frames] : []), [animation]);
   const stepCount = frames.length;
   const safeStep = Math.min(stepIndex, Math.max(0, stepCount - 1));
   const frame = frames[safeStep];
-
-  useEffect(() => { setStepIndex(0); }, [playId]);
 
   // Auto-advance through the steps while playing.
   useEffect(() => {
@@ -89,7 +87,7 @@ export default function Playbook() {
         )}
         {library && play && frame && (
           <div className="grid items-start gap-4 lg:grid-cols-[290px_minmax(0,1fr)]">
-            <PlayLibraryList categories={library.categories} selectedId={play.id} onSelect={(id) => { setPlaying(false); setPlayId(id); }} />
+            <PlayLibraryList categories={library.categories} selectedId={play.id} onSelect={(id) => { setPlaying(false); setStepIndex(0); setPlayId(id); }} />
             <div className="min-w-0 space-y-4">
               <div className="court-panel p-4 sm:p-5">
                 <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
@@ -114,7 +112,7 @@ export default function Playbook() {
                   />
                 </div>
               </div>
-              <PlayStepPanel play={play} label={`Step ${safeStep} of ${stepCount - 1}`} text={frame.text} isSetup={safeStep === 0} />
+              <PlayStepPanel play={play} label={`Step ${safeStep} of ${stepCount - 1}`} text={frame.text} involved={frame.involved} isSetup={safeStep === 0} />
             </div>
           </div>
         )}

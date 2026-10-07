@@ -3,14 +3,14 @@ import { Target, GitBranch, MapPin, User } from 'lucide-react';
 
 // Narration for the current step: what is happening, who is involved, the
 // play's tactical goal, its reads/counters, and the starting alignment.
-export default function PlayStepPanel({ play, label, text, isSetup = false }) {
-  const involved = [...new Set([...(text || '').matchAll(/\b([OX]\d)\b/g)].map((m) => m[1]))];
+export default function PlayStepPanel({ play, label, text, involved, isSetup = false }) {
+  const tokens = involved || [...new Set([...(text || '').matchAll(/\b([OX]\d)\b/g)].map((m) => m[1]))];
   return (
     <div className="court-panel p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="bcast-kicker">{isSetup ? 'Setup' : label}</p>
         <div className="flex flex-wrap gap-1.5">
-          {involved.map((id) => (
+          {tokens.map((id) => (
             <span key={id} className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 font-mono text-[10.4px] font-semibold ${id[0] === 'O' ? 'border-gold/40 bg-gold/10 text-gold' : 'border-trim/40 bg-trim/10 text-trim-ink'}`}>
               <User className="h-3 w-3" />{id}
             </span>

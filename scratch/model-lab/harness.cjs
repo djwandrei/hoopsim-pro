@@ -41,7 +41,7 @@ async function load() {
     .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.ref < b.ref ? -1 : 1));
   const teams = [...new Set(games.flatMap(g => [g.home, g.away]))].sort();
 
-  const F_TOTAL = ['hp10', 'ap10', 'hpa10', 'apa10', 'hp20', 'ap20', 'hpa20', 'apa20', 'restMean', 'g7Mean', 'etMean'];
+  const F_TOTAL = ['hp10', 'ap10', 'hpa10', 'apa10', 'hp20', 'ap20', 'hpa20', 'apa20', 'restMean', 'g7Mean', 'etMean', 'venueTotMean', 'tot10Mean', 'totAdv10'];
   // Elo variant grid: K x HCA x binary/margin updates (FiveThirtyEight-style
   // margin-of-victory multiplier on the margin variants).
   const ELO_GRID = [];
@@ -55,7 +55,7 @@ async function load() {
   const dateIndex = new Map(dates.map((d, i) => [d, i]));
   const idxOf = new Map(teams.map((t, i) => [t, i]));
 
-  const hist = new Map(teams.map(t => [t, { d: [], pf: [], pa: [], win: [], homePf: [], awayPf: [], em: 0, et: 0, emf: 0, ewr: null }]));
+  const hist = new Map(teams.map(t => [t, { d: [], pf: [], pa: [], win: [], homePf: [], awayPf: [], homeTot: [], awayTot: [], totAll: [], em: 0, et: 0, emf: 0, ewr: null }]));
   const elo = new Map(teams.map(t => [t, 1500]));
   let leaguePf = 110, leaguePa = 110, leagueN = 0;
   const feats = [];
@@ -129,9 +129,14 @@ async function load() {
       const hG7 = g7Of(h), aG7 = g7Of(a);
       const venueDev = (x, venueList) => { const vMean = wmeanN(venueList, 10); if (vMean == null) return 0; return vMean - wmean(x.pf, 10, leaguePf); };
       const hVenue = venueDev(h, h.homePf), aVenue = venueDev(a, a.awayPf);
+      const lgTot = leaguePf + leaguePa;
+      const ht10 = wmeanN(h.homeTot, 10), at10 = wmeanN(a.awayTot, 10);
       feats.push({
         idx: feats.length, ref: g.ref, season, date: d, g,
-        T: { hp10, ap10, hpa10, apa10, hp20, ap20, hpa20, apa20, restMean: (hRest + aRest) / 2, g7Mean: (hG7 + aG7) / 2, etMean: (h.et + a.et) / 2 },
+        T: { hp10, ap10, hpa10, apa10, hp20, ap20, hpa20, apa20, restMean: (hRest + aRest) / 2, g7Mean: (hG7 + aG7) / 2, etMean: (h.et + a.et) / 2,
+          venueTotMean: ht10 != null && at10 != null ? (ht10 + at10) / 2 : (ht10 ?? at10 ?? lgTot),
+          tot10Mean: (wmean(h.totAll, 10, lgTot) + wmean(a.totAll, 10, lgTot)) / 2,
+          totAdv10: wmean(h.totAll, 10, lgTot) - wmean(a.totAll, 10, lgTot) },
         M: {
           pfAdv10: hp10 - ap10, defAdv10: hpa10 - apa10, wrAdv10: (hwr10 ?? 0.5) - (awr10 ?? 0.5), restAdv: hRest - aRest,
           g7Adv: hG7 - aG7, strAdv: strOf(g.home) - strOf(g.away), pfAdv5: hp5 - ap5, defAdv5: hpa5 - apa5,
@@ -150,9 +155,11 @@ async function load() {
       const h = hist.get(g.home), a = hist.get(g.away);
       const m = g.hp - g.ap, tot = g.hp + g.ap;
       h.d.push(g.date); h.pf.push(g.hp); h.pa.push(g.ha); h.win.push(m > 0 ? 1 : 0); h.homePf.push(g.hp);
+      h.homeTot.push(tot); h.totAll.push(tot);
       h.em = h.em * 0.88 + 0.12 * m; h.et = h.et * 0.88 + 0.12 * tot;
       h.emf = h.emf * 0.8 + 0.2 * m; h.ewr = (h.ewr == null ? 0.5 : h.ewr * 0.8) + 0.2;
       a.d.push(g.date); a.pf.push(g.ap); a.pa.push(g.aa); a.win.push(m < 0 ? 1 : 0); a.awayPf.push(g.ap);
+      a.awayTot.push(tot); a.totAll.push(tot);
       a.em = a.em * 0.88 - 0.12 * m; a.et = a.et * 0.88 + 0.12 * tot;
       a.emf = a.emf * 0.8 - 0.2 * m; a.ewr = (a.ewr == null ? 0.5 : a.ewr * 0.8) + 0.2 * (m < 0 ? 1 : 0);
       leaguePf = (leaguePf * leagueN + g.hp) / (leagueN + 1); leaguePa = (leaguePa * leagueN + g.ha) / (leagueN + 1); leagueN += 2;

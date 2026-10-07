@@ -30,6 +30,7 @@ const PG_FNS = {
   availAdv5: (h, a) => diffPg(h, a, 'a5roll3'),
   availAdv8: (h, a) => diffPg(h, a, 'a8roll3'),
   availMean5: (h, a) => meanPg(h, a, 'a5roll3'),
+  availMeanWide: (h, a) => meanPg(h, a, 'a5roll5'),
   missAdv10: (h, a) => diffPg(h, a, 'miss10'),
   minTop5Adv: (h, a) => diffPg(h, a, 'minTop5roll5'),
   minTop5Mean: (h, a) => meanPg(h, a, 'minTop5roll5'),
@@ -59,6 +60,16 @@ function runCandidate2(db, cfg) {
     const scM = pgMIdx.map((_, j) => SCALE_STATS(rawM0.filter((_, i) => warmMask[i]).map(r => r[j])));
     stdT = feats.map((f, i) => [...stdT[i], ...rawT0[i].map((v, j) => v / scT[j].rms)]);
     stdM = feats.map((f, i) => [...stdM[i], ...rawM0[i].map((v, j) => v / scM[j].rms)]);
+  }
+  // Standardized cross-features (product of two existing margin-head columns,
+  // 'pg:' prefix selects a player-games feature). Requires the pg block above.
+  if (cfg.crossM) {
+    const namesNow = [...namesM, ...pgMIdx.map(n => 'pg:' + n)];
+    const col = (fi, name) => { const i = namesNow.indexOf(name); if (i < 0) throw new Error(`unknown cross member ${name}`); return stdM[fi][i]; };
+    const rawProds = feats.map((f, fi) => cfg.crossM.map(p => col(fi, p[0]) * col(fi, p[1])));
+    const warmMask = feats.map(f => db.WARMUP_YEARS.includes(f.season));
+    const scC = cfg.crossM.map((_, j) => SCALE_STATS(rawProds.filter((_, i) => warmMask[i]).map(r => r[j])));
+    stdM = feats.map((f, i) => [...stdM[i], ...rawProds[i].map((v, j) => v / scC[j].rms)]);
   }
   const dT = stdT[0].length + 1, dM = stdM[0].length + 1;
   const lambdaT = cfg.lambdaT ?? 8, lambdaM = cfg.lambdaM ?? 8;
@@ -137,6 +148,9 @@ function runCandidate2(db, cfg) {
   let autoS = 1.0;
   let curSeason = null, datesSince = 99;
   let bV = null;
+  // Direct online-logistic win head on the same standardized margin features;
+  // blended with the empirical residual-pool probability (cfg.logitBlend).
+  let logitW = null, logitN = 0;
 
   for (const d of dates) {
     const rows = feats.filter(f => f.date === d);
@@ -204,21 +218,30 @@ function runCandidate2(db, cfg) {
         q10 = margin - 1.281552 * sd; q90 = margin + 1.281552 * sd;
       } else if (stratProb && wN) {
         const am = Math.abs(margin);
+        const sS = cfg.scaleS ?? scaleNow, sM_ = cfg.scaleMid ?? scaleNow, sL = cfg.scaleL ?? scaleNow;
         const pool = stratHi != null
           ? (am < stratCut ? (poolS.length >= 100 ? poolS : residM) : am < stratHi ? (poolMid.length >= 100 ? poolMid : residM) : (poolL.length >= 100 ? poolL : residM))
           : (am < stratCut ? (poolS.length >= 100 ? poolS : residM) : (poolL.length >= 100 ? poolL : residM));
+        const poolScale = stratHi != null
+          ? (am < stratCut ? sS : am < stratHi ? sM_ : sL)
+          : (am < stratCut ? sS : sL);
         let s2 = 0; for (const x of pool) s2 += x;
         const pm = pool.length ? s2 / pool.length : 0;
         const pN = pool.length;
         p = 0.5;
         if (pN) {
           let c = 0;
-          for (let i = 0; i < pN; i++) { const v = margin + (pool[i] - pm) * scaleNow; c += v > 0 ? 1 : v === 0 ? 0.5 : 0; }
+          for (let i = 0; i < pN; i++) { const v = margin + (pool[i] - pm) * poolScale; c += v > 0 ? 1 : v === 0 ? 0.5 : 0; }
+          if (cfg.poolShrink != null) {
+            let cA = 0;
+            for (let i = 0; i < wN; i++) { const v = margin + (residM[i] - wm) * scaleNow; cA += v > 0 ? 1 : v === 0 ? 0.5 : 0; }
+            p = cfg.poolShrink * (c / pN) + (1 - cfg.poolShrink) * (cA / wN);
+          }
           p = c / pN;
           if (pN >= 100) {
             const stride = Math.max(1, Math.floor(pN / 300));
             const samples = [];
-            for (let i = 0; i < pN; i += stride) samples.push(margin + (pool[i] - pm) * scaleNow);
+            for (let i = 0; i < pN; i += stride) samples.push(margin + (pool[i] - pm) * poolScale);
             samples.sort((a, b) => a - b);
             const n2 = samples.length;
             let term1 = 0; for (const x of samples) term1 += Math.abs(x - margin);
@@ -308,7 +331,10 @@ function runCandidate2(db, cfg) {
           }
         }
       }
-      const yT = g.hp + g.ap, yM = g.hp - g.ap;
+      const yTr = g.hp + g.ap, yMr = g.hp - g.ap;
+      const winsorM = cfg.winsorM ?? null;
+      const yM = winsorM ? Math.max(-winsorM, Math.min(winsorM, yMr)) : yMr;
+      const yT = yTr;
       if (autoStep && q025 != null) {
         intLog.push({ q10, q90, q025, q975, y: yM });
         if (intLog.length > autoWin) intLog.shift();
@@ -319,7 +345,23 @@ function runCandidate2(db, cfg) {
           autoS = Math.min(1.35, Math.max(0.7, autoS * (1 + autoStep * err * 4)));
         }
       }
-      out.push({ idx: f.idx, season: f.season, date: f.date, obsT: yT, obsM: yM, total, margin, p, crpsM, q025, q975, q10, q90 });
+      if (cfg.logit) {
+        if (!logitW) logitW = new Float64Array(xM.length + 1);
+        if (logitN >= (cfg.logitMin ?? 300)) {
+          const z = logitW[0] + xM.reduce((s, v, i) => s + v * logitW[i + 1], 0);
+          const pl = 1 / (1 + Math.exp(-z));
+          p = (1 - (cfg.logitBlend ?? 0.5)) * p + (cfg.logitBlend ?? 0.5) * pl;
+        }
+      }
+      if (cfg.seasonShrink != null) {
+        const inSeason = datesSince; // 1 on the season's first date
+        const cutoff = cfg.shrinkDates ?? 8;
+        if (inSeason <= cutoff) {
+          const f2 = 1 - (cfg.seasonShrink * (1 - inSeason / (cutoff + 1)));
+          p = 0.5 + (p - 0.5) * f2;
+        }
+      }
+      out.push({ idx: f.idx, season: f.season, date: f.date, obsT: yTr, obsM: yMr, total, margin, p, crpsM, q025, q975, q10, q90 });
       const rm = yM - margin;
       residM.push(rm); residDay.push(db.dateIndex.get(f.date)); if (residM.length > 1000) { residM.shift(); residDay.shift(); }
       residPairs.push([margin, rm]); if (residPairs.length > 1000) residPairs.shift();
@@ -330,6 +372,15 @@ function runCandidate2(db, cfg) {
       const xTv = stdT[f.idx];
       const xMv = stdM[f.idx];
       addRowInto(accT, [1, ...xTv], yT, 1); addRowInto(accM, [1, ...xMv], yM, 1);
+      if (cfg.logit && logitW) {
+        const lr = cfg.logitLr ?? 0.02, l2 = cfg.logitL2 ?? 1e-4;
+        const yw = yMr > 0 ? 1 : 0;
+        const z = logitW[0] + xMv.reduce((s, v, i) => s + v * logitW[i + 1], 0);
+        const e = yw - 1 / (1 + Math.exp(-z));
+        logitW[0] += lr * e;
+        for (let i = 0; i < xMv.length; i++) logitW[i + 1] += lr * (e * xMv[i] - l2 * logitW[i + 1]);
+        logitN++;
+      }
       rawT.push([1, ...xTv, yT]); rawM.push([1, ...xMv, yM]); seasonRows.push(f.season); rawD.push(db.dateIndex.get(f.date));
       if (accV && bM) { const r2 = rm * rm; addRowInto(accV, [1, ...xMv], r2, 1); rawV.push([1, ...xMv, r2]); }
     }

@@ -1,0 +1,63 @@
+import React, { useMemo, useState } from 'react';
+import { Search } from 'lucide-react';
+
+// Browsable play library: search + category filter, grouped by dictionary
+// section (formations, systems, ball screens, defense, BLOB/SLOB, ...).
+export default function PlayLibraryList({ categories, selectedId, onSelect }) {
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('');
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return categories
+      .filter((item) => !category || item.title === category)
+      .map((item) => ({
+        ...item,
+        plays: item.plays.filter((play) => !q || play.name.toLowerCase().includes(q) || play.type.toLowerCase().includes(q) || play.goal.toLowerCase().includes(q)),
+      }))
+      .filter((item) => item.plays.length > 0);
+  }, [categories, query, category]);
+
+  return (
+    <div className="court-panel p-4">
+      <p className="court-kicker mb-3">Play library</p>
+      <div className="space-y-2">
+        <label className="relative block">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search plays, sets, schemes…"
+            aria-label="Search the play library"
+            className="min-h-10 w-full rounded-lg border border-input bg-raised/40 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground/70"
+          />
+        </label>
+        <select className="studio-select" value={category} onChange={(event) => setCategory(event.target.value)} aria-label="Filter by category">
+          <option value="">All categories ({categories.reduce((total, item) => total + item.plays.length, 0)})</option>
+          {categories.map((item) => <option key={item.title} value={item.title}>{item.title} ({item.plays.length})</option>)}
+        </select>
+      </div>
+      <div className="mt-3 max-h-[60vh] space-y-4 overflow-y-auto pr-1 lg:max-h-[calc(100vh-19rem)]">
+        {filtered.map((item) => (
+          <section key={item.title}>
+            <p className="mb-1.5 font-mono text-[10.4px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{item.title}</p>
+            <div className="flex flex-col gap-1">
+              {item.plays.map((play) => (
+                <button
+                  key={play.id}
+                  type="button"
+                  onClick={() => onSelect(play.id)}
+                  aria-current={play.id === selectedId}
+                  className={`rounded-lg border px-3 py-2 text-left text-xs leading-snug transition-colors ${play.id === selectedId ? 'border-gold/30 bg-gold/10 font-semibold text-gold' : 'border-transparent text-muted-foreground hover:bg-raised hover:text-foreground'}`}
+                >
+                  {play.name}
+                </button>
+              ))}
+            </div>
+          </section>
+        ))}
+        {filtered.length === 0 && <p className="py-6 text-center text-xs text-muted-foreground">No plays match that search.</p>}
+      </div>
+    </div>
+  );
+}

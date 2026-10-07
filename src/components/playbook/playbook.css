@@ -1,0 +1,13 @@
+.playbook-pass {
+  stroke: hsl(var(--court-focus));
+  stroke-width: 2.5;
+  stroke-dasharray: 7 7;
+  opacity: 0.95;
+  animation: playbook-dash 0.8s linear infinite;
+}
+@keyframes playbook-dash {
+  to { stroke-dashoffset: -14; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .playbook-pass { animation: none; }
+}

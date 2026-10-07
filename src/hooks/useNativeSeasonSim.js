@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
-import { runNativeSeason } from '@/lib/season/nativeSeasonEngine';
+import { useCallback, useEffect, useState } from 'react';
+import { runNativeSeason, seasonSourceBlocked } from '@/lib/season/nativeSeasonEngine';
+import { isV4RequiredError, V4_POLICY_NOTICE } from '@/lib/season/v4Policy';
 
 // Season replay driven by the site's release-pinned native engine. The hook
 // mirrors the local sim hook's surface so the replay console and every hub
@@ -10,6 +11,15 @@ export default function useNativeSeasonSim() {
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [policyBlocked, setPolicyBlocked] = useState(false);
+
+  // Surface the site's V4 model-execution gate before any click: while the
+  // reviewed V4 release is descriptive-only, season replays pause studio-wide.
+  useEffect(() => {
+    let active = true;
+    seasonSourceBlocked().then(blocked => { if (active) setPolicyBlocked(blocked); });
+    return () => { active = false; };
+  }, []);
 
   const run = useCallback(async (league, scheduleRows, year) => {
     if (!league || !year) return;
@@ -32,7 +42,9 @@ export default function useNativeSeasonSim() {
       });
       setResult(mapped);
     } catch (e) {
-      setError(e?.message || 'The native season replay could not run.');
+      const blocked = isV4RequiredError(e);
+      if (blocked) setPolicyBlocked(true);
+      setError(blocked ? V4_POLICY_NOTICE : (e?.message || 'The native season replay could not run.'));
     } finally {
       setRunning(false);
     }
@@ -44,5 +56,5 @@ export default function useNativeSeasonSim() {
     setError('');
   }, []);
 
-  return { setup, setSetup, running, progress, result, error, run, reset };
+  return { setup, setSetup, running, progress, result, error, run, reset, policyBlocked };
 }

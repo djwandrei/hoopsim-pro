@@ -85,7 +85,7 @@ export default function SeasonLab() {
           onTab={setTab}
           teamPicker={{ teams: league.teams, focusCode: team.code, onChange: setFocus }}
         >
-          <SimErrorBanner error={sim.error} />
+          <SimErrorBanner error={sim.error} hint={sim.policyBlocked ? '' : undefined} />
           <LeagueControls
             years={years}
             year={year}
@@ -95,6 +95,7 @@ export default function SeasonLab() {
             onRun={() => sim.run(league, source.schedule, year)}
             running={sim.running}
             progress={sim.progress}
+            blocked={sim.policyBlocked}
             hasResults={Boolean(sim.result)}
             championName={championName}
           />

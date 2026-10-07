@@ -115,7 +115,7 @@ export default function GameLab() {
   const resultHome = league.byCode.get(sim.game?.home) || home;
   const resultAway = league.byCode.get(sim.game?.away) || away;
   const breakdown = simProps => (
-    <MatchupBreakdown league={league} source={source} year={year} a={a} b={b} onA={setA} onB={setB} teamA={home} teamB={away} {...simProps} />
+    <MatchupBreakdown league={league} source={source} year={year} a={a} b={b} onA={setA} onB={setB} teamA={home} teamB={away} blocked={sim.policyBlocked} {...simProps} />
   );
 
   // The current finished result, expressed as a shelf entry (same call that
@@ -143,7 +143,7 @@ export default function GameLab() {
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
       <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: review the matchup intel, then sim single games and 7-game series." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">
-        <SimErrorBanner error={sim.error} />
+        <SimErrorBanner error={sim.error} hint={sim.policyBlocked ? '' : undefined} />
         <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&
           <div className="space-y-4">
@@ -154,7 +154,7 @@ export default function GameLab() {
               breakdown({ onSimGame: () => sim.runGame(league, home, away, { packageRef }), hasGame: false })}
               <GameControls
               settings={sim.settings} onSettingsChange={sim.setSettings}
-              running={sim.running} progress={sim.progress}
+              running={sim.running} progress={sim.progress} blocked={sim.policyBlocked}
               onShareLink={shareLink} />
             
               {sim.game ?
@@ -180,7 +180,7 @@ export default function GameLab() {
               {breakdown({})}
               <GameControls
               settings={sim.settings} onSettingsChange={sim.setSettings}
-              running={sim.running} progress={sim.progress}
+              running={sim.running} progress={sim.progress} blocked={sim.policyBlocked}
               onShareLink={shareLink}
               onRunSeries={() => sim.runSeries(league, home, away, { packageRef })}
               hasSeries={Boolean(sim.series)} />

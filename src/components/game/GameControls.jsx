@@ -7,7 +7,7 @@ const ghostBtn = 'inline-flex min-h-10 items-center gap-2 rounded-lg border bord
 // Native engine control strip: the site's possession-engine settings
 // (possessions, trials, attack weight), plus the series run action and the
 // shareable link.
-export default function GameControls({ settings, onSettingsChange, onRunSeries, hasSeries, onShareLink, running = false, progress = 0 }) {
+export default function GameControls({ settings, onSettingsChange, onRunSeries, hasSeries, onShareLink, running = false, progress = 0, blocked = false }) {
   const [copied, setCopied] = useState(false);
   const share = async () => {
     await onShareLink();
@@ -39,13 +39,14 @@ export default function GameControls({ settings, onSettingsChange, onRunSeries, 
       </div>
       <div className="flex flex-wrap items-center gap-3">
         {running && <span className="myna-mono text-[10px] myna-muted">SIMULATING… {Math.round(progress * 100)}%</span>}
+        {!running && blocked && <span className="myna-mono text-[10px] myna-muted">PAUSED — V4 MODEL GATE</span>}
         {onShareLink && (
           <button type="button" onClick={share} className={ghostBtn} aria-label="Copy shareable link">
             {copied ? <Check className="h-3.5 w-3.5" /> : <Link2 className="h-3.5 w-3.5" />}{copied ? 'LINK COPIED' : 'COPY LINK'}
           </button>
         )}
         {onRunSeries && (
-          <button type="button" onClick={onRunSeries} disabled={running} className="myna-accent inline-flex min-h-11 items-center gap-2 rounded-lg px-6 text-[12px] font-semibold tracking-[0.18em] transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button type="button" onClick={onRunSeries} disabled={running || blocked} className="myna-accent inline-flex min-h-11 items-center gap-2 rounded-lg px-6 text-[12px] font-semibold tracking-[0.18em] transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed">
             <Play className="h-3.5 w-3.5" />{hasSeries ? 'SIM NEW SERIES' : 'SIM 7-GAME SERIES'}
           </button>
         )}

@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   nativeGameLabModules, nativeGameLabSource,
   mapNativeGameReport, mapNativeSeriesReport,
 } from '@/lib/season/nativeGameEngine';
+import { seasonSourceBlocked } from '@/lib/season/nativeSeasonEngine';
+import { isV4RequiredError, V4_POLICY_NOTICE } from '@/lib/season/v4Policy';
 
 const SERIES_HISTORY_KEY = 'swishiq-game-lab-series';
 const DEFAULT_SETTINGS = { possessions: 100, trials: 1000, attackWeight: 0.5 };
@@ -35,6 +37,15 @@ export default function useNativeGameSim(initial = {}) {
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
+  const [policyBlocked, setPolicyBlocked] = useState(false);
+
+  // Surface the site's V4 model-execution gate before any click: while the
+  // reviewed V4 release is descriptive-only, sims pause studio-wide.
+  useEffect(() => {
+    let active = true;
+    seasonSourceBlocked().then(blocked => { if (active) setPolicyBlocked(blocked); });
+    return () => { active = false; };
+  }, []);
 
   const run = useCallback(async (home, away, packageRef, format) => {
     if (running) return null;
@@ -57,7 +68,9 @@ export default function useNativeGameSim(initial = {}) {
       }, { onProgress: setProgress });
       return report;
     } catch (e) {
-      setError(e?.message || 'The native matchup could not run.');
+      const blocked = isV4RequiredError(e);
+      if (blocked) setPolicyBlocked(true);
+      setError(blocked ? V4_POLICY_NOTICE : (e?.message || 'The native matchup could not run.'));
       return null;
     } finally {
       setRunning(false);
@@ -97,5 +110,5 @@ export default function useNativeGameSim(initial = {}) {
     try { sessionStorage.removeItem(SERIES_HISTORY_KEY); } catch { /* ignore */ }
   }, []);
 
-  return { seed, setSeed, neutral, setNeutral, settings, setSettings, game, series, runGame, runSeries, reset, running, progress, error };
+  return { seed, setSeed, neutral, setNeutral, settings, setSettings, game, series, runGame, runSeries, reset, running, progress, error, policyBlocked };
 }

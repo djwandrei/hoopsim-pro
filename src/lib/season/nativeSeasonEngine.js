@@ -4,6 +4,7 @@
 // simulations — the studio UI drives them but never models outcomes itself.
 import { loadNativeModule } from '@/components/native/nativeModules';
 import { originalFetch } from '@/components/native/nativeTransport';
+import { isV4RequiredError } from '@/lib/season/v4Policy';
 
 const SEASON_MODEL = 'engine/season-lab-model.js?v=20261001b&rev=season-model-v26-fixed-16-team-playoffs-20261001b';
 const SCHEDULE_SOURCE = 'engine/nba-schedule-source.js?v=20260920c&rev=structure-v1';
@@ -26,6 +27,19 @@ export function nativeSeasonModules() {
     modulesPromise.catch(() => { modulesPromise = null; });
   }
   return modulesPromise;
+}
+
+// Policy probe: the site's V4 cutover gate resolves before any registry fetch,
+// so one gate call answers with zero network traffic. Cached for the session.
+let sourceGateProbe = null;
+export function seasonSourceBlocked() {
+  if (!sourceGateProbe) {
+    sourceGateProbe = loadNativeModule('season-lab.js')
+      .then(module => { module.listNativeSeasonLabExactChoices({}, { requiredCapabilities: [] }); return false; })
+      .catch(error => isV4RequiredError(error));
+    sourceGateProbe.catch(() => { sourceGateProbe = null; });
+  }
+  return sourceGateProbe;
 }
 
 // One verified native source per season per session: registry selection,

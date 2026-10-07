@@ -13,7 +13,7 @@ const labelCls = 'myna-muted mb-1.5 block text-[9px] font-bold uppercase trackin
 // Broadcast replay console: season, replays, scoring mix, playoffs and the run action.
 export default function LeagueControls({
   years, year, onYearChange, setup, onSetupChange,
-  onRun, running, progress, hasResults, championName,
+  onRun, running, progress, hasResults, championName, blocked = false,
 }) {
   const pct = Math.round((progress || 0) * 100);
   return (
@@ -35,7 +35,7 @@ export default function LeagueControls({
               : { borderColor: 'var(--myna-border)', color: 'var(--myna-muted)' }}
         >
           <span className={`inline-block h-1.5 w-1.5 rounded-full ${running ? 'animate-pulse' : ''}`} style={{ background: running ? 'var(--myna-accent)' : 'var(--myna-muted)' }} />
-          {running ? `RUNNING · ${pct}%` : hasResults ? 'RESULTS READY' : 'READY'}
+          {running ? `RUNNING · ${pct}%` : blocked ? 'V4 GATED' : hasResults ? 'RESULTS READY' : 'READY'}
         </span>
       </header>
 
@@ -65,7 +65,7 @@ export default function LeagueControls({
         <button
           type="button"
           onClick={onRun}
-          disabled={running}
+          disabled={running || blocked}
           className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-5 text-[11px] font-bold tracking-[0.18em] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
           style={{ background: 'linear-gradient(115deg, var(--myna-accent), var(--myna-action-end, var(--myna-hi)))', color: 'var(--myna-on-accent)', boxShadow: '0 6px 18px color-mix(in srgb, var(--myna-accent) 30%, transparent)' }}
         >

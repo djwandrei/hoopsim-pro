@@ -13,7 +13,7 @@ const sideChip = (team, side) => (
   </div>
 );
 
-export default function MatchupPicker({ league, a, b, onA, onB, onSimGame, hasGame }) {
+export default function MatchupPicker({ league, a, b, onA, onB, onSimGame, hasGame, blocked = false }) {
   const swap = () => { onA(b); onB(a); };
   const randomize = () => {
     const first = Math.floor(Math.random() * league.teams.length);
@@ -48,8 +48,8 @@ export default function MatchupPicker({ league, a, b, onA, onB, onSimGame, hasGa
         <p className="col-span-2 text-center text-[10px] myna-muted">{teamA.code} hosts · swing the sides with swap or a random pairing</p>
       </div>
       {onSimGame && (
-        <button type="button" onClick={onSimGame} className="myna-accent mt-4 flex w-full min-h-12 items-center justify-center gap-2 rounded-lg text-[12px] font-semibold tracking-[0.18em] transition-opacity hover:opacity-90">
-          {hasGame ? 'SIM NEW GAME' : 'SIM GAME'}
+        <button type="button" onClick={onSimGame} disabled={blocked} className="myna-accent mt-4 flex w-full min-h-12 items-center justify-center gap-2 rounded-lg text-[12px] font-semibold tracking-[0.18em] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40">
+          {blocked ? 'SIM PAUSED — V4 GATE' : hasGame ? 'SIM NEW GAME' : 'SIM GAME'}
         </button>
       )}
     </section>

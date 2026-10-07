@@ -170,6 +170,20 @@ function initialPositions(play) {
         : zonePoint(zone, side);
     });
   }
+  // Overlap pass: an explicit assignment can land on another player's default
+  // spot ("O5 top" while O1 defaults to top) — nudge the default-holder away.
+  const ids = Object.keys(pos);
+  const spotOpen = (p, self) => !ids.some((other) => other !== self && Math.hypot(pos[other][0] - p[0], pos[other][1] - p[1]) < 30);
+  for (const id of ids) {
+    const isDefault = pos[id][0] === DEFAULT_SPOTS[id][0] && pos[id][1] === DEFAULT_SPOTS[id][1];
+    const clash = ids.find((other) => other !== id && Math.hypot(pos[other][0] - pos[id][0], pos[other][1] - pos[id][1]) < 30);
+    if (!isDefault || !clash) continue;
+    pos[id] = [
+      [pos[id][0] + 40, pos[id][1]], [pos[id][0] - 40, pos[id][1]],
+      [pos[id][0], pos[id][1] + 34], [pos[id][0], pos[id][1] - 34],
+      [pos[id][0] + 40, pos[id][1] + 34], [pos[id][0] - 40, pos[id][1] - 34],
+    ].find(spotOpen) || pos[id];
+  }
   return pos;
 }
 
@@ -241,6 +255,10 @@ function offenseMovement(stepText, offense, ballSide) {
   for (const group of stepText.matchAll(groupRe)) {
     const players = offenseTokens(group[0]);
     const ahead = stepText.slice(group.index + group[0].length, group.index + group[0].length + 120);
+    // A token referenced as a waypoint ("cuts tightly off O5…") only marks
+    // the screen the mover uses — it does not move itself.
+    const lead = stepText.slice(Math.max(0, group.index - 12), group.index);
+    if (/\b(?:off|past|around|behind|by)\s*(?:of)?\s*$/i.test(lead)) continue;
     const stop = ahead.search(/\b[OX]\d\b/i);
     const window = stop >= 0 ? ahead.slice(0, stop) : ahead;
     let zoneMatch = firstDestination(window);
@@ -378,6 +396,22 @@ export function buildFrames(play) {
     screens: [],
     involved: Object.keys(offense),
   };
+  // Step movers may land on a stationary teammate's spot (a cross-lane cut
+  // into an occupied wing, two screeners converging on the same gap). Nudge
+  // anyone that ends on top of someone else into the nearest open spot.
+  const resolveOverlaps = (pos) => {
+    const ids = Object.keys(pos);
+    const spotOpen = (p, self) => !ids.some((other) => other !== self && Math.hypot(pos[other][0] - p[0], pos[other][1] - p[1]) < 22);
+    for (const id of ids) {
+      if (spotOpen(pos[id], id)) continue;
+      pos[id] = [
+        [pos[id][0] + 40, pos[id][1]], [pos[id][0] - 40, pos[id][1]],
+        [pos[id][0], pos[id][1] + 34], [pos[id][0], pos[id][1] - 34],
+        [pos[id][0] + 40, pos[id][1] + 34], [pos[id][0] - 40, pos[id][1] - 34],
+      ].find(spotOpen) || pos[id];
+    }
+    return pos;
+  };
   const frames = play.steps.map((stepText) => {
     const ballSide = offense[ballOwner][0] <= 250 ? 'left' : 'right';
     const { passes, owner } = detectPasses(stepText, ballOwner);
@@ -392,6 +426,7 @@ export function buildFrames(play) {
         moved.add(action.cutter);
       }
     }
+    resolveOverlaps(next);
     Object.assign(offense, next);
     if (owner && offense[owner]) ballOwner = owner;
     const ballPos = ballPosFor(ballOwner);

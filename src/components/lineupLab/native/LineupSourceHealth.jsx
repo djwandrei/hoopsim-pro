@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReleasePinChip from '@/components/lineupLab/native/ReleasePinChip';
 
 // Source health check: verifies the vendored solver module graph is present
 // on this origin (the same files the background search worker imports). A
@@ -46,8 +47,12 @@ export default function LineupSourceHealth() {
   }, []);
 
   if (!health) return <span className="ll-health is-pending">Checking solver files…</span>;
-  if (health.missing.length) {
-    return <span className="ll-health is-warn">Solver check: {health.total - health.missing.length}/{health.total} files ready — republish to restore the rest.</span>;
-  }
-  return <span className="ll-health is-ok">Solver files verified · {health.total}/{health.total} ready</span>;
+  return (
+    <span className="flex flex-wrap items-center gap-2">
+      {health.missing.length
+        ? <span className="ll-health is-warn">Solver check: {health.total - health.missing.length}/{health.total} files ready — republish to restore the rest.</span>
+        : <span className="ll-health is-ok">Solver files verified · {health.total}/{health.total} ready</span>}
+      <ReleasePinChip />
+    </span>
+  );
 }

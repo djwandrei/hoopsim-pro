@@ -42,14 +42,20 @@ async function load() {
   const teams = [...new Set(games.flatMap(g => [g.home, g.away]))].sort();
 
   const F_TOTAL = ['hp10', 'ap10', 'hpa10', 'apa10', 'hp20', 'ap20', 'hpa20', 'apa20', 'restMean', 'g7Mean', 'etMean'];
-  const F_MARGIN = ['pfAdv10', 'defAdv10', 'wrAdv10', 'restAdv', 'g7Adv', 'strAdv', 'pfAdv5', 'defAdv5', 'wrAdv20', 'pfAdv20', 'defAdv20', 'emAdv', 'eloAdv', 'venueAdv'];
+  // Elo variant grid: K x HCA x binary/margin updates (FiveThirtyEight-style
+  // margin-of-victory multiplier on the margin variants).
+  const ELO_GRID = [];
+  for (const K of [12, 16, 20, 24, 32]) for (const H of [35, 50, 65]) for (const useM of [false, true]) ELO_GRID.push({ K, H, useM, name: `${K}h${H}${useM ? 'm' : ''}` });
+  const elos = new Map(ELO_GRID.map(v => [v.name, new Map(teams.map(t => [t, 1500]))]));
+  const F_MARGIN = ['pfAdv10', 'defAdv10', 'wrAdv10', 'restAdv', 'g7Adv', 'strAdv', 'pfAdv5', 'defAdv5', 'wrAdv20', 'pfAdv20', 'defAdv20', 'emAdv', 'eloAdv', 'venueAdv', 'emFastAdv', 'ewrAdv', 'stdAdv10', 'rStrAdv45', 'rStrAdv60', 'rStrAdv90', 'xStrEm', 'xStrRest', 'xEmRest', 'xEloStr', ...ELO_GRID.map(v => `eloAdv_${v.name}`)];
   const day = v => Math.round(Date.parse(v + 'T12:00:00Z') / 86400000);
+  const gameDay = new Map(games.map(g => [g.ref, day(g.date)]));
   const dates = []; const byDate = new Map();
   for (const g of games) { if (!byDate.has(g.date)) { byDate.set(g.date, []); dates.push(g.date); } byDate.get(g.date).push(g); }
   const dateIndex = new Map(dates.map((d, i) => [d, i]));
   const idxOf = new Map(teams.map((t, i) => [t, i]));
 
-  const hist = new Map(teams.map(t => [t, { d: [], pf: [], pa: [], win: [], homePf: [], awayPf: [], em: 0, et: 0 }]));
+  const hist = new Map(teams.map(t => [t, { d: [], pf: [], pa: [], win: [], homePf: [], awayPf: [], em: 0, et: 0, emf: 0, ewr: null }]));
   const elo = new Map(teams.map(t => [t, 1500]));
   let leaguePf = 110, leaguePa = 110, leagueN = 0;
   const feats = [];
@@ -59,24 +65,44 @@ async function load() {
   for (const d of dates) {
     const rows = byDate.get(d);
     const season = rows[0].season;
-    if (d === seasonFirstDate.get(season)) for (const t of teams) elo.set(t, 1505 + (elo.get(t) - 1505) * 2 / 3);
+    if (d === seasonFirstDate.get(season)) {
+      for (const t of teams) elo.set(t, 1505 + (elo.get(t) - 1505) * 2 / 3);
+      for (const m0 of elos.values()) for (const t of teams) m0.set(t, 1505 + (m0.get(t) - 1505) * 2 / 3);
+    }
 
     // --- SRS opponent-adjusted ratings from games strictly before d ---
+    // Base solve uses season-decay weights; recency solves use exponential
+    // day-decay over the last ~20 weeks (form-aware, still schedule-adjusted).
     const dim = teams.length + 1; const ic = dim - 1;
-    const N = new Float64Array(dim * dim); const rhs = new Float64Array(dim);
-    for (const g of games) {
-      if (dateIndex.get(g.date) >= dateIndex.get(d)) break;
-      if (g.season < season - 2) continue;
-      const w = g.season === season ? 1 : g.season === season - 1 ? 0.6 : 0.3;
-      const ih = idxOf.get(g.home), ia = idxOf.get(g.away), m = g.hp - g.ap;
-      N[ih * dim + ih] += w; N[ia * dim + ia] += w; N[ih * dim + ia] -= w; N[ia * dim + ih] -= w;
-      N[ih * dim + ic] += w; N[ic * dim + ih] += w; N[ia * dim + ic] -= w; N[ic * dim + ia] -= w; N[ic * dim + ic] += w;
-      rhs[ih] += w * m; rhs[ia] -= w * m;
+    const solveSrs = (weightFn) => {
+      const N = new Float64Array(dim * dim); const rhs = new Float64Array(dim);
+      for (const g of games) {
+        if (dateIndex.get(g.date) >= dateIndex.get(d)) break;
+        if (g.season < season - 2) continue;
+        const w = weightFn(g);
+        if (!w) continue;
+        const ih = idxOf.get(g.home), ia = idxOf.get(g.away), m = g.hp - g.ap;
+        N[ih * dim + ih] += w; N[ia * dim + ia] += w; N[ih * dim + ia] -= w; N[ia * dim + ih] -= w;
+        N[ih * dim + ic] += w; N[ic * dim + ih] += w; N[ia * dim + ic] -= w; N[ic * dim + ia] -= w; N[ic * dim + ic] += w;
+        rhs[ih] += w * m; rhs[ia] -= w * m;
+      }
+      for (let i = 0; i < dim; i++) N[i * dim + i] += i === ic ? 100 : 30;
+      const srsMatrix = []; for (let i = 0; i < dim; i++) { const row = new Float64Array(dim + 1); for (let j = 0; j < dim; j++) row[j] = N[i * dim + j]; row[dim] = rhs[i]; srsMatrix.push(row); }
+      return solveLinear(srsMatrix, dim);
+    };
+    const ratings = solveSrs(g => (g.season === season ? 1 : g.season === season - 1 ? 0.6 : 0.3));
+    const nowDay = gameDay.get(rows[0].ref);
+    const recRatings = {};
+    for (const half of [45, 60, 90]) {
+      recRatings[half] = solveSrs(g => {
+        const back = nowDay - gameDay.get(g.ref);
+        if (back < 0 || back > 140) return 0;
+        const w = Math.pow(0.5, back / half);
+        return w < 0.03 ? 0 : w;
+      });
     }
-    for (let i = 0; i < dim; i++) N[i * dim + i] += i === ic ? 100 : 30;
-    const srsMatrix = []; for (let i = 0; i < dim; i++) { const row = new Float64Array(dim + 1); for (let j = 0; j < dim; j++) row[j] = N[i * dim + j]; row[dim] = rhs[i]; srsMatrix.push(row); }
-    const ratings = solveLinear(srsMatrix, dim);
     const strOf = t => (ratings ? ratings[idxOf.get(t)] : 0);
+    const recStrOf = (half, t) => { const r = recRatings[half]; return r ? r[idxOf.get(t)] : 0; };
 
     for (const g of rows) {
       const h = hist.get(g.home), a = hist.get(g.away);
@@ -95,6 +121,8 @@ async function load() {
       const hp5 = wmean(h.pf, 5, ph.p), ap5 = wmean(a.pf, 5, pa.p);
       const hpa5 = wmean(h.pa, 5, ph.a), apa5 = wmean(a.pa, 5, pa.a);
       const hwr10 = wmeanN(h.win, 10), awr10 = wmeanN(a.win, 10), hwr20 = wmeanN(h.win, 20), awr20 = wmeanN(a.win, 20);
+      const stdOf = (x) => { const k = Math.min(10, x.pf.length); if (k < 4) return null; const ms = []; for (let i = x.pf.length - k; i < x.pf.length; i++) ms.push(x.pf[i] - x.pa[i]); const mu = ms.reduce((s2, v) => s2 + v, 0) / k; return Math.sqrt(ms.reduce((s2, v) => s2 + (v - mu) * (v - mu), 0) / k); };
+      const hStd = stdOf(h), aStd = stdOf(a);
       const restOf = x => x.d.length ? day(d) - day(x.d[x.d.length - 1]) : 3;
       const hRest = restOf(h), aRest = restOf(a);
       const g7Of = x => { const cut = day(d) - 7; let c = 0; for (let i = x.d.length - 1; i >= 0 && day(x.d[i]) > cut; i--) c++; return c; };
@@ -108,9 +136,14 @@ async function load() {
           pfAdv10: hp10 - ap10, defAdv10: hpa10 - apa10, wrAdv10: (hwr10 ?? 0.5) - (awr10 ?? 0.5), restAdv: hRest - aRest,
           g7Adv: hG7 - aG7, strAdv: strOf(g.home) - strOf(g.away), pfAdv5: hp5 - ap5, defAdv5: hpa5 - apa5,
           wrAdv20: (hwr20 ?? 0.5) - (awr20 ?? 0.5), pfAdv20: hp20 - ap20, defAdv20: hpa20 - apa20,
-          emAdv: h.em - a.em, eloAdv: (elo.get(g.home) - elo.get(g.away)) / 100, venueAdv: hVenue - aVenue,
+          emAdv: h.em - a.em, emFastAdv: h.emf - a.emf, ewrAdv: (h.ewr ?? 0.5) - (a.ewr ?? 0.5), stdAdv10: (hStd ?? 10) - (aStd ?? 10),
+          rStrAdv45: recStrOf(45, g.home) - recStrOf(45, g.away), rStrAdv60: recStrOf(60, g.home) - recStrOf(60, g.away), rStrAdv90: recStrOf(90, g.home) - recStrOf(90, g.away),
+          xStrEm: (strOf(g.home) - strOf(g.away)) * (h.em - a.em), xStrRest: (strOf(g.home) - strOf(g.away)) * (hRest - aRest),
+          xEmRest: (h.em - a.em) * (hRest - aRest), xEloStr: (elo.get(g.home) - elo.get(g.away)) * (strOf(g.home) - strOf(g.away)) / 100,
+          eloAdv: (elo.get(g.home) - elo.get(g.away)) / 100, venueAdv: hVenue - aVenue,
         },
       });
+      for (const v of ELO_GRID) { const m0 = elos.get(v.name); feats[feats.length - 1].M[`eloAdv_${v.name}`] = (m0.get(g.home) - m0.get(g.away)) / 100; }
     }
     // --- post-date updates ---
     for (const g of rows) {
@@ -118,13 +151,25 @@ async function load() {
       const m = g.hp - g.ap, tot = g.hp + g.ap;
       h.d.push(g.date); h.pf.push(g.hp); h.pa.push(g.ha); h.win.push(m > 0 ? 1 : 0); h.homePf.push(g.hp);
       h.em = h.em * 0.88 + 0.12 * m; h.et = h.et * 0.88 + 0.12 * tot;
+      h.emf = h.emf * 0.8 + 0.2 * m; h.ewr = (h.ewr == null ? 0.5 : h.ewr * 0.8) + 0.2;
       a.d.push(g.date); a.pf.push(g.ap); a.pa.push(g.aa); a.win.push(m < 0 ? 1 : 0); a.awayPf.push(g.ap);
       a.em = a.em * 0.88 - 0.12 * m; a.et = a.et * 0.88 + 0.12 * tot;
+      a.emf = a.emf * 0.8 - 0.2 * m; a.ewr = (a.ewr == null ? 0.5 : a.ewr * 0.8) + 0.2 * (m < 0 ? 1 : 0);
       leaguePf = (leaguePf * leagueN + g.hp) / (leagueN + 1); leaguePa = (leaguePa * leagueN + g.ha) / (leagueN + 1); leagueN += 2;
       const eH = elo.get(g.home), eA = elo.get(g.away);
       const p = 1 / (1 + Math.pow(10, -(eH - eA + 50) / 400));
       const act = m > 0 ? 1 : 0;
       elo.set(g.home, eH + 20 * (act - p)); elo.set(g.away, eA - 20 * (act - p));
+      for (const v of ELO_GRID) {
+        const m0 = elos.get(v.name);
+        const eH2 = m0.get(g.home), eA2 = m0.get(g.away);
+        const pr2 = 1 / (1 + Math.pow(10, -(eH2 - eA2 + v.H) / 400));
+        const act2 = m > 0 ? 1 : 0;
+        const upd2 = v.useM
+          ? v.K * (act2 - pr2) * (Math.pow(Math.abs(m) + 3, 0.8) / 7.5)
+          : v.K * (act2 - pr2);
+        m0.set(g.home, eH2 + upd2); m0.set(g.away, eA2 - upd2);
+      }
     }
   }
 
@@ -197,24 +242,48 @@ function runCandidate(db, cfg) {
   };
   const finalize = (acc, d, lambda) => { const A = acc.A.map(r => Float64Array.from(r)); for (let i = 1; i < d; i++) A[i][i] += lambda; return A.map((row, i) => { const full = new Float64Array(d + 1); for (let j = 0; j < d; j++) full[j] = row[j]; full[d] = acc.b[i]; return full; }); };
 
-  const rawT = [], rawM = [], seasonRows = [];
+  const rawT = [], rawM = [], seasonRows = [], rawD = [];
   const out = [];
   const residM = [];
   const allResidM = { s: 0, s2: 0, n: 0 };
   const probScale = cfg.probScale ?? 1;
+  const stratProb = cfg.stratProb ?? false;
   const gaussProb = cfg.gaussProb ?? false;
   const varPrior = cfg.varPrior ?? null;
   const recency = cfg.recency ?? null;
+  const recHalf = cfg.recHalf ?? null; // per-date exponential half-life, days
+  const recEvery = cfg.recEvery ?? 12; // per-date rebuild cadence (dates)
   let curSeason = null;
+  let datesSince = 99;
+  const rebuildDateW = (acc, d, lambda, rows, rowDays, half, curDay) => {
+    const nacc = mk(d);
+    for (let i = 0; i < rows.length; i++) {
+      const w = Math.pow(0.5, (curDay - rowDays[i]) / half);
+      addRowInto(nacc, rows[i].slice(0, d), rows[i][d], w);
+    }
+    for (let i = 1; i < d; i++) nacc.A[i][i] += lambda;
+    return nacc;
+  };
 
   for (const d of dates) {
     const rows = feats.filter(f => f.date === d);
     if (!rows.length) continue;
     const season = rows[0].season;
-    if (recency != null && season !== curSeason && rawT.length) {
-      accT = rebuildWeighted(accT, dT, lambdaT, rawT, rawT.map(r => r.slice(1, dT)), rawT.map(r => r[dT]), seasonRows, season, recency);
-      accM = rebuildWeighted(accM, dM, lambdaM, rawM, rawM.map(r => r.slice(1, dM)), rawM.map(r => r[dM]), seasonRows, season, recency);
+    if (season !== curSeason) datesSince = 0;
+    const wantRebuild = rawT.length > 0 &&
+      (recency != null ? season !== curSeason : recHalf != null && datesSince >= recEvery);
+    if (wantRebuild) {
+      if (recHalf != null) {
+        const curDay = db.dateIndex.get(d);
+        accT = rebuildDateW(accT, dT, lambdaT, rawT, rawD, recHalf, curDay);
+        accM = rebuildDateW(accM, dM, lambdaM, rawM, rawD, recHalf, curDay);
+      } else {
+        accT = rebuildWeighted(accT, dT, lambdaT, rawT, rawT.map(r => r.slice(1, dT)), rawT.map(r => r[dT]), seasonRows, season, recency);
+        accM = rebuildWeighted(accM, dM, lambdaM, rawM, rawM.map(r => r.slice(1, dM)), rawM.map(r => r[dM]), seasonRows, season, recency);
+      }
+      datesSince = 0;
     }
+    datesSince++;
     curSeason = season;
 
     const readyT = accT.n > (dT + 10) * 3;
@@ -232,23 +301,33 @@ function runCandidate(db, cfg) {
       const total = bT ? bT[0] + xT.reduce((s, v, i) => s + v * bT[i + 1], 0) : 226;
       const margin = bM ? bM[0] + xM.reduce((s, v, i) => s + v * bM[i + 1], 0) : 2.5;
       const g = f.g;
+      // stratProb: draw the residual support from the pool matching the
+      // predicted-margin regime (close games vs big favorites) — margin
+      // residuals are heteroskedastic across that split.
+      let pool = residM, wNrow = wN, wmRow = wm;
+      if (stratProb && wN) {
+        pool = Math.abs(margin) < 5 ? (residS.length >= 100 ? residS : residM) : (residL.length >= 100 ? residL : residM);
+        let s2 = 0; for (const x of pool) s2 += x;
+        wmRow = pool.length ? s2 / pool.length : 0;
+        wNrow = pool.length;
+      }
       let p = 0.5;
-      if (wN) {
+      if (wNrow) {
         if (gaussProb && priorSd && varPrior != null && recentSd) {
-          const sd = Math.sqrt((varPrior * priorSd * priorSd + wN * recentSd * recentSd) / (varPrior + wN)) * probScale;
+          const sd = Math.sqrt((varPrior * priorSd * priorSd + wNrow * recentSd * recentSd) / (varPrior + wNrow)) * probScale;
           p = 0.5 * (1 + erf(margin / (sd * Math.SQRT2)));
         } else {
           let c = 0;
-          for (let i = 0; i < wN; i++) { const v = margin + (residM[i] - wm) * probScale; c += v > 0 ? 1 : v === 0 ? 0.5 : 0; }
-          p = c / wN;
+          for (let i = 0; i < wNrow; i++) { const v = margin + (pool[i] - wmRow) * probScale; c += v > 0 ? 1 : v === 0 ? 0.5 : 0; }
+          p = c / wNrow;
         }
       }
       const yT = g.hp + g.ap, yM = g.hp - g.ap;
       let crpsM = null;
-      if (wN >= 100) {
-        const stride = Math.max(1, Math.floor(wN / CRPS_CAP));
+      if (wNrow >= 100) {
+        const stride = Math.max(1, Math.floor(wNrow / CRPS_CAP));
         const samples = [];
-        for (let i = 0; i < wN; i += stride) samples.push(margin + (residM[i] - wm) * probScale);
+        for (let i = 0; i < wNrow; i += stride) samples.push(margin + (pool[i] - wmRow) * probScale);
         samples.sort((a, b) => a - b);
         crpsM = crpsFromSorted(samples, margin);
         const q = pv => samples[Math.min(samples.length - 1, Math.max(0, Math.round(pv * (samples.length - 1))))];
@@ -257,12 +336,14 @@ function runCandidate(db, cfg) {
       out.push({ idx: f.idx, season: f.season, date: f.date, obsT: yT, obsM: yM, total, margin, p, crpsM, q025, q975, q10, q90 });
       const rm = yM - margin;
       residM.push(rm);
+      const stratPool = Math.abs(margin) < 5 ? residS : residL;
+      stratPool.push(rm); if (stratPool.length > RESID_WINDOW) stratPool.shift();
       allResidM.s += rm; allResidM.s2 += rm * rm; allResidM.n += 1;
       if (residM.length > RESID_WINDOW) residM.shift();
       const xTv = iT.map(i => (f.T[F_TOTAL[i]] - scaleT[i].mean) / scaleT[i].sd);
       const xMv = iM.map(i => f.M[F_MARGIN[i]] / scaleM[i].rms);
       addRow(accT, xTv, yT, 1); addRow(accM, xMv, yM, 1);
-      rawT.push([1, ...xTv, yT]); rawM.push([1, ...xMv, yM]); seasonRows.push(f.season);
+      rawT.push([1, ...xTv, yT]); rawM.push([1, ...xMv, yM]); seasonRows.push(f.season); rawD.push(db.dateIndex.get(f.date));
     }
   }
   return out;

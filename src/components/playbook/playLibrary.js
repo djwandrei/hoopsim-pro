@@ -1,6 +1,8 @@
 // Loads the DJHC basketball play/animation dictionary (a public markdown
 // library) and parses it into browsable plays: name, type, starting
 // alignment, numbered animation steps, tactical goal and read branches.
+import { tagsForPlay } from '@/components/playbook/playTags';
+
 const LIBRARY_URL = 'https://media.base44.com/files/public/6abc41d86dabd382371f49ea/0c38efcba_basketball_play_animation_library.md';
 
 let cache = null;
@@ -69,5 +71,6 @@ function parseLibrary(markdown) {
     if (readMatch && inReads) play.reads.push(readMatch[1].trim());
   }
   const kept = categories.filter((item) => item.plays.length > 0);
+  kept.forEach((item) => item.plays.forEach((play) => { play.tags = tagsForPlay(play, item.title); }));
   return { categories: kept, playCount: kept.reduce((total, item) => total + item.plays.length, 0) };
 }

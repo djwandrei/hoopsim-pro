@@ -5,6 +5,7 @@ import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import { loadPlayLibrary, findPlay } from '@/components/playbook/playLibrary';
 import { buildFrames } from '@/components/playbook/playAnimation';
+import { tagLabel } from '@/components/playbook/playTags';
 import PlayCourt from '@/components/playbook/PlayCourt';
 import PlayControls from '@/components/playbook/PlayControls';
 import PlayStepPanel from '@/components/playbook/PlayStepPanel';
@@ -23,7 +24,15 @@ export default function Playbook() {
     setError(null);
     loadPlayLibrary().then(setLibrary).catch((err) => setError(err.message || 'The play library could not be loaded.'));
   }, []);
-  useEffect(load, [load]);
+  useEffect(() => {
+    // Ignore the response if this view unmounts mid-fetch.
+    let cancelled = false;
+    setError(null);
+    loadPlayLibrary()
+      .then((result) => { if (!cancelled) setLibrary(result); })
+      .catch((err) => { if (!cancelled) setError(err.message || 'The play library could not be loaded.'); });
+    return () => { cancelled = true; };
+  }, [load]);
 
   const initialParams = useMemo(() => new URLSearchParams(window.location.search), []);
   const [playId, setPlayId] = useState(initialParams.get('play'));
@@ -36,7 +45,7 @@ export default function Playbook() {
   const animation = useMemo(() => (play ? buildFrames(play) : null), [play]);
   const frames = useMemo(() => (animation ? [{ ...animation.setup }, ...animation.frames] : []), [animation]);
   const stepCount = frames.length;
-  const safeStep = Math.min(stepIndex, Math.max(0, stepCount - 1));
+  const safeStep = Math.max(0, Math.min(stepIndex, stepCount - 1));
   const frame = frames[safeStep];
 
   // Auto-advance through the steps while playing.
@@ -92,7 +101,12 @@ export default function Playbook() {
               <div className="court-panel p-4 sm:p-5">
                 <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
                   <h2 className="font-display text-2xl tracking-wide text-foreground">{play.name}</h2>
-                  <span className="bcast-lowerthird">{play.type}</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="bcast-lowerthird">{play.type}</span>
+                    {(play.tags || []).map((id) => (
+                      <span key={id} className="rounded-full border border-border/40 bg-raised/30 px-2 py-0.5 font-mono text-[10.4px] text-muted-foreground">{tagLabel(id)}</span>
+                    ))}
+                  </div>
                 </div>
                 <PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} />
                 <div className="mt-4">

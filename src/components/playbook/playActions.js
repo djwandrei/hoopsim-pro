@@ -1,4 +1,4 @@
-import { actionClauses, offenseTokens } from '@/components/playbook/playClauses';
+import { actionClauses } from '@/components/playbook/playClauses';
 import { COURT, ZONE_RE, clonePositions, sideAt, sideOf, zoneKey, zonePoint, clampPoint } from '@/components/playbook/playGeometry';
 const MOVE = /\b(?:moves?|cuts?|sprints?|runs?|drifts?|lifts?|rises?|slides?|fills?|attacks?|drives?|clears?|exits?|relocates?|retreats?|steps?|walks?|goes?|flows?|slips?|pops?|flashes?|dribbles?|brings?|advances?|pushes?|rolls?|dives?|occupies|spaces?|settles?|establishes?|begins?|starts?|flatten|rotates?|places?)\b/i;
 function destination(body) {

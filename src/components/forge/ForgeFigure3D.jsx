@@ -78,7 +78,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       ? new THREE.OrthographicCamera(-1.48, 1.48, 1.48, -1.48, 0.1, 60)
       : new THREE.PerspectiveCamera(30, 1, 0.1, 60);
     if (silhouette) {
-      camera.position.set(-4.3, 1.65, 6.6);
+      camera.position.set(-6.8, 1.65, 4.8);
       camera.lookAt(-0.08, 1.48, -0.13);
     } else {
       camera.position.set(0.55, 1.55, 6.1);

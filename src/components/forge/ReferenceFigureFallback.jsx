@@ -13,7 +13,7 @@ export default function ReferenceFigureFallback({ filled, total, className }) {
     basketball.position.set(...ball);
     meshes.push(basketball);
     const camera = new THREE.OrthographicCamera(-1.48, 1.48, 1.48, -1.48, .1, 60);
-    camera.position.set(-4.3, 1.65, 6.6);
+    camera.position.set(-6.8, 1.65, 4.8);
     camera.lookAt(-.08, 1.48, -.13);
     camera.updateMatrixWorld();
     const draw = () => {

@@ -42,7 +42,7 @@ export default function StudioNavigation({ active, collapsed = false, onToggle }
         <Link to={path} title={collapsed ? title : undefined} aria-current={active === path ? 'page' : undefined} className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs lg:gap-3 lg:text-sm ${active === path ? 'border-gold/20 bg-gold/10 font-medium text-gold' : 'border-transparent text-muted-foreground hover:bg-raised hover:text-foreground'} ${collapsed ? 'lg:justify-center lg:px-2' : ''}`}>{emblem ? <Image src={emblem} alt="" fittingType="fit" className="h-6 w-6 shrink-0 object-contain" /> : <Icon className="h-5 w-5 shrink-0" />}{!collapsed && title}{active === path && !collapsed && <ArrowUpRight className="ml-auto hidden h-3 w-3 lg:block" />}</Link>
         {sub && !collapsed && (active === path || pathname.startsWith(`${path}/`)) && <div className="ml-4 flex flex-col gap-1 border-l border-border/30 pl-2 lg:ml-6">{sub.map((item) => <Link key={item.path} to={item.path} aria-current={pathname === item.path ? 'page' : undefined} className={pathname === item.path ? 'rounded-md px-2 py-1.5 text-[11px] font-semibold text-gold' : 'rounded-md px-2 py-1.5 text-[11px] text-muted-foreground hover:text-foreground'}>{item.title}</Link>)}</div>}
       </React.Fragment>)}</nav>
-      {!collapsed && <div className="mt-auto hidden border-t border-border/30 lg:block"><a href="https://www.djshouseofcards-comics.com/tools/swishiq-studio/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[11px] text-gold hidden">Visit the original Studio<ArrowUpRight className="h-3 w-3" /></a></div>}
+      
     </aside>);
 
 }

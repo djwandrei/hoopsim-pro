@@ -11,7 +11,7 @@ function seriesSides(series) {
   return { a, b };
 }
 
-function seriesWinner(series, a, b) {
+function seriesWinner(series) {
   const winner = codeOf(series.winnerId ?? series.winner);
   if (winner) return winner;
   return null;

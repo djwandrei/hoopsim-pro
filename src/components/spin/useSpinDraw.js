@@ -64,7 +64,7 @@ export default function useSpinDraw({ source, year, excluded, onSelection }) {
   stateRef.current = { settings, pool, history, dirty, context, source, excluded, onSelection };
 
   const runRebuild = useCallback(() => {
-    const { settings: s, context: ctx, source: src, excluded: excl, onSelection: select } = stateRef.current;
+    const { settings: s, context: ctx, onSelection: select } = stateRef.current;
     if (ctx.error) { setPool({ status: 'unavailable', reason: ctx.error }); setHistory([]); setDirty(false); select(null); return; }
     const effectiveSeed = randomSeed();
     const role = ctx.options.find(option => option.value === s.roleValue) || ctx.options[0];

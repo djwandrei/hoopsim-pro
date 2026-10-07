@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { ShieldCheck } from 'lucide-react';
 
-const TERMS_VERSION = '2026-10-06';
 const ELIGIBLE_STATES = [
   ['AZ', 'Arizona'], ['CO', 'Colorado'], ['CT', 'Connecticut'], ['DC', 'Washington, D.C.'],
   ['IL', 'Illinois'], ['IN', 'Indiana'], ['IA', 'Iowa'], ['KS', 'Kansas'], ['KY', 'Kentucky'],

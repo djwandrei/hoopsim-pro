@@ -24,7 +24,7 @@ export default function CardMatchups() {
   const [statusTone, setStatusTone] = useState('info');
   const [grouped, setGrouped] = useState([]);
   const [visibleResults, setVisibleResults] = useState(RESULT_PAGE_SIZE);
-  const [catalogQuery, setCatalogQuery] = useState('');
+  const catalogQuery = '';
   const [catalogCards, setCatalogCards] = useState([]);
   const [catalogTotal, setCatalogTotal] = useState(0);
   const [catalogPage, setCatalogPage] = useState(1);

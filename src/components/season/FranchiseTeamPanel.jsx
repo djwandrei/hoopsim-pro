@@ -1,5 +1,4 @@
 import React from 'react';
-import TeamMark from '@/components/studio/TeamMark';
 
 const RATING_KEYS = [
   ['scoring', 'SCTR'], ['shooting', 'SHOT'], ['creation', 'CREA'],

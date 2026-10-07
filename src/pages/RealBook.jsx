@@ -37,7 +37,7 @@ export default function RealBook() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState(null);
   const { league, state: seasonState } = useSeasonSource(2025);
-  const { feed, loadOdds, model, movement, boosts, propsByEvent } = useBookFeed(league, seasonState);
+  const { feed, loadOdds, model, movement, propsByEvent } = useBookFeed(league, seasonState);
 
   const loadAccount = useCallback(async () => {
     try {

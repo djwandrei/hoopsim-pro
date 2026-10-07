@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
-import OddsBoard, { bestPriceFor } from '@/components/book/OddsBoard';
+import { bestPriceFor } from '@/components/book/OddsBoard';
 import PickDeskHero from '@/components/realbook/PickDeskHero';
 import PickDeskStrip from '@/components/realbook/PickDeskStrip';
 import PickDeskBoard from '@/components/realbook/PickDeskBoard';

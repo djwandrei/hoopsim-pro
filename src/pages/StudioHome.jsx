@@ -6,7 +6,6 @@ import WorkbenchCard from '@/components/studio/WorkbenchCard';
 import BroadcastTicker from '@/components/studio/BroadcastTicker';
 import { WORKBENCHES, DAILY_GAMES } from '@/components/studio/workbenches';
 import FanToolsGrid from '@/components/studio/FanToolsGrid';
-import HubSourcePanel from '@/components/studio/HubSourcePanel';
 import ResumeStrip from '@/components/studio/ResumeStrip';
 export default function StudioHome() {
   usePageMeta({ title: 'SwishIQ Studio — DJHC Basketball Analytics', description: 'Seven NBA analytics workbenches and daily games: season sims, player blueprints, chemistry, Forge drafts and lineup solving.' });
@@ -17,6 +16,5 @@ export default function StudioHome() {
     <div className="mt-12"><div className="rise-in mb-5 flex flex-wrap items-baseline justify-between gap-2"><div><p className="bcast-kicker mb-2">Daily desk</p><h2 className="font-display text-xl tracking-wide">DAILY GAMES & LINEUP LAB</h2></div><span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>Fresh calls · Verified ranks</span></div>
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{DAILY_GAMES.map((tool,index) => <WorkbenchCard key={tool.path} tool={tool} index={index} />)}</div></div>
     <FanToolsGrid />
-    <HubSourcePanel />
   </main></StudioShell>;
 }

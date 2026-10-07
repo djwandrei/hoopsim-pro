@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dices, Loader2, Lock, RotateCcw } from 'lucide-react';
-import { MAX_PACK_OPENING_SIZE, PACK_OPENING_ALGORITHM, PACK_OPENING_RULESET } from '@/lib/cards/packModel';
+import { PACK_OPENING_ALGORITHM, PACK_OPENING_RULESET } from '@/lib/cards/packModel';
 import PackReveal from '@/components/packs/PackReveal';
 
 const PACK_SIZES = [1, 3, 5, 10];

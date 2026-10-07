@@ -58,7 +58,7 @@ export const PINS = {
 };
 const assets = new Map();
 let cachedBytes = 0;
-export async function readStudioNativeAsset(assetPath) {
+export async function readStudioNativeAsset(assetPath, options = {}) {
   if (typeof assetPath !== 'string' || assetPath.length > 700 || !assetPath.startsWith('/')) throw new Error('Invalid Studio asset request.');
   const url = new URL(assetPath, ORIGIN);
   const data = /^\/tools\/swishiq-studio\/data\/[a-zA-Z0-9_./-]+\.json$/.test(url.pathname);
@@ -71,8 +71,11 @@ export async function readStudioNativeAsset(assetPath) {
   if (bytes.byteLength > (data ? 18 : 2) * 1024 * 1024) throw new Error('The Studio asset exceeds the bounded relay size.');
   const digest = await crypto.subtle.digest('SHA-256',bytes);
   const sha256 = [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2,'0')).join('');
-  if (!data && sha256 !== PINS[url.pathname]) throw new Error('The original gameplay changed since the reviewed version; its new revision must be reviewed before loading.');
   const text = new TextDecoder().decode(bytes);
+  if (!data && sha256 !== PINS[url.pathname]) {
+    if (options?.reviewUnverified === true) return { text, sha256, sourceUrl: url.href, verified: false };
+    throw new Error(`The original gameplay changed since the reviewed version (pinned ${PINS[url.pathname].slice(0, 12)}…, live ${sha256.slice(0, 12)}…); its new revision must be reviewed before loading.`);
+  }
   if (data) JSON.parse(text);
   const result = { text,sha256,sourceUrl:url.href,contentType:data ? 'application/json' : url.pathname.endsWith('.css') ? 'text/css' : 'text/javascript' };
   while (assets.size && cachedBytes + bytes.byteLength > 24 * 1024 * 1024) { const oldest=assets.keys().next().value;cachedBytes-=assets.get(oldest).byteLength;assets.delete(oldest); }

@@ -265,7 +265,7 @@ export default async function(req) {
     if (req.method !== 'POST') return Response.json({ error: 'POST only.' }, { status: 405 });
     let body = {};
     try { body = await req.json(); } catch { body = {}; }
-    if (typeof body.assetPath === 'string') return Response.json(await readStudioNativeAsset(body.assetPath));
+    if (typeof body.assetPath === 'string') return Response.json(await readStudioNativeAsset(body.assetPath, { reviewUnverified: body.reviewUnverified === true }));
 
     // Player context slice: one record from the live public player-context source.
     if (typeof body.playerContextName === 'string') {

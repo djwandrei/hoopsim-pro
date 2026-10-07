@@ -12,7 +12,7 @@ export default function StudioNavigation({ active, collapsed = false, onToggle }
   const [mobileOpen, setMobileOpen] = useState(false);
   useEffect(() => {setMobileOpen(false);}, [pathname]);
   return (
-    <aside className={`studio-sidebar border-b border-border/60 bg-card lg:fixed lg:bottom-0 lg:left-0 lg:top-[var(--djhc-header-h,0px)] lg:z-30 lg:flex lg:flex-col lg:border-b-0 lg:border-r ${collapsed ? 'hidden lg:w-16' : 'lg:w-56'}`}>
+    <aside className={`studio-sidebar border-b border-border/60 bg-card lg:fixed lg:bottom-0 lg:left-0 lg:top-[var(--djhc-header-h,0px)] lg:z-30 lg:flex lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:border-b-0 lg:border-r ${collapsed ? 'hidden lg:w-16' : 'lg:w-56'}`}>
       {/* Mobile / narrow: compact bar with a collapsible menu panel */}
       <div className="lg:hidden">
         <div className="flex items-center justify-between gap-2 px-3 py-3">
@@ -34,7 +34,11 @@ export default function StudioNavigation({ active, collapsed = false, onToggle }
       <div className="hidden px-4 py-3 lg:flex lg:px-4 lg:py-4">
         <Link to="/" aria-label="SwishIQ Studio home" className="flex min-w-0 items-center gap-3">
           <Image src={STUDIO_EMBLEM} alt="" fittingType="fit" className="h-14 w-14 shrink-0 object-contain" />
-          {!collapsed && <span className="truncate font-display text-2xl leading-none tracking-wide text-foreground">SWISHIQ</span>}
+          {!collapsed &&
+          <span className="flex min-w-0 flex-col leading-none">
+            <span className="truncate font-display text-2xl tracking-wide text-foreground">SwishIQ</span>
+            <span className="mt-1 font-display text-sm tracking-[0.32em] text-gold">STUDIO</span>
+          </span>}
         </Link>
       </div>
       {!collapsed && <p className="hidden px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground lg:block">Workbenches</p>}

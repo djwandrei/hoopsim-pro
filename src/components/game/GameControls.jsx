@@ -17,25 +17,27 @@ export default function GameControls({ settings, onSettingsChange, onRunSeries, 
     setTimeout(() => setCopied(false), 1800);
   };
   const change = (key, value) => onSettingsChange(current => ({ ...current, [key]: value }));
+  const inputBlock = (label, title, hint, input) => (
+    <div className="flex min-w-0 flex-col gap-1">
+      <label className={chipLabel} title={title}>
+        {label}
+        {input}
+      </label>
+      <p className={`${hintCls} max-w-40`}>{hint}</p>
+    </div>
+  );
   return (
     <section className="myna-panel flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5" aria-label="Simulation controls">
       <span className="myna-accent-text text-[10px] font-semibold uppercase tracking-[0.2em]">Engine</span>
-      <label className={chipLabel} title="Possessions each team gets per simulated game — the game's length (90–110).">
-        POSS
-        <input type="number" min={90} max={110} step={1} value={settings.possessions} disabled={running} onChange={event => change('possessions', Math.min(110, Math.max(90, Number(event.target.value) || 90)))} className={fieldCls} aria-label="Possessions per game" />
-      </label>
-      <label className={chipLabel} title="Monte Carlo games the engine plays to estimate the win odds — 100 to 5,000. More trials mean steadier, sharper odds but a slower sim.">
-        TRIALS
-        <input type="number" min={100} max={5000} step={100} value={settings.trials} disabled={running} onChange={event => change('trials', event.target.value)} className={`${fieldCls} w-20`} aria-label="Monte Carlo trials" />
-        <span className="text-[10px] text-[var(--myna-muted)]">/ 5,000</span>
-      </label>
-      <label className={chipLabel} title="Applies to both teams the same way. At 0, every offense spreads its possessions evenly across all five defenders. As it rises to 1, each offense steers more possessions toward its single best matchup (usually a star attacking a weaker defender), which stretches the opposing defense. Low weight = steady, averaged-out games; high weight = more star-driven scoring and more game-to-game variance.">
-        WEIGHT
-        <input type="number" min={0} max={1} step={0.05} value={settings.attackWeight} disabled={running} onChange={event => change('attackWeight', event.target.value)} className={`${fieldCls} w-14`} aria-label="Offense attack weight" />
-      </label>
-      <p className={`${hintCls} max-w-52 hidden xl:block`}>
-        Weight — how hard each offense funnels possessions to its best matchup (both teams): 0 spreads every look evenly, 1 star-hunts.
-      </p>
+      {inputBlock('POSS', 'Possessions each team gets per simulated game — the game\'s length (90–110).',
+        'Possessions each team gets per game — the game\'s length (90–110).',
+        <input type="number" min={90} max={110} step={1} value={settings.possessions} disabled={running} onChange={event => change('possessions', Math.min(110, Math.max(90, Number(event.target.value) || 90)))} className={fieldCls} aria-label="Possessions per game" />)}
+      {inputBlock('TRIALS', 'Monte Carlo games the engine plays to estimate the win odds — 100 to 5,000. More trials mean steadier, sharper odds but a slower sim.',
+        'Monte Carlo games played to estimate win odds (100–5,000). More trials = steadier odds, slower sim.',
+        <input type="number" min={100} max={5000} step={100} value={settings.trials} disabled={running} onChange={event => change('trials', event.target.value)} className={`${fieldCls} w-20`} aria-label="Monte Carlo trials" />)}
+      {inputBlock('WEIGHT', 'Applies to both teams the same way. At 0, every offense spreads its possessions evenly across all five defenders. As it rises to 1, each offense steers more possessions toward its single best matchup (usually a star attacking a weaker defender), which stretches the opposing defense. Low weight = steady, averaged-out games; high weight = more star-driven scoring and more game-to-game variance.',
+        'How hard each offense funnels possessions to its best matchup (both teams): 0 spreads every look evenly, 1 star-hunts.',
+        <input type="number" min={0} max={1} step={0.05} value={settings.attackWeight} disabled={running} onChange={event => change('attackWeight', event.target.value)} className={`${fieldCls} w-14`} aria-label="Offense attack weight" />)}
       <div className="ml-auto flex flex-wrap items-center gap-2">
         {running && <span className="myna-mono text-[10px] myna-muted">SIMULATING… {Math.round(progress * 100)}%</span>}
         {!running && blocked && <span className="myna-mono text-[10px] myna-muted">PAUSED — V4 MODEL GATE</span>}

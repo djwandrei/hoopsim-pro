@@ -5,6 +5,16 @@ export const SITE = 'https://www.djshouseofcards-comics.com';
 // here — this app hosts them under the studio root.
 // Live hub order (minus Fix the Five and Draft Night, hosted under the studio
 // root) so the grid reads exactly like djshouseofcards-comics.com/tools/.
+// In-app React routes for the drawer: tools with a native page link there;
+// the rest keep their live-site hub page.
+export const TOOL_ROUTES = {
+  '/tools/':'/',
+  '/lineup-lab/':'/lineup-lab',
+  '/tools/player-card-matchups/':'/matchups',
+  '/tools/virtual-pack-opening/':'/packs',
+  '/tools/workshop/':'/workshop',
+  '/tools/swishiq-studio/':'/',
+};
 export const FAN_TOOLS = [
   ['/tools/','Fan Tools','fan-tools-emblem-20260911.png'],
   ['/lineup-lab/','Lineup Lab','lineup-lab-emblem-20260911.png','local'],
@@ -23,16 +33,6 @@ export const FAN_TOOLS = [
   const emblem = asset ? (local ? `/studio-assets/games/${asset}` : asset.startsWith('local:') ? `/studio-assets/${asset.slice(6)}` : `${SITE}/assets/games/${asset}`) : null;
   return {path,label,route:TOOL_ROUTES[path]||null,href:local?path.replace(/\/+$/,''):SITE+path,emblem};
 });
-// In-app React routes for the drawer: tools with a native page link there;
-// the rest keep their live-site hub page.
-export const TOOL_ROUTES = {
-  '/tools/':'/',
-  '/lineup-lab/':'/lineup-lab',
-  '/tools/player-card-matchups/':'/matchups',
-  '/tools/virtual-pack-opening/':'/packs',
-  '/tools/workshop/':'/workshop',
-  '/tools/swishiq-studio/':'/',
-};
 // Tools with no in-app page, hidden from the header drawer menu.
 export const DRAWER_HIDDEN = ['Position Lens','Roster Fit','Franchise Rebuild','Collection Builder','Team DNA Atlas'];
 export const FOOTER_GROUPS = [

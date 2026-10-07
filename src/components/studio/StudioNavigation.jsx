@@ -26,17 +26,17 @@ export default function StudioNavigation({ active, collapsed = false, onToggle }
         </div>
         {mobileOpen && <nav id="studio-mobile-menu" aria-label="Studio workbenches" className="flex flex-wrap gap-1 px-3 pb-3">{items.map(({ path, title, icon: Icon, emblem }) => <Link key={path} to={path} title={title} aria-current={active === path ? 'page' : undefined} className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border px-3 py-2.5 text-xs ${active === path ? 'border-gold/20 bg-gold/10 font-medium text-gold' : 'border-transparent text-muted-foreground hover:bg-raised hover:text-foreground'}`}>{emblem ? <Image src={emblem} alt="" fittingType="fit" className="h-6 w-6 shrink-0 object-contain" /> : <Icon className="h-5 w-5 shrink-0" />}{title}</Link>)}</nav>}
       </div>
+      {/* Desktop: edge-mounted collapse toggle — arrow-only, vertically centered, half over the sidebar border */}
+      <button type="button" onClick={onToggle} aria-label={collapsed ? 'Expand workbench menu' : 'Collapse workbench menu'} title={collapsed ? 'Expand menu' : 'Collapse menu'} className={`fixed top-1/2 z-40 hidden h-11 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-gold/50 bg-card text-gold shadow-[0_4px_14px_hsl(223_24%_5.7%/0.55)] hover:bg-gold/20 lg:flex ${collapsed ? 'left-16' : 'left-56'}`}>
+        {collapsed ? <ChevronsRight className="h-3.5 w-3.5" /> : <ChevronsLeft className="h-3.5 w-3.5" />}
+      </button>
       {/* Desktop: stacked sidebar (unchanged) */}
       <div className="hidden items-start gap-3 px-4 py-4 lg:flex lg:px-4 lg:py-4">
         <Link to="/" aria-label="SwishIQ Studio overview" className="flex shrink-0 items-center">
           <Image src={STUDIO_EMBLEM} alt="" fittingType="fit" className="h-14 w-14 shrink-0 object-contain" />
         </Link>
-        {!collapsed && <div className="flex min-w-0 flex-1 flex-col items-stretch gap-2">
-          <span className="truncate font-display text-2xl leading-none tracking-wide text-foreground">SWISHIQ</span>
-          <button type="button" onClick={onToggle} className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-2 py-1.5 text-[10px] font-semibold tracking-widest text-gold hover:bg-gold/20"><ChevronsLeft className="h-4 w-4 shrink-0" />Collapse</button>
-        </div>}
+        {!collapsed && <span className="truncate font-display text-2xl leading-none tracking-wide text-foreground">SWISHIQ</span>}
       </div>
-      {collapsed && <div className="hidden px-3 pb-2 lg:block"><button type="button" onClick={onToggle} aria-label="Expand workbench menu" className="flex w-full items-center justify-center rounded-lg border border-gold/40 bg-gold/10 py-2 text-gold hover:bg-gold/20"><ChevronsRight className="h-4 w-4" /></button></div>}
       {!collapsed && <p className="hidden px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground lg:block">Workbenches</p>}
       <nav aria-label="Studio workbenches" className="hidden flex-wrap gap-1 px-3 pb-3 lg:flex lg:flex-col lg:px-3">{items.map(({ path, title, icon: Icon, emblem, children: sub }) => <React.Fragment key={path}>
         <Link to={path} title={collapsed ? title : undefined} aria-current={active === path ? 'page' : undefined} className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs lg:gap-3 lg:text-sm ${active === path ? 'border-gold/20 bg-gold/10 font-medium text-gold' : 'border-transparent text-muted-foreground hover:bg-raised hover:text-foreground'} ${collapsed ? 'lg:justify-center lg:px-2' : ''}`}>{emblem ? <Image src={emblem} alt="" fittingType="fit" className="h-6 w-6 shrink-0 object-contain" /> : <Icon className="h-5 w-5 shrink-0" />}{!collapsed && title}{active === path && !collapsed && <ArrowUpRight className="ml-auto hidden h-3 w-3 lg:block" />}</Link>

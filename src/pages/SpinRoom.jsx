@@ -9,6 +9,8 @@ import SpinStage from '@/components/spin/SpinStage';
 import SpinPoolBoard from '@/components/spin/SpinPoolBoard';
 import SpinHistory from '@/components/spin/SpinHistory';
 import SpinReceipt from '@/components/spin/SpinReceipt';
+import SpinPoolTemplates from '@/components/spin/SpinPoolTemplates';
+import { readSpinTemplates, prependSpinTemplate, removeSpinTemplate } from '@/components/spin/spinTemplates';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import useSpinDraw from '@/components/spin/useSpinDraw';
 import { observedPlayers } from '@/lib/season/labs';
@@ -25,6 +27,7 @@ export default function SpinRoom() {
   const [poolMode, setPoolMode] = useState('exclude');
   const [selection, setSelection] = useState([]);
   const [latest, setLatest] = useState(null);
+  const [templates, setTemplates] = useState(readSpinTemplates);
   const [history, setHistory] = useState([]);
   const recordSelection = useCallback(payload => {
     setLatest(payload);
@@ -40,6 +43,27 @@ export default function SpinRoom() {
   const spin = useSpinDraw({ source, year, excluded, onSelection: recordSelection });
   const changeSeason = value => { setYear(value); setSelection([]); setPoolMode('exclude'); };
   const roleLabel = spin.roleOptions.find(option => option.value === spin.settings.roleValue)?.label || 'All source-backed players';
+  // Pool templates: every Apply saves the current setup (labelled compactly)
+  // and applying one restores season, settings, exclusions and mode, then
+  // rebuilds the pool after the state settles.
+  const templateLabel = useMemo(() => {
+    const parts = [];
+    if (spin.settings.roleValue && spin.settings.roleValue !== 'all') parts.push(spin.roleOptions.find(option => option.value === spin.settings.roleValue)?.label || spin.settings.roleValue);
+    if ((spin.settings.teams || []).length) parts.push(spin.settings.teams.join(' '));
+    if (spin.settings.weight && spin.settings.weight !== 'uniform') parts.push(spin.metricOptions.find(metric => metric.key === spin.settings.weight)?.label || spin.settings.weight);
+    return parts.length ? parts.join(' · ') : 'All players';
+  }, [spin.settings, spin.roleOptions, spin.metricOptions]);
+  const applyAndSave = useCallback(() => {
+    setTemplates(prependSpinTemplate({ label: templateLabel, savedAt: Date.now(), year, settings: spin.settings, selection, poolMode }));
+    spin.rebuild();
+  }, [templateLabel, year, spin.settings, spin.rebuild, selection, poolMode]);
+  const applyTemplate = useCallback(template => {
+    if (template.year && years.includes(template.year)) setYear(template.year);
+    spin.changeSettings(template.settings);
+    setSelection(template.selection || []);
+    setPoolMode(template.poolMode || 'exclude');
+    window.setTimeout(() => spin.rebuild(), 0);
+  }, [spin, years]);
   const stage = spin.pool?.status === 'ready' ? 1 : 0;
   const current = latest ? 2 : stage;
   return <StudioShell active="/spin">
@@ -55,11 +79,12 @@ export default function SpinRoom() {
       <SourceStatus state={state} error={error} source={source} year={year} years={years} onYearChange={changeSeason} onRetry={retry} />
       {state === 'ready' && <div className="grid items-start gap-5 lg:grid-cols-12">
         <div className="order-2 min-w-0 space-y-3 lg:order-1 lg:col-span-5 lg:sticky lg:top-[calc(var(--djhc-header-h,0px)+1rem)] xl:col-span-4">
+          <SpinPoolTemplates templates={templates} onApply={applyTemplate} onRemove={label => setTemplates(removeSpinTemplate(label))} />
           <div className="spin-tabs" role="tablist" aria-label="Control rail panels">
             <button type="button" role="tab" aria-selected={tab === 'filters'} onClick={() => setTab('filters')}><SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />Filters & weights</button>
             <button type="button" role="tab" aria-selected={tab === 'players'} onClick={() => setTab('players')}><Users className="h-3.5 w-3.5" aria-hidden="true" />Players in / out</button>
           </div>
-          {tab === 'filters' ? <SpinControlDesk settings={spin.settings} onChange={spin.changeSettings} onSubmit={spin.rebuild} onReset={spin.resetSettings} roleOptions={spin.roleOptions} teamOptions={spin.teamOptions} metricOptions={spin.metricOptions} dirty={spin.dirty} /> : <SpinPoolManager players={players} selected={selection} mode={poolMode} onModeChange={setPoolMode} onChange={setSelection} />}
+          {tab === 'filters' ? <SpinControlDesk settings={spin.settings} onChange={spin.changeSettings} onSubmit={applyAndSave} onReset={spin.resetSettings} roleOptions={spin.roleOptions} teamOptions={spin.teamOptions} metricOptions={spin.metricOptions} dirty={spin.dirty} /> : <SpinPoolManager players={players} selected={selection} mode={poolMode} onModeChange={setPoolMode} onChange={setSelection} />}
         </div>
         <div className="order-1 min-w-0 space-y-5 lg:order-2 lg:col-span-7 xl:col-span-8">
           <SpinStage pool={spin.pool} latest={latest} spinning={spin.spinning} historyCount={spin.history.length} history={history} onSpin={spin.spin} roleLabel={roleLabel} />

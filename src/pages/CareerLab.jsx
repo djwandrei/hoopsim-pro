@@ -16,6 +16,7 @@ import RecordedCareerChart from '@/components/career/RecordedCareerChart';
 import RecordedCareerTable from '@/components/career/RecordedCareerTable';
 import { careerSeasons } from '@/components/career/careerHistoryModel';
 import CareerSummary from '@/components/career/CareerSummary';
+import CareerBioFallback from '@/components/career/CareerBioFallback';
 import CareerSpotlight from '@/components/career/CareerSpotlight';
 import MyNbaHub from '@/components/season/MyNbaHub';
 
@@ -30,6 +31,9 @@ export default function CareerLab() {
   const [pickerOpen, setPickerOpen] = useState(true);
   const seasons = useMemo(() => player ? careerSeasons(player) : [], [player]);
   const { context, status } = usePlayerContext(player?.name || '');
+  // Bio tab: when the archive holds no biography record for this player, the
+  // page falls back to a stat summary instead of going quiet.
+  const hasBioRecord = Boolean(context?.nba?.profiles?.length || context?.nba?.roster);
 
   return (
     <StudioShell active="/career">
@@ -96,7 +100,7 @@ export default function CareerLab() {
               {view === 'history' &&
             <div className="myna-panel p-4"><RecordedCareerTable seasons={seasons} /></div>}
               {view === 'bio' && <div className="grid gap-4 lg:grid-cols-2">
-                <div className="myna-panel p-4"><p className="court-kicker">Bio & awards</p><h2 className="mt-1 font-display text-2xl">BIOGRAPHY</h2><PlayerBio player={{ ...player, seasonStartYear: player.latestYear }} context={context} status={status} /></div>
+                <div className="myna-panel p-4"><p className="court-kicker">Bio & awards</p><h2 className="mt-1 font-display text-2xl">BIOGRAPHY</h2>{status !== 'loading' && !hasBioRecord ? <CareerBioFallback seasons={seasons} /> : <PlayerBio player={{ ...player, seasonStartYear: player.latestYear }} context={context} status={status} />}</div>
                 <div className="myna-panel p-4"><p className="court-kicker">Published honors</p><h2 className="mt-1 font-display text-2xl">AWARDS</h2><TrophyCase context={context} status={status} /></div>
               </div>}
             </div>

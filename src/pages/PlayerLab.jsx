@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
@@ -17,6 +17,9 @@ import usePageMeta from '@/hooks/usePageMeta';
 
 export default function PlayerLab() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  // One click from the atlas leaderboard straight into a comparison slot.
+  const onCompare = row => navigate(`/players/compare?a=${encodeURIComponent(row.id)}`);
   usePageMeta({ title: 'Player Blueprint — SwishIQ Studio', description: 'League atlas and player dossiers: scope, pin and compare any observed NBA season record.' });
   const { year,setYear,years,source,state,error,retry } = useSeasonSource();
   // Pinned players ride in the URL (?p=id1,id2) so a dossier or compare view
@@ -47,5 +50,5 @@ export default function PlayerLab() {
     window.history.replaceState(null, '', next);
   }, [selectedIds]);
   const season = { year,years,onYearChange };
-  return <StudioShell active="/players"><WorkbenchHeader title="PLAYER BLUEPRINT" description="Two sections: the league atlas of scoped interactive charts, and a dossier explorer that pins any player's full observed record." steps={['League atlas', 'Scope & pin', 'Dossier & compare']} current={pathname === '/players/dossier' ? 2 : pathname === '/players/compare' ? 2 : selected.length ? 1 : 0} state={state} status={selected.length ? `${selected.length} player${selected.length > 1 ? 's' : ''} pinned` : 'Pin players from the atlas or index'} /><main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6"><SourceStatus state={state} error={error} source={source} year={year} years={years} onRetry={retry} phase={phase} />{state === 'ready' && <><PlayerViewTabs /><Routes><Route index element={<div className="space-y-5"><AtlasScopeBar scope={scope} onScope={onScope} roster={roster} selected={selected} careerPool={careerPool} season={season} /><LeagueAtlas rows={atlasRows} atlas={atlas} selected={selected} onSelect={toggle} /></div>} /><Route path="dossier" element={<PlayerHub roster={roster} phaseRows={phaseRows} phase={phase} onPhaseChange={setPhase} selected={selected} onToggle={toggle} onClear={() => setSelectedIds([])} atlas={atlas} season={season} />} /><Route path="compare" element={<PlayerCompare roster={roster} />} /></Routes></>}</main></StudioShell>;
+  return <StudioShell active="/players"><WorkbenchHeader title="PLAYER BLUEPRINT" description="Two sections: the league atlas of scoped interactive charts, and a dossier explorer that pins any player's full observed record." steps={['League atlas', 'Scope & pin', 'Dossier & compare']} current={pathname === '/players/dossier' ? 2 : pathname === '/players/compare' ? 2 : selected.length ? 1 : 0} state={state} status={selected.length ? `${selected.length} player${selected.length > 1 ? 's' : ''} pinned` : 'Pin players from the atlas or index'} /><main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6"><SourceStatus state={state} error={error} source={source} year={year} years={years} onRetry={retry} phase={phase} />{state === 'ready' && <><PlayerViewTabs /><Routes><Route index element={<div className="space-y-5"><AtlasScopeBar scope={scope} onScope={onScope} roster={roster} selected={selected} careerPool={careerPool} season={season} /><LeagueAtlas rows={atlasRows} atlas={atlas} selected={selected} onSelect={toggle} onCompare={onCompare} /></div>} /><Route path="dossier" element={<PlayerHub roster={roster} phaseRows={phaseRows} phase={phase} onPhaseChange={setPhase} selected={selected} onToggle={toggle} onClear={() => setSelectedIds([])} atlas={atlas} season={season} />} /><Route path="compare" element={<PlayerCompare roster={roster} />} /></Routes></>}</main></StudioShell>;
 }

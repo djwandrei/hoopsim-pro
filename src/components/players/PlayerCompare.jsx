@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GitCompare } from 'lucide-react';
 import CourtGraphic from '@/components/studio/CourtGraphic';
 import PlayerCompareIndex from '@/components/players/PlayerCompareIndex';
@@ -10,8 +10,20 @@ const INVERT = new Set(['tov']);
 // Head-to-head comparison built in the dossier's visual language:
 // a workbench header with court graphic, a player index with A/B slots,
 // a pair of profile cards, then a full side-by-side stat table.
+// Compare slots ride in the URL (?a=id&b=id) so a set-up comparison survives
+// reload and can be opened directly from the atlas leaderboard.
+const pickedFromUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+  return { a: params.get('a'), b: params.get('b') };
+};
 export default function PlayerCompare({ roster }) {
-  const [picked,setPicked] = useState({ a:null,b:null });
+  const [picked,setPicked] = useState(pickedFromUrl);
+  useEffect(() => {
+    const next = new URL(window.location.href);
+    if (picked.a) next.searchParams.set('a', picked.a); else next.searchParams.delete('a');
+    if (picked.b) next.searchParams.set('b', picked.b); else next.searchParams.delete('b');
+    window.history.replaceState(null, '', next);
+  }, [picked]);
   const players = { a: roster.find(row => row.id === picked.a) || null, b: roster.find(row => row.id === picked.b) || null };
   const assign = (slot,id) => setPicked(current => ({ ...current,[slot]: current[slot] === id ? null : id }));
   const onClear = () => setPicked({ a:null,b:null });

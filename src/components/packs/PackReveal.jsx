@@ -5,12 +5,19 @@ import { TIER_META, formatCardValue } from '@/lib/cards/packEngine';
 import './packReveal.css';
 
 const FLIP_STAGGER_MS = 460;
+const TIER_RANKS = ['base', 'uncommon', 'rare', 'super_rare', 'legendary'];
 
 // The pack-opening reveal: five cards deal in face-down, then flip one at a
-// time; rare-or-better pulls glow and the final flip fires a confetti burst.
-// Reduced-motion users get every card face-up immediately.
+// time; rare-or-better pulls glow and fire a gold burst at their flip, with a
+// bigger burst when the best card lands. Reduced-motion users get every card
+// face-up immediately.
 export default function PackReveal({ drawnCards }) {
   const [revealed, setRevealed] = useState(0);
+  const bestIndex = drawnCards.reduce((best, card, index) => (
+    TIER_RANKS.indexOf(card.tier || 'base') > (drawnCards[best] ? TIER_RANKS.indexOf(drawnCards[best].tier || 'base') : -1) ? index : best
+  ), 0);
+  const bestIsRarePlus = TIER_RANKS.indexOf(drawnCards[bestIndex]?.tier || 'base') >= TIER_RANKS.indexOf('rare');
+
   useEffect(() => {
     setRevealed(0);
     if (!drawnCards.length) return undefined;
@@ -22,17 +29,17 @@ export default function PackReveal({ drawnCards }) {
     for (let index = 0; index < drawnCards.length; index += 1) {
       timers.push(setTimeout(() => {
         setRevealed(value => Math.max(value, index + 1));
+        // The star pull gets its own gold burst the moment it flips.
+        if (index === bestIndex && bestIsRarePlus) {
+          confetti({ particleCount: 60, spread: 60, startVelocity: 30, scalar: 0.8, ticks: 140, origin: { y: 0.55 }, colors: ['#f0c66e', '#ffe49a', '#ffffff'] });
+        }
         if (index === drawnCards.length - 1) {
           confetti({ particleCount: 110, spread: 78, startVelocity: 34, scalar: 0.9, ticks: 170, origin: { y: 0.6 }, colors: ['#f0c66e', '#ffe49a', '#4a72d6', '#e4e9ff'] });
         }
       }, 620 + index * FLIP_STAGGER_MS));
     }
     return () => timers.forEach(timer => clearTimeout(timer));
-  }, [drawnCards]);
-  const bestIndex = drawnCards.reduce((best, card, index) => {
-    const rank = ['base', 'uncommon', 'rare', 'super_rare', 'legendary'].indexOf(card.tier || 'base');
-    return rank > (drawnCards[best] ? ['base', 'uncommon', 'rare', 'super_rare', 'legendary'].indexOf(drawnCards[best].tier || 'base') : -1) ? index : best;
-  }, 0);
+  }, [drawnCards, bestIndex, bestIsRarePlus]);
   return <ul className="pack-reveal" aria-label="Latest pack contents">
     {drawnCards.map((card, index) => {
       const meta = TIER_META[card.tier] || TIER_META.base;

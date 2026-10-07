@@ -251,8 +251,10 @@ function runCandidate(db, cfg) {
         for (let i = 0; i < wN; i += stride) samples.push(margin + (residM[i] - wm) * probScale);
         samples.sort((a, b) => a - b);
         crpsM = crpsFromSorted(samples, margin);
+        const q = pv => samples[Math.min(samples.length - 1, Math.max(0, Math.round(pv * (samples.length - 1))))];
+        var q025 = q(0.025), q975 = q(0.975), q10 = q(0.1), q90 = q(0.9);
       }
-      out.push({ idx: f.idx, season: f.season, date: f.date, obsT: yT, obsM: yM, total, margin, p, crpsM });
+      out.push({ idx: f.idx, season: f.season, date: f.date, obsT: yT, obsM: yM, total, margin, p, crpsM, q025, q975, q10, q90 });
       const rm = yM - margin;
       residM.push(rm);
       allResidM.s += rm; allResidM.s2 += rm * rm; allResidM.n += 1;
@@ -293,6 +295,9 @@ function evalLosses(db, out) {
       maeA: Math.abs((r.obsT - r.obsM) / 2 - (r.total - r.margin) / 2),
       maeM: Math.abs(r.obsM - r.margin),
       crpsM: r.crpsM ?? NaN,
+      cover95: r.obsM >= r.q025 && r.obsM <= r.q975,
+      cover80: r.obsM >= r.q10 && r.obsM <= r.q90,
+      win: y,
       correct: (r.p >= 0.5) === (y === 1),
     };
   });
@@ -302,7 +307,7 @@ function summarize(lossesArr) {
   for (const k of METRICS) { let sum = 0, n = 0; for (const r of lossesArr) { if (k === 'crpsM' && !isFinite(r.crpsM)) continue; sum += r[k]; n++; } s[k] = n ? sum / n : NaN; }
   s.acc = lossesArr.filter(r => r.correct).length / lossesArr.length;
   const bins = Array.from({ length: 10 }, () => ({ s: 0, n: 0, o: 0 }));
-  for (const r of lossesArr) { const b = Math.min(9, Math.max(0, Math.floor(r.p * 10))); bins[b].s += r.p; bins[b].n++; bins[b].o += (r.p >= 0.5 ? 1 : 0) * (r.obsM > 0 ? 1 : 0); }
+  for (const r of lossesArr) { const b = Math.min(9, Math.max(0, Math.floor(r.p * 10))); bins[b].s += r.p; bins[b].n++; bins[b].o += r.win; }
   let ece = 0;
   for (const b of bins) if (b.n) { ece += (b.n / lossesArr.length) * Math.abs(b.o / b.n - b.s / b.n); }
   s.ece = ece;

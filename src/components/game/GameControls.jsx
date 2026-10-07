@@ -28,7 +28,7 @@ export default function GameControls({ settings, onSettingsChange, onRunSeries, 
       <div className="flex flex-wrap items-start gap-x-4 gap-y-3">
         <label className={labelCls} title="How many possessions each team gets per simulated game — longer games are more decided by the better team.">
           <span>POSS</span>
-          <input type="number" min={60} max={140} step={1} value={settings.possessions} disabled={running} onChange={event => change('possessions', event.target.value)} className={fieldCls} aria-label="Possessions per game" />
+          <input type="number" min={90} max={110} step={1} value={settings.possessions} disabled={running} onChange={event => change('possessions', Math.min(110, Math.max(90, Number(event.target.value) || 90)))} className={fieldCls} aria-label="Possessions per game" />
           <span className={hintCls}>Game length — possessions per team.</span>
         </label>
         <label className={labelCls} title="How many Monte Carlo games the engine plays to estimate the win odds — more trials mean steadier odds.">

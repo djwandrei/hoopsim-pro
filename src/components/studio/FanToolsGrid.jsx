@@ -1,6 +1,4 @@
 import React from 'react';
-import { ExternalLink } from 'lucide-react';
-import ToolEmblem from '@/components/djhc/ToolEmblem';
 import { FAN_TOOLS } from '@/components/djhc/siteNavigation';
 
 // The rest of the DJHC fan-tools suite, as it lives on the live site hub.

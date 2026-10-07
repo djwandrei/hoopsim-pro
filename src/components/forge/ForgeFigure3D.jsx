@@ -20,7 +20,6 @@ import { frameReferenceCamera, REFERENCE_TURN_SPEED, REFERENCE_FAST_TURN_SPEED }
 
 const GOLD = new THREE.Color('#E9B949');
 const GOLD_DEEP = new THREE.Color('#B4761B');
-const GOLD_RIM = new THREE.Color('#FFE9AE');
 const STEEL = new THREE.Color('#4A5872');
 const STEEL_DARK = new THREE.Color('#39455E');
 const BALL_HIDE = new THREE.Color('#3A4763');

@@ -359,10 +359,13 @@ function runCandidate(db, cfg) {
 }
 
 function crpsFromSorted(sorted, m) {
+  // Empirical CRPS = E|X−y| − E|X−X'|/2, with the sorted-samples identity
+  // ΣΣ|x_i−x_j| = 2Σ(2i−n+1)x_(i) (0-indexed). Verified against the
+  // closed-form Gaussian CRPS and a two-point ensemble.
   const n = sorted.length;
   let term1 = 0; for (const x of sorted) term1 += Math.abs(x - m);
   let term2 = 0; for (let i = 0; i < n; i++) term2 += (2 * i - n + 1) * sorted[i];
-  return term1 / n - term2 / (2 * n * n);
+  return term1 / n - term2 / (n * n);
 }
 function erf(x) {
   const t = 1 / (1 + 0.3275911 * Math.abs(x));

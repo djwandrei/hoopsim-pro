@@ -13,8 +13,12 @@ export function referenceSection(rows, index, f, column, fallback) {
 
 export function referenceContour(angle, rx, front, back, power, profile) {
   const c = Math.cos(angle), s = Math.sin(angle);
-  const x = Math.sign(c) * Math.pow(Math.abs(c), power) * rx;
-  let depth = Math.sign(s) * Math.pow(Math.abs(s), power) * (s < 0 ? front : back);
+  // Polar sampling of the superellipse avoids the infinite parameter slope
+  // and visible ridges produced by sign(cos) * abs(cos)^power at the axes.
+  const exponent = 2 / power;
+  const radius = Math.pow(Math.pow(Math.abs(c), exponent) + Math.pow(Math.abs(s), exponent), -1 / exponent);
+  const x = c * radius * rx;
+  let depth = s * radius * (s < 0 ? front : back);
   // A shoe has a flatter sole and a rounded upper, not a spherical toe cap.
   if (profile === 'shoe' && s < 0) depth = Math.max(depth, -front * .72);
   return [x, depth];

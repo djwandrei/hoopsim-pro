@@ -46,10 +46,10 @@ function glowTexture() {
   return new THREE.CanvasTexture(canvas);
 }
 
-export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false, complete = false, variant = 'reference', className = '' }) {
+export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false, complete = false, variant = 'reference', rotating = true, viewAngle = 0, className = '' }) {
   const hostRef = useRef(null);
-  const stateRef = useRef({ filled, total, spinning, complete });
-  stateRef.current = { filled, total, spinning, complete };
+  const stateRef = useRef({ filled, total, spinning, complete, rotating });
+  stateRef.current = { filled, total, spinning, complete, rotating };
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -123,17 +123,18 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const deepMat = () => makeMat(GOLD_DEEP, STEEL_DARK, 0.6, 0.34);
 
     const figure = new THREE.Group();
+    figure.rotation.y = viewAngle;
     const segments = SEGMENT_ORDER.map(key => ({ key, mats: [], meshes: [] }));
     const seg = key => segments.find(item => item.key === key);
     const recsByKey = new Map();
     const register = rec => { recsByKey.set(rec.mat, rec); return rec; };
     const goldRec = () => register(goldMat());
     const deepRec = () => register(deepMat());
-    const addMesh = (key, mesh) => {
-      figure.add(mesh);
+    const addMesh = (key, mesh, trackedMaterials) => {
+      if (mesh.parent !== figure) figure.add(mesh);
       const s = seg(key);
       s.meshes.push(mesh);
-      for (const mat of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+      for (const mat of trackedMaterials || (Array.isArray(mesh.material) ? mesh.material : [mesh.material])) {
         const rec = recsByKey.get(mat);
         if (rec && !s.mats.includes(rec)) s.mats.push(rec);
       }
@@ -241,7 +242,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
 
       // Continuous, frame-rate-independent turn for the reference sculpt.
       // Keep the limbs and basketball together in the frozen airborne pose.
-      if (!reducedMotion) {
+      if (!reducedMotion && s.rotating) {
         figure.rotation.y += silhouette
           ? dt * (s.spinning ? REFERENCE_FAST_TURN_SPEED : REFERENCE_TURN_SPEED)
           : (s.spinning ? 0.055 : 0.006);
@@ -317,10 +318,10 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       renderer.dispose();
       host.removeChild(renderer.domElement);
     };
-  }, [variant]);
+  }, [variant, viewAngle]);
 
   if (failed) return variant === 'reference'
-    ? <ReferenceFigureFallback filled={filled} total={total} spinning={spinning} className={className} />
+    ? <ReferenceFigureFallback filled={filled} total={total} spinning={spinning} rotating={rotating} viewAngle={viewAngle} className={className} />
     : <FallbackFigure filled={filled} total={total} className={className} />;
   return <div ref={hostRef} role="img" aria-label={`Composite player in the reference dunk pose, forged ${filled} of ${total} skills`} className={`forge-figure h-full w-full ${className}`} />;
 }

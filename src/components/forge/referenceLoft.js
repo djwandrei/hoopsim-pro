@@ -3,10 +3,11 @@ import { referenceSection, referenceContour } from '@/components/forge/reference
 
 // One continuous surface along anatomical cross-sections, including the joint.
 // No cylinders, spherical joint covers, or separate muscle blobs.
-export function referenceLoft(rows, material, frameHint = [1, 0, 0], profile = 'skin') {
+export function referenceLoft(rows, material, frameHint = [1, 0, 0], profile = 'skin', { caps = [true, true], splitAt } = {}) {
   const curve = new THREE.CatmullRomCurve3(rows.map(r => new THREE.Vector3(...r.slice(0, 3))), false, 'centripetal');
-  const steps = Math.max(24, (rows.length - 1) * 8), sides = 32;
+  const steps = Math.max(36, (rows.length - 1) * 12), sides = 64;
   const positions = [], indices = [];
+  const splitStep = splitAt == null ? steps : Math.round(steps * splitAt / (rows.length - 1));
   let previousTangent, normal;
   for (let i = 0; i <= steps; i += 1) {
     const t = i / steps, p = curve.getPoint(t), tangent = curve.getTangent(t).normalize();
@@ -37,8 +38,11 @@ export function referenceLoft(rows, material, frameHint = [1, 0, 0], profile = '
       }
     }
   }
-  // Closed end caps; adjacent sections overlap only inside the clothing/skin.
+  const surfaceIndexCount = indices.length;
+  // Garment openings and buried limb roots must not have exposed end disks:
+  // those disks caused the sharp shoulder, cuff, and knee seams in side views.
   for (const end of [0, 1]) {
+    if (!caps[end]) continue;
     const row = rows[end ? rows.length - 1 : 0], center = positions.length / 3;
     positions.push(row[0], row[1], row[2]);
     const base = end ? steps * sides : 0;
@@ -50,6 +54,12 @@ export function referenceLoft(rows, material, frameHint = [1, 0, 0], profile = '
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geometry.setIndex(indices);
+  if (Array.isArray(material)) {
+    const breakIndex = splitStep * sides * 6;
+    geometry.addGroup(0, breakIndex, 0);
+    geometry.addGroup(breakIndex, surfaceIndexCount - breakIndex, 1);
+    if (indices.length > surfaceIndexCount) geometry.addGroup(surfaceIndexCount, indices.length - surfaceIndexCount, 1);
+  }
   geometry.computeVertexNormals();
   const mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;

@@ -20,7 +20,7 @@ const SPEEDS = [1, 1.5, 2];
 // Interactive Playbook: every play from the animation dictionary runs on an
 // animated half court, step by step, with the who/what/why narrated beside it.
 export default function Playbook() {
-  usePageMeta({ title: 'Interactive Playbook — SwishIQ Studio', description: 'Learn basketball plays, sets and schemes on an animated half court: labelled players run each step while the who, the what and the why are narrated.' });
+  usePageMeta({ title: 'Interactive Playbook — SwishIQ Studio', description: 'Learn basketball plays, sets and schemes on an animated court: labelled players run each step while the who, the what and the why are narrated.' });
   const [library, setLibrary] = useState(null);
   const [error, setError] = useState(null);
   const load = useCallback(() => {
@@ -91,7 +91,7 @@ export default function Playbook() {
     <StudioShell active="/playbook">
       <WorkbenchHeader
         title="INTERACTIVE PLAYBOOK"
-        description="Learn the dictionary of basketball plays, sets and schemes on an animated half court. Labelled players run each step of the action while the narration explains what is happening, who is involved and what each move is trying to accomplish."
+        description="Learn the dictionary of basketball plays, sets and schemes on an animated court. Labelled players run each step of the action while the narration explains what is happening, who is involved and what each move is trying to accomplish."
         steps={['Browse the play library', 'Run the step animation', 'Study the reads & goals']}
         current={safeStep > 0 ? 2 : play ? 1 : 0}
         state={!library ? 'loading' : error ? 'error' : 'ready'}

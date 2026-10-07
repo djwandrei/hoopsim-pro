@@ -6,7 +6,7 @@ export function coverageSetup(scene, name) {
   if (/Drop/.test(name)) scene.defense.X5 = [250, name === 'Deep Drop' ? 96 : 168];
   if (name === 'Scram Switch') { exchangeMatchups(scene, 'X1', 'X5'); scene.offense.O5 = [302, 126]; shell(scene); }
 }
-function useScreen(scene) {
+function runBallScreen(scene) {
   scene.offense.O1 = [300, 214]; scene.offense.O5 = [210, 94];
   scene.via.O1 = [[300, 280], [285, 246]];
 }
@@ -14,7 +14,7 @@ export function coverageStep(scene, name, step) {
   scene.cue = 'Illustrated response to a ball screen; X labels keep their identity when assignments change';
   if (/Drop|At-Level/.test(name)) {
     if (step === 0) { scene.defense.X1 = [366, 314]; scene.via.X1 = [[324, 368]]; }
-    if (step === 1) { useScreen(scene); scene.defense.X5 = [250, name === 'Deep Drop' ? 102 : name === 'At-Level' ? 258 : 154]; }
+    if (step === 1) { runBallScreen(scene); scene.defense.X5 = [250, name === 'Deep Drop' ? 102 : name === 'At-Level' ? 258 : 154]; }
     if (step === 2) { scene.defense.X1 = [358, 238]; if (name === 'At-Level') scene.defense.X5 = [280, 154]; }
     if (step === 3) { guard(scene, 'X1'); scene.defense.X5 = name === 'Deep Drop' ? [250, 102] : [260, 140]; }
     if (step === 4 && name !== 'Deep Drop') scene.defense.X4 = [265, 86];
@@ -30,7 +30,7 @@ export function coverageStep(scene, name, step) {
   }
   if (name === 'Under') {
     if (step === 0) scene.defense.X1 = [300, 260];
-    if (step === 1) { useScreen(scene); scene.defense.X1 = [300, 156]; scene.via.X1 = [[166, 230], [220, 210]]; }
+    if (step === 1) { runBallScreen(scene); scene.defense.X1 = [300, 156]; scene.via.X1 = [[166, 230], [220, 210]]; }
     if (step === 2) scene.defense.X5 = [238, 154];
     if (step === 3) guard(scene, 'X1');
     return;
@@ -56,7 +56,7 @@ export function coverageStep(scene, name, step) {
   if (name === 'Pre-Switch') {
     if (step === 1) { exchangeMatchups(scene, 'X5', 'X4'); shell(scene); }
     if (step === 2) guard(scene, 'X4');
-    if (step === 4) { useScreen(scene); exchangeMatchups(scene, 'X1', 'X4'); shell(scene); scene.cue = 'Example: pre-switch X4 onto the screener, then switch the ball screen'; }
+    if (step === 4) { runBallScreen(scene); exchangeMatchups(scene, 'X1', 'X4'); shell(scene); scene.cue = 'Example: pre-switch X4 onto the screener, then switch the ball screen'; }
     return;
   }
   if (name === 'Scram Switch') {
@@ -74,7 +74,7 @@ export function coverageStep(scene, name, step) {
     return;
   }
   if (/Triple Switch/.test(name)) {
-    if (step === 0) { useScreen(scene); guard(scene, 'X1'); guard(scene, 'X5'); }
+    if (step === 0) { runBallScreen(scene); guard(scene, 'X1'); guard(scene, 'X5'); }
     if (step === 1) scene.offense.O2 = [265, 100];
     if (step === 2) { scene.matchups.X2 = 'O5'; guard(scene, 'X2'); }
     if (step === 3) { scene.offense.O2 = [360, 316]; scene.matchups.X5 = 'O2'; guard(scene, 'X5'); }
@@ -84,7 +84,7 @@ export function coverageStep(scene, name, step) {
   }
   // Switch, Switch-Back and Switch Everything each have different timing.
   const initialSwitch = name === 'Switch-Back' ? 0 : 1;
-  if (step === initialSwitch) { useScreen(scene); exchangeMatchups(scene, 'X1', 'X5'); guard(scene, 'X5'); }
+  if (step === initialSwitch) { runBallScreen(scene); exchangeMatchups(scene, 'X1', 'X5'); guard(scene, 'X5'); }
   if (step === (name === 'Switch-Back' ? 1 : 2)) guard(scene, 'X1');
   if (name === 'Switch-Back') {
     if (step === 3) { scene.matchups.X1 = 'O1'; guard(scene, 'X1'); }

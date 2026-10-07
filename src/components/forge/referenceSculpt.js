@@ -4,7 +4,7 @@ import { REFERENCE_BALL, REFERENCE_PARTS } from '@/components/forge/referencePos
 export function buildReferenceSculpt({ addMesh, goldRec, deepRec }) {
   for (const part of REFERENCE_PARTS) {
     const record = part.deep ? deepRec() : goldRec();
-    addMesh(part.key, referenceLoft(part.rows, record.mat, part.hint));
+    addMesh(part.key, referenceLoft(part.rows, record.mat, part.hint, part.profile));
   }
   // Four curled fingers sit against the ball's actual surface, not beneath it.
   const grip = goldRec().mat;

@@ -1,8 +1,9 @@
 import * as THREE from 'three';
+import { referenceSection, referenceContour } from '@/components/forge/referenceSections';
 
 // One continuous surface along anatomical cross-sections, including the joint.
 // No cylinders, spherical joint covers, or separate muscle blobs.
-export function referenceLoft(rows, material, frameHint = [1, 0, 0]) {
+export function referenceLoft(rows, material, frameHint = [1, 0, 0], profile = 'skin') {
   const curve = new THREE.CatmullRomCurve3(rows.map(r => new THREE.Vector3(...r.slice(0, 3))), false, 'centripetal');
   const steps = Math.max(24, (rows.length - 1) * 8), sides = 32;
   const positions = [], indices = [];
@@ -20,12 +21,15 @@ export function referenceLoft(rows, material, frameHint = [1, 0, 0]) {
     const binormal = new THREE.Vector3().crossVectors(tangent, normal).normalize();
     previousTangent = tangent;
     const u = t * (rows.length - 1), a = Math.min(Math.floor(u), rows.length - 2);
-    const f = u - a, blend = f * f * (3 - 2 * f);
-    const rx = THREE.MathUtils.lerp(rows[a][3], rows[a + 1][3], blend);
-    const rz = THREE.MathUtils.lerp(rows[a][4], rows[a + 1][4], blend);
+    const f = u - a;
+    const rx = referenceSection(rows, a, f, 3);
+    const power = referenceSection(rows, a, f, 5, profile === 'cloth' ? .82 : profile === 'shoe' ? .68 : 1);
+    const front = referenceSection(rows, a, f, 6, row => row[4]);
+    const back = referenceSection(rows, a, f, 7, row => row[4]);
     for (let j = 0; j < sides; j += 1) {
       const angle = j / sides * Math.PI * 2;
-      const v = p.clone().addScaledVector(normal, Math.cos(angle) * rx).addScaledVector(binormal, Math.sin(angle) * rz);
+      const [x, depth] = referenceContour(angle, rx, front, back, power, profile);
+      const v = p.clone().addScaledVector(normal, x).addScaledVector(binormal, depth);
       positions.push(v.x, v.y, v.z);
       if (i < steps) {
         const c = i * sides + j, n = i * sides + (j + 1) % sides;

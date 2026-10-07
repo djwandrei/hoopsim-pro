@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { buildFigureBody } from '@/components/forge/forgeFigureModels';
 import { configureSilhouetteMaterial } from '@/components/forge/forgeSilhouetteMaterial';
 import ReferenceFigureFallback from '@/components/forge/ReferenceFigureFallback';
+import { frameReferenceCamera, REFERENCE_TURN_SPEED, REFERENCE_FAST_TURN_SPEED } from '@/components/forge/referenceView';
 
 // Real-time 3D player figure rendered with three.js. The body sculpt is one
 // of four variants (see forgeFigureModels.js): 'reference' — the dunk-pose
@@ -72,7 +73,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
 
     const scene = new THREE.Scene();
     const silhouette = variant === 'reference';
-    // Fixed three-quarter view corresponding to the left view of the reference.
+    // Begin in the reference's three-quarter view; the sculpt turns as one body.
     // Orthographic projection keeps the reconstructed limb proportions stable.
     const camera = silhouette
       ? new THREE.OrthographicCamera(-1.48, 1.48, 1.48, -1.48, 0.1, 60)
@@ -219,11 +220,8 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       const width = host.clientWidth, height = host.clientHeight;
       if (!width || !height) return;
       renderer.setSize(width, height, false);
-      if (camera.isOrthographicCamera) {
-        camera.left = -1.48 * width / height;
-        camera.right = 1.48 * width / height;
-      } else camera.aspect = width / height;
-      camera.updateProjectionMatrix();
+      if (camera.isOrthographicCamera) frameReferenceCamera(camera, width, height);
+      else { camera.aspect = width / height; camera.updateProjectionMatrix(); }
     };
     const observer = new ResizeObserver(resize);
     observer.observe(host);
@@ -241,11 +239,13 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       const s = stateRef.current;
       const progress = Math.max(0, Math.min(1, s.filled / s.total));
 
-      // Motion: slow display rotation (faster + emissive pulse while spinning),
-      // gentle idle bob — none for reduced-motion users.
-      if (!reducedMotion && !silhouette) {
-        figure.rotation.y += (s.spinning ? 0.055 : 0.006);
-        figure.position.y = Math.sin(t * 1.3) * 0.014;
+      // Continuous, frame-rate-independent turn for the reference sculpt.
+      // Keep the limbs and basketball together in the frozen airborne pose.
+      if (!reducedMotion) {
+        figure.rotation.y += silhouette
+          ? dt * (s.spinning ? REFERENCE_FAST_TURN_SPEED : REFERENCE_TURN_SPEED)
+          : (s.spinning ? 0.055 : 0.006);
+        if (!silhouette) figure.position.y = Math.sin(t * 1.3) * 0.014;
       }
       const pulse = s.spinning ? 0.22 * (0.5 + 0.5 * Math.sin(t * 7)) : 0;
 
@@ -320,7 +320,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
   }, [variant]);
 
   if (failed) return variant === 'reference'
-    ? <ReferenceFigureFallback filled={filled} total={total} className={className} />
+    ? <ReferenceFigureFallback filled={filled} total={total} spinning={spinning} className={className} />
     : <FallbackFigure filled={filled} total={total} className={className} />;
   return <div ref={hostRef} role="img" aria-label={`Composite player in the reference dunk pose, forged ${filled} of ${total} skills`} className={`forge-figure h-full w-full ${className}`} />;
 }

@@ -1,4 +1,5 @@
 import { Users, FlaskConical, Swords, Zap, CalendarRange, LineChart, Disc3, Banknote, IdCard, PackageOpen, Wrench, BookOpen } from 'lucide-react';
+import { studioAsset } from '@/components/studio/teamAssets';
 const EMBLEMS = 'https://www.djshouseofcards-comics.com/tools/swishiq-studio/assets/workbench-icons/';
 export const WORKBENCHES = [
   { path: '/players', icon: Users, emblem: `${EMBLEMS}player-blueprint-icon.webp`, title: 'Player Blueprint', tag: 'ATLAS & DOSSIERS', description: 'Scope the interactive league charts, then pin players to open their full observed dossiers.', flow: 'Atlas → Scope → Dossier', children: [{ path: '/players', title: 'League Atlas' }, { path: '/players/dossier', title: 'Player Dossier' }] },
@@ -10,8 +11,8 @@ export const WORKBENCHES = [
   { path: '/spin', icon: Disc3, emblem: `${EMBLEMS}spin-room-icon.webp`, title: 'Spin Room', tag: 'ROLE DRAFT & DISCOVERY', description: 'Build a seeded player pool, set exclusions, and reveal repeatable no-repeat picks.', flow: 'Pool → Draw → Selection' },
   { path: '/book', icon: Banknote, title: 'Book Room', tag: 'ODDS, MODEL EDGES & BETS', description: 'Shop real NBA lines, see the studio sim\'s model edge on every price, build parlays and teasers, and track every bet to settlement with a play-money bankroll.', flow: 'Board & edges → Bet slip → Track & settle' },
   { path: '/matchups', icon: IdCard, emblem: 'https://www.djshouseofcards-comics.com/assets/games/card-matchups-emblem-20260911.png', title: 'Player & Cards', tag: 'COLLECTOR SEARCH', description: 'Search the live collector catalog for cards tied to verified NBA players, then browse every catalog card.', flow: 'Search → Player match → Browse' },
-  { path: '/packs', icon: PackageOpen, title: 'Virtual Packs', tag: 'SEEDED PACK SIMULATION', description: 'Declare an eligible card pool from verified player matches and replay a deterministic simulated pack draw — simulation only, no purchase.', flow: 'Find cards → Pool → Seeded draw' },
-  { path: '/playbook', icon: BookOpen, title: 'Playbook', tag: 'INTERACTIVE PLAY ANIMATION', description: 'Learn plays, sets and schemes on an animated half court: labelled players run each step while the who, the what and the why are narrated.', flow: 'Library → Animate → Steps' },
+  { path: '/packs', icon: PackageOpen, emblem: studioAsset('virtual-packs-emblem-20261007.png'), title: 'Virtual Packs', tag: 'SEEDED PACK SIMULATION', description: 'Declare an eligible card pool from verified player matches and replay a deterministic simulated pack draw — simulation only, no purchase.', flow: 'Find cards → Pool → Seeded draw' },
+  { path: '/playbook', icon: BookOpen, emblem: studioAsset('playbook-emblem-20261007.png'), title: 'Playbook', tag: 'INTERACTIVE PLAY ANIMATION', description: 'Learn plays, sets and schemes on an animated half court: labelled players run each step while the who, the what and the why are narrated.', flow: 'Library → Animate → Steps' },
   { path: '/workshop', icon: Wrench, emblem: 'https://www.djshouseofcards-comics.com/assets/games/workshop-emblem-20260911.png', title: 'Workshop', tag: 'TOOL EXPERIENCE PREVIEWS', description: 'Preview the upcoming workshop experiences, review each setup, and save your configuration on this device.', flow: 'Pick experience → Setup → Save' },
 ];
 

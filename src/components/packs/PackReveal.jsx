@@ -51,8 +51,12 @@ export default function PackReveal({ drawnCards }) {
         style={{ '--deal-delay': `${index * 110}ms` }}
       >
         <div className="pack-card__flip">
-          <div className="pack-card__face pack-card__face--back" aria-hidden="true"><span className="pack-card__brand">SWISHIQ</span></div>
+          <div className="pack-card__face pack-card__face--back" aria-hidden="true">
+            <span className="pack-card__brand">DJHC</span>
+            <span className="pack-card__mystery">?</span>
+          </div>
           <div className="pack-card__face pack-card__face--front">
+            {card.grade && <span className="pack-card__grade" aria-label={`PSA ${card.grade} graded`}>PSA {card.grade}</span>}
             <div className="pack-card__media">
               {card.imageUrl
                 ? <Image src={card.imageUrl} alt={card.name} fittingType="fit" className="h-full w-full object-contain" />

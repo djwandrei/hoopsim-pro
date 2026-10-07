@@ -12,12 +12,17 @@
 
 .pack-card__face { position: absolute; inset: 0; display: grid; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: .7rem; border: 1px solid hsl(var(--border) / .5); }
 
-/* Face-down: dark pack back with the studio mark and a roaming shine */
-.pack-card__face--back { place-items: center; background: radial-gradient(120% 90% at 50% 0%, hsl(var(--court-accent) / .22), transparent 58%), linear-gradient(160deg, hsl(var(--court-surface)), hsl(var(--court-canvas))); box-shadow: 0 10px 22px hsl(var(--court-canvas) / .5); }
+/* Face-down: navy mystery card with the DJHC mark, gold "?" and a roaming shine */
+.pack-card__face--back { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; background: linear-gradient(165deg, hsl(221 37% 22%), hsl(223 24% 5.7%)); box-shadow: 0 10px 22px hsl(var(--court-canvas) / .5); }
 .pack-card__face--back::before { content: ''; position: absolute; inset: .45rem; border: 1px solid hsl(var(--court-accent) / .35); border-radius: .5rem; }
 .pack-card__face--back::after { content: ''; position: absolute; top: 0; bottom: 0; left: -40%; width: 35%; background: linear-gradient(100deg, transparent, hsl(220 38% 97% / .12), transparent); animation: pack-shine 2.2s ease-in-out infinite; }
 @keyframes pack-shine { to { left: 125%; } }
-.pack-card__brand { font-family: var(--font-display); font-size: 1.05rem; letter-spacing: .14em; color: hsl(var(--court-accent)); }
+.pack-card__brand { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .3em; color: hsl(var(--court-accent) / .8); }
+/* Mystery pull: gold question mark under the brand mark */
+.pack-card__mystery { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; color: hsl(var(--court-accent)); text-shadow: 0 0 18px hsl(var(--court-accent) / .5); }
+
+/* PSA grade badge pinned to the face-up card's top-right corner */
+.pack-card__grade { position: absolute; top: .45rem; right: .45rem; z-index: 1; border-radius: .3rem; border: 1px solid hsl(var(--court-accent) / .7); background: hsl(var(--court-canvas) / .9); padding: .1rem .35rem; font-family: var(--font-mono); font-size: .55rem; font-weight: 700; letter-spacing: .08em; color: hsl(var(--court-accent)); }
 
 /* Face-up: the card art with a caption strip; a gold glow lands on reveal */
 .pack-card__face--front { grid-template-rows: minmax(0, 1fr) auto; transform: rotateY(180deg); background: hsl(var(--court-canvas) / .92); }

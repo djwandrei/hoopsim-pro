@@ -10,3 +10,6 @@ export const STUDIO_EMBLEM = STANDALONE ? '/assets/games/swishiq-studio-emblem-2
 export const forgeSilhouette = mode =>
   `${STANDALONE ? SITE_BASE : ''}/studio-assets/forge/basketball-silhouette-${mode}.png`;
 export const playerAsset = path => /^\/assets\/player-headshots\/(nba|nba-no-background)\/[a-z0-9._-]+\.(webp|png|jpg|jpeg)$/i.test(path || '') ? (STANDALONE ? path : `https://www.djshouseofcards-comics.com${path}`) : null;
+// Studio-local emblem art shipped from public/studio-assets: on the site the
+// same folder deploys under the studio root.
+export const studioAsset = path => `${STANDALONE ? SITE_BASE : ''}/studio-assets/${path}`;

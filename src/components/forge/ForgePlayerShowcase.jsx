@@ -34,39 +34,50 @@ export default function ForgePlayerShowcase({ player, note }) {
         <div className="absolute inset-0 bg-gradient-to-br from-canvas/70 via-surface/80 to-raised/90" aria-hidden="true" />
         {logo && <Image src={logo} alt="" aria-hidden="true" fittingType="fit" className="absolute -left-6 top-1/2 h-44 w-44 -translate-y-1/2 object-contain opacity-20" />}
         <div className="relative flex flex-wrap items-end gap-4 p-4 sm:p-5">
-          <PlayerPortrait player={player} frameless className="h-24 w-20 shrink-0 rounded-t-2xl" />
           <div className="min-w-0 flex-1 pb-1">
             <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>Player profile</span>
             <h2 className="mt-1.5 font-display text-3xl uppercase leading-[0.95]">{player.name}</h2>
             <span className="hero-rule mt-2" aria-hidden="true"></span>
-            <p className="mt-1.5 text-xs text-muted-foreground">{player.teamCode} · {player.positions?.join(' / ') || '—'} · {player.games} GP</p>
           </div>
           {note && <p className="shrink-0 rounded-lg border border-gold/40 bg-gold/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-gold">{note}</p>}
         </div>
       </header>
-      <div className="grid grid-cols-5 divide-x divide-border/30 border-b border-border/30 bg-gradient-to-b from-canvas/60 to-transparent">
-        {BIG_STATS.map(stat => <div key={stat.key} className="px-2 py-3 text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[.2em] text-gold">{stat.label}</p>
-          <p className="mt-0.5 font-display text-2xl leading-none text-foreground sm:text-3xl">{stat.fmt(player[stat.key])}</p>
-          <p className="text-[10px] text-muted-foreground">per game</p>
-        </div>)}
-      </div>
-      <div className="border-b border-border/30 p-3">
-        <p className="bcast-kicker">DJHC skill grades</p>
-        <div className="mt-2 grid grid-cols-3 gap-1.5 sm:grid-cols-5">
-          {SKILLS.map(skill => {
-            const value = player[skill.key];
-            if (!Number.isFinite(value)) return null;
-            const tone = gradeTone(value);
-            return <div key={skill.key} className="rounded-lg border border-border/25 bg-raised/40 px-2 py-1.5 text-center">
-              <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{skill.label}</p>
-              <p className={`mt-0.5 font-display text-lg leading-none ${tone === 'positive' ? 'text-positive' : tone === 'royal' ? 'text-royal-ink' : tone === 'gold' ? 'text-gold' : 'text-trim-ink'}`}>{gradeFor(value)}<span className="font-mono text-[10px] opacity-80"> · {value}</span></p>
-            </div>;
-          })}
+      <div className="flex flex-col gap-5 p-4 sm:flex-row sm:p-5">
+        <div className="flex shrink-0 flex-col items-center gap-2 sm:w-44">
+          <PlayerPortrait player={player} frameless className="h-48 w-40 rounded-2xl" />
+          <p className="text-center text-xs text-muted-foreground">{player.teamCode} · {player.positions?.join(' / ') || '—'} · {player.games} GP</p>
+        </div>
+        <div className="min-w-0 flex-1 space-y-4">
+          <div>
+            <p className="bcast-kicker">Season stat line</p>
+            <div className="mt-2 grid grid-cols-5 divide-x divide-border/30 overflow-hidden rounded-xl border border-border/25 bg-gradient-to-b from-canvas/60 to-transparent">
+              {BIG_STATS.map(stat => <div key={stat.key} className="px-2 py-3 text-center">
+                <p className="text-[10px] font-semibold uppercase tracking-[.2em] text-gold">{stat.label}</p>
+                <p className="mt-0.5 font-display text-2xl leading-none text-foreground sm:text-3xl">{stat.fmt(player[stat.key])}</p>
+                <p className="text-[10px] text-muted-foreground">per game</p>
+              </div>)}
+            </div>
+          </div>
+          <div>
+            <p className="bcast-kicker">DJHC skill grades</p>
+            <div className="mt-2 grid grid-cols-3 gap-1.5 sm:grid-cols-5">
+              {SKILLS.map(skill => {
+                const value = player[skill.key];
+                if (!Number.isFinite(value)) return null;
+                const tone = gradeTone(value);
+                return <div key={skill.key} className="rounded-lg border border-border/25 bg-raised/40 px-2 py-1.5 text-center">
+                  <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{skill.label}</p>
+                  <p className={`mt-0.5 font-display text-lg leading-none ${tone === 'positive' ? 'text-positive' : tone === 'royal' ? 'text-royal-ink' : tone === 'gold' ? 'text-gold' : 'text-trim-ink'}`}>{gradeFor(value)}<span className="font-mono text-[10px] opacity-80"> · {value}</span></p>
+                </div>;
+              })}
+            </div>
+          </div>
         </div>
       </div>
-      <div className="relative flex flex-wrap justify-center gap-2 p-3">
-        {CONTEXT_STATS.map(stat => <span key={stat.key} className="bcast-lowerthird">{stat.label}<span className="text-foreground">{stat.fmt(player[stat.key])}</span></span>)}
+      <div className="border-t border-border/30 p-3">
+        <div className="flex flex-wrap gap-2">
+          {CONTEXT_STATS.map(stat => <span key={stat.key} className="bcast-lowerthird">{stat.label}<span className="text-foreground">{stat.fmt(player[stat.key])}</span></span>)}
+        </div>
       </div>
     </React.Fragment> : <div className="relative flex min-h-44 flex-col items-center justify-center text-center">
       <span className="bcast-watermark" aria-hidden="true">FRG</span>

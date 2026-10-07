@@ -8,7 +8,7 @@ const GRADE_TEXT = { positive: 'text-positive', royal: 'text-royal-ink', gold: '
 
 // The draft-show stage: spotlight lottery wheel, gold spin CTA, and the
 // selected player announced with a broadcast lower-third ride-in.
-export default function SpinStage({ pool, latest, spinning, historyCount, history = [], onSpin, roleLabel, skills = null }) {
+export default function SpinStage({ pool, latest, spinning, historyCount, history = [], onSpin, roleLabel, profile = null }) {
   const ready = pool?.status === 'ready';
   const eligible = ready ? pool.entries.length : null;
   const remaining = ready ? Math.max(0, eligible - historyCount) : 0;
@@ -40,18 +40,24 @@ export default function SpinStage({ pool, latest, spinning, historyCount, histor
           <p className="spin-pick__kicker"><Check className="h-3.5 w-3.5" aria-hidden="true" />Pick {String(latest.spinNumber).padStart(2, '0')} confirmed</p>
           <div className="spin-pick__row">
             <PlayerPortrait player={entry} className="h-32 w-28 shrink-0" />
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <h3 className="spin-pick__name">{entry.name}</h3>
               <p className="spin-pick__context">{entry.positions.join(' / ')} · {entry.seasonStartYear}–{String(entry.seasonStartYear + 1).slice(-2)} · Source games {entry.games}</p>
               <div className="spin-pick__teams">{(entry.teamCodes || []).map(code => <span key={code} className="spin-pick__team"><TeamMark code={code} className="h-9 w-9" />{code}</span>)}</div>
+              {profile?.stats?.length > 0 && <div className="mt-3 grid grid-cols-5 gap-1.5" aria-label="Season stat line">
+                {profile.stats.map(stat => <span key={stat.key} className="rounded-lg border border-border/25 bg-raised/40 px-1.5 py-1.5 text-center">
+                  <p className="text-[9px] font-semibold uppercase tracking-wider text-gold">{stat.label}</p>
+                  <p className="mt-0.5 font-display text-lg leading-none">{stat.value}</p>
+                </span>)}
+              </div>}
+              {profile?.skills?.length > 0 && <div className="mt-2 grid grid-cols-3 gap-1.5 sm:grid-cols-5" aria-label="DJHC skill grades">
+                {profile.skills.map(item => <span key={item.key} className="flex min-w-0 items-center justify-between gap-1.5 rounded-lg border border-border/25 bg-raised/40 px-2 py-1.5">
+                  <span className="min-w-0 truncate text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{item.label}</span>
+                  <span className={`shrink-0 font-mono text-[10px] font-bold ${GRADE_TEXT[gradeTone(item.value)]}`}>{gradeFor(item.value)}·{item.value}</span>
+                </span>)}
+              </div>}
             </div>
           </div>
-          {skills?.length > 0 && <div className="mt-3 grid grid-cols-3 gap-1.5 sm:grid-cols-5" aria-label="DJHC skill grades">
-            {skills.map(item => <span key={item.key} className="flex min-w-0 items-center justify-between gap-1.5 rounded-lg border border-border/25 bg-raised/40 px-2 py-1.5">
-              <span className="min-w-0 truncate text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{item.label}</span>
-              <span className={`shrink-0 font-mono text-[10px] font-bold ${GRADE_TEXT[gradeTone(item.value)]}`}>{gradeFor(item.value)}·{item.value}</span>
-            </span>)}
-          </div>}
         </div> : <div className="spin-pick spin-pick--idle">
           <p className="spin-pick__kicker">On deck</p>
           <h3 className="spin-pick__name">{pool?.status === 'ready' ? 'Ready when you are' : pool?.status === 'dirty' ? 'Pool settings changed' : 'Wheel is idle'}</h3>

@@ -8,6 +8,7 @@ import { simulateForgeSeason } from '@/components/forge/forgeTeamSim';
 import ForgeTeamSpinPanel from '@/components/forge/ForgeTeamSpinPanel';
 import ForgeTeamPickPanel from '@/components/forge/ForgeTeamPickPanel';
 import ForgePlayerShowcase from '@/components/forge/ForgePlayerShowcase';
+import ForgeTeamSetupPanel from '@/components/forge/ForgeTeamSetupPanel';
 import ForgeRosterBoard from '@/components/forge/ForgeRosterBoard';
 import ForgeTeamBoard from '@/components/forge/ForgeTeamBoard';
 import ForgeTeamResult from '@/components/forge/ForgeTeamResult';
@@ -171,18 +172,7 @@ export default function ForgeTeamDraft({ source, league, pickMode = false, pool:
   const revealNote = reveal ? `${TEAM_SLOTS.length - filled} open spots · tap one to place them` : null;
 
   return <section aria-label="Team forge game" className="space-y-4">
-    {phase === 'setup' && <div className="court-panel court-panel-hover p-6">
-      <div className="mx-auto max-w-xl text-center">
-        <p className="bcast-kicker">98-0 chase</p>
-        <h2 className="broadcast-gradient-text mt-1 font-display text-3xl">SPIN · PLACE · CHASE 98-0</h2>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{pickMode ? 'Spin the reel for a random team, then choose any player from their roster and tap an open rotation spot to place them.' : 'Spin the reels for a random team and player, then tap any open rotation spot to place them.'} Fill the five starter slots and three bench spots — then simulate the full 82-game season and playoff bracket. A flawless regular season plus a perfect title run is <span className="font-semibold text-gold">98-0</span>. {pickMode ? 'Two team respins per draft.' : 'Two team respins and three player respins per draft.'}</p>
-      </div>
-      <div className="mx-auto mt-4 grid max-w-lg grid-cols-5 gap-1.5">
-        {TEAM_SLOTS.map(slot => <span key={slot.key} className={`rounded-lg border px-1 py-1.5 text-center font-mono text-[10px] ${slot.starter ? 'border-gold/30 text-gold' : 'border-border/30 text-muted-foreground'}`}>{slot.label}</span>)}
-      </div>
-      <p className="mt-3 text-center text-xs text-muted-foreground">{allPool.length} player seasons in the pool</p>
-      <div className="mt-5 text-center"><button type="button" onClick={start} disabled={!allPool.length} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:translate-y-px hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40"><Play className="h-4 w-4" />Start the draft</button></div>
-    </div>}
+    {phase === 'setup' && <ForgeTeamSetupPanel pickMode={pickMode} slots={TEAM_SLOTS} poolCount={allPool.length} onStart={start} />}
     {phase === 'drafting' && <div className="space-y-4">
       <div className="grid gap-4 lg:grid-cols-[minmax(0,19rem),minmax(0,1fr)]">
         {pickMode ? <ForgeTeamPickPanel

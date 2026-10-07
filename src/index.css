@@ -119,18 +119,21 @@
 .studio-select:focus, .studio-select:focus-visible { border-color: hsl(var(--court-accent) / .6); box-shadow: 0 0 0 3px hsl(var(--court-accent) / .15); }
 .hero-rule { @apply block h-1 w-16 rounded-full; background: linear-gradient(90deg, hsl(var(--court-accent)), hsl(var(--court-accent) / .4) 60%, transparent); }
 @media (prefers-reduced-motion: reduce) { .studio-workspace *, .studio-workspace *::before, .studio-workspace *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
-/* Slimmed studio footer: drop the basketball artwork band above the footer
-   and condense the remaining content into a single compact band */
-.site-footer::before, body.court-themed .site-footer::before { display: none !important; }
-.site-footer .footer-inner { padding-top: 1.4rem !important; padding-bottom: 1.4rem !important; gap: 1.5rem !important; }
-.site-footer .footer-brand { gap: .55rem; }
-.site-footer .footer-logo { width: 46px !important; height: 46px !important; }
-.site-footer .footer-brand .brand-script { font-size: 1.05rem; }
-.site-footer .footer-brand .brand-kicker { font-size: .68rem; }
-.site-footer .footer-link-groups { gap: .9rem; }
-.site-footer .footer-link-group { gap: .3rem; padding-top: .45rem; }
-.site-footer .footer-link-group strong { font-size: .82rem; }
-.site-footer .footer-link-group a { padding: .14rem 0; font-size: .86rem; }
+/* Condensed studio footer: drop the basketball artwork band above the footer
+   and rebuild the remaining content as one compact inline strip */
+.footer.site-footer::before, body.court-themed .site-footer::before { display: none !important; }
+.footer.site-footer .footer-inner { display: flex !important; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .9rem 2.2rem; padding-top: 1.1rem !important; padding-bottom: 1.1rem !important; }
+.footer.site-footer .footer-brand { display: flex; align-items: center; gap: .8rem; padding: 0 !important; }
+.footer.site-footer .footer-brand::before { display: none; }
+.footer.site-footer .footer-logo { width: 42px !important; height: 42px !important; }
+.footer.site-footer .footer-brand .brand-script { font-size: 1.05rem; }
+.footer.site-footer .footer-brand .brand-kicker { font-size: .68rem; }
+.footer.site-footer .footer-links { padding: 0 !important; }
+.footer.site-footer .footer-link-groups { display: flex; flex-wrap: wrap; gap: .45rem 2rem !important; }
+.footer.site-footer .footer-link-group { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .65rem !important; padding: 0 !important; }
+.footer.site-footer .footer-link-group::before { display: none; }
+.footer.site-footer .footer-link-group strong { font-size: .74rem; }
+.footer.site-footer .footer-link-group a { min-height: 0 !important; padding: 0 !important; font-size: .86rem; }
 /* Forge wheel + draft-card motion */
 .wheel-chip-active { animation: studio-chip-pulse 1.4s ease-in-out infinite; }
 @keyframes studio-chip-pulse { 0%,100% { box-shadow: 0 0 0 0 hsl(var(--court-accent) / .4); } 50% { box-shadow: 0 0 0 7px hsl(var(--court-accent) / 0); } }

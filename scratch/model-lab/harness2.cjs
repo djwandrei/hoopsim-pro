@@ -116,6 +116,12 @@ function runCandidate2(db, cfg) {
   const residM = [];
   const residDay = []; // day index of each residual, for recency weighting
   const residPairs = []; // [marginAtFit, resid] for kernel-weighted support
+  // Margin-stratified residual pools (heteroskedastic across the favorite
+  // regime): each past residual joins the pool its own predicted margin was in.
+  const stratProb = cfg.stratProb ?? false;
+  const stratCut = cfg.stratCut ?? 5;
+  const stratHi = cfg.stratHi ?? null;
+  const poolS = [], poolMid = [], poolL = [];
   const allResidM = { s: 0, s2: 0, n: 0 };
   const gaussProb = cfg.gaussProb ?? false;
   const varPrior = cfg.varPrior ?? null;
@@ -196,6 +202,32 @@ function runCandidate2(db, cfg) {
         crpsM = crpsGauss(margin, sd, g.hp - g.ap);
         q025 = margin - 1.959964 * sd; q975 = margin + 1.959964 * sd;
         q10 = margin - 1.281552 * sd; q90 = margin + 1.281552 * sd;
+      } else if (stratProb && wN) {
+        const am = Math.abs(margin);
+        const pool = stratHi != null
+          ? (am < stratCut ? (poolS.length >= 100 ? poolS : residM) : am < stratHi ? (poolMid.length >= 100 ? poolMid : residM) : (poolL.length >= 100 ? poolL : residM))
+          : (am < stratCut ? (poolS.length >= 100 ? poolS : residM) : (poolL.length >= 100 ? poolL : residM));
+        let s2 = 0; for (const x of pool) s2 += x;
+        const pm = pool.length ? s2 / pool.length : 0;
+        const pN = pool.length;
+        p = 0.5;
+        if (pN) {
+          let c = 0;
+          for (let i = 0; i < pN; i++) { const v = margin + (pool[i] - pm) * scaleNow; c += v > 0 ? 1 : v === 0 ? 0.5 : 0; }
+          p = c / pN;
+          if (pN >= 100) {
+            const stride = Math.max(1, Math.floor(pN / 300));
+            const samples = [];
+            for (let i = 0; i < pN; i += stride) samples.push(margin + (pool[i] - pm) * scaleNow);
+            samples.sort((a, b) => a - b);
+            const n2 = samples.length;
+            let term1 = 0; for (const x of samples) term1 += Math.abs(x - margin);
+            let term2 = 0; for (let i = 0; i < n2; i++) term2 += (2 * i - n2 + 1) * samples[i];
+            crpsM = term1 / n2 - term2 / (n2 * n2);
+            const q = pv => samples[Math.min(n2 - 1, Math.max(0, Math.round(pv * (n2 - 1))))];
+            q025 = q(0.025); q975 = q(0.975); q10 = q(0.1); q90 = q(0.9);
+          }
+        }
       } else if (cfg.kernBand && residPairs.length >= 200) {
         // kernel-weighted residual support: weight each past residual by
         // proximity of its game's predicted margin to the current one
@@ -291,6 +323,9 @@ function runCandidate2(db, cfg) {
       const rm = yM - margin;
       residM.push(rm); residDay.push(db.dateIndex.get(f.date)); if (residM.length > 1000) { residM.shift(); residDay.shift(); }
       residPairs.push([margin, rm]); if (residPairs.length > 1000) residPairs.shift();
+      const amPush = Math.abs(margin);
+      const stratPool = stratHi != null ? (amPush < stratCut ? poolS : amPush < stratHi ? poolMid : poolL) : (amPush < stratCut ? poolS : poolL);
+      stratPool.push(rm); if (stratPool.length > 1000) stratPool.shift();
       allResidM.s += rm; allResidM.s2 += rm * rm; allResidM.n += 1;
       const xTv = stdT[f.idx];
       const xMv = stdM[f.idx];

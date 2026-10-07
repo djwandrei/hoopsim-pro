@@ -1,11 +1,13 @@
 import { actionClauses } from '@/components/playbook/playClauses';
 import { ZONE_RE, clonePositions, sideAt, sideOf, zoneKey, zonePoint, clampPoint } from '@/components/playbook/playGeometry';
-const MOVE = /\b(?:moves?|cuts?|sprints?|runs?|drifts?|lifts?|rises?|slides?|fills?|attacks?|drives?|clears?|exits?|relocates?|retreats?|steps?|walks?|goes?|flows?|slips?|pops?|flashes?|dribbles?|brings?|advances?|pushes?|rolls?|dives?|occupies|spaces?|settles?|establishes?|begins?|starts?|turns?|flatten|rotates?|places?)\b/i;
+const MOVE = /\b(?:moves?|cuts?|sprints?|runs?|drifts?|lifts?|rises?|slides?|fills?|attacks?|drives?|clears?|exits?|relocates?|retreats?|steps?|walks?|goes?|flows?|slips?|pops?|flashes?|dribbles?|brings?|advances?|pushes?|rolls?|dives?|occupies|spaces?|settles?|establishes?|begins?|starts?|turns?|widens?|flatten|rotates?|places?|approaches?)\b/i;
 function destination(body) {
   const matches = [...body.matchAll(ZONE_RE)].filter(match => {
     const before = body.slice(Math.max(0, match.index - 30), match.index);
     const after = body.slice(match.index + match[0].length);
     if (/\b(?:from|through|across|over|past|along)\s+(?:the\s+)?$/i.test(before)) return false;
+    // "outside the paint" and friends negate the zone — never a destination.
+    if (/\b(?:outside|out of|beyond|away from|clear of|free of|off of)\s+(?:the\s+)?$/i.test(before)) return false;
     if (/turns?\s+the\s*$/i.test(before) || /^\s*(?:screen|defender|help|tag|penetration)\b/i.test(after)) return false;
     return true;
   });
@@ -45,7 +47,7 @@ export function applyActions(text, offense, ballOwner, previousScreens = []) {
     const { actors, body, before } = clause;
     // Setter detection is actor-scoped: a reference to O5's screen never
     // moves O5. Both "O2 back-screens X5" and "O5 sets a screen" are setters.
-    const setter = /\b(?:sets?|setting|back-screens?|screens?|arrives?|sprints?|walks?|moves?|follows?|steps?)\b.*\b(?:screen\w*|pindown|stagger|elevator)\b/i.test(body) || /^(?:back-)?screens?\b/i.test(body);
+    const setter = /\b(?:sets?|setting|back-screens?|screens?|arrives?|sprints?|walks?|moves?|follows?|steps?|approaches?)\b.*\b(?:screen\w*|pindown|stagger|elevator)\b/i.test(body) || /^(?:back-)?screens?\b/i.test(body);
     const using = /\b(?:uses?|off|comes? off|through.*screen)\b/i.test(body);
     if (setter && !using && !/\b(?:receives?|passes?|reads?)\b/i.test(body)) {
       const targetMatch = /\b(?:on|for)\s+(O[1-5]|X[1-5])\b/i.exec(body) || /\b(X[1-5])\b/i.exec(body) || /\b(O[1-5])['’]s\s+defender/i.exec(body);
@@ -59,11 +61,11 @@ export function applyActions(text, offense, ballOwner, previousScreens = []) {
     // Spacing maintenance does not make weak-side players switch sides.
     if (/^(?:holds?|stays?|maintains?|remains?|waits?|reads?|pivots? to face|opens? to the ball|sets? X[1-5] up)\b/i.test(body)) continue;
     const reference = /\b(O[1-5])['’]s\s+(?:[\w-]+\s+){0,2}(?:screen|pindown)/i.exec(body) || /screen\s+from\s+(O[1-5])/i.exec(body);
-    const toPlayer = /\b(?:to|toward|towards)\s+(O[1-5])\b/i.exec(body);
+    const toPlayer = /\b(?:to|toward|towards|approaches?)\s+(O[1-5])\b/i.exec(body);
     const usedScreens = reference
       ? [{ screener: reference[1].toUpperCase(), point: next[reference[1].toUpperCase()] }]
       : previousScreens.filter(screen => actors.includes(screen.target));
-    const moveBody = /\b(?:passes?|feeds?|hands?|pitches?)\b/i.test(body) && /\b(?:cuts?|clears?|exits?)\b/i.test(body)
+    const moveBody = /\b(?:passes?|feeds?|hands?|pitches?|kicks?|swings?|outlets?)\b/i.test(body) && /\b(?:cuts?|clears?|exits?)\b/i.test(body)
       ? body.slice(body.search(/\b(?:cuts?|clears?|exits?)\b/i)) : body;
     const zone = destination(moveBody);
     const isMove = MOVE.test(body) || /\bplace\b/i.test(before);
@@ -71,9 +73,11 @@ export function applyActions(text, offense, ballOwner, previousScreens = []) {
     actors.forEach((id, index) => {
       const start = offense[id];
       const ownSide = sideAt(start);
-      const orderedSides = actors.length > 1 && /left and right|left.*right.*respectively/i.test(body);
+      // Pairs sent to "opposite slots/wings", "the two elbows" or ranges take
+      // mirrored sides, not one shared side.
+      const orderedSides = actors.length > 1 && (/left and right|left.*right.*respectively/i.test(body) || /\b(?:opposite|both|respective|two)\b/i.test(body));
       const side = orderedSides ? (index % 2 ? 'right' : 'left') : sideOf(before + body, ownSide);
-      if (toPlayer && !/\b(?:passes?|hands?|feeds?|gives?|pitches?)\b/i.test(body)) {
+      if (toPlayer && !/\b(?:passes?|hands?|feeds?|gives?|pitches?|kicks?|swings?|outlets?)\b/i.test(body)) {
         const target = next[toPlayer[1].toUpperCase()];
         let approach = start[0] >= target[0] ? 62 : -62;
         if (target[0] + approach < 32 || target[0] + approach > 468) approach *= -1;
@@ -90,9 +94,11 @@ export function applyActions(text, offense, ballOwner, previousScreens = []) {
         let target = zonePoint(zoneKey(zone[0]), side);
         if (/\b(?:middle|center)\b/i.test(zone[0]) && /pushes?|advances?|brings?/i.test(body)) target = [250, Math.max(270, start[1] - 90)];
         place(id, target);
-      } else if (/\brolls?|dives?|backcuts?\b/i.test(body)) place(id, zonePoint('rim'));
+      } else if (/\brolls?|dives?|backcuts?|cuts? through\b/i.test(body)) place(id, zonePoint('rim'));
+      else if (/\b(?:seals?|pins?|posts? up|steps? across|moves? inside)\b/i.test(body)) place(id, zonePoint('block', ballSide === 'right' ? 'right' : 'left'));
+      else if (/\b(?:advances?|pushes? the ball)\b/i.test(body)) place(id, [250, 314]);
       else if (/\bpops?\b/i.test(body)) place(id, zonePoint('slot', ownSide));
-      else if (/turns? the corner|downhill|drives?|penetrates?/i.test(body)) place(id, [250 + (ownSide === 'right' ? 46 : -46), 138]);
+      else if (/turns? the corner|downhill|drives?|penetrates?|attacks?|rejects?/i.test(body)) place(id, [250 + (ownSide === 'right' ? 46 : -46), 138]);
       else if (/\bclears?|exits?|flares?\b/i.test(body)) place(id, zonePoint('corner', ownSide === ballSide ? (ballSide === 'right' ? 'left' : 'right') : ownSide));
       else if (/rotates? one spot|replace.*vacated/i.test(body)) {
         const perimeter = [[46, 64], [72, 216], [250, 314], [428, 216], [454, 64]];

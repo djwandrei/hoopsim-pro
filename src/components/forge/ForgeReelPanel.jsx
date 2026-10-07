@@ -1,25 +1,16 @@
 import React from 'react';
 import ForgeReel from '@/components/forge/ForgeReel';
-import { SKILLS, gradeFor, gradeTone } from '@/components/forge/bapSkills';
-
-const TONE_CHIP = {
-  positive: 'border-positive/50 bg-positive/15 text-positive',
-  royal: 'border-royal/50 bg-royal/15 text-royal-ink',
-  gold: 'border-gold/50 bg-gold/15 text-gold',
-  trim: 'border-trim/50 bg-trim/15 text-trim-ink',
-};
 
 // Left panel of the Build-A-Bucket layout: grades toggle, TEAM / PLAYER reels,
-// the spin or respin controls, the revealed player card, and the skills list.
+// and the spin or respin controls. Locked skills live in the forge dashboard.
 export default function ForgeReelPanel({
   armedSkill = null,
   fast = false,
   showGrades, onToggleGrades, teamItems, playerItems, teamSpin, playerSpin, spinning,
   reveal, onSpin, spinDisabled, onRespinTeam, onRespinPlayer,
-  teamRespins, playerRespins, picks,
+  teamRespins, playerRespins,
 }) {
   const landed = Boolean(reveal);
-  const filled = SKILLS.filter(skill => picks[skill.key]);
   return <aside className="court-panel p-3" aria-label="Spin panel">
     <button type="button" onClick={onToggleGrades} className="flex min-h-8 w-full items-center justify-center rounded-lg border border-border/30 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold">
       {showGrades ? 'Turn off grades' : 'Turn on grades'}
@@ -40,20 +31,5 @@ export default function ForgeReelPanel({
         <span>Respin player</span><span className="font-mono text-[9px] opacity-80">{playerRespins} left</span>
       </button>
     </div>}
-    <p className="mt-4 text-center font-mono text-[9px] uppercase tracking-[0.25em] text-gold">Skills</p>
-    <div className="mt-2 space-y-1.5">
-      {filled.map(skill => {
-        const pick = picks[skill.key];
-        const fill = Math.max(0, Math.min(100, Math.round((pick.value - 25) / 74 * 100)));
-        return <div key={skill.key} className="slot-pop rounded-lg border border-border/25 bg-raised/40 px-2.5 py-1.5">
-          <div className="flex items-center gap-2">
-            <span className="flex-1 text-[10px] font-semibold uppercase tracking-wider">{skill.label}</span>
-            <span className={`flex h-6 min-w-6 items-center justify-center rounded-full border px-1 font-mono text-[10px] font-bold ${TONE_CHIP[gradeTone(pick.value)]}`}>{showGrades ? gradeFor(pick.value) : skill.fmt(pick.value)}</span>
-          </div>
-          <div className="mt-1 h-1 overflow-hidden rounded-full bg-raised/70"><span className="block h-full rounded-full bg-gold" style={{ width: `${fill}%` }} /></div>
-        </div>;
-      })}
-      {!filled.length && <p className="px-1 py-2 text-center text-[10px] leading-relaxed text-muted-foreground">No skills locked yet — spin the reels.</p>}
-    </div>
   </aside>;
 }

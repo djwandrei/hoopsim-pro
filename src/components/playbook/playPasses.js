@@ -10,7 +10,7 @@ export function detectPasses(text, startOwner) {
     let receiver;
     let giver = passer;
     const arrow = /^\s*(?:→|->)\s*(O[1-5])\b/i.exec(body);
-    const pass = /\b(?:passes?|feeds?|pitches?|delivers?|throws?|hits?|gives?|hands?|enters?|inbounds?|skips?|reverses?)\b[\s\S]*?\b(?:to|into)\b[^.!?]{0,35}?\b(O[1-5])\b/i.exec(body);
+    const pass = /\b(?:passes?|feeds?|pitches?|delivers?|throws?|hits?|gives?|hands?|enters?|inbounds?|skips?|reverses?|kicks?|swings?|outlets?|dishes?)\b[\s\S]*?\b(?:to|into)\b[^.!?]{0,35}?\b(O[1-5])\b/i.exec(body);
     const receives = /\b(?:receives?|takes?)\b[^.!?]{0,35}?\bfrom\s+(O[1-5])\b/i.exec(body);
     if (arrow || pass) receiver = (arrow || pass)[1].toUpperCase();
     else if (receives) { giver = receives[1].toUpperCase(); receiver = passer; }

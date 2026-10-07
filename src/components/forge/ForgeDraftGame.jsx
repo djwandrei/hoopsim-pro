@@ -9,10 +9,11 @@ import ForgeStage from '@/components/forge/ForgeStage';
 import ForgeOvrPanel from '@/components/forge/ForgeOvrPanel';
 import ForgeBuildWheel from '@/components/forge/ForgeBuildWheel';
 import BucketBoard from '@/components/forge/BucketBoard';
-import BucketSummary from '@/components/forge/BucketSummary';
 import ForgeLeagueTour from '@/components/forge/ForgeLeagueTour';
-import ForgePlayerShowcase from '@/components/forge/ForgePlayerShowcase';
+import ForgePlayerCard from '@/components/forge/ForgePlayerCard';
 import ForgeShareButton from '@/components/forge/ForgeShareButton';
+import MetricTile from '@/components/studio/MetricTile';
+import { RotateCcw } from 'lucide-react';
 import { decodeForgeBuild, forgeBuildQuery } from '@/components/forge/forgeReceipt';
 
 // Build-A-Bucket-style reel draft, shared by both Forge modes:
@@ -204,8 +205,9 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
 
   return <section aria-label="Forge draft game" className="space-y-4">
     {phase === 'setup' && <ForgeSetupPanel kicker={copy.kicker} title={copy.title} intro={copy.intro} group={group} onGroup={setGroup} poolCount={pool.length} onStart={start} steps={MODE_STEPS[mode]} />}
-    {phase === 'drafting' && <div className="space-y-4">
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,13.5rem)] xl:grid-cols-[minmax(0,17.5rem),minmax(0,1fr),minmax(0,15rem)]">
+    {/* Drafting is one screen: reels, silhouette stage, landed-player profile
+        and the forge dashboard sit side by side from the lg breakpoint up. */}
+    {phase === 'drafting' && <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,16rem),minmax(0,1fr),minmax(0,17rem),minmax(0,14rem)]">
       <ForgeReelPanel
         armedSkill={selectedSkill}
         showGrades={showGrades} onToggleGrades={() => setShowGrades(value => !value)}
@@ -216,24 +218,38 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
         onSpin={requestSpin} spinDisabled={mode === 'pick' && !selectedKey}
         onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
         teamRespins={teamRespins} playerRespins={playerRespins}
-        picks={picks}
       />
       <ForgeStage
         mode={mode} spinning={spinning} picks={picks}
         reveal={reveal} selectedKey={selectedKey}
         onSelect={selectSkill} onAssign={assign} showGrades={showGrades}
       />
+      <ForgePlayerCard player={reveal} note={revealNote} />
       <ForgeOvrPanel picks={picks} overall={liveOvr} showGrades={showGrades} onUndo={undo} />
-      </div>
-      <ForgePlayerShowcase player={reveal} note={revealNote} />
     </div>}
+    {/* Build complete: the wheel, summary tiles and share rail sit beside the
+        full slot list, so the whole composite reads on one screen. */}
     {phase === 'complete' && <div className="space-y-4">
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,22rem),minmax(0,1fr)]">
-        <div className="court-panel p-5"><p className="bcast-kicker">DJHC skill ratings</p><div className="mt-3"><ForgeBuildWheel picks={picks} overall={overall} /></div></div>
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,21rem),minmax(0,1fr)]">
+        <div className="space-y-3">
+          <div className="court-panel p-4">
+            <p className="bcast-kicker">DJHC skill ratings</p>
+            <div className="mx-auto mt-2 max-w-60"><ForgeBuildWheel picks={picks} overall={overall} /></div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <MetricTile label="Buckets filled" value={SKILLS.length} detail="Real player-season donors" tone="positive" />
+            {(() => {
+              const top = SKILLS.reduce((best, skill) => (!best || picks[skill.key].value > picks[best.key].value ? skill : best), null);
+              return <MetricTile label="Top contributor" value={top.player.name.split(' ').slice(-1)[0]} detail={`${top.label} · DJHC ${top.fmt(picks[top.key].value)}`} tone="royal" />;
+            })()}
+          </div>
+          <div className="flex flex-col gap-2">
+            <ForgeShareButton encode={() => forgeBuildQuery({ mode, picks: buildPayload })} />
+            <button type="button" onClick={start} className="flex min-h-10 items-center justify-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 text-xs font-semibold text-gold transition-colors hover:bg-gold/20"><RotateCcw className="h-3.5 w-3.5" />Draft a new player</button>
+          </div>
+        </div>
         <BucketBoard buckets={SKILLS} picks={picks} activeKey={null} onUndo={undo} complete showGrades={showGrades} />
       </div>
-      <BucketSummary buckets={SKILLS} picks={picks} overall={overall} onRestart={start} />
-      <div className="flex justify-center"><ForgeShareButton encode={() => forgeBuildQuery({ mode, picks: buildPayload })} /></div>
       <ForgeLeagueTour league={league} buckets={SKILLS} picks={picks} />
     </div>}
   </section>;

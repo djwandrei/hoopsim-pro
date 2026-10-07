@@ -7,7 +7,7 @@ import { decodeForgeBuild, forgeBuildQuery } from '@/components/forge/forgeRecei
 import { simulateForgeSeason } from '@/components/forge/forgeTeamSim';
 import ForgeTeamSpinPanel from '@/components/forge/ForgeTeamSpinPanel';
 import ForgeTeamPickPanel from '@/components/forge/ForgeTeamPickPanel';
-import ForgePlayerShowcase from '@/components/forge/ForgePlayerShowcase';
+import ForgePlayerCard from '@/components/forge/ForgePlayerCard';
 import ForgeTeamSetupPanel from '@/components/forge/ForgeTeamSetupPanel';
 import ForgeRosterBoard from '@/components/forge/ForgeRosterBoard';
 import ForgeTeamBoard from '@/components/forge/ForgeTeamBoard';
@@ -173,31 +173,28 @@ export default function ForgeTeamDraft({ source, league, pickMode = false, pool:
 
   return <section aria-label="Team forge game" className="space-y-4">
     {phase === 'setup' && <ForgeTeamSetupPanel pickMode={pickMode} slots={TEAM_SLOTS} poolCount={allPool.length} onStart={start} />}
-    {phase === 'drafting' && <div className="space-y-4">
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,19rem),minmax(0,1fr)]">
-        {pickMode ? <ForgeTeamPickPanel
-          teamItems={wheelTeams} teamSpin={teamSpin} spinning={spinning}
-          activeTeam={activeTeam}
-          onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')}
-          teamRespins={teamRespins} filled={filled} total={TEAM_SLOTS.length}
-          pending={Boolean(reveal)}
-        /> : <ForgeTeamSpinPanel
-          teamItems={wheelTeams} playerItems={playerItems}
-          teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning}
-          fast={spinCount.current > FAST_AFTER_SPINS}
-          onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
-          teamRespins={teamRespins} playerRespins={playerRespins}
-          filled={filled} total={TEAM_SLOTS.length}
-          pending={Boolean(reveal)}
-        />}
-        {pickMode
-          ? <div className="space-y-4">
-              <ForgeRosterBoard team={activeTeam} roster={activeTeam ? available(activeTeam.code) : []} selectedRef={reveal ? reveal.playerRef : null} onPick={selectPlayer} />
-              <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} />
-            </div>
-          : <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} />}
-      </div>
-      {!pickMode && <ForgePlayerShowcase player={reveal} note={revealNote} />}
+    {/* Drafting is one screen: spin controls, the landed player's profile (or
+        the pickable roster), and the depth chart sit side by side from lg up. */}
+    {phase === 'drafting' && <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,16rem),minmax(0,1fr),minmax(0,17rem)]">
+      {pickMode ? <ForgeTeamPickPanel
+        teamItems={wheelTeams} teamSpin={teamSpin} spinning={spinning}
+        activeTeam={activeTeam}
+        onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')}
+        teamRespins={teamRespins} filled={filled} total={TEAM_SLOTS.length}
+        pending={Boolean(reveal)}
+      /> : <ForgeTeamSpinPanel
+        teamItems={wheelTeams} playerItems={playerItems}
+        teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning}
+        fast={spinCount.current > FAST_AFTER_SPINS}
+        onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
+        teamRespins={teamRespins} playerRespins={playerRespins}
+        filled={filled} total={TEAM_SLOTS.length}
+        pending={Boolean(reveal)}
+      />}
+      {pickMode
+        ? <ForgeRosterBoard team={activeTeam} roster={activeTeam ? available(activeTeam.code) : []} selectedRef={reveal ? reveal.playerRef : null} onPick={selectPlayer} />
+        : <ForgePlayerCard player={reveal} note={revealNote} emptyHint="Spin the reels — the landed player lands here until you place them in the rotation." />}
+      <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} />
     </div>}
     {phase === 'ready' && <div className="court-panel relative overflow-hidden p-6">
       <span className="bcast-watermark" aria-hidden="true">LOCKED</span>

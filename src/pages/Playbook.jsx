@@ -144,7 +144,7 @@ export default function Playbook() {
                   />
                 </div>
               </div>
-              <PlayStepPanel play={play} label={`Step ${safeStep} of ${stepCount - 1}`} text={frame.text} involved={frame.involved} isSetup={safeStep === 0} />
+              <PlayStepPanel play={play} label={`Step ${safeStep} of ${stepCount - 1}`} text={frame.text} involved={frame.involved} actions={frame.actions || []} isSetup={safeStep === 0} />
               <PlayFilmPanel play={play} films={filmLinks} />
             </div>
           </div>

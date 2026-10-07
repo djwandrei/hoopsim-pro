@@ -20,7 +20,9 @@ export function samplePose(frame, routes, progress) {
     const flight = Math.min(0.999999, Math.max(0, (progress-start)/(end-start))) * exchanges.length;
     const exchange = exchanges[Math.floor(flight)], t = flight % 1;
     const from = ballAt(actors, exchange.from), to = ballAt(actors, exchange.to);
-    ball = [from[0]+(to[0]-from[0])*t,from[1]+(to[1]-from[1])*t-(exchange.handoff ? 4 : 26)*4*t*(1-t)];
+    const chord = Math.hypot(to[0]-from[0], to[1]-from[1]);
+    const peak = exchange.handoff ? 4 : Math.min(44, 14 + chord * 0.14);
+    ball = [from[0]+(to[0]-from[0])*t,from[1]+(to[1]-from[1])*t-peak*4*t*(1-t)];
     if (progress >= end) ball = ballAt(actors, frame.ballOwner);
   }
   return { actors, ball, progress, routes };

@@ -1,6 +1,9 @@
 import { clonePositions, ZONE_RE, zoneKey, zonePoint, sideOf, sideAt, settlePositions } from '@/components/playbook/playGeometry';
 import { offenseTokens } from '@/components/playbook/playClauses';
 const SPREAD = { O1: [250, 314], O2: [422, 216], O3: [78, 216], O4: [452, 64], O5: [174, 124] };
+// Formation entries walk in from a neutral cluster so their numbered sequence
+// animates the spacing out, instead of resting on pre-placed final spots.
+const NEUTRAL = { O1: [250, 400], O2: [356, 344], O3: [144, 344], O4: [322, 252], O5: [178, 252] };
 function formationFor(play) {
   const name = `${play.name} ${play.alignment}`.toLowerCase();
   if (/horns|double high/.test(name)) return { O1: [250, 314], O2: [454, 64], O3: [46, 64], O4: [330, 190], O5: [170, 190] };
@@ -23,7 +26,7 @@ function formationFor(play) {
 }
 // Read grouped assignments once: O4/O5 at elbows is a mirrored pair, not a
 // dangling O4 followed by an O5-only location. Narrative formations use templates.
-export function initialPositions(play) {
+export function alignmentSpots(play) {
   const pos = formationFor(play);
   const assigned = new Set();
   for (const segment of (play.alignment || '').split(/[;,]/)) {
@@ -44,6 +47,10 @@ export function initialPositions(play) {
   // Explicit spots take precedence; unassigned template occupants are placed last.
   const ordered = Object.fromEntries([...assigned, ...Object.keys(pos).filter(id => !assigned.has(id))].map(id => [id, pos[id]]));
   return settlePositions(ordered);
+}
+export function initialPositions(play) {
+  if (/^formation/i.test(play.type || '')) return clonePositions(NEUTRAL);
+  return alignmentSpots(play);
 }
 export function initialBallOwner(play) {
   const text = play.alignment || '';

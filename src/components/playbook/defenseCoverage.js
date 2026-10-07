@@ -60,8 +60,8 @@ export function coverageStep(scene, name, step) {
     return;
   }
   if (name === 'Scram Switch') {
-    if (step === 1) { scene.matchups.X4 = 'O5'; guard(scene, 'X4'); }
-    if (step === 2) { scene.matchups.X1 = 'O4'; guard(scene, 'X1'); }
+    if (step === 1) { scene.matchups.X4 = 'O5'; scene.matchups.X1 = 'O4'; guard(scene, 'X4'); guard(scene, 'X1'); }
+    if (step === 2) guard(scene, 'X1');
     if (step === 4) shell(scene);
     return;
   }

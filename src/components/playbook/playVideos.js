@@ -5,6 +5,7 @@ export const FILM_LINKS = [
   { match: /^2-3 Zone$/i, sources: ['heatZone', 'zone'], exact: ['2-3-zone'] },
   { match: /^1-3-1 Zone$/i, sources: ['braun'], exact: ['1-3-1-zone'] },
   { match: /Scram Switch/i, sources: ['scram'], exact: ['scram-switch'] },
+  { match: /^(Pre-Switch|Switch-Back)$/i, sources: ['switch'], exact: ['pre-switch', 'switch-back'] },
   { match: /Triple Switch vs Spain/i, sources: ['rocketsSwitch'], exact: ['triple-switch-vs-spain'] },
   { match: /^(Switch|Switch Everything)$/i, sources: ['rocketsSwitch'], exact: ['switch', 'switch-everything'] },
   { match: /^Hedge/i, sources: ['hedge'], exact: ['hedge-show'] },

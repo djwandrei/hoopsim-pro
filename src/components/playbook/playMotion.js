@@ -1,23 +1,24 @@
 import { clampPoint, distance } from '@/components/playbook/playGeometry';
 import separateRoutes from '@/components/playbook/playRouteSpacing';
 const CLEARANCE = 45;
-function segmentClear(a, b, obstacles) {
+function segmentClear(a, b, obstacles, clearance = CLEARANCE) {
   const dx = b[0] - a[0], dy = b[1] - a[1], len = dx * dx + dy * dy;
   return obstacles.every(p => {
     const t = len ? Math.max(0, Math.min(1, ((p[0]-a[0])*dx+(p[1]-a[1])*dy)/len)) : 0;
-    return distance(p, [a[0]+t*dx,a[1]+t*dy]) >= CLEARANCE;
+    return distance(p, [a[0]+t*dx,a[1]+t*dy]) >= clearance;
   });
 }
 // Visibility graph routes bend around resting teammates rather than drawing
 // a straight line through them. Screen usage adds a tactical approach waypoint.
 function routeBetween(from, to, obstacles, height = 470) {
-  if (segmentClear(from, to, obstacles)) return [from, to];
+  const clearance = height > 470 ? 58 : CLEARANCE;
+  if (segmentClear(from, to, obstacles, clearance)) return [from, to];
   const nodes = [from, to];
   obstacles.forEach(p => {
     for (let i = 0; i < 12; i++) {
       const angle = i * Math.PI / 6;
-      const node = clampPoint([p[0]+Math.cos(angle)*53,p[1]+Math.sin(angle)*53], height);
-      if (obstacles.every(other => distance(node, other) >= CLEARANCE)) nodes.push(node);
+      const node = clampPoint([p[0]+Math.cos(angle)*(clearance+8),p[1]+Math.sin(angle)*(clearance+8)], height);
+      if (obstacles.every(other => distance(node, other) >= clearance)) nodes.push(node);
     }
   });
   const costs = nodes.map(() => Infinity), prev = [], visited = new Set();
@@ -32,7 +33,7 @@ function routeBetween(from, to, obstacles, height = 470) {
     }
     visited.add(best);
     nodes.forEach((node, i) => {
-      if (visited.has(i) || !segmentClear(nodes[best], node, obstacles)) return;
+      if (visited.has(i) || !segmentClear(nodes[best], node, obstacles, clearance)) return;
       const cost = costs[best] + distance(nodes[best], node);
       if (cost < costs[i]) { costs[i] = cost; prev[i] = best; }
     });
@@ -41,15 +42,16 @@ function routeBetween(from, to, obstacles, height = 470) {
 }
 export function planRoutes(previous, next, via = {}, height = 470) {
   const routes = {};
+  const clearance = height > 470 ? 58 : CLEARANCE;
   const stationary = Object.keys(next).filter(id => distance(previous[id], next[id]) < 1);
   for (const id of Object.keys(next)) {
     const obstacles = stationary.filter(other => other !== id).map(other => previous[other]);
-    const waypoints = [previous[id], ...(via[id] || []).filter(p => obstacles.every(o => distance(p, o) >= CLEARANCE)), next[id]];
+    const waypoints = [previous[id], ...(via[id] || []).filter(p => obstacles.every(o => distance(p, o) >= clearance)), next[id]];
     routes[id] = waypoints.slice(1).reduce((path, p) => [...path.slice(0, -1), ...routeBetween(path[path.length - 1], p, obstacles, height)], [waypoints[0]]);
   }
   return separateRoutes(routes, pointOnRoute, (id, route, waypoint, t) => {
     const obstacles = stationary.filter(other => other !== id).map(other => previous[other]);
-    if (obstacles.some(p => distance(p, waypoint) < CLEARANCE)) return route;
+    if (obstacles.some(p => distance(p, waypoint) < clearance)) return route;
     const lengths = route.slice(1).map((p, i) => distance(route[i], p));
     const targetDistance = lengths.reduce((sum, n) => sum + n, 0) * t;
     let traveled = 0, segment = 0;

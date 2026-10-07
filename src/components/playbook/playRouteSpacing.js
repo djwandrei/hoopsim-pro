@@ -4,6 +4,7 @@ import { clampPoint, distance } from '@/components/playbook/playGeometry';
 export default function separateRoutes(initial, sample, detour, height = 470) {
   let routes = initial;
   const ids = Object.keys(routes);
+  const clearance = height > 470 ? 58 : 44;
   const inspect = paths => {
     let score = 0, first = null;
     for (let step = 1; step < 40; step++) {
@@ -11,8 +12,8 @@ export default function separateRoutes(initial, sample, detour, height = 470) {
       const positions = ids.map(id => sample(paths[id], t));
       for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++) {
         const gap = distance(positions[i], positions[j]);
-        if (gap < 44) {
-          score += 44 - gap;
+        if (gap < clearance) {
+          score += clearance - gap;
           if (!first) first = { a: ids[i], b: ids[j], t, pa: positions[i], pb: positions[j] };
         }
       }

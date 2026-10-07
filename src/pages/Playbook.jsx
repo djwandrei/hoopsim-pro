@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
-import { Download, Film, Loader2, RefreshCw } from 'lucide-react';
+import { Download, Loader2, RefreshCw } from 'lucide-react';
 import { exportCourtDiagram } from '@/components/playbook/exportDiagram';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
@@ -10,6 +10,7 @@ import { tagLabel } from '@/components/playbook/playTags';
 import { filmLinksForPlay } from '@/components/playbook/playVideos';
 import PlayCourt from '@/components/playbook/PlayCourt';
 import PlayControls from '@/components/playbook/PlayControls';
+import PlayFilmPanel from '@/components/playbook/PlayFilmPanel';
 import PlayStepPanel from '@/components/playbook/PlayStepPanel';
 import PlayLibraryList from '@/components/playbook/PlayLibraryList';
 import '@/components/playbook/playbook.css';
@@ -68,9 +69,9 @@ export default function Playbook() {
       if (playing && safeStep >= stepCount - 1) setPlaying(false);
       return;
     }
-    const timer = setTimeout(() => setStepIndex((current) => Math.min(current + 1, stepCount - 1)), 2300 / speed);
+    const timer = setTimeout(() => setStepIndex((current) => Math.min(current + 1, stepCount - 1)), ((frame?.duration || 1800) + 450) / speed);
     return () => clearTimeout(timer);
-  }, [playing, safeStep, speed, stepCount]);
+  }, [playing, safeStep, speed, stepCount, frame]);
 
   // Shareable call: the selected play and step live in the URL.
   useEffect(() => {
@@ -120,17 +121,12 @@ export default function Playbook() {
                     {(play.tags || []).map((id) => (
                       <span key={id} className="rounded-full border border-border/40 bg-raised/30 px-2 py-0.5 font-mono text-[10.4px] text-muted-foreground">{tagLabel(id)}</span>
                     ))}
-                    {filmLinks.map((film) => (
-                      <a key={film.url} href={film.url} target="_blank" rel="noreferrer" title={film.label} className="inline-flex min-h-8 max-w-[13rem] items-center gap-1.5 truncate rounded-full border border-gold/40 bg-gold/10 px-2.5 font-mono text-[10.4px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20">
-                        <Film className="h-3 w-3 shrink-0" />{film.label}
-                      </a>
-                    ))}
                     <button type="button" onClick={handleExport} disabled={exporting} className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-border/40 bg-raised/30 px-2.5 font-mono text-[10.4px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40">
                       <Download className="h-3 w-3 shrink-0" />{exporting ? 'Exporting…' : 'Export PNG'}
                     </button>
                   </div>
                 </div>
-                <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} prevFrame={frames[safeStep - 1]} mirrored={mirrored} /></div>
+                <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} speed={speed} /></div>
                 <div className="mt-4">
                   <PlayControls
                     stepIndex={safeStep}
@@ -149,6 +145,7 @@ export default function Playbook() {
                 </div>
               </div>
               <PlayStepPanel play={play} label={`Step ${safeStep} of ${stepCount - 1}`} text={frame.text} involved={frame.involved} isSetup={safeStep === 0} />
+              <PlayFilmPanel play={play} films={filmLinks} />
             </div>
           </div>
         )}

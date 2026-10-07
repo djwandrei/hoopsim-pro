@@ -4,7 +4,7 @@ export const offenseTokens = text => [...text.matchAll(/\b(O[1-5])\b/gi)].map(m 
 export function actionClauses(text) {
   const clauses = [];
   for (const sentence of text.split(/[.!?;]+/).filter(Boolean)) {
-    const parts = sentence.split(/\b(?:while|then)\b|,?\s+and\s+(?=O[1-5]\b\s+(?:cuts?|moves?|rolls?|pops?|sets?|screens?|dribbles?|passes?|clears?|lifts?|fills?|holds?|stays?))/i);
+    const parts = sentence.split(/\b(?:while|then)\b|,\s*(?=O[1-5]\b\s+(?:back-screens?|cuts?|moves?|rolls?|pops?|sets?|screens?|dribbles?|passes?|clears?|lifts?|fills?|holds?|stays?))|,?\s+and\s+(?=O[1-5]\b\s+(?:cuts?|moves?|rolls?|pops?|sets?|screens?|dribbles?|passes?|clears?|lifts?|fills?|holds?|stays?))/i);
     for (const part of parts) {
       // Read menus describe possibilities; they are not executed actions.
       if (/\b(?:reads?|depending|can\b|could\b|may\b|either\b|if\b|unless\b)\b/i.test(part)) continue;

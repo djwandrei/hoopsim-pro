@@ -1,4 +1,5 @@
 import { clampPoint, distance } from '@/components/playbook/playGeometry';
+import separateRoutes from '@/components/playbook/playRouteSpacing';
 const CLEARANCE = 45;
 function segmentClear(a, b, obstacles) {
   const dx = b[0] - a[0], dy = b[1] - a[1], len = dx * dx + dy * dy;
@@ -46,7 +47,15 @@ export function planRoutes(previous, next, via = {}) {
     const waypoints = [previous[id], ...(via[id] || []).filter(p => obstacles.every(o => distance(p, o) >= CLEARANCE)), next[id]];
     routes[id] = waypoints.slice(1).reduce((path, p) => [...path.slice(0, -1), ...routeBetween(path[path.length - 1], p, obstacles)], [waypoints[0]]);
   }
-  return routes;
+  return separateRoutes(routes, pointOnRoute, (id, route, waypoint, t) => {
+    const obstacles = stationary.filter(other => other !== id).map(other => previous[other]);
+    if (obstacles.some(p => distance(p, waypoint) < CLEARANCE)) return route;
+    const lengths = route.slice(1).map((p, i) => distance(route[i], p));
+    const targetDistance = lengths.reduce((sum, n) => sum + n, 0) * t;
+    let traveled = 0, segment = 0;
+    while (segment < lengths.length - 1 && traveled + lengths[segment] < targetDistance) { traveled += lengths[segment]; segment++; }
+    return [...route.slice(0, segment), ...routeBetween(route[segment], waypoint, obstacles), ...routeBetween(waypoint, route[segment + 1], obstacles).slice(1), ...route.slice(segment + 2)];
+  });
 }
 export function pointOnRoute(route, progress) {
   if (!route?.length) return [250, 300];

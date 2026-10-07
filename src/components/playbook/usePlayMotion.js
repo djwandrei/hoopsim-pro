@@ -32,7 +32,7 @@ export default function usePlayMotion(frame, speed = 1) {
         ball = [from[0]+(to[0]-from[0])*t,from[1]+(to[1]-from[1])*t-(exchange.handoff ? 4 : 26)*4*t*(1-t)];
       }
       if (progress >= 1) ball = ballAt(offense, frame.ballOwner);
-      latest.current = { offense, ball, progress }; setPose(latest.current);
+      latest.current = { offense, ball, progress, routes }; setPose(latest.current);
       if (progress < 1) request = requestAnimationFrame(update);
     };
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

@@ -1,6 +1,6 @@
 import { actionClauses } from '@/components/playbook/playClauses';
 import { COURT, ZONE_RE, clonePositions, sideAt, sideOf, zoneKey, zonePoint, clampPoint } from '@/components/playbook/playGeometry';
-const MOVE = /\b(?:moves?|cuts?|sprints?|runs?|drifts?|lifts?|rises?|slides?|fills?|attacks?|drives?|clears?|exits?|relocates?|retreats?|steps?|walks?|goes?|flows?|slips?|pops?|flashes?|dribbles?|brings?|advances?|pushes?|rolls?|dives?|occupies|spaces?|settles?|establishes?|begins?|starts?|flatten|rotates?|places?)\b/i;
+const MOVE = /\b(?:moves?|cuts?|sprints?|runs?|drifts?|lifts?|rises?|slides?|fills?|attacks?|drives?|clears?|exits?|relocates?|retreats?|steps?|walks?|goes?|flows?|slips?|pops?|flashes?|dribbles?|brings?|advances?|pushes?|rolls?|dives?|occupies|spaces?|settles?|establishes?|begins?|starts?|turns?|flatten|rotates?|places?)\b/i;
 function destination(body) {
   const matches = [...body.matchAll(ZONE_RE)].filter(match => {
     const before = body.slice(Math.max(0, match.index - 30), match.index);
@@ -59,16 +59,21 @@ export function applyActions(text, offense, ballOwner, previousScreens = []) {
     const usedScreens = reference
       ? [{ screener: reference[1].toUpperCase(), point: next[reference[1].toUpperCase()] }]
       : previousScreens.filter(screen => actors.includes(screen.target));
-    const zone = destination(body);
+    const moveBody = /\b(?:passes?|feeds?|hands?|pitches?)\b/i.test(body) && /\b(?:cuts?|clears?|exits?)\b/i.test(body)
+      ? body.slice(body.search(/\b(?:cuts?|clears?|exits?)\b/i)) : body;
+    const zone = destination(moveBody);
     const isMove = MOVE.test(body) || /\bplace\b/i.test(before);
     if (!isMove && !using) continue;
     actors.forEach((id, index) => {
       const start = offense[id];
       const ownSide = sideAt(start);
-      const side = actors.length > 1 && zone ? (index % 2 ? 'right' : 'left') : sideOf(before + body, ownSide);
+      const orderedSides = actors.length > 1 && /left and right|left.*right.*respectively/i.test(body);
+      const side = orderedSides ? (index % 2 ? 'right' : 'left') : sideOf(before + body, ownSide);
       if (toPlayer && !/\b(?:passes?|hands?|feeds?|gives?|pitches?)\b/i.test(body)) {
         const target = next[toPlayer[1].toUpperCase()];
-        place(id, [target[0] + (start[0] >= target[0] ? 62 : -62), target[1] - 12], usedScreens[0] ? [usedScreens[0].point[0] + (ownSide === 'right' ? -64 : 64), usedScreens[0].point[1]] : null);
+        let approach = start[0] >= target[0] ? 62 : -62;
+        if (target[0] + approach < 32 || target[0] + approach > 468) approach *= -1;
+        place(id, [target[0] + approach, target[1] - 12], usedScreens[0] ? [usedScreens[0].point[0] + (ownSide === 'right' ? -64 : 64), usedScreens[0].point[1]] : null);
       } else if (using && usedScreens.length) {
         const screen = usedScreens[usedScreens.length - 1];
         const dir = screen.point[0] >= 250 ? -1 : 1;
@@ -94,7 +99,7 @@ export function applyActions(text, offense, ballOwner, previousScreens = []) {
   }
   // Generic ordinal screener steps (Double Drag) retain the roles established
   // by earlier frames; they don't silently become frozen text.
-  const ordinal = /\b(first|second) screener\b.*\b(pops?|short-rolls?|rolls?)\b/i.exec(text);
+  const ordinal = /\b(first|second) screener\b.*?\b(pops?|short-rolls?|rolls?)\b/i.exec(text);
   if (ordinal && !/\b(?:if|can|depending)\b/i.test(text)) {
     const screen = previousScreens[ordinal[1].toLowerCase() === 'first' ? 0 : 1];
     if (screen) place(screen.screener, /pop/i.test(ordinal[2]) ? zonePoint('slot', sideAt(offense[screen.screener])) : COURT.rim);

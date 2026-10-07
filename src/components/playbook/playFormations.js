@@ -48,5 +48,5 @@ export function initialPositions(play) {
 export function initialBallOwner(play) {
   const text = play.alignment || '';
   const match = /\b(O[1-5])\b[^;,]{0,26}\b(?:ball handler|ball-handler|ball holder|handoff hub|with the ball)\b/i.exec(text);
-  return match ? match[1].toUpperCase() : 'O1';
+  return match ? match[1].toUpperCase() : /zoom|chicago/i.test(play.name) ? 'O5' : 'O1';
 }

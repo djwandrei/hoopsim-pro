@@ -16,7 +16,7 @@ export const FILM_LINKS = [
   { match: /double drag|stagger/i, sources: ['drag', 'pnr'] },
   { match: /pick-and|ball-screen|ghost|re-screen|reject|ram|^p&r|^drag|short roll/i, sources: ['pnr', 'drop'], exact: ['basic-pick-and-roll'] },
   { match: /post|punch|wedge|high-low|dunker|short-corner/i, sources: ['post', 'zone'] },
-  { match: /cut|screen|pindown|floppy|elevator|hammer|wiper|flex|ucla|iverson|zipper/i, sources: ['offball', 'backdoor'] },
+  { match: /give-and-go|^dive$|duck-in|elbow split|cut|screen|pindown|floppy|elevator|hammer|wiper|flex|ucla|iverson|zipper/i, sources: ['offball', 'backdoor'] },
   { match: /isolation/i, sources: ['switch', 'post'] },
   { match: /motion|princeton|triangle|shuffle|swing|blocker|continuity|read-and-react|5-out|4-out|3-out|1-4|spread|double high|double low/i, sources: ['nuggets'] },
 ];

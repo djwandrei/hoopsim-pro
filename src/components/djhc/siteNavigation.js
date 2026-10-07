@@ -14,12 +14,27 @@ export const FAN_TOOLS = [
   ['/tools/trade-package-builder/','Trade Packages',null],
   ['/tools/franchise-rebuild-challenge/','Franchise Rebuild',null],
   ['/tools/player-card-matchups/','Player & Cards','card-matchups-emblem-20260911.png'],
-  ['/tools/virtual-pack-opening/','Virtual Packs','card-matchups-emblem-20260911.png'],
+  ['/tools/virtual-pack-opening/','Virtual Packs','local:virtual-packs-emblem-20261007.png'],
   ['/tools/collection-lineup-builder/','Collection Builder',null],
   ['/tools/team-dna-atlas/','Team DNA Atlas',null],
   ['/tools/workshop/','Workshop','workshop-emblem-20260911.png'],
   ['/tools/swishiq-studio/','SwishIQ Studio','swishiq-studio-emblem-20260913.png'],
-].map(([path,label,asset,local])=>({path,label,href:local?path.replace(/\/+$/,''):SITE+path,emblem:asset?(local?`/studio-assets/games/${asset}`:`${SITE}/assets/games/${asset}`):null}));
+].map(([path,label,asset,local])=>{
+  const emblem = asset ? (local ? `/studio-assets/games/${asset}` : asset.startsWith('local:') ? `/studio-assets/${asset.slice(6)}` : `${SITE}/assets/games/${asset}`) : null;
+  return {path,label,route:TOOL_ROUTES[path]||null,href:local?path.replace(/\/+$/,''):SITE+path,emblem};
+});
+// In-app React routes for the drawer: tools with a native page link there;
+// the rest keep their live-site hub page.
+export const TOOL_ROUTES = {
+  '/tools/':'/',
+  '/lineup-lab/':'/lineup-lab',
+  '/tools/player-card-matchups/':'/matchups',
+  '/tools/virtual-pack-opening/':'/packs',
+  '/tools/workshop/':'/workshop',
+  '/tools/swishiq-studio/':'/',
+};
+// Tools with no in-app page, hidden from the header drawer menu.
+export const DRAWER_HIDDEN = ['Position Lens','Roster Fit','Franchise Rebuild','Collection Builder','Team DNA Atlas'];
 export const FOOTER_GROUPS = [
   {title:'Browse',key:'browse',links:[['Shop',SITE+'/shop.html'],['Sports Cards',SITE+'/sports-cards.html'],['Comics',SITE+'/comics.html'],['Collectibles',SITE+'/collectibles.html'],['Sell or Trade',SITE+'/sell-trade-want-list.html']]},
   {title:'Help & Policies',key:'support',links:[['Contact DJ',SITE+'/contact.html'],['Shipping',SITE+'/shipping.html'],['Returns',SITE+'/returns.html'],['Policies & Authenticity',SITE+'/policies.html']]},

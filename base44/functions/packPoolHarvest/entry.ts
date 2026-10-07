@@ -37,18 +37,17 @@ export default async function(req: Request): Promise<Response> {
     for (const set of sets) {
       const setInfo = { name: String(set.name).trim(), year: Number(set.year) };
       const llm = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: `Harvest basketball card pricing for this set: ${setInfo.name} (released ${setInfo.year}).
+        prompt: `Transcribe priced basketball card rows for this set: ${setInfo.name} (released ${setInfo.year}).
 
-Use web search to find priced listings for this exact set on BOTH:
-- PSA's price guide and CardFacts pages (psacard.com/priceguide/basketball-card-values/... and psacard.com/cardfacts/basketball-cards/...)
-- SportsCardsPro / PriceCharting set pages (sportscardspro.com/console/basketball-cards-...), which list Ungraded / Grade 9 / PSA 10 sale prices for the full checklist.
+Step 1 — web search: "sportscardspro basketball-cards ${setInfo.name.toLowerCase()}" (also try "pricecharting ${setInfo.name.toLowerCase()}"). Open the sportscardspro.com/pricecharting.com console page for the set — it is a price table with columns: Card | Ungraded | Grade 9 | PSA 10.
 
-List up to ${MAX_ROWS_PER_SET} individual cards, prioritizing rookie cards of NBA players and notable parallels (SILVER PRIZM, BLUE PRIZM, RED PRIZM, ICE, PULSAR, WAVE, FAST BREAK, CHOICE, GOLD, HOLO, etc.). For each card give:
-- description: the player name plus parallel name exactly as listed (e.g. "LaMelo Ball (R) SILVER PRIZM")
-- cardNumber: the card number in the set
-- priceUsd10: the PSA 10 price in USD when shown (the PSA 10 column), with "+" and commas stripped
-- imageUrl: ONLY if you actually saw a card scan ending in .jpg hosted on i.psacard.com or storage.googleapis.com/images.pricecharting.com — never a page URL.
-Only include cards actually priced or listed; do not invent cards.`,
+Step 2 — transcribe the table: list up to ${MAX_ROWS_PER_SET} rows, preferring ROOKIE cards and notable parallels (SILVER PRIZM, GOLD PRIZM, ICE, PULSAR, WAVE, CHOICE, HOLO, etc.). Rows where the PSA 10 column has a value are the most valuable.
+For each row give:
+- description: the card text in the Card column verbatim (player, bracketed parallel name, card number — e.g. "Paolo Banchero [Silver Prizm] #249 [RC]")
+- cardNumber: the card number from the Card column (e.g. "249")
+- priceUsd10: the PSA 10 column value in USD, "+" and commas stripped (omit if that column is empty)
+- imageUrl: the row's thumbnail URL (storage.googleapis.com/images.pricecharting.com/...) if present, else omit.
+Transcribe only rows actually shown; do not invent cards.`,
         response_json_schema: {
           type: 'object',
           properties: {
@@ -69,7 +68,7 @@ Only include cards actually priced or listed; do not invent cards.`,
           required: ['cards'],
         },
         add_context_from_internet: true,
-        model: 'gemini_3_8_flash',
+        model: body.model === 'gemini_3_1_pro' ? 'gemini_3_1_pro' : 'gemini_3_flash',
       });
       const rows = (llm && Array.isArray(llm.cards)) ? llm.cards : [];
       const prepared = prepareRows(rows, setInfo, poolNames);
@@ -78,7 +77,7 @@ Only include cards actually priced or listed; do not invent cards.`,
         const up = await base44.entities.PackCard.upsert(prepared, { key: 'sourceId' });
         written = (up?.created || 0) + (up?.updated || 0);
       }
-      results.push({ set: setInfo.name, harvested: rows.length, matched: prepared.length, written });
+      results.push({ set: setInfo.name, harvested: rows.length, matched: prepared.length, written, raw: body.debug === true ? rows : undefined, matchedNames: body.debug === true ? prepared.map((p: any) => p.name) : undefined });
     }
     return Response.json({ poolNames: poolNames.length, results });
   } catch (error) {

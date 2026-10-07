@@ -5,7 +5,7 @@ import { buildPlayerAverages } from '@/lib/season/playerAverages';
 
 // Interactive post-simulation recap: champion banner, key-metric tiles
 // (clickable to refocus the hub) and a top-scorers strip.
-export default function SeasonSummaryPanel({ summary, simGames, actualRecords, league, championCode, onFocusChange }) {
+export default function SeasonSummaryPanel({ summary, repeats, simGames, actualRecords, league, championCode, onFocusChange }) {
   const [open, setOpen] = useState(true);
 
   const model = useMemo(() => {
@@ -45,7 +45,7 @@ export default function SeasonSummaryPanel({ summary, simGames, actualRecords, l
           <h3 className="myna-display mt-0.5 text-2xl">SIMULATION SUMMARY</h3>
         </div>
         <div className="flex items-center gap-3">
-          <span className="myna-muted text-[10px]">Median of {summary.repeats ?? ''} replays</span>
+          <span className="myna-muted text-[10px]">Median of {repeats ?? ''} replays</span>
           <button
             type="button"
             aria-expanded={open}

@@ -179,7 +179,10 @@ function conferenceOf(series) {
   const value = String(series.conference ?? series.side ?? '').toLowerCase();
   if (value === 'east') return 'EAST';
   if (value === 'west') return 'WEST';
-  if (value === 'finals' || value.includes('final')) return 'FINALS';
+  // 'conference finals' text in the conference field would misroute a
+  // conference-final series into the NBA Finals slot — match finals markers
+  // exactly instead of substring-checking.
+  if (value === 'finals' || value === 'final' || value === 'league') return 'FINALS';
   return null;
 }
 
@@ -218,8 +221,9 @@ function normalizeBracket(bracket, league) {
       higherSeed: seedA, lower: seedA != null && seedB != null && seedA > seedB ? bId : (seedB != null ? bId : bId),
       lowerSeed: seedB, winner: winnerId, games,
     };
+    const stageText = String(series.stage ?? series.round ?? series.roundName ?? '').toLowerCase();
     const label = localRoundLabel(series.round ?? series.roundName ?? series.stage, unknownLabels.size);
-    if (conference === 'FINALS' || (series.stage && String(series.stage).toLowerCase() === 'finals')) {
+    if (conference === 'FINALS' || stageText === 'finals' || /nba finals?/.test(stageText)) {
       finals = { ...normalized, higherSeed: seedA, lowerSeed: seedB };
     } else if (rounds[conference]) {
       if (!unknownLabels.has(label)) unknownLabels.add(label);
@@ -237,7 +241,7 @@ function normalizeBracket(bracket, league) {
   const champion = codeOf(bracket.championId ?? bracket.champion);
   return {
     rounds: ['EAST', 'WEST'].map(conference => ({ conference, playIn: [], series: rounds[conference] })),
-    finals: finals || (champion && seriesList.length ? null : null),
+    finals,
     champion,
   };
 }

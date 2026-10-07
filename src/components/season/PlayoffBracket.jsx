@@ -138,6 +138,15 @@ function ConferenceBracket({ conference, conferenceName, bracket, selCode, onTea
 function FinalsPanel({ bracket, selCode, onTeam, expanded, onToggle }) {
   const finals = bracket.finals;
   const champion = bracket.champion;
+  if (!finals) {
+    // A bracket whose Finals series detail is missing must not crash the tab.
+    return (
+      <section className="myna-panel p-4" aria-label="NBA Finals">
+        <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--myna-accent)' }}><Trophy className="h-4 w-4" />NBA Finals</p>
+        <p className="myna-muted mt-2 text-[11px]">{champion ? `${champion} won the title — this replay carried no game-by-game Finals detail.` : 'The engine report carries no game-by-game Finals detail.'}</p>
+      </section>
+    );
+  }
   return (
     <section className="myna-panel p-4" aria-label="NBA Finals">
       <div className="flex flex-wrap items-center justify-between gap-3">

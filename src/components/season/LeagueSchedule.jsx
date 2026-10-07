@@ -113,7 +113,7 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
                     </td>
                     <td className="myna-mono px-2 py-3 text-right font-semibold" style={{ color: sim ? 'var(--myna-accent)' : undefined }}>{sim ? `${sim.awayPts}–${sim.homePts}` : '—'}</td>
                     <td className="myna-mono px-2 py-3 text-right myna-muted">{actual ? `${actual.away}–${actual.home}` : '—'}</td>
-                    <td className="px-2 py-3 text-center">{game.ot > 0 ? <span className="myna-mono rounded border border-[var(--myna-border)] px-1.5 py-0.5 text-[9px] font-bold">OT{game.ot > 1 ? game.ot : ''}</span> : <span className="myna-muted">·</span>}</td>
+                    <td className="px-2 py-3 text-center">{(sim?.ot || 0) > 0 ? <span className="myna-mono rounded border border-[var(--myna-border)] px-1.5 py-0.5 text-[9px] font-bold">OT{sim.ot > 1 ? sim.ot : ''}</span> : <span className="myna-muted">·</span>}</td>
                     {scope === 'team' && (
                       <td className="px-4 py-3 text-right">
                         {outcome ? (

@@ -55,8 +55,11 @@ export default function SeasonLab() {
   const simGames = sim.result?.games || null;
   // The schedule tab overlays replay scores position-by-position, so it needs
   // the replay games aligned to the actual schedule rows (holes where the
-  // horizon cut games off).
-  const scheduleSimGames = sim.result?.scheduleGames ?? simGames;
+  // horizon cut games off). Round-robin replays don't follow the real slate,
+  // so they must not overlay positionally — the Replay column stays empty.
+  const scheduleSimGames = sim.result?.scheduleSource === 'actual'
+    ? (sim.result.scheduleGames ?? simGames)
+    : null;
   const team = league.byCode.get(focus) || league.teams[0];
   const simRow = summary ? summary.find(row => row.code === team.code) || null : null;
   const actualRecord = actualRecords.get(team.code) || null;
@@ -104,7 +107,7 @@ export default function SeasonLab() {
             {tab === 'hub' && (
               <div className="space-y-4">
                 {summary && (
-                  <SeasonSummaryPanel summary={summary} simGames={simGames} actualRecords={actualRecords} league={league} championCode={sim.result?.champion} onFocusChange={setFocus} />
+                  <SeasonSummaryPanel summary={summary} repeats={sim.result?.repeats} simGames={simGames} actualRecords={actualRecords} league={league} championCode={sim.result?.champion} onFocusChange={setFocus} />
                 )}
                 <LeagueHero team={team} simRow={simRow} actualRecord={actualRecord} conferenceRank={conferenceRank} />
                 <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} limit={6} />

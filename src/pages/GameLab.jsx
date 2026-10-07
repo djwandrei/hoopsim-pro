@@ -114,6 +114,9 @@ export default function GameLab() {
   const away = league.byCode.get(b) || league.teams[1];
   const resultHome = league.byCode.get(sim.game?.home) || home;
   const resultAway = league.byCode.get(sim.game?.away) || away;
+  // The native report carries a period timeline but no per-play stat events;
+  // hide the live box score rather than showing an always-empty one.
+  const hasLiveStats = (sim.game?.pbp || []).some(event => event.stat);
   const breakdown = simProps => (
     <MatchupBreakdown league={league} source={source} year={year} a={a} b={b} onA={setA} onB={setB} teamA={home} teamB={away} blocked={sim.policyBlocked} {...simProps} />
   );
@@ -161,7 +164,7 @@ export default function GameLab() {
               <GameMatchupTheme homeCode={resultHome.code} awayCode={resultAway.code}>
                   {!feedDone &&
                   <GamePlayFeed key={sim.game.stamp} game={sim.game} home={resultHome} away={resultAway} onComplete={() => setFeedDone(true)} onProgress={setLiveCount} />}
-                  {!feedDone &&
+                  {!feedDone && hasLiveStats &&
                   <LiveBoxScore events={sim.game.pbp || []} count={liveCount} home={resultHome} away={resultAway} />}
                   {feedDone &&
                   <React.Fragment>

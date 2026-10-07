@@ -22,9 +22,6 @@ import { loadSavedResults, saveSavedResult, removeSavedResult } from '@/lib/save
 export default function GameLab() {
   usePageMeta({ title: 'Game Lab — SwishIQ Studio', description: 'Simulate any NBA matchup or full seven-game series with live play-by-play and series momentum.' });
   const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
-  const sim = useNativeGameSim({ seed: urlPick('seed') || undefined, neutral: urlPick('neutral') });
-  // The verified exact-season package reference drives the native engine.
-  const packageRef = source?.entry || null;
   // Shareable call state: matchup, seed, neutral court and tab live in the URL
   // so a copied link re-opens the exact call (the sim is deterministic).
   const params = new URLSearchParams(window.location.search);
@@ -34,6 +31,9 @@ export default function GameLab() {
     if (key === 'neutral') return value === '1';
     return value || null;
   };
+  const sim = useNativeGameSim({ seed: urlPick('seed') || undefined, neutral: urlPick('neutral') });
+  // The verified exact-season package reference drives the native engine.
+  const packageRef = source?.entry || null;
   const [tab, setTab] = useState(urlPick('tab'));
   const [a, setA] = useState(urlPick('a') || 'BOS');
   const [b, setB] = useState(urlPick('b') || 'LAL');

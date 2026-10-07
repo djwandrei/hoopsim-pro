@@ -22,19 +22,48 @@ const crpsGauss = (m, s, y) => {
 //   lambdaVar: ridge penalty (default 60). varFloor/varCeil: clamp the
 //   predicted sd to fractions of the trailing pooled sd (defaults .55/1.8).
 //   varBlend: blend predicted variance with pooled variance (1 = full).
+const SCALE_STATS = v => { let s = 0, s2 = 0; for (const x of v) { s += x; s2 += x * x; } const n = v.length || 1; const mean = s / n; return { mean, sd: Math.sqrt(Math.max(1e-9, s2 / n - mean * mean)), rms: Math.sqrt(s2 / n) || 1 }; };
+// Player-games feature accessors (both sides' stats come strictly from games
+// before the target game). Missing sides (early season, no prior games)
+// contribute 0 — league-neutral.
+const PG_FNS = {
+  availAdv5: (h, a) => diffPg(h, a, 'a5roll3'),
+  availAdv8: (h, a) => diffPg(h, a, 'a8roll3'),
+  availMean5: (h, a) => meanPg(h, a, 'a5roll3'),
+  missAdv10: (h, a) => diffPg(h, a, 'miss10'),
+  minTop5Adv: (h, a) => diffPg(h, a, 'minTop5roll5'),
+  minTop5Mean: (h, a) => meanPg(h, a, 'minTop5roll5'),
+};
+const OK_SIDE = s => s && s.nPrior >= 3;
+const diffPg = (h, a, k) => OK_SIDE(h) && OK_SIDE(a) && h[k] != null && a[k] != null ? h[k] - a[k] : 0;
+const meanPg = (h, a, k) => OK_SIDE(h) && OK_SIDE(a) && h[k] != null && a[k] != null ? (h[k] + a[k]) / 2 : 0;
+
 function runCandidate2(db, cfg) {
   const { feats, scaleT, scaleM, F_TOTAL, F_MARGIN, dates } = db;
   const namesT = cfg.total || ['hp10', 'ap10', 'hpa10', 'apa10', 'restMean', 'g7Mean'];
   const namesM = cfg.margin || ['pfAdv10', 'defAdv10', 'wrAdv10', 'restAdv', 'g7Adv', 'strAdv'];
   const iT = namesT.map(k => F_TOTAL.indexOf(k));
   const iM = namesM.map(k => F_MARGIN.indexOf(k));
-  const dT = namesT.length + 1, dM = namesM.length + 1;
+  const pg = cfg.pg || null;
+  const pgTNames = pg ? (cfg.pgTotal || []) : [];
+  const pgMNames = pg ? (cfg.pgMargin || []) : [];
+  const pgTIdx = pgTNames.map(n => { if (!PG_FNS[n]) throw new Error(`unknown pg feature ${n}`); return n; });
+  const pgMIdx = pgMNames.map(n => { if (!PG_FNS[n]) throw new Error(`unknown pg feature ${n}`); return n; });
+  let stdT = feats.map(f => iT.map(i => (f.T[F_TOTAL[i]] - db.scaleT[i].mean) / db.scaleT[i].sd));
+  let stdM = feats.map(f => iM.map(i => f.M[F_MARGIN[i]] / db.scaleM[i].rms));
+  if (pg) {
+    const rawPg = (names) => feats.map(f => { const s = pg.get(f.g.ref); return names.map(n => PG_FNS[n](s?.home, s?.away)); });
+    const rawT0 = rawPg(pgTIdx), rawM0 = rawPg(pgMIdx);
+    const warmMask = feats.map(f => db.WARMUP_YEARS.includes(f.season));
+    const scT = pgTIdx.map((_, j) => SCALE_STATS(rawT0.filter((_, i) => warmMask[i]).map(r => r[j])));
+    const scM = pgMIdx.map((_, j) => SCALE_STATS(rawM0.filter((_, i) => warmMask[i]).map(r => r[j])));
+    stdT = feats.map((f, i) => [...stdT[i], ...rawT0[i].map((v, j) => v / scT[j].rms)]);
+    stdM = feats.map((f, i) => [...stdM[i], ...rawM0[i].map((v, j) => v / scM[j].rms)]);
+  }
+  const dT = stdT[0].length + 1, dM = stdM[0].length + 1;
   const lambdaT = cfg.lambdaT ?? 8, lambdaM = cfg.lambdaM ?? 8;
   const recHalf = cfg.recHalf ?? null, recEvery = cfg.recEvery ?? 12;
   const recency = cfg.recency ?? null;
-
-  const stdT = feats.map(f => iT.map(i => (f.T[F_TOTAL[i]] - db.scaleT[i].mean) / db.scaleT[i].sd));
-  const stdM = feats.map(f => iM.map(i => f.M[F_MARGIN[i]] / db.scaleM[i].rms));
 
   const mk = d => ({ A: Array.from({ length: d }, () => new Float64Array(d)), b: new Float64Array(d), n: 0 });
   const addRowInto = (acc, xr, y, w) => {
@@ -263,8 +292,8 @@ function runCandidate2(db, cfg) {
       residM.push(rm); residDay.push(db.dateIndex.get(f.date)); if (residM.length > 1000) { residM.shift(); residDay.shift(); }
       residPairs.push([margin, rm]); if (residPairs.length > 1000) residPairs.shift();
       allResidM.s += rm; allResidM.s2 += rm * rm; allResidM.n += 1;
-      const xTv = iT.map(i => (f.T[F_TOTAL[i]] - db.scaleT[i].mean) / db.scaleT[i].sd);
-      const xMv = iM.map(i => f.M[F_MARGIN[i]] / db.scaleM[i].rms);
+      const xTv = stdT[f.idx];
+      const xMv = stdM[f.idx];
       addRowInto(accT, [1, ...xTv], yT, 1); addRowInto(accM, [1, ...xMv], yM, 1);
       rawT.push([1, ...xTv, yT]); rawM.push([1, ...xMv, yM]); seasonRows.push(f.season); rawD.push(db.dateIndex.get(f.date));
       if (accV && bM) { const r2 = rm * rm; addRowInto(accV, [1, ...xMv], r2, 1); rawV.push([1, ...xMv, r2]); }

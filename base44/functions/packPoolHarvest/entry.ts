@@ -6,7 +6,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 import { prepareRows } from '../../shared/packPoolHarvest.ts';
 
 const MAX_SETS_PER_RUN = 3;
-const MAX_ROWS_PER_SET = 40;
+const MAX_ROWS_PER_SET = 60;
 
 async function loadPoolNames(base44: any, override: unknown): Promise<string[]> {
   if (Array.isArray(override) && override.length) {
@@ -41,12 +41,13 @@ export default async function(req: Request): Promise<Response> {
 
 Step 1 — web search: "sportscardspro basketball-cards ${setInfo.name.toLowerCase()}" (also try "pricecharting ${setInfo.name.toLowerCase()}"). Open the sportscardspro.com/pricecharting.com console page for the set — it is a price table with columns: Card | Ungraded | Grade 9 | PSA 10.
 
-Step 2 — transcribe the table: list up to ${MAX_ROWS_PER_SET} rows, preferring ROOKIE cards and notable parallels (SILVER PRIZM, GOLD PRIZM, ICE, PULSAR, WAVE, CHOICE, HOLO, etc.). Rows where the PSA 10 column has a value are the most valuable.
+Step 2 — transcribe the table: list up to ${MAX_ROWS_PER_SET} rows covering the WHOLE market spread, not just the top: cheap base rookies and base cards (under $25), mid-range parallels ($25-$200), and high-end cards ($200+). Include every brand/parallel family in the set (base, Silver/Gold/Orange/Green Prizm, ICE, PULSAR, WAVE, CHOICE, HOLO, inserts, autographs, patches), and include rows even when the PSA 10 column is empty if the Ungraded or Grade 9 column has a value.
+Skip multi-card listings: never transcribe rows for lots, "set (xN)", groups, or entries combining several cards with "+".
 For each row give:
 - description: the card text in the Card column verbatim (player, bracketed parallel name, card number — e.g. "Paolo Banchero [Silver Prizm] #249 [RC]")
 - cardNumber: the card number from the Card column (e.g. "249")
 - priceUsd10: the PSA 10 column value in USD, "+" and commas stripped (omit if that column is empty)
-- imageUrl: the row's thumbnail URL (storage.googleapis.com/images.pricecharting.com/...) if present, else omit.
+- imageUrl: REQUIRED — the row's thumbnail URL (storage.googleapis.com/images.pricecharting.com/...) exactly as shown in the row. Skip any row that has no thumbnail.
 Transcribe only rows actually shown; do not invent cards.`,
         response_json_schema: {
           type: 'object',

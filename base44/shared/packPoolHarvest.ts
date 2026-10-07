@@ -46,6 +46,14 @@ export function slugify(value: string): string {
   return normKey(value).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+// Lots, multi-card groups and "rookie set (x12)" listings are never single
+// cards — reject them before matching so they can't enter the pack pool.
+const LOT_PATTERN = /\((?:x|×)\s*\d+\s*\)|\bset\b|\blots?\b|\bgroup\b|\bcollection\b|\bbreak\b|&\s*more|\+/i;
+
+export function isSingleCardRow(description: string): boolean {
+  return Boolean(description) && !LOT_PATTERN.test(description);
+}
+
 // Find the longest pool player named at a word boundary in the description.
 export function matchPlayer(description: string, poolKeys: Map<string, string>): string | null {
   const desc = normKey(description);
@@ -104,6 +112,7 @@ export function prepareRows(rows: HarvestRow[], setInfo: SetInfo, poolNames: str
   const seen = new Set<string>();
   for (const row of rows || []) {
     if (!row || typeof row.description !== 'string' || !row.cardNumber) continue;
+    if (!isSingleCardRow(row.description)) continue;
     const player = matchPlayer(row.description, poolKeys);
     if (!player) continue;
     // Variant: everything after the matched player's name, minus rookie marks.
@@ -121,14 +130,14 @@ export function prepareRows(rows: HarvestRow[], setInfo: SetInfo, poolNames: str
     const usd = Number(row.priceUsd10);
     const price10 = Number.isFinite(usd) && usd > 0 ? Math.round(usd * 100) : null;
     const tier = tierFromUsd(price10 != null ? usd : null) || tierFromVariant(variant);
-    // Scans: PSA's CDN, or PriceCharting's (upsized from its 60px thumbnail
-    // to the 240px render the CDN serves).
+    // Scans: only PriceCharting's public CDN loads in a browser (upsized from
+    // its 60px thumbnail to the 240px render the CDN serves). PSA's cardfacts
+    // pages are HTML listings, not images, and its CDN blocks hotlinking.
     const scanRaw = typeof row.imageUrl === 'string' ? row.imageUrl : '';
-    const psaScan = /^https:\/\/i\.psacard\.com\/.+\.jpg/i.test(scanRaw) ? scanRaw : null;
     const chartingScan = /^https:\/\/storage\.googleapis\.com\/images\.pricecharting\.com\/[a-z0-9]+\/\d+\.jpg/i.test(scanRaw)
       ? scanRaw.replace(/\/\d+\.jpg$/i, '/240.jpg')
       : null;
-    const scanUrl = psaScan || chartingScan;
+    const scanUrl = chartingScan;
     prepared.push({
       name: `${setInfo.name} ${cardNumber} ${player}${variant ? ` ${variant}` : ''}`,
       player,

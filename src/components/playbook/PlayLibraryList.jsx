@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
-import { TAGS } from '@/components/playbook/playTags';
+import { TAGS, tagLabel } from '@/components/playbook/playTags';
 
 // Browsable play library: search + category filter + scheme-family tags,
 // grouped by dictionary section (formations, systems, ball screens, defense,
@@ -24,7 +24,7 @@ export default function PlayLibraryList({ categories, selectedId, onSelect }) {
       .filter((item) => !category || item.title === category)
       .map((item) => ({
         ...item,
-        plays: item.plays.filter((play) => (!q || play.name.toLowerCase().includes(q) || play.type.toLowerCase().includes(q) || play.goal.toLowerCase().includes(q)) && activeTags.every((id) => (play.tags || []).includes(id))),
+        plays: item.plays.filter((play) => (!q || play.name.toLowerCase().includes(q) || play.type.toLowerCase().includes(q) || play.goal.toLowerCase().includes(q) || (play.tags || []).some((id) => tagLabel(id).toLowerCase().includes(q))) && activeTags.every((id) => (play.tags || []).includes(id))),
       }))
       .filter((item) => item.plays.length > 0);
   }, [categories, query, category, activeTags]);

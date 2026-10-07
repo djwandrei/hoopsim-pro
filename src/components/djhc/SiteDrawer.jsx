@@ -16,7 +16,7 @@ export default function SiteDrawer({open,navRef,onClose}) {
     </li>;
   })}</ul>
     <div className="site-nav__group"><span className="site-nav__eyebrow">Daily games</span></div>
-    <ul className="primary-nav__list">{DAILY_GAMES.map(item=>{
+    <ul className="primary-nav__list">{DAILY_GAMES.filter(item=>!FAN_TOOLS.some(tool=>tool.route===item.path && !DRAWER_HIDDEN.includes(tool.label))).map(item=>{
       const activeGame = pathname === item.path || pathname.startsWith(`${item.path}/`);
       return <li key={item.path} className="primary-nav__item"><Link to={item.path} className={`primary-nav__link${activeGame?' active':''}`} aria-current={activeGame?'page':undefined} onClick={onClose}><ToolEmblem emblem={item.emblem} label={item.title} className="fan-tools-primary__emblem" /><span className="fan-tools-primary__label">{item.title}</span></Link></li>;
     })}</ul></nav>;

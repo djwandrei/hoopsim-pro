@@ -44,14 +44,6 @@ export default function Playbook() {
   const [mirrored, setMirrored] = useState(false);
   const courtRef = useRef(null);
   const [exporting, setExporting] = useState(false);
-  // PNG export of the current diagram step (SVG tokens resolved, rasterized 2x).
-  const handleExport = useCallback(async () => {
-    const svg = courtRef.current?.querySelector('svg');
-    if (!svg || exporting) return;
-    setExporting(true);
-    try { await exportCourtDiagram(svg, `swishiq-playbook-${play.id}-step${safeStep}.png`); }
-    finally { setExporting(false); }
-  }, [exporting, play, safeStep]);
 
   const play = useMemo(() => (library ? findPlay(library, playId) || library.categories[0]?.plays[0] : null), [library, playId]);
   const filmLinks = useMemo(() => filmLinksForPlay(play), [play]);
@@ -60,6 +52,15 @@ export default function Playbook() {
   const stepCount = frames.length;
   const safeStep = Math.max(0, Math.min(stepIndex, stepCount - 1));
   const frame = frames[safeStep];
+
+  // PNG export of the current diagram step (SVG tokens resolved, rasterized 2x).
+  const handleExport = useCallback(async () => {
+    const svg = courtRef.current?.querySelector('svg');
+    if (!svg || exporting) return;
+    setExporting(true);
+    try { await exportCourtDiagram(svg, `swishiq-playbook-${play.id}-step${safeStep}.png`); }
+    finally { setExporting(false); }
+  }, [exporting, play, safeStep]);
 
   // Auto-advance through the steps while playing.
   useEffect(() => {

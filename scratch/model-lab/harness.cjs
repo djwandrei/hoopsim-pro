@@ -245,9 +245,12 @@ function runCandidate(db, cfg) {
   const rawT = [], rawM = [], seasonRows = [], rawD = [];
   const out = [];
   const residM = [];
+  const residS = [], residL = [], residMid = [];
   const allResidM = { s: 0, s2: 0, n: 0 };
   const probScale = cfg.probScale ?? 1;
   const stratProb = cfg.stratProb ?? false;
+  const stratCut = cfg.stratCut ?? 5;
+  const stratHi = cfg.stratHi ?? null; // optional third (mid) pool
   const gaussProb = cfg.gaussProb ?? false;
   const varPrior = cfg.varPrior ?? null;
   const recency = cfg.recency ?? null;
@@ -306,7 +309,12 @@ function runCandidate(db, cfg) {
       // residuals are heteroskedastic across that split.
       let pool = residM, wNrow = wN, wmRow = wm;
       if (stratProb && wN) {
-        pool = Math.abs(margin) < 5 ? (residS.length >= 100 ? residS : residM) : (residL.length >= 100 ? residL : residM);
+        const am = Math.abs(margin);
+        pool = stratHi != null
+          ? (am < stratCut ? (residS.length >= 100 ? residS : residM)
+            : am < stratHi ? (residMid.length >= 100 ? residMid : residM)
+            : (residL.length >= 100 ? residL : residM))
+          : (am < stratCut ? (residS.length >= 100 ? residS : residM) : (residL.length >= 100 ? residL : residM));
         let s2 = 0; for (const x of pool) s2 += x;
         wmRow = pool.length ? s2 / pool.length : 0;
         wNrow = pool.length;
@@ -336,7 +344,8 @@ function runCandidate(db, cfg) {
       out.push({ idx: f.idx, season: f.season, date: f.date, obsT: yT, obsM: yM, total, margin, p, crpsM, q025, q975, q10, q90 });
       const rm = yM - margin;
       residM.push(rm);
-      const stratPool = Math.abs(margin) < 5 ? residS : residL;
+      const amPush = Math.abs(margin);
+      const stratPool = stratHi != null ? (amPush < stratCut ? residS : amPush < stratHi ? residMid : residL) : (amPush < stratCut ? residS : residL);
       stratPool.push(rm); if (stratPool.length > RESID_WINDOW) stratPool.shift();
       allResidM.s += rm; allResidM.s2 += rm * rm; allResidM.n += 1;
       if (residM.length > RESID_WINDOW) residM.shift();

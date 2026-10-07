@@ -18,6 +18,7 @@
     --court-muted: 216 27% 80%;
     --court-border: 215 14% 49%;
     --court-accent: 43 78% 60%;
+    --court-team-hint: 225 73% 57%;
     --court-focus: 43 85% 72%;
     --court-trim: 356 66% 53%;
     --court-trim-ink: 356 80% 64%;
@@ -194,6 +195,9 @@
 .broadcast-in-l { animation: broadcast-in-left .45s cubic-bezier(.2,.8,.3,1) both; }
 .broadcast-in-r { animation: broadcast-in-right .45s cubic-bezier(.2,.8,.3,1) both; }
 @media (prefers-reduced-motion: reduce) { .broadcast-in-l, .broadcast-in-r { animation-duration: 0.01ms !important; } }
+
+/* Selection: gold-tinted highlight so selected text reads on the dark canvas */
+::selection { background: hsl(var(--court-accent) / .28); color: hsl(var(--foreground)); }
 
 /* === Premium broadcast polish layer === */
 .court-panel { position: relative; }

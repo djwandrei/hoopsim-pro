@@ -2,10 +2,13 @@ import React from 'react';
 import { Check } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
+import { gradeFor, gradeTone } from '@/components/forge/bapSkills';
+
+const GRADE_TEXT = { positive: 'text-positive', royal: 'text-royal-ink', gold: 'text-gold', trim: 'text-trim-ink' };
 
 // The draft-show stage: spotlight lottery wheel, gold spin CTA, and the
 // selected player announced with a broadcast lower-third ride-in.
-export default function SpinStage({ pool, latest, spinning, historyCount, history = [], onSpin, roleLabel }) {
+export default function SpinStage({ pool, latest, spinning, historyCount, history = [], onSpin, roleLabel, skills = null }) {
   const ready = pool?.status === 'ready';
   const eligible = ready ? pool.entries.length : null;
   const remaining = ready ? Math.max(0, eligible - historyCount) : 0;
@@ -43,6 +46,12 @@ export default function SpinStage({ pool, latest, spinning, historyCount, histor
               <div className="spin-pick__teams">{(entry.teamCodes || []).map(code => <span key={code} className="spin-pick__team"><TeamMark code={code} className="h-9 w-9" />{code}</span>)}</div>
             </div>
           </div>
+          {skills?.length > 0 && <div className="mt-3 grid grid-cols-3 gap-1.5 sm:grid-cols-5" aria-label="DJHC skill grades">
+            {skills.map(item => <span key={item.key} className="flex min-w-0 items-center justify-between gap-1.5 rounded-lg border border-border/25 bg-raised/40 px-2 py-1.5">
+              <span className="min-w-0 truncate text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{item.label}</span>
+              <span className={`shrink-0 font-mono text-[10px] font-bold ${GRADE_TEXT[gradeTone(item.value)]}`}>{gradeFor(item.value)}·{item.value}</span>
+            </span>)}
+          </div>}
         </div> : <div className="spin-pick spin-pick--idle">
           <p className="spin-pick__kicker">On deck</p>
           <h3 className="spin-pick__name">{pool?.status === 'ready' ? 'Ready when you are' : pool?.status === 'dirty' ? 'Pool settings changed' : 'Wheel is idle'}</h3>

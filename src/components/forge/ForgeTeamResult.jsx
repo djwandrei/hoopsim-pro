@@ -30,7 +30,7 @@ export default function ForgeTeamResult({ result, onRerun, onNewDraft, shareEnco
       <p className="mt-2 text-sm text-muted-foreground">{subline}</p>
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         <span className="rounded-lg border border-gold/30 bg-gold/5 px-3 py-1.5 text-[11px] text-gold">Team grade <span className="font-mono font-bold">{Math.round(result.teamScore)}</span></span>
-        <span className="rounded-lg border border-royal/40 bg-royal/10 px-3 py-1.5 text-[11px] text-royal">Net rating <span className="font-mono font-bold">{result.net > 0 ? '+' : ''}{result.net.toFixed(1)}</span></span>
+        <span className="rounded-lg border border-royal/40 bg-royal/10 px-3 py-1.5 text-[11px] text-royal-ink">Net rating <span className="font-mono font-bold">{result.net > 0 ? '+' : ''}{result.net.toFixed(1)}</span></span>
         {forgeRow && <span className="rounded-lg border border-border/30 px-3 py-1.5 text-[11px] text-muted-foreground">ORtg <span className="font-mono font-bold text-foreground">{forgeRow.ortg.toFixed(1)}</span> · DRtg <span className="font-mono font-bold text-foreground">{forgeRow.drtg.toFixed(1)}</span></span>}
       </div>
       <div className="mt-5 flex flex-wrap justify-center gap-2">

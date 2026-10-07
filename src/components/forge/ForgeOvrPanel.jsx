@@ -6,9 +6,9 @@ import { SKILLS, gradeFor, gradeTone } from '@/components/forge/bapSkills';
 
 const TONE = {
   positive: 'border-positive/60 bg-positive/15 text-positive',
-  royal: 'border-royal/60 bg-royal/15 text-royal',
+  royal: 'border-royal/60 bg-royal/15 text-royal-ink',
   gold: 'border-gold/60 bg-gold/15 text-gold',
-  trim: 'border-trim/60 bg-trim/15 text-trim',
+  trim: 'border-trim/60 bg-trim/15 text-trim-ink',
 };
 
 // Right panel of the Build-A-Bucket layout, upgraded to a live forge
@@ -66,7 +66,7 @@ export default function ForgeOvrPanel({ picks, overall, showGrades, onUndo }) {
             <p className="truncate font-mono text-[9px] text-muted-foreground">{skill.label} · DJHC {skill.fmt(pick.value)}</p>
           </div>
           {showGrades && <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border font-mono text-[10px] font-bold ${TONE[gradeTone(pick.value)]}`}>{gradeFor(pick.value)}</span>}
-          <button type="button" aria-label={`Release ${pick.player.name} from ${skill.label}`} onClick={() => onUndo(skill.key)} className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:text-trim"><X className="h-3 w-3" /></button>
+          <button type="button" aria-label={`Release ${pick.player.name} from ${skill.label}`} onClick={() => onUndo(skill.key)} className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:text-trim-ink"><X className="h-3 w-3" /></button>
         </div>;
       })}
     </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Image } from '@/components/ui/image';
 import { teamAsset } from '@/components/studio/teamAssets';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
+import { SKILLS, gradeFor, gradeTone } from '@/components/forge/bapSkills';
 
 const one = value => (Number(value) || 0).toFixed(1);
 const int = value => String(Math.round(Number(value) || 0));
@@ -49,6 +50,20 @@ export default function ForgePlayerShowcase({ player, note }) {
           <p className="mt-0.5 font-display text-2xl leading-none text-foreground sm:text-3xl">{stat.fmt(player[stat.key])}</p>
           <p className="text-[10px] text-muted-foreground">per game</p>
         </div>)}
+      </div>
+      <div className="border-b border-border/30 p-3">
+        <p className="bcast-kicker">DJHC skill grades</p>
+        <div className="mt-2 grid grid-cols-3 gap-1.5 sm:grid-cols-5">
+          {SKILLS.map(skill => {
+            const value = player[skill.key];
+            if (!Number.isFinite(value)) return null;
+            const tone = gradeTone(value);
+            return <div key={skill.key} className="rounded-lg border border-border/25 bg-raised/40 px-2 py-1.5 text-center">
+              <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{skill.label}</p>
+              <p className={`mt-0.5 font-display text-lg leading-none ${tone === 'positive' ? 'text-positive' : tone === 'royal' ? 'text-royal-ink' : tone === 'gold' ? 'text-gold' : 'text-trim-ink'}`}>{gradeFor(value)}<span className="font-mono text-[10px] opacity-80"> · {value}</span></p>
+            </div>;
+          })}
+        </div>
       </div>
       <div className="relative flex flex-wrap justify-center gap-2 p-3">
         {CONTEXT_STATS.map(stat => <span key={stat.key} className="bcast-lowerthird">{stat.label}<span className="text-foreground">{stat.fmt(player[stat.key])}</span></span>)}

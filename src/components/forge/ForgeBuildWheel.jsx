@@ -23,13 +23,13 @@ export default function ForgeBuildWheel({ picks, overall, selectedKey, spinning 
       {segments.map(({ skill, pick, index }) => {
         const rad = index * slice * Math.PI / 180;
         const selected = selectedKey === skill.key;
-        return <div key={skill.key} style={{ left:`${50 + 37 * Math.sin(rad)}%`, top:`${50 - 37 * Math.cos(rad)}%` }} className={`absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-center transition-colors ${pick ? 'border-gold/60 bg-canvas/85 text-gold wheel-chip-landed' : 'border-border/30 bg-canvas/70 text-muted-foreground'} ${selected ? 'border-gold wheel-chip-active' : ''}`}>
+        return <div key={skill.key} style={{ left:`${50 + 37 * Math.sin(rad)}%`, top:`${50 - 37 * Math.cos(rad)}%` }} className={`absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-center transition-colors ${pick ? 'border-gold/60 bg-card/95 text-gold wheel-chip-landed' : 'border-border/30 bg-card/85 text-muted-foreground'} ${selected ? 'border-gold wheel-chip-active' : ''}`}>
           <span className="font-display text-[11px] leading-none tracking-wide">{skill.label}</span>
           <span className="font-mono text-[9px] leading-none opacity-80">{pick ? `${gradeFor(pick.value)} ${pick.value} · ${initials(pick)}` : '—'}</span>
         </div>;
       })}
     </div>
-    <div className="absolute inset-[26%] flex flex-col items-center justify-center rounded-full border-2 border-gold/50 bg-canvas shadow-[0_0_30px_hsl(var(--court-accent)/0.2)]">
+    <div className="absolute inset-[26%] flex flex-col items-center justify-center rounded-full border-2 border-gold/50 bg-card shadow-[0_0_30px_hsl(var(--court-accent)/0.2)]">
       <div className="absolute inset-[10%]"><ForgeFigure3D filled={SKILLS.filter(skill => picks[skill.key]).length} complete={Boolean(overall)} /></div>
       <motion.span key={overall ?? 'none'} initial={{ scale:1.3, opacity:.3 }} animate={{ scale:1, opacity:1 }} transition={{ type:'spring', stiffness:320, damping:18 }} className="relative font-display text-4xl leading-none text-gold">{overall ?? '—'}</motion.span>
       <span className="relative mt-1 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">OVR</span>

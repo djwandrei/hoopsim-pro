@@ -11,7 +11,7 @@ export default function ForgeShareButton({ encode }) {
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1800);
   };
-  return <button type="button" onClick={share} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-royal/40 bg-royal/10 px-4 text-xs font-semibold uppercase tracking-wider text-royal transition-colors hover:bg-royal/20">
+  return <button type="button" onClick={share} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-royal/40 bg-royal/10 px-4 text-xs font-semibold uppercase tracking-wider text-royal-ink transition-colors hover:bg-royal/20">
     {copied ? <Check className="h-3.5 w-3.5" /> : <Link2 className="h-3.5 w-3.5" />}{copied ? 'Build link copied' : 'Copy build link'}
   </button>;
 }

@@ -15,6 +15,8 @@ import { readSpinTemplates, prependSpinTemplate, removeSpinTemplate } from '@/co
 import useSeasonSource from '@/hooks/useSeasonSource';
 import useSpinDraw from '@/components/spin/useSpinDraw';
 import { observedPlayers } from '@/lib/season/labs';
+import { buildForgePool } from '@/components/forge/forgePool';
+import { SKILLS } from '@/components/forge/bapSkills';
 import { SlidersHorizontal, Users } from 'lucide-react';
 import '@/components/spin/draftShow.css';
 
@@ -37,6 +39,16 @@ export default function SpinRoom() {
     else setHistory(current => [...current, { number: payload.spinNumber, player: payload.displayPlayer }]);
   }, []);
   const players = useMemo(() => source ? observedPlayers(source) : [], [source]);
+  // DJHC skill ratings per drawn player: the forge rating pool keyed by player
+  // reference, so the stage profile card can show grades and attribute values.
+  const skillsFor = useMemo(() => {
+    if (state !== 'ready' || !source) return null;
+    const byRef = new Map(buildForgePool(source).map(player => [player.playerRef, player]));
+    return entry => {
+      const row = entry?.playerRef ? byRef.get(entry.playerRef) : null;
+      return row ? SKILLS.map(skill => ({ key: skill.key, label: skill.label, value: row[skill.key] })).filter(item => Number.isFinite(item.value)) : null;
+    };
+  }, [source, state]);
   const allRefs = useMemo(() => players.map(player => player.playerRef), [players]);
   // "Exclude" mode: the selection is out. "Only these": everyone else is out.
   const excluded = useMemo(() => poolMode === 'include'
@@ -89,7 +101,7 @@ export default function SpinRoom() {
           {tab === 'filters' ? <SpinControlDesk settings={spin.settings} onChange={spin.changeSettings} onSubmit={applyAndSave} onReset={spin.resetSettings} roleOptions={spin.roleOptions} teamOptions={spin.teamOptions} metricOptions={spin.metricOptions} dirty={spin.dirty} /> : <SpinPoolManager players={players} selected={selection} mode={poolMode} onModeChange={setPoolMode} onChange={setSelection} />}
         </div>
         <div className="order-1 min-w-0 space-y-5 lg:order-2 lg:col-span-7 xl:col-span-8">
-          <SpinStage pool={spin.pool} latest={latest} spinning={spin.spinning} historyCount={spin.history.length} history={history} onSpin={spin.spin} roleLabel={roleLabel} />
+          <SpinStage pool={spin.pool} latest={latest} spinning={spin.spinning} historyCount={spin.history.length} history={history} onSpin={spin.spin} roleLabel={roleLabel} skills={latest?.displayPlayer && skillsFor ? skillsFor(latest.displayPlayer) : null} />
           <SpinPoolBoard pool={spin.pool} latest={latest} excluded={excluded} />
           <SpinHistory history={history} />
           <SpinShareCard latest={latest} pool={spin.pool} received={receivedDraw} onClearReceived={() => { setReceivedDraw(null); window.history.replaceState(null, '', window.location.pathname); }} />

@@ -70,6 +70,7 @@ module.exports = {
   			'trim-ink': 'hsl(var(--court-trim-ink) / <alpha-value>)',
   			positive: 'hsl(var(--court-positive) / <alpha-value>)',
   			royal: 'hsl(var(--court-royal) / <alpha-value>)',
+  			'royal-ink': 'hsl(var(--court-royal-ink) / <alpha-value>)',
             'court-wood-light': 'hsl(var(--court-wood-light) / <alpha-value>)',
             'court-wood': 'hsl(var(--court-wood) / <alpha-value>)',
             'court-wood-dark': 'hsl(var(--court-wood-dark) / <alpha-value>)',

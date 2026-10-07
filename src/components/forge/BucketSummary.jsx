@@ -21,10 +21,10 @@ export default function BucketSummary({ buckets, picks, overall, onRestart }) {
     <div className="mt-5 space-y-2">{buckets.map(bucket => {
       const pick = picks[bucket.key];
       const pct = Math.min(100, Math.max(0, Math.round(pick.value / 99 * 100)));
-      return <div key={bucket.key} className="flex items-center gap-3 rounded-xl border border-border/25 bg-canvas/30 px-3 py-2 transition-colors hover:border-gold/35">
+      return <div key={bucket.key} className="flex items-center gap-3 rounded-xl border border-border/25 bg-raised/40 px-3 py-2 transition-colors hover:border-gold/35">
         <PlayerPortrait player={pick.player} className="h-10 w-10 shrink-0" />
         <div className="min-w-0 w-40 shrink-0"><p className="truncate text-xs font-semibold">{pick.player.name}</p><p className="flex items-center gap-1 text-[10px] text-muted-foreground"><TeamMark code={pick.player.teamCode} className="h-7 w-7" />{pick.player.teamCode}</p></div>
-        <div className="min-w-0 flex-1"><div className="flex items-center justify-between text-[10px] text-muted-foreground"><span>{bucket.label} · {bucket.basis}</span><span className="font-mono">DJHC {bucket.fmt(pick.value)} / 99</span></div><div className="mt-1 h-2 overflow-hidden rounded-full bg-canvas/60"><div className="h-full rounded-full bg-gradient-to-r from-gold/60 to-gold" style={{ width: `${Math.max(4, pct)}%` }} /></div></div>
+        <div className="min-w-0 flex-1"><div className="flex items-center justify-between text-[10px] text-muted-foreground"><span>{bucket.label} · {bucket.basis}</span><span className="font-mono">DJHC {bucket.fmt(pick.value)} / 99</span></div><div className="mt-1 h-2 overflow-hidden rounded-full bg-raised/70"><div className="h-full rounded-full bg-gradient-to-r from-gold/60 to-gold" style={{ width: `${Math.max(4, pct)}%` }} /></div></div>
         <span className="shrink-0 rounded-md border border-gold/30 bg-gold/10 px-1.5 py-0.5 font-mono text-[10px] font-bold text-gold">{gradeFor(pick.value)}</span>
       </div>;
     })}</div>

@@ -24,6 +24,7 @@
     --court-trim-ink: 356 80% 64%;
     --court-positive: 148 55% 68%;
     --court-royal: 225 73% 57%;
+    --court-royal-ink: 225 73% 57%;
     --court-wood-light: 35 46% 63%;
     --court-wood: 31 37% 49%;
     --court-wood-dark: 27 30% 29%;
@@ -146,7 +147,7 @@
 .forge-stage-chip--live:hover { background:hsl(var(--court-accent) / .22); }
 .forge-stage-chip--armed { border:1px solid hsl(var(--court-accent) / .55); background:hsl(var(--court-accent) / .08); color:hsl(var(--court-accent)); }
 .forge-stage-chip--best { border:1px solid hsl(var(--court-positive) / .8); background:hsl(var(--court-positive) / .12); color:hsl(var(--court-positive)); box-shadow:0 0 16px hsl(var(--court-positive) / .3); }
-.forge-stage-chip--open { border:1px dashed hsl(var(--border) / .5); background:hsl(var(--court-canvas) / .35); color:hsl(var(--muted-foreground) / .85); }
+.forge-stage-chip--open { border:1px dashed hsl(var(--border) / .55); background:hsl(var(--court-raised) / .55); color:hsl(var(--muted-foreground) / .95); }
 /* 3D card treatment for the attribute chips: raised glass face, lit top edge,
    hover lift */
 .forge-stage-chip { box-shadow: inset 0 1px 0 hsl(220 38% 97% / .12), 0 8px 18px hsl(var(--court-canvas) / .55); background-image: linear-gradient(180deg, hsl(220 38% 97% / .07), transparent 60%); transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease; }

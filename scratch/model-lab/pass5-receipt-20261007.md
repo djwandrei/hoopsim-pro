@@ -74,9 +74,34 @@ standardized. `restAdv`/`g7Adv` are zero-heavy (52%/59% zeros) — expected
 - **Confirmed dead ends:** variance-modeling approaches (homoskedasticity
   audit), kernel-weighted support (VIF/strata results consistent with pass-3).
 
-## Next steps (pass 6)
-1. Rerun the champion minus `totAdv10` and record official scratch-champion
-   numbers for the to-be-ported runner.
-2. Optional lean-margin variant (drop `eloAdv`) head-to-head.
-3. Port the winning configuration to the site's official runner for hashed
-   validation before any adoption.
+## Pass 6 follow-up (same day): trimmed variants
+
+Ran both recommended variants through the same rolling-origin harness with
+paired date-cluster bootstrap vs the pass-4 champion (651 date clusters,
+4,920 eval games):
+
+| Config | Brier | Log | maeM | CRPS-M | Acc | ECE |
+|---|---|---|---|---|---|---|
+| Champion (12T + 16M + 4pg) | 0.21253 | 0.61313 | 10.888 | 3.0829 | 66.32% | 0.0182 |
+| − `totAdv10` (11T + 16M + 4pg) | 0.21253 | 0.61313 | 10.888 | 3.0829 | 66.32% | 0.0182 |
+| − `totAdv10` − `eloAdv` (lean) | 0.21258 | 0.61322 | 10.890 | 3.1034 | 66.48% | 0.0184 |
+
+- **Drop `totAdv10`: ADOPTED as the new scratch champion.** Paired deltas are
+  exactly zero on brier/log/maeM/CRPS (maeH delta 9e-6, CIs straddle 0) —
+  the exact redundancy contributes nothing. The totals head is now
+  non-singular (11 features + venueTotMean, 12 columns) with a clean solve.
+- **Lean margin variant (drop `eloAdv`): REJECTED.** CRPS-M degrades by
+  +0.0205 [0.0170, 0.0237] — significant and material (~0.7% worse). The
+  Elo-family redundancy is earning its keep despite VIF 118; ridge handles
+  the collinearity and `eloAdv` carries real signal the recency-SRS
+  features don't.
+- New scratch champion numbers for the runner port:
+  Brier 0.21253 · Log 0.61313 · maeM 10.888 · CRPS-M 3.0829 · Acc 66.32% ·
+  ECE 0.0182, config `{ total: 11T+venueTotMean, margin: CHAMP_M (16+4pg),
+  recHalf: 270, stratProb: true, stratCut: 6, probScale: 1 }`.
+
+## Next steps (pass 7)
+1. Port the new scratch champion (totals head without `totAdv10`) to the
+   site's official runner for hashed validation before any adoption.
+2. Optional: `eloAdv`-vs-`eloAdv_12h50m` ablation (swap, don't drop) if a
+   leaner margin head is still wanted for interpretability.

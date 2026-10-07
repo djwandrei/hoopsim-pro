@@ -4,13 +4,13 @@ import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
 import useSeasonSource from '@/hooks/useSeasonSource';
-import useGameSim from '@/hooks/useGameSim';
+import useNativeGameSim from '@/hooks/useNativeGameSim';
 import MyNbaHub from '@/components/season/MyNbaHub';
 import MatchupBreakdown from '@/components/game/MatchupBreakdown';
 import GameControls from '@/components/game/GameControls';
 import GameScoreboard from '@/components/game/GameScoreboard';
 import GameBoxScore from '@/components/game/GameBoxScore';
-import GameRecap from '@/components/game/GameRecap';
+import NativeMatchupReport from '@/components/game/NativeMatchupReport';
 import GamePlayFeed from '@/components/game/GamePlayFeed';
 import SeriesBoard from '@/components/game/SeriesBoard';
 import GameMatchupTheme from '@/components/game/GameMatchupTheme';
@@ -22,7 +22,9 @@ import { loadSavedResults, saveSavedResult, removeSavedResult } from '@/lib/save
 export default function GameLab() {
   usePageMeta({ title: 'Game Lab — SwishIQ Studio', description: 'Simulate any NBA matchup or full seven-game series with live play-by-play and series momentum.' });
   const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
-  const sim = useGameSim({ seed: urlPick('seed') || undefined, neutral: urlPick('neutral') });
+  const sim = useNativeGameSim({ seed: urlPick('seed') || undefined, neutral: urlPick('neutral') });
+  // The verified exact-season package reference drives the native engine.
+  const packageRef = source?.entry || null;
   // Shareable call state: matchup, seed, neutral court and tab live in the URL
   // so a copied link re-opens the exact call (the sim is deterministic).
   const params = new URLSearchParams(window.location.search);
@@ -78,8 +80,8 @@ export default function GameLab() {
     const away = league.byCode.get(pendingOpen.b);
     setPendingOpen(null);
     if (!home || !away) return;
-    if (pendingOpen.kind === 'series') sim.runSeries(league, home, away, { seed: pendingOpen.seed, neutral: pendingOpen.neutral });
-    else sim.runGame(league, home, away, { seed: pendingOpen.seed, neutral: pendingOpen.neutral });
+    if (pendingOpen.kind === 'series') sim.runSeries(league, home, away, { seed: pendingOpen.seed, neutral: pendingOpen.neutral, packageRef });
+    else sim.runGame(league, home, away, { seed: pendingOpen.seed, neutral: pendingOpen.neutral, packageRef });
   }, [pendingOpen, league, year, sim]);
 
   if (state !== 'ready' || !league) {
@@ -131,12 +133,12 @@ export default function GameLab() {
           <div className="space-y-4">
               {sim.game ?
               <PreGameDisclosure home={home} away={away} open={showPreGame} onToggle={() => setShowPreGame(current => !current)}>
-                {breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: true })}
+                {breakdown({ onSimGame: () => sim.runGame(league, home, away, { packageRef }), hasGame: true })}
               </PreGameDisclosure> :
-              breakdown({ onSimGame: () => sim.runGame(league, home, away), hasGame: false })}
+              breakdown({ onSimGame: () => sim.runGame(league, home, away, { packageRef }), hasGame: false })}
               <GameControls
-              seed={sim.seed} onSeedChange={sim.setSeed}
-              neutral={sim.neutral} onNeutralChange={sim.setNeutral}
+              settings={sim.settings} onSettingsChange={sim.setSettings}
+              running={sim.running} progress={sim.progress}
               onShareLink={shareLink} />
             
               {sim.game ?
@@ -147,13 +149,13 @@ export default function GameLab() {
                   <LiveBoxScore events={sim.game.pbp || []} count={liveCount} home={resultHome} away={resultAway} />}
                   {feedDone &&
                   <React.Fragment>
-                    <GameRecap game={sim.game} home={resultHome} away={resultAway} />
                     <GameScoreboard league={league} game={sim.game} />
-                    <GameBoxScore game={sim.game} />
+                    {((sim.game.boxHome?.lines?.length || 0) + (sim.game.boxAway?.lines?.length || 0)) > 0 && <GameBoxScore game={sim.game} />}
+                    <NativeMatchupReport native={sim.game.native} home={resultHome} away={resultAway} />
                   </React.Fragment>}
                   </GameMatchupTheme> :
 
-            <section className="myna-panel p-6 text-center text-xs myna-muted">Set a seed, then sim the game — the live play-by-play feed, team-colored scoreboard and full box score land here.</section>
+            <section className="myna-panel p-6 text-center text-xs myna-muted">Pick a matchup, then sim the game — the site's release-pinned possession engine runs the Monte Carlo trials; the feed, scoreboard and native engine report land here.</section>
             }
             </div>
           }
@@ -161,16 +163,19 @@ export default function GameLab() {
           <div className="space-y-4">
               {breakdown({})}
               <GameControls
-              seed={sim.seed} onSeedChange={sim.setSeed}
-              neutral={sim.neutral} onNeutralChange={sim.setNeutral}
+              settings={sim.settings} onSettingsChange={sim.setSettings}
+              running={sim.running} progress={sim.progress}
               onShareLink={shareLink}
-              onRunSeries={() => sim.runSeries(league, home, away)}
+              onRunSeries={() => sim.runSeries(league, home, away, { packageRef })}
               hasSeries={Boolean(sim.series)} />
             
               {sim.series ?
-            <SeriesBoard league={league} series={sim.series} /> :
+            <React.Fragment>
+              <SeriesBoard league={league} series={sim.series} />
+              <NativeMatchupReport native={sim.series.native} home={home} away={away} />
+            </React.Fragment> :
 
-            <section className="myna-panel p-4 text-xs myna-muted">Sim a 7-game series between the picked teams — home court follows the 2-2-1-1-1 format with {home.code} hosting.</section>
+            <section className="myna-panel p-4 text-xs myna-muted">Sim a 7-game series with the site's engine — every game plays on neutral terms; display hosts follow the 2-2-1-1-1 pattern with {home.code} first.</section>
             }
             </div>
           }

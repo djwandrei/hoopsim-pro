@@ -1,0 +1,18 @@
+{
+  "type": "intercom",
+  "scopes": [
+    "Read and list users and companies",
+    "Write users and companies",
+    "Read events",
+    "Write events",
+    "Read conversations",
+    "Write conversations",
+    "Read tags",
+    "Write tags",
+    "Read counts",
+    "Read tickets",
+    "Write tickets",
+    "Read admins",
+    "Read and list articles"
+  ]
+}

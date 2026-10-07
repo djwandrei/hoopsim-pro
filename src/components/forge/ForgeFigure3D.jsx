@@ -23,20 +23,19 @@ const BALL_LIT = new THREE.Color('#D2571E');
 // Skeleton landmarks: x right, y up, z toward the viewer. A relaxed athletic
 // stance — soft knee bend, left arm low and slightly across, right arm raised
 // holding the ball — reads cleanly from every rotation angle.
+// Heroic statue proportions (~7.5 heads tall): broad shoulders, deep chest,
+// tapered waist, long legs. The right arm is a true shooting pose — ball
+// resting on the hand directly above the wrist.
 const P = {
-  neckA: [0, 2.04, 0.02], neckB: [0, 1.86, 0],
-  head: [0, 2.28, 0.03],
-  shoulderL: [-0.37, 1.85, 0], shoulderR: [0.37, 1.85, 0],
-  elbowL: [-0.53, 1.48, 0.06], elbowR: [0.51, 1.66, 0.13],
-  wristL: [-0.47, 1.12, 0.15], wristR: [0.7, 2.14, 0.38],
-  chestA: [0, 1.9, 0], chestB: [0, 1.46, 0],
-  waistA: [0, 1.44, 0], waistB: [0, 1.28, 0],
-  shortsA: [0, 1.34, 0], shortsB: [0, 1.08, 0],
-  hipL: [-0.18, 1.18, 0], hipR: [0.18, 1.18, 0],
-  kneeL: [-0.23, 0.6, 0.08], kneeR: [0.26, 0.6, -0.05],
-  ankleL: [-0.25, 0.17, 0.03], ankleR: [0.28, 0.17, -0.07],
-  toeL: [-0.26, 0.09, 0.33], toeR: [0.29, 0.09, 0.25],
-  ball: [0.84, 2.5, 0.52],
+  neckA: [0, 2.24, 0.02], neckB: [0, 2.02, 0.02],
+  head: [0, 2.4, 0.02],
+  shoulderL: [-0.4, 1.97, 0], shoulderR: [0.4, 1.97, 0],
+  elbowL: [-0.53, 1.6, 0.04], elbowR: [0.55, 1.72, 0.16],
+  wristL: [-0.44, 1.24, 0.1], wristR: [0.62, 2.02, 0.42],
+  hipL: [-0.15, 1.18, 0], hipR: [0.15, 1.18, 0],
+  kneeL: [-0.19, 0.62, 0.05], kneeR: [0.19, 0.62, -0.04],
+  ankleL: [-0.21, 0.16, 0], ankleR: [0.22, 0.16, -0.09],
+  ball: [0.66, 2.24, 0.5],
 };
 
 // Segment order drives the forge state: shins, thighs, shorts, torso, arms,
@@ -63,6 +62,38 @@ function sphereAt(p, r, material) {
   mesh.castShadow = true;
   return mesh;
 }
+
+// Tapered limb segment: cylinder from a (radius rA) to b (radius rB) — reads
+// as a real muscle limb rather than a constant-width tube.
+function limbBetween(a, b, rA, rB, material) {
+  const start = new THREE.Vector3(...a), end = new THREE.Vector3(...b);
+  const dir = end.clone().sub(start);
+  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(rB, rA, Math.max(0.02, dir.length()), 20, 1), material);
+  mesh.position.copy(start).add(end).multiplyScalar(0.5);
+  mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+  mesh.castShadow = true;
+  return mesh;
+}
+
+// Lathe-turned torso volumes: a continuous revolved profile gives the smooth
+// athletic silhouette (shoulders → chest → waist taper → hips) that stacked
+// capsules can't. Elliptical cross-section via z-scale.
+const SLEEVE_ELLIPSE = 0.72;
+function latheMesh(points, material) {
+  const mesh = new THREE.Mesh(new THREE.LatheGeometry(points.map(([x, y]) => new THREE.Vector2(x, y)), 28), material);
+  mesh.scale.z = SLEEVE_ELLIPSE;
+  mesh.castShadow = true;
+  return mesh;
+}
+// Jersey: waist seam up over the pec shelf, shoulder slope and trapezius
+// into the collar. Shorts: pelvis wedge from the crotch to the waistband.
+const JERSEY_PROFILE = [
+  [0.185, 1.3], [0.205, 1.36], [0.225, 1.44], [0.265, 1.56],
+  [0.3, 1.7], [0.31, 1.8], [0.27, 1.91], [0.19, 1.985], [0.105, 2.05],
+];
+const SHORTS_PROFILE = [
+  [0.02, 1.05], [0.15, 1.08], [0.235, 1.16], [0.24, 1.24], [0.215, 1.31],
+];
 
 // Soft radial glow texture for the forge aura sprite.
 function glowTexture() {
@@ -153,56 +184,59 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const deepRec = () => (deepRecStore ||= deepMat());
     const segCache = {};
 
-    // Legs & feet
-    addMesh('shin-l', capsuleBetween(P.ankleL, P.kneeL, 0.088, goldRec().mat));
-    addMesh('shin-l', capsuleBetween(P.ankleL, P.toeL, 0.072, goldRec().mat));
-    addMesh('shin-r', capsuleBetween(P.ankleR, P.kneeR, 0.088, goldRec().mat));
-    addMesh('shin-r', capsuleBetween(P.ankleR, P.toeR, 0.072, goldRec().mat));
-    // Thighs
-    addMesh('thigh-l', capsuleBetween(P.kneeL, P.hipL, 0.12, goldRec().mat));
-    addMesh('thigh-r', capsuleBetween(P.kneeR, P.hipR, 0.12, goldRec().mat));
-    // Shorts: pelvis volume with a front split seam
+    // Legs: tapered thighs and shins with quad and calf muscle volumes,
+    // sculpted shoes with a distinct heel
+    addMesh('thigh-l', limbBetween(P.kneeL, P.hipL, 0.095, 0.125, goldRec().mat));
+    addMesh('thigh-r', limbBetween(P.kneeR, P.hipR, 0.095, 0.125, goldRec().mat));
+    addMesh('shin-l', limbBetween(P.ankleL, P.kneeL, 0.055, 0.085, goldRec().mat));
+    addMesh('shin-r', limbBetween(P.ankleR, P.kneeR, 0.055, 0.085, goldRec().mat));
+    const quadL = sphereAt([P.kneeL[0] - 0.005, 0.94, P.kneeL[2] + 0.035], 0.105, goldRec().mat); quadL.scale.set(0.95, 1.35, 0.9);
+    const quadR = sphereAt([P.kneeR[0] - 0.005, 0.94, P.kneeR[2] + 0.035], 0.105, goldRec().mat); quadR.scale.set(0.95, 1.35, 0.9);
+    addMesh('thigh-l', quadL); addMesh('thigh-r', quadR);
+    const calfL = sphereAt([P.kneeL[0] + 0.005, 0.5, P.kneeL[2] - 0.035], 0.08, goldRec().mat); calfL.scale.set(1, 1.4, 0.85);
+    const calfR = sphereAt([P.kneeR[0] + 0.005, 0.5, P.kneeR[2] - 0.035], 0.08, goldRec().mat); calfR.scale.set(1, 1.4, 0.85);
+    addMesh('shin-l', calfL); addMesh('shin-r', calfR);
+    const shoeL = sphereAt([P.ankleL[0], 0.095, P.ankleL[2] + 0.12], 0.08, goldRec().mat); shoeL.scale.set(0.85, 0.6, 2);
+    const shoeR = sphereAt([P.ankleR[0], 0.095, P.ankleR[2] + 0.12], 0.08, goldRec().mat); shoeR.scale.set(0.85, 0.6, 2);
+    addMesh('shin-l', shoeL); addMesh('shin-r', shoeR);
+    // Shorts: lathe pelvis wedge with a waistband
     segCache.shortMat = deepRec().mat;
-    const shortsPelvis = new THREE.Mesh(new THREE.CapsuleGeometry(0.245, 0.18, 6, 20), segCache.shortMat);
-    shortsPelvis.position.set(0, 1.21, 0); shortsPelvis.scale.set(1.05, 1, 0.66); shortsPelvis.castShadow = true;
-    addMesh('shorts', shortsPelvis);
-    const shortWaist = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.245, 0.1, 20), segCache.shortMat);
-    shortWaist.position.set(0, 1.35, 0); shortWaist.scale.z = 0.68; shortWaist.castShadow = true;
-    addMesh('shorts', shortWaist);
-    // Torso jersey: chest + waist elliptical volumes, collar and seam lines
+    addMesh('shorts', latheMesh(SHORTS_PROFILE, segCache.shortMat));
+    const waistband = new THREE.Mesh(new THREE.TorusGeometry(0.215, 0.022, 10, 28), segCache.shortMat);
+    waistband.position.set(0, 1.33, 0); waistband.rotation.x = Math.PI / 2; waistband.scale.set(1, SLEEVE_ELLIPSE, 1); waistband.castShadow = true;
+    addMesh('shorts', waistband);
+    // Torso jersey: single lathe silhouette with subtle pec shelves and collar
     segCache.torsoMat = goldRec().mat;
-    const chest = new THREE.Mesh(new THREE.CapsuleGeometry(0.27, 0.32, 7, 22), segCache.torsoMat);
-    chest.position.set(0, 1.68, 0); chest.scale.set(1.08, 1, 0.62); chest.castShadow = true;
-    addMesh('torso', chest);
-    const waist = new THREE.Mesh(new THREE.CapsuleGeometry(0.21, 0.12, 6, 20), segCache.torsoMat);
-    waist.position.set(0, 1.36, 0); waist.scale.set(1.02, 1, 0.66); waist.castShadow = true;
-    addMesh('torso', waist);
-    const collar = new THREE.Mesh(new THREE.TorusGeometry(0.115, 0.026, 10, 24), deepRec().mat);
-    collar.position.set(0, 1.94, 0.02); collar.rotation.x = Math.PI / 2; collar.scale.z = 1.5; collar.castShadow = true;
+    addMesh('torso', latheMesh(JERSEY_PROFILE, segCache.torsoMat));
+    const pecL = sphereAt([-0.135, 1.72, 0.1], 0.15, segCache.torsoMat); pecL.scale.set(1, 0.55, 0.5);
+    const pecR = sphereAt([0.135, 1.72, 0.1], 0.15, segCache.torsoMat); pecR.scale.set(1, 0.55, 0.5);
+    addMesh('torso', pecL); addMesh('torso', pecR);
+    const collar = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.024, 10, 24), deepRec().mat);
+    collar.position.set(0, 2.02, 0.02); collar.rotation.x = Math.PI / 2; collar.scale.set(1.25, SLEEVE_ELLIPSE, 1); collar.castShadow = true;
     addMesh('torso', collar);
-    // Arms: upper, forearm and hand
-    addMesh('arm-l', capsuleBetween(P.shoulderL, P.elbowL, 0.088, goldRec().mat));
-    addMesh('arm-l', capsuleBetween(P.elbowL, P.wristL, 0.07, goldRec().mat));
-    addMesh('arm-l', sphereAt(P.wristL, 0.082, goldRec().mat));
-    addMesh('arm-r', capsuleBetween(P.shoulderR, P.elbowR, 0.088, goldRec().mat));
-    addMesh('arm-r', capsuleBetween(P.elbowR, P.wristR, 0.07, goldRec().mat));
-    addMesh('arm-r', sphereAt(P.wristR, 0.082, goldRec().mat));
-    // Deltoid caps
-    addMesh('arm-l', sphereAt([P.shoulderL[0] - 0.02, P.shoulderL[1] + 0.03, 0], 0.105, goldRec().mat));
-    addMesh('arm-r', sphereAt([P.shoulderR[0] + 0.02, P.shoulderR[1] + 0.03, 0], 0.105, goldRec().mat));
+    // Arms: deltoid cap, tapered upper arm and forearm, sculpted hand
+    addMesh('arm-l', sphereAt([P.shoulderL[0] - 0.02, P.shoulderL[1] + 0.03, 0], 0.115, goldRec().mat));
+    addMesh('arm-r', sphereAt([P.shoulderR[0] + 0.02, P.shoulderR[1] + 0.03, 0], 0.115, goldRec().mat));
+    addMesh('arm-l', limbBetween(P.shoulderL, P.elbowL, 0.082, 0.06, goldRec().mat));
+    addMesh('arm-r', limbBetween(P.shoulderR, P.elbowR, 0.082, 0.06, goldRec().mat));
+    addMesh('arm-l', limbBetween(P.elbowL, P.wristL, 0.06, 0.042, goldRec().mat));
+    addMesh('arm-r', limbBetween(P.elbowR, P.wristR, 0.06, 0.042, goldRec().mat));
+    const handL = sphereAt(P.wristL, 0.058, goldRec().mat); handL.scale.set(1, 0.85, 1.15);
+    const handR = sphereAt(P.wristR, 0.058, goldRec().mat); handR.scale.set(1, 0.85, 1.15);
+    addMesh('arm-l', handL); addMesh('arm-r', handR);
     // Joints: knees, ankles, elbows, hips
-    addMesh('shin-l', sphereAt(P.ankleL, 0.062, goldRec().mat));
-    addMesh('shin-r', sphereAt(P.ankleR, 0.062, goldRec().mat));
-    addMesh('thigh-l', sphereAt(P.kneeL, 0.082, goldRec().mat));
-    addMesh('thigh-r', sphereAt(P.kneeR, 0.082, goldRec().mat));
-    addMesh('arm-l', sphereAt(P.elbowL, 0.072, goldRec().mat));
-    addMesh('arm-r', sphereAt(P.elbowR, 0.072, goldRec().mat));
-    addMesh('thigh-l', sphereAt(P.hipL, 0.09, deepRec().mat));
-    addMesh('thigh-r', sphereAt(P.hipR, 0.09, deepRec().mat));
-    // Neck + head
-    addMesh('head', capsuleBetween(P.neckA, P.neckB, 0.075, goldRec().mat));
-    const head = sphereAt(P.head, 0.215, goldRec().mat);
-    head.scale.set(0.92, 1.06, 0.98);
+    addMesh('shin-l', sphereAt(P.ankleL, 0.06, goldRec().mat));
+    addMesh('shin-r', sphereAt(P.ankleR, 0.06, goldRec().mat));
+    addMesh('thigh-l', sphereAt(P.kneeL, 0.088, goldRec().mat));
+    addMesh('thigh-r', sphereAt(P.kneeR, 0.088, goldRec().mat));
+    addMesh('arm-l', sphereAt(P.elbowL, 0.058, goldRec().mat));
+    addMesh('arm-r', sphereAt(P.elbowR, 0.058, goldRec().mat));
+    addMesh('thigh-l', sphereAt(P.hipL, 0.088, deepRec().mat));
+    addMesh('thigh-r', sphereAt(P.hipR, 0.088, deepRec().mat));
+    // Neck + head: egg-shaped skull with a narrower jaw taper
+    addMesh('head', capsuleBetween(P.neckA, P.neckB, 0.062, goldRec().mat));
+    const head = sphereAt(P.head, 0.185, goldRec().mat);
+    head.scale.set(0.88, 1.02, 0.96);
     addMesh('head', head);
 
     scene.add(figure);

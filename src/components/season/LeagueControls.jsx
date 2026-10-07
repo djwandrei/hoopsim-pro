@@ -39,58 +39,41 @@ export default function LeagueControls({
         </span>
       </header>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[9rem_8rem_12rem_auto_auto] lg:items-end">
-        <label className="block">
+      <div className="mt-4 flex flex-wrap items-end gap-2">
+        <label className="block w-28">
           <span className={labelCls}><Calendar className="mr-1 inline h-3 w-3" />Season</span>
           <select className={fieldCls} value={year} onChange={event => onYearChange(Number(event.target.value))} disabled={running} aria-label="Season">
             {years.map(value => <option key={value} value={value}>{value}–{String(value + 1).slice(-2)}</option>)}
           </select>
         </label>
-        <label className="block">
+        <label className="block w-24">
           <span className={labelCls}><Repeat className="mr-1 inline h-3 w-3" />Replays</span>
           <select className={fieldCls} value={setup.repeats} onChange={event => onSetupChange({ ...setup, repeats: Number(event.target.value) })} disabled={running} aria-label="Replays">
             {[1, 2, 5, 10, 25, 50, 100].map(value => <option key={value} value={value}>{value}×</option>)}
           </select>
         </label>
-        <label className="block">
+        <label className="block w-36">
           <span className={labelCls}><Gauge className="mr-1 inline h-3 w-3" />Scoring mix</span>
           <select className={fieldCls} value={setup.blend} onChange={event => onSetupChange({ ...setup, blend: event.target.value })} disabled={running} aria-label="Scoring mix">
             {BLEND_OPTIONS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </label>
-        <label className="flex min-h-10 items-center gap-2 rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3">
-          <span className="text-xs">Playoffs</span>
-          <Switch aria-label="Include playoffs" checked={setup.playoffs} onCheckedChange={checked => onSetupChange({ ...setup, playoffs: checked })} disabled={running} />
-        </label>
-        <button
-          type="button"
-          onClick={onRun}
-          disabled={running || blocked}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-5 text-[11px] font-bold tracking-[0.18em] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
-          style={{ background: 'linear-gradient(115deg, var(--myna-accent), var(--myna-action-end, var(--myna-hi)))', color: 'var(--myna-on-accent)', boxShadow: '0 6px 18px color-mix(in srgb, var(--myna-accent) 30%, transparent)' }}
-        >
-          {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-          {running ? 'Simulating…' : hasResults ? 'Run new replay' : 'Run season replay'}
-        </button>
-      </div>
-
-      <div className="mt-3 grid gap-3 border-t border-[var(--myna-border)] pt-3 sm:grid-cols-2 lg:grid-cols-4">
-        <label className="block">
+        <label className="block w-36">
           <span className={labelCls}><Calendar className="mr-1 inline h-3 w-3" />Horizon</span>
           <select className={fieldCls} value={setup.horizon} onChange={event => onSetupChange({ ...setup, horizon: event.target.value })} disabled={running} aria-label="Horizon">
-            <option value="team">One game per team</option>
-            <option value="short">Short schedule</option>
-            <option value="full">Full schedule</option>
+            <option value="team">One per team</option>
+            <option value="short">Short slate</option>
+            <option value="full">Full slate</option>
           </select>
         </label>
-        <label className="block">
+        <label className="block w-36">
           <span className={labelCls}><Calendar className="mr-1 inline h-3 w-3" />Schedule source</span>
           <select className={fieldCls} value={setup.scheduleSource} onChange={event => onSetupChange({ ...setup, scheduleSource: event.target.value })} disabled={running} aria-label="Schedule source">
-            <option value="actual">Actual NBA schedule</option>
-            <option value="round-robin">Generated round-robin</option>
+            <option value="actual">Actual schedule</option>
+            <option value="round-robin">Round-robin</option>
           </select>
         </label>
-        <label className="block">
+        <label className="block w-28">
           <span className={labelCls}><Trophy className="mr-1 inline h-3 w-3" />Series length</span>
           <select className={fieldCls} value={setup.series} onChange={event => onSetupChange({ ...setup, series: event.target.value })} disabled={running} aria-label="Playoff series length">
             <option value="7">Best of 7</option>
@@ -99,6 +82,20 @@ export default function LeagueControls({
             <option value="1">One game</option>
           </select>
         </label>
+        <label className="flex min-h-10 items-center gap-2 self-stretch rounded-lg border border-[var(--myna-border)] bg-[var(--myna-canvas)] px-3 pb-1">
+          <span className="text-xs">Playoffs</span>
+          <Switch aria-label="Include playoffs" checked={setup.playoffs} onCheckedChange={checked => onSetupChange({ ...setup, playoffs: checked })} disabled={running} />
+        </label>
+        <button
+          type="button"
+          onClick={onRun}
+          disabled={running || blocked}
+          className="ml-auto inline-flex min-h-10 items-center justify-center gap-2 self-stretch rounded-lg px-5 text-[11px] font-bold tracking-[0.18em] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+          style={{ background: 'linear-gradient(115deg, var(--myna-accent), var(--myna-action-end, var(--myna-hi)))', color: 'var(--myna-on-accent)', boxShadow: '0 6px 18px color-mix(in srgb, var(--myna-accent) 30%, transparent)' }}
+        >
+          {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+          {running ? 'Simulating…' : hasResults ? 'Run new replay' : 'Run season replay'}
+        </button>
       </div>
 
       {running && (

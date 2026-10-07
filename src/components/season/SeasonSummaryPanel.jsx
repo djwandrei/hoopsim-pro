@@ -1,11 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { ChevronDown, Crown, TrendingUp, TrendingDown, Star } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
-import { buildPlayerAverages } from '@/lib/season/playerAverages';
 
-// Interactive post-simulation recap: champion banner, key-metric tiles
-// (clickable to refocus the hub) and a top-scorers strip.
-export default function SeasonSummaryPanel({ summary, repeats, simGames, actualRecords, league, championCode, onFocusChange }) {
+// Interactive post-simulation recap: champion banner and key-metric tiles
+// (clickable to refocus the hub). Leaders live on the League leaders panel.
+export default function SeasonSummaryPanel({ summary, repeats, actualRecords, league, championCode, onFocusChange }) {
   const [open, setOpen] = useState(true);
 
   const model = useMemo(() => {
@@ -75,7 +74,7 @@ export default function SeasonSummaryPanel({ summary, repeats, simGames, actualR
               </div>
             </button>
           )}
-          <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
             <button type="button" className={tile} onClick={() => onFocusChange?.(best.code)}>
               <span className={tileLabel}><Star className="h-3 w-3" />Best record</span>
               <TeamMark code={best.code} name={best.code} className="mt-2 h-8 w-8" />

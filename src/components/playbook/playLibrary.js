@@ -71,6 +71,6 @@ function parseLibrary(markdown) {
     if (readMatch && inReads) play.reads.push(readMatch[1].trim());
   }
   const kept = categories.filter((item) => item.plays.length > 0);
-  kept.forEach((item) => item.plays.forEach((play) => { play.tags = tagsForPlay(play, item.title); }));
+  kept.forEach((item) => item.plays.forEach((play) => { play.category = item.title; play.tags = tagsForPlay(play, item.title); }));
   return { categories: kept, playCount: kept.reduce((total, item) => total + item.plays.length, 0) };
 }

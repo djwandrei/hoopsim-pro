@@ -41,6 +41,7 @@ export default function Playbook() {
   const [playId, setPlayId] = useState(initialParams.get('play'));
   const [stepIndex, setStepIndex] = useState(Number(initialParams.get('step')) || 0);
   const [playing, setPlaying] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [mirrored, setMirrored] = useState(false);
   const courtRef = useRef(null);
@@ -63,15 +64,13 @@ export default function Playbook() {
     finally { setExporting(false); }
   }, [exporting, play, safeStep]);
 
-  // Auto-advance through the steps while playing.
-  useEffect(() => {
-    if (!playing || safeStep >= stepCount - 1) {
-      if (playing && safeStep >= stepCount - 1) setPlaying(false);
-      return;
-    }
-    const timer = setTimeout(() => setStepIndex((current) => Math.min(current + 1, stepCount - 1)), ((frame?.duration || 1800) + 450) / speed);
-    return () => clearTimeout(timer);
-  }, [playing, safeStep, speed, stepCount, frame]);
+  // Advance only when the shared player/ball clock finishes, including the
+  // final step. Pausing and speed changes never reset a second timeout.
+  const handleFrameComplete = useCallback(() => {
+    if (!playing) return;
+    if (safeStep < stepCount - 1) setStepIndex(current => Math.min(current + 1, stepCount - 1));
+    else setPlaying(false);
+  }, [playing, safeStep, stepCount]);
 
   // Shareable call: the selected play and step live in the URL.
   useEffect(() => {
@@ -82,9 +81,10 @@ export default function Playbook() {
 
   const handleTogglePlay = () => {
     if (!playing && safeStep >= stepCount - 1) setStepIndex(0);
+    setPaused(playing);
     setPlaying((current) => !current);
   };
-  const handleRestart = () => { setPlaying(false); setStepIndex(0); };
+  const handleRestart = () => { setPaused(false); setPlaying(false); setStepIndex(0); };
   const handleCycleSpeed = () => setSpeed((current) => SPEEDS[(SPEEDS.indexOf(current) + 1) % SPEEDS.length]);
 
   return (
@@ -111,7 +111,7 @@ export default function Playbook() {
         )}
         {library && play && frame && (
           <div className="grid items-start gap-4 lg:grid-cols-[290px_minmax(0,1fr)]">
-            <PlayLibraryList categories={library.categories} selectedId={play.id} onSelect={(id) => { setPlaying(false); setStepIndex(0); setPlayId(id); }} />
+            <PlayLibraryList categories={library.categories} selectedId={play.id} onSelect={(id) => { setPaused(false); setPlaying(false); setStepIndex(0); setPlayId(id); }} />
             <div className="min-w-0 space-y-4">
               <div className="court-panel p-4 sm:p-5">
                 <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
@@ -126,7 +126,7 @@ export default function Playbook() {
                     </button>
                   </div>
                 </div>
-                <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} speed={speed} /></div>
+                <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} speed={speed} paused={paused} playing={playing} onComplete={handleFrameComplete} /></div>
                 <div className="mt-4">
                   <PlayControls
                     stepIndex={safeStep}
@@ -134,13 +134,13 @@ export default function Playbook() {
                     playing={playing}
                     speed={speed}
                     mirrored={mirrored}
-                    onPrev={() => { setPlaying(false); setStepIndex((current) => Math.max(0, current - 1)); }}
-                    onNext={() => setStepIndex((current) => Math.min(stepCount - 1, current + 1))}
+                    onPrev={() => { setPaused(false); setPlaying(false); setStepIndex((current) => Math.max(0, current - 1)); }}
+                    onNext={() => { setPaused(false); setStepIndex((current) => Math.min(stepCount - 1, current + 1)); }}
                     onTogglePlay={handleTogglePlay}
                     onRestart={handleRestart}
                     onCycleSpeed={handleCycleSpeed}
                     onToggleMirror={() => setMirrored((current) => !current)}
-                    onScrub={(index) => { setPlaying(false); setStepIndex(index); }}
+                    onScrub={(index) => { setPaused(false); setPlaying(false); setStepIndex(index); }}
                   />
                 </div>
               </div>

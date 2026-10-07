@@ -1,5 +1,5 @@
 import { actionClauses } from '@/components/playbook/playClauses';
-import { COURT, ZONE_RE, clonePositions, sideAt, sideOf, zoneKey, zonePoint, clampPoint } from '@/components/playbook/playGeometry';
+import { ZONE_RE, clonePositions, sideAt, sideOf, zoneKey, zonePoint, clampPoint } from '@/components/playbook/playGeometry';
 const MOVE = /\b(?:moves?|cuts?|sprints?|runs?|drifts?|lifts?|rises?|slides?|fills?|attacks?|drives?|clears?|exits?|relocates?|retreats?|steps?|walks?|goes?|flows?|slips?|pops?|flashes?|dribbles?|brings?|advances?|pushes?|rolls?|dives?|occupies|spaces?|settles?|establishes?|begins?|starts?|turns?|flatten|rotates?|places?)\b/i;
 function destination(body) {
   const matches = [...body.matchAll(ZONE_RE)].filter(match => {
@@ -17,8 +17,12 @@ function destination(body) {
 function screenPoint(body, screener, target, positions, owner, priorScreens) {
   const receiver = positions[target] || positions[owner];
   const dir = receiver[0] >= 250 ? -1 : 1;
-  if (/back[-\s]?screen|rip screen/i.test(body)) return clampPoint([receiver[0], receiver[1] - 62]);
-  if (/pindown|pin-down|down screen|screen.*desired catch/i.test(body)) return clampPoint([receiver[0] + dir * 42, receiver[1] + 58]);
+  if (/back[-\s]?screen|rip screen/i.test(body)) {
+    const handler = positions[owner];
+    if (receiver[1] < 145 && target !== owner) return clampPoint([receiver[0] - dir * 62, (receiver[1]+handler[1])/2]);
+    return clampPoint([receiver[0], receiver[1] - 62]);
+  }
+  if (/pindown|pin-down|down screen|moves? down.*screen|screen.*desired catch/i.test(body)) return clampPoint([receiver[0] + dir * 42, receiver[1] + 58]);
   if (/flare/.test(body)) return clampPoint([receiver[0] - dir * 62, receiver[1] - 24]);
   if (/cross|flex/.test(body)) return clampPoint([receiver[0] + dir * 66, Math.min(receiver[1], 126)]);
   const previous = priorScreens.find(s => s.screener !== screener && s.target === target);
@@ -86,7 +90,7 @@ export function applyActions(text, offense, ballOwner, previousScreens = []) {
         let target = zonePoint(zoneKey(zone[0]), side);
         if (/\b(?:middle|center)\b/i.test(zone[0]) && /pushes?|advances?|brings?/i.test(body)) target = [250, Math.max(270, start[1] - 90)];
         place(id, target);
-      } else if (/\brolls?|dives?|backcuts?\b/i.test(body)) place(id, COURT.rim);
+      } else if (/\brolls?|dives?|backcuts?\b/i.test(body)) place(id, zonePoint('rim'));
       else if (/\bpops?\b/i.test(body)) place(id, zonePoint('slot', ownSide));
       else if (/turns? the corner|downhill|drives?|penetrates?/i.test(body)) place(id, [250 + (ownSide === 'right' ? 46 : -46), 138]);
       else if (/\bclears?|exits?|flares?\b/i.test(body)) place(id, zonePoint('corner', ownSide === ballSide ? (ballSide === 'right' ? 'left' : 'right') : ownSide));
@@ -102,7 +106,7 @@ export function applyActions(text, offense, ballOwner, previousScreens = []) {
   const ordinal = /\b(first|second) screener\b.*?\b(pops?|short-rolls?|rolls?)\b/i.exec(text);
   if (ordinal && !/\b(?:if|can|depending)\b/i.test(text)) {
     const screen = previousScreens[ordinal[1].toLowerCase() === 'first' ? 0 : 1];
-    if (screen) place(screen.screener, /pop/i.test(ordinal[2]) ? zonePoint('slot', sideAt(offense[screen.screener])) : COURT.rim);
+    if (screen) place(screen.screener, /pop/i.test(ordinal[2]) ? zonePoint('slot', sideAt(offense[screen.screener])) : zonePoint('rim'));
   }
   return { next, moved, screens, via };
 }

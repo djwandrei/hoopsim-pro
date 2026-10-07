@@ -1,7 +1,7 @@
 import { clampPoint, distance } from '@/components/playbook/playGeometry';
 // Check movement in time, not just landing spots. Detours are local additions
 // to the routed path; stationary players are never displaced to fix a crossing.
-export default function separateRoutes(initial, sample, detour) {
+export default function separateRoutes(initial, sample, detour, height = 470) {
   let routes = initial;
   const ids = Object.keys(routes);
   const inspect = paths => {
@@ -27,7 +27,7 @@ export default function separateRoutes(initial, sample, detour) {
       if (distance(routes[id][0], routes[id][routes[id].length - 1]) < 1) continue;
       const center = id === clash.a ? clash.pa : clash.pb;
       for (const radius of [64, 96, 136]) for (let angle = 0; angle < 8; angle++) {
-        const waypoint = clampPoint([center[0]+Math.cos(angle*Math.PI/4)*radius,center[1]+Math.sin(angle*Math.PI/4)*radius]);
+        const waypoint = clampPoint([center[0]+Math.cos(angle*Math.PI/4)*radius,center[1]+Math.sin(angle*Math.PI/4)*radius], height);
         const candidate = { ...routes, [id]: detour(id, routes[id], waypoint, clash.t) };
         const check = inspect(candidate);
         if (check.score < bestCheck.score - 0.01) { best = candidate; bestCheck = check; }

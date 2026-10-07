@@ -1,6 +1,21 @@
 import { NBA_FILM } from '@/components/playbook/nbaFilmCatalog';
 // Specific action names first. Related sets are never labelled exact matches.
 export const FILM_LINKS = [
+  { match: /^Box-and-One$/i, sources: ['boxone'], exact: ['box-and-one'] },
+  { match: /^2-3 Zone$/i, sources: ['heatZone', 'zone'], exact: ['2-3-zone'] },
+  { match: /^1-3-1 Zone$/i, sources: ['braun'], exact: ['1-3-1-zone'] },
+  { match: /Scram Switch/i, sources: ['scram'], exact: ['scram-switch'] },
+  { match: /Triple Switch vs Spain/i, sources: ['rocketsSwitch'], exact: ['triple-switch-vs-spain'] },
+  { match: /^(Switch|Switch Everything)$/i, sources: ['rocketsSwitch'], exact: ['switch', 'switch-everything'] },
+  { match: /^Hedge/i, sources: ['hedge'], exact: ['hedge-show'] },
+  { match: /^Ice/i, sources: ['ice'], exact: ['ice-down'] },
+  { match: /^Under$/i, sources: ['under'], exact: ['under'] },
+  { match: /Drop/i, sources: ['davisDrop', 'drop'], exact: ['drop-coverage', 'deep-drop'] },
+  { match: /Blitz/i, sources: ['braun', 'pressure'], exact: ['blitz-trap'] },
+  { match: /At-Level/i, sources: ['braun', 'davisDrop'] },
+  { match: /Diamond Press|2-2-1 Press|Run-and-Jump|Half-Court Trap/i, sources: ['pressure', 'transition'] },
+  { match: /Hammer/i, sources: ['hammer'], exact: ['hammer'] },
+  { match: /^45 Cut$/i, sources: ['braun'], exact: ['45-cut'] },
   { match: /^horns/i, sources: ['horns'], exact: ['horns'] },
   { match: /spain/i, sources: ['spain'], exact: ['spain-pick-and-roll'] },
   { match: /\b(?:blob|slob)\b|^box|^diamond|stack|^line$|four across/i, sources: ['inbound'] },

@@ -1,19 +1,20 @@
 // Export the current playbook diagram as a PNG: the live SVG is serialized
 // with its design tokens resolved to literal colors, then rasterized at 2x.
-const TOKENS = ['--court-canvas', '--court-accent', '--court-focus', '--court-trim', '--court-line', '--court-rim'];
+const TOKENS = ['--court-canvas', '--court-accent', '--court-focus', '--court-trim', '--court-trim-ink', '--court-line', '--court-rim', '--court-wood', '--court-wood-dark', '--court-team-hint'];
 
 export async function exportCourtDiagram(svg, filename) {
   if (!svg) return;
   const styles = window.getComputedStyle(svg);
   const clone = svg.cloneNode(true);
   clone.setAttribute('width', '1000');
-  clone.setAttribute('height', '940');
+  const height = svg.viewBox.baseVal.height * 2;
+  clone.setAttribute('height', String(height));
   let markup = new XMLSerializer().serializeToString(clone);
   for (const token of TOKENS) {
     const value = styles.getPropertyValue(token).trim();
     if (value) markup = markup.split(`var(${token})`).join(value);
   }
-  markup = markup.replace(/var\(--font-mono\)/g, 'ui-monospace, Menlo, Consolas, monospace');
+  markup = markup.replace(/var\(--font-mono\)/g, 'ui-monospace, Menlo, Consolas, monospace').replace(/var\(--font-display\)/g, 'Impact, sans-serif');
   const source = `<?xml version="1.0" encoding="UTF-8"?>${markup}`;
   const svgUrl = URL.createObjectURL(new Blob([source], { type: 'image/svg+xml;charset=utf-8' }));
   try {
@@ -25,7 +26,7 @@ export async function exportCourtDiagram(svg, filename) {
     });
     const canvas = document.createElement('canvas');
     canvas.width = 1000;
-    canvas.height = 940;
+    canvas.height = height;
     const context = canvas.getContext('2d');
     const canvasColor = styles.getPropertyValue('--court-canvas').trim();
     context.fillStyle = canvasColor ? `hsl(${canvasColor})` : '#0b1220';

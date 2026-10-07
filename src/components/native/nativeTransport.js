@@ -13,8 +13,8 @@ async function relay(path) {
   active += 1;
   let lastError;
   try {
-    for (let attempt = 0; attempt < 4; attempt += 1) {
-      if (attempt) await sleep(500 * attempt);
+    for (let attempt = 0; attempt < 6; attempt += 1) {
+      if (attempt) await sleep(600 * attempt);
       try {
         const { base44 } = await import('@/api/base44Client');
         const response=await base44.functions.invoke('swishiqSeasonSource',{assetPath:path});
@@ -26,6 +26,7 @@ async function relay(path) {
       }
     }
   } finally { active -= 1;waiters.shift()?.(); }
+  if (String(lastError?.message || '').includes('status code')) throw new Error('The Studio source relay is temporarily unavailable — try again in a moment.');
   throw lastError;
 }
 // Standalone site build: fetch directly from the site (same-origin) and verify

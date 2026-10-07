@@ -4,7 +4,7 @@ import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import SourceStatus from '@/components/studio/SourceStatus';
 import useSeasonSource from '@/hooks/useSeasonSource';
-import useSeasonSim from '@/hooks/useSeasonSim';
+import useNativeSeasonSim from '@/hooks/useNativeSeasonSim';
 import MyNbaHub from '@/components/season/MyNbaHub';
 import LeagueControls from '@/components/season/LeagueControls';
 import LeagueHero from '@/components/season/LeagueHero';
@@ -18,13 +18,14 @@ import LeagueAwards from '@/components/season/LeagueAwards';
 import SeasonSummaryPanel from '@/components/season/SeasonSummaryPanel';
 import SeasonHistoryPanel from '@/components/season/SeasonHistoryPanel';
 import SeasonCompare from '@/components/season/SeasonCompare';
+import FranchiseLab from '@/components/season/FranchiseLab';
 import { actualRecordsFrom } from '@/lib/season/seasonRecords';
 import '@/components/season/seasonTables.css';
 
 export default function SeasonLab() {
   usePageMeta({ title: 'Season Lab — SwishIQ Studio', description: 'Explore any published NBA season: standings, brackets, schedules, leaders and full season simulation.' });
   const { year, setYear, years, source, league, state, error, retry } = useSeasonSource();
-  const sim = useSeasonSim();
+  const sim = useNativeSeasonSim();
   const [tab, setTab] = useState('hub');
   const [focus, setFocus] = useState('BOS');
 
@@ -51,6 +52,10 @@ export default function SeasonLab() {
 
   const summary = sim.result?.summary || null;
   const simGames = sim.result?.games || null;
+  // The schedule tab overlays replay scores position-by-position, so it needs
+  // the replay games aligned to the actual schedule rows (holes where the
+  // horizon cut games off).
+  const scheduleSimGames = sim.result?.scheduleGames ?? simGames;
   const team = league.byCode.get(focus) || league.teams[0];
   const simRow = summary ? summary.find(row => row.code === team.code) || null : null;
   const actualRecord = actualRecords.get(team.code) || null;
@@ -85,7 +90,7 @@ export default function SeasonLab() {
             onYearChange={changeYear}
             setup={sim.setup}
             onSetupChange={sim.setSetup}
-            onRun={() => sim.run(league, source.schedule)}
+            onRun={() => sim.run(league, source.schedule, year)}
             running={sim.running}
             progress={sim.progress}
             hasResults={Boolean(sim.result)}
@@ -114,13 +119,16 @@ export default function SeasonLab() {
               <PlayoffBracket bracket={sim.result?.bracket} onFocusChange={setFocus} />
             )}
             {tab === 'schedule' && (
-              <LeagueSchedule league={league} schedule={source.schedule || []} simGames={simGames} focusCode={team.code} onFocusChange={setFocus} />
+              <LeagueSchedule league={league} schedule={source.schedule || []} simGames={scheduleSimGames} focusCode={team.code} onFocusChange={setFocus} />
             )}
             {tab === 'team' && (
               <LeagueTeamView team={team} simRow={simRow} league={league} actualWins={actualRecord?.w} />
             )}
             {tab === 'log' && (
               <PlayerStatsLog team={team} simGames={simGames} />
+            )}
+            {tab === 'franchise' && (
+              <FranchiseLab year={year} league={league} />
             )}
           </div>
         </MyNbaHub>

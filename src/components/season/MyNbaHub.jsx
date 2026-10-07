@@ -3,7 +3,7 @@ import { mix, paletteForTeam, themeFor } from '@/components/djhc/basketballPalet
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { matchupThemeVars, teamThemeVars } from '@/components/game/matchupTheme';
 
-const SEASON_TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['compare', 'COMPARE'], ['bracket', 'BRACKET'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM'], ['log', 'PLAYER LOG']];
+const SEASON_TABS = [['hub', 'HUB'], ['standings', 'STANDINGS'], ['compare', 'COMPARE'], ['bracket', 'BRACKET'], ['schedule', 'SCHEDULE'], ['team', 'MY TEAM'], ['log', 'PLAYER LOG'], ['franchise', 'FRANCHISE']];
 
 // MyNBA-style league hub shell: every panel is themed by the focused team's
 // palette. When an opposing team is supplied (Game Lab), the canvas blends

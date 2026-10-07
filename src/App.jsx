@@ -7,6 +7,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
+import GaPageView from '@/components/GaPageView';
 import { STANDALONE, SITE_BASE } from '@/lib/deployConfig';
 import RouteFallback from '@/components/studio/RouteFallback';
 // Add page imports here
@@ -40,6 +41,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router basename={STANDALONE ? SITE_BASE : undefined}>
           <ScrollToTop />
+          <GaPageView />
           <Suspense fallback={<RouteFallback />}>
           <Routes>
             {/* Add your page Route elements here */}

@@ -74,7 +74,8 @@ async function load() {
       rhs[ih] += w * m; rhs[ia] -= w * m;
     }
     for (let i = 0; i < dim; i++) N[i * dim + i] += i === ic ? 100 : 30;
-    const ratings = solveLinear(N, rhs, dim);
+    const srsMatrix = []; for (let i = 0; i < dim; i++) { const row = new Float64Array(dim + 1); for (let j = 0; j < dim; j++) row[j] = N[i * dim + j]; row[dim] = rhs[i]; srsMatrix.push(row); }
+    const ratings = solveLinear(srsMatrix, dim);
     const strOf = t => (ratings ? ratings[idxOf.get(t)] : 0);
 
     for (const g of rows) {
@@ -228,7 +229,7 @@ function runCandidate(db, cfg) {
 
     for (const f of rows) {
       const xT = stdT[f.idx], xM = stdM[f.idx];
-      const total = bT ? 1 + xT.reduce((s, v, i) => s + v * bT[i + 1], 0) * 1 + bT[0] : 226;
+      const total = bT ? bT[0] + xT.reduce((s, v, i) => s + v * bT[i + 1], 0) : 226;
       const margin = bM ? bM[0] + xM.reduce((s, v, i) => s + v * bM[i + 1], 0) : 2.5;
       const g = f.g;
       let p = 0.5;
@@ -285,7 +286,7 @@ function evalLosses(db, out) {
     const ph = Math.min(1 - 1e-6, Math.max(1e-6, r.p));
     const y = r.obsM > 0 ? 1 : 0;
     return {
-      season: r.season, date: r.date,
+      season: r.season, date: r.date, p: r.p,
       brier: (r.p - y) * (r.p - y),
       log: -(y * Math.log(ph) + (1 - y) * Math.log(1 - ph)),
       maeH: Math.abs((r.obsT + r.obsM) / 2 - (r.total + r.margin) / 2),
@@ -300,11 +301,11 @@ function summarize(lossesArr) {
   const s = { n: lossesArr.length };
   for (const k of METRICS) { let sum = 0, n = 0; for (const r of lossesArr) { if (k === 'crpsM' && !isFinite(r.crpsM)) continue; sum += r[k]; n++; } s[k] = n ? sum / n : NaN; }
   s.acc = lossesArr.filter(r => r.correct).length / lossesArr.length;
-  const bins = Array.from({ length: 10 }, () => ({ s: 0, n: 0 }));
-  for (const r of lossesArr) { const b = Math.min(9, Math.max(0, Math.floor(r.p * 10))); bins[b].s += r.p; bins[b].n++; }
-  s.ece = bins.reduce((acc, b) => b.n ? acc + b.n / lossesArr.length * Math.abs(b.s / b.n - b.s / b.n) : acc, 0) // placeholder replaced below
-    ; void s.ece;
-  s.ece = 0; // computed properly in the run script if needed
+  const bins = Array.from({ length: 10 }, () => ({ s: 0, n: 0, o: 0 }));
+  for (const r of lossesArr) { const b = Math.min(9, Math.max(0, Math.floor(r.p * 10))); bins[b].s += r.p; bins[b].n++; bins[b].o += (r.p >= 0.5 ? 1 : 0) * (r.obsM > 0 ? 1 : 0); }
+  let ece = 0;
+  for (const b of bins) if (b.n) { ece += (b.n / lossesArr.length) * Math.abs(b.o / b.n - b.s / b.n); }
+  s.ece = ece;
   return s;
 }
 

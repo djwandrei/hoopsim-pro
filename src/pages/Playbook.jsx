@@ -6,7 +6,7 @@ import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import { loadPlayLibrary, findPlay } from '@/components/playbook/playLibrary';
 import { buildFrames } from '@/components/playbook/playAnimation';
 import { tagLabel } from '@/components/playbook/playTags';
-import { filmLinkForPlay } from '@/components/playbook/playVideos';
+import { filmLinksForPlay } from '@/components/playbook/playVideos';
 import PlayCourt from '@/components/playbook/PlayCourt';
 import PlayControls from '@/components/playbook/PlayControls';
 import PlayStepPanel from '@/components/playbook/PlayStepPanel';
@@ -43,7 +43,7 @@ export default function Playbook() {
   const [mirrored, setMirrored] = useState(false);
 
   const play = useMemo(() => (library ? findPlay(library, playId) || library.categories[0]?.plays[0] : null), [library, playId]);
-  const film = useMemo(() => filmLinkForPlay(play), [play]);
+  const filmLinks = useMemo(() => filmLinksForPlay(play), [play]);
   const animation = useMemo(() => (play ? buildFrames(play) : null), [play]);
   const frames = useMemo(() => (animation ? [{ ...animation.setup }, ...animation.frames] : []), [animation]);
   const stepCount = frames.length;
@@ -108,11 +108,11 @@ export default function Playbook() {
                     {(play.tags || []).map((id) => (
                       <span key={id} className="rounded-full border border-border/40 bg-raised/30 px-2 py-0.5 font-mono text-[10.4px] text-muted-foreground">{tagLabel(id)}</span>
                     ))}
-                    {film && (
-                      <a href={film.url} target="_blank" rel="noreferrer" title={film.label} className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2.5 font-mono text-[10.4px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20">
-                        <Film className="h-3 w-3" />Watch film
+                    {filmLinks.map((film) => (
+                      <a key={film.url} href={film.url} target="_blank" rel="noreferrer" title={film.label} className="inline-flex min-h-8 max-w-[13rem] items-center gap-1.5 truncate rounded-full border border-gold/40 bg-gold/10 px-2.5 font-mono text-[10.4px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20">
+                        <Film className="h-3 w-3 shrink-0" />{film.label}
                       </a>
-                    )}
+                    ))}
                   </div>
                 </div>
                 <PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} />

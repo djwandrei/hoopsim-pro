@@ -78,7 +78,7 @@ export default function CompletionPanel({ total, max, entries, otherGamePath, ot
             <li key={entry.key} className="rounded-lg border border-border/30 bg-canvas/40 px-3 py-2.5">
               <div className="dg-complete__row">
                 <span className="dg-complete__row-name">{index + 1}. {entry.title}</span>
-                <span className="dg-complete__row-pts">{entry.points}/{entry.maxPoints}</span>
+                <span className="dg-complete__row-pts">{entry.maxPoints > 0 ? `${entry.points}/${entry.maxPoints}` : 'No Game Points'}</span>
               </div>
               <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-raised/60">
                 <span className="block h-full rounded-full bg-gold/80" style={{ width: `${entryPct}%` }} />

@@ -10,7 +10,8 @@
  * through the app backend on hosted previews or calls the site evaluator
  * directly same-origin on the standalone build.
  */
-import { loadNativeModule, originalFetch } from '@/components/native/nativeTransport';
+import { loadNativeModule } from '@/components/native/nativeModules';
+import { originalFetch } from '@/components/native/nativeTransport';
 import { STANDALONE, SITE_ORIGIN } from '@/lib/deployConfig';
 
 export const SWISHIQ_DAILY_GAME_KINDS = Object.freeze(['fix-the-five', 'draft-night']);

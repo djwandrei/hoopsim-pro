@@ -6,6 +6,7 @@ import usePageMeta from '@/hooks/usePageMeta';
 import PackReveal from '@/components/packs/PackReveal';
 import PackHistory from '@/components/packs/PackHistory';
 import { base44 } from '@/api/base44Client';
+import { trackGa4 } from '@/lib/gaBridge';
 import {
   PACK_SIZE,
   TIER_META,
@@ -46,7 +47,9 @@ export default function VirtualPacks() {
       const { cards, receipt } = await openPack(PACK_SIZE);
       setPack({ cards, receipt });
       setHistory(prependPackHistory({ openedAt: receipt.openedAt, cards }));
-      setStatus(`Pack opened — best pull: ${(cards.reduce((best, card) => (TIER_ODDS.findIndex(([tier]) => tier === card.tier) > TIER_ODDS.findIndex(([tier]) => tier === best.tier) ? card : best), cards[0]) || {}).name || '—'}`);
+      const bestPull = cards.reduce((best, card) => (TIER_ODDS.findIndex(([tier]) => tier === card.tier) > TIER_ODDS.findIndex(([tier]) => tier === best.tier) ? card : best), cards[0]) || {};
+      trackGa4('pack_opened', { card_count: cards.length, best_tier: bestPull.tier || 'unknown', best_value_cents: Number(bestPull.valueCents) || 0 });
+      setStatus(`Pack opened — best pull: ${bestPull.name || '—'}`);
     } catch (error) {
       setStatus(error?.message || 'The pack draw failed. Try again shortly.');
     } finally {

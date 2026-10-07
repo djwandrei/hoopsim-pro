@@ -18,6 +18,7 @@ import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsSt
 import { gradeBet, profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRobinCombos, TEASER_POINTS } from '@/components/book/betsMath';
 import { modelEdgePct } from '@/lib/bookRoom/modelEdge';
 import { base44 } from '@/api/base44Client';
+import { trackGa4 } from '@/lib/gaBridge';
 import { AlertTriangle, Coins, RefreshCcw, UserRound, Wallet } from 'lucide-react';
 
 const BONUS_AMOUNT = 250;
@@ -126,6 +127,9 @@ export default function BookRoom() {
     if (!Array.isArray(legs) || legs.length === 0) return;
     const stakeCredits = Math.round(Number(stake));
     if (!Number.isFinite(stakeCredits) || stakeCredits < 1) return;
+    const outlay = mode === 'roundrobin' ? stakeCredits * roundRobinCombos(legs, 2).length : stakeCredits;
+    if (outlay > book.bankroll) return;
+    trackGa4('bet_placed', { mode, legs: legs.length, stake: stakeCredits });
     const at = new Date().toISOString();
     // Bankroll guard runs against the live state inside the updater, so a
     // stale slip (or a double submit) can never overdraw the wallet.

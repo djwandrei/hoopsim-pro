@@ -19,6 +19,7 @@ import PreGameDisclosure from '@/components/game/PreGameDisclosure';
 import LiveBoxScore from '@/components/game/LiveBoxScore';
 import SavedResultsShelf from '@/components/game/SavedResultsShelf';
 import { loadSavedResults, saveSavedResult, removeSavedResult } from '@/lib/savedResults';
+import { trackGa4 } from '@/lib/gaBridge';
 
 export default function GameLab() {
   usePageMeta({ title: 'Game Lab — SwishIQ Studio', description: 'Simulate any NBA matchup or full seven-game series with live play-by-play and series momentum.' });
@@ -51,6 +52,14 @@ export default function GameLab() {
 
   // A freshly simulated series clears any open per-game drill-down.
   useEffect(() => { setDrillGame(null); }, [sim.series]);
+
+  // Analytics: report completed sims to GA4 (best-effort, never blocking).
+  useEffect(() => {
+    if (sim.game) trackGa4('game_sim_completed', { home: sim.game.home, away: sim.game.away, seed: String(sim.seed), neutral: sim.neutral });
+  }, [sim.game]);
+  useEffect(() => {
+    if (sim.series) trackGa4('series_sim_completed', { home: sim.series.home, away: sim.series.away, home_wins: sim.series.homeWins, away_wins: sim.series.awayWins, seed: String(sim.seed) });
+  }, [sim.series]);
 
   useEffect(() => {
     if (!league) return;

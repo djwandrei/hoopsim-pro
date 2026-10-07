@@ -20,7 +20,7 @@ export default function ForgeReelPanel({
       <ForgeReel label="Player" items={playerItems} getKey={player => player.playerRef} getPrimary={player => player.name.split(' ')[0]} getSub={player => player.name.split(' ').slice(1).join(' ')} spinRequest={playerSpin} spinning={spinning} fast={fast} />
     </div>
     {!landed && <button type="button" onClick={onSpin} disabled={spinning || spinDisabled} className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg bg-primary text-sm font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40">
-      {spinning ? 'Spinning…' : armedSkill ? `Spin for ${armedSkill.label}` : filled.length ? 'Spin again' : 'Spin'}
+      {spinning ? 'Spinning…' : armedSkill ? `Spin for ${armedSkill.label}` : 'Spin'}
     </button>}
     {landed && <div className="mt-1.5 grid grid-cols-[1fr,auto,1fr] items-stretch gap-1.5">
       <button type="button" onClick={onRespinTeam} disabled={!teamRespins || spinning} className="flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-lg border border-trim/40 bg-trim/10 px-1 text-[10px] font-semibold uppercase tracking-wider text-trim-ink transition-colors hover:bg-trim/20 disabled:cursor-not-allowed disabled:opacity-40">

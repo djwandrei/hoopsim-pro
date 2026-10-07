@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Loader2, PackageOpen } from 'lucide-react';
-import { Image } from '@/components/ui/image';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import usePageMeta from '@/hooks/usePageMeta';
 import PackReveal from '@/components/packs/PackReveal';
 import PackHistory from '@/components/packs/PackHistory';
-import { studioAsset } from '@/components/studio/teamAssets';
 import { base44 } from '@/api/base44Client';
 import { trackGa4 } from '@/lib/gaBridge';
 import {
@@ -83,15 +81,6 @@ export default function VirtualPacks() {
       status={busy ? 'Drawing pack' : pool === null ? 'Loading card pool' : `${poolTotal.toLocaleString()} cards in the pool`} />
     
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
-      {/* Hero: pack art beside the display title */}
-      <section className="rise-in flex items-center gap-4 hidden">
-        <Image src={studioAsset('virtual-packs-emblem-20261007.png')} alt="Virtual Packs emblem — fanned holographic cards over a gold foil pack" fittingType="fit" className="h-20 w-20 shrink-0 sm:h-24 sm:w-24" />
-        <div className="min-w-0">
-          <h1 className="court-display text-3xl tracking-wide text-foreground sm:text-4xl">VIRTUAL PACKS<span className="text-gold">.</span></h1>
-          <p className="mt-1 max-w-2xl text-xs leading-relaxed text-muted-foreground">NBA virtual trading card packs drawn from the real collector market — PSA-graded scans across the 2017–26 player pool, priced by PSA price-guide values, five cards per pack.</p>
-        </div>
-      </section>
-
       <section className="rise-in grid gap-4 lg:grid-cols-[300px,minmax(0,1fr)]" style={{ '--rise-delay': '60ms' }}>
         {/* Simulation-only callout */}
         <aside className="rounded-xl border-2 border-foreground/70 bg-canvas/60 p-4">

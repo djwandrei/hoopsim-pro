@@ -9,7 +9,7 @@ const VIEWS = [
 ];
 
 export default function ForgeModelCompare() {
-  return <div className="studio-workspace min-h-screen bg-canvas px-6 py-8">
+  return <div className="studio-workspace min-h-screen bg-canvas px-4 py-6 sm:px-6 sm:py-8">
     <header className="mb-6">
       <p className="court-kicker">Forge Lab</p>
       <h1 className="court-display text-3xl">Reference Silhouette — Three Views</h1>

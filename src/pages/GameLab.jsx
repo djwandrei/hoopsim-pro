@@ -150,16 +150,15 @@ export default function GameLab() {
         <MyNbaHub focusCode={home.code} awayCode={away.code} tab={tab} onTab={setTab} tabs={[['game', 'GAME'], ['series', 'SERIES']]}>
           {tab === 'game' &&
           <div className="space-y-4">
+              <GameControls
+              settings={sim.settings} onSettingsChange={sim.setSettings}
+              running={sim.running} progress={sim.progress} blocked={sim.policyBlocked}
+              onShareLink={shareLink} />
               {sim.game ?
               <PreGameDisclosure home={home} away={away} open={showPreGame} onToggle={() => setShowPreGame(current => !current)}>
                 {breakdown({ onSimGame: () => sim.runGame(league, home, away, { packageRef }), hasGame: true })}
               </PreGameDisclosure> :
               breakdown({ onSimGame: () => sim.runGame(league, home, away, { packageRef }), hasGame: false })}
-              <GameControls
-              settings={sim.settings} onSettingsChange={sim.setSettings}
-              running={sim.running} progress={sim.progress} blocked={sim.policyBlocked}
-              onShareLink={shareLink} />
-            
               {sim.game ?
               <GameMatchupTheme homeCode={resultHome.code} awayCode={resultAway.code}>
                   {!feedDone &&
@@ -180,14 +179,13 @@ export default function GameLab() {
           }
           {tab === 'series' &&
           <div className="space-y-4">
-              {breakdown({})}
               <GameControls
               settings={sim.settings} onSettingsChange={sim.setSettings}
               running={sim.running} progress={sim.progress} blocked={sim.policyBlocked}
               onShareLink={shareLink}
               onRunSeries={() => sim.runSeries(league, home, away, { packageRef })}
               hasSeries={Boolean(sim.series)} />
-            
+              {breakdown({})}
               {sim.series ?
             <React.Fragment>
               <SeriesBoard league={league} series={sim.series} onSelect={setDrillGame} />

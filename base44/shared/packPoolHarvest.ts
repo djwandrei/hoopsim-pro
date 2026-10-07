@@ -130,14 +130,12 @@ export function prepareRows(rows: HarvestRow[], setInfo: SetInfo, poolNames: str
     const usd = Number(row.priceUsd10);
     const price10 = Number.isFinite(usd) && usd > 0 ? Math.round(usd * 100) : null;
     const tier = tierFromUsd(price10 != null ? usd : null) || tierFromVariant(variant);
-    // Scans: only PriceCharting's public CDN loads in a browser (upsized from
-    // its 60px thumbnail to the 240px render the CDN serves). PSA's cardfacts
-    // pages are HTML listings, not images, and its CDN blocks hotlinking.
-    const scanRaw = typeof row.imageUrl === 'string' ? row.imageUrl : '';
-    const chartingScan = /^https:\/\/storage\.googleapis\.com\/images\.pricecharting\.com\/[a-z0-9]+\/\d+\.jpg/i.test(scanRaw)
-      ? scanRaw.replace(/\/\d+\.jpg$/i, '/240.jpg')
-      : null;
-    const scanUrl = chartingScan;
+    // Scans: none. PriceCharting's CDN blocks browser hotlinking — its
+    // thumbnails render broken in the pack UI (confirmed across harvested
+    // sets), and PSA's cardfacts pages are HTML listings, not images. No
+    // scan is stored; tiles fall back to the designed placeholder until a
+    // manual review supplies art.
+    const scanUrl = null;
     prepared.push({
       name: `${setInfo.name} ${cardNumber} ${player}${variant ? ` ${variant}` : ''}`,
       player,

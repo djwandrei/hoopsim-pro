@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { buildFigureBody } from '@/components/forge/forgeFigureModels';
+import { loadReferenceFigureParts } from '@/components/forge/forgeReferenceModel';
 import { configureSilhouetteMaterial } from '@/components/forge/forgeSilhouetteMaterial';
 import ReferenceFigureFallback from '@/components/forge/ReferenceFigureFallback';
 import { frameReferenceCamera, REFERENCE_TURN_SPEED, REFERENCE_FAST_TURN_SPEED } from '@/components/forge/referenceView';
 
 // Real-time 3D player figure rendered with three.js. The body sculpt is one
-// of four variants (see forgeFigureModels.js): 'reference' — the dunk-pose
-// silhouette of the one-hand dunk reference, 'character' — stylized athletic,
+// of four variants (see forgeFigureModels.js): 'reference' — the authored
+// 450k-triangle dunk-pose silhouette (GLB, split into the nine forge segments
+// plus the basketball), 'character' — stylized athletic,
 // 'natural' — lifelike proportions, 'faceted' — angular low-poly sculpture. The shared engine stands the statue on a slowly rotating
 // display pedestal with physically-lit molten-gold materials (metalness +
 // emissive glow), a warm key light, cool rim light, soft fill and live cast
@@ -30,6 +32,10 @@ const SIL = new THREE.Color('#0B1018');
 // then the head as the ninth. The ball is segment 10 and only ignites on
 // completion.
 const SEGMENT_ORDER = ['shin-l', 'shin-r', 'thigh-l', 'thigh-r', 'shorts', 'torso', 'arm-l', 'arm-r', 'head'];
+
+// The reference camera keeps its three-quarter angle; the authored model's
+// fit replaces the legacy framing constants once loaded.
+const REFERENCE_VIEW_DIRECTION = new THREE.Vector3(-0.809, 0.0205, 0.593).normalize();
 
 // Soft radial glow texture for the forge aura sprite.
 function glowTexture() {
@@ -140,28 +146,56 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     };
     const segCache = {};
 
-    // Sculpt the nine-segment body from the selected variant; the variant
-    // also reports where the shooting hand sits so the ball rests on it.
-    const { ball: ballPos } = buildFigureBody(variant, { addMesh, segCache, goldRec, deepRec });
-    scene.add(figure);
-
-    // Basketball: hidden steel until completion, then ignited with seams and a
-    // warm point light.
-    const ballGroup = new THREE.Group();
-    ballGroup.position.set(...ballPos);
     const ballMat = makeMat(BALL_LIT, BALL_HIDE, 0.35, 0.5);
-    const ballMesh = new THREE.Mesh(new THREE.SphereGeometry(0.095, 28, 22), ballMat.mat);
-    ballMesh.castShadow = true;
-    ballGroup.add(ballMesh);
-    const seamMat = silhouette ? null : new THREE.MeshStandardMaterial({ color: 0x6b2a10, roughness: 0.6, metalness: 0.1 });
-    (silhouette ? [] : [[Math.PI / 2, 0, 0], [0.4, 0, Math.PI / 2], [Math.PI / 2.6, Math.PI / 3, 0.3]]).forEach(rot => {
-      const seam = new THREE.Mesh(new THREE.TorusGeometry(0.096, 0.004, 8, 40), seamMat);
-      seam.rotation.set(...rot);
-      ballGroup.add(seam);
-    });
+
+    // Basketball plumbing: hidden steel until completion, then ignited with
+    // seams and a warm point light. The reference path hangs the authored
+    // ball geometry here instead of the procedural sphere.
+    const ballGroup = new THREE.Group();
     const ballLight = new THREE.PointLight(0xffa04a, 0, 3.4, 1.6);
     ballGroup.add(ballLight);
     figure.add(ballGroup);
+
+    let cancelled = false;
+    const fitRef = { current: null };
+
+    if (variant === 'reference') {
+      // Authored model: one welded body plus one ball, split into the nine
+      // forge segments. Shared geometry cache; the frame stays empty until
+      // the model arrives, then the camera refits to its authored bounds.
+      loadReferenceFigureParts().then(parts => {
+        if (cancelled) return;
+        for (const { key, geometry } of parts.segmentGeometries) {
+          const rec = goldRec();
+          const mesh = new THREE.Mesh(geometry, rec.mat);
+          mesh.castShadow = true;
+          addMesh(key, mesh, [rec.mat]);
+        }
+        const ballMesh = new THREE.Mesh(parts.ballGeometry, ballMat.mat);
+        ballMesh.castShadow = true;
+        ballGroup.add(ballMesh);
+        const fit = { center: parts.center, halfY: parts.halfY, sweep: parts.sweep };
+        fitRef.current = fit;
+        camera.position.copy(fit.center).addScaledVector(REFERENCE_VIEW_DIRECTION, 22);
+        camera.lookAt(fit.center);
+        resize();
+      }).catch(() => { if (!cancelled) setFailed(true); });
+    } else {
+      // Sculpt the nine-segment body from the selected variant; the variant
+      // also reports where the shooting hand sits so the ball rests on it.
+      const { ball: ballPos } = buildFigureBody(variant, { addMesh, segCache, goldRec, deepRec });
+      ballGroup.position.set(...ballPos);
+      const ballMesh = new THREE.Mesh(new THREE.SphereGeometry(0.095, 28, 22), ballMat.mat);
+      ballMesh.castShadow = true;
+      ballGroup.add(ballMesh);
+      const seamMat = new THREE.MeshStandardMaterial({ color: 0x6b2a10, roughness: 0.6, metalness: 0.1 });
+      [[Math.PI / 2, 0, 0], [0.4, 0, Math.PI / 2], [Math.PI / 2.6, Math.PI / 3, 0.3]].forEach(rot => {
+        const seam = new THREE.Mesh(new THREE.TorusGeometry(0.096, 0.004, 8, 40), seamMat);
+        seam.rotation.set(...rot);
+        ballGroup.add(seam);
+      });
+    }
+    scene.add(figure);
 
     // Display pedestal the statue rotates on, with a gold trim ring.
     const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.92, 1.02, 0.09, 48), new THREE.MeshStandardMaterial({ color: 0x1d2434, metalness: 0.65, roughness: 0.35 }));
@@ -220,7 +254,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       const width = host.clientWidth, height = host.clientHeight;
       if (!width || !height) return;
       renderer.setSize(width, height, false);
-      if (camera.isOrthographicCamera) frameReferenceCamera(camera, width, height);
+      if (camera.isOrthographicCamera) frameReferenceCamera(camera, width, height, fitRef.current);
       else { camera.aspect = width / height; camera.updateProjectionMatrix(); }
     };
     const observer = new ResizeObserver(resize);
@@ -308,6 +342,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     animate();
 
     return () => {
+      cancelled = true;
       cancelAnimationFrame(frame);
       observer.disconnect();
       scene.traverse(object => {

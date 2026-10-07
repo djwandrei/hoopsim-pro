@@ -39,6 +39,8 @@ export default async function(req: Request): Promise<Response> {
       const llm = await base44.asServiceRole.integrations.Core.InvokeLLM({
         prompt: `Transcribe priced basketball card rows for this set: ${setInfo.name} (released ${setInfo.year}).
 
+This is the men's NBA set — the pool is NBA players only. If a WNBA product shares the name, search specifically for the NBA version and skip all WNBA rows.
+
 Step 1 — web search: "sportscardspro basketball-cards ${setInfo.name.toLowerCase()}" (also try "pricecharting ${setInfo.name.toLowerCase()}"). Open the sportscardspro.com/pricecharting.com console page for the set — it is a price table with columns: Card | Ungraded | Grade 9 | PSA 10.
 
 Step 2 — transcribe the table: list up to ${MAX_ROWS_PER_SET} rows covering the WHOLE market spread, not just the top: cheap base rookies and base cards (under $25), mid-range parallels ($25-$200), and high-end cards ($200+). Include every brand/parallel family in the set (base, Silver/Gold/Orange/Green Prizm, ICE, PULSAR, WAVE, CHOICE, HOLO, inserts, autographs, patches), and include rows even when the PSA 10 column is empty if the Ungraded or Grade 9 column has a value.

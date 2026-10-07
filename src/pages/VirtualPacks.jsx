@@ -16,8 +16,8 @@ import {
   clearPackHistory,
   openPack,
   prependPackHistory,
-  readPackHistory,
-} from '@/lib/cards/packEngine';
+  readPackHistory } from
+'@/lib/cards/packEngine';
 
 // Tier-chip styling for the pool board (mockup treatment: neutral base, royal
 // uncommon, gold rare, violet super rare, gold-filled legendary).
@@ -26,7 +26,7 @@ const TIER_CHIP_STYLE = {
   uncommon: 'border-royal/60 bg-royal/10 text-royal',
   rare: 'border-gold/60 bg-gold/10 text-gold',
   super_rare: 'border-purple-400/60 bg-purple-400/10 text-purple-300',
-  legendary: 'border-gold bg-gradient-to-b from-gold/25 to-gold/5 text-gold',
+  legendary: 'border-gold bg-gradient-to-b from-gold/25 to-gold/5 text-gold'
 };
 
 // Virtual Packs: each pack is 5 real-world cards — curated PSA scans plus the
@@ -40,20 +40,20 @@ export default function VirtualPacks() {
   const [history, setHistory] = useState([]);
   const [pool, setPool] = useState(null);
 
-  useEffect(() => { setHistory(readPackHistory()); }, []);
+  useEffect(() => {setHistory(readPackHistory());}, []);
 
   useEffect(() => {
     let alive = true;
-    base44.entities.PackCard.aggregate({ query: { active: true }, groupBy: 'tier' })
-      .then(result => { if (alive) setPool(result.rows || []); })
-      .catch(() => { if (alive) setPool([]); });
-    return () => { alive = false; };
+    base44.entities.PackCard.aggregate({ query: { active: true }, groupBy: 'tier' }).
+    then((result) => {if (alive) setPool(result.rows || []);}).
+    catch(() => {if (alive) setPool([]);});
+    return () => {alive = false;};
   }, []);
 
   const poolTotal = (pool || []).reduce((sum, row) => sum + (Number(row.count) || 0), 0);
-  const bestPull = pack ? pack.cards.reduce((best, card) => (
-    TIER_ODDS.findIndex(([tier]) => tier === card.tier) > TIER_ODDS.findIndex(([tier]) => tier === best.tier) ? card : best
-  ), pack.cards[0]) : null;
+  const bestPull = pack ? pack.cards.reduce((best, card) =>
+  TIER_ODDS.findIndex(([tier]) => tier === card.tier) > TIER_ODDS.findIndex(([tier]) => tier === best.tier) ? card : best,
+  pack.cards[0]) : null;
 
   const handleOpen = async () => {
     setBusy(true);
@@ -71,20 +71,20 @@ export default function VirtualPacks() {
     }
   };
 
-  const bestPullSafe = cards => cards.reduce((best, card) => (
-    TIER_ODDS.findIndex(([tier]) => tier === card.tier) > TIER_ODDS.findIndex(([tier]) => tier === best.tier) ? card : best
-  ), cards[0]) || {};
+  const bestPullSafe = (cards) => cards.reduce((best, card) =>
+  TIER_ODDS.findIndex(([tier]) => tier === card.tier) > TIER_ODDS.findIndex(([tier]) => tier === best.tier) ? card : best,
+  cards[0]) || {};
 
   return <StudioShell active="/packs">
     <WorkbenchHeader
       title="VIRTUAL PACKS"
       description="Open a five-card pack of real NBA cards: PSA-graded scans and shop cards for players in the 2017–26 pool, from base cards to legendary pulls. Draws are server-side and fully random."
       state={busy ? 'loading' : pool === null ? 'loading' : 'ready'}
-      status={busy ? 'Drawing pack' : pool === null ? 'Loading card pool' : `${poolTotal.toLocaleString()} cards in the pool`}
-    />
+      status={busy ? 'Drawing pack' : pool === null ? 'Loading card pool' : `${poolTotal.toLocaleString()} cards in the pool`} />
+    
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
       {/* Hero: pack art beside the display title */}
-      <section className="rise-in flex items-center gap-4">
+      <section className="rise-in flex items-center gap-4 hidden">
         <Image src={studioAsset('virtual-packs-emblem-20261007.png')} alt="Virtual Packs emblem — fanned holographic cards over a gold foil pack" fittingType="fit" className="h-20 w-20 shrink-0 sm:h-24 sm:w-24" />
         <div className="min-w-0">
           <h1 className="court-display text-3xl tracking-wide text-foreground sm:text-4xl">VIRTUAL PACKS<span className="text-gold">.</span></h1>
@@ -109,7 +109,7 @@ export default function VirtualPacks() {
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-5">
             {TIER_ODDS.map(([tier, odds]) => {
               const meta = TIER_META[tier];
-              const count = (pool || []).find(row => row.tier === tier)?.count || 0;
+              const count = (pool || []).find((row) => row.tier === tier)?.count || 0;
               return <li key={tier} className={`rounded-xl border p-3 ${TIER_CHIP_STYLE[tier]}`}>
                 <p className="font-mono text-[10.4px] font-semibold uppercase tracking-widest">{meta.label}</p>
                 <p className="mt-0.5 font-mono text-[10.4px] text-muted-foreground">{count.toLocaleString()} cards</p>
@@ -122,7 +122,7 @@ export default function VirtualPacks() {
 
       {/* Full-width gold CTA */}
       <button type="button" onClick={handleOpen} disabled={busy || !poolTotal}
-        className="book-cta rise-in w-full rounded-xl bg-gradient-to-r from-gold to-goldSoft px-6 py-4 font-display text-base tracking-widest text-canvas shadow-lg shadow-gold/25 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none" style={{ '--rise-delay': '120ms' }}>
+      className="book-cta rise-in w-full rounded-xl bg-gradient-to-r from-gold to-goldSoft px-6 py-4 font-display text-base tracking-widest text-canvas shadow-lg shadow-gold/25 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none" style={{ '--rise-delay': '120ms' }}>
         <span className="inline-flex items-center gap-2">{busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <PackageOpen className="h-4 w-4" aria-hidden="true" />}{busy ? 'OPENING PACK…' : `OPEN ${PACK_SIZE}-CARD PACK`}</span>
       </button>
 

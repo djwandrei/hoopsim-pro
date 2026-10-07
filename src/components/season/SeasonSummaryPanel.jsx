@@ -22,11 +22,8 @@ export default function SeasonSummaryPanel({ summary, repeats, simGames, actualR
       .sort((a, b) => b.delta - a.delta);
     const over = surprises[0] || null;
     const under = surprises.length > 1 ? surprises[surprises.length - 1] : null;
-    const leaders = (simGames || []).length
-      ? buildPlayerAverages(simGames).sort((a, b) => b.pts - a.pts).slice(0, 5)
-      : [];
-    return { rows, bestNet, over, under, leaders };
-  }, [summary, simGames, actualRecords]);
+    return { rows, bestNet, over, under };
+  }, [summary, actualRecords]);
 
   if (!model) return null;
   const champion = championCode ? league.byCode.get(championCode) : null;
@@ -108,16 +105,7 @@ export default function SeasonSummaryPanel({ summary, repeats, simGames, actualR
               </button>
             )}
           </div>
-          {model.leaders.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 border-t border-[var(--myna-border)] px-4 py-3">
-              <span className="myna-muted text-[9px] font-bold uppercase tracking-[0.18em]">Top scorers</span>
-              {model.leaders.map(player => (
-                <span key={player.name} className="myna-mono rounded-md border border-[var(--myna-border)] px-2 py-1 text-[11px]">
-                  {player.name} <span className="font-bold" style={{ color: 'var(--myna-accent)' }}>{player.pts.toFixed(1)}</span>
-                </span>
-              ))}
-            </div>
-          )}
+
         </div>
       )}
     </section>

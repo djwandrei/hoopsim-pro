@@ -3,9 +3,9 @@ import * as THREE from 'three';
 import { buildFigureBody } from '@/components/forge/forgeFigureModels';
 
 // Real-time 3D player figure rendered with three.js. The body sculpt is one
-// of three variants (see forgeFigureModels.js): 'character' — stylized
-// athletic, 'natural' — lifelike proportions, 'faceted' — angular low-poly
-// sculpture. The shared engine stands the statue on a slowly rotating
+// of four variants (see forgeFigureModels.js): 'reference' — the dunk-pose
+// silhouette of the one-hand dunk reference, 'character' — stylized athletic,
+// 'natural' — lifelike proportions, 'faceted' — angular low-poly sculpture. The shared engine stands the statue on a slowly rotating
 // display pedestal with physically-lit molten-gold materials (metalness +
 // emissive glow), a warm key light, cool rim light, soft fill and live cast
 // shadows onto the forge floor. Every locked skill lights its segment — cold
@@ -22,6 +22,7 @@ const STEEL = new THREE.Color('#4A5872');
 const STEEL_DARK = new THREE.Color('#39455E');
 const BALL_HIDE = new THREE.Color('#3A4763');
 const BALL_LIT = new THREE.Color('#D2571E');
+const SIL = new THREE.Color('#0B1018');
 
 // Segment order drives the forge state: shins, thighs, shorts, torso, arms,
 // then the head as the ninth. The ball is segment 10 and only ignites on
@@ -42,7 +43,7 @@ function glowTexture() {
   return new THREE.CanvasTexture(canvas);
 }
 
-export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false, complete = false, variant = 'character', className = '' }) {
+export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false, complete = false, variant = 'reference', className = '' }) {
   const hostRef = useRef(null);
   const stateRef = useRef({ filled, total, spinning, complete });
   stateRef.current = { filled, total, spinning, complete };
@@ -70,7 +71,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 60);
     camera.position.set(0.55, 1.55, 6.1);
-    camera.lookAt(0.16, 1.32, 0);
+    camera.lookAt(0.16, variant === 'reference' ? 1.45 : 1.32, 0);
 
     // Lighting rig: warm upper-left key with shadows, cool rim from behind,
     // gentle frontal fill and a low hemisphere base.
@@ -87,6 +88,8 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     const rim = new THREE.DirectionalLight(0x7ea2ff, 1.15);
     rim.position.set(2.6, 3.4, -4.2);
     scene.add(rim);
+    // Silhouette reads on the rim light tracing its outline
+    if (variant === 'reference') rim.intensity = 2.2;
     const fill = new THREE.DirectionalLight(0xffffff, 0.3);
     fill.position.set(2.8, 1.4, 3.2);
     scene.add(fill);
@@ -98,9 +101,10 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
     // steel and molten gold (color, emissive intensity, metalness, roughness).
     // The faceted variant requests flat shading for chiseled planes.
     const flat = variant === 'faceted';
+    const silhouette = variant === 'reference';
     const makeMat = (litColor, unlitColor, metalLit, roughLit) => {
-      const mat = new THREE.MeshStandardMaterial({ color: unlitColor.clone(), metalness: 0.85, roughness: 0.42, emissive: litColor.clone(), emissiveIntensity: 0.04, flatShading: flat });
-      return { mat, litColor: litColor.clone(), unlitColor: unlitColor.clone(), metalLit, roughLit, wasLit: false, flashT: null };
+      const mat = new THREE.MeshStandardMaterial({ color: (silhouette ? SIL : unlitColor).clone(), metalness: silhouette ? 0.08 : 0.85, roughness: silhouette ? 0.92 : 0.42, emissive: litColor.clone(), emissiveIntensity: silhouette ? 0 : 0.04, flatShading: flat });
+      return { mat, litColor: litColor.clone(), unlitColor: (silhouette ? SIL : unlitColor).clone(), metalLit, roughLit, unlitEmissive: silhouette ? 0 : 0.04, wasLit: false, flashT: null };
     };
     const goldMat = () => makeMat(GOLD, STEEL, 0.55, 0.28);
     const deepMat = () => makeMat(GOLD_DEEP, STEEL_DARK, 0.6, 0.34);
@@ -237,7 +241,7 @@ export default function ForgeFigure3D({ filled = 0, total = 9, spinning = false,
       for (const segment of segments) {
         for (const rec of segment.mats) {
           const flash = rec.flashT != null ? Math.max(0, 1 - (t - rec.flashT) * 2.2) : 0;
-          const targetEmissive = (rec.wasLit ? 0.3 + 0.55 * progress + flash * 1.5 : 0.04) + pulse;
+          const targetEmissive = (rec.wasLit ? 0.3 + 0.55 * progress + flash * 1.5 : rec.unlitEmissive) + pulse;
           rec.mat.emissiveIntensity += (targetEmissive - rec.mat.emissiveIntensity) * 0.12;
           rec.mat.color.lerp(rec.wasLit ? rec.litColor : rec.unlitColor, 0.09);
           rec.mat.metalness += ((rec.wasLit ? rec.metalLit : 0.85) - rec.mat.metalness) * 0.09;

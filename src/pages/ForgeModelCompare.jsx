@@ -1,34 +1,35 @@
 import React from 'react';
 import ForgeFigure3D from '@/components/forge/ForgeFigure3D';
 
-// Temporary comparison page: renders the three Forge figure sculpt variants
-// side by side so the direction can be picked, then gets retired.
-const VARIANTS = [
-  { key: 'character', label: 'Stylized Character', note: 'Simplified smooth anatomy, big head, baggy shorts, chunky high-tops — bold basketball silhouette.' },
-  { key: 'natural', label: 'Natural Proportions', note: 'Lifelike 7.5-head build: sculpted hands with thumbs, jaw, nose, defined quads and calves.' },
-  { key: 'faceted', label: 'Faceted Sculpture', note: 'Angular low-poly planes — icosahedral volumes and chiseled shells, flat shading.' },
-];
-
+// Reference-direction preview: the dunk-pose silhouette sculpt shown cold
+// (unforged) and fully forged, side by side.
 export default function ForgeModelCompare() {
   return (
     <div className="studio-workspace min-h-screen bg-canvas px-6 py-8">
       <header className="mb-6">
         <p className="court-kicker">Forge Lab</p>
-        <h1 className="court-display text-3xl">Figure Model Directions</h1>
-        <p className="mt-1 text-xs text-muted-foreground">Three complete sculpts, same lighting and forge animation. Pick a direction and the rest get retired.</p>
+        <h1 className="court-display text-3xl">Reference Silhouette — Forge States</h1>
+        <p className="mt-1 text-xs text-muted-foreground">The dunk-pose sculpt stays a near-black silhouette until skills lock in; each locked skill ignites its segment to molten gold.</p>
       </header>
-      <div className="grid gap-4 md:grid-cols-3">
-        {VARIANTS.map((variant, index) => (
-          <div key={variant.key} className="court-panel overflow-hidden" style={{ '--rise-delay': `${index * 90}ms` }}>
-            <div className="h-[430px] bg-canvas/60">
-              <ForgeFigure3D filled={9} total={9} complete variant={variant.key} className="h-full w-full" />
-            </div>
-            <div className="border-t border-border/35 p-4">
-              <h2 className="court-display text-lg tracking-wide">{variant.label}</h2>
-              <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">{variant.note}</p>
-            </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="court-panel overflow-hidden">
+          <div className="h-[480px] bg-canvas/60">
+            <ForgeFigure3D filled={0} total={9} variant="reference" className="h-full w-full" />
           </div>
-        ))}
+          <div className="border-t border-border/35 p-4">
+            <h2 className="court-display text-lg tracking-wide">Cold — Silhouette</h2>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">Zero skills locked: matte black figure, rim light tracing the outline.</p>
+          </div>
+        </div>
+        <div className="court-panel overflow-hidden">
+          <div className="h-[480px] bg-canvas/60">
+            <ForgeFigure3D filled={9} total={9} complete variant="reference" className="h-full w-full" />
+          </div>
+          <div className="border-t border-border/35 p-4">
+            <h2 className="court-display text-lg tracking-wide">Forged — Molten Gold</h2>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">All nine skills locked: every segment ignited, basketball lit.</p>
+          </div>
+        </div>
       </div>
     </div>
   );

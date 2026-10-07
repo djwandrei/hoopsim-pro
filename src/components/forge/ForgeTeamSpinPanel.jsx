@@ -4,15 +4,15 @@ import ForgeReel from '@/components/forge/ForgeReel';
 // Left panel of the Team Forge: TEAM / PLAYER reels and the spin or respin
 // controls only — the revealed player lives in the wide showcase beside it.
 export default function ForgeTeamSpinPanel({
-  teamItems, playerItems, teamSpin, playerSpin, spinning, pending = false,
+  teamItems, playerItems, teamSpin, playerSpin, spinning, pending = false, fast = false,
   onSpin, onRespinTeam, onRespinPlayer, teamRespins, playerRespins, filled, total,
 }) {
   const landed = Boolean(teamSpin?.targetKey) && !spinning;
   return <aside className="court-panel p-3" aria-label="Spin panel">
     <p className="text-center font-mono text-[9px] uppercase tracking-[0.25em] text-gold">Roster {filled}/{total}</p>
     <div className="mt-3 grid grid-cols-2 gap-2">
-      <ForgeReel label="Team" items={teamItems} getKey={team => team.code} getPrimary={team => team.code} getSub={team => (team.name || team.code || '').split(' ').slice(-1)[0]} spinRequest={teamSpin} spinning={spinning} />
-      <ForgeReel label="Player" items={playerItems} getKey={player => player.playerRef} getPrimary={player => player.name.split(' ')[0]} getSub={player => player.name.split(' ').slice(1).join(' ')} spinRequest={playerSpin} spinning={spinning} />
+      <ForgeReel label="Team" items={teamItems} getKey={team => team.code} getPrimary={team => team.code} getSub={team => (team.name || team.code || '').split(' ').slice(-1)[0]} spinRequest={teamSpin} spinning={spinning} fast={fast} />
+      <ForgeReel label="Player" items={playerItems} getKey={player => player.playerRef} getPrimary={player => player.name.split(' ')[0]} getSub={player => player.name.split(' ').slice(1).join(' ')} spinRequest={playerSpin} spinning={spinning} fast={fast} />
     </div>
     {!pending && <button type="button" onClick={onSpin} disabled={spinning} className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg bg-primary text-sm font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40">
       {spinning ? 'Spinning…' : landed ? 'Spin again' : 'Spin'}

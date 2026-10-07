@@ -14,6 +14,7 @@ export default function GamePlayFeed({ game, home, away, onComplete, onProgress 
   const [count, setCount] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [speedIdx, setSpeedIdx] = useState(0);
+  const [hoverPlay, setHoverPlay] = useState(null);
   const listRef = useRef(null);
   const doneRef = useRef(false);
   const homePalette = paletteForTeam(home.code);
@@ -95,7 +96,7 @@ export default function GamePlayFeed({ game, home, away, onComplete, onProgress 
       {run && <div className="mt-2 flex justify-center"><span className="bcast-lowerthird">{run.team === 'home' ? home.code : away.code} · {run.pts}–0 RUN</span></div>}
 
       <div className="mt-3">
-        <WinProbabilityChart events={events} count={count} homeCode={home.code} awayCode={away.code} />
+        <WinProbabilityChart events={events} count={count} homeCode={home.code} awayCode={away.code} onHoverPlay={setHoverPlay} />
       </div>
 
       <div ref={listRef} className="mt-3 h-64 space-y-1.5 overflow-y-auto pr-1">
@@ -103,8 +104,10 @@ export default function GamePlayFeed({ game, home, away, onComplete, onProgress 
           const isHome = event.side === 'home';
           const palette = event.side ? (isHome ? homePalette : awayPalette) : null;
           const newest = i === visible.length - 1;
+          // Chart hover is synced to the feed: the hovered play lights up here.
+          const hovered = hoverPlay != null && count - visible.length + i === hoverPlay - 1;
           return (
-            <div key={count - visible.length + i} data-team-theme={palette ? (isHome ? home.code : away.code) : undefined} style={palette ? teamThemeVars(isHome ? home.code : away.code, mode) : undefined}           className={`flex items-center gap-2 rounded-lg border border-border/25 bg-canvas/50 px-2.5 py-1.5 text-xs ${newest && event.type === 'final' ? 'buzzer-flash ' : ''}${newest && event.side && event.pts > 0 ? 'score-pop ' : ''}${newest && event.side ? (isHome ? 'broadcast-in-l' : 'broadcast-in-r') : ''}`}>
+            <div key={count - visible.length + i} data-team-theme={palette ? (isHome ? home.code : away.code) : undefined} style={palette ? teamThemeVars(isHome ? home.code : away.code, mode) : undefined}           className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-xs ${hovered ? 'border-gold/70 bg-gold/10 ' : 'border-border/25 bg-canvas/50 '}${newest && event.type === 'final' ? 'buzzer-flash ' : ''}${newest && event.side && event.pts > 0 ? 'score-pop ' : ''}${newest && event.side ? (isHome ? 'broadcast-in-l' : 'broadcast-in-r') : ''}`}>
               <span className="myna-mono w-14 shrink-0 text-[10px] myna-muted">{event.q} {event.clock}</span>
               <span className="h-6 w-1 shrink-0 rounded-full" style={{ background: palette ? palette.primary : 'hsl(var(--court-accent))' }} />
               <span className="min-w-0 flex-1 truncate" title={event.text} style={event.type === 'period' || event.type === 'final' ? { color: 'hsl(var(--court-accent))' } : undefined}>{event.text}</span>

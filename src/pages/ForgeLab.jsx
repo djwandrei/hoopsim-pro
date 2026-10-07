@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
@@ -8,6 +8,7 @@ import ForgeBucketDraft from '@/components/forge/ForgeBucketDraft';
 import ForgePickDraft from '@/components/forge/ForgePickDraft';
 import ForgeTeamDraft from '@/components/forge/ForgeTeamDraft';
 import { MODE_STEPS } from '@/components/forge/ForgeDraftGame';
+import { buildForgePool } from '@/components/forge/forgePool';
 
 const DRAFT_MODES = [
   { key:'wheel', label:'Wheel Draft', desc:'Spin the reels for team & player, tap a stat chip to assign it — keep or respin the offered player-season, then the finished build tours the league.' },
@@ -20,6 +21,9 @@ export default function ForgeLab() {
   usePageMeta({ title: 'Forge Lab — SwishIQ Studio', description: 'Forge composite players and teams from real season data with live 3D build feedback.' });
   const data = useSeasonSource();
   const [mode, setMode] = useState('wheel');
+  // Season pool built once per source and shared by every draft mode, so
+  // switching modes never re-derives the ratings pipeline.
+  const pool = useMemo(() => (data.state === 'ready' ? buildForgePool(data.source) : null), [data.source, data.state]);
   const Draft = mode === 'pick' ? ForgePickDraft : mode === 'team' || mode === 'teamPick' ? ForgeTeamDraft : ForgeBucketDraft;
   const active = DRAFT_MODES.find(item => item.key === mode) || DRAFT_MODES[0];
   return <StudioShell active="/forge">
@@ -30,8 +34,8 @@ export default function ForgeLab() {
         {DRAFT_MODES.map(item => <button key={item.key} type="button" role="tab" aria-selected={mode === item.key} onClick={() => setMode(item.key)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${mode === item.key ? 'border-gold/60 bg-gradient-to-r from-gold/15 to-royal/10 text-gold shadow-[0_0_18px_rgba(233,185,73,0.12)]' : 'border-border/30 text-muted-foreground hover:border-gold/40 hover:text-gold'}`}>{item.label}</button>)}
       </div>}
       {data.state === 'ready' && (mode === 'teamPick'
-        ? <ForgeTeamDraft key={mode + data.source.entry.packageVersion} pickMode source={data.source} league={data.league} />
-        : <Draft key={mode + data.source.entry.packageVersion} source={data.source} league={data.league} />)}
+        ? <ForgeTeamDraft key={mode + data.source.entry.packageVersion} pickMode source={data.source} league={data.league} pool={pool} />
+        : <Draft key={mode + data.source.entry.packageVersion} source={data.source} league={data.league} pool={pool} />)}
     </main>
   </StudioShell>;
 }

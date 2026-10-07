@@ -48,7 +48,7 @@ const tip = ({ active, payload }) => {
 
 // Live win-probability area chart: the bottom band is the home side's chance,
 // the top band the away side's — each in that team's primary color.
-export default function WinProbabilityChart({ events, count, homeCode, awayCode }) {
+export default function WinProbabilityChart({ events, count, homeCode, awayCode, onHoverPlay }) {
   const series = useMemo(() => winProbabilitySeries(events, homeCode, awayCode), [events, homeCode, awayCode]);
   const quarterMarks = useMemo(() => {
     const marks = [];
@@ -74,7 +74,7 @@ export default function WinProbabilityChart({ events, count, homeCode, awayCode 
       </div>
       <div className="mt-2 h-40">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 4, right: 6, left: -22, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 4, right: 6, left: -22, bottom: 0 }} onMouseMove={event => { if (typeof event?.activeTooltipIndex === 'number') onHoverPlay?.(event.activeTooltipIndex + 1); }} onMouseLeave={() => onHoverPlay?.(null)}>
             <defs>
               <linearGradient id={`${gradId}-home`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--matchup-home-chart, var(--matchup-home-primary))" stopOpacity={0.75} />
@@ -89,6 +89,7 @@ export default function WinProbabilityChart({ events, count, homeCode, awayCode 
             <XAxis dataKey="play" hide />
             <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tickFormatter={value => `${value}%`} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} width={54} />
             <Tooltip content={tip} cursor={{ stroke: 'hsl(var(--border))' }} />
+            <ReferenceLine x={data[data.length - 1]?.play} stroke="hsl(var(--court-accent))" strokeWidth={2} />
             <ReferenceLine y={50} stroke="hsl(var(--border) / .6)" strokeDasharray="4 4" />
             {quarterMarks.map(mark => <ReferenceLine key={mark} x={mark} stroke="hsl(var(--border) / .35)" />)}
             <Area dataKey="homeProb" stackId="wp" isAnimationActive={false} stroke="var(--matchup-home-chart, var(--matchup-home-primary))" strokeWidth={1.5} fill={`url(#${gradId}-home)`} />

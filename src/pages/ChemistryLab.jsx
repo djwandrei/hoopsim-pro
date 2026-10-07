@@ -8,6 +8,7 @@ import useSeasonSource from '@/hooks/useSeasonSource';
 import useChemistryData from '@/components/chemistry/useChemistryData';
 import ChemPairView from '@/components/chemistry/ChemPairView';
 import ChemObservedView from '@/components/chemistry/ChemObservedView';
+import ChemSuspectPanel from '@/components/chemistry/ChemSuspectPanel';
 
 const DESCRIPTION = 'Compare a pair’s full-season profiles, play the comparison challenge, and explore verified shared-floor and exact-five combinations.';
 const STEPS = ['Pair profiles', 'Compare & challenge', 'Observed combinations'];
@@ -26,6 +27,7 @@ export default function ChemistryLab() {
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
       <SourceStatus state={season.state} error={season.error} year={season.year} years={season.years} onYearChange={season.setYear} onRetry={season.retry} />
       {season.state === 'ready' && <React.Fragment>
+        {observedReady && <ChemSuspectPanel observed={chemistry.data.observed} onInvestigate={() => setView('combinations')} />}
         <div className="flex flex-wrap gap-2" role="tablist" aria-label="Chemistry views">
           {[['pair', 'Player comparison'], ['combinations', 'Observed lineups']].map(([value, label]) => (
             <button key={value} type="button" role="tab" aria-selected={view === value} onClick={() => setView(value)} className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${view === value ? 'border-gold/60 bg-gradient-to-r from-gold/15 to-royal/10 text-gold shadow-[0_0_18px_rgba(233,185,73,0.12)]' : 'border-border/30 text-muted-foreground hover:border-gold/40 hover:text-gold'}`}>{label}</button>

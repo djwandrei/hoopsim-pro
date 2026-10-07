@@ -9,6 +9,7 @@ import SpinStage from '@/components/spin/SpinStage';
 import SpinPoolBoard from '@/components/spin/SpinPoolBoard';
 import SpinHistory from '@/components/spin/SpinHistory';
 import SpinReceipt from '@/components/spin/SpinReceipt';
+import SpinShareCard, { readSharedDraw } from '@/components/spin/SpinShareCard';
 import SpinPoolTemplates from '@/components/spin/SpinPoolTemplates';
 import { readSpinTemplates, prependSpinTemplate, removeSpinTemplate } from '@/components/spin/spinTemplates';
 import useSeasonSource from '@/hooks/useSeasonSource';
@@ -29,6 +30,7 @@ export default function SpinRoom() {
   const [latest, setLatest] = useState(null);
   const [templates, setTemplates] = useState(readSpinTemplates);
   const [history, setHistory] = useState([]);
+  const [receivedDraw, setReceivedDraw] = useState(() => readSharedDraw(window.location.search));
   const recordSelection = useCallback(payload => {
     setLatest(payload);
     if (!payload) setHistory([]);
@@ -90,6 +92,7 @@ export default function SpinRoom() {
           <SpinStage pool={spin.pool} latest={latest} spinning={spin.spinning} historyCount={spin.history.length} history={history} onSpin={spin.spin} roleLabel={roleLabel} />
           <SpinPoolBoard pool={spin.pool} latest={latest} excluded={excluded} />
           <SpinHistory history={history} />
+          <SpinShareCard latest={latest} pool={spin.pool} received={receivedDraw} onClearReceived={() => { setReceivedDraw(null); window.history.replaceState(null, '', window.location.pathname); }} />
           <SpinReceipt source={source} pool={spin.pool} latest={latest} excluded={excluded} />
           <p className="px-1 text-[11px] text-muted-foreground">The wheel is a visual cue. The original seeded-pool engine determines each pick; role, position, team, workload and stat filters are applied before every draw, and the weight field shapes the draw odds.</p>
         </div>

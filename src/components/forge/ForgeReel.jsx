@@ -9,7 +9,7 @@ const WIND_MS = 500;   // phase 1: accelerate into the blurred cruise
 const SETTLE_MS = 750; // phase 2: decelerate onto the target with a tick-back bounce
 
 // Vertical slot-machine reel: spins through the item strip and lands on the target row.
-export default function ForgeReel({ label, items, getKey, getPrimary, getSub, spinRequest, spinning }) {
+export default function ForgeReel({ label, items, getKey, getPrimary, getSub, spinRequest, spinning, fast = false }) {
   const strip = useMemo(() => Array.from({ length: REPEATS }, () => items).flat(), [items]);
   const targetIndex = useMemo(() => (
     spinRequest?.targetKey == null ? -1 : items.findIndex(item => getKey(item) === spinRequest.targetKey)
@@ -35,6 +35,14 @@ export default function ForgeReel({ label, items, getKey, getPrimary, getSub, sp
     setWinding(false);
     setOffset(2 * count + current);
     requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (fast) {
+        // Long-session mode: skip the wind-up cruise and settle in one step.
+        setWinding(false);
+        setAnimate(true);
+        setTransition(`transform ${SETTLE_MS}ms cubic-bezier(.15,.8,.1,1.12)`);
+        setOffset(2 * count + current + delta);
+        return;
+      }
       // Phase 1 — wind-up: accelerate hard into a long blurred cruise.
       setWinding(true);
       setAnimate(true);
@@ -47,7 +55,7 @@ export default function ForgeReel({ label, items, getKey, getPrimary, getSub, sp
         setOffset(2 * count + current + count * (REPEATS - 6) + delta);
       }, WIND_MS);
     }));
-  }, [spinRequest?.token, targetIndex, items.length]);
+  }, [spinRequest?.token, targetIndex, items.length, fast]);
 
   useEffect(() => () => window.clearTimeout(settleTimer.current), []);
 

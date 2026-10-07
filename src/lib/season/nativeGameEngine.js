@@ -115,6 +115,7 @@ export function mapNativeSeriesReport(report, homeCode, awayCode) {
       hostPts: num(homeHosts ? game.a : game.b),
       visitorPts: num(homeHosts ? game.b : game.a),
       ot: num(game.overtimes),
+      timeline: (game.timeline || []).map(row => ({ period: row.period, a: num(row.a), b: num(row.b) })),
     };
   });
   return {

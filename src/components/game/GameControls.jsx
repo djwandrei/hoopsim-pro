@@ -14,6 +14,8 @@ export default function GameControls({ settings, onSettingsChange, onRunSeries, 
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
+  // Advanced preset: one toggle flips the Monte Carlo depth to the engine max.
+  const advanced = Number(settings.trials) >= 5000;
   const change = (key, value) => onSettingsChange(current => ({ ...current, [key]: value }));
   return (
     <section className="myna-panel flex flex-wrap items-center justify-between gap-x-5 gap-y-3 px-4 py-3" aria-label="Simulation controls">
@@ -24,7 +26,11 @@ export default function GameControls({ settings, onSettingsChange, onRunSeries, 
         </label>
         <label className="flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-[var(--myna-muted)]">
           <span>TRIALS</span>
-          <input type="number" min={100} max={5000} step={100} value={settings.trials} disabled={running} onChange={event => change('trials', event.target.value)} className={fieldCls} aria-label="Monte Carlo trials" />
+          <input type="number" min={100} max={5000} step={100} value={settings.trials} disabled={running || advanced} onChange={event => change('trials', event.target.value)} className={fieldCls} aria-label="Monte Carlo trials" />
+        </label>
+        <label className="flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-[var(--myna-muted)]">
+          <span>ADVANCED</span>
+          <button type="button" role="switch" aria-checked={advanced} disabled={running} onClick={() => change('trials', advanced ? 1000 : 5000)} className={`myna-mono inline-flex min-h-10 items-center rounded-lg border px-3 text-[11px] font-bold transition-colors disabled:opacity-55 ${advanced ? 'border-[var(--myna-accent)] bg-[color-mix(in_srgb,var(--myna-accent)_18%,transparent)] text-[var(--myna-accent)]' : 'border-[var(--myna-border)] text-[var(--myna-muted)] hover:text-[var(--myna-accent)]'}`}>{advanced ? '5K RUNS' : 'OFF'}</button>
         </label>
         <label className="flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-[var(--myna-muted)]">
           <span>WEIGHT</span>

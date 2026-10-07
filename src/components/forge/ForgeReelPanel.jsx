@@ -13,6 +13,7 @@ const TONE_CHIP = {
 // the spin or respin controls, the revealed player card, and the skills list.
 export default function ForgeReelPanel({
   armedSkill = null,
+  fast = false,
   showGrades, onToggleGrades, teamItems, playerItems, teamSpin, playerSpin, spinning,
   reveal, onSpin, spinDisabled, onRespinTeam, onRespinPlayer,
   teamRespins, playerRespins, picks,
@@ -24,8 +25,8 @@ export default function ForgeReelPanel({
       {showGrades ? 'Turn off grades' : 'Turn on grades'}
     </button>
     <div className="mt-3 grid grid-cols-2 gap-2">
-      <ForgeReel label="Team" items={teamItems} getKey={team => team.code} getPrimary={team => team.code} getSub={team => (team.name || team.code || '').split(' ').slice(-1)[0]} spinRequest={teamSpin} spinning={spinning} />
-      <ForgeReel label="Player" items={playerItems} getKey={player => player.playerRef} getPrimary={player => player.name.split(' ')[0]} getSub={player => player.name.split(' ').slice(1).join(' ')} spinRequest={playerSpin} spinning={spinning} />
+      <ForgeReel label="Team" items={teamItems} getKey={team => team.code} getPrimary={team => team.code} getSub={team => (team.name || team.code || '').split(' ').slice(-1)[0]} spinRequest={teamSpin} spinning={spinning} fast={fast} />
+      <ForgeReel label="Player" items={playerItems} getKey={player => player.playerRef} getPrimary={player => player.name.split(' ')[0]} getSub={player => player.name.split(' ').slice(1).join(' ')} spinRequest={playerSpin} spinning={spinning} fast={fast} />
     </div>
     {!landed && <button type="button" onClick={onSpin} disabled={spinning || spinDisabled} className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg bg-primary text-sm font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:bg-goldSoft disabled:cursor-not-allowed disabled:opacity-40">
       {spinning ? 'Spinning…' : armedSkill ? `Spin for ${armedSkill.label}` : filled.length ? 'Spin again' : 'Spin'}

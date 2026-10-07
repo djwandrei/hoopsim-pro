@@ -4,7 +4,7 @@ import TeamMark from '@/components/studio/TeamMark';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
 import { matchupThemeVars, teamThemeVars } from '@/components/game/matchupTheme';
 
-export default function SeriesBoard({ league, series }) {
+export default function SeriesBoard({ league, series, onSelect }) {
   const winnerCode = series.homeWins === 4 ? series.home : series.away;
   const winner = league.byCode.get(winnerCode);
   const { mode = 'dark' } = useCourtTheme() || {};
@@ -36,7 +36,8 @@ export default function SeriesBoard({ league, series }) {
         {series.games.map(item => {
           const hostWon = item.hostPts > item.visitorPts;
           return (
-            <li key={item.game} data-team-theme={hostWon ? item.host : item.visitor} className={`broadcast-in-r flex items-center gap-3 rounded-lg border px-3 py-2 ${item.game === series.games.length ? 'border-gold/70 shadow-[0_0_16px_hsl(var(--court-accent)/.28)]' : ''}`} style={{ ...teamThemeVars(hostWon ? item.host : item.visitor, mode), animationDelay: `${item.game * 70}ms` }}>
+            <li key={item.game} data-team-theme={hostWon ? item.host : item.visitor} className={`broadcast-in-r rounded-lg border ${item.game === series.games.length ? 'border-gold/70 shadow-[0_0_16px_hsl(var(--court-accent)/.28)]' : ''}`} style={{ ...teamThemeVars(hostWon ? item.host : item.visitor, mode), animationDelay: `${item.game * 70}ms` }}>
+              <button type="button" onClick={() => onSelect?.(item)} aria-label={`Open the game ${item.game} recap`} className="flex w-full items-center gap-3 px-3 py-2 text-left">
               <span className="myna-mono myna-muted text-[11px]">{item.game === series.games.length && <span className="mr-1 rounded border border-gold/50 bg-gold/10 px-1 text-[9px] font-bold text-gold">CLINCHER</span>}G{item.game}</span>
               <span className="myna-mono min-w-0 flex-1 text-xs">
                 {item.visitor} <span data-team-side={item.visitor === series.home ? 'home' : 'away'} className={hostWon ? 'myna-muted' : 'font-bold matchup-side-text'}>{item.visitorPts}</span>
@@ -45,6 +46,8 @@ export default function SeriesBoard({ league, series }) {
               </span>
               {item.ot > 0 && <span className="myna-muted text-[10px] font-semibold">OT{item.ot > 1 ? item.ot : ''}</span>}
               <span className="myna-mono shrink-0 rounded-md px-1.5 py-0.5 text-[10px]" style={{ background: 'color-mix(in srgb, var(--team-primary) 20%, transparent)', color: 'var(--team-ink)' }}>+{Math.abs(item.hostPts - item.visitorPts)}</span>
+              {onSelect && <span className="myna-mono shrink-0 rounded-md border border-[var(--myna-border)] px-1.5 py-0.5 text-[9px] myna-muted">RECAP</span>}
+              </button>
             </li>
           );
         })}

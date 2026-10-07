@@ -12,6 +12,8 @@ import BucketBoard from '@/components/forge/BucketBoard';
 import BucketSummary from '@/components/forge/BucketSummary';
 import ForgeLeagueTour from '@/components/forge/ForgeLeagueTour';
 import ForgePlayerShowcase from '@/components/forge/ForgePlayerShowcase';
+import ForgeShareButton from '@/components/forge/ForgeShareButton';
+import { decodeForgeBuild, forgeBuildQuery } from '@/components/forge/forgeReceipt';
 
 // Build-A-Bucket-style reel draft, shared by both Forge modes:
 // TEAM / PLAYER reels on the left, silhouette stage with DJHC skill chips in
@@ -21,6 +23,7 @@ import ForgePlayerShowcase from '@/components/forge/ForgePlayerShowcase';
 const TEAM_RESPINS = 1;
 const PLAYER_RESPINS = 3;
 const SPIN_MS = 1250;
+const FAST_AFTER_SPINS = 6;
 
 const COPY = {
   wheel: {
@@ -42,9 +45,15 @@ export const MODE_STEPS = {
   teamPick: ['Spin for a team', 'Pick any roster player', 'Chase 98-0'],
 };
 
-export default function ForgeDraftGame({ source, league, mode }) {
+export default function ForgeDraftGame({ source, league, mode, pool: poolProp }) {
   const copy = COPY[mode] || COPY.wheel;
-  const allPool = useMemo(() => buildForgePool(source), [source]);
+  // The season pool is built once at the Forge Lab level and shared across
+  // every draft mode, so switching modes never re-derives it.
+  const allPool = useMemo(() => poolProp || buildForgePool(source), [poolProp, source]);
+  const [boot] = useState(() => {
+    const shared = decodeForgeBuild(window.location.search);
+    return shared?.mode === mode ? shared : null;
+  });
   const [group, setGroup] = useState('Guard');
   const [showGrades, setShowGrades] = useState(true);
   const [phase, setPhase] = useState('setup');
@@ -58,6 +67,7 @@ export default function ForgeDraftGame({ source, league, mode }) {
   const [teamRespins, setTeamRespins] = useState(TEAM_RESPINS);
   const [playerRespins, setPlayerRespins] = useState(PLAYER_RESPINS);
   const timer = useRef(null);
+  const spinCount = useRef(0);
 
   const pool = useMemo(() => {
     const active = GROUPS.find(item => item.key === group) || GROUPS[0];
@@ -78,6 +88,33 @@ export default function ForgeDraftGame({ source, league, mode }) {
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
+  // Shared build: a ?build= link restores the finished composite once the
+  // season pool is available; every encoded pick must resolve to a player.
+  useEffect(() => {
+    if (!boot || !allPool.length) return;
+    const byRef = new Map(allPool.map(player => [player.playerRef, player]));
+    const restored = {};
+    for (const [key, pick] of Object.entries(boot.picks)) {
+      const player = byRef.get(pick.playerRef);
+      if (player) restored[key] = { player, value: pick.value ?? player[key] };
+    }
+    if (Object.keys(restored).length === Object.keys(boot.picks).length) {
+      setPicks(restored);
+      setPhase('complete');
+    }
+  }, [boot, allPool]);
+
+  // A finished build lives in the URL, so copying the page link shares it.
+  const buildPayload = useMemo(() => {
+    const payload = {};
+    for (const skill of SKILLS) if (picks[skill.key]) payload[skill.key] = [picks[skill.key].player.playerRef, picks[skill.key].value];
+    return payload;
+  }, [picks]);
+  useEffect(() => {
+    if (phase !== 'complete' || !SKILLS.every(skill => picks[skill.key])) return;
+    window.history.replaceState(null, '', `${window.location.pathname}?${forgeBuildQuery({ mode, picks: buildPayload })}`);
+  }, [phase, picks, mode, buildPayload]);
+
   const openSkills = SKILLS.filter(skill => !picks[skill.key]);
 
   const eligibleRoster = code => rosterOf(code).filter(player => mode === 'pick'
@@ -86,6 +123,7 @@ export default function ForgeDraftGame({ source, league, mode }) {
 
   const spin = (withTeam, spend) => {
     if (spinning || !wheelTeams.length) return;
+    spinCount.current += 1;
     if (spend === 'team' && !teamRespins) return;
     if (spend === 'player' && !playerRespins) return;
     const options = wheelTeams.filter(team => eligibleRoster(team.code).length);
@@ -173,6 +211,7 @@ export default function ForgeDraftGame({ source, league, mode }) {
         showGrades={showGrades} onToggleGrades={() => setShowGrades(value => !value)}
         teamItems={wheelTeams} playerItems={playerItems}
         teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning}
+        fast={spinCount.current > FAST_AFTER_SPINS}
         reveal={reveal}
         onSpin={requestSpin} spinDisabled={mode === 'pick' && !selectedKey}
         onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
@@ -194,6 +233,7 @@ export default function ForgeDraftGame({ source, league, mode }) {
         <BucketBoard buckets={SKILLS} picks={picks} activeKey={null} onUndo={undo} complete showGrades={showGrades} />
       </div>
       <BucketSummary buckets={SKILLS} picks={picks} overall={overall} onRestart={start} />
+      <div className="flex justify-center"><ForgeShareButton encode={() => forgeBuildQuery({ mode, picks: buildPayload })} /></div>
       <ForgeLeagueTour league={league} buckets={SKILLS} picks={picks} />
     </div>}
   </section>;

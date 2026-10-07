@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
-import { Film, Loader2, RefreshCw } from 'lucide-react';
+import { Download, Film, Loader2, RefreshCw } from 'lucide-react';
+import { exportCourtDiagram } from '@/components/playbook/exportDiagram';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import { loadPlayLibrary, findPlay } from '@/components/playbook/playLibrary';
@@ -41,6 +42,16 @@ export default function Playbook() {
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [mirrored, setMirrored] = useState(false);
+  const courtRef = useRef(null);
+  const [exporting, setExporting] = useState(false);
+  // PNG export of the current diagram step (SVG tokens resolved, rasterized 2x).
+  const handleExport = useCallback(async () => {
+    const svg = courtRef.current?.querySelector('svg');
+    if (!svg || exporting) return;
+    setExporting(true);
+    try { await exportCourtDiagram(svg, `swishiq-playbook-${play.id}-step${safeStep}.png`); }
+    finally { setExporting(false); }
+  }, [exporting, play, safeStep]);
 
   const play = useMemo(() => (library ? findPlay(library, playId) || library.categories[0]?.plays[0] : null), [library, playId]);
   const filmLinks = useMemo(() => filmLinksForPlay(play), [play]);
@@ -113,9 +124,12 @@ export default function Playbook() {
                         <Film className="h-3 w-3 shrink-0" />{film.label}
                       </a>
                     ))}
+                    <button type="button" onClick={handleExport} disabled={exporting} className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-border/40 bg-raised/30 px-2.5 font-mono text-[10.4px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40">
+                      <Download className="h-3 w-3 shrink-0" />{exporting ? 'Exporting…' : 'Export PNG'}
+                    </button>
                   </div>
                 </div>
-                <PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} />
+                <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} /></div>
                 <div className="mt-4">
                   <PlayControls
                     stepIndex={safeStep}

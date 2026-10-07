@@ -13,6 +13,7 @@ import GameBoxScore from '@/components/game/GameBoxScore';
 import NativeMatchupReport from '@/components/game/NativeMatchupReport';
 import GamePlayFeed from '@/components/game/GamePlayFeed';
 import SeriesBoard from '@/components/game/SeriesBoard';
+import SeriesGameRecap from '@/components/game/SeriesGameRecap';
 import GameMatchupTheme from '@/components/game/GameMatchupTheme';
 import PreGameDisclosure from '@/components/game/PreGameDisclosure';
 import LiveBoxScore from '@/components/game/LiveBoxScore';
@@ -38,6 +39,7 @@ export default function GameLab() {
   const [a, setA] = useState(urlPick('a') || 'BOS');
   const [b, setB] = useState(urlPick('b') || 'LAL');
   const [feedDone, setFeedDone] = useState(false);
+  const [drillGame, setDrillGame] = useState(null);
   const [showPreGame, setShowPreGame] = useState(true);
   const [liveCount, setLiveCount] = useState(0);
 
@@ -46,6 +48,9 @@ export default function GameLab() {
     setLiveCount(0);
     setShowPreGame(!sim.game);
   }, [sim.game]);
+
+  // A freshly simulated series clears any open per-game drill-down.
+  useEffect(() => { setDrillGame(null); }, [sim.series]);
 
   useEffect(() => {
     if (!league) return;
@@ -171,7 +176,8 @@ export default function GameLab() {
             
               {sim.series ?
             <React.Fragment>
-              <SeriesBoard league={league} series={sim.series} />
+              <SeriesBoard league={league} series={sim.series} onSelect={setDrillGame} />
+              {drillGame && <SeriesGameRecap series={sim.series} game={drillGame} onClose={() => setDrillGame(null)} />}
               <NativeMatchupReport native={sim.series.native} home={home} away={away} />
             </React.Fragment> :
 

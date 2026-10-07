@@ -2,9 +2,10 @@ import React from 'react';
 import { RotateCcw, RefreshCw, Trophy } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
+import ForgeShareButton from '@/components/forge/ForgeShareButton';
 
 // Post-season verdict for the forged roster: record, playoff fate, and standings.
-export default function ForgeTeamResult({ result, onRerun, onNewDraft }) {
+export default function ForgeTeamResult({ result, onRerun, onNewDraft, shareEncode }) {
   const { forgeRow, standings, roster } = result;
   const near = standings.slice(0, 8);
   const showForge = forgeRow && !near.some(row => row.code === 'FRG');
@@ -35,6 +36,7 @@ export default function ForgeTeamResult({ result, onRerun, onNewDraft }) {
       <div className="mt-5 flex flex-wrap justify-center gap-2">
         <button type="button" onClick={onRerun} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 text-xs font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/20"><RotateCcw className="h-3.5 w-3.5" />Run the season again</button>
         <button type="button" onClick={onNewDraft} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border/30 px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold"><RefreshCw className="h-3.5 w-3.5" />New draft</button>
+        {shareEncode && <ForgeShareButton encode={shareEncode} />}
       </div>
     </div>
     <div className="court-panel p-4">

@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { Loader2, Play } from 'lucide-react';
 import PlayerPortrait from '@/components/players/PlayerPortrait';
 import { buildForgePool } from '@/components/forge/forgePool';
+import { decodeForgeBuild, forgeBuildQuery } from '@/components/forge/forgeReceipt';
 import { simulateForgeSeason } from '@/components/forge/forgeTeamSim';
 import ForgeTeamSpinPanel from '@/components/forge/ForgeTeamSpinPanel';
 import ForgeTeamPickPanel from '@/components/forge/ForgeTeamPickPanel';
@@ -25,11 +26,17 @@ export const TEAM_SLOTS = [
 const TEAM_RESPINS = 2;
 const PLAYER_RESPINS = 3;
 const SPIN_MS = 1250;
+const FAST_AFTER_SPINS = 8;
 
 // Team Forge · 98-0: spin for a player every round, choose where they slot
 // into the eight-man rotation, then simulate the season and chase perfection.
-export default function ForgeTeamDraft({ source, league, pickMode = false }) {
-  const allPool = useMemo(() => buildForgePool(source), [source]);
+export default function ForgeTeamDraft({ source, league, pickMode = false, pool: poolProp }) {
+  // Shared season pool from the Forge Lab level — no re-derivation per mode.
+  const allPool = useMemo(() => poolProp || buildForgePool(source), [poolProp, source]);
+  const [boot] = useState(() => {
+    const shared = decodeForgeBuild(window.location.search);
+    return shared?.mode === (pickMode ? 'teamPick' : 'team') ? shared : null;
+  });
   const [phase, setPhase] = useState('setup');
   const [picks, setPicks] = useState({});
   const [reveal, setReveal] = useState(null);
@@ -41,6 +48,7 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
   const [playerRespins, setPlayerRespins] = useState(PLAYER_RESPINS);
   const [result, setResult] = useState(null);
   const timer = useRef(null);
+  const spinCount = useRef(0);
 
   const draftedRefs = useMemo(() => new Set(Object.values(picks).map(pick => pick.player.playerRef)), [picks]);
 
@@ -61,10 +69,35 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
+  // Shared build: a ?build= link restores the locked rotation once the season
+  // pool is available; the recipient re-runs the season sim on their side.
+  useEffect(() => {
+    if (!boot || !allPool.length) return;
+    const byRef = new Map(allPool.map(player => [player.playerRef, player]));
+    const restored = {};
+    for (const [slotKey, pick] of Object.entries(boot.picks)) {
+      const player = byRef.get(pick.playerRef);
+      if (player) restored[slotKey] = { player };
+    }
+    if (TEAM_SLOTS.every(slot => restored[slot.key])) {
+      setPicks(restored);
+      setPhase('ready');
+    }
+  }, [boot, allPool]);
+
+  // A locked rotation lives in the URL, so copying the page link shares it.
+  useEffect(() => {
+    if (phase !== 'ready' || !TEAM_SLOTS.every(slot => picks[slot.key])) return;
+    const payload = {};
+    for (const slot of TEAM_SLOTS) if (picks[slot.key]) payload[slot.key] = [picks[slot.key].player.playerRef];
+    window.history.replaceState(null, '', `${window.location.pathname}?${forgeBuildQuery({ mode: pickMode ? 'teamPick' : 'team', picks: payload })}`);
+  }, [phase, picks, pickMode]);
+
   const available = code => (rosters.get(code) || []).filter(player => !draftedRefs.has(player.playerRef));
 
   const spin = (freshTeam, spend) => {
     if (spinning) return;
+    spinCount.current += 1;
     if (spend === 'team' && !teamRespins) return;
     if (spend === 'player' && !playerRespins) return;
     if (pickMode && spend === 'player') return;
@@ -161,6 +194,7 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
         /> : <ForgeTeamSpinPanel
           teamItems={wheelTeams} playerItems={playerItems}
           teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning}
+          fast={spinCount.current > FAST_AFTER_SPINS}
           onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
           teamRespins={teamRespins} playerRespins={playerRespins}
           filled={filled} total={TEAM_SLOTS.length}
@@ -198,6 +232,10 @@ export default function ForgeTeamDraft({ source, league, pickMode = false }) {
       <p className="mt-4 font-display text-2xl tracking-wide">SIMULATING THE SEASON</p>
       <p className="mt-2 text-sm text-muted-foreground">82 regular-season games, then the playoff bracket…</p>
     </div>}
-    {phase === 'complete' && result && <ForgeTeamResult result={result} onRerun={rerun} onNewDraft={newDraft} />}
+    {phase === 'complete' && result && <ForgeTeamResult result={result} onRerun={rerun} onNewDraft={newDraft} shareEncode={() => {
+      const payload = {};
+      for (const slot of TEAM_SLOTS) if (picks[slot.key]) payload[slot.key] = [picks[slot.key].player.playerRef];
+      return forgeBuildQuery({ mode: pickMode ? 'teamPick' : 'team', picks: payload });
+    }} />}
   </section>;
 }

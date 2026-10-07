@@ -10,6 +10,8 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
   const decision = passport?.decision;
   const gamePoints = passport?.gamePoints;
   const nativeOutcome = passport?.nativeOutcome;
+  // V4 boards return descriptive source-impact rankings without Game Points.
+  const v4Evaluation = outcome?.evaluation ?? null;
   const proof = decision ? decisionProofStatus(decision) : null;
   const unitLabel = nativeOutcome?.unit === 'points-per-100-possessions' ? 'points per 100 possessions' : 'points';
   const selectedValue = nativeOutcome && Number.isFinite(nativeOutcome.value) ? nativeOutcome.value : null;
@@ -37,7 +39,7 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
             </span>
           )}
           <h3 className="dg-result__rank">
-            {decision ? `Rank ${decision.rank} of ${decision.optionCount}` : 'Result unavailable'}
+            {decision ? `Rank ${decision.rank} of ${decision.optionCount}` : v4Evaluation ? 'Descriptive rank verified' : 'Result unavailable'}
           </h3>
           {contextTitle && <p className="dg-result__context mt-1">{contextTitle}</p>}
         </div>
@@ -76,6 +78,9 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
         </div>
       )}
       {proof && <p className="dg-note mt-4"><ShieldCheck className="h-3.5 w-3.5 text-positive" />{proof.disclosure}</p>}
+      {!proof && v4Evaluation && (
+        <p className="dg-note mt-4"><ShieldCheck className="h-3.5 w-3.5 text-positive" />V4 summary: descriptive source-impact ranking, verified against the exact-season evaluator. Game Points are not part of the V4 contract.</p>
+      )}
       {gamePoints && (
         <p className="dg-note mt-2">
           {gamePoints.ruleVersion === 'swishiq-game-points-v2'

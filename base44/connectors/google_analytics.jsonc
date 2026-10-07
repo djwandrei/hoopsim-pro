@@ -1,7 +1,8 @@
 {
   "type": "google_analytics",
   "scopes": [
-    "https://www.googleapis.com/auth/analytics.readonly",
-    "email"
+    "https://www.googleapis.com/auth/analytics.edit",
+    "email",
+    "https://www.googleapis.com/auth/analytics.readonly"
   ]
 }

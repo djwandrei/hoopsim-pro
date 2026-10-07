@@ -130,7 +130,7 @@ export default function Playbook() {
                     </button>
                   </div>
                 </div>
-                <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} /></div>
+                <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} prevFrame={frames[safeStep - 1]} mirrored={mirrored} /></div>
                 <div className="mt-4">
                   <PlayControls
                     stepIndex={safeStep}

@@ -1,3 +1,9 @@
+.playbook-trail {
+  stroke: hsl(var(--court-accent) / 0.5);
+  stroke-width: 2;
+  stroke-dasharray: 3 7;
+  stroke-linecap: round;
+}
 .playbook-pass {
   stroke: hsl(var(--court-focus));
   stroke-width: 2.5;

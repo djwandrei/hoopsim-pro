@@ -24,7 +24,7 @@ function zoneKey(phrase) {
   if (/free-throw/.test(p)) return 'free_throw';
   if (/high post/.test(p)) return 'high_post';
   if (/(mid|low|middle) post/.test(p)) return 'block';
-  if (/opposite half|weak side|far side/.test(p)) return 'wing';
+  if (/opposite[-\s]half|weak[-\s]side|far[-\s]side/.test(p)) return 'wing';
   if (/nail/.test(p)) return 'nail';
   if (/slot/.test(p)) return 'slot';
   if (/wing|perimeter|three-point/.test(p)) return 'wing';
@@ -32,7 +32,7 @@ function zoneKey(phrase) {
   if (/elbow/.test(p)) return 'elbow';
   if (/block/.test(p)) return 'block';
   if (/rim|basket|restricted/.test(p)) return 'rim';
-  if (/paint|lane|middle/.test(p)) return 'lane';
+  if (/paint|lane|middle|center/.test(p)) return 'lane';
   if (/top|arc/.test(p)) return 'top';
   if (/half-court/.test(p)) return 'half_court';
   if (/baseline/.test(p)) return 'baseline';
@@ -59,7 +59,7 @@ function sideOf(before, ballSide) {
 // A phrase only counts as a destination when the clause contains real player
 // movement — this keeps idioms ("turns the corner") and descriptors
 // ("baseline flex screen") from teleporting the wrong player.
-const MOVE_VERB_RE = /\b(moves?|moved|cut(?:s|ting)?|sprints?|runs?|drifts?|lifts?|rises?|slides?|fills?|attacks?|drives?|clears?|exits?|relocat(?:es|ing)?|retreats?|sets?|steps?|walks?|jabs?|seals?|goes?|turns?|plants?|pivots?|flows?|slips?|pops?|opens?|screens?|holds?|stays?|remains?|waits?|settles?|spaces?|widens?|flashes?|darts?|brings?|backs?|chases?|follows?|trails?|establishes?|positions?|approaches?|arrives?|advances?|pushes?|crosses?|dives?|flashes|rolls?|fans?|carries?|places?|placing|aligns?|aligned|occup(?:y|ies)|rotates?|rotating)\b/i;
+const MOVE_VERB_RE = /\b(moves?|moved|cut(?:s|ting)?|sprints?|runs?|drifts?|lifts?|rises?|slides?|fills?|attacks?|drives?|clears?|exits?|relocat(?:es|ing)?|retreats?|sets?|steps?|walks?|jabs?|seals?|goes?|turns?|plants?|pivots?|flows?|slips?|pops?|opens?|screens?|holds?|stays?|remains?|waits?|settles?|spaces?|widens?|flashes?|darts?|dribbl(?:es?|ing)|penetrat(?:es?|ing)|brings?|backs?|chases?|follows?|trails?|establishes?|positions?|approaches?|arrives?|advances?|pushes?|crosses?|dives?|flashes|rolls?|fans?|carries?|places?|placing|aligns?|aligned|occup(?:y|ies)|rotates?|rotating)\b/i;
 
 // A zone phrase that describes something other than the player's destination.
 function isDescriptor(zoneMatch, windowText) {
@@ -269,7 +269,43 @@ function offenseMovement(stepText, offense, ballSide) {
       clause = window + rest.slice(0, nextStop >= 0 ? nextStop : rest.length);
       zoneMatch = firstDestination(clause);
     }
-    if (!zoneMatch) continue;
+    // A read clause ("O1 reads the help…") lists options, not a destination.
+    if (/^\s*reads?\b/i.test(window)) continue;
+    if (!zoneMatch) {
+      const possScreen = /\b([Oo]\d)'?s\s+[\w-]*\s*screen/i.exec(ahead);
+      if (possScreen) {
+        const screener = possScreen[1].toUpperCase();
+        const subject = ((sentenceAt(stepText, group.index).match(/\b[Oo]\d\b/i) || [])[0] || '').toUpperCase();
+        // "O5 uses O1's down screen and rises to the top/wing": look past the
+        // possessive screen for the mover's own named destination.
+        const tail = ahead.slice(possScreen.index + possScreen[0].length);
+        const tailStop = tail.search(/\b[OX]\d\b/i);
+        const destination = firstDestination(tail.slice(0, tailStop >= 0 ? tailStop : tail.length));
+        if (subject && subject !== screener && !moved.has(subject) && offense[subject]) {
+          if (destination) {
+            const zone = zoneKey(destination[0]);
+            const side = isPluralZone(destination[0]) ? ballSide : sideOf(tail.slice(0, destination.index), ballSide);
+            let target = zonePoint(zone, side);
+            const occupied = (p) => Object.entries(next).some(([other, spot]) => other !== subject && Math.hypot(spot[0] - p[0], spot[1] - p[1]) < 26);
+            if (occupied(target)) {
+              target = [
+                [target[0] + 34, target[1]], [target[0] - 34, target[1]],
+                [target[0], target[1] + 30], [target[0], target[1] - 30],
+                [target[0] + 34, target[1] + 30], [target[0] - 34, target[1] - 30],
+              ].find((p) => !occupied(p)) || target;
+            }
+            next[subject] = target;
+          } else {
+            // No named destination: come off the screen toward the middle.
+            const spot = offense[screener];
+            const dir = spot[0] > 250 ? -1 : 1;
+            next[subject] = [Math.min(470, Math.max(30, spot[0] + dir * 46)), Math.max(24, spot[1] - 26)];
+          }
+          moved.add(subject);
+        }
+      }
+      continue;
+    }
     // "O5 uses O1's down screen and rises to the top": the possessive token
     // merely owns the screen — the sentence's subject is the one who moves.
     let actors = players;
@@ -352,7 +388,16 @@ function screenActions(stepText, offense, ballOwner) {
     if (!screener) continue;
     const spot = offense[screener];
     if (!spot || !offense[cutter]) continue;
-    actions.push({ screener, target: cutter, cutter, point: [spot[0], spot[1] - 24] });
+    // "comes off the screen toward O5" ends beside the screener; a plain
+    // flex-style usage carries the cutter to the mirrored side.
+    const comeOff = Boolean(usage[3]);
+    actions.push({
+      screener,
+      target: cutter,
+      cutter,
+      point: [spot[0], spot[1] - 24],
+      cutterPoint: comeOff ? [spot[0] + (spot[0] <= 250 ? 34 : -34), spot[1] - 18] : null,
+    });
   }
   return actions;
 }
@@ -422,7 +467,7 @@ export function buildFrames(play) {
       // A named screen usage also sends the cutter across to the far side.
       if (action.cutter && !moved.has(action.cutter)) {
         const start = offense[action.cutter] || next[action.cutter];
-        next[action.cutter] = [COURT.width - start[0], start[1]];
+        next[action.cutter] = action.cutterPoint || [COURT.width - start[0], start[1]];
         moved.add(action.cutter);
       }
     }

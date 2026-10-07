@@ -9,11 +9,13 @@ export default function useNativeSeasonSim() {
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
 
   const run = useCallback(async (league, scheduleRows, year) => {
     if (!league || !year) return;
     setRunning(true);
     setProgress(0);
+    setError('');
     try {
       const mapped = await runNativeSeason({
         year,
@@ -29,6 +31,8 @@ export default function useNativeSeasonSim() {
         onProgress: setProgress,
       });
       setResult(mapped);
+    } catch (e) {
+      setError(e?.message || 'The native season replay could not run.');
     } finally {
       setRunning(false);
     }
@@ -37,7 +41,8 @@ export default function useNativeSeasonSim() {
   const reset = useCallback(() => {
     setResult(null);
     setProgress(0);
+    setError('');
   }, []);
 
-  return { setup, setSetup, running, progress, result, run, reset };
+  return { setup, setSetup, running, progress, result, error, run, reset };
 }

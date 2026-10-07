@@ -20,6 +20,7 @@ import SeasonHistoryPanel from '@/components/season/SeasonHistoryPanel';
 import SeasonCompare from '@/components/season/SeasonCompare';
 import FranchiseLab from '@/components/season/FranchiseLab';
 import { actualRecordsFrom } from '@/lib/season/seasonRecords';
+import SimErrorBanner from '@/components/game/SimErrorBanner';
 import '@/components/season/seasonTables.css';
 
 export default function SeasonLab() {
@@ -84,6 +85,7 @@ export default function SeasonLab() {
           onTab={setTab}
           teamPicker={{ teams: league.teams, focusCode: team.code, onChange: setFocus }}
         >
+          <SimErrorBanner error={sim.error} />
           <LeagueControls
             years={years}
             year={year}

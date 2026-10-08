@@ -511,4 +511,14 @@ header.djhc-chrome, .djhc-chrome button, .djhc-chrome [role="tab"], .djhc-chrome
    footer is hidden and the bottom tab bar takes over, so content keeps
    breathing room above it */
 body.webview .footer, body.webview .site-footer { display: none !important; }
-body.webview { padding-bottom: calc(env(safe-area-inset-bottom) + 4.5rem); }
+
+/* No rubber-band overscroll anywhere on the document */
+html, body { overscroll-behavior: none; }
+/* Native-like root: WebView/mobile sessions get a fixed-height app shell
+   (100dvh, overflow hidden) with the content region as the sole scroll
+   container, so the iOS keyboard shift and document bounce can't move the
+   whole layout */
+body.webview { overflow: hidden; }
+body.webview #root { height: 100dvh; overflow: hidden; }
+body.webview .studio-workspace { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
+body.webview .webview-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(env(safe-area-inset-bottom) + 4.5rem); }

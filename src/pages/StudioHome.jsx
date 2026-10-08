@@ -10,8 +10,8 @@ import FanToolsGrid from '@/components/studio/FanToolsGrid';
 import ResumeStrip from '@/components/studio/ResumeStrip';
 import DailyCall from '@/components/studio/DailyCall';
 export default function StudioHome() {
-  usePageMeta({ title: 'SwishIQ Studio — DJHC Basketball Analytics', description: 'Nine NBA analytics workbenches and daily games: season and franchise sims, player blueprints, chemistry, Forge drafts, collector tools and lineup solving.' });
-  const board = [{ value: '09', label: 'Workbenches' }, { value: '2017–26', label: 'Published archive' }, { value: '04', label: 'Comparison slots' }, { value: 'SHA-256', label: 'Verified source' }, { value: 'Original', label: 'Gameplay modules' }, { value: 'Seeded', label: 'Replay engine' }];
+  usePageMeta({ title: 'SwishIQ Studio — DJHC Basketball Analytics', description: 'Eight NBA analytics workbenches and daily games: season and franchise sims, player blueprints, chemistry, Forge drafts, collector tools and lineup solving.' });
+  const board = [{ value: '08', label: 'Workbenches' }, { value: '2017–26', label: 'Published archive' }, { value: '04', label: 'Comparison slots' }, { value: 'SHA-256', label: 'Verified source' }, { value: 'Original', label: 'Gameplay modules' }, { value: 'Seeded', label: 'Replay engine' }];
   return <StudioShell active="/"><StudioWelcome /><BroadcastTicker items={board} /><ResumeStrip /><DailyCall /><main className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
     
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{WORKBENCHES.map((tool, index) => <WorkbenchCard key={tool.path} tool={tool} index={index} />)}</div>

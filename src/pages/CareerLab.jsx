@@ -36,7 +36,7 @@ export default function CareerLab() {
   const hasBioRecord = Boolean(context?.nba?.profiles?.length || context?.nba?.roster);
 
   return (
-    <StudioShell active="/career">
+    <StudioShell active="/analytics">
       <WorkbenchHeader title="CAREER LAB" description="A MyNBA-style career hub on the real site's pooled 2017–26 archive. Explore season changes, team stints and source-backed biography—without invented forecasts." steps={['Find a player', 'Recorded career path', 'History & biography']} current={player ? view === 'overview' ? 1 : 2 : 0} state={state} status={player ? `${seasons.length} recorded seasons` : 'Browse the pooled archive'} />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">
         <MyNbaHub focusCode="djhc" tab={view} onTab={setView} tabs={CAREER_TABS}>

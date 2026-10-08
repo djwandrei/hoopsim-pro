@@ -1,14 +1,15 @@
 /**
  * Relay for the live sportsbook odds feed, basketball_nba.
  * kind 'odds'   → upcoming games with moneyline / spread / total prices
+ * kind 'props'  → per-player points milestones for upcoming games
  * kind 'scores' → completed games, used by the Book Room to settle bets.
  * Source: ESPN's keyless public scoreboard feed — no API key, no quota.
  */
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' };
 
-// The relay serves public odds data but spends the app's paid API quota, so
-// it is throttled per caller IP: a sliding 60-second window, best-effort
-// (in-memory) since the relay itself is stateless.
+// The relay serves public odds data but hammers ESPN across many requests per
+// call, so it is throttled per caller IP: a sliding 60-second window,
+// best-effort (in-memory) since the relay itself is stateless.
 const RATE_WINDOW_MS = 60000;
 const RATE_MAX_CALLS = 30;
 const rateHits = new Map();
@@ -19,6 +20,37 @@ function isRateLimited(ip) {
   rateHits.set(ip, hits);
   if (rateHits.size > 1000) for (const [key, times] of rateHits) if (times.every(ts => now - ts >= RATE_WINDOW_MS)) rateHits.delete(key);
   return hits.length > RATE_MAX_CALLS;
+}
+
+// Per-kind response caches: concurrent callers and quick retries replay a
+// fresh-enough snapshot instead of repeating the multi-request ESPN fan-out.
+const FEED_TTL_MS = { odds: 45000, props: 120000, scores: 30000 };
+const feedCaches = new Map();
+
+// Shared JSON helper: a non-JSON body (HTML error page) or a dropped request
+// reads as null — never a thrown parse error.
+async function getJSON(url) {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch { return null; }
+}
+
+// Bounded-concurrency map: keeps the ESPN fan-out wide but never wider than
+// the limit, preserving input order in the results.
+async function mapWithConcurrency(list, limit, worker) {
+  const results = new Array(list.length);
+  let next = 0;
+  const runners = Array.from({ length: Math.min(limit, list.length || 0) }, async () => {
+    while (next < list.length) {
+      const index = next;
+      next += 1;
+      results[index] = await worker(list[index], index);
+    }
+  });
+  await Promise.all(runners);
+  return results;
 }
 
 // --- ESPN scoreboard source (public JSON, no API key needed) ---
@@ -65,71 +97,71 @@ function espnGames(events) {
 async function espnFinals(events) {
   const finals = [];
   let boxes = 0;
-  for (const event of events || []) {
-    if (!event.status?.type?.completed) continue;
+  // Box-score rides: fetched with bounded concurrency — a heavy slate no
+  // longer settles game-by-game in series.
+  const pending = (events || []).map(async event => {
+    if (!event.status?.type?.completed) return null;
     const comp = event.competitions?.[0] || {};
     const home = comp.competitors?.find(c => c.homeAway === 'home');
     const away = comp.competitors?.find(c => c.homeAway === 'away');
     const homeScore = Number(home?.score), awayScore = Number(away?.score);
-    if (!home?.team || !away?.team || !Number.isFinite(homeScore) || !Number.isFinite(awayScore)) continue;
+    if (!home?.team || !away?.team || !Number.isFinite(homeScore) || !Number.isFinite(awayScore)) return null;
     const final = { eventKey: event.id, home: home.team.displayName, away: away.team.displayName, homeScore, awayScore };
-    // Box-score player points ride along so "N+ points" prop legs can grade
-    // (capped so a heavy slate never balloons the relay).
-    if (boxes < 12) { final.pointsByPlayer = await espnBoxPoints(event); boxes += 1; }
-    finals.push(final);
-  }
-  return finals;
+    if (boxes < 12) {
+      boxes += 1;
+      final.pointsByPlayer = await espnBoxPoints(event);
+    }
+    return final;
+  });
+  return (await Promise.all(pending)).filter(Boolean);
 }
 
 // Player prop milestones from ESPN's core odds feed — athlete-scoped
 // "Points Milestones" (e.g. Julius Randle 10+ points at -209), grouped per
-// player per game. Keyless, same source as the game odds.
+// player per game. Keyless, same source as the game odds. Games are read with
+// bounded concurrency; each game's board items are read the same way.
 async function espnProps(events) {
-  const games = [];
-  for (const event of events || []) {
-    if (event.status?.type?.completed) continue;
+  const live = (events || []).filter(event => !event.status?.type?.completed);
+  const games = await mapWithConcurrency(live, 3, async event => {
     const comp = event.competitions?.[0] || {};
     const home = comp.competitors?.find(c => c.homeAway === 'home')?.team?.displayName;
     const away = comp.competitors?.find(c => c.homeAway === 'away')?.team?.displayName;
-    if (!home || !away) continue;
+    if (!home || !away) return null;
     try {
-      const oddsUrl = `https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/${event.id}/competitions/${event.id}/odds`;
-      const odds = await fetch(oddsUrl, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null);
+      const odds = await getJSON(`https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/events/${event.id}/competitions/${event.id}/odds`);
       const first = odds?.items?.[0] || odds;
-      if (!first?.propBets?.$ref) continue;
-      const board = await fetch(first.propBets.$ref, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null);
+      if (!first?.propBets?.$ref) return null;
+      const board = await getJSON(first.propBets.$ref);
+      if (!board) return null;
       const names = new Map();
       const byPlayer = new Map();
-      for (const item of board?.items || []) {
-        const full = item.$ref ? await fetch(item.$ref, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null).catch(() => null) : item;
-        if (!full || full.type?.name !== 'Points Milestones') continue;
-        let player = names.get(full.athlete?.$ref);
-        if (player === undefined) {
-          player = full.athlete?.$ref
-            ? await fetch(full.athlete.$ref, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null).catch(() => null)
-            : null;
-          player = player?.displayName || null;
-          names.set(full.athlete?.$ref, player);
+      await mapWithConcurrency(board?.items || [], 4, async item => {
+        const full = item.$ref ? await getJSON(item.$ref) : item;
+        if (!full || full.type?.name !== 'Points Milestones') return;
+        if (!names.has(full.athlete?.$ref)) {
+          const athlete = full.athlete?.$ref ? await getJSON(full.athlete.$ref) : null;
+          names.set(full.athlete?.$ref, athlete?.displayName || null);
         }
+        const player = names.get(full.athlete?.$ref);
         const line = parseInt(String(full.odds?.total?.value ?? full.current?.target?.displayValue ?? ''), 10);
         const price = espnPrice(full.odds?.american?.value);
-        if (!player || !Number.isFinite(line) || price == null) continue;
+        if (!player || !Number.isFinite(line) || price == null) return;
         const entry = byPlayer.get(player) || { player, options: [] };
         if (!entry.options.some(option => option.line === line)) entry.options.push({ line, price });
         byPlayer.set(player, entry);
-      }
+      });
       const props = [...byPlayer.values()];
-      if (props.length) games.push({ eventKey: event.id, commenceTime: event.date, home, away, props });
-    } catch { /* a game without props doesn't sink the feed */ }
-  }
-  return games;
+      return props.length ? { eventKey: event.id, commenceTime: event.date, home, away, props } : null;
+    } catch { return null; /* a game without props doesn't sink the feed */ }
+  });
+  return games.filter(Boolean);
 }
 
 // Per-player points from the official box score of a finished game, keyed by
 // the athlete's display name — used to settle "N+ points" prop legs.
 async function espnBoxPoints(event) {
   try {
-    const sum = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${event.id}&region=us&lang=en&contentorigin=espn`, { signal: AbortSignal.timeout(15000) }).then(res => res.ok ? res.json() : null);
+    const sum = await getJSON(`https://site.web.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${event.id}&region=us&lang=en&contentorigin=espn`);
     const points = {};
     for (const team of sum?.boxscore?.players || []) {
       for (const group of team.statistics || []) {
@@ -148,17 +180,14 @@ async function espnBoxPoints(event) {
 }
 
 async function espnScoreboard(daysBack) {
-  const events = [];
-  for (let offset = 0; offset <= daysBack; offset++) {
-    const date = new Date(Date.now() - offset * 86400000).toISOString().slice(0, 10).replace(/-/g, '');
-    try {
-      const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=${date}`, { signal: AbortSignal.timeout(15000) });
-      if (!res.ok) continue;
-      const payload = await res.json();
-      events.push(...(payload.events || []));
-    } catch { /* a missed day doesn't sink the feed */ }
-  }
-  return events;
+  // The daily boards are independent — read them in parallel, keep date order.
+  const dates = Array.from({ length: daysBack + 1 }, (_, offset) =>
+    new Date(Date.now() - offset * 86400000).toISOString().slice(0, 10).replace(/-/g, ''));
+  const boards = await mapWithConcurrency(dates, 3, async date => {
+    const payload = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=${date}`);
+    return payload?.events || [];
+  });
+  return boards.flat();
 }
 
 export default async function(req) {
@@ -173,10 +202,15 @@ export default async function(req) {
     }
     const body = await req.json().catch(() => ({}));
     const kind = body?.kind === 'scores' ? 'scores' : body?.kind === 'props' ? 'props' : 'odds';
+    const hit = feedCaches.get(kind);
+    if (hit && Date.now() - hit.at < FEED_TTL_MS[kind]) return Response.json({ ...hit.payload, cached: true }, { headers: CORS });
     const events = await espnScoreboard(kind === 'scores' ? 2 : 0);
-    if (kind === 'scores') return Response.json({ finals: await espnFinals(events), quota: null }, { headers: CORS });
-    if (kind === 'props') return Response.json({ games: await espnProps(events), quota: null }, { headers: CORS });
-    return Response.json({ games: espnGames(events), quota: null }, { headers: CORS });
+    let payload;
+    if (kind === 'scores') payload = { finals: await espnFinals(events), quota: null };
+    else if (kind === 'props') payload = { games: await espnProps(events), quota: null };
+    else payload = { games: espnGames(events), quota: null };
+    feedCaches.set(kind, { at: Date.now(), payload });
+    return Response.json(payload, { headers: CORS });
   } catch (error) {
     return Response.json({ error: error?.message || 'The odds feed is unavailable.', code: 'odds_feed_error' }, { status: 502, headers: CORS });
   }

@@ -2,20 +2,32 @@
 // library) and parses it into browsable plays: name, type, starting
 // alignment, numbered animation steps, tactical goal and read branches.
 import { tagsForPlay } from '@/components/playbook/playTags';
+import { STANDALONE } from '@/lib/deployConfig';
 
 const LIBRARY_URL = 'https://media.base44.com/files/public/6abc41d86dabd382371f49ea/0c38efcba_basketball_play_animation_library.md';
 
 let cache = null;
 let inflight = null;
 
+// Site build: same-origin-style direct fetch. Studio build: the library rides
+// on the dedicated relay (server-side fetch with timeout, size validation and
+// a TTL cache), so one validated response serves every visitor.
+async function fetchLibrary() {
+  if (STANDALONE) {
+    const res = await fetch(LIBRARY_URL);
+    if (!res.ok) throw new Error(`Play library unavailable (${res.status})`);
+    return res.text();
+  }
+  const { base44 } = await import('@/api/base44Client');
+  const response = await base44.functions.invoke('playbookLibrarySource', {});
+  if (response.data?.error) throw new Error(response.data.error);
+  return response.data.markdown;
+}
+
 export async function loadPlayLibrary() {
   if (cache) return cache;
   if (!inflight) {
-    inflight = fetch(LIBRARY_URL)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Play library unavailable (${res.status})`);
-        return res.text();
-      })
+    inflight = fetchLibrary()
       .then((markdown) => { cache = parseLibrary(markdown); return cache; })
       .finally(() => { inflight = null; });
   }

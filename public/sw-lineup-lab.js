@@ -4,7 +4,7 @@
 // verifying and the studio never bundles or edits the site's modules.
 
 const SITE = 'https://www.djshouseofcards-comics.com';
-const CACHE = 'lineup-lab-runtime-v2';
+const CACHE = 'lineup-lab-runtime-v3';
 const CONNECTIONS = 'lineup-lab-connections-v1';
 const ownerKey = id => `${self.location.origin}/__lineup-lab-client/${encodeURIComponent(id)}`;
 async function isConnected(client) {

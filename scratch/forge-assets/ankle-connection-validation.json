@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "sourceSha256": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae",
+  "triangleCount": 706786,
+  "checks": [
+    {
+      "side": "right",
+      "rigidShoeVertices": 26454,
+      "minimumRigidShoeWeight": 1.0,
+      "blendMaximumWeightError": 2.9802142531565323e-08,
+      "dunkConnectionCollapsedTriangles": 0,
+      "posedAnkleCrossSections": [
+        {
+          "sourceHeightMeters": 0.22,
+          "lateralSpanMeters": 0.07292182856848949
+        },
+        {
+          "sourceHeightMeters": 0.24,
+          "lateralSpanMeters": 0.07702675461769104
+        },
+        {
+          "sourceHeightMeters": 0.26,
+          "lateralSpanMeters": 0.08238538354635243
+        },
+        {
+          "sourceHeightMeters": 0.28,
+          "lateralSpanMeters": 0.08820202946662906
+        }
+      ]
+    },
+    {
+      "side": "left",
+      "rigidShoeVertices": 26517,
+      "minimumRigidShoeWeight": 1.0,
+      "blendMaximumWeightError": 2.9802142531565323e-08,
+      "dunkConnectionCollapsedTriangles": 0,
+      "posedAnkleCrossSections": [
+        {
+          "sourceHeightMeters": 0.22,
+          "lateralSpanMeters": 0.07285148539070813
+        },
+        {
+          "sourceHeightMeters": 0.24,
+          "lateralSpanMeters": 0.07685717940330503
+        },
+        {
+          "sourceHeightMeters": 0.26,
+          "lateralSpanMeters": 0.08238538354635237
+        },
+        {
+          "sourceHeightMeters": 0.28,
+          "lateralSpanMeters": 0.08843062072992323
+        }
+      ]
+    }
+  ],
+  "scope": "Rigid lower shoes, continuous calf-to-foot weights and finite connected dunk surfaces; visual review recorded separately"
+}

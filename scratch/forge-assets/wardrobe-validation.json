@@ -1,0 +1,54 @@
+{
+  "status": "passed",
+  "sourceSha256": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae",
+  "outfitSha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7",
+  "baseTriangles": 706786,
+  "maximumTriangles": 738658,
+  "bodySurfaceAssignedExactlyOnce": true,
+  "embeddedModelByteParity": true,
+  "separateMeshNames": [
+    "body",
+    "jersey",
+    "shorts",
+    "right-shoe",
+    "left-shoe",
+    "basketball",
+    "head-neck",
+    "exposed-upper-body",
+    "right-arm",
+    "left-arm",
+    "headband",
+    "right-sleeve",
+    "left-sleeve"
+  ],
+  "accessories": [
+    {
+      "name": "headband",
+      "vertices": 3456,
+      "triangles": 6912,
+      "degenerateFaces": 0,
+      "nonManifoldOrOpenEdges": 0,
+      "normalizedSkinWeights": true,
+      "finiteUnitNormals": true
+    },
+    {
+      "name": "right-sleeve",
+      "vertices": 6242,
+      "triangles": 12480,
+      "degenerateFaces": 0,
+      "nonManifoldOrOpenEdges": 0,
+      "normalizedSkinWeights": true,
+      "finiteUnitNormals": true
+    },
+    {
+      "name": "left-sleeve",
+      "vertices": 6242,
+      "triangles": 12480,
+      "degenerateFaces": 0,
+      "nonManifoldOrOpenEdges": 0,
+      "normalizedSkinWeights": true,
+      "finiteUnitNormals": true
+    }
+  ],
+  "archiveNotRebuilt": true
+}

@@ -1,0 +1,855 @@
+{
+  "status": "passed",
+  "originalSourcePreservedSha256": "3e2c595d11023a4d34b412c9a7db8975996df16e57bf6d7ba55f3cd247e0e4f7",
+  "sourceSha256": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae",
+  "riggedGlbSha256": "7dc1bc2bf22dc588e8c04e7d3957b3678b763826e21105a0b4ac1291b9313646",
+  "vertexCount": 353397,
+  "triangleCount": 706786,
+  "boneCount": 29,
+  "triangleBudget": 800000,
+  "bodyBindGeometryParity": "exact",
+  "glbOfflineWeightParity": "exact",
+  "weightSumMaximumError": 1.1920928955078125e-07,
+  "zeroInteractivePositionMaximumErrorMeters": 7.508891108898297e-08,
+  "gltfInverseBindMaximumError": 5.895737564820536e-08,
+  "gltfBodyBindMaximumErrorMeters": 1.0585741194724108e-07,
+  "gltfBallBindMaximumErrorMeters": 3.725290298461914e-09,
+  "sourceChecks": {
+    "parts": [
+      {
+        "name": "unified_player_body",
+        "vertices": 347347,
+        "triangles": 694690,
+        "connectedComponents": 1,
+        "eulerCharacteristic": 2,
+        "boundaryEdges": 0,
+        "nonmanifoldEdges": 0,
+        "sameDirectedEdges": 0,
+        "degenerateTriangles": 0,
+        "opposingAverageNormals": 0,
+        "minimumDoubleArea": 4.541634584202801e-13,
+        "signedVolumeMetersCubed": 0.09193171558107117
+      },
+      {
+        "name": "basketball",
+        "vertices": 6050,
+        "triangles": 12096,
+        "connectedComponents": 1,
+        "eulerCharacteristic": 2,
+        "boundaryEdges": 0,
+        "nonmanifoldEdges": 0,
+        "sameDirectedEdges": 0,
+        "degenerateTriangles": 0,
+        "opposingAverageNormals": 0,
+        "minimumDoubleArea": 2.2303314073243117e-06,
+        "signedVolumeMetersCubed": 0.0070494910689602635
+      }
+    ],
+    "offlineBufferParity": "exact",
+    "normalLengthMaximumError": 5.960464477539063e-08
+  },
+  "handFootWeightLocality": [
+    {
+      "group": "right fingers",
+      "minimumWeight": 0.1,
+      "vertices": 10924,
+      "maximumAnchorDistanceMeters": 0.19129098207687315,
+      "oppositeSideSubstantialVertices": 0,
+      "bounds": {
+        "min": [
+          -0.7555652260780334,
+          0.9721127152442932,
+          0.01983293518424034
+        ],
+        "max": [
+          -0.6489588022232056,
+          1.1286871433258057,
+          0.06590169668197632
+        ]
+      }
+    },
+    {
+      "group": "left fingers",
+      "minimumWeight": 0.1,
+      "vertices": 10890,
+      "maximumAnchorDistanceMeters": 0.19129098207687315,
+      "oppositeSideSubstantialVertices": 0,
+      "bounds": {
+        "min": [
+          0.6489588022232056,
+          0.9721127152442932,
+          0.01983293518424034
+        ],
+        "max": [
+          0.7555652260780334,
+          1.1286871433258057,
+          0.06590169668197632
+        ]
+      }
+    },
+    {
+      "group": "right foot",
+      "minimumWeight": 0.1,
+      "vertices": 37007,
+      "maximumAnchorDistanceMeters": 0.2573786469828306,
+      "oppositeSideSubstantialVertices": 0,
+      "bounds": {
+        "min": [
+          -0.16902397572994232,
+          1.2351665645837784e-07,
+          -0.1200171411037445
+        ],
+        "max": [
+          -0.051001038402318954,
+          0.21954134106636047,
+          0.231045201420784
+        ]
+      }
+    },
+    {
+      "group": "left foot",
+      "minimumWeight": 0.1,
+      "vertices": 37065,
+      "maximumAnchorDistanceMeters": 0.2573786469828306,
+      "oppositeSideSubstantialVertices": 0,
+      "bounds": {
+        "min": [
+          0.05097602307796478,
+          0.0,
+          -0.1200171411037445
+        ],
+        "max": [
+          0.1689990609884262,
+          0.21954132616519928,
+          0.231045201420784
+        ]
+      }
+    }
+  ],
+  "presetLimits": "User adjustments are relative to each authored preset baseline",
+  "neutral": {
+    "name": "Neutral bind",
+    "vertices": 353397,
+    "triangles": 706786,
+    "finite": true,
+    "normalLengthMaximumError": 3.3306690738754696e-16,
+    "trueCollapsedTriangles": 0,
+    "float32QuantizedCollapsedTriangles": 0,
+    "minimumDoublePrecisionArea2": 6.503418153203645e-13,
+    "minimumFloat32Area2": 4.5416345380647205e-13,
+    "opposingDeformedAverageNormalTriangles": 48,
+    "stronglyOpposingDeformedAverageNormalTriangles": 11,
+    "minimumDeformedFaceNormalCosine": -0.970874875548237,
+    "opposingDeformedAreaMetersSquared": 4.099301813545848e-06,
+    "opposingDeformedGroups": {
+      "spine": {
+        "triangles": 1,
+        "areaMetersSquared": 5.930702285673241e-08
+      },
+      "chest": {
+        "triangles": 16,
+        "areaMetersSquared": 1.7895249761111408e-06
+      },
+      "head": {
+        "triangles": 4,
+        "areaMetersSquared": 1.1609565461826349e-08
+      },
+      "right_shoulder": {
+        "triangles": 1,
+        "areaMetersSquared": 1.0424703984281675e-07
+      },
+      "right_elbow": {
+        "triangles": 4,
+        "areaMetersSquared": 1.7579474306928577e-06
+      },
+      "right_wrist": {
+        "triangles": 12,
+        "areaMetersSquared": 4.664507161150621e-08
+      },
+      "left_shoulder": {
+        "triangles": 1,
+        "areaMetersSquared": 2.749140450283557e-07
+      },
+      "left_elbow": {
+        "triangles": 2,
+        "areaMetersSquared": 3.0861593063833794e-08
+      },
+      "left_wrist": {
+        "triangles": 7,
+        "areaMetersSquared": 2.4245068876778063e-08
+      }
+    },
+    "worstFaceSourceCenter": [
+      -0.6336030960083008,
+      1.1178299188613892,
+      0.04930700361728668
+    ],
+    "worstFaceDeformedCenter": [
+      -0.6336030871561226,
+      1.117829978031824,
+      0.04930700323219805
+    ],
+    "worstFaceAreaMetersSquared": 3.831493600599092e-12,
+    "ballAttached": true,
+    "ballVisible": true,
+    "ballCenter": [
+      -0.6677044928073883,
+      1.0580509305000305,
+      0.17439203709363937
+    ],
+    "glbOfflineDeformationMaximumErrorMeters": 5.895737564820536e-08,
+    "skeletalSegmentLengthMaximumErrorMeters": 0.0,
+    "ballRadiusMaximumErrorMeters": 0.0,
+    "bounds": {
+      "min": [
+        -0.7867044806480408,
+        2.7755575615628914e-17,
+        -0.13884669645761472
+      ],
+      "max": [
+        0.7555652260780334,
+        1.9190754890441895,
+        0.29339203238487244
+      ]
+    }
+  },
+  "presets": [
+    {
+      "name": "Neutral stance",
+      "vertices": 353397,
+      "triangles": 706786,
+      "finite": true,
+      "normalLengthMaximumError": 3.3306690738754696e-16,
+      "trueCollapsedTriangles": 0,
+      "float32QuantizedCollapsedTriangles": 0,
+      "minimumDoublePrecisionArea2": 6.503418153203645e-13,
+      "minimumFloat32Area2": 4.5416345380647205e-13,
+      "opposingDeformedAverageNormalTriangles": 48,
+      "stronglyOpposingDeformedAverageNormalTriangles": 11,
+      "minimumDeformedFaceNormalCosine": -0.970874875548237,
+      "opposingDeformedAreaMetersSquared": 4.099301813545848e-06,
+      "opposingDeformedGroups": {
+        "spine": {
+          "triangles": 1,
+          "areaMetersSquared": 5.930702285673241e-08
+        },
+        "chest": {
+          "triangles": 16,
+          "areaMetersSquared": 1.7895249761111408e-06
+        },
+        "head": {
+          "triangles": 4,
+          "areaMetersSquared": 1.1609565461826349e-08
+        },
+        "right_shoulder": {
+          "triangles": 1,
+          "areaMetersSquared": 1.0424703984281675e-07
+        },
+        "right_elbow": {
+          "triangles": 4,
+          "areaMetersSquared": 1.7579474306928577e-06
+        },
+        "right_wrist": {
+          "triangles": 12,
+          "areaMetersSquared": 4.664507161150621e-08
+        },
+        "left_shoulder": {
+          "triangles": 1,
+          "areaMetersSquared": 2.749140450283557e-07
+        },
+        "left_elbow": {
+          "triangles": 2,
+          "areaMetersSquared": 3.0861593063833794e-08
+        },
+        "left_wrist": {
+          "triangles": 7,
+          "areaMetersSquared": 2.4245068876778063e-08
+        }
+      },
+      "worstFaceSourceCenter": [
+        -0.6336030960083008,
+        1.1178299188613892,
+        0.04930700361728668
+      ],
+      "worstFaceDeformedCenter": [
+        -0.6336030871561226,
+        1.117829978031824,
+        0.04930700323219805
+      ],
+      "worstFaceAreaMetersSquared": 3.831493600599092e-12,
+      "ballAttached": true,
+      "ballVisible": false,
+      "ballCenter": [
+        -0.6677044928073883,
+        1.0580509305000305,
+        0.17439203709363937
+      ],
+      "glbOfflineDeformationMaximumErrorMeters": 5.895737564820536e-08,
+      "skeletalSegmentLengthMaximumErrorMeters": 0.0,
+      "ballRadiusMaximumErrorMeters": 0.0,
+      "bounds": {
+        "min": [
+          -0.7867044806480408,
+          2.7755575615628914e-17,
+          -0.13884669645761472
+        ],
+        "max": [
+          0.7555652260780334,
+          1.9190754890441895,
+          0.29339203238487244
+        ]
+      }
+    },
+    {
+      "name": "Dunk",
+      "vertices": 353397,
+      "triangles": 706786,
+      "finite": true,
+      "normalLengthMaximumError": 3.3306690738754696e-16,
+      "trueCollapsedTriangles": 0,
+      "float32QuantizedCollapsedTriangles": 8,
+      "minimumDoublePrecisionArea2": 5.697089055136868e-13,
+      "minimumFloat32Area2": 0.0,
+      "opposingDeformedAverageNormalTriangles": 2511,
+      "stronglyOpposingDeformedAverageNormalTriangles": 1769,
+      "minimumDeformedFaceNormalCosine": -0.9998917060867651,
+      "opposingDeformedAreaMetersSquared": 0.003929100463123038,
+      "opposingDeformedGroups": {
+        "pelvis": {
+          "triangles": 21,
+          "areaMetersSquared": 2.2354991642460434e-05
+        },
+        "spine": {
+          "triangles": 18,
+          "areaMetersSquared": 3.6893320530404828e-06
+        },
+        "chest": {
+          "triangles": 123,
+          "areaMetersSquared": 8.189549088270775e-05
+        },
+        "head": {
+          "triangles": 6,
+          "areaMetersSquared": 2.949029375200891e-07
+        },
+        "right_shoulder": {
+          "triangles": 92,
+          "areaMetersSquared": 7.979908372465546e-05
+        },
+        "right_elbow": {
+          "triangles": 15,
+          "areaMetersSquared": 6.335807321240619e-05
+        },
+        "right_wrist": {
+          "triangles": 18,
+          "areaMetersSquared": 4.963867303682748e-07
+        },
+        "left_shoulder": {
+          "triangles": 5,
+          "areaMetersSquared": 1.8436822225660813e-06
+        },
+        "left_elbow": {
+          "triangles": 4,
+          "areaMetersSquared": 2.6931479435990075e-07
+        },
+        "left_wrist": {
+          "triangles": 7,
+          "areaMetersSquared": 5.439677579514352e-08
+        },
+        "right_hip": {
+          "triangles": 985,
+          "areaMetersSquared": 0.0012397639114054074
+        },
+        "right_knee": {
+          "triangles": 441,
+          "areaMetersSquared": 0.001334944021993135
+        },
+        "right_ankle": {
+          "triangles": 5,
+          "areaMetersSquared": 1.0585255806802459e-05
+        },
+        "left_hip": {
+          "triangles": 499,
+          "areaMetersSquared": 0.000605903372926262
+        },
+        "left_knee": {
+          "triangles": 272,
+          "areaMetersSquared": 0.00048384824601555194
+        }
+      },
+      "worstFaceSourceCenter": [
+        0.05647847056388855,
+        0.5447669625282288,
+        0.027301860973238945
+      ],
+      "worstFaceDeformedCenter": [
+        0.10292175879562376,
+        0.7843713998081693,
+        0.37506848550313937
+      ],
+      "worstFaceAreaMetersSquared": 1.0516873520354431e-06,
+      "ballAttached": true,
+      "ballVisible": true,
+      "ballCenter": [
+        -0.4345745710134786,
+        2.118510709083686,
+        -0.056324350420725026
+      ],
+      "glbOfflineDeformationMaximumErrorMeters": 5.819893611480609e-08,
+      "skeletalSegmentLengthMaximumErrorMeters": 2.636779683484747e-16,
+      "ballRadiusMaximumErrorMeters": 4.440892098500626e-16,
+      "bounds": {
+        "min": [
+          -0.6024964760141375,
+          0.2000004048530189,
+          -0.7691133502312727
+        ],
+        "max": [
+          0.4215645888002699,
+          2.2375107267266605,
+          0.4170980718652605
+        ]
+      }
+    },
+    {
+      "name": "Layup",
+      "vertices": 353397,
+      "triangles": 706786,
+      "finite": true,
+      "normalLengthMaximumError": 3.3306690738754696e-16,
+      "trueCollapsedTriangles": 0,
+      "float32QuantizedCollapsedTriangles": 10,
+      "minimumDoublePrecisionArea2": 1.220926009735483e-12,
+      "minimumFloat32Area2": 0.0,
+      "opposingDeformedAverageNormalTriangles": 1767,
+      "stronglyOpposingDeformedAverageNormalTriangles": 1123,
+      "minimumDeformedFaceNormalCosine": -0.9986450108801784,
+      "opposingDeformedAreaMetersSquared": 0.003273007913923637,
+      "opposingDeformedGroups": {
+        "pelvis": {
+          "triangles": 9,
+          "areaMetersSquared": 2.1434058672710187e-06
+        },
+        "spine": {
+          "triangles": 19,
+          "areaMetersSquared": 4.502816358969293e-06
+        },
+        "chest": {
+          "triangles": 449,
+          "areaMetersSquared": 0.0006649376237507358
+        },
+        "head": {
+          "triangles": 4,
+          "areaMetersSquared": 1.161024033769274e-08
+        },
+        "right_shoulder": {
+          "triangles": 593,
+          "areaMetersSquared": 0.0005551672592718005
+        },
+        "right_elbow": {
+          "triangles": 6,
+          "areaMetersSquared": 1.0896659359673945e-05
+        },
+        "right_wrist": {
+          "triangles": 16,
+          "areaMetersSquared": 3.9831058732659545e-07
+        },
+        "left_shoulder": {
+          "triangles": 65,
+          "areaMetersSquared": 0.00037315845974492947
+        },
+        "left_elbow": {
+          "triangles": 69,
+          "areaMetersSquared": 0.0006083491054497487
+        },
+        "left_wrist": {
+          "triangles": 12,
+          "areaMetersSquared": 2.539032395565399e-08
+        },
+        "right_hip": {
+          "triangles": 23,
+          "areaMetersSquared": 0.00037413309900678304
+        },
+        "right_knee": {
+          "triangles": 8,
+          "areaMetersSquared": 5.264881395119202e-06
+        },
+        "right_ankle": {
+          "triangles": 1,
+          "areaMetersSquared": 4.0575445172096205e-06
+        },
+        "left_hip": {
+          "triangles": 297,
+          "areaMetersSquared": 0.00034645630879208585
+        },
+        "left_knee": {
+          "triangles": 196,
+          "areaMetersSquared": 0.0003235054392576905
+        }
+      },
+      "worstFaceSourceCenter": [
+        0.16206875443458557,
+        1.1538718938827515,
+        0.008561617694795132
+      ],
+      "worstFaceDeformedCenter": [
+        0.32103049512909326,
+        1.1598651333849463,
+        0.008823366767576316
+      ],
+      "worstFaceAreaMetersSquared": 8.50206779685463e-08,
+      "ballAttached": true,
+      "ballVisible": true,
+      "ballCenter": [
+        -0.01119962196027879,
+        2.2494816516829554,
+        0.3321139303514261
+      ],
+      "glbOfflineDeformationMaximumErrorMeters": 5.320107310247124e-08,
+      "skeletalSegmentLengthMaximumErrorMeters": 1.6653345369377348e-16,
+      "ballRadiusMaximumErrorMeters": 3.885780586188048e-16,
+      "bounds": {
+        "min": [
+          -0.13019960980093126,
+          0.20000006114625507,
+          -0.5180251869657372
+        ],
+        "max": [
+          0.7795892812440661,
+          2.3684816693259303,
+          0.4822194305843177
+        ]
+      }
+    },
+    {
+      "name": "Defense",
+      "vertices": 353397,
+      "triangles": 706786,
+      "finite": true,
+      "normalLengthMaximumError": 3.3306690738754696e-16,
+      "trueCollapsedTriangles": 0,
+      "float32QuantizedCollapsedTriangles": 12,
+      "minimumDoublePrecisionArea2": 5.148457257063207e-13,
+      "minimumFloat32Area2": 0.0,
+      "opposingDeformedAverageNormalTriangles": 155,
+      "stronglyOpposingDeformedAverageNormalTriangles": 64,
+      "minimumDeformedFaceNormalCosine": -0.9847553696310677,
+      "opposingDeformedAreaMetersSquared": 0.00012344791974803115,
+      "opposingDeformedGroups": {
+        "pelvis": {
+          "triangles": 11,
+          "areaMetersSquared": 1.7785038477483969e-06
+        },
+        "spine": {
+          "triangles": 33,
+          "areaMetersSquared": 8.349234903264935e-06
+        },
+        "chest": {
+          "triangles": 41,
+          "areaMetersSquared": 6.535989384837037e-06
+        },
+        "head": {
+          "triangles": 3,
+          "areaMetersSquared": 4.6784601208174547e-08
+        },
+        "right_elbow": {
+          "triangles": 5,
+          "areaMetersSquared": 8.680997545818997e-06
+        },
+        "right_wrist": {
+          "triangles": 12,
+          "areaMetersSquared": 5.473017041189509e-08
+        },
+        "left_elbow": {
+          "triangles": 4,
+          "areaMetersSquared": 1.8166222747064619e-07
+        },
+        "left_wrist": {
+          "triangles": 8,
+          "areaMetersSquared": 5.469221084466705e-08
+        },
+        "right_hip": {
+          "triangles": 12,
+          "areaMetersSquared": 9.186387118112935e-05
+        },
+        "right_knee": {
+          "triangles": 5,
+          "areaMetersSquared": 1.430424899820243e-06
+        },
+        "left_hip": {
+          "triangles": 17,
+          "areaMetersSquared": 4.187938563716339e-06
+        },
+        "left_knee": {
+          "triangles": 4,
+          "areaMetersSquared": 2.830902117604751e-07
+        }
+      },
+      "worstFaceSourceCenter": [
+        -0.15108273923397064,
+        1.0684475898742676,
+        0.002738352632150054
+      ],
+      "worstFaceDeformedCenter": [
+        -0.1307709817353745,
+        0.9355723816484082,
+        -0.01245521145520713
+      ],
+      "worstFaceAreaMetersSquared": 2.8652461278612556e-07,
+      "ballAttached": true,
+      "ballVisible": false,
+      "ballCenter": [
+        -0.6692589568373523,
+        0.9231725347029677,
+        0.3342858689818806
+      ],
+      "glbOfflineDeformationMaximumErrorMeters": 5.796349955566882e-08,
+      "skeletalSegmentLengthMaximumErrorMeters": 1.1102230246251565e-16,
+      "ballRadiusMaximumErrorMeters": 2.220446049250313e-16,
+      "bounds": {
+        "min": [
+          -0.7882162689187472,
+          -4.238846208084995e-07,
+          -0.13950064771894435
+        ],
+        "max": [
+          0.7563096838089762,
+          1.7580137575497572,
+          0.453257357965422
+        ]
+      }
+    },
+    {
+      "name": "Jump shot",
+      "vertices": 353397,
+      "triangles": 706786,
+      "finite": true,
+      "normalLengthMaximumError": 3.3306690738754696e-16,
+      "trueCollapsedTriangles": 0,
+      "float32QuantizedCollapsedTriangles": 10,
+      "minimumDoublePrecisionArea2": 1.0976120466051199e-12,
+      "minimumFloat32Area2": 0.0,
+      "opposingDeformedAverageNormalTriangles": 2807,
+      "stronglyOpposingDeformedAverageNormalTriangles": 1941,
+      "minimumDeformedFaceNormalCosine": -0.9992812609188562,
+      "opposingDeformedAreaMetersSquared": 0.0037627052016541125,
+      "opposingDeformedGroups": {
+        "pelvis": {
+          "triangles": 3,
+          "areaMetersSquared": 2.967936427471316e-07
+        },
+        "spine": {
+          "triangles": 9,
+          "areaMetersSquared": 9.212882234545165e-07
+        },
+        "chest": {
+          "triangles": 1178,
+          "areaMetersSquared": 0.0018528310875801938
+        },
+        "head": {
+          "triangles": 3,
+          "areaMetersSquared": 2.4111124412511487e-08
+        },
+        "right_shoulder": {
+          "triangles": 723,
+          "areaMetersSquared": 0.0011072111770280189
+        },
+        "right_elbow": {
+          "triangles": 124,
+          "areaMetersSquared": 8.906022263339919e-05
+        },
+        "right_wrist": {
+          "triangles": 251,
+          "areaMetersSquared": 5.606551112088554e-05
+        },
+        "left_shoulder": {
+          "triangles": 485,
+          "areaMetersSquared": 0.000654586560970087
+        },
+        "left_elbow": {
+          "triangles": 5,
+          "areaMetersSquared": 6.43384595211934e-07
+        },
+        "left_wrist": {
+          "triangles": 17,
+          "areaMetersSquared": 1.2525492996924148e-07
+        },
+        "right_hip": {
+          "triangles": 2,
+          "areaMetersSquared": 8.704869103928672e-08
+        },
+        "right_knee": {
+          "triangles": 3,
+          "areaMetersSquared": 2.1629113814171056e-07
+        },
+        "left_hip": {
+          "triangles": 2,
+          "areaMetersSquared": 4.62904701745551e-07
+        },
+        "left_knee": {
+          "triangles": 2,
+          "areaMetersSquared": 1.7356527480645585e-07
+        }
+      },
+      "worstFaceSourceCenter": [
+        -0.6114733815193176,
+        1.1107784509658813,
+        0.009450715035200119
+      ],
+      "worstFaceDeformedCenter": [
+        -0.10820807821396461,
+        2.1570735980272775,
+        0.3259216511368997
+      ],
+      "worstFaceAreaMetersSquared": 1.7054574150633515e-10,
+      "ballAttached": true,
+      "ballVisible": true,
+      "ballCenter": [
+        -0.10235394845291708,
+        2.297341896042959,
+        0.4252664222562969
+      ],
+      "glbOfflineDeformationMaximumErrorMeters": 5.699718830243228e-08,
+      "skeletalSegmentLengthMaximumErrorMeters": 2.0816681711721685e-16,
+      "ballRadiusMaximumErrorMeters": 3.7470027081099033e-16,
+      "bounds": {
+        "min": [
+          -0.2581518948689533,
+          0.10999970235492813,
+          -0.1476973021845095
+        ],
+        "max": [
+          0.2712938343592276,
+          2.416341913685934,
+          0.5442664175475298
+        ]
+      }
+    },
+    {
+      "name": "Dribble",
+      "vertices": 353397,
+      "triangles": 706786,
+      "finite": true,
+      "normalLengthMaximumError": 3.3306690738754696e-16,
+      "trueCollapsedTriangles": 0,
+      "float32QuantizedCollapsedTriangles": 16,
+      "minimumDoublePrecisionArea2": 6.443039544330463e-13,
+      "minimumFloat32Area2": 0.0,
+      "opposingDeformedAverageNormalTriangles": 250,
+      "stronglyOpposingDeformedAverageNormalTriangles": 122,
+      "minimumDeformedFaceNormalCosine": -0.998424871793736,
+      "opposingDeformedAreaMetersSquared": 0.0009788464401780186,
+      "opposingDeformedGroups": {
+        "pelvis": {
+          "triangles": 5,
+          "areaMetersSquared": 5.740082293946285e-07
+        },
+        "spine": {
+          "triangles": 15,
+          "areaMetersSquared": 2.2258014407469256e-06
+        },
+        "chest": {
+          "triangles": 71,
+          "areaMetersSquared": 1.6168339592277406e-05
+        },
+        "head": {
+          "triangles": 3,
+          "areaMetersSquared": 3.7758676500119735e-08
+        },
+        "right_shoulder": {
+          "triangles": 35,
+          "areaMetersSquared": 0.00020615141183640234
+        },
+        "right_elbow": {
+          "triangles": 47,
+          "areaMetersSquared": 0.0004132767994866111
+        },
+        "right_wrist": {
+          "triangles": 7,
+          "areaMetersSquared": 2.8054107773010068e-08
+        },
+        "left_shoulder": {
+          "triangles": 6,
+          "areaMetersSquared": 9.476789970828351e-06
+        },
+        "left_elbow": {
+          "triangles": 6,
+          "areaMetersSquared": 1.4013903144417862e-06
+        },
+        "left_wrist": {
+          "triangles": 11,
+          "areaMetersSquared": 1.6426738188554473e-07
+        },
+        "right_hip": {
+          "triangles": 16,
+          "areaMetersSquared": 0.00019063744164240408
+        },
+        "right_knee": {
+          "triangles": 2,
+          "areaMetersSquared": 7.760950259799021e-08
+        },
+        "left_hip": {
+          "triangles": 14,
+          "areaMetersSquared": 0.0001288693255833076
+        },
+        "left_knee": {
+          "triangles": 7,
+          "areaMetersSquared": 4.3574151815809815e-06
+        },
+        "left_ankle": {
+          "triangles": 5,
+          "areaMetersSquared": 5.40002723126689e-06
+        }
+      },
+      "worstFaceSourceCenter": [
+        0.16020669043064117,
+        1.1440882682800293,
+        0.009677792899310589
+      ],
+      "worstFaceDeformedCenter": [
+        0.16044483844838023,
+        1.087695263164508,
+        0.020724550779336628
+      ],
+      "worstFaceAreaMetersSquared": 5.411339610169482e-08,
+      "ballAttached": false,
+      "ballVisible": true,
+      "ballCenter": [
+        -0.4887554928073883,
+        0.9426839305000304,
+        0.36121203709363936
+      ],
+      "glbOfflineDeformationMaximumErrorMeters": 5.8125340762771316e-08,
+      "skeletalSegmentLengthMaximumErrorMeters": 1.1102230246251565e-16,
+      "ballRadiusMaximumErrorMeters": 1.1102230246251565e-16,
+      "bounds": {
+        "min": [
+          -0.6077554806480407,
+          -4.2238887733928123e-07,
+          -0.6131598251128355
+        ],
+        "max": [
+          0.6113824096079664,
+          1.8474122285298995,
+          0.4846067734946051
+        ]
+      }
+    }
+  ],
+  "ballChecks": [
+    "rigid_in_all_presets",
+    "held_follows_wrist",
+    "detached_ignores_wrist",
+    "detach_preserves_position",
+    "reattach_preserves_position"
+  ],
+  "verifiedInputs": {
+    "basketball-athlete.glb": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae",
+    "athlete-rig-data.js": "a32127301275881a516e39faa22e9c572f6edd85308c4aad7081aba31626c63b",
+    "basketball-athlete-poseable.glb": "7dc1bc2bf22dc588e8c04e7d3957b3678b763826e21105a0b4ac1291b9313646",
+    "basketball-dunk-silhouette.glb": "3e2c595d11023a4d34b412c9a7db8975996df16e57bf6d7ba55f3cd247e0e4f7",
+    "athlete-model-data.js": "b4ceb8fb687845078a4d224115a108161b243a000f7b180c9afacb0211c86308",
+    "athlete-model-validation.json": "5dd43508415452d515a73f8126b8643f7f8089188f7c150c34bd0eb8c5440f28",
+    "basketball-preset-poses.json": "76b2f6ad77b38cf54cff76d95b29362d52b1858a733f3dd2587c9e045af3dfc9",
+    "athlete-pose-presets.js": "0b6277e07d5f8ad2979b44c6218d7b445dd5ad2242be3fda6d59c340c35c7910"
+  }
+}

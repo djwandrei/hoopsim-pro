@@ -1,0 +1,153 @@
+{
+  "status": "passed",
+  "sourceSha256": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae",
+  "presetsSha256": "76b2f6ad77b38cf54cff76d95b29362d52b1858a733f3dd2587c9e045af3dfc9",
+  "checks": [
+    {
+      "preset": "neutral",
+      "side": "right",
+      "wristBendDegrees": 0.0,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0,
+      "controlsBall": false,
+      "palmTowardBall": null,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": 0.032
+    },
+    {
+      "preset": "neutral",
+      "side": "left",
+      "wristBendDegrees": 0.0,
+      "residualWristTwistDegrees": -0.0,
+      "orientationDeterminant": 1.0,
+      "controlsBall": false,
+      "palmTowardBall": null,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": -0.032
+    },
+    {
+      "preset": "dunk",
+      "side": "right",
+      "wristBendDegrees": 9.079,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0000000000000016,
+      "controlsBall": true,
+      "palmTowardBall": 0.991,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": 0.032
+    },
+    {
+      "preset": "dunk",
+      "side": "left",
+      "wristBendDegrees": 11.133,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0000000000000007,
+      "controlsBall": false,
+      "palmTowardBall": null,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": -0.032
+    },
+    {
+      "preset": "layup",
+      "side": "right",
+      "wristBendDegrees": 3.639,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0000000000000002,
+      "controlsBall": true,
+      "palmTowardBall": 0.9901,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": 0.032
+    },
+    {
+      "preset": "layup",
+      "side": "left",
+      "wristBendDegrees": 3.722,
+      "residualWristTwistDegrees": -0.0,
+      "orientationDeterminant": 0.9999999999999999,
+      "controlsBall": false,
+      "palmTowardBall": null,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": -0.032
+    },
+    {
+      "preset": "defense",
+      "side": "right",
+      "wristBendDegrees": 2.07,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0000000000000002,
+      "controlsBall": false,
+      "palmTowardBall": null,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": 0.032
+    },
+    {
+      "preset": "defense",
+      "side": "left",
+      "wristBendDegrees": 2.07,
+      "residualWristTwistDegrees": -0.0,
+      "orientationDeterminant": 1.0000000000000002,
+      "controlsBall": false,
+      "palmTowardBall": null,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": -0.032
+    },
+    {
+      "preset": "jump-shot",
+      "side": "right",
+      "wristBendDegrees": 55.0,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0000000000000002,
+      "controlsBall": true,
+      "palmTowardBall": 0.9901,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": 0.032
+    },
+    {
+      "preset": "jump-shot",
+      "side": "left",
+      "wristBendDegrees": 23.867,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0000000000000007,
+      "controlsBall": true,
+      "palmTowardBall": 0.7759,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": -0.032
+    },
+    {
+      "preset": "dribble",
+      "side": "right",
+      "wristBendDegrees": 16.518,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0000000000000007,
+      "controlsBall": true,
+      "palmTowardBall": 0.9901,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": 0.032
+    },
+    {
+      "preset": "dribble",
+      "side": "left",
+      "wristBendDegrees": 24.905,
+      "residualWristTwistDegrees": 0.0,
+      "orientationDeterminant": 1.0000000000000009,
+      "controlsBall": false,
+      "palmTowardBall": null,
+      "fingerCurlTowardPalm": true,
+      "thumbSideCorrect": true,
+      "thumbLateralOffsetMeters": -0.032
+    }
+  ],
+  "method": "Palm roll authored at forearm, anatomically correct opposite thumb sides checked explicitly, fingertip flex toward palms. Actual skinned surfaces rendered for review.",
+  "scope": "Preset orientation and geometric wrist bend checks; not an exhaustive biomechanics or collision simulation."
+}

@@ -1,0 +1,799 @@
+{
+  "version": 2,
+  "createdUtc": "2026-10-08T16:29:04.644461+00:00",
+  "athleteSourceSha256": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae",
+  "athleteRigSha256": "7dc1bc2bf22dc588e8c04e7d3957b3678b763826e21105a0b4ac1291b9313646",
+  "outfitSha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7",
+  "styledGlbSha256": "cbd5356104045e2b9e9f7e00ba7d9c7c80dcb09f5a9a708cf660a3e5ed9b6f44",
+  "maximumTriangles": 738658,
+  "triangleBudget": 800000,
+  "uniformDesigns": 90,
+  "verifiedEmbeddedUniformImages": 252,
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 16381,
+      "sha256": "2c1cb1bb26e1f51c883f99aa138d3f1e52b41c4fb2bbb0ab518688ff713571fe"
+    },
+    {
+      "path": "index-static.html",
+      "bytes": 18156,
+      "sha256": "3cfe5a4abadb05e8e93d906339d12810a7768e3afa947c46368e18740d13f514"
+    },
+    {
+      "path": "pose-controller.js",
+      "bytes": 38666,
+      "sha256": "d41ebf247c9683c026688f840fdb975de71e9a5aa4c413d62c75fb9763c5f1f6"
+    },
+    {
+      "path": "uniform-controller.js",
+      "bytes": 15261,
+      "sha256": "e8883f03cf98a39b02118e3669e99f3efbf7ad3c824f537bc5f8ddaf7d66c254"
+    },
+    {
+      "path": "uniform-atlas.js",
+      "bytes": 3472,
+      "sha256": "a91f4c1dcf7b6608924d8521fcd87ba845d8997b1ec1b649a1e2a828f4146855"
+    },
+    {
+      "path": "uniform-catalog.js",
+      "bytes": 52933,
+      "sha256": "4713b71a612e3782c2a9f756d21c633e7428b23f034d0c388b03213d251091c4"
+    },
+    {
+      "path": "uniform-source-manifest.json",
+      "bytes": 67376,
+      "sha256": "09f1e9f8226a21cca60f68cd61a771d09fb51847784ea9aeea5df71e5de5b32b"
+    },
+    {
+      "path": "uniform-archive-references.json",
+      "bytes": 90450,
+      "sha256": "d781a512b7d8cb7ca191875c3d15ff49927b2d5094b9b6790f5ef3f4af002954"
+    },
+    {
+      "path": "athlete-model-data.js",
+      "bytes": 22619249,
+      "sha256": "b4ceb8fb687845078a4d224115a108161b243a000f7b180c9afacb0211c86308"
+    },
+    {
+      "path": "athlete-rig-data.js",
+      "bytes": 9433295,
+      "sha256": "a32127301275881a516e39faa22e9c572f6edd85308c4aad7081aba31626c63b"
+    },
+    {
+      "path": "athlete-pose-presets.js",
+      "bytes": 7325,
+      "sha256": "0b6277e07d5f8ad2979b44c6218d7b445dd5ad2242be3fda6d59c340c35c7910"
+    },
+    {
+      "path": "basketball-surface-data.js",
+      "bytes": 6748688,
+      "sha256": "15c9f7eb52890f838ffa7eea5fb4aa9c46d4fa1c937a7f9a0448ff60f9a2608f"
+    },
+    {
+      "path": "outfit-elements.js",
+      "bytes": 12755063,
+      "sha256": "280cf90e8b9adb5cc5784749d53a13e88d0ccf66b2f55008f620e0c1fe5253a3"
+    },
+    {
+      "path": "outfit-model-data.js",
+      "bytes": 49761520,
+      "sha256": "62dc44e12499dde7eda97e223248a73deca9cffaf16abdbba0e2042390f47e20"
+    },
+    {
+      "path": "model-data.js",
+      "bytes": 14402129,
+      "sha256": "c388aa0e901e79ad584896af42dd415d5726cee0dd864ef841260df65fc6b5d2"
+    },
+    {
+      "path": "basketball-athlete.glb",
+      "bytes": 16964412,
+      "sha256": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae"
+    },
+    {
+      "path": "basketball-athlete-poseable.glb",
+      "bytes": 23850352,
+      "sha256": "7dc1bc2bf22dc588e8c04e7d3957b3678b763826e21105a0b4ac1291b9313646"
+    },
+    {
+      "path": "basketball-athlete-outfit.glb",
+      "bytes": 37321108,
+      "sha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7"
+    },
+    {
+      "path": "basketball-athlete-styled.glb",
+      "bytes": 39831328,
+      "sha256": "cbd5356104045e2b9e9f7e00ba7d9c7c80dcb09f5a9a708cf660a3e5ed9b6f44"
+    },
+    {
+      "path": "basketball-dunk-silhouette.glb",
+      "bytes": 10801572,
+      "sha256": "3e2c595d11023a4d34b412c9a7db8975996df16e57bf6d7ba55f3cd247e0e4f7"
+    },
+    {
+      "path": "basketball-dunk-silhouette.obj",
+      "bytes": 34426036,
+      "sha256": "1980bfbc8ab324d29af96e9fcc929b413fe11df82819864341a47a0cf5a74196"
+    },
+    {
+      "path": "basketball-dunk-silhouette.mtl",
+      "bytes": 92,
+      "sha256": "bcb5f62653dbc0c005428d24f2491213eb703bc29a48725afcee861d41efc84e"
+    },
+    {
+      "path": "basketball-preset-poses.json",
+      "bytes": 31001,
+      "sha256": "76b2f6ad77b38cf54cff76d95b29362d52b1858a733f3dd2587c9e045af3dfc9"
+    },
+    {
+      "path": "reviewed-pose.json",
+      "bytes": 5866,
+      "sha256": "f0b79b6533326cbec964a7bbb3404f94070d777aa974861a28462f93ce94502e"
+    },
+    {
+      "path": "athlete-anatomy.json",
+      "bytes": 17313,
+      "sha256": "3bba063106027d3f73c7df3565e971ed6e434ee915be0423b6b325af6618cb14"
+    },
+    {
+      "path": "basketball-reference-leather.png",
+      "bytes": 3311647,
+      "sha256": "1851f0276e24191d09ccf751315dae9d3b9f6872471af37af2dbaf32147f253f"
+    },
+    {
+      "path": "basketball-reference-leather-pot.png",
+      "bytes": 5061249,
+      "sha256": "9be1f5269bf3aa2ef1802dfe4dcd00cd15a465703d479a52c2f10f95ca00c1db"
+    },
+    {
+      "path": "athlete-model-validation.json",
+      "bytes": 5369,
+      "sha256": "5dd43508415452d515a73f8126b8643f7f8089188f7c150c34bd0eb8c5440f28"
+    },
+    {
+      "path": "athlete-rig-validation.json",
+      "bytes": 1932,
+      "sha256": "f0a3474b2dc608f63c964b3fe9b4b142656c84906a5f6c8b345bc7f1b3fd12e6"
+    },
+    {
+      "path": "independent-athlete-rig-validation.json",
+      "bytes": 26713,
+      "sha256": "152e889949c99d03a6a23385905afc4b4685b32db6cf37d6b55efee67cb10605"
+    },
+    {
+      "path": "outfit-elements-validation.json",
+      "bytes": 1864,
+      "sha256": "ad25958c77c8beff5d8c144c5ba3bbdba8acdb25f3f8442ca14fb8e656f58fdb"
+    },
+    {
+      "path": "wardrobe-validation.json",
+      "bytes": 1359,
+      "sha256": "a3932b8022a028e8270f58f689da9a64d2083f9eb10db6a990ade9705c91dcdc"
+    },
+    {
+      "path": "hand-orientation-validation.json",
+      "bytes": 4901,
+      "sha256": "e557032475c8310d4dbc8d4fee3c3ea1e713030f304a2e0724b0983d2335e4fc"
+    },
+    {
+      "path": "ankle-connection-validation.json",
+      "bytes": 1730,
+      "sha256": "1b42e1e867749c51308a5171366dc53f98d4cdb3df0ce28982634f0afbca8402"
+    },
+    {
+      "path": "ball-contact-validation.json",
+      "bytes": 1809,
+      "sha256": "f3d32e86799d7b1a201e8e07bc6bd0de198bc4dde3c34ed19859f8f1197fd3c6"
+    },
+    {
+      "path": "surface-refinement-validation.json",
+      "bytes": 796,
+      "sha256": "33a01b4b12318dc7b438d0d6f658a04a57b9bbe6a68cfa29e4bbe07f2a2f83cc"
+    },
+    {
+      "path": "body-color-validation.json",
+      "bytes": 1928,
+      "sha256": "1240bdc63a5cd5b7f94e2ae4a24f1d13df39a5022b4192022fed66ac417c550e"
+    },
+    {
+      "path": "browser-refinement-validation.json",
+      "bytes": 1741,
+      "sha256": "5359562179efd16466101c535b2ee7c18a0c6da803cf42d35b387e30cc18866e"
+    },
+    {
+      "path": "pose-reference-review.json",
+      "bytes": 1624,
+      "sha256": "0acdfc3e1f06e0a63e4600a5a382ae2c8b71d69f55723f519be074ce7ee3a8e0"
+    },
+    {
+      "path": "body-color-review.png",
+      "bytes": 38601,
+      "sha256": "f47276684ae7c4df6a18760d79c3a9e80e3b88732634b2c4513e84d297e69aa1"
+    },
+    {
+      "path": "shooting-refinement-review.png",
+      "bytes": 21408,
+      "sha256": "62aca3dc3eafa3bcc24c36d744a771fd94b7e413f5850276c54ee47ca5988a89"
+    },
+    {
+      "path": "player-refinement-review.png",
+      "bytes": 40165,
+      "sha256": "e9b65eb5966b37c90c8e172cf782ce0e286574c2c8116e72293dce4be531bc3f"
+    },
+    {
+      "path": "hand-orientation-review.png",
+      "bytes": 320057,
+      "sha256": "c36f3e103c891317f4bf52378aaeaa8526c1284759256685d7bbfe50f3dce85e"
+    },
+    {
+      "path": "ankle-connection-review.png",
+      "bytes": 305345,
+      "sha256": "62abf96308ab0c9c0e7bc446bbbc8b0ed04db4c5e2c068381fe47ce7cf196d3c"
+    },
+    {
+      "path": "build_model.py",
+      "bytes": 29032,
+      "sha256": "ce597f1178e9fb45de947a9b374a2881065e4fdab8d9a24b3b3e061e7f713a5b"
+    },
+    {
+      "path": "blend_connections.py",
+      "bytes": 10101,
+      "sha256": "db0c17034d816357c80902b02a93c85c16e208168eb8a299c4fccf5be3cca17a"
+    },
+    {
+      "path": "refine_structure.py",
+      "bytes": 4125,
+      "sha256": "cf132d813ec21d12a72a5db65ee9b580022afe04536be2e630c2aac80d20ae32"
+    },
+    {
+      "path": "build_pose_rig.py",
+      "bytes": 15782,
+      "sha256": "db290fcea9197885f910b9a102ec8c0f81dc9c19e72ad939c0d255c38c71c2f6"
+    },
+    {
+      "path": "build_athlete_model.py",
+      "bytes": 42109,
+      "sha256": "ef7145467370433f4125c974adb3a6f075a76cbbc92b7357e8ca1d959e54e85e"
+    },
+    {
+      "path": "finalize_athlete_shape.py",
+      "bytes": 2982,
+      "sha256": "2b20d3489ea5a30a9a8c8d6f406f03bc1e553c8ca9ea755c8a818ec3a85c8042"
+    },
+    {
+      "path": "correct_athlete_hands.py",
+      "bytes": 6331,
+      "sha256": "f6c7464315208e08b0c496c7b2ecb95ee96d1f0d94bdc13538ac3687ca9230e5"
+    },
+    {
+      "path": "build_athlete_rig.py",
+      "bytes": 5430,
+      "sha256": "2d0efc243e2166a2d04575d37db6024a0286c7c800a955427851c9814f76abc1"
+    },
+    {
+      "path": "refine_athlete_skin.py",
+      "bytes": 3789,
+      "sha256": "a7b5d266bbf7cd1687e4942dc2b84337f536c5b1e5615db65d9b2a7da967320b"
+    },
+    {
+      "path": "build_basketball_presets.py",
+      "bytes": 14533,
+      "sha256": "e210274a05418be6ac1b35caf2b71cc489720e87c2b35e46dab261e33961fa7a"
+    },
+    {
+      "path": "build_athlete_accessories.py",
+      "bytes": 4451,
+      "sha256": "643aedd16a9804d208a386b11c242d76a474f4599143f3168d0a5e75d462cf3c"
+    },
+    {
+      "path": "build_basketball_surface.py",
+      "bytes": 1107,
+      "sha256": "f68f2a698b1abe4fc486568be75f242631eb1c88d103a05f42c5c9907543be90"
+    },
+    {
+      "path": "build_outfit_elements.py",
+      "bytes": 13585,
+      "sha256": "4c18d994b6d3e230fb9e6931a0cc7f7e433e429c5be70a279e1b2f78888b8439"
+    },
+    {
+      "path": "render_basketball_presets.py",
+      "bytes": 2403,
+      "sha256": "1279d3e86f9da3991ab6f729460125da88470e1196ec22bba65266e289b030bb"
+    },
+    {
+      "path": "review_hand_orientations.py",
+      "bytes": 5529,
+      "sha256": "ff8ac3bf7c37fc8f4afeb104b5d2ab566d50bb5088485bb33d915239c33f3f4e"
+    },
+    {
+      "path": "review_ball_contacts.py",
+      "bytes": 3884,
+      "sha256": "4e7d69f33d1220fd340acbd9b35fdac14634f6cee117d2610a13595e8f20f5e9"
+    },
+    {
+      "path": "validate_pose_rig.py",
+      "bytes": 26286,
+      "sha256": "6bf45df4a7e0f9c8fa48dd2340fcfbab41370acc701b08aff9d88159c70f34dc"
+    },
+    {
+      "path": "validate_athlete_rig.py",
+      "bytes": 31436,
+      "sha256": "bb0a96fe6e43c42773602a7ab591a09ee90d3fa90c77d42dd2c101aecece6d76"
+    },
+    {
+      "path": "validate_wardrobe.py",
+      "bytes": 3653,
+      "sha256": "be3ef3b33cd654de34f89c122e7979d8c17c6f50ee045020783d666373147501"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 46,
+      "sha256": "66d4e2b26f5bec0bedfd2b589877e659b1b78b14fdfa21c07f60bc534ebdb097"
+    },
+    {
+      "path": "POSE-CONTROLS.md",
+      "bytes": 9814,
+      "sha256": "4346378122f234e4e37e3d294584c9d97172ac200b46363ad4dd414462e1bc66"
+    },
+    {
+      "path": "package_basketball_studio.py",
+      "bytes": 8947,
+      "sha256": "582e10db17ada98e269a4cd085bf245203a44db7a85bc705aebea81faf9d3eaf"
+    },
+    {
+      "path": "uniform-assets/atlanta-hawks-association.js",
+      "bytes": 915441,
+      "sha256": "5e34b2e2d9bee4f11822a433b872a5b0a872cbe67de711930ab49108988c7e9a"
+    },
+    {
+      "path": "uniform-assets/atlanta-hawks-icon.js",
+      "bytes": 1297500,
+      "sha256": "7c9a814245eadf1e7aaef4a41b47d5590e624080d302b677a572dbd853011c48"
+    },
+    {
+      "path": "uniform-assets/atlanta-hawks-statement.js",
+      "bytes": 1252092,
+      "sha256": "2d80e03b07ceec48e40ae233d0e37eb70259240b94fe7adea5513a933a360912"
+    },
+    {
+      "path": "uniform-assets/boston-celtics-association.js",
+      "bytes": 1055868,
+      "sha256": "5c3c850f83b6f6b318fdc5c9d5569786697d09ab2f408c9b90b179afcbf190f5"
+    },
+    {
+      "path": "uniform-assets/boston-celtics-icon.js",
+      "bytes": 1109676,
+      "sha256": "84f92a569b2bb41d807ba4e534f683167349675202c0ff7a07420a08c365c2f7"
+    },
+    {
+      "path": "uniform-assets/boston-celtics-statement.js",
+      "bytes": 718502,
+      "sha256": "0ea0a027e30df9e5729bb2a59261432d93278b34df0fe1b0c67a0fd2e8c8f7fa"
+    },
+    {
+      "path": "uniform-assets/brooklyn-nets-association.js",
+      "bytes": 1075698,
+      "sha256": "cb351f2016d24516ed6e5abe8dc6dc16e897b86cd4202165e8d2157c43277262"
+    },
+    {
+      "path": "uniform-assets/brooklyn-nets-icon.js",
+      "bytes": 889554,
+      "sha256": "0732283433f0a42e8ebefe5efc37d430a8e6a2d6f5ce26b483060ebb0dacfd08"
+    },
+    {
+      "path": "uniform-assets/brooklyn-nets-statement.js",
+      "bytes": 1063410,
+      "sha256": "c2eb219b166b6323442e92b3e87235232f2fe20cd1c127e367f116a81dc06c27"
+    },
+    {
+      "path": "uniform-assets/charlotte-hornets-association.js",
+      "bytes": 821282,
+      "sha256": "0acce7fdf749e3fad788f04fae06dc0538fbdb9412d974075c7012aff34f5700"
+    },
+    {
+      "path": "uniform-assets/charlotte-hornets-icon.js",
+      "bytes": 1033730,
+      "sha256": "fd29e2411016d45295d4c098c189cd5a4b9973b71ea4ed530653bc5aabc1e9ee"
+    },
+    {
+      "path": "uniform-assets/charlotte-hornets-statement.js",
+      "bytes": 1339886,
+      "sha256": "1b24886ac3c709199fb90c3ff037bdf3d6bc8c44024674d0c7693a85fb1367ea"
+    },
+    {
+      "path": "uniform-assets/chicago-bulls-association.js",
+      "bytes": 904484,
+      "sha256": "02f02b6f35ef58f68246ed9b4718e04adeb12e5123a5fd83939154b72a68a6ce"
+    },
+    {
+      "path": "uniform-assets/chicago-bulls-icon.js",
+      "bytes": 886218,
+      "sha256": "c1984fe780db0b2d8ce4027f167495f8a626394a01191808570cbb3c7cd824a9"
+    },
+    {
+      "path": "uniform-assets/chicago-bulls-statement.js",
+      "bytes": 1030655,
+      "sha256": "b738bf70a769976af4a7a6f916e5b7c7e551e170c146ed0f69223c8a18839cee"
+    },
+    {
+      "path": "uniform-assets/cleveland-cavaliers-association.js",
+      "bytes": 777578,
+      "sha256": "5ba9b67b626ed41171373378e716015e54b0ae5a80a6ad1ecf941bc70f452cdd"
+    },
+    {
+      "path": "uniform-assets/cleveland-cavaliers-icon.js",
+      "bytes": 857646,
+      "sha256": "e70e7f7f8bc1ecc3a31513853166122f581ce1536bef4428be54818e3400700a"
+    },
+    {
+      "path": "uniform-assets/cleveland-cavaliers-statement.js",
+      "bytes": 838384,
+      "sha256": "1d497d5bd4691c33a00ca8317596ef699f030fcbfab4853ffde0fa63673bfb83"
+    },
+    {
+      "path": "uniform-assets/dallas-mavericks-association.js",
+      "bytes": 768312,
+      "sha256": "ff078f796849ddbb04af84b9327187c5b6bf03d0735064d22c02ba7c5ff992ad"
+    },
+    {
+      "path": "uniform-assets/dallas-mavericks-icon.js",
+      "bytes": 1334268,
+      "sha256": "f304b93a9e8974d278f1f74215ca171e18a07591c1488620cb08138c9d8079ed"
+    },
+    {
+      "path": "uniform-assets/dallas-mavericks-statement.js",
+      "bytes": 1078146,
+      "sha256": "ac22495b4a09393d82621d3e4ba66448f9fe829264cf899802a4df141dbc2318"
+    },
+    {
+      "path": "uniform-assets/denver-nuggets-association.js",
+      "bytes": 1086318,
+      "sha256": "79ad685199851e4163cc4bbcfc7c3fdea2552b2a5a5e76ec2a784c6f4453cd06"
+    },
+    {
+      "path": "uniform-assets/denver-nuggets-icon.js",
+      "bytes": 1216210,
+      "sha256": "84e2847e7ed95d62f7a8b02aedff4865d02e9391961be45e999cf349a90e1b7d"
+    },
+    {
+      "path": "uniform-assets/denver-nuggets-statement.js",
+      "bytes": 1316096,
+      "sha256": "6ecc712b1f278390329331d19d12ed63eb03d58e738db704b4edd86dc92f7e4d"
+    },
+    {
+      "path": "uniform-assets/detroit-pistons-association.js",
+      "bytes": 942788,
+      "sha256": "b1af46123dde191cc5f7723c96a2ab162d909b7fd0674dd9df09290bbd86eaa5"
+    },
+    {
+      "path": "uniform-assets/detroit-pistons-icon.js",
+      "bytes": 1018350,
+      "sha256": "e6ee06d2890ee7cf75ba4ac40230ff9dd090eef8123050d18ce15f599c67311a"
+    },
+    {
+      "path": "uniform-assets/detroit-pistons-statement.js",
+      "bytes": 892164,
+      "sha256": "a66157fc28ee540976b0ebab15ca12c9a7816716a22daef57a83036d0ec75706"
+    },
+    {
+      "path": "uniform-assets/golden-state-warriors-association.js",
+      "bytes": 966926,
+      "sha256": "abcee983ab6183358e159d68315ec93dd4ae3bae57783f9a2459fe19b95f9782"
+    },
+    {
+      "path": "uniform-assets/golden-state-warriors-icon.js",
+      "bytes": 1023866,
+      "sha256": "4884333c8f075482a693dac042643889b564bf30319972749977868480479693"
+    },
+    {
+      "path": "uniform-assets/golden-state-warriors-statement.js",
+      "bytes": 1204808,
+      "sha256": "83515e5f2c20b08e18be98edbdc2a264b93b634f1dd42b1735012a3770d00218"
+    },
+    {
+      "path": "uniform-assets/houston-rockets-association.js",
+      "bytes": 545431,
+      "sha256": "faaf10acb956b8e27abe7651f71fd1d02b53cef5d24e62084bae24dc32c58004"
+    },
+    {
+      "path": "uniform-assets/houston-rockets-icon.js",
+      "bytes": 780514,
+      "sha256": "0042ac6f5ff20ed3f4ed47b6bb48502577af6bf106f926d7cb14e2190d90c17a"
+    },
+    {
+      "path": "uniform-assets/houston-rockets-statement.js",
+      "bytes": 828160,
+      "sha256": "504d2456e0a7d9bb3a1a177430bcbf01de6d5efe0c6928122586ed50d948e413"
+    },
+    {
+      "path": "uniform-assets/indiana-pacers-association.js",
+      "bytes": 962086,
+      "sha256": "949e3e7a15bd266a45367d4c15429db5cfe5d97a5bdd80378493ee438a1d2fae"
+    },
+    {
+      "path": "uniform-assets/indiana-pacers-icon.js",
+      "bytes": 906908,
+      "sha256": "fc27630c9d2f0c040a4f97a1b15913726f1fe19b0e9e212b2f73c68d77201b73"
+    },
+    {
+      "path": "uniform-assets/indiana-pacers-statement.js",
+      "bytes": 932710,
+      "sha256": "4eb7aba78515ff792f0e5b31358f948d95435b4eabdcf66b9c2cc2c964dbc3bf"
+    },
+    {
+      "path": "uniform-assets/los-angeles-clippers-association.js",
+      "bytes": 582333,
+      "sha256": "9a823a4167607df9841ba7741bd42386d1fcc515bec0a1c224ed2c5a5837c1fd"
+    },
+    {
+      "path": "uniform-assets/los-angeles-clippers-icon.js",
+      "bytes": 903140,
+      "sha256": "7d8c6f89b1f42fbe5697ebc8dcbb9207e6587be79f2492e2f21fe0d89c1f67c8"
+    },
+    {
+      "path": "uniform-assets/los-angeles-clippers-statement.js",
+      "bytes": 905042,
+      "sha256": "196399eab23258f57ff6d2f98dc4ce5f2176dd37e407792bb6855e8a8c70bcf6"
+    },
+    {
+      "path": "uniform-assets/los-angeles-lakers-association.js",
+      "bytes": 645221,
+      "sha256": "9370a0b2b70706127f721ccd3016367dd06d9e7ce40674e3101476fb98ff5217"
+    },
+    {
+      "path": "uniform-assets/los-angeles-lakers-icon.js",
+      "bytes": 1407212,
+      "sha256": "9c556b2c67fec33ad3e5e4ac75a6de30fb1dfdda7dfdbba1b2f0dc7c0fa46fe7"
+    },
+    {
+      "path": "uniform-assets/los-angeles-lakers-statement.js",
+      "bytes": 1045154,
+      "sha256": "01c6236489409e3a0deee3c09f8d895ca91aa4c41df37b00152e736ba9fb936e"
+    },
+    {
+      "path": "uniform-assets/memphis-grizzlies-association.js",
+      "bytes": 667436,
+      "sha256": "246bd86fc35d33ff261d89628147114461a43be7b9d7c8b9cc808bb8e6ac06e7"
+    },
+    {
+      "path": "uniform-assets/memphis-grizzlies-icon.js",
+      "bytes": 788497,
+      "sha256": "2fec362237b21d15770bba953ed2f30fdc852ff7f89ac10b84be7b96d01d09f2"
+    },
+    {
+      "path": "uniform-assets/memphis-grizzlies-statement.js",
+      "bytes": 900879,
+      "sha256": "a2a0873238b15f761311a9be58e4327051f18a4bf16e29c1ac9a72d3e7fbf907"
+    },
+    {
+      "path": "uniform-assets/miami-heat-association.js",
+      "bytes": 992648,
+      "sha256": "8930725313397351b7fff8494eb2d310e8671c1534445bd2bfca309f243c450b"
+    },
+    {
+      "path": "uniform-assets/miami-heat-icon.js",
+      "bytes": 871232,
+      "sha256": "a90bee1d0931fa11c93fa64ab6fafc885c522ab4f89613f737c596770be46748"
+    },
+    {
+      "path": "uniform-assets/miami-heat-statement.js",
+      "bytes": 956802,
+      "sha256": "6bb7ac418bd52bce02e9deee6590fd7298d66078eb9bb5d364cca25bb4941bfc"
+    },
+    {
+      "path": "uniform-assets/milwaukee-bucks-association.js",
+      "bytes": 541399,
+      "sha256": "2e26eb17a2aa53e3be78c96c5ec23cc673538092b71793bb855ee0f9a884f489"
+    },
+    {
+      "path": "uniform-assets/milwaukee-bucks-icon.js",
+      "bytes": 1148276,
+      "sha256": "7f16bbe36d7f2fc4993b72bbfb01b804990d776d041a69b0371585ede03e8ae9"
+    },
+    {
+      "path": "uniform-assets/milwaukee-bucks-statement.js",
+      "bytes": 1157029,
+      "sha256": "e0e7d139e7a162058f01e581f4103d4de026073dcc8a9970b0e4cb020f20cc70"
+    },
+    {
+      "path": "uniform-assets/minnesota-timberwolves-association.js",
+      "bytes": 912768,
+      "sha256": "208e048096a3a609b27f778362f083185db13e1f5d205cce5cbb1f91ffa92c61"
+    },
+    {
+      "path": "uniform-assets/minnesota-timberwolves-icon.js",
+      "bytes": 827147,
+      "sha256": "32c5b7e3e597af7c9de2645d8210c007eccb2e752871ea33b79bda66b0781c64"
+    },
+    {
+      "path": "uniform-assets/minnesota-timberwolves-statement.js",
+      "bytes": 799497,
+      "sha256": "317477b11e75b9d6163f3db71d0df844f3eca88350e8ec35a16f595d54b9f357"
+    },
+    {
+      "path": "uniform-assets/new-orleans-pelicans-association.js",
+      "bytes": 889114,
+      "sha256": "200a8da55475657af74dd910c910c07e001a67f49ef5885f24f5eb49ca0a417b"
+    },
+    {
+      "path": "uniform-assets/new-orleans-pelicans-icon.js",
+      "bytes": 846739,
+      "sha256": "3d15456a2b5bfff418bbf37962d483c44a6526f15d1f71f3228be39c536ae13f"
+    },
+    {
+      "path": "uniform-assets/new-orleans-pelicans-statement.js",
+      "bytes": 868529,
+      "sha256": "444320d7a2dc997985fef6e84d79e183c4e73b7a587db12d0fb68720708ec21a"
+    },
+    {
+      "path": "uniform-assets/new-york-knicks-association.js",
+      "bytes": 623431,
+      "sha256": "ece6cfa48fe844c8d216fd1a244a6b3799a2dcc1855114e3c70775f370031781"
+    },
+    {
+      "path": "uniform-assets/new-york-knicks-icon.js",
+      "bytes": 981073,
+      "sha256": "0e83e3a709a2f47401368c05450638d71fc0aaa9789e211721269d1195c249b1"
+    },
+    {
+      "path": "uniform-assets/new-york-knicks-statement.js",
+      "bytes": 1073241,
+      "sha256": "6432964418334477e98d72dd424cbc323db2d820828b1925c02d4f717c9a17ba"
+    },
+    {
+      "path": "uniform-assets/oklahoma-city-thunder-association.js",
+      "bytes": 620387,
+      "sha256": "0b10c6fd84c219edd9a260529f88a8a2e5664a5331ea9e6335103f0626dcd885"
+    },
+    {
+      "path": "uniform-assets/oklahoma-city-thunder-icon.js",
+      "bytes": 1029590,
+      "sha256": "ede60d3a9c923a8925ebeee59e2fa5a61a36fa8b4c321538b8313b0df024547f"
+    },
+    {
+      "path": "uniform-assets/oklahoma-city-thunder-statement.js",
+      "bytes": 1093980,
+      "sha256": "a3be03f8e9a02a80e77a53fdb65491ac3b1f5a50de1ba7ea038fc0ea894aad9b"
+    },
+    {
+      "path": "uniform-assets/orlando-magic-association.js",
+      "bytes": 1297418,
+      "sha256": "96cf9d8fbbc5670daacbde4a1d2ca7169f66676ec069111cb9c51b30973a5d5a"
+    },
+    {
+      "path": "uniform-assets/orlando-magic-icon.js",
+      "bytes": 1456976,
+      "sha256": "8bb727e0cb751d3ffeba5c625e4024117e22a54749da2fd2cb8068e3f6e2d126"
+    },
+    {
+      "path": "uniform-assets/orlando-magic-statement.js",
+      "bytes": 1379092,
+      "sha256": "43744dbbdd88cd1eb34a2ce2efbc17e26a8871f55482753f6fc34a5ab5587427"
+    },
+    {
+      "path": "uniform-assets/philadelphia-76ers-association.js",
+      "bytes": 1162782,
+      "sha256": "b457655e88c2ed8a027ac394a1a5083ba7d7c597031b75da52b10038507bb4b9"
+    },
+    {
+      "path": "uniform-assets/philadelphia-76ers-icon.js",
+      "bytes": 1337968,
+      "sha256": "76064c317ffd84f42e5ea19c931f4d14c4bc369fdb2b86e050b281a556850835"
+    },
+    {
+      "path": "uniform-assets/philadelphia-76ers-statement.js",
+      "bytes": 1049864,
+      "sha256": "ac69bec2ceeeeb7152be48ddd96b95ecf67967925b4a0c3288402c307e977676"
+    },
+    {
+      "path": "uniform-assets/phoenix-suns-association.js",
+      "bytes": 849660,
+      "sha256": "d44f0878a630754dbcc103a8e5d6f440dd3b2a11cb84519ccc7ed680a7736528"
+    },
+    {
+      "path": "uniform-assets/phoenix-suns-icon.js",
+      "bytes": 1362294,
+      "sha256": "f166d3eb16a5f30339bbf42ad83d1916c27d4c9b73b6dd55609b2b80f2bfb49d"
+    },
+    {
+      "path": "uniform-assets/phoenix-suns-statement.js",
+      "bytes": 957054,
+      "sha256": "5534b92562bbfa95cdad33ae97e2efeefe5fe78666809609c8ce13312dfc124b"
+    },
+    {
+      "path": "uniform-assets/portland-trail-blazers-association.js",
+      "bytes": 1063640,
+      "sha256": "eb2e97599d1c55e68292178ec215f3e7fe9c11b858fd70bcb23deeb7b44116d2"
+    },
+    {
+      "path": "uniform-assets/portland-trail-blazers-icon.js",
+      "bytes": 982266,
+      "sha256": "366463c8d0958cdba052c5b086229d832e4b75ed83683e97d53c80725f9aad68"
+    },
+    {
+      "path": "uniform-assets/portland-trail-blazers-statement.js",
+      "bytes": 839414,
+      "sha256": "b4802ae00e4f48de0e21aaf1e1e782436c96fcbdaeb6fc5f7bc8537bea20b68c"
+    },
+    {
+      "path": "uniform-assets/sacramento-kings-association.js",
+      "bytes": 1179267,
+      "sha256": "3ee02cb87e7631ce6b2e1f09508b2b4e17c05f6fe774a15cf4360a70de79fe75"
+    },
+    {
+      "path": "uniform-assets/sacramento-kings-icon.js",
+      "bytes": 946756,
+      "sha256": "a6ba23ffc8961aabb2d5102de9d635fbeedc64ffe91a4373458fe99c4eadab82"
+    },
+    {
+      "path": "uniform-assets/sacramento-kings-statement.js",
+      "bytes": 964466,
+      "sha256": "20e429b986c4b468bad1c556d4922244ab5d9df737af8fae3e8c1101da2131d1"
+    },
+    {
+      "path": "uniform-assets/san-antonio-spurs-association.js",
+      "bytes": 865300,
+      "sha256": "759eeb85ffb609dc831683879ae84d0f8b5765d3d9fd702f14871da03f172bce"
+    },
+    {
+      "path": "uniform-assets/san-antonio-spurs-icon.js",
+      "bytes": 938885,
+      "sha256": "df7bf828a76e58bd20904dce50657eabca1ba4ed19c1c0f5c5abe93583b935e7"
+    },
+    {
+      "path": "uniform-assets/san-antonio-spurs-statement.js",
+      "bytes": 939628,
+      "sha256": "a3e0111e704d68b2dec662182f1dc21aa8ec554899b9e219bb49d506a9b671bb"
+    },
+    {
+      "path": "uniform-assets/toronto-raptors-association.js",
+      "bytes": 775235,
+      "sha256": "61153497bbefadfb697e067b196a1476884dfe75f7cc4f9601449b472c55bb21"
+    },
+    {
+      "path": "uniform-assets/toronto-raptors-icon.js",
+      "bytes": 878601,
+      "sha256": "797c415a80d924c21255537ae8b091018ef99baf16af3fd360863994b0a9214c"
+    },
+    {
+      "path": "uniform-assets/toronto-raptors-statement.js",
+      "bytes": 783015,
+      "sha256": "5f32e62bcf60119eb1e6548893e037a311e9c8ae91ab487c315b44ce29a2c392"
+    },
+    {
+      "path": "uniform-assets/utah-jazz-association.js",
+      "bytes": 828323,
+      "sha256": "d2be7408dc11016b90e7137341cd731fe5271b8f6898b8c0125f6f57c3ae9bcf"
+    },
+    {
+      "path": "uniform-assets/utah-jazz-icon.js",
+      "bytes": 984210,
+      "sha256": "51cd041cae68b7877c2d9c5376dbaf83066359a9aff970047f29e65bc6c47573"
+    },
+    {
+      "path": "uniform-assets/utah-jazz-statement.js",
+      "bytes": 873388,
+      "sha256": "f53e19c1341dcd47e3140a9c48cefe5780abc8eb7058584982e2f4c82f1e29b8"
+    },
+    {
+      "path": "uniform-assets/washington-wizards-association.js",
+      "bytes": 1055840,
+      "sha256": "e36f5e22606b3af09fb212a0018a2816b32c9eaa1fdda88e5b1d45f15f769128"
+    },
+    {
+      "path": "uniform-assets/washington-wizards-icon.js",
+      "bytes": 910691,
+      "sha256": "f670fa0c450fe7c5f44470bf197b6f0c7fa21b56c3c3c479f1c9e0127287bf30"
+    },
+    {
+      "path": "uniform-assets/washington-wizards-statement.js",
+      "bytes": 856981,
+      "sha256": "a7790b5663be0876edcc45394c7309c71ad4f0dd7a8a251d00d741d1d1fe4f02"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9814,
+      "sha256": "4346378122f234e4e37e3d294584c9d97172ac200b46363ad4dd414462e1bc66"
+    }
+  ]
+}

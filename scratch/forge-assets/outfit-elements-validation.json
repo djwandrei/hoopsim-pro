@@ -1,0 +1,79 @@
+{
+  "status": "passed",
+  "sourceSha256": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae",
+  "outfitSha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7",
+  "triangleCount": 706786,
+  "maximumTriangleCount": 738658,
+  "meshNames": [
+    "body",
+    "jersey",
+    "shorts",
+    "right-shoe",
+    "left-shoe",
+    "basketball",
+    "head-neck",
+    "exposed-upper-body",
+    "right-arm",
+    "left-arm",
+    "headband",
+    "right-sleeve",
+    "left-sleeve"
+  ],
+  "groups": [
+    {
+      "id": "body",
+      "element": 0,
+      "triangleCount": 154577
+    },
+    {
+      "id": "jersey",
+      "element": 1,
+      "triangleCount": 56814
+    },
+    {
+      "id": "shorts",
+      "element": 2,
+      "triangleCount": 143931
+    },
+    {
+      "id": "right-shoe",
+      "element": 3,
+      "triangleCount": 72998
+    },
+    {
+      "id": "left-shoe",
+      "element": 4,
+      "triangleCount": 73147
+    },
+    {
+      "id": "basketball",
+      "element": 5,
+      "triangleCount": 12096
+    },
+    {
+      "id": "head-neck",
+      "element": 6,
+      "triangleCount": 83045
+    },
+    {
+      "id": "exposed-upper-body",
+      "element": 7,
+      "triangleCount": 37012
+    },
+    {
+      "id": "right-arm",
+      "element": 8,
+      "triangleCount": 36531
+    },
+    {
+      "id": "left-arm",
+      "element": 9,
+      "triangleCount": 36635
+    }
+  ],
+  "geometryDisplacementMeters": 0,
+  "skinWeightsRetained": true,
+  "surfaceCoverage": "Every triangle assigned once",
+  "construction": "Separate surface meshes with duplicated shared boundary vertices; not removable watertight garments or a fully modeled body underneath",
+  "textureScope": "Separate front/rear atlas islands, cloth margins at sides and explicit exposed neckline/armholes"
+}

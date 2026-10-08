@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "outfitSha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7",
+  "presetsSha256": "76b2f6ad77b38cf54cff76d95b29362d52b1858a733f3dd2587c9e045af3dfc9",
+  "dribbleLeftWristChangeMeters": [
+    0.07000000641842441,
+    -0.13322799887680215,
+    0.019999998618999926
+  ],
+  "neutralAndDefensePreserved": true,
+  "dunkAndLayupBodyDirectionsPreserved": true,
+  "photoInformedShotAndDribble": true,
+  "basketballTextureEmbeddedByteParity": true,
+  "ballLetteringNotMirrored": true,
+  "maximumBallFaceLongitudeSpan": 0.010418012738227844,
+  "orangeLeatherFraction": 0.8678350448608398,
+  "referencePages": 90,
+  "flatFrontReferences": 83,
+  "flatBackReferences": 79,
+  "referenceRevision": "f16bafec43b5",
+  "archiveNotRebuilt": true
+}

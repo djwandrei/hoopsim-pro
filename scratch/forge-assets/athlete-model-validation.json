@@ -1,0 +1,164 @@
+{
+  "status": "passed",
+  "vertexCount": 353397,
+  "triangleCount": 706786,
+  "triangleBudget": 800000,
+  "glbBytes": 16964412,
+  "glbSha256": "7d690aba4daeb84a265aedad135e992ee8b877449c4f523a8865a6f9d0d779ae",
+  "materialCount": 1,
+  "drawCalls": 1,
+  "parts": [
+    {
+      "name": "unified_player_body",
+      "firstVertex": 0,
+      "vertexCount": 347347,
+      "triangleCount": 694690
+    },
+    {
+      "name": "basketball",
+      "firstVertex": 347347,
+      "vertexCount": 6050,
+      "triangleCount": 12096
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.7867044806480408,
+      0.0,
+      -0.13884669542312622
+    ],
+    "max": [
+      0.7555652260780334,
+      1.9190754890441895,
+      0.29339203238487244
+    ]
+  },
+  "heightMeters": 1.9190754890441895,
+  "bodyConnectedComponents": 1,
+  "separateBasketball": true,
+  "degenerateTriangles": 0,
+  "consistentWinding": true,
+  "opposingSmoothNormalTriangles": 0,
+  "normalLengths": "unit",
+  "positiveConstituentVolumes": {
+    "unified_player_body": 0.0919317155810712,
+    "basketball": 0.0070494910689602565
+  },
+  "connectionRefinement": {
+    "method": "Exact body union plus tapered local Taubin smoothing",
+    "dependency": "manifold3d 3.5.4",
+    "sourceBodySurfaceCount": 79,
+    "bodyConnectedComponents": 1,
+    "basketballSeparateProp": true,
+    "seamVertexCount": 24168,
+    "refinedSeamEdges": 201388,
+    "trianglesBeforeSeamRefinement": 365790,
+    "trianglesAfterSeamRefinement": 768566,
+    "smoothedVertexCount": 288961,
+    "maxSmoothingDisplacementMeters": 0.007999999999999988,
+    "rejectedFlipMoves": 11111,
+    "bodyVolumeBeforeSmoothing": 0.0916479078639161,
+    "bodyVolumeAfterSmoothing": 0.09164334157131264,
+    "trianglesAfterOptimization": 481556,
+    "removedCutSliverTriangles": 287010
+  },
+  "surfaceGenusByPart": {
+    "unified_player_body": 0,
+    "basketball": 0
+  },
+  "finalRefinement": {
+    "targetTriangles": 750000,
+    "addedEdges": 128174,
+    "anatomicalPriorityFrame": "neutral_A_pose",
+    "projectedContourSamples": 121214,
+    "maximumContourCorrectionMeters": 0.00025,
+    "joinPriorityEdges": 32438,
+    "shoulderPriorityEdges": 15854,
+    "headPriorityEdges": 25720,
+    "additionalHeadTriangles": 50000,
+    "additionalLowerBodyTriangles": 50000,
+    "lowerBodyPriorityEdges": 50048,
+    "handPriorityEdges": 9439,
+    "shoePriorityEdges": 11253,
+    "garmentPriorityEdges": 50962,
+    "unusedVerticesRemoved": 0,
+    "exportSliverOptimization": {
+      "toleranceMeters": 1e-06,
+      "removedTriangles": 17582
+    },
+    "exportPositionSafety": {
+      "repairedFaces": 0,
+      "maximumMoveMeters": 0.0
+    },
+    "exportNormalSafety": {
+      "repairedFaces": 0,
+      "iterations": 0,
+      "minimumHemisphereAgreement": 1.1738457805665625e-05
+    },
+    "headWidthPositionSafety": {
+      "repairedFaces": 0,
+      "maximumMoveMeters": 0.0
+    },
+    "headWidthNormalSafety": {
+      "repairedFaces": 3,
+      "iterations": 9,
+      "minimumHemisphereAgreement": 2.46750087895542e-06
+    },
+    "handSurgeryOptimization": {
+      "toleranceMeters": 5e-06,
+      "discardedMicroscopicCutTriangles": 6,
+      "discardedMicroscopicCutVolumeMetersCubed": 8.794066183851371e-14,
+      "scope": "Final welded hands and wrist cut slivers"
+    },
+    "handSurgeryPositionSafety": {
+      "repairedFaces": 0,
+      "maximumMoveMeters": 0.0
+    },
+    "handSurgeryNormalSafety": {
+      "repairedFaces": 0,
+      "iterations": 0,
+      "minimumHemisphereAgreement": 1.0946782478066241e-05
+    }
+  },
+  "quantizationRepairs": 0,
+  "normalConstraintRepairs": 265,
+  "anatomy": {
+    "neutralPose": "A pose",
+    "headHeightMeters": 0.25,
+    "headCranialWidthMeters": 0.16632,
+    "shoulderPivotSpanMeters": 0.43,
+    "shoulderConstruction": "Continuous inboard-to-arm deltoid loft",
+    "waistWidthMeters": 0.3,
+    "pelvicEnvelopeWidthMeters": 0.356,
+    "headBackConstruction": "Independently interpolated smooth occipital outline",
+    "legConstruction": "Continuous tapered thighs, patellar transitions and high calf bellies",
+    "approximateHeadHeightRatio": 7.676301956176758
+  },
+  "limitations": [
+    "Independently authored approximate anatomy; featureless face without facial details or skin textures",
+    "Static neutral source mesh; rig and presets exported separately"
+  ],
+  "headWidthAdjustment": {
+    "upperCranialWidthScale": 1.08,
+    "blendStartMeters": 1.69,
+    "blendEndMeters": 1.77,
+    "vertexCount": 40356,
+    "maximumLateralMoveMeters": 0.006599999964237213,
+    "method": "Smooth lateral expansion with inverse-transpose Jacobian normals; positions and face count otherwise retained."
+  },
+  "handChiralityCorrected": true,
+  "handGeometryRepair": {
+    "method": "Replace mirrored hands with correct lateral thumb and finger ordering, Boolean-weld to retained wrist surfaces. Existing rounded head, clothing, shoes and legs retained.",
+    "previousSourceSha256": "65dda75f2a5503bb667fbd658b790c3fc741f99c264447858971dd2172b1169f",
+    "repairs": [
+      {
+        "side": "right",
+        "thumbSide": "anatomically correct lateral thumb"
+      },
+      {
+        "side": "left",
+        "thumbSide": "anatomically correct lateral thumb"
+      }
+    ]
+  }
+}

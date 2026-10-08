@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "method": "Closest point on posed body triangles versus the 119 mm sphere; both shot hands measured independently.",
+  "rigSha256": "a32127301275881a516e39faa22e9c572f6edd85308c4aad7081aba31626c63b",
+  "presetsSha256": "76b2f6ad77b38cf54cff76d95b29362d52b1858a733f3dd2587c9e045af3dfc9",
+  "checks": [
+    {
+      "preset": "dunk",
+      "testedNearbyBodyTriangles": 12106,
+      "minimumBodyClearanceMeters": 0.0005788815873322972,
+      "intersectingBodyTriangles": 0,
+      "hands": [
+        {
+          "side": "right",
+          "nearestSurfaceGapMeters": 0.0005995875770746645
+        }
+      ]
+    },
+    {
+      "preset": "layup",
+      "testedNearbyBodyTriangles": 16188,
+      "minimumBodyClearanceMeters": 0.0005978700627899125,
+      "intersectingBodyTriangles": 0,
+      "hands": [
+        {
+          "side": "right",
+          "nearestSurfaceGapMeters": 0.0006000686337452876
+        }
+      ]
+    },
+    {
+      "preset": "jump-shot",
+      "testedNearbyBodyTriangles": 10859,
+      "minimumBodyClearanceMeters": 0.0005978700627899403,
+      "intersectingBodyTriangles": 0,
+      "hands": [
+        {
+          "side": "right",
+          "nearestSurfaceGapMeters": 0.0006000686337452321
+        },
+        {
+          "side": "left",
+          "nearestSurfaceGapMeters": 0.0013817310351403878
+        }
+      ]
+    },
+    {
+      "preset": "dribble",
+      "testedNearbyBodyTriangles": 16081,
+      "minimumBodyClearanceMeters": 0.000597903993139734,
+      "intersectingBodyTriangles": 0,
+      "hands": [
+        {
+          "side": "right",
+          "nearestSurfaceGapMeters": 0.0006001049811427545
+        }
+      ]
+    }
+  ],
+  "scope": "Default presets; custom interactive edits are unrestricted."
+}

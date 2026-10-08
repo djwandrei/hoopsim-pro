@@ -1,0 +1,16 @@
+{
+  "purpose": "Photo-informed static basketball presets; no motion clips or exact athlete reconstruction",
+  "shooting": {
+    "source": "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2023.1272478/full",
+    "image": "https://www.frontiersin.org/files/Articles/1272478/fspor-05-1272478-HTML-r1/image_m/fspor-05-1272478-g003.jpg",
+    "observed": "Real shooter in preparation and airborne release frames. The elbow rises toward the target, forearm extends, legs lengthen, and feet leave the floor.",
+    "applied": "Rising near-release pose with ball above and in front of the forehead, shooting elbow beneath it, guide palm on the side, modest knee bend and airborne feet. The ball is still held, before the fully released follow-through frame."
+  },
+  "dribbling": {
+    "source": "https://maraudersports.com/sports/mens-basketball/roster/wesley-jones/338",
+    "image": "https://images.sidearmdev.com/convert?type=webp&url=https%3A%2F%2Fdxbhsrqyrr690.cloudfront.net%2Fsidearm.nextgen.sites%2Fmaraudersports.com%2Fimages%2F2011%2F5%2F16%2FIMG_5521.jpg",
+    "observed": "A driving player with the ball beside the hip, torso pitched into the stride, a low free hand, bent leading knee and tucked trailing leg.",
+    "applied": "More compact ball arm with palm above the bounce, slightly lower torso and bent leading knee; free arm stays lower and away from the torso. Pose is authored for right-hand dribbling."
+  },
+  "contactValidation": "Actual posed player triangles tested against the sphere; both shot hands tested independently. Custom interactive changes are unrestricted."
+}

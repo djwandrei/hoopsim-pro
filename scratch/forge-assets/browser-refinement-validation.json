@@ -1,0 +1,80 @@
+{
+  "accessories": {
+    "headband": {
+      "color": "#ffffff",
+      "visible": true
+    },
+    "sleeves": {
+      "color": "#ffffff",
+      "side": "right"
+    }
+  },
+  "checks": [
+    {
+      "finiteBounds": true,
+      "finiteSkinMatrices": true,
+      "preset": "neutral",
+      "visibleTriangles": 714082,
+      "webglError": 0
+    },
+    {
+      "finiteBounds": true,
+      "finiteSkinMatrices": true,
+      "preset": "dunk",
+      "visibleTriangles": 726178,
+      "webglError": 0
+    },
+    {
+      "finiteBounds": true,
+      "finiteSkinMatrices": true,
+      "preset": "layup",
+      "visibleTriangles": 726178,
+      "webglError": 0
+    },
+    {
+      "finiteBounds": true,
+      "finiteSkinMatrices": true,
+      "preset": "defense",
+      "visibleTriangles": 714082,
+      "webglError": 0
+    },
+    {
+      "finiteBounds": true,
+      "finiteSkinMatrices": true,
+      "preset": "jump-shot",
+      "visibleTriangles": 726178,
+      "webglError": 0
+    },
+    {
+      "finiteBounds": true,
+      "finiteSkinMatrices": true,
+      "preset": "dribble",
+      "visibleTriangles": 726178,
+      "webglError": 0
+    }
+  ],
+  "export": {
+    "ballTextureByteParity": true,
+    "bytes": 39831092,
+    "declaredLength": 39831092,
+    "imageCount": 5,
+    "meshNames": [
+      "body",
+      "jersey",
+      "shorts",
+      "right-shoe",
+      "left-shoe",
+      "basketball",
+      "head-neck",
+      "exposed-upper-body",
+      "right-arm",
+      "left-arm",
+      "headband",
+      "right-sleeve",
+      "left-sleeve"
+    ],
+    "separateShoeTextures": true,
+    "sha256": "beaa5391c44df6f4e9a66515a16704c5049e47cb4b7d8d82f06578ba6f54729a"
+  },
+  "surfaceSha256": "9be1f5269bf3aa2ef1802dfe4dcd00cd15a465703d479a52c2f10f95ca00c1db"
+}

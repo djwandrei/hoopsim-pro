@@ -44,7 +44,7 @@ const makeBet = (legs, stake, price, extra = {}) => ({
 // sim: real NBA lines with the SwishIQ model edge on every price, parlays,
 // round robins, teasers, boosts, early cash-out and a tracked credits wallet.
 export default function BookRoom() {
-  usePageMeta({ title: 'Book Room — SwishIQ Studio', description: 'A play-money sportsbook powered by the studio sim: real NBA lines with model edges, parlays, teasers, round robins, odds boosts, early cash-out and a tracked SwishIQ Credits wallet.' });
+  usePageMeta({ title: 'Sportsbook — SwishIQ Studio', description: 'A play-money sportsbook powered by the studio sim: real NBA lines with model edges, parlays, teasers, round robins, odds boosts, early cash-out and a tracked SwishIQ Credits wallet.' });
   const [view, setView] = useState('events');
   const [format, setFormat] = useState(() => { try { return localStorage.getItem('swishiq-odds-format') || 'american'; } catch { return 'american'; } });
   const [book, setBook] = useState(loadBook);

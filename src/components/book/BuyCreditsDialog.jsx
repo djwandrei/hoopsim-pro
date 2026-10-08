@@ -63,7 +63,7 @@ export default function BuyCreditsDialog({ open, onOpenChange }) {
         {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <CreditCard className="h-4 w-4" aria-hidden="true" />}
         {busy ? 'Opening checkout…' : `Buy ${pack.label} — ${pack.price}`}
       </button>
-      <p className="text-[11px] leading-relaxed text-muted-foreground">Paid securely through Stripe checkout. Credits land in your wallet automatically when you return to the Book Room.</p>
+      <p className="text-[11px] leading-relaxed text-muted-foreground">Paid securely through Stripe checkout. Credits land in your wallet automatically when you return to the Sportsbook.</p>
     </DialogContent>
   </Dialog>;
 }

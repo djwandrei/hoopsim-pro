@@ -43,7 +43,7 @@ export default function Account() {
         <h2 className="font-display text-2xl tracking-wide text-foreground">SIGN IN TO YOUR ACCOUNT</h2>
         <p className="text-xs leading-relaxed text-muted-foreground">Sign in to review checkout orders tied to your email, save contact details, and manage your sportsbook wallet.</p>
         <button type="button" onClick={() => base44.auth.redirectToLogin('/account')} className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-gold to-goldSoft px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-canvas shadow-lg shadow-gold/20 transition-all hover:brightness-110">Sign in</button>
-        <p className="flex flex-wrap justify-center gap-3 text-[11px] text-muted-foreground"><Link to="/book" className="inline-flex items-center gap-1.5 text-gold hover:underline"><Dice5 className="h-3 w-3" aria-hidden="true" />Back to the Book Room</Link></p>
+        <p className="flex flex-wrap justify-center gap-3 text-[11px] text-muted-foreground"><Link to="/book" className="inline-flex items-center gap-1.5 text-gold hover:underline"><Dice5 className="h-3 w-3" aria-hidden="true" />Back to the Sportsbook</Link></p>
       </section>}
       {state === 'ready' && <div className="space-y-5">
         <AccountDetailsForm me={me} onSaved={setMe} />

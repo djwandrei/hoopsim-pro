@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -59,26 +59,18 @@ function App() {
             <Route path="/sims/season" element={<SeasonLab />} />
             <Route path="/sims/game" element={<GameLab />} />
             <Route path="/sims/franchise" element={<FranchiseLab />} />
-            {/* Legacy paths keep working, with query params preserved */}
-            <Route path="/season" element={<Navigate to={`/sims/season${window.location.search}`} replace />} />
-            <Route path="/game" element={<Navigate to={`/sims/game${window.location.search}`} replace />} />
-            <Route path="/franchise" element={<Navigate to={`/sims/franchise${window.location.search}`} replace />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/players/*" element={<PlayerLab />} />
             <Route path="/chemistry" element={<ChemistryLab />} />
             <Route path="/forge" element={<ForgeLab />} />
             <Route path="/forge-models" element={<ForgeModelCompare />} />
             <Route path="/analytics/career" element={<CareerLab />} />
-            <Route path="/career" element={<Navigate to={`/analytics/career${window.location.search}`} replace />} />
             <Route path="/spin" element={<SpinRoom />} />
             <Route path="/book" element={<BookRoom />} />
             <Route path="/real-book" element={<RealBook />} />
             <Route path="/daily-games" element={<DailyGames />} />
             <Route path="/daily-games/fix-the-five" element={<FixTheFive />} />
             <Route path="/daily-games/draft-night" element={<DraftNight />} />
-            {/* Legacy paths keep working (shared ?result= links included) */}
-            <Route path="/fix-the-five" element={<Navigate to={`/daily-games/fix-the-five${window.location.search}`} replace />} />
-            <Route path="/draft-night" element={<Navigate to={`/daily-games/draft-night${window.location.search}`} replace />} />
             <Route path="/lineup-lab" element={<LineupLab />} />
             <Route path="/tools/shared-result" element={<LineupSharedResult />} />
             <Route path="/pool-mockup" element={<PoolRedesignMockup />} />

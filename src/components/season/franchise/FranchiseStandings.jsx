@@ -15,7 +15,7 @@ export default function FranchiseStandings({ view, onFocusTeam }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <span className="frx-head-icon"><Trophy className="h-4 w-4" aria-hidden="true" /></span>
-          <div><p className="bcast-kicker">League rail</p><h3 className="frx-title">Team records</h3></div>
+          <div><p className="bcast-kicker">League rail</p><h3 className="frx-title" id="frx-standings-title">Team records</h3></div>
         </div>
         {leader && <span className="frx-pill frx-pill--amber">Leader · {leader.code} {leader.wins}–{leader.losses}</span>}
       </div>

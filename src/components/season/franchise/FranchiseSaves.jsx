@@ -8,7 +8,7 @@ export default function FranchiseSaves({ sim }) {
   const saves = sim.view.saves;
   const fileRef = useRef(null);
   return (
-    <section className="court-panel frx-strip" aria-labelledby="frx-saves-title">
+    <section className="court-panel frx-strip" aria-label="Checkpoints">
       <span className="frx-strip__seg">
         <span className="bcast-kicker">Checkpoints</span>
         <span className={`frx-pill ${saves.backend === 'indexeddb' ? 'frx-pill--green' : 'frx-pill--slate'}`}>{saves.backend === 'indexeddb' ? 'IndexedDB' : 'localStorage'}</span>
@@ -30,7 +30,7 @@ export default function FranchiseSaves({ sim }) {
             onChange={event => sim.importSave(event.target.files?.[0])} />
         </label>
       </span>
-      <p className="frx-note w-full sm:ml-auto sm:max-w-sm sm:text-right" role="status">{sim.view.saveStatus}</p>
+      <p className="frx-note w-full" role="status">{sim.view.saveStatus}</p>
     </section>
   );
 }

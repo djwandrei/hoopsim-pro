@@ -28,7 +28,7 @@ export default function FranchiseRotation({ sim }) {
   const gapPct = Math.max(0, 100 - Math.min(100, (totalAssigned / 240) * 100));
   const starterCount = team.rows.filter(row => row.starter && !row.excluded && !row.unavailable).length;
   return (
-    <section className="court-panel frx-panel space-y-3 p-4" aria-labelledby="frx-rotation-title">
+    <section className="court-panel frx-panel space-y-3 p-4" aria-label="Team rotation HQ">
       <div className="flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex items-center gap-2.5">
           <TeamChip code={team.code} name={team.name} />

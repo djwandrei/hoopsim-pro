@@ -14,7 +14,7 @@ export default function FranchiseBoxScore({ view }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <span className="frx-head-icon"><Activity className="h-4 w-4" aria-hidden="true" /></span>
-          <div><p className="bcast-kicker">Latest game</p><h3 className="frx-title">Box score</h3></div>
+          <div><p className="bcast-kicker">Latest game</p><h3 className="frx-title" id="frx-box-title">Box score</h3></div>
         </div>
         {box.headline && <span className="frx-pill frx-pill--live">{box.headline}</span>}
       </div>

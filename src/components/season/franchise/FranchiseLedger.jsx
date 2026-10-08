@@ -9,7 +9,7 @@ export default function FranchiseLedger({ view }) {
     <section className="court-panel frx-panel space-y-2 p-4" aria-labelledby="frx-history-title">
       <div className="flex items-center gap-2.5">
         <span className="frx-head-icon"><ScrollText className="h-4 w-4" aria-hidden="true" /></span>
-        <div><p className="bcast-kicker">Ledger</p><h3 className="frx-title">Recent results &amp; actions</h3></div>
+        <div><p className="bcast-kicker">Ledger</p><h3 className="frx-title" id="frx-history-title">Recent results &amp; actions</h3></div>
       </div>
       {historyEmpty ? <p className="frx-note">{historyEmpty}</p> : (
         <div className="frx-history frx-scroll">

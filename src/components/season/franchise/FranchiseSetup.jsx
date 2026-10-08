@@ -1,14 +1,14 @@
 import React from 'react';
-import { Database, FileCheck2, FileUp, Lightbulb, Loader2, Lock, Play, RefreshCcw, ShieldCheck, Sparkles } from 'lucide-react';
+import { Database, FileCheck2, FileUp, Lightbulb, Loader2, Lock, Play, ShieldCheck, Sparkles } from 'lucide-react';
 import { pillClass } from './franchiseUi';
 import { GENERATED_SHOOTING_RATING_POLICY } from './franchiseLogic';
 
-const cardHead = (Icon, title, kicker) => (
+const cardHead = (Icon, title, kicker, id) => (
   <div className="flex items-center gap-2.5">
     <span className="frx-head-icon"><Icon className="h-4 w-4" aria-hidden="true" /></span>
     <div className="min-w-0">
       <p className="bcast-kicker">{kicker}</p>
-      <h3 className="frx-title">{title}</h3>
+      <h3 className="frx-title" id={id}>{title}</h3>
     </div>
   </div>
 );
@@ -26,7 +26,7 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
     <div className="space-y-4">
       {path === 'v4' && (
         <section className="court-panel frx-panel space-y-4 p-4" aria-labelledby="frx-v4-title">
-          {cardHead(Database, 'Exact V4 season', 'Primary scenario path')}
+          {cardHead(Database, 'Exact V4 season', 'Primary scenario path', 'frx-v4-title')}
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="studio-control-label" htmlFor="frx-v4-season">Regular season</label>
@@ -88,7 +88,7 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
 
       {path === 'fixture' && (
         <section className="court-panel frx-panel space-y-4 p-4" aria-labelledby="frx-fixture-title">
-          {cardHead(FileCheck2, 'Prepared fixture', 'Local fixture path')}
+          {cardHead(FileCheck2, 'Prepared fixture', 'Local fixture path', 'frx-fixture-title')}
           <div className="flex flex-wrap gap-2.5">
             <label className={fixture.fileDisabled ? `${ghostButton} frx-disabled` : ghostButton}>
               <FileUp className="h-3.5 w-3.5" aria-hidden="true" /> Load fixture JSON
@@ -131,7 +131,7 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
       {path === 'v4' && (
         <section className="court-panel frx-panel space-y-3 p-4" aria-labelledby="frx-choices-title">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            {cardHead(Sparkles, 'Roster-choice review', 'Multi-team names')}
+            {cardHead(Sparkles, 'Roster-choice review', 'Multi-team names', 'frx-choices-title')}
             <span className="frx-pill frx-pill--slate">{v4.choiceCount}</span>
           </div>
           {!v4.groups.length && <p className="frx-note">{v4.status.state === 'idle' ? 'Roster-choice review appears after V4 intake.' : 'No multi-team player names need a franchise choice in this exact season.'}</p>}
@@ -175,8 +175,6 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
           )}
         </section>
       )}
-
-      {path === 'fixture' && !busy && !fixture.meta && <p className="frx-note flex items-center gap-2"><RefreshCcw className="h-3.5 w-3.5" aria-hidden="true" /> Switch source with the cards above at any time before a session is initialized.</p>}
     </div>
   );
 }

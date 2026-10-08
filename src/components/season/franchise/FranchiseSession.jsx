@@ -11,7 +11,7 @@ import FranchiseSaves from './FranchiseSaves';
 // checkpoint bar beneath. All controls come straight from the sim hook.
 export default function FranchiseSession({ sim, view }) {
   return (
-    <div className="grid gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] xl:items-start">
+    <div className="grid gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] xl:items-start" aria-busy={sim.view.busy}>
       <div className="min-w-0 space-y-4">
         <FranchiseSchedule sim={sim} />
         <FranchiseRotation sim={sim} />

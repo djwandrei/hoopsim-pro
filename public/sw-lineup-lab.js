@@ -142,7 +142,30 @@ self.addEventListener('activate', event => event.waitUntil((async () => {
 self.addEventListener('fetch', event => {
   // Never relay React navigations or the studio's compiled bundles.
   if (event.request.method !== 'GET' || event.request.mode === 'navigate') return;
-  const path = sourcePath(new URL(event.request.url));
+  const requestUrl = new URL(event.request.url);
+  // Vendored franchise/engine release files are normally served natively from
+  // the studio build. When the host platform cannot serve one (missing file,
+  // stale deploy, SPA HTML fallback), fall back to the site relay so module
+  // imports never break on an HTML body.
+  const localRelease = requestUrl.origin === self.location.origin
+    && (requestUrl.pathname.startsWith(FRANCHISE_LOCAL_PREFIX)
+      || requestUrl.pathname === '/tools/swishiq-studio/data/nba-actual-schedules-v1.json'
+      || (requestUrl.pathname.startsWith('/tools/swishiq-studio/engine/')
+        && VENDORED_ENGINE_FILES.has(requestUrl.pathname.split('/').pop())));
+  if (localRelease) {
+    event.respondWith((async () => {
+      let native = null;
+      try { native = await fetch(event.request, { cache: 'no-store' }); } catch { native = null; }
+      const nativeMime = native?.headers?.get('content-type') ?? '';
+      if (native && native.ok && !nativeMime.includes('text/html')) return native;
+      try { return await relay(requestUrl.pathname + requestUrl.search, event.clientId); }
+      catch {
+        return new Response('Lineup Lab source temporarily unavailable', { status: 503, headers: { 'content-type': 'text/plain', 'cache-control': 'no-store' } });
+      }
+    })());
+    return;
+  }
+  const path = sourcePath(requestUrl);
   if (!path) return;
   event.respondWith((async () => {
     try {

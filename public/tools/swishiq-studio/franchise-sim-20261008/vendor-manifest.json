@@ -339,6 +339,16 @@
       "file": "../data/nba-actual-schedules-v1.json",
       "sha256": "522ed031595601aff75b26d5f3d3cc8022525c0e8b29d072baa0b626d54d4e3e",
       "note": "v4-franchise-intake-v1 source pin (site studio data path)"
+    },
+    {
+      "file": "integration/v4-franchise-intake-v1.mjs",
+      "sha256": "ca5360d113ac966a3ab6bbe4232add7954779cb09f18e892f6bac036fc0d3227",
+      "note": "site byte-pinned at fetch time"
+    },
+    {
+      "file": "integration/v4-snapshot-worker-payload-v1.mjs",
+      "sha256": "4542ea864d3330b92f24f0811fdd31fc45201786b61415c6cdf439bebc63a251",
+      "note": "site byte-pinned at fetch time"
     }
   ]
 }

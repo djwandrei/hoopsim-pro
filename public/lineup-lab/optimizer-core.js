@@ -247,6 +247,17 @@ function round(value, digits = 6) {
   return Math.round((value + Number.EPSILON) * multiplier) / multiplier;
 }
 
+// Keep display-only score bounding local to the optimizer. The continuous
+// SwishIQ objective returns a 0–100 presentation score, but the underlying
+// contribution can be missing or slightly outside that range for a sparse
+// rotation. Bounding at this boundary prevents a valid solve from failing
+// after candidate enumeration has already completed.
+function clamp(value, minimum, maximum) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return minimum;
+  return Math.max(minimum, Math.min(maximum, numeric));
+}
+
 function applyObjectiveInputOffset(metric, value, offset) {
   const candidate = Number(value) + Number(offset);
   if (!Number.isFinite(candidate)) return value;
@@ -3484,9 +3495,9 @@ function findPositionMinuteFlow(players, bounds, requirements, minuteRanges = nu
     const upper = roleRange ? roleRange.max : requirements[position];
     addBoundedEdge(positionNode, sink, lower, upper);
   }
-  // Closing sink back to source turns the bounded source/sink problem into a
-  // circulation. Exact role demands force this edge to carry all 240 minutes.
-  addBoundedEdge(sink, source, 0, totalRequired);
+  // A range has lower totals below 240, so role demands alone cannot force a
+  // regulation plan. Require all 240 minutes in the bounded circulation.
+  addBoundedEdge(sink, source, totalRequired, totalRequired);
 
   let balanceDemand = 0;
   for (let node = 0; node <= sink; node += 1) {
@@ -3532,7 +3543,7 @@ function findPositionMinuteFlow(players, bounds, requirements, minuteRanges = nu
       && POSITION_KEYS.every((position) => minuteRanges
         ? actual[position] >= minuteRanges[position].min && actual[position] <= minuteRanges[position].max
         : actual[position] === requirements[position]),
-    required: { ...requirements },
+    required: minuteRanges ? { ...actual } : { ...requirements },
     ...(minuteRanges ? { ranges: minuteRanges } : {}),
     actual,
     byPlayer,
@@ -3610,8 +3621,8 @@ function fixedBoundsFrom(minutes) {
   return new Map([...minutes].map(([id, value]) => [id, { min: value, max: value }]));
 }
 
-function objectivePositionAllocation(players, bounds, scores, requirements) {
-  if (everyPlayerCoversRequiredPositions(players, requirements, bounds)) {
+function objectivePositionAllocation(players, bounds, scores, requirements, minuteRanges = null) {
+  if (!minuteRanges && everyPlayerCoversRequiredPositions(players, requirements, bounds)) {
     const minutes = new Map(
       players.map((player) => [player.id, bounds.get(player.id).min]),
     );
@@ -3634,7 +3645,7 @@ function objectivePositionAllocation(players, bounds, scores, requirements) {
   let workingBounds = new Map(
     [...bounds].map(([id, bound]) => [id, { ...bound }]),
   );
-  let feasibleFlow = findPositionMinuteFlow(players, workingBounds, requirements);
+  let feasibleFlow = findPositionMinuteFlow(players, workingBounds, requirements, minuteRanges);
   if (!feasibleFlow.feasible) return feasibleFlow;
 
   // With a fixed 240-minute total and player-only score coefficients, giving
@@ -3658,7 +3669,7 @@ function objectivePositionAllocation(players, bounds, scores, requirements) {
         [...workingBounds].map(([playerId, bound]) => [playerId, { ...bound }]),
       );
       trialBounds.set(id, { min: candidate, max: candidate });
-      const trialFlow = findPositionMinuteFlow(players, trialBounds, requirements);
+      const trialFlow = findPositionMinuteFlow(players, trialBounds, requirements, minuteRanges);
       if (trialFlow.feasible) {
         feasibleMinutes = candidate;
         bestFlow = trialFlow;
@@ -3673,14 +3684,14 @@ function objectivePositionAllocation(players, bounds, scores, requirements) {
   return feasibleFlow;
 }
 
-function balancedPositionAllocation(players, bounds, targetMinutes, requirements) {
-  const exactTarget = findPositionMinuteFlow(players, fixedBoundsFrom(targetMinutes), requirements);
+function balancedPositionAllocation(players, bounds, targetMinutes, requirements, minuteRanges = null) {
+  const exactTarget = findPositionMinuteFlow(players, fixedBoundsFrom(targetMinutes), requirements, minuteRanges);
   if (exactTarget.feasible) return { ...exactTarget, adjusted: false };
 
   let workingBounds = new Map(
     [...bounds].map(([id, bound]) => [id, { ...bound }]),
   );
-  let feasibleFlow = findPositionMinuteFlow(players, workingBounds, requirements);
+  let feasibleFlow = findPositionMinuteFlow(players, workingBounds, requirements, minuteRanges);
   if (!feasibleFlow.feasible) return feasibleFlow;
 
   // If the pure proportional totals cannot cover the roles, pin each player to
@@ -3701,7 +3712,7 @@ function balancedPositionAllocation(players, bounds, targetMinutes, requirements
         [...workingBounds].map(([playerId, item]) => [playerId, { ...item }]),
       );
       trialBounds.set(id, { min: candidate, max: candidate });
-      const trialFlow = findPositionMinuteFlow(players, trialBounds, requirements);
+      const trialFlow = findPositionMinuteFlow(players, trialBounds, requirements, minuteRanges);
       if (!trialFlow.feasible) continue;
       workingBounds = trialBounds;
       feasibleFlow = trialFlow;
@@ -3794,6 +3805,34 @@ function createMinCostFlowNetwork(nodeCount) {
   return { addEdge, minCostFlow };
 }
 
+function positionMinutesSatisfy(actual, requirements, ranges = null) {
+  return POSITION_KEYS.reduce((sum, position) => sum + actual[position], 0) === 240
+    && POSITION_KEYS.every(position => ranges
+      ? actual[position] >= ranges[position].min && actual[position] <= ranges[position].max
+      : actual[position] === requirements[position]);
+}
+
+function addPositionMinuteDemandEdges(network, positionStart, sink, superSink, requirements, ranges) {
+  let lowerTotal = 0;
+  for (const position of POSITION_KEYS) {
+    const node = positionStart + POSITION_KEYS.indexOf(position);
+    const lower = ranges ? ranges[position].min : requirements[position];
+    const upper = ranges ? ranges[position].max : requirements[position];
+    network.addEdge(node, superSink, lower, 0);
+    network.addEdge(node, sink, upper - lower, 0);
+    lowerTotal += lower;
+  }
+  network.addEdge(sink, superSink, 240 - lowerTotal, 0);
+}
+
+function* integerPositionMinuteSplits(ranges) {
+  for (let G = ranges.G.min; G <= ranges.G.max; G += 1) {
+    const minimumF = Math.max(ranges.F.min, 240 - G - ranges.C.max);
+    const maximumF = Math.min(ranges.F.max, 240 - G - ranges.C.min);
+    for (let F = minimumF; F <= maximumF; F += 1) yield { G, F, C: 240 - G - F };
+  }
+}
+
 /**
  * Minimize total absolute departure from the selected group's rescaled
  * historical workload target while still proving every G/F/C minute. This is
@@ -3807,6 +3846,7 @@ function historicalContinuityPositionAllocation(
   targetMinutes,
   requirements,
   scores = new Map(),
+  minuteRanges = null,
 ) {
   // This is the common case for a source-grounded roster. Avoid constructing a
   // 240-unit cost network when the historical target vector already covers the
@@ -3816,6 +3856,7 @@ function historicalContinuityPositionAllocation(
     players,
     fixedBoundsFrom(targetMinutes),
     requirements,
+    minuteRanges,
   );
   if (exactTarget.feasible) {
     return {
@@ -3825,7 +3866,7 @@ function historicalContinuityPositionAllocation(
       continuityDeviation: 0,
     };
   }
-  const feasibility = findPositionMinuteFlow(players, bounds, requirements);
+  const feasibility = findPositionMinuteFlow(players, bounds, requirements, minuteRanges);
   if (!feasibility.feasible) return feasibility;
 
   const sortedPlayers = players.slice().sort(comparePlayersById);
@@ -3904,11 +3945,7 @@ function historicalContinuityPositionAllocation(
   // Remaining court minutes originate at the usual source node. Together with
   // each player's lower-bound supply this always totals exactly 240 minutes.
   network.addEdge(superSource, source, totalRequired - minimumTotal, 0);
-  for (const position of POSITION_KEYS) {
-    const positionNode = positionStart + POSITION_KEYS.indexOf(position);
-    network.addEdge(positionNode, sink, requirements[position], 0);
-  }
-  network.addEdge(sink, superSink, totalRequired, 0);
+  addPositionMinuteDemandEdges(network, positionStart, sink, superSink, requirements, minuteRanges);
 
   const solved = network.minCostFlow(superSource, superSink, totalRequired);
   if (solved.delivered !== totalRequired) {
@@ -3941,8 +3978,8 @@ function historicalContinuityPositionAllocation(
     0,
   );
   return {
-    feasible: POSITION_KEYS.every((position) => actual[position] === requirements[position]),
-    required: { ...requirements },
+    feasible: positionMinutesSatisfy(actual, requirements, minuteRanges),
+    required: minuteRanges ? { ...actual } : { ...requirements },
     actual,
     byPlayer,
     totalsByPlayer,
@@ -3971,6 +4008,7 @@ function roleConditionedPositionAllocation(
   requirements,
   scorePlan,
   marginalAdjustmentById = null,
+  minuteRanges = null,
 ) {
   const sortedPlayers = players.slice().sort(comparePlayersById);
   // Production-constraint certification occasionally adds a constant linear
@@ -4037,6 +4075,7 @@ function roleConditionedPositionAllocation(
       sortedPlayers,
       fixedBoundsFrom(relaxedMinutes),
       requirements,
+      minuteRanges,
     );
     if (relaxedRoleFlow.feasible) {
       return {
@@ -4122,11 +4161,7 @@ function roleConditionedPositionAllocation(
   });
 
   network.addEdge(superSource, source, totalRequired - minimumTotal, 0);
-  for (const position of POSITION_KEYS) {
-    const positionNode = positionStart + POSITION_KEYS.indexOf(position);
-    network.addEdge(positionNode, sink, requirements[position], 0);
-  }
-  network.addEdge(sink, superSink, totalRequired, 0);
+  addPositionMinuteDemandEdges(network, positionStart, sink, superSink, requirements, minuteRanges);
 
   const solved = network.minCostFlow(superSource, superSink, totalRequired);
   if (solved.delivered !== totalRequired) {
@@ -4135,7 +4170,7 @@ function roleConditionedPositionAllocation(
     // request infeasible. Run the cheaper oracle only on this exceptional path:
     // it preserves a defensive fallback without paying for two full flow solves
     // for every feasible candidate in a broad exact roster search.
-    const feasibility = findPositionMinuteFlow(players, bounds, requirements);
+    const feasibility = findPositionMinuteFlow(players, bounds, requirements, minuteRanges);
     if (!feasibility.feasible) return feasibility;
     return {
       ...feasibility,
@@ -4162,8 +4197,8 @@ function roleConditionedPositionAllocation(
     );
   }
   return {
-    feasible: POSITION_KEYS.every((position) => actual[position] === requirements[position]),
-    required: { ...requirements },
+    feasible: positionMinutesSatisfy(actual, requirements, minuteRanges),
+    required: minuteRanges ? { ...actual } : { ...requirements },
     actual,
     byPlayer,
     totalsByPlayer,
@@ -4338,6 +4373,7 @@ function deriveHistoricalGuidanceBounds(
     historicalTeamGames = null,
     minuteFlexibility = DEFAULT_ROTATION_MINUTE_FLEXIBILITY,
     positionRequirements = null,
+    positionRanges = null,
   } = {},
   reasons,
 ) {
@@ -4441,7 +4477,7 @@ function deriveHistoricalGuidanceBounds(
     const candidateCapacity = boundsCanReachRegulationMinutes(candidateBounds);
     if (!candidateCapacity.feasible) continue;
     const flow = positionRequirements
-      ? findPositionMinuteFlow(players, candidateBounds, positionRequirements)
+      ? findPositionMinuteFlow(players, candidateBounds, positionRequirements, positionRanges)
       : { feasible: true };
     if (!flow.feasible) continue;
     return {
@@ -6087,6 +6123,10 @@ function constrainedPositionAllocation(
  * - roleConditionedScorePlan: internal exact minute-value curve supplied by
  *   `optimizeLineups`; direct callers can omit it and retain linear scoring
  */
+// Fixed-split children of a range search share the already-established
+// workload guardrails; they must not widen those guardrails independently.
+const RANGE_HISTORICAL_GUIDANCE = Symbol("rangeHistoricalGuidance");
+
 export function allocateRotationMinutes(players, options = {}) {
   const reasons = [];
   if (!Array.isArray(players)) {
@@ -6205,6 +6245,10 @@ export function allocateRotationMinutes(players, options = {}) {
       }
     }
   }
+  const positionRanges = normalizeRotationPositionMinuteRanges(options.positionMinuteRanges, reasons);
+  if (positionRanges && !positionRequirements) {
+    reasons.push("Position-minute ranges require a 240-minute target profile.");
+  }
   const projectedConstraints = { statMinimums: {}, maxTurnovers: Number.POSITIVE_INFINITY };
   const rawProjectedMinimums = options.projectedStatMinimums ?? {};
   if (!isPlainObject(rawProjectedMinimums)) {
@@ -6305,6 +6349,67 @@ export function allocateRotationMinutes(players, options = {}) {
     return rotationFailure(reasons, { category: "validation", selectedPlayers: players.length });
   }
 
+  if (positionRanges && hasProjectedConstraints) {
+    // Optimize the full range cheaply first. If its optimum satisfies every
+    // production rule it is also the constrained optimum. Otherwise enumerate
+    // all integer splits and reuse the exact fixed-split constraint solver.
+    // Never accept a partial result after cancellation or watchdog exhaustion.
+    const unconstrained = allocateRotationMinutes(players, {
+      ...options, strategy: "objective", historicalAllocationStyle: HISTORICAL_ALLOCATION_STYLES.STRATEGY_FIRST,
+      projectedStatMinimums: {}, projectedMaxTurnovers: Number.POSITIVE_INFINITY,
+    });
+    if (!unconstrained.ok) return unconstrained;
+    const unconstrainedTotals = projectedTotalsForMinutes(rotationPlayers,
+      new Map(Object.entries(unconstrained.byId)), projectedRates);
+    const unconstrainedStatus = projectedConstraintStatus(unconstrainedTotals, projectedConstraints);
+    const sharedBudget = sharedConstraintSearchBudget ?? {
+      limit: MAX_CONSTRAINED_ALLOCATION_STATES, used: 0,
+    };
+    let best = null;
+    let bestObjective = Number.NEGATIVE_INFINITY;
+    let lastFailure = null;
+    let splitsEvaluated = 0;
+    const splits = unconstrainedStatus.passed
+      ? [unconstrained.positionMinutes.actual]
+      : integerPositionMinuteSplits(positionRanges);
+    const fixedHistoricalGuidance = minutePlan === ROTATION_MINUTE_PLANS.HISTORICAL_AWARE
+      ? { bounds: new Map(unconstrained.allocations.map(row => [row.id, { min: row.minimum, max: row.maximum }])),
+          guidance: unconstrained.historicalGuidance }
+      : null;
+    for (const requirements of splits) {
+      if (cancellationRequested()) return rotationFailure(["Rotation range search cancelled."], {
+        category: "cancelled", exactSearchCompleted: false,
+      });
+      const result = allocateRotationMinutes(players, {
+        ...options, positionMinuteRanges: null, positionMinuteRequirements: requirements,
+        sharedConstraintSearchBudget: sharedBudget,
+        [RANGE_HISTORICAL_GUIDANCE]: fixedHistoricalGuidance,
+      });
+      splitsEvaluated += 1;
+      if (!result.ok) {
+        if (["cancelled", "constraint-search-limit", "validation"].includes(result.diagnostics?.category)) {
+          return result;
+        }
+        lastFailure = result;
+        continue;
+      }
+      const objective = allocationObjective(new Map(Object.entries(result.byId)), scores,
+        result.roleConditionedScoring?.applied ? roleConditionedScorePlan : null);
+      if (objective > bestObjective) { best = result; bestObjective = objective; }
+    }
+    if (!best) return rotationFailure(["No allocation in the position ranges satisfies the production rules."], {
+      category: "projected-constraints", ...unconstrainedStatus,
+      positionRangeSearch: { completed: true, splitsEvaluated, method: "all-integer-splits" },
+      searchStates: sharedBudget.used, lastFixedSplitFailure: lastFailure?.diagnostics?.category ?? null,
+    });
+    best.positionMinutes = { ...best.positionMinutes, allocationMode: "soft-range",
+      target: { ...positionRequirements }, ranges: positionRanges, withinSoftRanges: true };
+    best.diagnostics.positionRangeSearch = { completed: true, splitsEvaluated,
+      method: unconstrainedStatus.passed ? "attained-range-upper-bound" : "all-integer-splits" };
+    if (sharedConstraintSearchBudget) sharedConstraintSearchBudget.used = sharedBudget.used;
+    return best;
+  }
+
   const sortedIds = ids.slice().sort(compareIds);
   const userMinimumTotal = sortedIds.reduce((total, id) => total + bounds.get(id).min, 0);
   const userMaximumTotal = sortedIds.reduce((total, id) => total + bounds.get(id).max, 0);
@@ -6356,7 +6461,7 @@ export function allocateRotationMinutes(players, options = {}) {
       : null,
   };
   if (minutePlan === ROTATION_MINUTE_PLANS.HISTORICAL_AWARE) {
-    const derived = deriveHistoricalGuidanceBounds(
+    const derived = options[RANGE_HISTORICAL_GUIDANCE] ?? deriveHistoricalGuidanceBounds(
       rotationPlayers,
       bounds,
       {
@@ -6364,6 +6469,7 @@ export function allocateRotationMinutes(players, options = {}) {
         historicalTeamGames,
         minuteFlexibility,
         positionRequirements,
+        positionRanges,
       },
       reasons,
     );
@@ -6495,6 +6601,7 @@ export function allocateRotationMinutes(players, options = {}) {
         historicalTargets,
         positionRequirements,
         scores,
+        positionRanges,
       )
       : usesRoleConditionedScoring
         ? roleConditionedPositionAllocation(
@@ -6502,10 +6609,12 @@ export function allocateRotationMinutes(players, options = {}) {
           effectiveBounds,
           positionRequirements,
           roleConditionedScorePlan,
+          null,
+          positionRanges,
         )
       : strategy === "objective" || usesStrategyFirstAllocation
-        ? objectivePositionAllocation(rotationPlayers, effectiveBounds, scores, positionRequirements)
-        : balancedPositionAllocation(rotationPlayers, effectiveBounds, balancedTargets, positionRequirements);
+        ? objectivePositionAllocation(rotationPlayers, effectiveBounds, scores, positionRequirements, positionRanges)
+        : balancedPositionAllocation(rotationPlayers, effectiveBounds, balancedTargets, positionRequirements, positionRanges);
     if (!positionFlow.feasible) {
       return rotationFailure([
         `The selected players cannot cover ${positionRequirements.G} guard, ${positionRequirements.F} forward, and ${positionRequirements.C} center minutes within their minute limits. Add another eligible flex/center or raise an eligible player's maximum.`,
@@ -7744,48 +7853,6 @@ export function optimizeLineups(players, config = {}, runtime = {}) {
     const candidateConstraintSearchBudget = includeProjectedConstraints
       ? { limit: perCandidateConstraintSearchLimit, used: 0 }
       : null;
-    let selectedPositionRequirements = rotationPositionMinuteRequirements;
-    let selectedPositionFlow = null;
-    if (rotationPositionMinuteRanges) {
-      const boundReasons = [];
-      const selectedBounds = new Map(selectedPlayers.map((player) => [
-        player.id,
-        rotationPlayerMinuteBounds(player, normalizedConfig.rotationOptions, boundReasons),
-      ]));
-      if (boundReasons.length > 0) {
-        return rotationFailure(boundReasons, { category: "validation" });
-      }
-      selectedPositionFlow = findPositionMinuteFlow(
-        selectedPlayers,
-        selectedBounds,
-        rotationPositionMinuteRequirements,
-      );
-      if (!selectedPositionFlow.feasible) {
-        selectedPositionFlow = findPositionMinuteFlow(
-          selectedPlayers,
-          selectedBounds,
-          rotationPositionMinuteRequirements,
-          rotationPositionMinuteRanges,
-        );
-      }
-      if (!selectedPositionFlow.feasible) {
-        return rotationFailure([
-          "The selected players cannot cover any 240-minute G/F/C mix inside the automatic soft position ranges and player minute limits.",
-        ], {
-          category: "position-minutes",
-          selectedPlayers: selectedPlayers.length,
-          requiredPositionMinutes: { ...rotationPositionMinuteRequirements },
-          allowedPositionMinuteRanges: rotationPositionMinuteRanges,
-          deliveredPositionFlow: selectedPositionFlow.delivered,
-          requiredPositionFlow: selectedPositionFlow.balanceDemand,
-        });
-      }
-      // Prefer the evidence-centered split when it is feasible. If not, the
-      // range flow returns a deterministic feasible role split; that exact
-      // split is then passed through the existing allocator for every ranking
-      // and constraint proof.
-      selectedPositionRequirements = selectedPositionFlow.actual;
-    }
     const rotation = allocateRotationMinutes(selectedPlayers, {
       ...normalizedConfig.rotationOptions,
       // The normal allocation honors an explicit caller workload objective.
@@ -7817,7 +7884,8 @@ export function optimizeLineups(players, config = {}, runtime = {}) {
       // Roster-slot minimums above remain composition constraints. Every
       // rotation candidate separately proves the selected G/F/C court shape,
       // with flex players allowed to split their minutes.
-      positionMinuteRequirements: selectedPositionRequirements,
+      positionMinuteRequirements: rotationPositionMinuteRequirements,
+      positionMinuteRanges: rotationPositionMinuteRanges,
       // Normalize the public model settings once at the solve boundary so a
       // caller cannot accidentally have the UI describe one policy while the
       // allocator applies another. Historical anchors themselves come from
@@ -8112,7 +8180,11 @@ export function optimizeLineups(players, config = {}, runtime = {}) {
         return;
       }
 
-      const proof = proveProjectedConstraintInfeasibility(
+      // One fixed-split certificate cannot reject a range scenario. Pass 2
+      // instead proves production feasibility over all admissible splits.
+      const proof = rotationPositionMinuteRanges ? {
+        impossibleStats: [], impossibleTurnovers: false, impossibleJoint: false,
+      } : proveProjectedConstraintInfeasibility(
         selectedPlayers,
         boundsFromRotation(baselineRotation),
         baselineRotation.positionMinutes?.required || rotationPositionMinuteRequirements,

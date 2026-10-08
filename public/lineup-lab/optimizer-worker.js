@@ -1,7 +1,7 @@
 // Match the app shell's revision so the worker cannot run an older solver from
 // an existing browser cache after a targeted cPanel release.
-import { analyzeLineupInputStability, optimizeLineups } from "./optimizer-core.js?v=20261002c&rev=lineup-optimizer-core-continuous-objective-v2-input-stability";
-import { canonicalV4LineupModelExecutionAvailability } from "../tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js?v=20261001g&rev=canonical-v4-lineup-model-execution-gate-v2-policy-pin-closure-v1";
+import { analyzeLineupInputStability, optimizeLineups } from "./optimizer-core.js?v=20261008n&rev=automatic-role-range-v3";
+import { canonicalV4LineupModelExecutionAvailability } from "../tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js?v=20261008n&rev=historical-optimizer-gate-6a0e4d0ed273a71e";
 
 self.addEventListener("message", (event) => {
   const { requestId, players, config } = event.data || {};

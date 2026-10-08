@@ -8,6 +8,7 @@ import useNativeGameSim from '@/hooks/useNativeGameSim';
 import MyNbaHub from '@/components/season/MyNbaHub';
 import MatchupBreakdown from '@/components/game/MatchupBreakdown';
 import GameControls from '@/components/game/GameControls';
+import Candidate100Panel from '@/components/game/Candidate100Panel';
 import GameScoreboard from '@/components/game/GameScoreboard';
 import GameBoxScore from '@/components/game/GameBoxScore';
 import NativeMatchupReport from '@/components/game/NativeMatchupReport';
@@ -154,6 +155,7 @@ export default function GameLab() {
               settings={sim.settings} onSettingsChange={sim.setSettings}
               running={sim.running} progress={sim.progress} blocked={sim.policyBlocked}
               onShareLink={shareLink} />
+              <Candidate100Panel year={year} home={home} away={away} sourceEntry={packageRef} />
               {sim.game ?
               <PreGameDisclosure home={home} away={away} open={showPreGame} onToggle={() => setShowPreGame(current => !current)}>
                 {breakdown({ onSimGame: () => sim.runGame(league, home, away, { packageRef }), hasGame: true })}

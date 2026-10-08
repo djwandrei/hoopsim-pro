@@ -102,7 +102,7 @@ export default function GameLab() {
 
   if (state !== 'ready' || !league) {
     return (
-      <StudioShell active="/game" followTeam="djhc">
+      <StudioShell active="/sims" followTeam="djhc">
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
         <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub on the observed season package." state={state} status={state === 'ready' ? 'Matchup hub ready' : undefined} />
         <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6"><SourceStatus state={state} error={error} year={year} years={years} onYearChange={setYear} onRetry={retry} /></main>
@@ -143,7 +143,7 @@ export default function GameLab() {
       : null;
 
   return (
-    <StudioShell active="/game" followTeam="djhc">
+    <StudioShell active="/sims" followTeam="djhc">
         <GameMatchupTheme homeCode={league?.byCode.get(a)?.code || a} awayCode={league?.byCode.get(b)?.code || b}>
       <WorkbenchHeader title="GAME LAB" description="A MyNBA-style matchup hub: review the matchup intel, then sim single games and 7-game series." state="ready" status="Matchup hub ready" />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">

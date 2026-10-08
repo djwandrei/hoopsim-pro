@@ -43,7 +43,7 @@ export default function SeasonLab() {
 
   if (state !== 'ready' || !league) {
     return (
-      <StudioShell active="/season">
+      <StudioShell active="/sims">
         <WorkbenchHeader title="SEASON LAB" description="A MyNBA-style league hub on the observed season package." state={state} status={state === 'ready' ? 'League hub ready' : undefined} />
         <main className="season-lab mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6"><SourceStatus state={state} error={error} year={year} years={years} onYearChange={setYear} onRetry={retry} /></main>
       </StudioShell>
@@ -78,7 +78,7 @@ export default function SeasonLab() {
   };
 
   return (
-    <StudioShell active="/season">
+    <StudioShell active="/sims">
       <WorkbenchHeader title="SEASON LAB" description="A MyNBA-style league hub: replay the observed season, track standings and the schedule, and dive into your team page." state="ready" status="League hub ready" />
       <main className="season-lab mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">
         <MyNbaHub

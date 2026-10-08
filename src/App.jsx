@@ -39,6 +39,7 @@ const FranchiseLab = lazy(() => import('@/pages/FranchiseLab'));
 const DailyGames = lazy(() => import('@/pages/DailyGames'));
 const Analytics = lazy(() => import('@/pages/Analytics'));
 const CollectorCenter = lazy(() => import('@/pages/CollectorCenter'));
+const SimsHub = lazy(() => import('@/pages/SimsHub'));
 
 // Public studio: no login gate — every route is open. On the site the router
 // lives under /tools/swishiq-studio/ so existing site links keep working.
@@ -54,8 +55,14 @@ function App() {
           <Routes>
             {/* Add your page Route elements here */}
             <Route path="/" element={<StudioHome />} />
-            <Route path="/season" element={<SeasonLab />} />
-            <Route path="/franchise" element={<FranchiseLab />} />
+            <Route path="/sims" element={<SimsHub />} />
+            <Route path="/sims/season" element={<SeasonLab />} />
+            <Route path="/sims/game" element={<GameLab />} />
+            <Route path="/sims/franchise" element={<FranchiseLab />} />
+            {/* Legacy paths keep working, with query params preserved */}
+            <Route path="/season" element={<Navigate to={`/sims/season${window.location.search}`} replace />} />
+            <Route path="/game" element={<Navigate to={`/sims/game${window.location.search}`} replace />} />
+            <Route path="/franchise" element={<Navigate to={`/sims/franchise${window.location.search}`} replace />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/players/*" element={<PlayerLab />} />
             <Route path="/chemistry" element={<ChemistryLab />} />

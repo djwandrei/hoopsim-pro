@@ -89,5 +89,6 @@ function gameSimModuleUrl(path) {
 }
 
 export async function gameSimModule(path) {
-  return import(/* @vite-ignore */ await gameSimModuleUrl(path));
+  const moduleUrl = await gameSimModuleUrl(path);
+  return import(/* @vite-ignore */ moduleUrl);
 }

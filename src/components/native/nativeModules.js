@@ -32,5 +32,8 @@ export async function nativeModuleUrl(input, base = ORIGINAL_STUDIO) {
   })();
   modules.set(url,task);task.catch(()=>modules.delete(url));return task;
 }
-export async function loadNativeModule(input,base=ORIGINAL_STUDIO) { return import(/* @vite-ignore */ await nativeModuleUrl(input,base)); }
+export async function loadNativeModule(input,base=ORIGINAL_STUDIO) {
+  const moduleUrl=await nativeModuleUrl(input,base);
+  return import(/* @vite-ignore */ moduleUrl);
+}
 globalThis.__djhcOriginalModuleLoader=loadNativeModule;

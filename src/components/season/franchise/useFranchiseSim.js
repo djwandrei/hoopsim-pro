@@ -9,7 +9,7 @@ import {
   loadRotationDraft, rotationValidation, rotationMatchesSaved, makeRotationControls, makeBrowserKey,
   exportedSaveMatches, upcomingGame, gameDateMap, completedGames, recordFor, statsForLog, displayBoxStat,
   multiTeamV4Choices, buildV4RosterChoiceReceipt, suggestionLabel, receiptPartSummary,
-  readPayload,
+  deriveRosterModeAssignments, readPayload,
   GENERATED_SHOOTING_RATING_POLICY, COUNT_FIELDS, SEASON_OPTIONS, SAVE_KEY_PREFIX,
 } from './franchiseLogic';
 import {
@@ -36,6 +36,7 @@ const freshState = () => ({
   v4Api: null, v4Intake: null, v4GameModelText: '', v4ProductionCandidateText: '', v4GameModelMeta: null, v4ProductionMeta: null,
   v4RosterChoices: new Map(), v4ChoiceProvenance: new Map(), v4SuggestionsByName: new Map(),
   v4SuggestionSummary: null, v4OperationNotice: null,
+  v4PlayerGamesPart: null, v4RosterMode: null,
   ratingReceipt: null,
   // Saves
   storageBackend: 'localstorage', franchiseBrowserStore: null, browserSaveCheckKey: '',
@@ -268,6 +269,9 @@ function computeView(state) {
     ratingReceipt: state.ratingReceipt,
     choiceDisabled: busy || Boolean(session),
     sessionLocked: Boolean(session),
+    rosterMode: state.v4RosterMode,
+    canAssign: !busy && canReview && groups.length > 0,
+    unresolvedGroups: groups.filter(group => !group.selectedTeam || !group.options.includes(group.selectedTeam)),
   };
 
   // === Fixture panel ===
@@ -801,6 +805,8 @@ export default function useFranchiseSim() {
       state.v4ChoiceProvenance = new Map();
       state.v4SuggestionsByName = new Map();
       state.v4SuggestionSummary = null;
+      state.v4PlayerGamesPart = null;
+      state.v4RosterMode = null;
       state.workerStatus = { text: 'V4 intake verified · worker not initialized', state: 'idle' };
       showMessage('');
     } catch (error) {
@@ -859,6 +865,65 @@ export default function useFranchiseSim() {
       state.v4OperationNotice = { operation: 'suggestions', kind: 'error', seasonStartYear,
         message: `Latest-team suggestions for ${seasonStartYear} failed: ${error?.message ?? error}. Existing exact-team choices and V4 source receipts were preserved; unresolved names still need manual choices.` };
       showFailure(error, 'Latest-team suggestions could not be loaded.', 'V4 suggestions');
+    } finally {
+      setBusy(false);
+      render();
+    }
+  };
+
+  // === Start/end-of-season bulk roster assignment (applyRosterMode) ===
+  const applyRosterMode = async mode => {
+    const state = ref.current;
+    const intake = state.v4Intake;
+    if (!intake || Number(intake.scenario?.seasonStartYear) !== Number(state.v4Year) || state.activeSession || state.busy) return;
+    const seasonStartYear = Number(intake.scenario.seasonStartYear);
+    showMessage('');
+    setBusy(true);
+    try {
+      const { intake: api } = await ensureV4Api();
+      let cached = state.v4PlayerGamesPart;
+      if (!cached || Number(cached.seasonStartYear) !== seasonStartYear) {
+        const releasePin = api.createV4FranchiseLocalMirrorReleasePinV1({ origin: window.location.origin });
+        const baseUrl = new URL('/tools/swishiq-studio/', window.location.origin).href;
+        cached = { seasonStartYear, part: (await api.loadV4PlayerGamesForFranchiseSuggestionsV1({ seasonStartYear, releasePin, baseUrl })).part };
+        state.v4PlayerGamesPart = cached;
+      }
+      const { applied, held } = deriveRosterModeAssignments(intake, cached.part.records, mode);
+      const nextChoices = new Map(state.v4RosterChoices);
+      const nextProvenance = new Map(state.v4ChoiceProvenance);
+      const nextSuggestions = new Map(state.v4SuggestionsByName);
+      const heldKeys = new Set(held.map(row => row.key));
+      for (const row of applied) {
+        nextChoices.set(row.key, row.teamCode);
+        nextProvenance.set(row.key, 'generated');
+        nextSuggestions.set(row.key, Object.freeze({
+          status: 'suggested-not-applied',
+          policy: mode === 'start' ? 'first-observed-team-scenario' : 'last-observed-team-scenario',
+          teamCode: row.teamCode,
+          latestGameLocalDate: row.boundaryDate,
+          observations: Object.freeze(row.observations),
+          explicitUserChoiceRequired: true,
+          applied: false,
+        }));
+      }
+      // A mode switch overrides prior generated assignments, but never an
+      // explicit manual choice for a name the new mode could not resolve.
+      for (const key of heldKeys) {
+        if (nextProvenance.get(key) === 'generated') { nextChoices.delete(key); nextProvenance.delete(key); }
+      }
+      state.v4Intake = api.applyV4FranchiseRosterChoicesV1(intake, { rosterChoicesByName: nextChoices });
+      state.v4RosterChoices = nextChoices;
+      state.v4ChoiceProvenance = nextProvenance;
+      state.v4SuggestionsByName = nextSuggestions;
+      state.v4SuggestionSummary = null;
+      state.v4RosterMode = mode;
+      state.v4OperationNotice = null;
+      state.workerStatus = { text: `Roster mode applied: ${mode === 'start' ? 'start' : 'end'} of season · worker not initialized`, state: 'idle' };
+      showMessage(`${applied.length} multi-team name${applied.length === 1 ? '' : 's'} assigned to the team they ${mode === 'start' ? 'first played for in' : 'last played for in'} the season. ${held.length} remain held for a manual choice.`, 'notice');
+    } catch (error) {
+      state.v4OperationNotice = { operation: 'roster-mode', kind: 'error', seasonStartYear,
+        message: `Roster assignment failed: ${error?.message ?? error}. Existing exact-team choices and V4 source receipts were preserved.` };
+      showFailure(error, 'Roster assignment could not be applied.', 'Roster assignment');
     } finally {
       setBusy(false);
       render();
@@ -1273,7 +1338,7 @@ export default function useFranchiseSim() {
     view,
     setV4Year, setV4UserTeam, setFixtureUserTeam, setGenerateRating,
     onRosterChoice, setDraft,
-    loadV4Season, applySuggestions, initializeScenario,
+    loadV4Season, applySuggestions, applyRosterMode, initializeScenario,
     loadFixture, loadVerifiedFixture,
     saveRotation, advanceGame, advanceUserGame, verifyCompletion,
     saveLocal, resumeLocal, exportSave, importSave,

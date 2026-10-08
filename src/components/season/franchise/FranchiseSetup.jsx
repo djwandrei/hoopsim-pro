@@ -127,40 +127,25 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
         </section>
       )}
 
-      {/* V4 roster-choice review — a launch step on the exact-season path */}
+      {/* V4 roster assignment — a launch step on the exact-season path */}
       {path === 'v4' && (
         <section className="court-panel frx-panel space-y-3 p-4" aria-labelledby="frx-choices-title">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            {cardHead(Sparkles, 'Roster-choice review', 'Multi-team names', 'frx-choices-title')}
+            {cardHead(Sparkles, 'Roster assignment', 'Multi-team names', 'frx-choices-title')}
             <span className="frx-pill frx-pill--slate">{v4.choiceCount}</span>
           </div>
-          {!v4.groups.length && <p className="frx-note">{v4.status.state === 'idle' ? 'Roster-choice review appears after V4 intake.' : 'No multi-team player names need a franchise choice in this exact season.'}</p>}
-          <div className="grid gap-2.5">
-            {v4.groups.map(group => (
-              <article key={group.key} className="frx-choice">
-                <div className="frx-choice__head">
-                  <div className="min-w-0">
-                    <h4>{group.name}</h4>
-                    <p>{group.label}{group.observed ? ` · ${group.observed}` : ''}</p>
-                  </div>
-                  <span className={pillClass(group.pill.kind)}>{group.pill.text}</span>
-                </div>
-                <div className="grid gap-2.5 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-start">
-                  <div>
-                    <label className="studio-control-label" htmlFor={`frx-choice-${group.key}`}>Exact regular-season team</label>
-                    <select id={`frx-choice-${group.key}`} className="studio-select" value={group.selectedTeam} disabled={v4.choiceDisabled}
-                      onChange={event => sim.onRosterChoice(group.key, event.target.value)}>
-                      <option value="">Choose a team</option>
-                      {group.options.map(code => <option key={code} value={code}>{code}</option>)}
-                    </select>
-                  </div>
-                  <details>
-                    <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Evidence rows ({group.evidenceCount})</summary>
-                    <ul className="frx-choice__evidence">{group.evidenceRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
-                  </details>
-                </div>
-              </article>
-            ))}
+          {!v4.groups.length && <p className="frx-note">{v4.status.state === 'idle' ? 'Roster assignment appears after V4 intake.' : 'No multi-team player names need a franchise choice in this exact season.'}</p>}
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            <button type="button" className={`${buttonBase} h-auto flex-col items-start gap-1 border-border/50 bg-raised/40 p-3.5 tracking-normal normal-case hover:border-gold/40 ${v4.rosterMode === 'start' ? 'border-gold/60 bg-gold/10 text-gold' : 'text-foreground'}`} disabled={!v4.canAssign}
+              onClick={() => sim.applyRosterMode('start')}>
+              <strong className="text-xs font-semibold uppercase tracking-widest">Start of season</strong>
+              <span className="text-xs leading-relaxed">Every multi-team player joins the team they first played for in the season.</span>
+            </button>
+            <button type="button" className={`${buttonBase} h-auto flex-col items-start gap-1 border-border/50 bg-raised/40 p-3.5 tracking-normal normal-case hover:border-gold/40 ${v4.rosterMode === 'end' ? 'border-gold/60 bg-gold/10 text-gold' : 'text-foreground'}`} disabled={!v4.canAssign}
+              onClick={() => sim.applyRosterMode('end')}>
+              <strong className="text-xs font-semibold uppercase tracking-widest">End of season</strong>
+              <span className="text-xs leading-relaxed">Every multi-team player joins the team they last played for in the season.</span>
+            </button>
           </div>
           {v4.appliedSummary && (
             <div className="rounded-xl border border-border/40 bg-raised/30 p-3">
@@ -171,6 +156,36 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
                   <ul className="frx-choice__evidence">{v4.appliedSummary.appliedRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
                 </details>
               )}
+            </div>
+          )}
+          {v4.groups.length > 0 && v4.unresolvedGroups.length > 0 && (
+            <div className="grid gap-2.5">
+              <p className="frx-note"><strong className="text-foreground">{v4.unresolvedGroups.length} name{v4.unresolvedGroups.length === 1 ? '' : 's'} still need{v4.unresolvedGroups.length === 1 ? 's' : ''} a manual exact-team choice.</strong></p>
+              {v4.unresolvedGroups.map(group => (
+                <article key={group.key} className="frx-choice">
+                  <div className="frx-choice__head">
+                    <div className="min-w-0">
+                      <h4>{group.name}</h4>
+                      <p>{group.label}{group.observed ? ` · ${group.observed}` : ''}</p>
+                    </div>
+                    <span className={pillClass(group.pill.kind)}>{group.pill.text}</span>
+                  </div>
+                  <div className="grid gap-2.5 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-start">
+                    <div>
+                      <label className="studio-control-label" htmlFor={`frx-choice-${group.key}`}>Exact regular-season team</label>
+                      <select id={`frx-choice-${group.key}`} className="studio-select" value={group.selectedTeam} disabled={v4.choiceDisabled}
+                        onChange={event => sim.onRosterChoice(group.key, event.target.value)}>
+                        <option value="">Choose a team</option>
+                        {group.options.map(code => <option key={code} value={code}>{code}</option>)}
+                      </select>
+                    </div>
+                    <details>
+                      <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Evidence rows ({group.evidenceCount})</summary>
+                      <ul className="frx-choice__evidence">{group.evidenceRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
+                    </details>
+                  </div>
+                </article>
+              ))}
             </div>
           )}
         </section>

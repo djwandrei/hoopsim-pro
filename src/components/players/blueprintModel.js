@@ -23,7 +23,3 @@ export function buildBlueprintRows(source,phase = 'regular') {
     return { ...row,id:`${row.playerRef}:${row.teamCode}`,name,stats,totals,available:phase !== 'regular' || Boolean(publicRow),statsSource:publicRow ? 'Published full-season totals' : phase !== 'regular' ? 'Observed package phase' : 'Full-season totals unavailable',provenance:publicRow?.provenance || [],phase };
   }).sort((a,b) => a.name.localeCompare(b.name) || a.teamCode.localeCompare(b.teamCode));
 }
-export function scoutRound(players,key) {
-  const choices = players.flatMap((player,index) => player.phase === 'regular' && Number.isFinite(player.stats[key]) ? [{ index,player,value:Number(player.stats[key].toFixed(1)) }] : []);
-  return choices.length < 2 ? null : { key,choices,bestValue:Math.max(...choices.map(choice => choice.value)) };
-}

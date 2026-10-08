@@ -1,6 +1,6 @@
 import { NBA_FILM } from '@/components/playbook/nbaFilmCatalog';
 // Specific action names first. Related sets are never labelled exact matches.
-export const FILM_LINKS = [
+const FILM_LINKS = [
   { match: /^Box-and-One$/i, sources: ['boxone'], exact: ['box-and-one'] },
   { match: /^2-3 Zone$/i, sources: ['heatZone', 'zone'], exact: ['2-3-zone'] },
   { match: /^1-3-1 Zone$/i, sources: ['braun'], exact: ['1-3-1-zone'] },

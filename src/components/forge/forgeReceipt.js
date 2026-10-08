@@ -10,7 +10,7 @@ const decode = text => {
 };
 
 // picks: { key: [playerRef, value?] }
-export function encodeForgeBuild(mode, picks) {
+function encodeForgeBuild(mode, picks) {
   return encode({ v: 1, m: mode, p: picks });
 }
 

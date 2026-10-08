@@ -3,7 +3,7 @@
 // agree on prices, payouts and grading — the server recomputes every price
 // from the raw legs and never trusts a client-supplied one.
 
-export function americanToDecimal(price) {
+function americanToDecimal(price) {
   const value = Number(price);
   if (!Number.isFinite(value) || value === 0) return 1;
   return value > 0 ? 1 + value / 100 : 1 + 100 / Math.abs(value);

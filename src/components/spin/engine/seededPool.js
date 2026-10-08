@@ -31,7 +31,6 @@ function canonicalEligibilityRule(input) {
   if (canonical.seasons.some(year => !Number.isSafeInteger(year) || year < 1947 || year > 2200) || [canonical.minGames,canonical.minMinutes].some(value => value !== null && (!finite(value) || value < 0)) || (canonical.uniquePlayerKey !== false && !boundedText(canonical.uniquePlayerKey,80))) throw new Error('The role eligibility rule contains invalid values.');
   return canonical;
 }
-export function canonicalizeSeededEligibility(input = {}) { return canonicalEligibilityRule(input); }
 function poolFailure(reason,extra = {}) { return unavailable(reason,{ engineVersion:SEEDED_POOL_ENGINE_VERSION, contractVersion:MODEL_POOL_CONTRACT_VERSION, ...extra }); }
 export function buildSeededPool({ entries, packageRef, seed, eligibility = {}, uniquePlayerKey = null, maxEntries = SEEDED_POOL_LIMITS.maxEntries } = {}) {
   if (!Array.isArray(entries)) throw new Error('Seeded pools require an entry array.');
@@ -82,7 +81,6 @@ export function validateSeededPool(pool,{ packageRef, seed, eligibility } = {}) 
     return { ...rebuilt, excluded:canonicalExcluded, receipt:{ ...receipt, scope:publicModelPackageRef(normalizedPoolPackage) } };
   } catch (error) { return poolFailure(error.message || 'The supplied seeded pool is invalid.'); }
 }
-export function seededShuffle(entries,seed,{ keyField = null } = {}) { if (!Array.isArray(entries)) throw new Error('Seeded shuffle requires an entry array.'); const replaySeed = assertSeed(seed,'shuffle seed'), rows = sortedEntries(entries,keyField); if (rows.some(row => !row.key)) throw new Error('Seeded shuffle entries need stable keys.'); if (new Set(rows.map(row => row.key)).size !== rows.length) throw new Error('Seeded shuffle entries need unique keys.'); return randomShuffle(rows.map(row => row.entry),replaySeed,'standalone-shuffle'); }
 function weightedValue(entry,weightField) { const raw = weightField ? entry?.[weightField] : entry?.weight; if (raw === undefined || raw === null || raw === '') return 1; const value = Number(raw); return finite(value) && value >= 0 ? value : null; }
 function pickIndex(rows,random,weightField) { const weights = rows.map(row => weightedValue(row,weightField)); if (weights.some(value => value === null)) return { index:-1, reason:'A pool weight is not a non-negative finite number.' }; const maximum = Math.max(...weights); if (!(maximum > 0)) return { index:-1, reason:'The pool has no positive selection weight.' }; const scaledWeights = weights.map(value => value/maximum), total = scaledWeights.reduce((sum,value) => sum+value,0); let cursor = random()*total; for (let index = 0; index < scaledWeights.length; index += 1) { cursor -= scaledWeights[index]; if (cursor < 0 || index === weights.length-1) return { index }; } return { index:rows.length-1 }; }
 export function spinSeededPool(poolOrInput,{ count = 1, withoutReplacement = true, spinIndex = 0, weightField = null } = {}) {

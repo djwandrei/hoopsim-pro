@@ -45,5 +45,3 @@ export function trackGa4(eventName, params = {}) {
     /* analytics is best-effort */
   }
 }
-
-export const gaClientId = clientId;

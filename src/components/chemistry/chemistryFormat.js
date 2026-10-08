@@ -19,10 +19,6 @@ export const initials = name => (
   String(name || '').trim().split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]?.toUpperCase()).join('') || 'PL'
 );
 
-export const positionsLabel = row => (
-  Array.isArray(row?.positions) && row.positions.length ? row.positions.join(' / ') : 'Position unavailable'
-);
-
 export const seasonLabel = scope => {
   const start = Number(scope?.seasonStartYear);
   const end = Number(scope?.seasonEndYear);

@@ -14,7 +14,7 @@ const erf = x => {
 };
 const normCdf = z => 0.5 * (1 + erf(z / Math.SQRT2));
 
-export function winProbabilitySeries(events, homeCode, awayCode) {
+function winProbabilitySeries(events, homeCode, awayCode) {
   const total = events.length || 1;
   const rows = [{ play: 0, homeProb: 50, awayProb: 50, label: 'PREGAME', homeCode, awayCode }];
   events.forEach((event, index) => {

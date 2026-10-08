@@ -20,9 +20,3 @@ export async function findPlayerMatches(query) {
   if (data?.error) throw new Error(data.error);
   return data;
 }
-
-export async function productMapping(productId) {
-  const { data } = await base44.functions.invoke('swishiqCardCatalog', { mode: 'mapping', productId });
-  if (data?.error) throw new Error(data.error);
-  return data;
-}

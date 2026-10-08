@@ -9,7 +9,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 // segment forge lighting keeps working on the authored geometry. The heavy
 // result is cached per session and shared by every figure on the page.
 
-export const REFERENCE_MODEL_URL = `${import.meta.env.BASE_URL}studio-assets/forge/basketball-dunk-silhouette.glb`;
+const REFERENCE_MODEL_URL = `${import.meta.env.BASE_URL}studio-assets/forge/basketball-dunk-silhouette.glb`;
 
 const SEGMENT_KEYS = ['shin-l', 'shin-r', 'thigh-l', 'thigh-r', 'shorts', 'torso', 'arm-l', 'arm-r', 'head'];
 

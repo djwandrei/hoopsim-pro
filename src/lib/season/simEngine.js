@@ -5,7 +5,7 @@ import { buildGamePeriods } from '@/lib/season/gamePeriods';
 import { buildGameReplay } from '@/lib/season/gameReplay';
 import { replayBoxScores } from '@/lib/season/replayBoxScores';
 
-export const CONFERENCE_BY_TEAM = {
+const CONFERENCE_BY_TEAM = {
   ATL: 'EAST', BKN: 'EAST', BOS: 'EAST', CHA: 'EAST', CHI: 'EAST', CLE: 'EAST', DET: 'EAST',
   IND: 'EAST', MIA: 'EAST', MIL: 'EAST', NYK: 'EAST', ORL: 'EAST', PHI: 'EAST', TOR: 'EAST', WAS: 'EAST',
   DAL: 'WEST', DEN: 'WEST', GSW: 'WEST', HOU: 'WEST', LAC: 'WEST', LAL: 'WEST', MEM: 'WEST',
@@ -395,37 +395,6 @@ export function actualStandings(source) {
   return wins;
 }
 
-export function aggregateRepeats(previous, repeat) {
-  const agg = previous || { repeats: 0, teams: {} };
-  agg.repeats += 1;
-  for (const row of repeat.standings) {
-    const slot = agg.teams[row.code] || (agg.teams[row.code] = { wins: [], playoff: 0, confFinals: 0, champion: 0, ortg: [], drtg: [], pace: [] });
-    slot.wins.push(row.wins);
-    slot.ortg.push(row.ortg); slot.drtg.push(row.drtg); slot.pace.push(row.pace);
-    const reach = repeat.bracket?.reach?.[row.code];
-    if (reach && reach !== 'playIn') slot.playoff += 1;
-    if (reach === 'cf' || reach === 'finals' || reach === 'champion') slot.confFinals += 1;
-    if (reach === 'champion') slot.champion += 1;
-  }
-  return agg;
-}
-
-const median = list => {
-  if (!list.length) return 0;
-  const sorted = [...list].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-};
-
-export function summarizeAggregate(agg) {
-  return Object.entries(agg.teams).map(([code, slot]) => ({
-    code, wins: median(slot.wins), playoff: slot.playoff / agg.repeats,
-    confFinals: slot.confFinals / agg.repeats, title: slot.champion / agg.repeats,
-    ortg: median(slot.ortg), drtg: median(slot.drtg), pace: median(slot.pace),
-    winsList: slot.wins,
-  }));
-}
-
 export function buildGeneratedSchedule(teams, seed) {
   const rng = mulberry32(seed >>> 0);
   const codes = teams.map(team => team.code);
@@ -465,14 +434,6 @@ export function buildGeneratedSchedule(teams, seed) {
   return games;
 }
 
-export function nextLeague(league, year) {
-  return {
-    ...league,
-    label: seasonLabel(year),
-    seasonStartYear: year,
-    generated: true,
-  };
-}
 
 export function simSingleGame(league, home, away, { seed = 1, neutral = false, defenseWeight = 0.5, offenseWeight = 0.5, log = false } = {}) {
   const rng = mulberry32(seed >>> 0);

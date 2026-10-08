@@ -14,7 +14,7 @@ import { loadNativeModule } from '@/components/native/nativeModules';
 import { originalFetch } from '@/components/native/nativeTransport';
 import { STANDALONE, SITE_ORIGIN } from '@/lib/deployConfig';
 
-export const SWISHIQ_DAILY_GAME_KINDS = Object.freeze(['fix-the-five', 'draft-night']);
+const SWISHIQ_DAILY_GAME_KINDS = Object.freeze(['fix-the-five', 'draft-night']);
 export const SWISHIQ_DAILY_GAME_FAMILY = 'team-season';
 
 const NATIVE_DAILY_CLIENT_URL = '/tools/swishiq-daily-game-client.js?v=20261001g&rev=swishiq-daily-game-v5-name-identity-cache-closure-v1';
@@ -219,11 +219,6 @@ export function normalizeDailySeed(value) {
     fail('Daily date is invalid.');
   }
   return seed;
-}
-
-export function normalizeOptionalDailySeed(value) {
-  if (value == null || value === '') return '';
-  return normalizeDailySeed(value);
 }
 
 export function chicagoDailySeed(date = new Date()) {

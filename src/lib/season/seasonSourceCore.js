@@ -8,7 +8,7 @@ const REGISTRY_FILE = `${V4_RELEASE}/registry.json?v=20261002b`;
 const SCHEDULE_FILE = 'nba-actual-schedules-v1.json?v=20260920c&rev=nba-schedule-source-v2';
 const PLAYER_METADATA_FILE = 'player-metadata.json?v=20260920c&rev=20260919b';
 const PUBLIC_CONTEXT_FILE = 'public-player-context-v2.json?v=20260920c&rev=20260918f';
-export const SUPPORTED_YEARS = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+const SUPPORTED_YEARS = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 const METRIC_KEYS = [
   'offense', 'defense', 'net', 'pace48', 'pointsPerGame', 'pointsAllowedPerGame',
   'effectiveFieldGoal', 'freeThrowAttemptRate', 'offensiveReboundRate', 'defensiveReboundRate',

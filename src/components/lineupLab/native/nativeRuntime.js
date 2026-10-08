@@ -7,11 +7,14 @@ import controllerContract from '@/components/lineupLab/native/controllerContract
 
 const REV = '?v=20261002c&rev=lineup-v4-share-client-contract-pin-closure-v1';
 const WORKFLOW = '/lineup-lab/workflow-state.js?v=20261002c&rev=lineup-workflow-state-phase10-component-reliability-v1-20260928j';
+// Compute the public-dir URL at runtime: a static-looking import specifier
+// makes the dev server try to transform a /public file, which refuses it.
+const workflowUrl = new URL(WORKFLOW, location.origin).href;
 
 export default async function nativeRuntime(root, signal) {
   await workerConnection(); signal.throwIfAborted();
   const [, original, workflow] = await Promise.all([
-    ensureSiteConfig(), readSourceText('/lineup-lab/app.js' + REV), import(/* @vite-ignore */ WORKFLOW),
+    ensureSiteConfig(), readSourceText('/lineup-lab/app.js' + REV), import(/* @vite-ignore */ workflowUrl),
   ]);
   signal.throwIfAborted();
   controllerContract(root, original);

@@ -3,8 +3,11 @@ import { studioAsset } from '@/components/studio/teamAssets';
 const EMBLEMS = 'https://www.djshouseofcards-comics.com/tools/swishiq-studio/assets/workbench-icons/';
 const GAME_ASSETS = 'https://www.djshouseofcards-comics.com/assets/games/';
 export const WORKBENCHES = [
-  { path: '/players', icon: Users, emblem: `${EMBLEMS}player-blueprint-icon.webp`, title: 'Player Blueprint', tag: 'ATLAS & DOSSIERS', description: 'Scope the interactive league charts, then pin players to open their full observed dossiers.', flow: 'Atlas → Scope → Dossier', children: [{ path: '/players', title: 'League Atlas' }, { path: '/players/dossier', title: 'Player Dossier' }] },
-  { path: '/chemistry', icon: FlaskConical, emblem: `${EMBLEMS}chemistry-lab-icon.webp`, title: 'Chemistry Lab', tag: 'PAIR & LINEUP ANALYSIS', description: 'Compare a pair, play the challenge, and explore real shared-floor and exact-five combinations.', flow: 'Pair → Challenge → Combinations' },
+  { path: '/analytics', icon: LineChart, title: 'Analytics & Analysis', tag: 'PLAYER & LINEUP ANALYSIS', description: 'One desk for the analysis suite: player blueprints, chemistry between players, and the full lineup optimizer.', flow: 'Hub → Pick a tool → Analyze', children: [
+    { path: '/players', icon: Users, emblem: `${EMBLEMS}player-blueprint-icon.webp`, title: 'Player Blueprint', tag: 'ATLAS & DOSSIERS', description: 'Scope the interactive league charts, then pin players to open their full observed dossiers.', flow: 'Atlas → Scope → Dossier' },
+    { path: '/chemistry', icon: FlaskConical, emblem: `${EMBLEMS}chemistry-lab-icon.webp`, title: 'Chemistry Lab', tag: 'PAIR & LINEUP ANALYSIS', description: 'Compare a pair, play the challenge, and explore real shared-floor and exact-five combinations.', flow: 'Pair → Challenge → Combinations' },
+    { path: '/lineup-lab', icon: LineChart, emblem: `${GAME_ASSETS}lineup-lab-emblem-20260911.png`, title: 'NBA Lineup Lab', tag: 'LINEUP & ROTATION OPTIMIZER', description: 'Pick a team-season, set the game plan, and run the exact optimizer to rank lineups, rotations, and one-player tradeoffs.', flow: 'Team & season → Game plan → Build' },
+  ] },
   { path: '/forge', icon: Swords, emblem: `${EMBLEMS}composite-forge-icon.webp`, title: 'Composite Forge', tag: 'BUILD & REVIEW', description: 'Choose real player-season skill donors, build your player, and save or replay the source-backed recipe.', flow: 'Player examples → Skills → Build' },
   { path: '/game', icon: Zap, emblem: `${EMBLEMS}game-lab-icon.webp`, title: 'Game Lab', tag: 'MATCHUP SIMULATION', description: 'Play the original single-game, series and campaign challenges with adaptive trials and seeded replay.', flow: 'Matchup → Make your call → Replay' },
   { path: '/season', icon: CalendarRange, emblem: `${EMBLEMS}season-lab-icon.webp`, title: 'Season Lab', tag: 'SEASON REPLAYS', description: 'Replay the real schedule, review the fixed 16-team postseason, and follow the original season history.', flow: 'Schedule → Replay → Season history' },
@@ -19,7 +22,6 @@ export const WORKBENCHES = [
     { path: '/daily-games/fix-the-five', title: 'Fix the Five' },
     { path: '/daily-games/draft-night', title: 'Draft Night' },
   ] },
-  { path: '/lineup-lab', icon: LineChart, emblem: `${GAME_ASSETS}lineup-lab-emblem-20260911.png`, title: 'NBA Lineup Lab', tag: 'LINEUP & ROTATION OPTIMIZER', description: 'Pick a team-season, set the game plan, and run the exact optimizer to rank lineups, rotations, and one-player tradeoffs.', flow: 'Team & season → Game plan → Build' },
 ];
 
 // The Daily Games desk and its two verified games. Lineup Lab is deliberately
@@ -37,3 +39,16 @@ export const DAILY_GAMES = [
 ];
 // The two games themselves — the today's-call rotation and the site drawer.
 export const DAILY_GAMES_ROUTES = DAILY_GAMES[0].children;
+
+// Resolve a route to the studio tool that owns it. A child (tool screen)
+// wins over its parent workbench, and the parent carries the sidebar index.
+export function findStudioTool(pathname) {
+  const allTools = [...WORKBENCHES, ...DAILY_GAMES];
+  const match = tool => pathname === tool.path || pathname.startsWith(`${tool.path}/`);
+  for (const [index, workbench] of allTools.entries()) {
+    const child = (workbench.children ?? []).find(match);
+    if (child) return { tool: child, workbench, index };
+  }
+  const index = allTools.findIndex(match);
+  return index === -1 ? undefined : { tool: allTools[index], workbench: allTools[index], index };
+}

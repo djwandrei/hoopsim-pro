@@ -2,17 +2,15 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Circle, Loader2 } from 'lucide-react';
 import WorkbenchStages from '@/components/studio/WorkbenchStages';
-import { WORKBENCHES, DAILY_GAMES } from '@/components/studio/workbenches';
+import { findStudioTool } from '@/components/studio/workbenches';
 import CourtGraphic from '@/components/studio/CourtGraphic';
 import { Image } from '@/components/ui/image';
 import TeamPalettePicker from '@/components/djhc/TeamPalettePicker';
 export default function WorkbenchHeader({ title, description, steps = [], current = 0, state, status }) {
   const { pathname } = useLocation();
-  const allTools = [...WORKBENCHES, ...DAILY_GAMES];
-  const toolIndex = allTools.findIndex(tool => pathname === tool.path || pathname.startsWith(`${tool.path}/`));
-  const parent = allTools[toolIndex];
-  // A workbench's own screens carry their identity — emblem included.
-  const tool = parent?.children?.find(child => pathname === child.path) ?? parent;
+  const resolved = findStudioTool(pathname);
+  const tool = resolved?.tool;
+  const toolIndex = resolved?.index ?? -1;
   const Icon = tool?.icon;
   const loading = state === 'loading' || state === 'idle';
   const badge = loading ? 'Loading season' : state === 'error' ? 'Data unavailable' : status || (state === 'ready' ? 'Ready to explore' : null);

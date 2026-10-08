@@ -1,9 +1,13 @@
 const ORIGIN = 'https://www.djshouseofcards-comics.com';
 // Updated whenever a pin below is refreshed after review.
-const PIN_CACHE_BUST = '20261008b';
+const PIN_CACHE_BUST = '20261008c';
 export const PINS = {
-'/tools/swishiq-studio/react-game-lab-bridge.js':'61c0658cb714f8093a8af232289aba9f9d3c17d5f453059b28701811a36d399a',
-'/tools/swishiq-studio/react-season-lab-bridge.js':'a588f8f2bcd5e3d0a2d51fb7685ad1a1f4525cd8455f9525215069f8de37d702',
+// Reviewed as of 2026-10-08: the site's react-app runtime moved from
+// candidate74 to candidate100 (owner-manual release); these bridges now pin
+// that revision. The studio's own engine path (game-lab.js + canonical-v4
+// adapter) was not changed by the site update.
+'/tools/swishiq-studio/react-game-lab-bridge.js':'3bbfbd07b5764595b8b64812fedc51202ebe7c3039056e3b737d979e65742401',
+'/tools/swishiq-studio/react-season-lab-bridge.js':'f1a99a6b53d2e1c3fa723028d6416c8afa6fd9cca7dac31d6cb1aec013b50b89',
 '/tools/swishiq-studio/simulation-session-ui.js':'2e8296fa24d45652453fae4673a5287a50cda42a9bf5dd8d2701f5906d3fe5f8',
 '/tools/swishiq-studio/game-lab.js':'3cfeed5aacc57162ec7070b4b99c8cb50a90b335ce5988c76425e92eee6b570d',
 '/tools/swishiq-studio/season-lab.js':'d8124963319f7aaacb0510a564fde319fbf53154fe4f5e696ebd7b781be3f947',
@@ -37,7 +41,7 @@ export const PINS = {
 '/tools/swishiq-studio/engine/season-simulator.js':'7d3c87278313ed421d77e1f9e359917e54b52e8bcdb8b59d2bbfb5d7ad9cd1c9',
 '/tools/swishiq-studio/engine/career-state-source.js':'0e63328ab000221e743c322bb064b4e5583b8bcb901568c599dc1d9888f1a5d8',
 '/tools/swishiq-studio/engine/context-contract.js':'82528ef429143960f4d09531498e9c3419b591fc2fbe1517aef1d1f00961350f',
-'/tools/result-passport.js':'f7837df1fae9d0db7acda901f3fd25cf6aa016d331ed595a86c69dd9a4e810f5',
+'/tools/result-passport.js':'5d48d837052721ebd6912e25736cd4db6b69399abba6fa97d0ad51be81e4b5d0',
 '/tools/swishiq-studio/engine/studio-analysis.js':'3ed6c7f79c62de897a320f0cb24443d6768afea27c71fdc8d4731b2cd057e673',
 '/tools/swishiq-studio/engine/model-calibration.js':'8c65825cf2c14791a87221feb0589457dc25addeb3ca4c984b7099a7820a9840',
 '/tools/swishiq-studio/engine/canonical-v4-public-network-loader.js':'39e737644abc8c478bab692320710f0485cc5e52a107c829d1a6664eae495b78',

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -11,35 +11,13 @@ import GaPageView from '@/components/GaPageView';
 import { STANDALONE, SITE_BASE } from '@/lib/deployConfig';
 import RouteFallback from '@/components/studio/RouteFallback';
 import ErrorBoundary from '@/components/ErrorBoundary';
-// Add page imports here
+// Mobile-responsive layout route: plain passthrough on the web, keep-alive
+// bottom-tab shell inside a mobile WebView.
+import Layout from '@/components/Layout';
 // Route code-splitting: the studio home stays eager; every workbench and
-// daily game loads on first visit so the landing paint stays light.
-import StudioHome from '@/pages/StudioHome';
-const SeasonLab = lazy(() => import('@/pages/SeasonLab'));
-const PlayerLab = lazy(() => import('@/pages/PlayerLab'));
-const ChemistryLab = lazy(() => import('@/pages/ChemistryLab'));
-const ForgeLab = lazy(() => import('@/pages/ForgeLab'));
-const GameLab = lazy(() => import('@/pages/GameLab'));
-const CareerLab = lazy(() => import('@/pages/CareerLab'));
-const SpinRoom = lazy(() => import('@/pages/SpinRoom'));
-const BookRoom = lazy(() => import('@/pages/BookRoom'));
-const FixTheFive = lazy(() => import('@/pages/FixTheFive'));
-const DraftNight = lazy(() => import('@/pages/DraftNight'));
-const LineupLab = lazy(() => import('@/pages/LineupLab'));
-const LineupSharedResult = lazy(() => import('@/pages/LineupSharedResult'));
-const PoolRedesignMockup = lazy(() => import('@/pages/PoolRedesignMockup'));
-const CardMatchups = lazy(() => import('@/pages/CardMatchups'));
-const VirtualPacks = lazy(() => import('@/pages/VirtualPacks'));
-const Workshop = lazy(() => import('@/pages/Workshop'));
-const Account = lazy(() => import('@/pages/Account'));
-const Playbook = lazy(() => import('@/pages/Playbook'));
-const ForgeModelCompare = lazy(() => import('@/pages/ForgeModelCompare'));
-const RealBook = lazy(() => import('@/pages/RealBook'));
-const FranchiseLab = lazy(() => import('@/pages/FranchiseLab'));
-const DailyGames = lazy(() => import('@/pages/DailyGames'));
-const Analytics = lazy(() => import('@/pages/Analytics'));
-const CollectorCenter = lazy(() => import('@/pages/CollectorCenter'));
-const SimsHub = lazy(() => import('@/pages/SimsHub'));
+// daily game loads on first visit so the landing paint stays light. The
+// shared route list feeds both the web router and the mobile tab views.
+import { APP_ROUTES } from '@/components/mobile/appRoutes';
 
 // Public studio: no login gate — every route is open. On the site the router
 // lives under /tools/swishiq-studio/ so existing site links keep working.
@@ -53,33 +31,11 @@ function App() {
           <ErrorBoundary>
           <Suspense fallback={<RouteFallback />}>
           <Routes>
-            {/* Add your page Route elements here */}
-            <Route path="/" element={<StudioHome />} />
-            <Route path="/sims" element={<SimsHub />} />
-            <Route path="/sims/season" element={<SeasonLab />} />
-            <Route path="/sims/game" element={<GameLab />} />
-            <Route path="/sims/franchise" element={<FranchiseLab />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/players/*" element={<PlayerLab />} />
-            <Route path="/chemistry" element={<ChemistryLab />} />
-            <Route path="/forge" element={<ForgeLab />} />
-            <Route path="/forge-models" element={<ForgeModelCompare />} />
-            <Route path="/analytics/career" element={<CareerLab />} />
-            <Route path="/spin" element={<SpinRoom />} />
-            <Route path="/book" element={<BookRoom />} />
-            <Route path="/real-book" element={<RealBook />} />
-            <Route path="/daily-games" element={<DailyGames />} />
-            <Route path="/daily-games/fix-the-five" element={<FixTheFive />} />
-            <Route path="/daily-games/draft-night" element={<DraftNight />} />
-            <Route path="/lineup-lab" element={<LineupLab />} />
-            <Route path="/tools/shared-result" element={<LineupSharedResult />} />
-            <Route path="/pool-mockup" element={<PoolRedesignMockup />} />
-            <Route path="/collector" element={<CollectorCenter />} />
-            <Route path="/matchups" element={<CardMatchups />} />
-            <Route path="/packs" element={<VirtualPacks />} />
-            <Route path="/playbook" element={<Playbook />} />
-            <Route path="/workshop" element={<Workshop />} />
-            <Route path="/account" element={<Account />} />
+            <Route element={<Layout />}>
+              {APP_ROUTES.map(({ path, element }) => (
+                <Route key={path} path={path} element={element} />
+              ))}
+            </Route>
             <Route path="*" element={<PageNotFound />} />
           </Routes>
           </Suspense>

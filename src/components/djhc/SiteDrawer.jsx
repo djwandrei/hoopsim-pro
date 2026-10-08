@@ -8,6 +8,7 @@ export default function SiteDrawer({open,navRef,onClose}) {
   // The drawer mirrors the app's workbench structure: the analysis and
   // collector tools are grouped under their desks, not listed standalone.
   const groups = [
+    ['Workbenches', WORKBENCHES],
     ['Analytics & Analysis', (WORKBENCHES.find(workbench => workbench.path === '/analytics')?.children ?? [])],
     ['Collector Center', (WORKBENCHES.find(workbench => workbench.path === '/collector')?.children ?? [])],
     ['Daily games', DAILY_GAMES_ROUTES],

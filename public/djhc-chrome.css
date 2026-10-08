@@ -522,3 +522,13 @@ body.webview { overflow: hidden; }
 body.webview #root { height: 100dvh; overflow: hidden; }
 body.webview .studio-workspace { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
 body.webview .webview-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(env(safe-area-inset-bottom) + 4.5rem); }
+
+/* === Light-mode contrast fix for the header dropdown menu (site drawer) ===
+   The drawer switches to a white surface in light mode, but several text
+   slots kept their dark-theme colors (near-white text, pale team tints,
+   white dividers). Restyle them for the light surface. */
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation="true"] .site-header.fan-suite-header .site-nav .site-nav__eyebrow { color: #1f2fa3; }
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation="true"] .site-header.fan-suite-header .site-nav .site-nav__mobile-title { color: #14203a; }
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation="true"] .site-header.fan-suite-header .site-nav .site-nav__mobile-header { border-bottom-color: rgba(24,37,73,.16); }
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation="true"] .site-header.fan-suite-header .site-nav .site-nav__mobile-header p { color: rgba(23,32,51,.78); }
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation="true"] .site-header.fan-suite-header .site-nav .fan-tools-primary__label { color: #172033; }

@@ -53,11 +53,29 @@ const OPTIMIZER_MODULES = new Set([
   '/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js',
 ]);
 
+// The franchise release is vendored byte-exact in the studio build and served
+// natively at its site paths; only the non-vendored V4 release data still
+// relays through the backend source function.
+const FRANCHISE_LOCAL_PREFIX = '/tools/swishiq-studio/franchise-sim-20261008/';
+const FRANCHISE_V4_DATA = '/tools/swishiq-studio/data/v4/';
+const VENDORED_ENGINE_FILES = new Set([
+  'canonical-v4-descriptive-source-consumer.js', 'canonical-v4-identity.js',
+  'canonical-v4-lineup-model-gate.js', 'canonical-v4-player-name-identity.js',
+  'canonical-v4-player-season-evidence.js', 'canonical-v4-projection-capability-map.js',
+  'canonical-v4-projection-resolver.js', 'canonical-v4-public-network-loader.js',
+  'canonical-v4-site-consumer-policy.js', 'canonical-v4-studio-runtime-adapter.js',
+  'canonical-v4-studio-runtime-release-pin.js', 'nba-schedule-source.js',
+]);
+
 function sourcePath(url) {
   if (![SITE, self.location.origin].includes(url.origin)) return null;
   if (url.origin === self.location.origin && url.pathname.startsWith('/assets/') && /\.(js|css)$/.test(url.pathname)) return null;
   if (url.origin === self.location.origin && OPTIMIZER_MODULES.has(url.pathname)) return null;
   if (url.pathname.startsWith('/fixtures/')) return '/lineup-lab' + url.pathname + url.search;
+  if (url.pathname.startsWith(FRANCHISE_LOCAL_PREFIX)
+    || url.pathname === '/tools/swishiq-studio/data/nba-actual-schedules-v1.json'
+    || (url.pathname.startsWith('/tools/swishiq-studio/engine/')
+      && VENDORED_ENGINE_FILES.has(url.pathname.split('/').pop()))) return null;
   if (['/tools/', '/lineup-lab/', '/assets/'].some(prefix => url.pathname.startsWith(prefix)) || ROOT_FILES.has(url.pathname)) {
     return url.pathname + url.search;
   }
@@ -131,7 +149,10 @@ self.addEventListener('fetch', event => {
       // Resolve the current window on each request: service workers restart
       // after idle, so an in-memory connection flag cannot gate the lab.
       const client = event.clientId ? await self.clients.get(event.clientId) : null;
-      if (client?.type === 'window' && !await isConnected(client)) return fetch(event.request);
+      // The franchise preview's window client never connects, so its V4
+      // release data must still relay through any connected studio client.
+      const franchiseRelay = new URL(event.request.url).pathname.startsWith(FRANCHISE_V4_DATA);
+      if (client?.type === 'window' && !await isConnected(client) && !franchiseRelay) return fetch(event.request);
       const cache = await caches.open(CACHE);
       const cached = await cache.match(event.request);
       if (cached) return cached;

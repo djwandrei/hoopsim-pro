@@ -10,7 +10,7 @@ build, and loads all of its data and gameplay from your site same-origin —
 
 ```bash
 npm ci
-VITE_STANDALONE=true npm run build
+npm run build:site
 ```
 
 The `VITE_STANDALONE=true` flag compiles the standalone site build:
@@ -33,21 +33,26 @@ Copy everything from `dist/` into your site so that:
   `/assets/forge/`) only if you relocate them; see §5.
 
 **Server configuration (the one required site change):** the app is a single
-page application. Your server must return `index.html` for these paths
-under the studio root (all other files are served statically):
+page application. Your server must return `index.html` for **any path under
+`/tools/swishiq-studio/` that does not match a static file** (all other files
+are served statically). The main entry points:
 
 | Route | Page |
 | --- | --- |
 | `/tools/swishiq-studio/` | Studio home |
-| `/tools/swishiq-studio/season/` | Season Lab |
+| `/tools/swishiq-studio/sims/…` | Sims & What-ifs hub, Season / Game / Franchise labs |
+| `/tools/swishiq-studio/analytics/…` | Analytics hub, Career Lab |
 | `/tools/swishiq-studio/players/*` | Player Lab (all player pages) |
 | `/tools/swishiq-studio/chemistry/` | Chemistry Lab |
-| `/tools/swishiq-studio/forge/` | Forge (Build-A-Bucket) |
-| `/tools/swishiq-studio/game/` | Game Lab |
-| `/tools/swishiq-studio/career/` | Career Lab |
+| `/tools/swishiq-studio/forge/`, `/forge-models/` | Composite Forge |
+| `/tools/swishiq-studio/lineup-lab/` | NBA Lineup Lab |
 | `/tools/swishiq-studio/spin/` | Spin Room |
-| `/tools/swishiq-studio/fix-the-five/` | Fix the Five (daily game) |
-| `/tools/swishiq-studio/draft-night/` | Draft Night (daily game) |
+| `/tools/swishiq-studio/book/`, `/real-book/` | Sportsbook (play-money / real-money) |
+| `/tools/swishiq-studio/daily-games/…` | Daily Games hub, Fix the Five, Draft Night |
+| `/tools/swishiq-studio/collector/…` | Collector Center, Player & Cards, Virtual Packs |
+| `/tools/swishiq-studio/playbook/` | Playbook |
+| `/tools/swishiq-studio/workshop/` | Workshop |
+| `/tools/swishiq-studio/account/` | Account |
 
 The previous studio page at `/tools/swishiq-studio/` is fully replaced, so
 every existing site link that points there keeps working.
@@ -110,3 +115,8 @@ verified against reviewed SHA-256 pins **in the browser** before execution:
   verified by scanning the built JS for SDK code.
 - The route base name and logo/asset paths switch automatically via
   `src/lib/deployConfig.js` — no code edits needed at integration time.
+- Hosted-only features degrade inertly on the static site: the real-money
+  book (`/real-book/`), account/checkout flows, and hosted credits need the
+  Base44 runtime and are no-ops in the standalone bundle. The play-money
+  Sportsbook, daily games (which call the site's own evaluator endpoint), and
+  all sim/analytics workbenches are fully functional same-origin.

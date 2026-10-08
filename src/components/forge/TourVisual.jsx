@@ -19,8 +19,8 @@ export default function TourVisual({ tour }) {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 24, top: 4, bottom: 4 }}>
             <CartesianGrid horizontal={false} stroke="hsl(var(--border) / .18)" />
-            <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} tickFormatter={value => (value > 0 ? `+${value}` : value)} />
-            <YAxis type="category" dataKey="code" width={42} interval={0} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
+            <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} tickFormatter={value => (value > 0 ? `+${value}` : value)} />
+            <YAxis type="category" dataKey="code" width={42} interval={0} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <Tooltip
               cursor={{ fill: 'hsl(var(--court-raised) / .3)' }}
               contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border) / .4)', borderRadius: 10, fontSize: 11 }}

@@ -83,12 +83,12 @@ export default function PlayerStatsChart({ teamA, teamB }) {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" margin={{ top: 4, right: 36, left: 8, bottom: 0 }}>
             <CartesianGrid horizontal={false} stroke="hsl(var(--border) / .3)" />
-            <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis type="category" dataKey="name" width={80} interval={0} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
+            <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4 }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="name" width={80} interval={0} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <Tooltip content={tip} cursor={{ fill: 'hsl(var(--court-accent) / .08)' }} />
             <Bar dataKey="value" isAnimationActive={false} barSize={16} radius={[0, 4, 4, 0]}>
               {data.map((row, index) => <Cell key={index} fill={row.teamColor} stroke={row.teamInk} />)}
-              <LabelList dataKey="value" position="right" formatter={value => Number(value).toFixed(1)} style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9, fontFamily: 'var(--font-mono)' }} />
+              <LabelList dataKey="value" position="right" formatter={value => Number(value).toFixed(1)} style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4, fontFamily: 'var(--font-mono)' }} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

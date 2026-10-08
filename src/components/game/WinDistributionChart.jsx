@@ -37,12 +37,12 @@ export default function WinDistributionChart({ source, league, teamA, teamB }) {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" margin={{ top: 4, right: 28, left: 4, bottom: 0 }}>
             <CartesianGrid horizontal={false} stroke="hsl(var(--border) / .3)" />
-            <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis type="category" dataKey="code" width={44} interval={0} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
+            <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4 }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="code" width={44} interval={0} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4, fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <Tooltip content={props => tip({ ...props, teamA, teamB })} cursor={{ fill: 'hsl(var(--court-accent) / .08)' }} />
             <Bar dataKey="wins" isAnimationActive={false} barSize={13} radius={[0, 4, 4, 0]}>
               {data.map(row => <Cell key={row.code} fill={fillFor(row.code)} stroke={row.code === teamA.code ? 'var(--matchup-home-color)' : row.code === teamB.code ? 'var(--matchup-away-color)' : 'var(--myna-border)'} />)}
-              <LabelList dataKey="wins" position="right" style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9, fontFamily: 'var(--font-mono)' }} />
+              <LabelList dataKey="wins" position="right" style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4, fontFamily: 'var(--font-mono)' }} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

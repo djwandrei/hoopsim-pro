@@ -239,7 +239,7 @@ body.dark-mode .studio-workspace tbody tr:nth-child(even) { background: transpar
 /* Readability floor: 8px/9px utility micro-labels (chips, kickers, table
    headers) sit below the ~10px legibility floor on desktop — lift every one
    inside the studio to a 10.4px floor without touching the source classes. */
-.studio-workspace [class*="text-[8px]"], .studio-workspace [class*="text-[9px]"], .studio-workspace [class*="text-[10px]"] { font-size: .65rem; }
+[class*="text-[8px]"], [class*="text-[9px]"], [class*="text-[10px]"] { font-size: .65rem; }
 /* Human factors: on touch devices, widen the tap area of compact icon/text
    controls without shifting layout (expanded hit box, not padding). */
 @media (pointer: coarse) {

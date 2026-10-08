@@ -69,7 +69,7 @@ export default function PlayerDuelRadar({ teamA, teamB }) {
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={data} outerRadius="72%">
                 <PolarGrid stroke="hsl(var(--border) / .3)" />
-                <PolarAngleAxis dataKey="axis" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
+                <PolarAngleAxis dataKey="axis" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4 }} />
                 <Radar name={pA.name} dataKey="a" stroke="var(--matchup-home-color)" fill={cA} fillOpacity={0.25} isAnimationActive={false} />
                 <Radar name={pB.name} dataKey="b" stroke="var(--matchup-away-color)" fill={cB} fillOpacity={0.25} isAnimationActive={false} />
                 <Tooltip content={tip} />

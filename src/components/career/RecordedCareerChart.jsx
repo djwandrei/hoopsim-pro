@@ -44,7 +44,7 @@ export default function RecordedCareerChart({ seasons }) {
         <AreaChart data={chart} margin={{ top: 10, right: 15, bottom: 5, left: -15 }} onClick={event => { const row = event?.activePayload?.[0]?.payload; if (row && byYear.has(row.year)) setSelectedYear(row.year); }}>
           <defs><linearGradient id={`career-fill-${stat}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={PALETTE[stat]} stopOpacity={0.32} /><stop offset="100%" stopColor={PALETTE[stat]} stopOpacity={0.03} /></linearGradient></defs>
           <CartesianGrid vertical={false} stroke="hsl(var(--border) / .25)" strokeDasharray="3 3" />
-          <XAxis dataKey="label" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} tickLine={false} axisLine={false} />
+          <XAxis dataKey="label" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4 }} tickLine={false} axisLine={false} />
           <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} tickLine={false} axisLine={false} />
           <Tooltip content={<Tip />} cursor={{ stroke: 'hsl(var(--border) / .5)' }} />
           <Area type="linear" dataKey={stat} connectNulls={false} stroke={PALETTE[stat]} strokeWidth={3} fill={`url(#career-fill-${stat})`} activeDot={{ r: 5, stroke: 'hsl(var(--card))', strokeWidth: 2 }}

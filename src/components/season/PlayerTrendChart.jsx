@@ -13,8 +13,8 @@ export default function PlayerTrendChart({ rows }) {
           <div className="mt-2 h-52">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data} margin={{ top: 8, right: 6, bottom: 0, left: -22 }}>
-                <XAxis dataKey="game" tick={{ fontSize: 9, fill: 'var(--myna-muted)' }} stroke="var(--myna-border)" />
-                <YAxis tick={{ fontSize: 9, fill: 'var(--myna-muted)' }} stroke="var(--myna-border)" domain={['dataMin - 3', 'dataMax + 3']} />
+                <XAxis dataKey="game" tick={{ fontSize: 10.4, fill: 'var(--myna-muted)' }} stroke="var(--myna-border)" />
+                <YAxis tick={{ fontSize: 10.4, fill: 'var(--myna-muted)' }} stroke="var(--myna-border)" domain={['dataMin - 3', 'dataMax + 3']} />
                 <Tooltip
                   contentStyle={{ background: 'var(--myna-surface)', color: 'var(--myna-text)', border: '1px solid var(--myna-border)', borderRadius: 8, fontSize: 11 }}
                   labelStyle={{ color: 'var(--myna-muted)' }}
@@ -22,7 +22,7 @@ export default function PlayerTrendChart({ rows }) {
                   labelFormatter={value => `Game ${value}`}
                   formatter={value => [value, 'PTS']}
                 />
-                <ReferenceLine y={avg} stroke="var(--myna-muted)" strokeDasharray="4 4" strokeOpacity={0.7} label={{ value: `${avg.toFixed(1)} PPG avg`, position: 'insideTopRight', fontSize: 9, fill: 'var(--myna-muted)' }} />
+                <ReferenceLine y={avg} stroke="var(--myna-muted)" strokeDasharray="4 4" strokeOpacity={0.7} label={{ value: `${avg.toFixed(1)} PPG avg`, position: 'insideTopRight', fontSize: 10.4, fill: 'var(--myna-muted)' }} />
                 <Line type="monotone" dataKey="pts" stroke="var(--myna-accent)" strokeWidth={2} dot={{ r: 2.5, fill: 'var(--myna-accent)' }} activeDot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>

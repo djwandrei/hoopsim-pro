@@ -21,7 +21,7 @@
 .spin-stage__outcome { display: grid; gap: .9rem; min-width: 0; }
 .spin-pick { position: relative; border: 1px solid hsl(var(--court-accent) / .35); border-radius: .8rem; background: hsl(var(--court-canvas) / .65); padding: 1.4rem 1.5rem; }
 .spin-pick--idle { border-style: dashed; border-color: hsl(var(--border) / .5); background: hsl(var(--court-canvas) / .4); }
-.spin-pick__kicker { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.spin-pick__kicker { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--court-accent)); }
 .spin-pick--idle .spin-pick__kicker { color: hsl(var(--muted-foreground)); }
 .spin-pick__row { display: flex; align-items: center; gap: 1.1rem; margin-top: .9rem; }
 .spin-pick__name { margin-top: .5rem; font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.05; letter-spacing: .03em; }
@@ -39,7 +39,7 @@
 .spin-desk__field input, .spin-desk__field select { width: 100%; min-height: 2.5rem; border-radius: .5rem; border: 1px solid hsl(var(--input)); background: hsl(var(--court-raised) / .5); padding: .5rem .7rem; color: hsl(var(--foreground)); font-size: .8rem; }
 /* Previous picks strip on the stage */
 .spin-past { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
-.spin-past__label { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.spin-past__label { font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
 .spin-past__chip { display: inline-flex; align-items: center; border: 1px solid hsl(var(--border) / .4); border-radius: 999px; background: hsl(var(--court-canvas) / .5); padding: .2rem .6rem; font-size: .68rem; color: hsl(var(--muted-foreground)); }
 /* Control rail tabs (filters vs players) */
 .spin-tabs { display: flex; gap: .3rem; padding: .3rem; border-radius: .7rem; border: 1px solid hsl(var(--border) / .35); background: hsl(var(--court-canvas) / .6); }
@@ -47,7 +47,7 @@
 .spin-tabs button[aria-selected="true"] { background: hsl(var(--court-accent) / .15); color: hsl(var(--court-accent)); box-shadow: inset 0 0 0 1px hsl(var(--court-accent) / .4); }
 /* Control desk sections & chips */
 .spin-desk__section { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px dashed hsl(var(--border) / .3); }
-.spin-desk__label { margin-bottom: .5rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.spin-desk__label { margin-bottom: .5rem; font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
 .spin-chips { display: flex; flex-wrap: wrap; gap: .35rem; }
 .spin-chip { display: inline-flex; align-items: center; min-height: 1.9rem; border-radius: 999px; border: 1px solid hsl(var(--border) / .45); background: hsl(var(--court-raised) / .4); padding: 0 .7rem; font-family: var(--font-mono); font-size: .65rem; font-weight: 600; letter-spacing: .06em; color: hsl(var(--muted-foreground)); transition: border-color .12s ease, color .12s ease, background-color .12s ease; }
 .spin-chip:hover { border-color: hsl(var(--court-accent) / .5); color: hsl(var(--foreground)); }

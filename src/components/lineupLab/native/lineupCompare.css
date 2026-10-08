@@ -7,7 +7,7 @@
 .cmp-header { position: relative; overflow: hidden; border-bottom: 1px solid hsl(var(--border) / .3); }
 .cmp-court { position: absolute; right: -.75rem; top: -1rem; width: 11rem; color: hsl(var(--court-accent)); opacity: .1; }
 .cmp-header__copy { position: relative; padding: 1rem 1.1rem; }
-.cmp-kicker { font-size: .6rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+.cmp-kicker { font-size: .65rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: hsl(var(--court-accent)); }
 .cmp-title { margin-top: .25rem; font-family: var(--font-display); font-size: 1.35rem; letter-spacing: .04em; color: hsl(var(--foreground)); }
 
 /* Scale switch: raw, per-36, per-100 */
@@ -27,7 +27,7 @@
 .cmp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: .7rem; }
 .cmp-card { position: relative; overflow: hidden; border: 1px solid hsl(var(--border) / .3); border-radius: .9rem; background: hsl(var(--court-canvas) / .5); padding: .8rem .9rem .8rem 1.1rem; }
 .cmp-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--cmp-color, hsl(var(--court-accent))); }
-.cmp-card__chip { position: absolute; top: .55rem; right: .6rem; border: 1px solid hsl(var(--court-accent) / .4); border-radius: 999px; background: hsl(var(--court-accent) / .08); color: hsl(var(--court-accent)); font-family: var(--font-mono); font-size: .55rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; padding: .18rem .5rem; }
+.cmp-card__chip { position: absolute; top: .55rem; right: .6rem; border: 1px solid hsl(var(--court-accent) / .4); border-radius: 999px; background: hsl(var(--court-accent) / .08); color: hsl(var(--court-accent)); font-family: var(--font-mono); font-size: .65rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; padding: .18rem .5rem; }
 .cmp-card__id { display: flex; align-items: center; gap: .65rem; padding-top: .3rem; }
 .cmp-card__avatar { display: grid; place-items: center; flex-shrink: 0; height: 2.6rem; width: 2.6rem; overflow: hidden; border-radius: .6rem; border: 1px solid hsl(var(--border) / .35); background: hsl(var(--court-raised) / .6); color: hsl(var(--court-muted)); font-family: var(--font-display); font-size: .9rem; letter-spacing: .04em; }
 .cmp-card__name { min-width: 0; font-family: var(--font-display); font-size: 1.05rem; letter-spacing: .03em; text-transform: uppercase; line-height: 1.1; color: hsl(var(--foreground)); overflow-wrap: anywhere; }
@@ -39,7 +39,7 @@
 .cmp-table thead th:first-child { border-left: 2px solid hsl(var(--court-accent) / .35); border-top-left-radius: .4rem; }
 .cmp-gap-col { border-left: 1px solid hsl(var(--border) / .25); color: hsl(var(--court-team-hint)) !important; }
 .cmp-head { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; }
-.cmp-head__avatar { display: grid; place-items: center; flex-shrink: 0; height: 1.75rem; width: 1.75rem; overflow: hidden; border-radius: .45rem; border: 1px solid hsl(var(--border) / .35); background: hsl(var(--court-raised) / .6); color: hsl(var(--court-muted)); font-size: .6rem; }
+.cmp-head__avatar { display: grid; place-items: center; flex-shrink: 0; height: 1.75rem; width: 1.75rem; overflow: hidden; border-radius: .45rem; border: 1px solid hsl(var(--border) / .35); background: hsl(var(--court-raised) / .6); color: hsl(var(--court-muted)); font-size: .65rem; }
 .cmp-head__name { max-width: 9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-body); font-size: .72rem; font-weight: 600; color: hsl(var(--foreground)); }
 .cmp-table tbody th { padding: .75rem .7rem; text-align: left; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: hsl(var(--court-muted)); }
 .cmp-table tbody td { padding: .75rem .7rem; vertical-align: middle; }
@@ -53,7 +53,7 @@
 .cmp-leader .cmp-value { color: hsl(var(--court-focus)); font-weight: 700; text-shadow: 0 0 18px hsl(var(--court-accent) / .3); }
 .cmp-lead-chip { display: inline-flex; align-items: center; gap: .3rem; border: 1px solid hsl(var(--court-accent) / .55); border-radius: 999px; background: hsl(var(--court-accent) / .12); color: hsl(var(--court-accent)); font: 600 .55rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; padding: .14rem .5rem; }
 .cmp-delta { display: inline-flex; align-items: center; border: 1px solid hsl(var(--court-trim-ink) / .4); border-radius: 999px; background: hsl(var(--court-trim-ink) / .08); color: hsl(var(--court-trim-ink)); font: 600 .62rem var(--font-mono); font-variant-numeric: tabular-nums; padding: .12rem .5rem; }
-.cmp-pct { font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--court-muted)); }
+.cmp-pct { font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--court-muted)); }
 
 /* Difference meter: leader-to-trailer gap plus every player plotted on it */
 .cmp-gap { display: grid; justify-items: start; gap: .3rem; min-width: 0; }

@@ -87,7 +87,7 @@ export default function WinProbabilityChart({ events, count, homeCode, awayCode,
             </defs>
             <CartesianGrid stroke="hsl(var(--border) / .3)" vertical={false} />
             <XAxis dataKey="play" hide />
-            <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tickFormatter={value => `${value}%`} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 9 }} width={54} />
+            <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tickFormatter={value => `${value}%`} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4 }} width={54} />
             <Tooltip content={tip} cursor={{ stroke: 'hsl(var(--border))' }} />
             <ReferenceLine x={data[data.length - 1]?.play} stroke="hsl(var(--court-accent))" strokeWidth={2} />
             <ReferenceLine y={50} stroke="hsl(var(--border) / .6)" strokeDasharray="4 4" />

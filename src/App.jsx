@@ -68,7 +68,6 @@ function App() {
             <Route path="/chemistry" element={<ChemistryLab />} />
             <Route path="/forge" element={<ForgeLab />} />
             <Route path="/forge-models" element={<ForgeModelCompare />} />
-            <Route path="/game" element={<GameLab />} />
             <Route path="/analytics/career" element={<CareerLab />} />
             <Route path="/career" element={<Navigate to={`/analytics/career${window.location.search}`} replace />} />
             <Route path="/spin" element={<SpinRoom />} />

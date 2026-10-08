@@ -7,12 +7,12 @@ import { WORKBENCHES } from '@/components/studio/workbenches';
 
 const TOOLS = WORKBENCHES.find(tool => tool.path === '/analytics')?.children ?? [];
 
-// The Analytics & Analysis desk: the three analysis tools launch from this
+// The Analytics & Analysis desk: the four analysis tools launch from this
 // central home page, and each opens as its own distinct page.
 export default function Analytics() {
   usePageMeta({
     title: 'Analytics & Analysis | DJ\'s House of Cards',
-    description: 'One desk for the analysis suite — player blueprints, chemistry between players, and the full NBA lineup optimizer.',
+    description: 'One desk for the analysis suite — player blueprints, chemistry between players, the full NBA lineup optimizer, and recorded career history.',
   });
   return (
     <StudioShell active="/analytics">

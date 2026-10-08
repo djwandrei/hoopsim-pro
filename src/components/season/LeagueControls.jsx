@@ -108,12 +108,12 @@ export default function LeagueControls({
         </div>
       )}
 
-      {hasResults && !running && !championName && (
+      {hasResults && !running && (
         <p className="mt-4 flex items-center gap-2 rounded-lg border px-3 py-2 text-[11px] myna-muted" style={{ borderColor: 'color-mix(in srgb, var(--myna-accent) 35%, transparent)', background: 'color-mix(in srgb, var(--myna-accent) 7%, transparent)' }}>
           <Trophy className="h-3.5 w-3.5" style={{ color: 'var(--myna-accent)' }} />
           {championName
             ? <>Replay champion: <span className="myna-accent-text font-semibold">{championName}</span> · median standings across {setup.repeats} replays.</>
-            : <>Median standings across {setup.replays ?? setup.repeats} replays · playoffs off.</>}
+            : <>Median standings across {setup.repeats} replays.</>}
         </p>
       )}
     </section>

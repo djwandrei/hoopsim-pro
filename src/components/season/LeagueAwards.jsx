@@ -29,7 +29,7 @@ export default function LeagueAwards({ simGames }) {
             <span aria-hidden className="absolute inset-x-0 top-0 h-0.5" style={{ background: 'linear-gradient(90deg, var(--myna-accent), transparent 85%)' }} />
             <span aria-hidden className="pointer-events-none absolute -right-2 -top-3 select-none opacity-[0.08]"><Icon className="h-16 w-16" /></span>
             <div className="flex h-10 w-10 items-center justify-center rounded-full border" style={{ borderColor: 'color-mix(in srgb, var(--myna-accent) 60%, transparent)', background: 'color-mix(in srgb, var(--myna-accent) 14%, transparent)', color: 'var(--myna-accent)' }}>
-              <Icon className="h-4.5 w-4.5" />
+              <Icon className="h-4 w-4" />
             </div>
             <p className="text-[9px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--myna-accent)' }}>{label}</p>
             <TeamMark code={winner.team} name={winner.team} className="h-8 w-8" />

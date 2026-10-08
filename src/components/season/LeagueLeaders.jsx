@@ -69,7 +69,7 @@ export default function LeagueLeaders({ simGames }) {
                     <tr key={player.name} className="border-t border-[var(--myna-border)] transition-colors hover:bg-[var(--myna-raised)]" style={medal && !dark ? { background: medal.bg } : undefined}>
                       <td className="px-3 py-2">
                         <span
-                          className="myna-mono inline-flex h-5.5 w-5.5 min-w-5 items-center justify-center rounded-full border text-[10px] font-bold"
+                          className="myna-mono inline-flex h-5 w-5 min-w-5 items-center justify-center rounded-full border text-[10px] font-bold"
                           style={medal ? { borderColor: medal.border, color: medal.border } : { borderColor: 'var(--myna-border)', color: 'var(--myna-muted)' }}
                         >
                           {index + 1}

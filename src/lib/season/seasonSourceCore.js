@@ -29,6 +29,12 @@ const cache = new Map();
 let publicContextPromise = null;
 let careerCache = null;
 
+export function clearSeasonSourceCache() {
+  cache.clear();
+  publicContextPromise = null;
+  careerCache = null;
+}
+
 async function readJson(path, label) {
   const key = path.split('?')[0];
   if (cache.has(key)) return cache.get(key);

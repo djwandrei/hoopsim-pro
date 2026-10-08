@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import useViewRefresh from '@/components/mobile/useViewRefresh';
 import { gamePrices } from '@/components/book/OddsBoard';
 import { CODE_BY_NAME, runModelGame } from '@/lib/bookRoom/modelEdge';
 
@@ -48,13 +49,14 @@ export default function useBookFeed(league, seasonState) {
         setBoosts({ [key]: offer.price + 100 });
       } else setBoosts({});
       setFeed({ state: 'ready', games, quota: response.data?.quota ?? null, error: null, setup: false });
-      loadProps();
+      await loadProps();
     } catch (error) {
       const data = error?.response?.data || {};
       setFeed({ state: data.code === 'odds_feed_not_configured' ? 'setup' : 'error', games: [], quota: null, error: data.error || error?.message || 'The odds feed is unavailable.', setup: data.code === 'odds_feed_not_configured' });
     }
-  }, []);
+  }, [loadProps]);
 
+  useViewRefresh(loadOdds);
   useEffect(() => { loadOdds(); }, [loadOdds]);
 
   const upcomingSignature = feed.state === 'ready' ? feed.games.filter(game => Date.parse(game.commenceTime) > Date.now()).map(game => game.eventKey).join('|') : '';

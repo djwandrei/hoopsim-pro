@@ -1,14 +1,21 @@
 import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 import applyCourtTheme from '@/components/djhc/applyCourtTheme';
+import { useMobileView } from '@/components/mobile/MobileViewContext';
 const CourtThemeContext=createContext(null);
 const stored=(key,fallback)=>{try{return localStorage.getItem(key)||fallback;}catch{return fallback;}};
 export const useCourtTheme=()=>useContext(CourtThemeContext);
 export default function CourtThemeProvider({children,followTeam}) {
+  const { active } = useMobileView();
   const [team,setTeam]=useState(()=>paletteForTeam(stored('djhc-court-team-v1','djhc')).id);
   const [mode,setMode]=useState(()=>stored('theme','dark')==='light'?'light':'dark');
   const palette=paletteForTeam(followTeam || team);
-  useLayoutEffect(()=>applyCourtTheme(palette,mode,followTeam?'matchup':stored('djhc-court-team-v1','')?'manual':'default'),[palette,mode,followTeam]);
+  useLayoutEffect(()=>{if(active) applyCourtTheme(palette,mode,followTeam?'matchup':stored('djhc-court-team-v1','')?'manual':'default');},[active,palette,mode,followTeam]);
+  useEffect(()=>{
+    const sync=event=>setMode(event.detail.mode);
+    document.addEventListener('djhc-theme-change',sync);
+    return()=>document.removeEventListener('djhc-theme-change',sync);
+  },[]);
   useLayoutEffect(()=>{
     const sync=event=>{if(event.key==='djhc-court-team-v1')setTeam(paletteForTeam(event.newValue).id);if(event.key==='theme')setMode(event.newValue==='light'?'light':'dark');};
     window.addEventListener('storage',sync);return()=>window.removeEventListener('storage',sync);

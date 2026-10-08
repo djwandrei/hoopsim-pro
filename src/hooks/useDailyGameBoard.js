@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useSeasonSource from '@/hooks/useSeasonSource';
+import useViewRefresh from '@/components/mobile/useViewRefresh';
 import { loadSwishIQDailyBoard, swishIQDailyGameErrorKind, dailySeedFromPageSearch, normalizeGameFamily } from '@/lib/dailyGames/boardSource';
 import { hydratePresentationBoard, loadSwishIqPlayerMetadata } from '@/lib/dailyGames/boardHydration';
 
@@ -34,6 +35,7 @@ export default function useDailyGameBoard({ gameKind, onBoardReady }) {
     }
   }, [gameKind, seed, urlFamily]);
 
+  useViewRefresh(() => loadBoard(seed));
   useEffect(() => { loadBoard(seed); }, [seed, loadBoard]);
   useEffect(() => { loadSwishIqPlayerMetadata().then(setMetadata, () => setMetadata(null)); }, []);
   useEffect(() => {

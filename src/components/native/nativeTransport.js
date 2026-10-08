@@ -47,6 +47,12 @@ async function direct(url) {
   }
   return { text: new TextDecoder().decode(bytes), sha256, contentType: response.headers.get('content-type') || 'application/octet-stream' };
 }
+export function clearStudioDataRequests() {
+  for (const path of requests.keys()) {
+    if (DATA_ASSET.test(new URL(path, ORIGINAL_ORIGIN).pathname)) requests.delete(path);
+  }
+}
+
 export function originalAsset(input, base = ORIGINAL_STUDIO) {
   const url = new URL(String(input),base);
   if (url.origin !== ORIGINAL_ORIGIN) throw new Error('The original Studio requested an unsupported external source.');

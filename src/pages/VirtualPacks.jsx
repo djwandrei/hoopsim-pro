@@ -3,6 +3,7 @@ import { Loader2, PackageOpen } from 'lucide-react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import usePageMeta from '@/hooks/usePageMeta';
+import useViewRefresh from '@/components/mobile/useViewRefresh';
 import PackReveal from '@/components/packs/PackReveal';
 import PackHistory from '@/components/packs/PackHistory';
 import { base44 } from '@/api/base44Client';
@@ -47,6 +48,11 @@ export default function VirtualPacks() {
     catch(() => {if (alive) setPool([]);});
     return () => {alive = false;};
   }, []);
+
+  useViewRefresh(async () => {
+    const result = await base44.entities.PackCard.aggregate({ query: { active: true }, groupBy: 'tier' });
+    setPool(result.rows || []); setHistory(readPackHistory());
+  });
 
   const poolTotal = (pool || []).reduce((sum, row) => sum + (Number(row.count) || 0), 0);
   const bestPull = pack ? pack.cards.reduce((best, card) =>

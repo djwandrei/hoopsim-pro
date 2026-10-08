@@ -14,3 +14,47 @@ body.court-themed[data-fan-tools-navigation='true'] .site-header.fan-suite-heade
   display:grid; place-items:center; width:clamp(3rem,4.5vw,4.5rem); height:clamp(3rem,4.5vw,4.5rem);
   padding:0; overflow:visible; border:0; border-radius:0; background:transparent; box-shadow:none; object-fit:contain;
 }
+
+/* Mobile-only header; desktop branding and account controls stay unchanged. */
+body.webview .site-header.fan-suite-header > .header-inner {
+  grid-template-columns: minmax(0,1fr) auto !important;
+  grid-template-areas: 'brand actions' 'nav nav' !important;
+  gap: 0 .5rem !important;
+  width: calc(100% - 1.5rem) !important;
+}
+body.webview .site-header.fan-suite-header .mobile-brand {
+  grid-area: brand; display: flex; align-items: center; gap: .5rem;
+  min-width: 0; color: inherit; text-decoration: none;
+}
+body.webview .site-header.fan-suite-header .mobile-back { color: inherit; background: transparent; }
+body.webview .site-header.fan-suite-header .fan-suite-team-mark,
+body.webview .site-header.fan-suite-header .home-header-utility { display: none !important; }
+body.webview .site-header.fan-suite-header .theme-toggle .button-label { display: none; }
+body.webview .site-header.fan-suite-header :is(.nav-toggle,.theme-toggle) { min-width: 44px; height: 44px; padding-inline: .8rem; }
+body.webview .site-header.fan-suite-header .site-nav.hoopsim-menu {
+  max-height: calc(100dvh - var(--djhc-header-h, 64px) - env(safe-area-inset-bottom) - 4.5rem) !important;
+  height: auto !important; padding-bottom: 1.5rem !important;
+}
+@media (max-width: 380px) {
+  body.webview .site-header.fan-suite-header .nav-toggle .button-label { display: none; }
+  body.webview .site-header.fan-suite-header .mobile-brand > span { font-size: 1.25rem; }
+}
+
+/* Explicit light-mode states beat the site's dark menu rules. */
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation='true'] .site-header.fan-suite-header .site-nav.hoopsim-menu {
+  background: hsl(var(--card)) !important; color: hsl(var(--foreground)); border-color: hsl(var(--border));
+}
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation='true'] .site-header.fan-suite-header .site-nav.hoopsim-menu .primary-nav__link {
+  color: hsl(var(--foreground)) !important; background: hsl(var(--secondary)) !important;
+  border-color: hsl(var(--border) / .6); opacity: 1;
+}
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation='true'] .site-header.fan-suite-header .site-nav.hoopsim-menu .primary-nav__link:is(:hover,:focus-visible,.active) {
+  color: hsl(var(--foreground)) !important; background: hsl(var(--primary) / .12) !important;
+  border-color: hsl(var(--primary)); box-shadow: inset 3px 0 hsl(var(--primary));
+}
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation='true'] .site-header.fan-suite-header .site-nav.hoopsim-menu :is(.fan-tools-primary__label,.site-nav__mobile-title) { color: hsl(var(--foreground)); }
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation='true'] .site-header.fan-suite-header .site-nav.hoopsim-menu :is(.site-nav__eyebrow,.site-nav__mobile-header p) { color: hsl(var(--muted-foreground)); }
+body.court-themed:not(.dark-mode)[data-fan-tools-navigation='true'] .site-header.fan-suite-header .site-nav.hoopsim-menu .site-nav__mobile-header { border-color: hsl(var(--border) / .5); }
+.site-nav.hoopsim-menu .site-nav__group { margin-block: 1rem; }
+.site-nav.hoopsim-menu .site-nav__group > h2 { margin-bottom: .65rem; }
+.site-nav.hoopsim-menu .primary-nav__link:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }

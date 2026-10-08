@@ -4,6 +4,7 @@ import { Loader2, LogOut, UserRound, Dice5 } from 'lucide-react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import usePageMeta from '@/hooks/usePageMeta';
+import useViewRefresh from '@/components/mobile/useViewRefresh';
 import AccountDetailsForm from '@/components/account/AccountDetailsForm';
 import AccountPassword from '@/components/account/AccountPassword';
 import AccountActivity from '@/components/account/AccountActivity';
@@ -24,6 +25,12 @@ export default function Account() {
       .catch(() => { if (active) setState('anonymous'); });
     return () => { active = false; };
   }, []);
+
+  useViewRefresh(async () => {
+    if (state !== 'ready') return;
+    const user = await base44.auth.me();
+    setMe(user);
+  });
 
   const signOut = async () => {
     await base44.auth.logout('/account');

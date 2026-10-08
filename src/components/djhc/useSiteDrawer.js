@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
+import { useMobileView } from '@/components/mobile/MobileViewContext';
 export default function useSiteDrawer(headerRef, navRef, toggleRef) {
   const [open,setOpen]=useState(false);
+  const { active } = useMobileView();
   useEffect(()=>{
+    if (!active) return;
     const measure=()=>{const height=headerRef.current?.offsetHeight||0;document.documentElement.style.setProperty('--djhc-header-h',`${height}px`);headerRef.current?.style.setProperty('--header-h',`${height}px`);};
     measure();const observer=new ResizeObserver(measure);if(headerRef.current)observer.observe(headerRef.current);
     return ()=>observer.disconnect();
-  },[headerRef]);
+  },[active,headerRef]);
   useEffect(()=>{
+    if (!active) { setOpen(false); return; }
     document.body.classList.toggle('menu-open',open);
     if(!open)return;
     navRef.current?.querySelector('a[href]')?.focus();
@@ -19,7 +23,7 @@ export default function useSiteDrawer(headerRef, navRef, toggleRef) {
     };
     document.addEventListener('keydown',handleKey);
     return ()=>{document.body.classList.remove('menu-open');document.removeEventListener('keydown',handleKey);};
-  },[open,navRef,toggleRef]);
+  },[active,open,navRef,toggleRef]);
   const close=()=>{setOpen(false);toggleRef.current?.focus();};
   return {open,close,toggle:()=>setOpen(value=>!value)};
 }

@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import RouteFallback from '@/components/studio/RouteFallback';
 import PageNotFound from '@/lib/PageNotFound';
 import { APP_ROUTES } from '@/components/mobile/appRoutes';
+import MobileViewProvider from '@/components/mobile/MobileViewProvider';
 
 // Routes can render a saved location without creating a second router.
 // Links and Back still use the single app-level browser history.
@@ -26,7 +27,7 @@ export default function KeepAliveTab({ location, active }) {
   }, [active, path]);
 
   return (
-    <div ref={viewRef} hidden={!active} aria-hidden={!active} className="h-full min-h-0"
+    <MobileViewProvider active={active}><div ref={viewRef} hidden={!active} aria-hidden={!active} className="h-full min-h-0"
       onScrollCapture={event => {
         if (active) scrollPositions.current.set(event.target, [event.target.scrollTop, event.target.scrollLeft]);
       }}>
@@ -38,6 +39,6 @@ export default function KeepAliveTab({ location, active }) {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Suspense>
-    </div>
+    </div></MobileViewProvider>
   );
 }

@@ -3,6 +3,7 @@ import { Loader2, Search, UserRound } from 'lucide-react';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import usePageMeta from '@/hooks/usePageMeta';
+import useViewRefresh from '@/components/mobile/useViewRefresh';
 import CardTile from '@/components/cards/CardTile';
 import CardsGrid from '@/components/cards/CardsGrid';
 import { browseCards, findPlayerMatches, suggestPlayers } from '@/lib/cards/cardClient';
@@ -94,6 +95,12 @@ export default function CardMatchups() {
       setLoadingMore(false);
     }
   };
+
+  useViewRefresh(async () => {
+    const data = await browseCards({ query: catalogQuery, page: 1, pageSize: 12 });
+    setCatalogCards(data.cards || []); setCatalogTotal(data.total || 0); setCatalogPage(1);
+    if (grouped.length && query.trim().length >= 2) await runSearch(null, query);
+  });
 
   const featured = grouped[0]?.player || null;
   const moreResults = visibleResults < grouped.length;

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import useViewRefresh from '@/components/mobile/useViewRefresh';
 import { loadSeasonSource, AVAILABLE_YEARS } from '@/lib/season/dataClient';
 import { buildLeague } from '@/lib/season/simEngine';
 import useStudioSeason from '@/components/studio/useStudioSeason';
@@ -25,6 +26,15 @@ export default function useSeasonSource(initialYear = 2025) {
   const [league, setLeague] = useState(null);
   const [state, setState] = useState('idle');
   const [error, setError] = useState('');
+  const currentYear = useRef(year);
+  currentYear.current = year;
+  useViewRefresh(async () => {
+    const data = await loadSeasonSource(year);
+    if (currentYear.current !== year) return;
+    const built = buildLeague(data);
+    cacheSeason(year, { source: data, league: built });
+    setSource(data); setLeague(built); setState('ready'); setError('');
+  });
 
   useEffect(() => {
     let cancelled = false;

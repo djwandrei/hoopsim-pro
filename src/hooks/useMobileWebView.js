@@ -8,7 +8,7 @@ export function detectMobileWebView() {
   const agent = navigator.userAgent || '';
   const isMobileAgent = /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(agent)
     || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  if (!isMobileAgent) return false;
+  if (!isMobileAgent) return typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
   const isIosWebView = /AppleWebKit/.test(agent) && !/Version\/.*Safari/.test(agent);
   const isAndroidWebView = /; wv\)|FBAN|FBAV|FB_IAB|Instagram|Line\//i.test(agent)
     || (/Android/.test(agent) && !/Chrome\/|CriOS/.test(agent));
@@ -18,9 +18,14 @@ export function detectMobileWebView() {
 // Marks <body class="webview"> so site chrome (footer, safe-area paddings)
 // can react in CSS, and returns whether the session is WebView/mobile.
 export default function useMobileWebView() {
-  const [isWebView] = useState(() => detectMobileWebView());
+  const [isWebView, setIsWebView] = useState(() => detectMobileWebView());
   useEffect(() => {
-    if (isWebView) document.body.classList.add('webview');
+    const update = () => setIsWebView(detectMobileWebView());
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  useEffect(() => {
+    document.body.classList.toggle('webview', isWebView);
   }, [isWebView]);
   return isWebView;
 }

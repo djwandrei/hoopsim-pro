@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { dollars } from '@/components/realbook/realFormat';
+import useViewRefresh from '@/components/mobile/useViewRefresh';
 
 // Sportsbook activity on this account: SwishIQ Credits purchases from the
 // play-money book and the real-money book's transaction ledger.
@@ -24,6 +25,14 @@ export default function AccountActivity() {
     })();
     return () => { active = false; };
   }, []);
+
+  useViewRefresh(async () => {
+    const [purchasesPage, txPage] = await Promise.all([
+      base44.entities.BookRoomPurchase.filter({}, { sort: '-created_date', limit: 5 }),
+      base44.entities.RealTransaction.filter({}, { sort: '-created_date', limit: 6 }),
+    ]);
+    setPurchases(purchasesPage.items || []); setTransactions(txPage.items || []);
+  });
 
   return <section className="court-panel space-y-4 p-4">
     <div>

@@ -37,7 +37,12 @@ export default function useChemistryData(entry) {
           additionalArtifactIds,
           fetchImpl: originalFetch,
         });
-        const pairBoundary = await exact('franchiseInputs', ['player-seasons']);
+        // Start every capability download together — each is an independent
+        // relay round-trip, and the pair view only needs the first one back.
+        const pairPromise = exact('franchiseInputs', ['player-seasons']);
+        const chemistryPromise = exact('chemistry').catch(() => null);
+        const lineupPromise = exact('lineupEvidence').catch(() => null);
+        const pairBoundary = await pairPromise;
         if (!live) return;
         const pair = chem.buildCanonicalV4PairProfileDataset(pairBoundary);
         if (!live) return;
@@ -45,10 +50,8 @@ export default function useChemistryData(entry) {
         setState('ready');
         // Observed lineups load in the background; the pair view works without them.
         try {
-          const chemistryData = await exact('chemistry');
-          if (!live) return;
-          const lineupData = await exact('lineupEvidence');
-          if (!live) return;
+          const [chemistryData, lineupData] = await Promise.all([chemistryPromise, lineupPromise]);
+          if (!live || !chemistryData || !lineupData) return;
           const playerRecords = (pairBoundary.parts?.['player-seasons']?.records || []).map(row => row.values);
           const observed = await chem.buildCanonicalV4ObservedChemistryDatasetCooperatively(
             chemistryData,

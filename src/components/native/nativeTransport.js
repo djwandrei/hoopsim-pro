@@ -21,7 +21,10 @@ async function relay(path) {
         if(response.data.error)throw new Error(response.data.error);
         return response.data;
       } catch (error) {
-        if (String(error?.message).includes('not an approved public Studio asset')) throw error;
+        // Deterministic relay failures never heal on retry: fail fast instead
+        // of spending the full backoff schedule on them.
+        const message = String(error?.message);
+        if (/not an approved public Studio asset|exceeds the bounded relay size|failed its integrity check|changed since the reviewed version/.test(message)) throw error;
         lastError = error;
       }
     }

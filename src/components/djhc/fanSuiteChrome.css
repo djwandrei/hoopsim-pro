@@ -40,6 +40,23 @@ body.webview .site-header.fan-suite-header .site-nav.hoopsim-menu {
   body.webview .site-header.fan-suite-header .mobile-brand > span { font-size: 1.25rem; }
 }
 
+/* Mobile header guard: the site's ≤520px rules re-add the account column and
+   a 4-track grid, squeezing and clipping the mobile brand. Outrank them so a
+   WebView header is always the simple brand + actions row with room to spare. */
+body.webview[data-fan-tools-navigation='true'] .site-header.fan-suite-header > .container.header-inner {
+  grid-template-columns: minmax(0,1fr) auto !important;
+  grid-template-areas: 'brand actions' !important;
+  grid-template-rows: auto !important;
+  gap: 0 .5rem !important;
+  width: min(100% - 1rem, 92rem) !important;
+  padding-block: .5rem !important;
+  min-height: 0 !important;
+}
+body.webview[data-fan-tools-navigation='true'] .site-header.fan-suite-header .fan-suite-team-mark,
+body.webview[data-fan-tools-navigation='true'] .site-header.fan-suite-header .home-header-utility { display: none !important; }
+body.webview[data-fan-tools-navigation='true'] .site-header.fan-suite-header .mobile-brand,
+body.webview[data-fan-tools-navigation='true'] .site-header.fan-suite-header .mobile-back { min-height: 44px; }
+
 /* Explicit light-mode states beat the site's dark menu rules. */
 body.court-themed:not(.dark-mode)[data-fan-tools-navigation='true'] .site-header.fan-suite-header .site-nav.hoopsim-menu {
   background: hsl(var(--card)) !important; color: hsl(var(--foreground)); border-color: hsl(var(--border));

@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101820">
+    <title>Season Lab · Franchise preview</title>
+    <meta name="description" content="Explore SwishIQ Season Lab franchise scenarios with exact-season inputs, roster controls, and visible model and transaction limitations.">
+    <link rel="canonical" href="https://www.djshouseofcards-comics.com/tools/swishiq-studio/season/">
+    <link rel="stylesheet" href="./preview.css?rev=franchise-ui-readiness-v11">
+    <script type="module" src="./preview.mjs?rev=franchise-ui-readiness-v11"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <span class="brand-mark" aria-hidden="true">S</span>
+          <div>
+            <p class="eyebrow">SwishIQ · Season Lab</p>
+            <h1>Franchise preview</h1>
+          </div>
+        </div>
+        <div class="topbar-status">
+          <span class="status-dot" id="worker-dot" aria-hidden="true"></span>
+          <span id="worker-status" role="status">Worker not initialized</span>
+        </div>
+      </header>
+
+      <section class="notice notice--provisional" aria-labelledby="disclosure-title">
+        <div class="notice-icon" aria-hidden="true">i</div>
+        <div>
+          <h2 id="disclosure-title">Development scenario</h2>
+          <p>Model outputs, generated contract terms, and incomplete legal inputs remain provisional. Exact-season V4 aggregates seed retrospective user-created scenarios, not forecasts; the separate two-team fixture is browser smoke input only. This preview does not certify predictions or transaction legality.</p>
+        </div>
+        <span class="pill pill--amber" id="quality-pill">Awaiting source</span>
+      </section>
+
+      <div class="message" id="message" role="alert" aria-live="assertive" hidden></div>
+
+      <section class="panel setup-panel" aria-labelledby="setup-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">01 · Scenario intake</p>
+            <h2 id="setup-title">Start from exact-season V4 inputs</h2>
+          </div>
+          <span class="quiet-tag">30-team regular-season scenario</span>
+        </div>
+        <p class="panel-copy">Load one supported 2017–2025 regular season from the verified V4 source set. Full-season player rates and ratings describe a retrospective user-created scenario; they are not pregame forecasts. Roster, schedule, model, and provisional-source labels remain visible before the first game.</p>
+        <div class="v4-input-row">
+          <label class="field-control" for="v4-season">
+            <span class="file-control-label">Exact season start year</span>
+            <select id="v4-season">
+              <option value="2025" selected>2025–26</option>
+              <option value="2024">2024–25</option>
+              <option value="2023">2023–24</option>
+              <option value="2022">2022–23</option>
+              <option value="2021">2021–22</option>
+              <option value="2020">2020–21</option>
+              <option value="2019">2019–20</option>
+              <option value="2018">2018–19</option>
+              <option value="2017">2017–18</option>
+            </select>
+          </label>
+          <button id="v4-load" class="button button--primary" type="button">Load verified V4 season</button>
+          <button id="v4-suggest" class="button button--quiet" type="button" disabled>Apply unique latest-team suggestions</button>
+          <label class="field-control" for="v4-user-team">
+            <span class="file-control-label">Team you will control</span>
+            <select id="v4-user-team" disabled>
+              <option value="">Load V4 source first</option>
+            </select>
+          </label>
+          <button id="v4-initialize" class="button button--secondary" type="button" disabled>Start 30-team scenario</button>
+        </div>
+        <p class="v4-helper">The suggestions action may load the package-wide regular-season player-game file (about 35.8 MB). A latest-team suggestion is only a generated scenario choice and is applied only after this button is pressed. Ties and unknowns stay open for exact manual review.</p>
+        <div class="v4-intake-status" id="v4-intake-status" role="status">Select an exact season and load the pinned regular-season source set.</div>
+        <div class="v4-source-receipts" id="v4-source-receipts" aria-live="polite"></div>
+        <div class="v4-policy-control">
+          <label for="v4-generate-shooting-rating">
+            <input id="v4-generate-shooting-rating" type="checkbox" aria-controls="v4-generated-rating-receipt">
+            <span><strong>Generate provisional shooting ratings for missing components</strong><small>Default off. Applies only to missing shooting ratings with <code>generated-exposure-shrunk-snapshot-v1</code>. Original V4 ratings stay unchanged; the choice and generated-player receipt are saved with this session.</small></span>
+          </label>
+          <div class="v4-generated-rating-receipt" id="v4-generated-rating-receipt" role="status">No scenario initialized. Missing shooting ratings will be rejected unless you explicitly enable the provisional policy.</div>
+        </div>
+        <div class="v4-choice-heading">
+          <div>
+            <h3>Multi-team roster choices</h3>
+            <p>Every player with regular-season rows for more than one team needs one exact team selection. Team aggregates do not resolve franchise membership.</p>
+          </div>
+          <span class="pill pill--slate" id="v4-choice-count">No V4 source loaded</span>
+        </div>
+        <div class="v4-roster-review" id="v4-roster-review">
+          <div class="empty-state">Roster-choice review appears after V4 intake.</div>
+        </div>
+        <div class="v4-applied-summary" id="v4-applied-summary" aria-live="polite"></div>
+        <div class="v4-phase-notice" id="v4-phase-notice">
+          <strong>Available phase: Regular season</strong>
+          <span>Postseason and offseason/year advancement are disabled in this preview. Contracts and payroll remain unknown.</span>
+        </div>
+      </section>
+
+      <section class="panel setup-panel fixture-panel" aria-labelledby="fixture-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Fallback · Prepared input</p>
+            <h2 id="fixture-title">Load a prepared browser fixture</h2>
+          </div>
+          <span class="quiet-tag">Local file · no upload</span>
+        </div>
+        <p class="panel-copy">Keep using a prepared JSON fixture for a bounded browser smoke flow. It may contain a session or session input, pinned model text, production candidate text, and game inputs; this path does not establish full-league acceptance.</p>
+        <div class="intake-row">
+          <label class="file-control" for="fixture-file">
+            <span class="file-control-label">Fixture JSON</span>
+            <input id="fixture-file" type="file" accept=".json,application/json">
+          </label>
+          <label class="field-control" for="user-team">
+            <span class="file-control-label">User-controlled team</span>
+            <select id="user-team" disabled>
+              <option value="">Load a fixture first</option>
+            </select>
+          </label>
+          <button id="verified-fixture" class="button button--quiet" type="button">Load two-team browser smoke input</button>
+          <button id="initialize" class="button button--primary" type="button" disabled>Initialize scenario</button>
+        </div>
+        <div class="fixture-meta" id="fixture-meta">
+          <span class="meta-muted">No fixture selected</span>
+        </div>
+        <div class="pin-grid" id="pin-grid" aria-live="polite">
+          <article class="pin-card">
+            <span class="pin-label">Exact-season source pin</span>
+            <strong id="source-name">Not loaded</strong>
+            <small id="source-detail">Package, season, and manifest pin appear here.</small>
+          </article>
+          <article class="pin-card">
+            <span class="pin-label">Game model</span>
+            <strong id="model-name">Not loaded</strong>
+            <small id="model-detail">Model ID and content pin appear here.</small>
+          </article>
+          <article class="pin-card">
+            <span class="pin-label">Prepared inputs</span>
+            <strong id="input-count">0 game inputs</strong>
+            <small id="input-detail">Production candidate status is shown after fixture load.</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Franchise workspace">
+        <div class="workspace-main">
+          <section class="panel team-panel" aria-labelledby="team-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">02 · Team and rotation</p>
+                <h2 id="team-title">Rotation setup</h2>
+              </div>
+              <span class="pill pill--slate" id="team-role">No active team</span>
+            </div>
+            <div class="team-overview" id="team-overview">
+              <p class="empty-state">Initialize a prepared scenario to inspect its roster and control the selected user team.</p>
+            </div>
+            <div class="rotation-toolbar">
+              <div>
+                <strong>Rotation inputs</strong>
+                <p>Assign every eligible roster player to active or inactive. Regulation minutes must total 240.</p>
+              </div>
+              <button id="save-rotation" class="button button--secondary" type="button" disabled>Save rotation</button>
+            </div>
+            <div class="rotation-validation" id="rotation-validation" role="status">Load a scenario to inspect rotation readiness.</div>
+            <div class="roster-wrap" id="roster-wrap">
+              <div class="empty-state empty-state--table">Roster controls appear after initialization.</div>
+            </div>
+            <div class="automation-strip">
+              <div class="automation-avatar" aria-hidden="true">CPU</div>
+              <div>
+                <strong>League automation</strong>
+              <p id="automation-copy">Other-team rotations are prepared by the worker when a game advances. CPU trades, free agency, draft, and season automation are not connected.</p>
+              </div>
+              <button class="button button--disabled" type="button" disabled title="CPU automation is not available in this worker preview">Not available</button>
+            </div>
+          </section>
+
+          <section class="panel game-panel" aria-labelledby="game-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">03 · Season checkpoint</p>
+                <h2 id="game-title">Next game</h2>
+              </div>
+              <span class="pill pill--slate" id="schedule-progress">No schedule loaded</span>
+            </div>
+            <div id="next-game-card" class="next-game-card">
+              <p class="empty-state">The next scheduled matchup appears here after initialization.</p>
+            </div>
+            <div class="game-actions">
+              <div class="game-action-buttons">
+                <button id="advance-game" class="button button--primary button--large" type="button" disabled>Simulate next game</button>
+                <button id="advance-user-game" class="button button--secondary button--large" type="button" disabled>Simulate through next user game</button>
+              </div>
+              <p>Single game advances one scheduled game. The second action includes intervening CPU games and your next game in one atomic checkpoint. A rejected or stale result leaves the visible session unchanged; the last browser checkpoint stays intact until you explicitly save.</p>
+            </div>
+            <div class="completion-panel" aria-labelledby="completion-title">
+              <div class="completion-heading">
+                <div>
+                  <p class="eyebrow">Regular-season closeout · v1</p>
+                  <strong id="completion-title">Verify schedule completion</strong>
+                  <p id="completion-hint">Initialize a pinned season to inspect its scheduled games.</p>
+                </div>
+                <button id="verify-season-completion" class="button button--secondary" type="button"
+                  data-worker-command="verify-season-completion" data-action-version="1.0.0"
+                  aria-describedby="completion-hint" disabled>Verify completed schedule</button>
+              </div>
+              <div id="completion-status" class="completion-status" role="status" aria-live="polite">No completion receipt verified.</div>
+              <pre id="completion-receipt" class="completion-receipt">The exact worker receipt will appear here after verification.</pre>
+            </div>
+        <div class="transaction-row" aria-label="Unavailable transaction and season actions">
+          <div>
+            <strong>Transactions and year advancement</strong>
+            <p>The worker can evaluate and execute a transaction proposal, but this preview has no proposal editor or approval screen. Draft market, postseason, awards, and new-season controls are not connected here.</p>
+            <small>Transaction and draft controls stay disabled until user-team review, explicit approval, and result receipts are shown in the UI.</small>
+              </div>
+              <div class="disabled-actions">
+                <button class="button button--disabled" type="button" disabled>Trade proposal</button>
+                <button class="button button--disabled" type="button" disabled>Free agency</button>
+                <button class="button button--disabled" type="button" disabled>Draft approval</button>
+                <button class="button button--disabled" type="button" disabled>Postseason</button>
+                <button class="button button--disabled" type="button" disabled>Awards</button>
+                <button class="button button--disabled" type="button" disabled>Advance season</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="workspace-side" aria-label="State and save controls">
+          <section class="panel state-panel" aria-labelledby="state-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Live snapshot</p>
+                <h2 id="state-title">League state</h2>
+              </div>
+              <span class="pill pill--slate" id="revision-pill">Revision —</span>
+            </div>
+            <div class="state-metrics" id="state-metrics">
+              <div class="metric"><span>Season</span><strong>—</strong></div>
+              <div class="metric"><span>Teams</span><strong>—</strong></div>
+              <div class="metric"><span>Games played</span><strong>—</strong></div>
+              <div class="metric"><span>Remaining</span><strong>—</strong></div>
+            </div>
+            <div class="state-quality" id="state-quality">State receipt not loaded.</div>
+            <div class="standings-list" id="team-records"></div>
+          </section>
+
+          <section class="panel save-panel" aria-labelledby="save-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Checkpoint</p>
+                <h2 id="save-title">Save and resume</h2>
+              </div>
+            </div>
+            <p class="panel-copy">Browser saves are local to this device. Export a JSON checkpoint for a portable copy.</p>
+            <div class="save-actions">
+              <button id="save-local" class="button button--secondary" type="button" disabled>Save in this browser</button>
+              <button id="resume-local" class="button button--quiet" type="button" disabled>Resume browser save</button>
+              <button id="export-save" class="button button--quiet" type="button" disabled>Export JSON</button>
+              <label class="button button--quiet import-button" for="save-file">Import JSON</label>
+              <input id="save-file" class="visually-hidden" type="file" accept=".json,application/json" disabled>
+            </div>
+            <div class="save-status" id="save-status">No checkpoint loaded.</div>
+          </section>
+
+          <section class="panel history-panel" aria-labelledby="history-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Audit trail</p>
+                <h2 id="history-title">Recent history</h2>
+              </div>
+            </div>
+            <ol class="history-list" id="history-list">
+              <li class="empty-state">Completed games and actions appear here.</li>
+            </ol>
+          </section>
+
+          <section class="panel box-panel" aria-labelledby="box-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Latest result</p>
+                <h2 id="box-title">Box score</h2>
+              </div>
+            </div>
+            <div id="box-score" class="box-score">
+              <p class="empty-state">No game has been completed in this session.</p>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <footer class="footer-note">
+        <span>Isolated local preview</span>
+        <span>Development model · exact-season source pin · one-game checkpointing</span>
+      </footer>
+    </main>
+  </body>
+</html>

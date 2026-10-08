@@ -33,8 +33,9 @@ export default function CardMatchups() {
 
   useEffect(() => {
     if (query.trim().length < 2) { setSuggestions([]); return undefined; }
-    const timer = setTimeout(() => { suggestPlayers(query).then(setSuggestions).catch(() => setSuggestions([])); }, 250);
-    return () => clearTimeout(timer);
+    let stale = false;
+    const timer = setTimeout(() => { suggestPlayers(query).then(list => { if (!stale) setSuggestions(list); }).catch(() => { if (!stale) setSuggestions([]); }); }, 250);
+    return () => { stale = true; clearTimeout(timer); };
   }, [query]);
 
   useEffect(() => {

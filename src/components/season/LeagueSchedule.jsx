@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam, readableTeamInk } from '@/components/djhc/basketballPalettes';
@@ -12,10 +12,12 @@ export default function LeagueSchedule({ league, schedule, simGames, focusCode, 
   const [result, setResult] = useState('all');
   const [page, setPage] = useState(0);
   useEffect(() => { setPage(0); }, [scope, focusCode, result]);
-  const rows = schedule.map((game, index) => ({ ...game, sim: simGames?.[index] ?? null }));
-  const filtered = scope === 'team'
-    ? rows.filter(game => game.home === focusCode || game.away === focusCode)
-    : rows;
+  const filtered = useMemo(() => {
+    const rows = schedule.map((game, index) => ({ ...game, sim: simGames?.[index] ?? null }));
+    return scope === 'team'
+      ? rows.filter(game => game.home === focusCode || game.away === focusCode)
+      : rows;
+  }, [schedule, simGames, scope, focusCode]);
   const outcomeOf = game => {
     const sim = game.sim;
     const actual = game.actual;

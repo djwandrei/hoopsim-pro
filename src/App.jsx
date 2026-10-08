@@ -10,6 +10,7 @@ import ScrollToTop from './components/ScrollToTop';
 import GaPageView from '@/components/GaPageView';
 import { STANDALONE, SITE_BASE } from '@/lib/deployConfig';
 import RouteFallback from '@/components/studio/RouteFallback';
+import ErrorBoundary from '@/components/ErrorBoundary';
 // Add page imports here
 // Route code-splitting: the studio home stays eager; every workbench and
 // daily game loads on first visit so the landing paint stays light.
@@ -43,6 +44,7 @@ function App() {
         <Router basename={STANDALONE ? SITE_BASE : undefined}>
           <ScrollToTop />
           <GaPageView />
+          <ErrorBoundary>
           <Suspense fallback={<RouteFallback />}>
           <Routes>
             {/* Add your page Route elements here */}
@@ -69,6 +71,7 @@ function App() {
             <Route path="*" element={<PageNotFound />} />
           </Routes>
           </Suspense>
+          </ErrorBoundary>
           <Toaster />
         </Router>
       </QueryClientProvider>

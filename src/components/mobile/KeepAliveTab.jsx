@@ -1,64 +1,43 @@
-import React, { Suspense, useEffect, useRef } from 'react';
-import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import React, { Suspense, useLayoutEffect, useRef } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import RouteFallback from '@/components/studio/RouteFallback';
 import PageNotFound from '@/lib/PageNotFound';
 import { APP_ROUTES } from '@/components/mobile/appRoutes';
 
-function TabRoutes({ tab, active, outerPath, onPathChange, onPendingConsumed }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const fullPath = location.pathname + location.search;
-  const activeRef = useRef(active);
-  activeRef.current = active;
-  const prevPath = useRef(fullPath);
+// Routes can render a saved location without creating a second router.
+// Links and Back still use the single app-level browser history.
+export default function KeepAliveTab({ location, active }) {
+  const viewRef = useRef(null);
+  const scrollPositions = useRef(new Map());
+  const path = location.pathname + location.search;
+  const previousPath = useRef(path);
 
-  // Bidirectional location sync: consume a pending deep link (outer → tab),
-  // otherwise mirror the tab's location to the outer URL (tab → outer).
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!active) return;
-    if (tab.pendingOuterPath) {
-      const target = tab.pendingOuterPath;
-      if (target !== fullPath) navigate(target);
-      onPendingConsumed(tab.id);
+    if (previousPath.current !== path) {
+      previousPath.current = path;
+      scrollPositions.current.clear();
+      viewRef.current?.querySelectorAll('.webview-scroll').forEach(node => { node.scrollTop = 0; });
       return;
     }
-    if (fullPath !== outerPath) onPathChange(tab.id, location.pathname, fullPath, navigate);
-  }, [active, fullPath, tab.pendingOuterPath, tab.id, outerPath, location.pathname, navigate, onPathChange, onPendingConsumed]);
-
-  // Reset the scroll region when moving between pages inside the tab — but
-  // never when the tab is merely being (re)activated, which restores scroll.
-  useEffect(() => {
-    if (prevPath.current !== fullPath) {
-      prevPath.current = fullPath;
-      if (activeRef.current) window.scrollTo(0, 0);
-    }
-  }, [fullPath]);
+    scrollPositions.current.forEach(([top, left], node) => {
+      if (node.isConnected) { node.scrollTop = top; node.scrollLeft = left; }
+    });
+  }, [active, path]);
 
   return (
-    <Suspense fallback={<RouteFallback />}>
-      <Routes>
-        {APP_ROUTES.map(({ path, element }) => (
-          <Route key={path} path={path} element={element} />
-        ))}
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </Suspense>
-  );
-}
-
-// One persisted tab view: its own memory-routed copy of the app's routes.
-// The view stays mounted (hidden by its parent) so scroll positions and all
-// sub-navigation state survive switching to another tab.
-export default function KeepAliveTab({ tab, active, outerPath, onPathChange, onPendingConsumed }) {
-  return (
-    <MemoryRouter initialEntries={[tab.entry || tab.to]} initialIndex={0}>
-      <TabRoutes
-        tab={tab}
-        active={active}
-        outerPath={outerPath}
-        onPathChange={onPathChange}
-        onPendingConsumed={onPendingConsumed}
-      />
-    </MemoryRouter>
+    <div ref={viewRef} hidden={!active} aria-hidden={!active} className="h-full min-h-0"
+      onScrollCapture={event => {
+        if (active) scrollPositions.current.set(event.target, [event.target.scrollTop, event.target.scrollLeft]);
+      }}>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes location={location}>
+          {APP_ROUTES.map(({ path: routePath, element }) => (
+            <Route key={routePath} path={routePath} element={element} />
+          ))}
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </Suspense>
+    </div>
   );
 }

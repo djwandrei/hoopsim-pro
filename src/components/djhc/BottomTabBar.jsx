@@ -22,7 +22,8 @@ export default function BottomTabBar() {
               to={to}
               end={to === '/'}
               onClick={(e) => { if (tabsCtx) { e.preventDefault(); tabsCtx.switchTab(id, to); } }}
-              className={({ isActive }) => `flex min-h-14 flex-col items-center justify-center gap-0.5 text-[10px] font-medium tracking-wide ${isActive ? 'text-gold' : 'text-muted-foreground'}`}
+              aria-current={tabsCtx ? (tabsCtx.activeId === id ? 'page' : undefined) : undefined}
+              className={({ isActive }) => `flex min-h-14 flex-col items-center justify-center gap-0.5 text-[10px] font-medium tracking-wide ${(tabsCtx ? tabsCtx.activeId === id : isActive) ? 'text-gold' : 'text-muted-foreground'}`}
             >
               <Icon className="h-5 w-5" aria-hidden="true" />
               <span>{label}</span>

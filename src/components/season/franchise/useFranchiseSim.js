@@ -384,6 +384,42 @@ function computeView(state) {
       : null;
   }
 
+  // === Full schedule board + season-pulse chart data ===
+  if (!session) {
+    view.scheduleList = [];
+    view.seasonCurve = null;
+  } else {
+    const boardDates = gameDateMap(session);
+    const playedByGameId = new Map(completedGames(session).map(game => [game.gameId, game]));
+    const boardCursor = Number(session.scheduleCursor ?? 0);
+    const userTeamCode = state.activeTeamCode;
+    view.scheduleList = (session.schedule ?? []).map((game, index) => {
+      const away = upper(game.awayTeamCode); const home = upper(game.homeTeamCode);
+      const played = playedByGameId.get(game.gameId);
+      return {
+        index, gameId: game.gameId,
+        date: boardDates.get(game.gameId) ?? game.gameLocalDate ?? '',
+        away, home,
+        awayScore: played ? played.awayScore : null,
+        homeScore: played ? played.homeScore : null,
+        status: played ? 'played' : index === boardCursor ? 'next' : 'upcoming',
+        isUserGame: away === userTeamCode || home === userTeamCode,
+        inputReady: played ? null : Object.hasOwn(state.fixturePayload?.gameInputs ?? {}, game.gameId),
+      };
+    });
+    let wins = 0; let losses = 0;
+    const curve = [];
+    for (const row of view.scheduleList) {
+      if (row.status !== 'played' || !row.isUserGame) continue;
+      const userHome = row.home === userTeamCode;
+      const userScore = Number(userHome ? row.homeScore : row.awayScore);
+      const oppScore = Number(userHome ? row.awayScore : row.homeScore);
+      if (userScore > oppScore) wins += 1; else losses += 1;
+      curve.push({ game: curve.length + 1, wins, losses, margin: userScore - oppScore });
+    }
+    view.seasonCurve = curve.length ? curve : null;
+  }
+
   // === Season completion (updateSeasonCompletionControls) ===
   const schedule = Array.isArray(session?.schedule) ? session.schedule : [];
   const cursor = Number(session?.scheduleCursor);

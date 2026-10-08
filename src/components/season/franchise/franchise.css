@@ -146,3 +146,29 @@
 /* === Section headings inside the workspace === */
 .frx-title { font-family: var(--font-display); font-size: 1.05rem; letter-spacing: .06em; }
 .frx-note { font-size: .68rem; line-height: 1.5; color: hsl(var(--muted-foreground)); }
+
+/* === Three-screen path: step rail === */
+.frx-steps { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; padding: .55rem .9rem; }
+.frx-step { display: inline-flex; align-items: center; gap: .45rem; }
+.frx-step__num { display: grid; place-items: center; height: 1.5rem; width: 1.5rem; border-radius: 999px; border: 1px solid hsl(var(--border) / .5); background: hsl(var(--court-raised) / .5); font-family: var(--font-mono); font-size: .65rem; color: hsl(var(--muted-foreground)); }
+.frx-step__label { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.frx-step--active .frx-step__num { border-color: hsl(var(--court-accent) / .7); background: hsl(var(--court-accent) / .14); color: hsl(var(--court-accent)); box-shadow: 0 0 10px hsl(var(--court-accent) / .3); }
+.frx-step--active .frx-step__label { color: hsl(var(--court-accent)); }
+.frx-step--done .frx-step__num { border-color: hsl(var(--court-positive) / .55); background: hsl(var(--court-positive) / .12); color: hsl(var(--court-positive)); }
+.frx-step--done .frx-step__label { color: hsl(var(--foreground) / .85); }
+.frx-step__link { height: 1px; width: 1.6rem; margin: 0 .35rem; background: hsl(var(--border) / .6); }
+
+/* === Full schedule board === */
+.frx-board-row { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr) auto minmax(0, 1fr) auto; align-items: center; gap: .6rem; padding: .38rem .6rem; border-radius: .5rem; transition: background-color .15s ease; }
+.frx-board-row:hover { background: hsl(var(--court-accent) / .06); }
+.frx-board-row--next { background: hsl(var(--court-accent) / .09); box-shadow: inset 2px 0 0 hsl(var(--court-accent)); }
+.frx-board-date { font-family: var(--font-mono); font-size: .65rem; color: hsl(var(--muted-foreground)); white-space: nowrap; }
+.frx-board-team { display: flex; min-width: 0; align-items: center; gap: .4rem; font-family: var(--font-display); font-size: .92rem; letter-spacing: .05em; }
+.frx-board-team--winner { color: hsl(var(--court-accent)); }
+.frx-board-team--loser { color: hsl(var(--muted-foreground) / .9); }
+.frx-board-mid { display: grid; place-items: center; min-width: 3.2rem; }
+.frx-board-score { font-family: var(--font-mono); font-size: .78rem; font-variant-numeric: tabular-nums; color: hsl(var(--foreground)); white-space: nowrap; }
+.frx-board-at { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .12em; color: hsl(var(--muted-foreground)); }
+.frx-board-state { display: inline-flex; align-items: center; gap: .3rem; justify-self: end; }
+.frx-board-month { position: sticky; top: 0; z-index: 1; padding: .55rem .6rem .3rem; background: hsl(var(--card)); font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: hsl(var(--court-accent)); }
+@media (max-width: 639px) { .frx-board-row { grid-template-columns: 4.4rem minmax(0, 1fr) auto minmax(0, 1fr); } .frx-board-state { display: none; } }

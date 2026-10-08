@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
 import useFranchiseSim from './franchise/useFranchiseSim';
 import FranchiseStatusStrip from './franchise/FranchiseStatusStrip';
-import FranchiseSetup from './franchise/FranchiseSetup';
-import FranchiseRotation from './franchise/FranchiseRotation';
-import FranchiseSchedule from './franchise/FranchiseSchedule';
-import FranchiseStandings from './franchise/FranchiseStandings';
-import FranchiseLedger from './franchise/FranchiseLedger';
-import FranchiseSaves from './franchise/FranchiseSaves';
+import FranchiseStepRail from './franchise/FranchiseStepRail';
+import FranchiseWelcome from './franchise/FranchiseWelcome';
+import FranchiseLaunch from './franchise/FranchiseLaunch';
+import FranchiseSession from './franchise/FranchiseSession';
 import './franchise/franchise.css';
 
-// The franchise tab, fully native React: the vendored simulation worker and V4
-// intake modules load at their same-origin studio paths (V4 release data still
-// relays through the connected studio source), and every preview control is
-// rendered and driven directly by React instead of the embedded site frame.
+// Three-screen franchise path: welcome → startup (source, season package,
+// team, and initialization options) → the in-season control room. The screen
+// advances automatically once a session exists, and the step rail above every
+// screen shows where you are in the path.
 export default function FranchisePreview() {
   const sim = useFranchiseSim();
+  const [started, setStarted] = useState(false);
+  const screen = sim.view.hasSession ? 'season' : started ? 'setup' : 'welcome';
 
   if (sim.enginePhase !== 'ready') {
     return (
@@ -47,15 +47,20 @@ export default function FranchisePreview() {
 
   return (
     <div className="season-view-enter space-y-4">
-      <FranchiseStatusStrip view={sim.view} />
-      <FranchiseSetup sim={sim} />
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] xl:items-start">
-        <FranchiseRotation sim={sim} />
-        <FranchiseSchedule sim={sim} />
-      </div>
-      <FranchiseStandings view={sim.view} />
-      <FranchiseLedger view={sim.view} />
-      <FranchiseSaves sim={sim} />
+      <FranchiseStepRail active={screen} />
+      {screen === 'welcome' && <FranchiseWelcome sim={sim} onStart={() => setStarted(true)} />}
+      {screen === 'setup' && (
+        <>
+          <FranchiseStatusStrip view={sim.view} />
+          <FranchiseLaunch sim={sim} onBack={() => setStarted(false)} />
+        </>
+      )}
+      {screen === 'season' && (
+        <>
+          <FranchiseStatusStrip view={sim.view} />
+          <FranchiseSession sim={sim} view={sim.view} />
+        </>
+      )}
     </div>
   );
 }

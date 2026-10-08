@@ -2,51 +2,35 @@
   "format": "swishiq-studio-lineup-lab-engine-vendor-v1",
   "built": "2026-10-08T16:42:05.866Z",
   "source": "https://www.djshouseofcards-comics.com/lineup-lab (20261008 release, automatic-role-range-v3 optimizer + conditional-lineup-publication-v1 model)",
-  "note": "Byte-exact site copies; every file sha256-pinned to the reviewed copy manifest (COPY-MANIFEST sourceSha256).",
+  "note": "Byte-exact site copies (20261008 release, automatic-role-range-v3 optimizer + conditional-lineup-od-20261008-v1 model publication); every file sha256-pinned.",
   "files": [
     {
-      "file": "optimizer-core.js",
-      "sha256": "f6425697c4006632ced68df07c7556e117e689e201691a81501c6268c53a46c2"
+      "file": "basketball-simulation.js",
+      "sha256": "057509178ec886b2e57fcffffe340a1b9dc04aa780a66d9a082cc4755af07188"
     },
     {
-      "file": "optimizer-config.js",
-      "sha256": "aba9fe72d9126042588e2b2f5a68cb78af52dba7b0fb57f24376ac83512e5e0e"
+      "file": "conditional-lineup-model-pin-cb942ed193111248.js",
+      "sha256": "cb942ed193111248be758261731e11d2f1a671682e07f8577e519b33004279a8"
     },
     {
-      "file": "projection-parameters.js",
-      "sha256": "b3d0d819f98c344ade05a7acbc5017f574eaba6af447f932ac842b43ae7b6c08"
+      "file": "conditional-lineup-model.js",
+      "sha256": "0c3091fc23b58eb11876387fb02545a6e1090b14eb35915863f004cecb1c2b75"
     },
     {
-      "file": "player-projection.js",
-      "sha256": "d5d67c1d25c2b24d64932555ebd2ed32d0443976636284070abcba93b965caff"
+      "file": "data/native-lineup-2022-2023-dc9bf4bbd0e61a08.json",
+      "sha256": "dc9bf4bbd0e61a08bd47185eab7c6ecaeabeac07a41eb66c4ac345adae793f68"
     },
     {
-      "file": "workload-model.js",
-      "sha256": "a9d8ed00b325ceed342b3e15e8794d7365498b8a99ab68d83d41cd574eec624b"
+      "file": "data/native-lineup-2023-2024-4668235ecb98440c.json",
+      "sha256": "4668235ecb98440c4a3d7a32ce87ae9fc0b0f4a8a1ba81babad548e5791bfc34"
     },
     {
-      "file": "workload-calibration.js",
-      "sha256": "9f556d01dc4d6d12f44801b00c6e7ddfeeb25aae321225b444b1d6ec9c37ba07"
+      "file": "data/native-lineup-2024-2025-a502b27ee9e30244.json",
+      "sha256": "a502b27ee9e302442dda8d7db9f8bab4912ff1658b1f8df7b42fd8ee31376e47"
     },
     {
-      "file": "projection-evidence.js",
-      "sha256": "3db9ac6c24c01753341b03b7e19a790bd68a4f4e0b0db67035156541aac3d66c"
-    },
-    {
-      "file": "lineup-role-model.js",
-      "sha256": "fbd5d811373b22655b93d02e86514f108963fd87302d45fe12366a00054fe6f4"
-    },
-    {
-      "file": "swishiq-impact.js",
-      "sha256": "e1e1a95f9d2e52b9d4a6d7528d7086a98e86b298299889c71e1c6ced175482c1"
-    },
-    {
-      "file": "rotation-unit-planner.js",
-      "sha256": "dbd0300ecbb72247692ef9a53d602292ce5108023faf14dae5abee73610dbb1c"
-    },
-    {
-      "file": "player-data.js",
-      "sha256": "18446f0e4f21d753ba5c1d1057662f84c998cd19a28ce8c383ef4f409f15e29d"
+      "file": "data/native-lineup-2025-2026-2a33894a333e8cee.json",
+      "sha256": "2a33894a333e8cee0acccb630b25b54efab5f480b1c89155c6cef938574f8457"
     },
     {
       "file": "fan-analytics.js",
@@ -57,36 +41,60 @@
       "sha256": "c7e7c07a962255a2276dd5021bf17ec310a6fbb9db0542e0b2e420602eb47987"
     },
     {
+      "file": "lineup-cache.js",
+      "sha256": "17dc15770a7ebf28526ec3b92c381d840af41e7725eb70c0476e0be616d60c25"
+    },
+    {
+      "file": "lineup-role-model.js",
+      "sha256": "fbd5d811373b22655b93d02e86514f108963fd87302d45fe12366a00054fe6f4"
+    },
+    {
+      "file": "native-lineup-forecast.mjs",
+      "sha256": "9cdf204b11ae35d25a6d9fc5102517e0b9b554f5e718b1164463b556d7cb3d45"
+    },
+    {
+      "file": "nba-rapm.mjs",
+      "sha256": "ab82e253ac277c67ac6551f41e08c4ce37ffa9cb2bcb756700a0d4ae9ed8efe7"
+    },
+    {
       "file": "opponent-gameplan.js",
       "sha256": "3de9747339537666011889a8a4266acaebeb420510bec5b71ba04343c91ab0dc"
     },
     {
-      "file": "basketball-simulation.js",
-      "sha256": "057509178ec886b2e57fcffffe340a1b9dc04aa780a66d9a082cc4755af07188"
+      "file": "optimizer-config.js",
+      "sha256": "aba9fe72d9126042588e2b2f5a68cb78af52dba7b0fb57f24376ac83512e5e0e"
     },
     {
-      "file": "workflow-state.js",
-      "sha256": "25269e18b68d8921a43c506be631dede5e8e37e1bc83e664e798a2822c17fe56"
-    },
-    {
-      "file": "scenario-url.js",
-      "sha256": "88213130f6a7e3100273a5cb0ff3bd1903a79d46a06d99478bb2592f938bd516"
-    },
-    {
-      "file": "lineup-cache.js",
-      "sha256": "17dc15770a7ebf28526ec3b92c381d840af41e7725eb70c0476e0be616d60c25"
+      "file": "optimizer-core.js",
+      "sha256": "f6425697c4006632ced68df07c7556e117e689e201691a81501c6268c53a46c2"
     },
     {
       "file": "optimizer-worker.js",
       "sha256": "58c69f4f383ab4ff23e5edb666aa934659d909eb17a5711be1438c02818732de"
     },
     {
-      "file": "conditional-lineup-model.js",
-      "sha256": "0c3091fc23b58eb11876387fb02545a6e1090b14eb35915863f004cecb1c2b75"
+      "file": "player-data.js",
+      "sha256": "18446f0e4f21d753ba5c1d1057662f84c998cd19a28ce8c383ef4f409f15e29d"
     },
     {
-      "file": "conditional-lineup-model-pin-cb942ed193111248.js",
-      "sha256": "0ea06947c66a59fc8ad62670bbde2b5e07a43d939ae25c9e194f63be20f4cb8d"
+      "file": "player-projection.js",
+      "sha256": "d5d67c1d25c2b24d64932555ebd2ed32d0443976636284070abcba93b965caff"
+    },
+    {
+      "file": "projection-evidence.js",
+      "sha256": "3db9ac6c24c01753341b03b7e19a790bd68a4f4e0b0db67035156541aac3d66c"
+    },
+    {
+      "file": "projection-parameters.js",
+      "sha256": "b3d0d819f98c344ade05a7acbc5017f574eaba6af447f932ac842b43ae7b6c08"
+    },
+    {
+      "file": "rotation-unit-planner.js",
+      "sha256": "dbd0300ecbb72247692ef9a53d602292ce5108023faf14dae5abee73610dbb1c"
+    },
+    {
+      "file": "scenario-url.js",
+      "sha256": "88213130f6a7e3100273a5cb0ff3bd1903a79d46a06d99478bb2592f938bd516"
     },
     {
       "file": "snapshots/native-lineup-2022-2023-dc9bf4bbd0e61a08.json",
@@ -105,12 +113,20 @@
       "sha256": "2a33894a333e8cee0acccb630b25b54efab5f480b1c89155c6cef938574f8457"
     },
     {
-      "file": "nba-rapm.mjs",
-      "sha256": "ab82e253ac277c67ac6551f41e08c4ce37ffa9cb2bcb756700a0d4ae9ed8efe7"
+      "file": "swishiq-impact.js",
+      "sha256": "e1e1a95f9d2e52b9d4a6d7528d7086a98e86b298299889c71e1c6ced175482c1"
     },
     {
-      "file": "native-lineup-forecast.mjs",
-      "sha256": "9cdf204b11ae35d25a6d9fc5102517e0b9b554f5e718b1164463b556d7cb3d45"
+      "file": "workflow-state.js",
+      "sha256": "25269e18b68d8921a43c506be631dede5e8e37e1bc83e664e798a2822c17fe56"
+    },
+    {
+      "file": "workload-calibration.js",
+      "sha256": "9f556d01dc4d6d12f44801b00c6e7ddfeeb25aae321225b444b1d6ec9c37ba07"
+    },
+    {
+      "file": "workload-model.js",
+      "sha256": "a9d8ed00b325ceed342b3e15e8794d7365498b8a99ab68d83d41cd574eec624b"
     }
   ]
 }

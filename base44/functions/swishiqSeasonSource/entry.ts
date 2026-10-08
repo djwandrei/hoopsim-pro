@@ -28,12 +28,16 @@ const PER_GAME_KEYS = ['points', 'assists', 'rebounds', 'turnovers', 'steals', '
 const cache = new Map();
 let publicContextPromise = null;
 
+// Upstream artifacts are pinned, versioned files; a stalled connection must
+// fail fast so the workbench load surfaces an error instead of hanging.
+const FETCH_TIMEOUT_MS = 30000;
+
 async function readJson(path, label) {
   const key = path.split('?')[0];
   if (cache.has(key)) return cache.get(key);
   let response;
   try {
-    response = await fetch(DATA_BASE + path, { cache: 'no-store' });
+    response = await fetch(DATA_BASE + path, { cache: 'no-store', signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
   } catch {
     throw new Error(`${label} could not be reached.`);
   }
@@ -208,7 +212,7 @@ async function careerArchive() {
   if (!descriptor?.path) throw new Error('The pooled package is missing its player-seasons artifact.');
   let response;
   try {
-    response = await fetch(`${DATA_BASE}${V4_RELEASE}/${descriptor.path}?v=20261002b`, { cache: 'no-store' });
+    response = await fetch(`${DATA_BASE}${V4_RELEASE}/${descriptor.path}?v=20261002b`, { cache: 'no-store', signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
   } catch {
     throw new Error('The pooled player-seasons artifact could not be reached.');
   }

@@ -35,6 +35,10 @@ export default function SeasonHistoryPanel({ year, hasResults, result, championN
     try { localStorage.removeItem(storageKey(year)); } catch { /* storage unavailable */ }
   };
 
+  // Density: stay out of the layout until there is a completed replay to save
+  // or history to review — the disabled-buttons empty block added clutter.
+  if (!entries.length && !hasResults) return null;
+
   return (
     <section className="myna-panel p-4 sm:p-5" aria-label="Replay history">
       <header className="flex flex-wrap items-center justify-between gap-3">

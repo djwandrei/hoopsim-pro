@@ -4,6 +4,7 @@
 // result into the shapes the studio's Game Lab views consume.
 import { loadNativeModule } from '@/components/native/nativeModules';
 import { originalFetch } from '@/components/native/nativeTransport';
+import { num } from '@/lib/scalars';
 
 const GAME_LAB_MODULE = '/tools/swishiq-studio/game-lab.js';
 const POSSESSION_MODULE = '/tools/swishiq-studio/engine/possession-simulator.js?v=20261001c&rev=possession-workbench-v10-score-mean-se-v1';
@@ -48,7 +49,6 @@ export async function nativeGameLabSource(entry) {
   return task;
 }
 
-const num = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 
 // Display hosts follow the studio's 2-2-1-1-1 pattern; the native series is
 // played on neutral terms.

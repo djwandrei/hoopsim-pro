@@ -1,9 +1,8 @@
 import React from 'react';
 import { Crown, Trophy } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
+import { codeOf, num } from '@/lib/scalars';
 
-const codeOf = value => (typeof value === 'string' && value.trim() ? value.trim() : null);
-const num = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 
 function seriesSides(series) {
   const a = codeOf(series.aId ?? series.teamAId ?? series.higher ?? series.home ?? series.a);

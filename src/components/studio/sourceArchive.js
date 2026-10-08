@@ -1,10 +1,6 @@
 import { STANDALONE } from '@/lib/deployConfig';
 import { loadCareerArchiveCore, loadPlayerContextCore } from '@/lib/season/seasonSourceCore';
 
-export function normalizePlayerName(value) {
-  return String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[†*]+$/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
-}
-
 export async function loadPlayerContext(name) {
   const nameValue = String(name || '');
   if (STANDALONE) return (await loadPlayerContextCore(nameValue)).record || null;

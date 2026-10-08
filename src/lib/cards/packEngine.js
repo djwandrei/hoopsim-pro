@@ -2,6 +2,7 @@
 // The draw runs server-side (crypto randomness, tier weights); this module
 // only calls it and keeps the pack history in this browser.
 import { base44 } from '@/api/base44Client';
+import { safeStorage } from '@/lib/safeStorage';
 
 export const PACK_ENGINE = 'server-crypto-weighted-tier-v2';
 export const PACK_SIZE = 5;
@@ -23,10 +24,6 @@ export const TIER_ODDS = [
   ['super_rare', 2.5],
   ['legendary', 0.5],
 ];
-
-function safeStorage() {
-  try { return globalThis.localStorage || null; } catch { return null; }
-}
 
 export function readPackHistory() {
   try {

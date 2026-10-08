@@ -5,19 +5,9 @@
  */
 import { originalFetch } from '@/components/native/nativeTransport';
 import { SITE_ORIGIN } from '@/lib/deployConfig';
+import { normalizePlayerName } from '@/lib/normalizePlayerName';
 
 const SWISHIQ_PLAYER_METADATA_PATH = '/tools/swishiq-studio/data/player-metadata.json';
-
-export function normalizePlayerName(value) {
-  return String(value || '')
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\u2020*]+$/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim()
-    .replace(/\s+/g, ' ');
-}
 
 export async function loadSwishIqPlayerMetadata() {
   const response = await originalFetch(new URL(SWISHIQ_PLAYER_METADATA_PATH, SITE_ORIGIN.replace(/\/$/, '')));

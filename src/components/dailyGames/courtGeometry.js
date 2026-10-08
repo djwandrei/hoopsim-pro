@@ -1,3 +1,5 @@
+import { roleOf } from '@/components/dailyGames/lineupRoles';
+
 // One projection for floor markings, raised hoop geometry, and HTML portraits.
 // Portraits stay outside transformed/flattened layers, so they cannot be clipped
 // or tilted by the court's perspective.
@@ -29,12 +31,6 @@ const COURT_SLOTS = [
   { x: 44, depth: 32 }, { x: 25, depth: 42 },
 ];
 const PREFERENCES = { C: [0, 1, 2, 3, 4], F: [1, 2, 0, 3, 4], G: [4, 3, 2, 1, 0] };
-const roleOf = player => {
-  const positions = (player.positions || []).map(position => String(position).toUpperCase());
-  if (positions.some(p => p === 'C' || p === 'CENTER')) return 'C';
-  if (positions.some(p => ['F', 'PF', 'SF', 'FORWARD'].includes(p))) return 'F';
-  return 'G';
-};
 export function allocateCourtSlots(lineup) {
   const assigned = [];
   const used = new Set();

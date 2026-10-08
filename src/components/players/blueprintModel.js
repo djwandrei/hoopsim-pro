@@ -1,4 +1,4 @@
-import { normalizePlayerName } from '@/components/studio/sourceArchive';
+import { normalizePlayerName } from '@/lib/normalizePlayerName';
 export const PHASES = [['regular','Regular season'],['in_season_tournament','In-season tournament'],['play_in','Play-in'],['playoffs','Playoffs']];
 export const BLUEPRINT_STATS = [['pts','PPG','Scoring'],['ast','APG','Playmaking'],['reb','RPG','Rebounding'],['mpg','MPG','Minutes'],['fg','FG%','Field goals'],['three','3P%','Three-point'],['ft','FT%','Free throws'],['ts','TS%','True shooting'],['efg','eFG%','Effective field goals'],['stl','SPG','Steals'],['blk','BPG','Blocks'],['tov','TOV','Turnovers'],['oreb','OREB/G','Offensive rebounds'],['dreb','DREB/G','Defensive rebounds'],['pts36','PTS/36','Points per 36'],['gp','GP','Games played']];
 const fraction = new Set(['fg','three','ft','ts','efg']);

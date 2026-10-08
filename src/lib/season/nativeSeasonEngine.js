@@ -5,6 +5,7 @@
 import { loadNativeModule } from '@/components/native/nativeModules';
 import { originalFetch } from '@/components/native/nativeTransport';
 import { isV4RequiredError } from '@/lib/season/v4Policy';
+import { num, codeOf } from '@/lib/scalars';
 
 const SEASON_MODEL = 'engine/season-lab-model.js?v=20261001b&rev=season-model-v26-fixed-16-team-playoffs-20261001b';
 const SCHEDULE_SOURCE = 'engine/nba-schedule-source.js?v=20260920c&rev=structure-v1';
@@ -67,8 +68,7 @@ export async function nativeSeasonSource(year) {
   return task;
 }
 
-const num = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
-const codeOf = value => (typeof value === 'string' && value.trim() ? value.trim() : null);
+
 const packageRefOf = source => {
   const candidates = [
     source.nativePackages?.[0]?.packageRef,

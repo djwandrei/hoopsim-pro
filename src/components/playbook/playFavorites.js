@@ -1,10 +1,8 @@
 // Playbook favorites: a browser-local pin list shared by the library list.
 // No account, no server — the same storage pattern as pack history.
-const FAVORITES_KEY = 'swishiq-playbook-favorites';
+import { safeStorage } from '@/lib/safeStorage';
 
-function safeStorage() {
-  try { return globalThis.localStorage || null; } catch { return null; }
-}
+const FAVORITES_KEY = 'swishiq-playbook-favorites';
 
 export function readFavorites() {
   try {

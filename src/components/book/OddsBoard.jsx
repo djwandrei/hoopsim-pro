@@ -1,7 +1,8 @@
 import React from 'react';
 import { CalendarClock, RefreshCcw, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { formatOdds, formatCommence, pickKey } from '@/components/book/betsMath';
-import { modelEdgePct, CODE_BY_NAME } from '@/lib/bookRoom/modelEdge';
+import { CODE_BY_NAME } from '@/lib/bookRoom/modelEdge';
+import { buildPriceCell } from '@/lib/bookRoom/oddsCells';
 import TeamMark from '@/components/studio/TeamMark';
 
 export function bestMoneyline(books, side) {
@@ -98,25 +99,7 @@ export default function OddsBoard({ games, quota, movement, boosts, format, mode
   const renderGame = game => {
     const books = (game.books || []).filter(book => !bookFilter || book.key === bookFilter);
     const modelData = model?.byEvent?.[game.eventKey];
-    const apply = (market, side, offer) => {
-      if (!offer) return null;
-      const key = pickKey(game.eventKey, market, side);
-      const boosted = boosts?.[key];
-      return { ...offer, price: Number.isFinite(boosted) ? boosted : offer.price, boosted: Number.isFinite(boosted), key, trend: movement?.[key] || null };
-    };
-    const edgeFor = (market, side, offer) => {
-      if (!modelData || !offer || !Number.isFinite(Number(offer.price))) return null;
-      const leg = { market, eventKey: game.eventKey, ...(market === 'total' ? { totalPick: side } : { pickSide: side }), ...(offer.line != null ? { line: offer.line } : {}) };
-      return modelEdgePct(modelData, leg, Number(offer.price));
-    };
-    const cell = (market, side, offer, label, pickLabel) => {
-      const priced = apply(market, side, offer);
-      if (!priced) return null;
-      return {
-        label, offer: priced, edge: edgeFor(market, side, priced),
-        onPick: () => onPick({ eventKey: game.eventKey, matchup: `${game.away} @ ${game.home}`, commenceTime: game.commenceTime, market, ...(market === 'total' ? { totalPick: side } : { pickSide: side }), label: pickLabel, ...(priced.line != null ? { line: priced.line } : {}), price: priced.price, book: priced.book }),
-      };
-    };
+    const { cell } = buildPriceCell({ game, modelData, boosts, movement, onPick });
     const awayCode = CODE_BY_NAME[game.away], homeCode = CODE_BY_NAME[game.home];
     const cells = {
       awayMl: cell('moneyline', 'away', bestMoneyline(books, 'away'), awayCode, `${game.away} ML`),

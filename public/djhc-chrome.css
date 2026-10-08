@@ -495,3 +495,20 @@ body.court-themed .footer.site-footer .footer-link-groups { grid-template-column
 @media (max-width:460px) {
 body.court-themed .footer.site-footer .footer-link-groups { grid-template-columns: minmax(0,1fr); }
 }
+
+/* === iOS WebView & mobile compatibility === */
+/* Buttons, tabs and headers: no rubber-band overscroll or accidental text
+   selection on long-press */
+header.djhc-chrome, .djhc-chrome button, .djhc-chrome [role="tab"], .djhc-chrome [role="tablist"], .djhc-chrome .fan-suite-nav__scroll {
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+/* Sticky header clears the iPhone notch / status bar */
+.site-header { padding-top: env(safe-area-inset-top); }
+/* In WebView sessions (marked by useMobileWebView on <body>), the massive
+   footer is hidden and the bottom tab bar takes over, so content keeps
+   breathing room above it */
+body.webview .footer, body.webview .site-footer { display: none !important; }
+body.webview { padding-bottom: calc(env(safe-area-inset-bottom) + 4.5rem); }

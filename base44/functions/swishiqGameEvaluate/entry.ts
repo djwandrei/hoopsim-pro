@@ -29,7 +29,13 @@ export default async function(req) {
     }
     const body = await req.text();
     if (body.length > 131072) return Response.json({ error: 'Game request is too large.' }, { status: 413 });
-    const { request } = JSON.parse(body);
+    // A malformed envelope is a client error (400), not an upstream outage.
+    let request;
+    try {
+      ({ request } = JSON.parse(body));
+    } catch {
+      return Response.json({ error: 'Invalid daily-game evaluation request.' }, { status: 400 });
+    }
     const selection = request?.selection;
     const kind = request?.boardRef?.gameKind;
     // V1 boards select by opaque playerRef; V4 boards select by the public
@@ -57,6 +63,12 @@ export default async function(req) {
       signal: AbortSignal.timeout(30000),
     });
     const text = await response.text();
+    // A gateway outage can answer with an HTML error page: normalize it so
+    // clients always receive JSON and their error-kind mapping keeps working.
+    const contentType = String(response.headers.get('content-type') || '');
+    if (!contentType.includes('json')) {
+      return Response.json({ error: `The SwishIQ game evaluator is unavailable (upstream ${response.status}).` }, { status: 502 });
+    }
     return new Response(text, {
       status: response.status,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },

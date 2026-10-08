@@ -1,27 +1,19 @@
-// Loads the DJHC basketball play/animation dictionary (a public markdown
-// library) and parses it into browsable plays: name, type, starting
-// alignment, numbered animation steps, tactical goal and read branches.
+// Loads the basketball play/animation dictionary and parses it into browsable
+// plays: name, type, starting alignment, numbered animation steps, tactical
+// goal and read branches.
 import { tagsForPlay } from '@/components/playbook/playTags';
-import { STANDALONE } from '@/lib/deployConfig';
 
-const LIBRARY_URL = 'https://media.base44.com/files/public/6abc41d86dabd382371f49ea/0c38efcba_basketball_play_animation_library.md';
+// The library ships with the app (public/playbook/play-library.md), so every
+// build — hosted preview and standalone site — loads it same-origin.
+const LIBRARY_URL = `${import.meta.env.BASE_URL}playbook/play-library.md`;
 
 let cache = null;
 let inflight = null;
 
-// Site build: same-origin-style direct fetch. Studio build: the library rides
-// on the dedicated relay (server-side fetch with timeout, size validation and
-// a TTL cache), so one validated response serves every visitor.
 async function fetchLibrary() {
-  if (STANDALONE) {
-    const res = await fetch(LIBRARY_URL);
-    if (!res.ok) throw new Error(`Play library unavailable (${res.status})`);
-    return res.text();
-  }
-  const { base44 } = await import('@/api/base44Client');
-  const response = await base44.functions.invoke('playbookLibrarySource', {});
-  if (response.data?.error) throw new Error(response.data.error);
-  return response.data.markdown;
+  const res = await fetch(LIBRARY_URL);
+  if (!res.ok) throw new Error(`Play library unavailable (${res.status})`);
+  return res.text();
 }
 
 export async function loadPlayLibrary() {

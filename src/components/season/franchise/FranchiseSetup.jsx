@@ -1,6 +1,5 @@
 import React from 'react';
-import { Database, Lightbulb, Loader2, Lock, Play, Sparkles } from 'lucide-react';
-import { pillClass } from './franchiseUi';
+import { Database, Loader2, Lock, Play, Sparkles } from 'lucide-react';
 import { GENERATED_SHOOTING_RATING_POLICY } from './franchiseLogic';
 
 const cardHead = (Icon, title, kicker, id) => (
@@ -15,7 +14,6 @@ const cardHead = (Icon, title, kicker, id) => (
 
 const buttonBase = 'inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-xs font-semibold uppercase tracking-widest transition-colors disabled:cursor-not-allowed disabled:opacity-45';
 const goldButton = `${buttonBase} border-gold/50 bg-gold/15 text-gold hover:bg-gold/25`;
-const ghostButton = `${buttonBase} border-border/50 bg-raised/40 text-foreground hover:border-gold/40 hover:text-gold`;
 
 // The selected scenario path's setup panel. `path` comes from the launch
 // picker; every control of the site preview stays available in its own path.
@@ -53,9 +51,6 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
           <div className="flex flex-wrap gap-2.5">
             <button type="button" className={goldButton} disabled={!v4.canLoad} onClick={sim.loadV4Season}>
               {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <Database className="h-3.5 w-3.5" aria-hidden="true" />} Load V4 season
-            </button>
-            <button type="button" className={ghostButton} disabled={!v4.canSuggest} onClick={sim.applySuggestions}>
-              <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" /> Apply latest-team suggestions
             </button>
           </div>
           <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-border/40 bg-raised/30 p-3 text-xs leading-relaxed">
@@ -100,18 +95,21 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
             <span className="frx-pill frx-pill--slate">{v4.choiceCount}</span>
           </div>
           {!v4.groups.length && <p className="frx-note">{v4.status.state === 'idle' ? 'Roster assignment appears after V4 intake.' : 'No multi-team player names need a franchise choice in this exact season.'}</p>}
-          <div className="grid gap-2.5 sm:grid-cols-2">
-            <button type="button" className={`${buttonBase} h-auto flex-col items-start gap-1 border-border/50 bg-raised/40 p-3.5 tracking-normal normal-case hover:border-gold/40 ${v4.rosterMode === 'start' ? 'border-gold/60 bg-gold/10 text-gold' : 'text-foreground'}`} disabled={!v4.canAssign}
-              onClick={() => sim.applyRosterMode('start')}>
-              <strong className="text-xs font-semibold uppercase tracking-widest">Start of season</strong>
-              <span className="text-xs leading-relaxed">Every multi-team player joins the team they first played for in the season.</span>
-            </button>
-            <button type="button" className={`${buttonBase} h-auto flex-col items-start gap-1 border-border/50 bg-raised/40 p-3.5 tracking-normal normal-case hover:border-gold/40 ${v4.rosterMode === 'end' ? 'border-gold/60 bg-gold/10 text-gold' : 'text-foreground'}`} disabled={!v4.canAssign}
-              onClick={() => sim.applyRosterMode('end')}>
-              <strong className="text-xs font-semibold uppercase tracking-widest">End of season</strong>
-              <span className="text-xs leading-relaxed">Every multi-team player joins the team they last played for in the season.</span>
-            </button>
-          </div>
+          {v4.groups.length > 0 && (
+            <fieldset className="grid gap-2.5 sm:grid-cols-2" disabled={!v4.canAssign}>
+              <legend className="studio-control-label">Choose which roster set to use — all multi-team players are assigned automatically</legend>
+              <label className={`flex h-auto cursor-pointer items-start gap-3 rounded-lg border border-border/50 bg-raised/40 p-3.5 transition-colors hover:border-gold/40 ${v4.rosterMode === 'start' ? 'border-gold/60 bg-gold/10' : ''}`}>
+                <input type="radio" name="frx-roster-mode" className="mt-0.5 h-4 w-4 shrink-0" checked={v4.rosterMode === 'start'} onChange={() => sim.applyRosterMode('start')} />
+                <span><strong className="block text-xs font-semibold uppercase tracking-widest text-foreground">Start of season rosters</strong>
+                  <span className="text-xs leading-relaxed">Every multi-team player joins the team they first played for in the season.</span></span>
+              </label>
+              <label className={`flex h-auto cursor-pointer items-start gap-3 rounded-lg border border-border/50 bg-raised/40 p-3.5 transition-colors hover:border-gold/40 ${v4.rosterMode === 'end' ? 'border-gold/60 bg-gold/10' : ''}`}>
+                <input type="radio" name="frx-roster-mode" className="mt-0.5 h-4 w-4 shrink-0" checked={v4.rosterMode === 'end'} onChange={() => sim.applyRosterMode('end')} />
+                <span><strong className="block text-xs font-semibold uppercase tracking-widest text-foreground">End of season rosters</strong>
+                  <span className="text-xs leading-relaxed">Every multi-team player joins the team they last played for in the season.</span></span>
+              </label>
+            </fieldset>
+          )}
           {v4.appliedSummary && (
             <div className="rounded-xl border border-border/40 bg-raised/30 p-3">
               <p className="frx-note"><strong className="text-foreground">{v4.appliedSummary.text}</strong>{v4.appliedSummary.suggestionNote ? <><br />{v4.appliedSummary.suggestionNote}</> : ''}</p>
@@ -121,36 +119,6 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
                   <ul className="frx-choice__evidence">{v4.appliedSummary.appliedRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
                 </details>
               )}
-            </div>
-          )}
-          {v4.groups.length > 0 && v4.unresolvedGroups.length > 0 && (
-            <div className="grid gap-2.5">
-              <p className="frx-note"><strong className="text-foreground">{v4.unresolvedGroups.length} name{v4.unresolvedGroups.length === 1 ? '' : 's'} still need{v4.unresolvedGroups.length === 1 ? 's' : ''} a manual exact-team choice.</strong></p>
-              {v4.unresolvedGroups.map(group => (
-                <article key={group.key} className="frx-choice">
-                  <div className="frx-choice__head">
-                    <div className="min-w-0">
-                      <h4>{group.name}</h4>
-                      <p>{group.label}{group.observed ? ` · ${group.observed}` : ''}</p>
-                    </div>
-                    <span className={pillClass(group.pill.kind)}>{group.pill.text}</span>
-                  </div>
-                  <div className="grid gap-2.5 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-start">
-                    <div>
-                      <label className="studio-control-label" htmlFor={`frx-choice-${group.key}`}>Exact regular-season team</label>
-                      <select id={`frx-choice-${group.key}`} className="studio-select" value={group.selectedTeam} disabled={v4.choiceDisabled}
-                        onChange={event => sim.onRosterChoice(group.key, event.target.value)}>
-                        <option value="">Choose a team</option>
-                        {group.options.map(code => <option key={code} value={code}>{code}</option>)}
-                      </select>
-                    </div>
-                    <details>
-                      <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Evidence rows ({group.evidenceCount})</summary>
-                      <ul className="frx-choice__evidence">{group.evidenceRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
-                    </details>
-                  </div>
-                </article>
-              ))}
             </div>
           )}
         </section>

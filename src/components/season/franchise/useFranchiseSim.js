@@ -271,7 +271,6 @@ function computeView(state) {
     sessionLocked: Boolean(session),
     rosterMode: state.v4RosterMode,
     canAssign: !busy && canReview && groups.length > 0,
-    unresolvedGroups: groups.filter(group => !group.selectedTeam || !group.options.includes(group.selectedTeam)),
   };
 
   // === Fixture panel ===

@@ -143,7 +143,7 @@ export default function LineupCompare() {
 
   if (!data) return null;
 
-  const scaleReady = data.players.every(player => minutes[player.name] != null);
+  const scaleReady = !data.empty && data.players.every(player => minutes[player.name] != null);
   const scaleBar = <div className="cmp-scale" role="group" aria-label="Comparison stat scale">
     {SCALES.map(([key, label, sub]) => <button key={key} type="button" className={scale === key ? 'is-active' : ''} disabled={key !== 'game' && !scaleReady} title={key !== 'game' && !scaleReady ? 'Load the roster to convert rates' : sub} aria-pressed={scale === key} onClick={() => setScale(key)}>{label}</button>)}
   </div>;

@@ -64,8 +64,15 @@ export function restoreInputs(keeper, data) {
       if (el.value === wanted) return;
       el.value = wanted;
     }
-    el.dispatchEvent(new Event('change', { bubbles: true }));
-    applied += 1;
+    try {
+      // A dependent control can be mid-repopulation when this pass fires, and
+      // the site's change handler may then fail on a select it expects. That
+      // must not abort the restore — the next settling pass retries it.
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      applied += 1;
+    } catch {
+      // Keep the pass going; settleRestore's later passes retry this field.
+    }
   });
   return applied;
 }

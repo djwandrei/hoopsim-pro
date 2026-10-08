@@ -1,9 +1,9 @@
 const ORIGIN = 'https://www.djshouseofcards-comics.com';
 // Updated whenever a pin below is refreshed after review.
-const PIN_CACHE_BUST = '20261008a';
+const PIN_CACHE_BUST = '20261008b';
 export const PINS = {
-'/tools/swishiq-studio/react-game-lab-bridge.js':'401a5bfd8a093fb229da6e3a5eb3d744f70eee1815143051c4f5588bed826cd7',
-'/tools/swishiq-studio/react-season-lab-bridge.js':'405d136a1149a9fcdce63bd92aa04793879f77583b0d4729e906afadaa0b3298',
+'/tools/swishiq-studio/react-game-lab-bridge.js':'61c0658cb714f8093a8af232289aba9f9d3c17d5f453059b28701811a36d399a',
+'/tools/swishiq-studio/react-season-lab-bridge.js':'a588f8f2bcd5e3d0a2d51fb7685ad1a1f4525cd8455f9525215069f8de37d702',
 '/tools/swishiq-studio/simulation-session-ui.js':'2e8296fa24d45652453fae4673a5287a50cda42a9bf5dd8d2701f5906d3fe5f8',
 '/tools/swishiq-studio/game-lab.js':'3cfeed5aacc57162ec7070b4b99c8cb50a90b335ce5988c76425e92eee6b570d',
 '/tools/swishiq-studio/season-lab.js':'d8124963319f7aaacb0510a564fde319fbf53154fe4f5e696ebd7b781be3f947',
@@ -12,10 +12,13 @@ export const PINS = {
 '/tools/swishiq-studio/engine/game-lab-evaluation.js':'01ecbe66fe28823aae1212a848a3eb35e4b1a938a9ade6f2868d3c79f1376022',
 '/tools/result-visuals.js':'a92079689f46f911ad883c201cc78c670987ef4c8aee1504278d13cbd1c01255',
 '/tools/swishiq-studio/engine/simulation-seed.js':'503d60d1eea095a17c71cdf78132d19f243e195f410f3c43cf09146c1ab4e21a',
-'/tools/swishiq-studio/engine/possession-simulator.js':'045e5cbe444cf058eb91bf80a2047a4489d71ce623e1b790dfc833623e29c254',
+'/tools/swishiq-studio/engine/possession-simulator.js':'11b2bd7082b1830f56aeecfbe96a1db80dbfead15a88b98a2df71136b88ad061',
 '/tools/swishiq-studio/engine/public-result-share.js':'8c681c8163528ca7475623eb33d4c8a929f491923bc82482b88a6526f6f6f18a',
 '/tools/swishiq-studio/engine/season-lab-model.js':'44920d1387b47d723c7b56e22d16103f5428c8ac6d3ec127cda92cc02ddc9450',
-'/tools/swishiq-studio/react-app/studio-react-labs.js':'4a325d421352e1154d59726534f00afc0834670976533dbb5f96c4e3f47cb2f1',
+'/tools/swishiq-studio/react-app/studio-react-labs.js':'87b20c13215de816ffd3eb5ea94bebe24f616db10d9b923e30f79a65ab602d78',
+// The live react-game-lab-bridge import resolves to this candidate runtime;
+// it is the reviewed Game Lab revision as of 2026-10-08.
+'/tools/swishiq-studio/react-app/studio-react-labs-candidate74-20261007-r2.js':'59d4ea3b2ddea3a454316d5d81fe6cf9dda6c167e009611db1455cd4581cd054',
 '/tools/swishiq-studio/integration-bridge.js':'07e65797e6f2f2374a7464db5b582fdb1f90a6ab88c0968acc1060266100e773',
 '/tools/swishiq-studio/engine/nba-schedule-source.js':'c2db12f4760563c1fa92df0bc0acd204e6f047059a4829e2b8f5bfb6c7cece00',
 '/tools/swishiq-studio/engine/public-result-share-client.js':'8d46b4ad8e259c3eeba2440b78cdee00e0ca5df97ae605d3d9d1c78f6cbb1baf',
@@ -28,9 +31,9 @@ export const PINS = {
 '/tools/swishiq-studio/selector-system.js':'2958ec6adfe44eb3ebb4cd19af74970150b4058dae426b5e03ce190ad0480d62',
 '/tools/swishiq-studio/composite-public-result-share.js':'53ea37be6f3a89e20eb079225c86fb95c0ccddfd82af0a8060ba274dc4cfaf37',
 '/tools/swishiq-studio/engine/career-simulator.js':'849b480398cb7c6b755be404ed17e822f7a817161e4d2d9a0f24ede353987079',
-'/tools/swishiq-studio/engine/composite-forge-native.js':'4288a69d405ea2fbfa666592b14cf055f920eab156a57a2f6eac7d9048baba65',
+'/tools/swishiq-studio/engine/composite-forge-native.js':'31b673f18eef2daef06abf6c7219887d5e7fc3f00b34cc18c1d0ac48b8861966',
 '/tools/swishiq-studio/engine/career-simulation-model.js':'cada921d478c3419e050830b1aa6ef0f665574091cd34b83513abfc0a9c440a1',
-'/tools/swishiq-studio/engine/composite-forge.js':'a1e7356524adb0d948ba611ae2e5043c10ee91a8a344c66bc5939e397045fd95',
+'/tools/swishiq-studio/engine/composite-forge.js':'3978b2a4e16ed4eff141d65d88985294cddcebd28acdf120a2e4e7759aed9999',
 '/tools/swishiq-studio/engine/season-simulator.js':'7d3c87278313ed421d77e1f9e359917e54b52e8bcdb8b59d2bbfb5d7ad9cd1c9',
 '/tools/swishiq-studio/engine/career-state-source.js':'0e63328ab000221e743c322bb064b4e5583b8bcb901568c599dc1d9888f1a5d8',
 '/tools/swishiq-studio/engine/context-contract.js':'82528ef429143960f4d09531498e9c3419b591fc2fbe1517aef1d1f00961350f',
@@ -75,7 +78,8 @@ export async function readStudioNativeAsset(assetPath, options = {}) {
   const response = await fetch(fetchUrl, { signal:AbortSignal.timeout(20000), redirect:'manual' });
   if (!response.ok) throw new Error(`The original Studio asset is unavailable (${response.status}).`);
   const bytes = new Uint8Array(await response.arrayBuffer());
-  if (bytes.byteLength > (data ? 18 : 2) * 1024 * 1024) throw new Error('The Studio asset exceeds the bounded relay size.');
+  // Script bound accommodates the candidate74 Game Lab runtime (~2.2MB).
+if (bytes.byteLength > (data ? 18 : 4) * 1024 * 1024) throw new Error('The Studio asset exceeds the bounded relay size.');
   const digest = await crypto.subtle.digest('SHA-256',bytes);
   const sha256 = [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2,'0')).join('');
   const text = new TextDecoder().decode(bytes);

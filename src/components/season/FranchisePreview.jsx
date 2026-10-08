@@ -7,7 +7,7 @@ import workerConnection from '@/lineupLab/lineup-lab/workerConnection';
 // graph, dedicated worker, and relative data fetches resolve exactly as they
 // do on the live site. On the Base44 preview, the V4 release data (registry +
 // packages) still relays through the app's source connection.
-const PREVIEW_PATH = '/tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/index.html?rev=franchise-ui-readiness-v11';
+const PREVIEW_PATH = '/tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/index.html?rev=franchise-ui-redesign-v12';
 
 export default function FranchisePreview() {
   const [relayState, setRelayState] = useState(STANDALONE ? 'ready' : 'connecting');

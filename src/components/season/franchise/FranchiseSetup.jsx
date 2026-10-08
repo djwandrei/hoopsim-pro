@@ -1,5 +1,5 @@
 import React from 'react';
-import { Database, FileCheck2, FileUp, Lightbulb, Loader2, Lock, Play, ShieldCheck, Sparkles } from 'lucide-react';
+import { Database, Lightbulb, Loader2, Lock, Play, Sparkles } from 'lucide-react';
 import { pillClass } from './franchiseUi';
 import { GENERATED_SHOOTING_RATING_POLICY } from './franchiseLogic';
 
@@ -20,7 +20,7 @@ const ghostButton = `${buttonBase} border-border/50 bg-raised/40 text-foreground
 // The selected scenario path's setup panel. `path` comes from the launch
 // picker; every control of the site preview stays available in its own path.
 export default function FranchiseSetup({ sim, path = 'v4' }) {
-  const { v4, fixture, pins, busy } = sim.view;
+  const { v4, busy } = sim.view;
   const rating = v4.ratingReceipt;
   return (
     <div className="space-y-4">
@@ -29,9 +29,15 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
           {cardHead(Database, 'Exact V4 season', 'Primary scenario path', 'frx-v4-title')}
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="studio-control-label" htmlFor="frx-v4-season">Regular season</label>
+              <label className="studio-control-label" htmlFor="frx-v4-season">Starting season</label>
               <select id="frx-v4-season" className="studio-select" value={v4.year} disabled={v4.yearDisabled}
-                onChange={event => sim.setV4Year(Number(event.target.value))}>
+                onChange={event => {
+                  const value = Number(event.target.value);
+                  if (!value) return;
+                  sim.setV4Year(value);
+                  sim.loadV4Season();
+                }}>
+                <option value="">Choose your starting season</option>
                 {v4.seasons.map(year => <option key={year} value={year}>{year}–{String(year + 1).slice(2)}</option>)}
               </select>
             </div>
@@ -83,47 +89,6 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
             </div>
           )}
           {v4.sessionLocked && <p className="frx-note flex items-center gap-2"><Lock className="h-3.5 w-3.5" aria-hidden="true" /> Source choices are locked while a session is active.</p>}
-        </section>
-      )}
-
-      {path === 'fixture' && (
-        <section className="court-panel frx-panel space-y-4 p-4" aria-labelledby="frx-fixture-title">
-          {cardHead(FileCheck2, 'Prepared fixture', 'Local fixture path', 'frx-fixture-title')}
-          <div className="flex flex-wrap gap-2.5">
-            <label className={fixture.fileDisabled ? `${ghostButton} frx-disabled` : ghostButton}>
-              <FileUp className="h-3.5 w-3.5" aria-hidden="true" /> Load fixture JSON
-              <input type="file" accept="application/json,.json" className="sr-only" disabled={fixture.fileDisabled}
-                onChange={event => sim.loadFixture(event.target.files?.[0])} />
-            </label>
-            <button type="button" className={ghostButton} disabled={fixture.fileDisabled} onClick={sim.loadVerifiedFixture}>
-              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" /> Load verified smoke fixture
-            </button>
-          </div>
-          <div className="rounded-xl border border-border/40 bg-raised/30 p-3">
-            {fixture.meta
-              ? <p className="frx-note"><strong className="text-foreground">{fixture.meta.name}</strong><br />{fixture.meta.detail}</p>
-              : <p className="frx-note">No fixture loaded. Fixture inputs pin the model, package, schedule, and prepared game inputs locally.</p>}
-          </div>
-          <div>
-            <label className="studio-control-label" htmlFor="frx-fixture-team">Team to control</label>
-            <select id="frx-fixture-team" className="studio-select" value={fixture.value} disabled={fixture.selectDisabled}
-              onChange={event => sim.setFixtureUserTeam(event.target.value)}>
-              {fixture.optionMessage
-                ? <option value="">{fixture.optionMessage}</option>
-                : <>{<option value="" hidden>Choose a team</option>}{fixture.options.map(option => <option key={option.code} value={option.code}>{option.label}</option>)}</>}
-            </select>
-          </div>
-          <button type="button" className={`${goldButton} w-full justify-center sm:w-auto`} disabled={!fixture.canInitialize} onClick={() => sim.initializeScenario('fixture')}>
-            <Play className="h-3.5 w-3.5" aria-hidden="true" /> Initialize fixture scenario
-          </button>
-          {fixture.sessionLocked && <p className="frx-note flex items-center gap-2"><Lock className="h-3.5 w-3.5" aria-hidden="true" /> Fixture inputs are locked while a session is active.</p>}
-          {/* Engine pins */}
-          <div className="grid gap-2 rounded-xl border border-border/40 bg-court-canvas/40 p-3 sm:grid-cols-2">
-            <div><p className="bcast-kicker">Package pin</p><p className="frx-note"><strong className="text-foreground">{pins.packageName}</strong><br />{pins.sourceDetail}</p></div>
-            <div><p className="bcast-kicker">Model artifact</p><p className="frx-note"><strong className="text-foreground">{pins.modelName}</strong><br />{pins.modelDetail}</p></div>
-            <div><p className="bcast-kicker">Prepared inputs</p><p className="frx-note"><strong className="text-foreground">{pins.inputs} prepared game input{pins.inputs === 1 ? '' : 's'}</strong><br />{pins.candidateText}</p></div>
-            <div><p className="bcast-kicker">Status</p><p className="frx-note">{pins.provisional ? 'Provisional / generated values in play; read receipts before simulating.' : 'Source reconciled · model validated · ready.'}</p></div>
-          </div>
         </section>
       )}
 

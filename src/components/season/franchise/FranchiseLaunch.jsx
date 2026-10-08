@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import { Database, FileCheck2 } from 'lucide-react';
+import { Database } from 'lucide-react';
 import FranchiseSetup from './FranchiseSetup';
 
 const SOURCES = [
   {
     id: 'v4', icon: Database, title: 'Exact V4 season',
-    blurb: 'A pinned 30-team regular-season snapshot with verified source receipts, roster-choice review, and IndexedDB checkpoints.',
-  },
-  {
-    id: 'fixture', icon: FileCheck2, title: 'Prepared fixture',
-    blurb: 'A locally pinned fixture payload with prepared game inputs — the fastest path to a live session.',
+    blurb: 'A pinned 30-team regular-season snapshot with verified source receipts, roster assignment, and IndexedDB checkpoints.',
   },
 ];
 
@@ -34,7 +30,7 @@ export default function FranchiseLaunch({ sim, onBack }) {
           )}
         </div>
       </header>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-3">
         {SOURCES.map(source => {
           const selected = source.id === path;
           const Icon = source.icon;

@@ -25,7 +25,7 @@ const readSavedText = key => {
 
 const freshState = () => ({
   // Setup inputs (mirror of the preview frame's control values)
-  v4Year: 2025, v4UserTeam: '', fixtureUserTeam: '', generateRating: false,
+  v4Year: 2025, v4YearSelected: false, v4UserTeam: '', fixtureUserTeam: '', generateRating: false,
   // Engine + session
   client: null, workerCapabilities: null, activeSession: null, activeTeamCode: '',
   rotationDraft: [], draftSessionRef: null, draftTeamRef: '', rawMinutesText: new Map(),
@@ -131,7 +131,7 @@ function computeView(state) {
   if (!intake) {
     v4Status = notice
       ? { state: notice.kind, title: notice.message, metrics: [], issues: [] }
-      : { state: 'idle', title: `No verified V4 source is loaded for ${state.v4Year}. Load the pinned regular-season source set.`, metrics: [], issues: [] };
+      : { state: 'idle', title: `Choose your starting season to load the pinned regular-season V4 source set.${state.v4YearSelected ? ` No verified V4 source is loaded for ${state.v4Year}.` : ''}`, metrics: [], issues: [] };
   } else {
     const scenario = intake.scenario ?? {};
     const playerCount = Number(intake.candidatePlayerCount ?? intake.playerSeasonEvidence?.length ?? 0);
@@ -255,9 +255,9 @@ function computeView(state) {
   const v4TeamSelected = teamOptions.some(option => option.code === state.v4UserTeam) ? state.v4UserTeam : '';
 
   view.v4 = {
-    year: state.v4Year, seasons: SEASON_OPTIONS,
+    year: state.v4YearSelected ? state.v4Year : '', seasons: SEASON_OPTIONS,
     yearDisabled: busy || Boolean(session),
-    canLoad: !busy && !session,
+    canLoad: !busy && !session && state.v4YearSelected,
     teamOptions, teamSelected: v4TeamSelected,
     teamDisabled: busy || Boolean(session) || !loadedForSelectedYear,
     teamMessage: teamOptions.length ? 'Choose a team to control' : 'Load V4 source first',
@@ -685,7 +685,7 @@ export default function useFranchiseSim() {
   // === Setup inputs ===
   const setV4Year = value => {
     const state = ref.current;
-    state.v4Year = value; state.v4UserTeam = ''; state.generateRating = false;
+    state.v4Year = value; state.v4YearSelected = true; state.v4UserTeam = ''; state.generateRating = false;
     state.v4OperationNotice = null;
     setRatingReceipt(state, null);
     render();

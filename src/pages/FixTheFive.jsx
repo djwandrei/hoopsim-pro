@@ -304,7 +304,7 @@ export default function FixTheFive() {
                   const points = gamePointsForOutcome(outcomes[challenge.challengeId]);
                   return { key: challenge.challengeId, title: challenge.title, points: points.total, maxPoints: points.max };
                 })}
-                otherGamePath="/draft-night"
+                otherGamePath="/daily-games/draft-night"
                 otherGameTitle="Draft Night"
                 onReplay={replay}
                 sharedResult={completedCount === challenges.length ? encodeSharedRun({ gameKind: 'fix-the-five', seed: presentation.dailySeed, picks: selections }) : null} />

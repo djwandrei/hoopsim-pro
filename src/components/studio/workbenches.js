@@ -1,6 +1,7 @@
-import { Users, FlaskConical, Swords, Zap, CalendarRange, LineChart, Disc3, Banknote, IdCard, PackageOpen, BookOpen, Trophy } from 'lucide-react';
+import { Users, FlaskConical, Swords, Zap, CalendarRange, LineChart, Disc3, Banknote, IdCard, PackageOpen, BookOpen, Trophy, Gamepad2 } from 'lucide-react';
 import { studioAsset } from '@/components/studio/teamAssets';
 const EMBLEMS = 'https://www.djshouseofcards-comics.com/tools/swishiq-studio/assets/workbench-icons/';
+const GAME_ASSETS = 'https://www.djshouseofcards-comics.com/assets/games/';
 export const WORKBENCHES = [
   { path: '/players', icon: Users, emblem: `${EMBLEMS}player-blueprint-icon.webp`, title: 'Player Blueprint', tag: 'ATLAS & DOSSIERS', description: 'Scope the interactive league charts, then pin players to open their full observed dossiers.', flow: 'Atlas → Scope → Dossier', children: [{ path: '/players', title: 'League Atlas' }, { path: '/players/dossier', title: 'Player Dossier' }] },
   { path: '/chemistry', icon: FlaskConical, emblem: `${EMBLEMS}chemistry-lab-icon.webp`, title: 'Chemistry Lab', tag: 'PAIR & LINEUP ANALYSIS', description: 'Compare a pair, play the challenge, and explore real shared-floor and exact-five combinations.', flow: 'Pair → Challenge → Combinations' },
@@ -14,13 +15,25 @@ export const WORKBENCHES = [
   { path: '/matchups', icon: IdCard, emblem: 'https://www.djshouseofcards-comics.com/assets/games/card-matchups-emblem-20260911.png', title: 'Player & Cards', tag: 'COLLECTOR SEARCH', description: 'Search the live collector catalog for cards tied to verified NBA players, then browse every catalog card.', flow: 'Search → Player match → Browse' },
   { path: '/packs', icon: PackageOpen, emblem: studioAsset('virtual-packs-emblem-20261007.png'), title: 'Virtual Packs', tag: 'SEEDED PACK SIMULATION', description: 'Declare an eligible card pool from verified player matches and replay a deterministic simulated pack draw — simulation only, no purchase.', flow: 'Find cards → Pool → Seeded draw' },
   { path: '/playbook', icon: BookOpen, emblem: studioAsset('playbook-emblem-20261007.png'), title: 'Playbook', tag: 'INTERACTIVE PLAY ANIMATION', description: 'Learn plays, sets and schemes on an animated half court: labelled players run each step while the who, the what and the why are narrated.', flow: 'Library → Animate → Steps' },
+  { path: '/daily-games', icon: Gamepad2, title: 'Daily Games', tag: 'DAILY VERIFIED GAMES', description: 'One desk for both verified daily games: repair a starting five or draft a five-round roster — each scored blind, then revealed once by the SwishIQ evaluator.', flow: 'Hub → Pick a game → Verified rank', children: [
+    { path: '/daily-games/fix-the-five', title: 'Fix the Five' },
+    { path: '/daily-games/draft-night', title: 'Draft Night' },
+  ] },
+  { path: '/lineup-lab', icon: LineChart, emblem: `${GAME_ASSETS}lineup-lab-emblem-20260911.png`, title: 'NBA Lineup Lab', tag: 'LINEUP & ROTATION OPTIMIZER', description: 'Pick a team-season, set the game plan, and run the exact optimizer to rank lineups, rotations, and one-player tradeoffs.', flow: 'Team & season → Game plan → Build' },
 ];
 
-// Daily games live outside the SwishIQ workbench system: not in the studio
-// sidebar or index — reachable from the site header drawer instead.
-const GAME_ASSETS = 'https://www.djshouseofcards-comics.com/assets/games/';
+// The Daily Games desk and its two verified games. Lineup Lab is deliberately
+// not a daily game — it lives in the workbench system above.
 export const DAILY_GAMES = [
-  { path: '/fix-the-five', emblem: `${GAME_ASSETS}fix-the-five-emblem-20260911.png`, title: 'Fix the Five', tag: 'DAILY ROTATION REPAIR', description: 'Repair five exact-season starting fives by swapping in legal replacements, verified by the original private evaluator.', flow: 'Board → Swap call → Verified rank' },
-  { path: '/draft-night', emblem: `${GAME_ASSETS}draft-night-emblem-20260911.png`, title: 'Draft Night', tag: 'DAILY FIVE-ROUND DRAFT', description: 'Draft one player from each of five team rounds, then reveal one verified cross-team impact result.', flow: 'Rounds → Lock draft → Verified rank' },
-  { path: '/lineup-lab', emblem: `${GAME_ASSETS}lineup-lab-emblem-20260911.png`, title: 'NBA Lineup Lab', tag: 'LINEUP & ROTATION OPTIMIZER', description: 'Pick a team-season, set the game plan, and run the exact optimizer to rank lineups, rotations, and one-player tradeoffs.', flow: 'Team & season → Game plan → Build' },
+  {
+    path: '/daily-games', icon: Gamepad2, title: 'Daily Games', tag: 'DAILY VERIFIED GAMES',
+    description: 'One desk for both verified daily games: repair a starting five or draft a five-round roster — each scored blind, then revealed once by the SwishIQ evaluator.',
+    flow: 'Hub → Pick a game → Verified rank',
+    children: [
+      { path: '/daily-games/fix-the-five', emblem: `${GAME_ASSETS}fix-the-five-emblem-20260911.png`, title: 'Fix the Five', tag: 'DAILY ROTATION REPAIR', description: 'Repair five exact-season starting fives by swapping in legal replacements, verified by the original private evaluator.', flow: 'Board → Swap call → Verified rank' },
+      { path: '/daily-games/draft-night', emblem: `${GAME_ASSETS}draft-night-emblem-20260911.png`, title: 'Draft Night', tag: 'DAILY FIVE-ROUND DRAFT', description: 'Draft one player from each of five team rounds, then reveal one verified cross-team impact result.', flow: 'Rounds → Lock draft → Verified rank' },
+    ],
+  },
 ];
+// The two games themselves — the today's-call rotation and the site drawer.
+export const DAILY_GAMES_ROUTES = DAILY_GAMES[0].children;

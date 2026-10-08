@@ -263,7 +263,7 @@ export default function DraftNight() {
                 max={points.max}
                 seed={presentation.dailySeed}
                 entries={[{ key: 'draft', title: 'Five-pick draft', points: points.total, maxPoints: points.max }]}
-                otherGamePath="/fix-the-five"
+                otherGamePath="/daily-games/fix-the-five"
                 otherGameTitle="Fix the Five"
                 onReplay={replay}
                 sharedResult={outcome ? encodeSharedRun({ gameKind: 'draft-night', seed: presentation.dailySeed, picks }) : null}

@@ -10,7 +10,9 @@ export default function WorkbenchHeader({ title, description, steps = [], curren
   const { pathname } = useLocation();
   const allTools = [...WORKBENCHES, ...DAILY_GAMES];
   const toolIndex = allTools.findIndex(tool => pathname === tool.path || pathname.startsWith(`${tool.path}/`));
-  const tool = allTools[toolIndex];
+  const parent = allTools[toolIndex];
+  // A workbench's own screens carry their identity — emblem included.
+  const tool = parent?.children?.find(child => pathname === child.path) ?? parent;
   const Icon = tool?.icon;
   const loading = state === 'loading' || state === 'idle';
   const badge = loading ? 'Loading season' : state === 'error' ? 'Data unavailable' : status || (state === 'ready' ? 'Ready to explore' : null);

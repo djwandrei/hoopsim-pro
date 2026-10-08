@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ToolEmblem from '@/components/djhc/ToolEmblem';
 import { FAN_TOOLS, TOOL_ROUTES, DRAWER_HIDDEN } from '@/components/djhc/siteNavigation';
-import { DAILY_GAMES } from '@/components/studio/workbenches';
+import { DAILY_GAMES_ROUTES } from '@/components/studio/workbenches';
 export default function SiteDrawer({open,navRef,onClose}) {
   const { pathname } = useLocation();
   return <nav ref={navRef} id="siteNav" aria-label="Primary navigation" className={`site-nav${open?' open':''}`} hidden={!open}><div className="site-nav__mobile-header"><span className="site-nav__eyebrow">Navigate the collection</span><strong className="site-nav__mobile-title">SwishIQ Studio</strong><p>Move between fan tools, games, and SwishIQ workbenches.</p></div><ul className="primary-nav__list">{FAN_TOOLS.filter(item=>!DRAWER_HIDDEN.includes(item.label)).map(item=>{
@@ -16,7 +16,7 @@ export default function SiteDrawer({open,navRef,onClose}) {
     </li>;
   })}</ul>
     <div className="site-nav__group"><span className="site-nav__eyebrow">Daily games</span></div>
-    <ul className="primary-nav__list">{DAILY_GAMES.filter(item=>!FAN_TOOLS.some(tool=>tool.route===item.path && !DRAWER_HIDDEN.includes(tool.label))).map(item=>{
+    <ul className="primary-nav__list">{DAILY_GAMES_ROUTES.filter(item=>!FAN_TOOLS.some(tool=>tool.route===item.path && !DRAWER_HIDDEN.includes(tool.label))).map(item=>{
       const activeGame = pathname === item.path || pathname.startsWith(`${item.path}/`);
       return <li key={item.path} className="primary-nav__item"><Link to={item.path} className={`primary-nav__link${activeGame?' active':''}`} aria-current={activeGame?'page':undefined} onClick={onClose}><ToolEmblem emblem={item.emblem} label={item.title} className="fan-tools-primary__emblem" /><span className="fan-tools-primary__label">{item.title}</span></Link></li>;
     })}</ul></nav>;

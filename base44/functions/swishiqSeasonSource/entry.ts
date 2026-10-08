@@ -132,6 +132,12 @@ function publicStatsForYear(context, year, nameSet) {
 // consume, and only that reduction is cached.
 let careerCache = null;
 
+// Bounded per-season payload cache for exact-season requests: warm instances
+// skip the package-part mapping on repeat workbench loads (the frontends keep
+// their own session cache, so this serves cross-workbench revisits/retries).
+const seasonPayloadCache = new Map();
+const SEASON_PAYLOAD_CACHE_LIMIT = 4;
+
 // Streams canonical records out of one very large JSON part so it never has to
 // be parsed as a single document: the scanner tracks string/brace depth and
 // hands each top-level `records` element to `onRecord` as its own small JSON.
@@ -207,6 +213,9 @@ async function streamCanonicalRecords(response, onRecord) {
 
 async function careerArchive() {
   if (careerCache) return careerCache;
+  // Headshot metadata runs alongside the pooled artifact: streaming must not
+  // wait on it, so headshots are attached once both have finished.
+  const metadataPromise = playerMetadata();
   const { registry, entry, index } = await publishedPackage('pooled-window');
   const descriptor = (index.artifacts || []).find(item => item.artifactId === 'player-seasons');
   if (!descriptor?.path) throw new Error('The pooled package is missing its player-seasons artifact.');
@@ -217,7 +226,6 @@ async function careerArchive() {
     throw new Error('The pooled player-seasons artifact could not be reached.');
   }
   if (!response.ok || !response.body) throw new Error(`The pooled player-seasons artifact is unavailable (${response.status}).`);
-  const metadata = await playerMetadata();
   const records = [];
   await streamCanonicalRecords(response, row => {
     const item = rowValues(row);
@@ -236,9 +244,10 @@ async function careerArchive() {
       age: item.age ?? null,
       experience: null,
       careerMetrics: Object.fromEntries(PER_GAME_KEYS.map(key => [key, metricValue(metrics[`${key}PerGame`])])),
-      headshotPath: headshotFor(metadata, item.displayName),
     });
   });
+  const metadata = await metadataPromise;
+  for (const record of records) record.headshotPath = headshotFor(metadata, record.displayName);
   careerCache = {
     registry,
     entry,
@@ -308,11 +317,13 @@ export default async function(req) {
     }
 
     // Exact-season source: every published package part plus the public
-    // companion sources, rebuilt live on each request.
+    // companion sources. Warm instances replay a cached per-season payload.
     const year = Number(body.seasonStartYear);
     if (!SUPPORTED_YEARS.includes(year)) {
       return Response.json({ error: `Season ${body.seasonStartYear || '(missing)'} is not published. Supported: 2017–2025 start years.` }, { status: 400 });
     }
+    const cachedPayload = seasonPayloadCache.get(year);
+    if (cachedPayload) return Response.json(cachedPayload);
     const { registry, entry, index, packageRoot } = await publishedPackage('exact-season', year);
 
     const [teamStylesPart, membershipsPart, playerSeasonsPart, playersPart, metadata, context, scheduleDoc] = await Promise.all([
@@ -399,7 +410,7 @@ export default async function(req) {
         actual: game.result ? { home: Number(game.result.homeScore), away: Number(game.result.awayScore) } : null,
       }));
 
-    return Response.json({
+    const payload = {
       registry: {
         format: registry.format,
         registryVersion: registry.registryVersion,
@@ -416,7 +427,12 @@ export default async function(req) {
       schedule,
       supportedYears: SUPPORTED_YEARS,
       scheduleStatus: scheduleSeason?.status || 'unknown',
-    });
+    };
+    if (seasonPayloadCache.size >= SEASON_PAYLOAD_CACHE_LIMIT) {
+      seasonPayloadCache.delete(seasonPayloadCache.keys().next().value);
+    }
+    seasonPayloadCache.set(year, payload);
+    return Response.json(payload);
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : 'The Season Lab source could not be loaded.' }, { status: 500 });
   }

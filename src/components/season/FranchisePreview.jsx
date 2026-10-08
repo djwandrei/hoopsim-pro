@@ -1,44 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { STANDALONE } from '@/lib/deployConfig';
-import workerConnection from '@/lineupLab/lineup-lab/workerConnection';
+import React from 'react';
+import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
+import useFranchiseSim from './franchise/useFranchiseSim';
+import FranchiseStatusStrip from './franchise/FranchiseStatusStrip';
+import FranchiseSetup from './franchise/FranchiseSetup';
+import FranchiseRotation from './franchise/FranchiseRotation';
+import FranchiseSchedule from './franchise/FranchiseSchedule';
+import FranchiseStandings from './franchise/FranchiseStandings';
+import FranchiseLedger from './franchise/FranchiseLedger';
+import FranchiseSaves from './franchise/FranchiseSaves';
+import './franchise/franchise.css';
 
-// The vendored site release runs in its own same-origin frame so its module
-// graph, dedicated worker, and relative data fetches resolve exactly as they
-// do on the live site. On the Base44 preview, the V4 release data (registry +
-// packages) still relays through the app's source connection.
-const PREVIEW_PATH = '/tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/index.html?rev=franchise-ui-redesign-v12';
-
+// The franchise tab, fully native React: the vendored simulation worker and V4
+// intake modules load at their same-origin studio paths (V4 release data still
+// relays through the connected studio source), and every preview control is
+// rendered and driven directly by React instead of the embedded site frame.
 export default function FranchisePreview() {
-  const [relayState, setRelayState] = useState(STANDALONE ? 'ready' : 'connecting');
-  const [error, setError] = useState(null);
-  const [attempt, setAttempt] = useState(0);
+  const sim = useFranchiseSim();
 
-  useEffect(() => {
-    if (STANDALONE) return undefined;
-    let live = true;
-    setRelayState('connecting');
-    setError(null);
-    workerConnection()
-      .then(() => { if (live) setRelayState('ready'); })
-      .catch(connectError => { if (live) { setRelayState('failed'); setError(connectError.message); } });
-    return () => { live = false; };
-  }, [attempt]);
-
-  return (
-    <div className="season-view-enter space-y-3">
-      {relayState !== 'ready' && (
+  if (sim.enginePhase !== 'ready') {
+    return (
+      <div className="season-view-enter">
         <div className="court-panel flex flex-wrap items-center gap-3 p-4 text-sm">
-          {relayState === 'connecting' ? (
-            <span className="text-muted-foreground">Connecting the franchise data source…</span>
+          {sim.enginePhase === 'loading' ? (
+            <span className="flex items-center gap-2 text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              Connecting the franchise data source…
+            </span>
           ) : (
             <>
-              <AlertTriangle className="h-4 w-4 text-trim" aria-hidden="true" />
-              <span>The franchise data source is unavailable: {error}</span>
+              <AlertTriangle className="h-4 w-4 shrink-0 text-trim" aria-hidden="true" />
+              <span className="min-w-0 flex-1">The franchise engine is unavailable: {sim.engineError}</span>
               <button
                 type="button"
-                onClick={() => setAttempt(value => value + 1)}
-                className="ml-auto inline-flex items-center gap-2 rounded-lg border border-gold/50 bg-gold/10 px-3 py-1.5 text-xs font-semibold text-gold hover:bg-gold/20"
+                onClick={sim.retry}
+                className="inline-flex items-center gap-2 rounded-lg border border-gold/50 bg-gold/10 px-3 py-1.5 text-xs font-semibold text-gold hover:bg-gold/20"
               >
                 <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
                 Retry connection
@@ -46,14 +41,21 @@ export default function FranchisePreview() {
             </>
           )}
         </div>
-      )}
-      {relayState === 'ready' && (
-        <iframe
-          title="Franchise simulation preview"
-          src={PREVIEW_PATH}
-          className="h-[80vh] min-h-[720px] w-full rounded-xl border border-border/40 bg-raised/40"
-        />
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="season-view-enter space-y-4">
+      <FranchiseStatusStrip view={sim.view} />
+      <FranchiseSetup sim={sim} />
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] xl:items-start">
+        <FranchiseRotation sim={sim} />
+        <FranchiseSchedule sim={sim} />
+      </div>
+      <FranchiseStandings view={sim.view} />
+      <FranchiseLedger view={sim.view} />
+      <FranchiseSaves sim={sim} />
     </div>
   );
 }

@@ -38,6 +38,7 @@ const RealBook = lazy(() => import('@/pages/RealBook'));
 const FranchiseLab = lazy(() => import('@/pages/FranchiseLab'));
 const DailyGames = lazy(() => import('@/pages/DailyGames'));
 const Analytics = lazy(() => import('@/pages/Analytics'));
+const CollectorCenter = lazy(() => import('@/pages/CollectorCenter'));
 
 // Public studio: no login gate — every route is open. On the site the router
 // lives under /tools/swishiq-studio/ so existing site links keep working.
@@ -74,6 +75,7 @@ function App() {
             <Route path="/lineup-lab" element={<LineupLab />} />
             <Route path="/tools/shared-result" element={<LineupSharedResult />} />
             <Route path="/pool-mockup" element={<PoolRedesignMockup />} />
+            <Route path="/collector" element={<CollectorCenter />} />
             <Route path="/matchups" element={<CardMatchups />} />
             <Route path="/packs" element={<VirtualPacks />} />
             <Route path="/playbook" element={<Playbook />} />

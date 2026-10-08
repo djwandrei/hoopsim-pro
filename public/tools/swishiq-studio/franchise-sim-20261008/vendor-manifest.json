@@ -308,6 +308,37 @@
       "file": "models/shared-player-production-v1-candidate-20261007b.json",
       "bytes": 36920,
       "sha256": "044386cbe912d03036ef454a185c555da5c356a485288622e722b0c609ee8db4"
+    },
+    {
+      "file": "integration/season-lab-preview/index.html",
+      "note": "site byte-pinned at fetch time"
+    },
+    {
+      "file": "integration/season-lab-preview/preview.mjs",
+      "note": "site byte-pinned at fetch time"
+    },
+    {
+      "file": "integration/season-lab-preview/preview.css",
+      "note": "site byte-pinned at fetch time"
+    },
+    {
+      "file": "integration/season-lab-preview/real-v4-browser-fixture-20261008.json",
+      "note": "site byte-pinned at fetch time"
+    },
+    {
+      "file": "integration/season-lab-preview/real-v4-browser-fixture-20261008.receipt.json",
+      "sha256": "4ccfb7481621a5297b0648a44b80edbaa2a2035eece5eeb99a4648b8fab37729",
+      "note": "preview.mjs RECEIPT_SHA256_HEX pin"
+    },
+    {
+      "file": "data/season-age-anchor-index-v1.json",
+      "sha256": "b8d38d4861c2af3a76684c0d228d04dc2c1941f22ed0893688dcdc5961f36df4",
+      "note": "v4-franchise-intake-v1 source pin"
+    },
+    {
+      "file": "../data/nba-actual-schedules-v1.json",
+      "sha256": "522ed031595601aff75b26d5f3d3cc8022525c0e8b29d072baa0b626d54d4e3e",
+      "note": "v4-franchise-intake-v1 source pin (site studio data path)"
     }
   ]
 }

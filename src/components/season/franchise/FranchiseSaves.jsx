@@ -8,12 +8,13 @@ export default function FranchiseSaves({ sim }) {
   const saves = sim.view.saves;
   const fileRef = useRef(null);
   return (
-    <section className="court-panel frx-panel space-y-3 p-4" aria-labelledby="frx-saves-title">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="bcast-kicker">Checkpoints</p>
-        <span className="frx-pill frx-pill--slate">{saves.backend === 'indexeddb' ? 'IndexedDB' : 'localStorage'}</span>
-      </div>
-      <div className="flex flex-wrap gap-2.5">
+    <section className="court-panel frx-strip" aria-labelledby="frx-saves-title">
+      <span className="frx-strip__seg">
+        <span className="bcast-kicker">Checkpoints</span>
+        <span className={`frx-pill ${saves.backend === 'indexeddb' ? 'frx-pill--green' : 'frx-pill--slate'}`}>{saves.backend === 'indexeddb' ? 'IndexedDB' : 'localStorage'}</span>
+      </span>
+      <span className="frx-strip__div" aria-hidden="true" />
+      <span className="flex flex-wrap gap-2">
         <button type="button" className={ghostButton} disabled={!saves.canSave} onClick={sim.saveLocal}>
           <Save className="h-3.5 w-3.5" aria-hidden="true" /> {saves.saveLabel}
         </button>
@@ -28,8 +29,8 @@ export default function FranchiseSaves({ sim }) {
           <input ref={fileRef} type="file" accept="application/json,.json" className="sr-only" disabled={!saves.canImport}
             onChange={event => sim.importSave(event.target.files?.[0])} />
         </label>
-      </div>
-      <p className="frx-note" role="status">{sim.view.saveStatus}</p>
+      </span>
+      <p className="frx-note w-full sm:ml-auto sm:max-w-sm sm:text-right" role="status">{sim.view.saveStatus}</p>
     </section>
   );
 }

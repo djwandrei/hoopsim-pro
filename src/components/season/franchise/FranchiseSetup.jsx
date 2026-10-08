@@ -5,7 +5,7 @@ import { GENERATED_SHOOTING_RATING_POLICY } from './franchiseLogic';
 
 const cardHead = (Icon, title, kicker) => (
   <div className="flex items-center gap-2.5">
-    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-gold/35 bg-gold/10 text-gold"><Icon className="h-4.5 w-4.5" aria-hidden="true" /></span>
+    <span className="frx-head-icon"><Icon className="h-4 w-4" aria-hidden="true" /></span>
     <div className="min-w-0">
       <p className="bcast-kicker">{kicker}</p>
       <h3 className="frx-title">{title}</h3>
@@ -17,16 +17,14 @@ const buttonBase = 'inline-flex items-center gap-2 rounded-lg border px-3.5 py-2
 const goldButton = `${buttonBase} border-gold/50 bg-gold/15 text-gold hover:bg-gold/25`;
 const ghostButton = `${buttonBase} border-border/50 bg-raised/40 text-foreground hover:border-gold/40 hover:text-gold`;
 
-// Setup rail: the two scenario paths (exact V4 season + prepared fixture),
-// intake status, source receipts, and the multi-team roster-choice review.
-// Every control mirrors the site preview's, in the studio's design language.
-export default function FranchiseSetup({ sim }) {
+// The selected scenario path's setup panel. `path` comes from the launch
+// picker; every control of the site preview stays available in its own path.
+export default function FranchiseSetup({ sim, path = 'v4' }) {
   const { v4, fixture, pins, busy } = sim.view;
   const rating = v4.ratingReceipt;
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 xl:grid-cols-2">
-        {/* V4 path */}
+      {path === 'v4' && (
         <section className="court-panel frx-panel space-y-4 p-4" aria-labelledby="frx-v4-title">
           {cardHead(Database, 'Exact V4 season', 'Primary scenario path')}
           <div className="grid gap-3 sm:grid-cols-2">
@@ -86,8 +84,9 @@ export default function FranchiseSetup({ sim }) {
           )}
           {v4.sessionLocked && <p className="frx-note flex items-center gap-2"><Lock className="h-3.5 w-3.5" aria-hidden="true" /> Source choices are locked while a session is active.</p>}
         </section>
+      )}
 
-        {/* Fixture path */}
+      {path === 'fixture' && (
         <section className="court-panel frx-panel space-y-4 p-4" aria-labelledby="frx-fixture-title">
           {cardHead(FileCheck2, 'Prepared fixture', 'Local fixture path')}
           <div className="flex flex-wrap gap-2.5">
@@ -126,54 +125,58 @@ export default function FranchiseSetup({ sim }) {
             <div><p className="bcast-kicker">Status</p><p className="frx-note">{pins.provisional ? 'Provisional / generated values in play; read receipts before simulating.' : 'Source reconciled · model validated · ready.'}</p></div>
           </div>
         </section>
-      </div>
+      )}
 
-      {/* V4 roster-choice review */}
-      <section className="court-panel frx-panel space-y-3 p-4" aria-labelledby="frx-choices-title">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          {cardHead(Sparkles, 'Roster-choice review', 'Multi-team names')}
-          <span className="frx-pill frx-pill--slate">{v4.choiceCount}</span>
-        </div>
-        {!sim.view.v4.groups.length && <p className="frx-note">{sim.view.v4.status.state === 'idle' ? 'Roster-choice review appears after V4 intake.' : 'No multi-team player names need a franchise choice in this exact season.'}</p>}
-        <div className="grid gap-2.5">
-          {v4.groups.map(group => (
-            <article key={group.key} className="frx-choice">
-              <div className="frx-choice__head">
-                <div className="min-w-0">
-                  <h4>{group.name}</h4>
-                  <p>{group.label}{group.observed ? ` · ${group.observed}` : ''}</p>
-                </div>
-                <span className={pillClass(group.pill.kind)}>{group.pill.text}</span>
-              </div>
-              <div className="grid gap-2.5 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-start">
-                <div>
-                  <label className="studio-control-label" htmlFor={`frx-choice-${group.key}`}>Exact regular-season team</label>
-                  <select id={`frx-choice-${group.key}`} className="studio-select" value={group.selectedTeam} disabled={v4.choiceDisabled}
-                    onChange={event => sim.onRosterChoice(group.key, event.target.value)}>
-                    <option value="">Choose a team</option>
-                    {group.options.map(code => <option key={code} value={code}>{code}</option>)}
-                  </select>
-                </div>
-                <details>
-                  <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Evidence rows ({group.evidenceCount})</summary>
-                  <ul className="frx-choice__evidence">{group.evidenceRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
-                </details>
-              </div>
-            </article>
-          ))}
-        </div>
-        {v4.appliedSummary && (
-          <div className="rounded-xl border border-border/40 bg-raised/30 p-3">
-            <p className="frx-note"><strong className="text-foreground">{v4.appliedSummary.text}</strong>{v4.appliedSummary.suggestionNote ? <><br />{v4.appliedSummary.suggestionNote}</> : ''}</p>
-            {v4.appliedSummary.appliedRows.length > 0 && (
-              <details className="mt-1.5">
-                <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Applied team choices and provenance</summary>
-                <ul className="frx-choice__evidence">{v4.appliedSummary.appliedRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
-              </details>
-            )}
+      {/* V4 roster-choice review — a launch step on the exact-season path */}
+      {path === 'v4' && (
+        <section className="court-panel frx-panel space-y-3 p-4" aria-labelledby="frx-choices-title">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            {cardHead(Sparkles, 'Roster-choice review', 'Multi-team names')}
+            <span className="frx-pill frx-pill--slate">{v4.choiceCount}</span>
           </div>
-        )}
-      </section>
+          {!v4.groups.length && <p className="frx-note">{v4.status.state === 'idle' ? 'Roster-choice review appears after V4 intake.' : 'No multi-team player names need a franchise choice in this exact season.'}</p>}
+          <div className="grid gap-2.5">
+            {v4.groups.map(group => (
+              <article key={group.key} className="frx-choice">
+                <div className="frx-choice__head">
+                  <div className="min-w-0">
+                    <h4>{group.name}</h4>
+                    <p>{group.label}{group.observed ? ` · ${group.observed}` : ''}</p>
+                  </div>
+                  <span className={pillClass(group.pill.kind)}>{group.pill.text}</span>
+                </div>
+                <div className="grid gap-2.5 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-start">
+                  <div>
+                    <label className="studio-control-label" htmlFor={`frx-choice-${group.key}`}>Exact regular-season team</label>
+                    <select id={`frx-choice-${group.key}`} className="studio-select" value={group.selectedTeam} disabled={v4.choiceDisabled}
+                      onChange={event => sim.onRosterChoice(group.key, event.target.value)}>
+                      <option value="">Choose a team</option>
+                      {group.options.map(code => <option key={code} value={code}>{code}</option>)}
+                    </select>
+                  </div>
+                  <details>
+                    <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Evidence rows ({group.evidenceCount})</summary>
+                    <ul className="frx-choice__evidence">{group.evidenceRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
+                  </details>
+                </div>
+              </article>
+            ))}
+          </div>
+          {v4.appliedSummary && (
+            <div className="rounded-xl border border-border/40 bg-raised/30 p-3">
+              <p className="frx-note"><strong className="text-foreground">{v4.appliedSummary.text}</strong>{v4.appliedSummary.suggestionNote ? <><br />{v4.appliedSummary.suggestionNote}</> : ''}</p>
+              {v4.appliedSummary.appliedRows.length > 0 && (
+                <details className="mt-1.5">
+                  <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Applied team choices and provenance</summary>
+                  <ul className="frx-choice__evidence">{v4.appliedSummary.appliedRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
+                </details>
+              )}
+            </div>
+          )}
+        </section>
+      )}
+
+      {path === 'fixture' && !busy && !fixture.meta && <p className="frx-note flex items-center gap-2"><RefreshCcw className="h-3.5 w-3.5" aria-hidden="true" /> Switch source with the cards above at any time before a session is initialized.</p>}
     </div>
   );
 }

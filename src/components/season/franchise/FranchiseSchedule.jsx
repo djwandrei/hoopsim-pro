@@ -3,17 +3,31 @@ import { CalendarCheck2, ChevronRight, FastForward, ShieldCheck } from 'lucide-r
 import { FranchiseTeamMark } from './FranchiseTeamMark';
 import { ghostButton, goldButton, pillClass } from './franchiseUi';
 
-// Season rail: progress rail graphic, the next-game matchup card, advance
-// controls, and the read-only season-completion verification.
+// Game desk: progress rail, the next-game matchup card with both records and
+// a YOU badge on the controlled team, advance controls, and the read-only
+// season-completion verification.
 export default function FranchiseSchedule({ sim }) {
-  const { scheduleProgress, nextGame, scheduleComplete, completion, busy } = sim.view;
+  const { scheduleProgress, nextGame, scheduleComplete, completion, busy, records, team } = sim.view;
   const total = scheduleProgress?.total ?? 0;
   const cursor = scheduleProgress?.cursor ?? 0;
   const pct = total ? Math.min(100, Math.round((cursor / total) * 100)) : 0;
+  const recordOf = code => {
+    const row = (records || []).find(item => item.code === code);
+    return row ? `${row.wins}–${row.losses}` : null;
+  };
+  const renderSide = (code, role) => (
+    <div className="frx-matchup__side">
+      <FranchiseTeamMark code={code} />
+      <strong>{code}</strong>
+      <small>{role}</small>
+      {recordOf(code) && <span className="frx-matchup__rec">{recordOf(code)}</span>}
+      {team?.code === code && <span className="frx-matchup__you">You</span>}
+    </div>
+  );
   return (
     <section className="court-panel frx-panel space-y-4 p-4" aria-labelledby="frx-schedule-title">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="bcast-kicker">Season schedule</p>
+        <p className="bcast-kicker">Game desk · season schedule</p>
         <span className="frx-pill frx-pill--slate">{cursor} / {total} games complete</span>
       </div>
       <div className={`frx-progress ${scheduleComplete ? 'frx-progress--done' : ''}`} role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={cursor}>
@@ -28,9 +42,9 @@ export default function FranchiseSchedule({ sim }) {
       ) : nextGame ? (
         <div>
           <div className="frx-matchup">
-            <div className="frx-matchup__side"><FranchiseTeamMark code={nextGame.away} /><strong>{nextGame.away}</strong><small>Away</small></div>
+            {renderSide(nextGame.away, 'Away')}
             <span className="frx-matchup__vs">AT</span>
-            <div className="frx-matchup__side"><FranchiseTeamMark code={nextGame.home} /><strong>{nextGame.home}</strong><small>Home</small></div>
+            {renderSide(nextGame.home, 'Home')}
           </div>
           <div className="frx-matchup__meta">
             <span>{nextGame.date}</span>

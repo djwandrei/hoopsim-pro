@@ -1,30 +1,57 @@
 import React from 'react';
-import { CheckCircle2, Save } from 'lucide-react';
+import { CheckCircle2, Save, Users } from 'lucide-react';
 import { TeamChip } from './FranchiseTeamMark';
 import { goldButton } from './franchiseUi';
 
-// Team HQ: overview chips, the rotation draft table, and its validation strip.
+// Rotation HQ: overview chips, a minutes-allocation strip against the 240
+// target, the rotation draft table, and its validation strip.
 export default function FranchiseRotation({ sim }) {
   const team = sim.view.team;
   if (team.empty) {
     return (
       <section className="court-panel frx-panel space-y-2 p-4">
-        <p className="bcast-kicker">Team HQ</p>
+        <div className="flex items-center gap-2.5">
+          <span className="frx-head-icon"><Users className="h-4 w-4" aria-hidden="true" /></span>
+          <div><p className="bcast-kicker">Team HQ</p><h3 className="frx-title">Rotation</h3></div>
+        </div>
         <p className="frx-note">{team.text}</p>
       </section>
     );
   }
   const validation = team.validationState;
+  const numericMinutes = row => {
+    const value = Number(row.minutes);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  };
+  const activeRows = team.rows.filter(row => row.active && !row.excluded && !row.unavailable);
+  const totalAssigned = activeRows.reduce((sum, row) => sum + numericMinutes(row), 0);
+  const gapPct = Math.max(0, 100 - Math.min(100, (totalAssigned / 240) * 100));
+  const starterCount = team.rows.filter(row => row.starter && !row.excluded && !row.unavailable).length;
   return (
     <section className="court-panel frx-panel space-y-3 p-4" aria-labelledby="frx-rotation-title">
       <div className="flex flex-wrap items-center justify-between gap-2.5">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <TeamChip code={team.code} name={team.name} />
           <span className="frx-pill frx-pill--green">User-controlled</span>
         </div>
         <span className="frx-pill frx-pill--slate">{team.wins}–{team.losses} <span className="font-normal opacity-75">current record</span></span>
       </div>
-      <p className="frx-note">{team.rosterCount} roster entries · set the active rotation, five starters, and exact minutes (must total 240).</p>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="frx-pill frx-pill--slate">{activeRows.length} active</span>
+        <span className="frx-pill frx-pill--slate">{starterCount} starters</span>
+        <span className={`frx-pill ${Math.abs(totalAssigned - 240) < 0.001 ? 'frx-pill--green' : 'frx-pill--amber'}`}>{Math.round(totalAssigned * 10) / 10}/240 minutes</span>
+      </div>
+      <div>
+        <p className="bcast-kicker mb-1.5">Minutes allocation · target 240</p>
+        <div className="frx-alloc" role="img" aria-label={`Minutes allocation: ${Math.round(totalAssigned)} of 240 minutes assigned`}>
+          {activeRows.map((row, index) => {
+            const minutes = numericMinutes(row);
+            const width = Math.min(100, (minutes / 240) * 100);
+            return <span key={row.name} className={index % 2 ? 'frx-alloc__seg--alt' : 'frx-alloc__seg'} style={{ width: `${width}%` }} title={`${row.name} · ${minutes} min`} />;
+          })}
+          {gapPct > 0.05 && <span className="frx-alloc__gap" style={{ width: `${gapPct}%` }} />}
+        </div>
+      </div>
       <div className="frx-roster -mx-1 overflow-x-auto">
         <table className="w-full min-w-[26rem]">
           <caption>Rotation draft</caption>

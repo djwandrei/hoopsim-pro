@@ -1,0 +1,10 @@
+{
+  "modelSha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7",
+  "source": "uploaded basketball-athlete-pose-studio nine-part archive",
+  "uniforms": 90,
+  "sourceModel": {
+    "path": "basketball-athlete-outfit.glb",
+    "bytes": 37321108,
+    "sha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7"
+  }
+}

@@ -10,8 +10,8 @@ const decode = text => {
 };
 
 // picks: { key: [playerRef, value?] }
-function encodeForgeBuild(mode, picks) {
-  return encode({ v: 1, m: mode, p: picks });
+function encodeForgeBuild(mode, picks, editions) {
+  return encode({ v: 1, m: mode, p: picks, e: editions });
 }
 
 export function decodeForgeBuild(search) {
@@ -27,8 +27,10 @@ export function decodeForgeBuild(search) {
         picks[key] = { playerRef: value[0], value: value.length > 1 ? value[1] : null };
       }
     }
-    return Object.keys(picks).length ? { mode: build.m, picks } : null;
+    const validEditions = ['association', 'icon', 'statement'];
+    const editions = Object.fromEntries(['jersey', 'shorts'].map(element => [element, validEditions.includes(build.e?.[element]) ? build.e[element] : 'icon']));
+    return Object.keys(picks).length ? { mode: build.m, picks, editions } : null;
   } catch { return null; }
 }
 
-export const forgeBuildQuery = payload => new URLSearchParams({ build: encodeForgeBuild(payload.mode, payload.picks) }).toString();
+export const forgeBuildQuery = payload => new URLSearchParams({ build: encodeForgeBuild(payload.mode, payload.picks, payload.editions) }).toString();

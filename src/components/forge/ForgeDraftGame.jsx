@@ -12,6 +12,8 @@ import BucketBoard from '@/components/forge/BucketBoard';
 import ForgeLeagueTour from '@/components/forge/ForgeLeagueTour';
 import ForgePlayerCard from '@/components/forge/ForgePlayerCard';
 import ForgeShareButton from '@/components/forge/ForgeShareButton';
+import ForgeWardrobeControls from '@/components/forge/ForgeWardrobeControls';
+import { DEFAULT_WARDROBE_EDITIONS } from '@/components/forge/forgeWardrobeRules';
 import MetricTile from '@/components/studio/MetricTile';
 import { RotateCcw } from 'lucide-react';
 import { decodeForgeBuild, forgeBuildQuery } from '@/components/forge/forgeReceipt';
@@ -59,6 +61,8 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
   const [showGrades, setShowGrades] = useState(true);
   const [phase, setPhase] = useState('setup');
   const [picks, setPicks] = useState({});
+  const [editions, setEditions] = useState(() => boot?.editions || { ...DEFAULT_WARDROBE_EDITIONS });
+  const onEdition = (element, edition) => setEditions(value => ({ ...value, [element]: edition }));
   const [reveal, setReveal] = useState(null);
   const [selectedKey, setSelectedKey] = useState(null);
   const [spinning, setSpinning] = useState(false);
@@ -113,8 +117,8 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
   }, [picks]);
   useEffect(() => {
     if (phase !== 'complete' || !SKILLS.every(skill => picks[skill.key])) return;
-    window.history.replaceState(null, '', `${window.location.pathname}?${forgeBuildQuery({ mode, picks: buildPayload })}`);
-  }, [phase, picks, mode, buildPayload]);
+    window.history.replaceState(null, '', `${window.location.pathname}?${forgeBuildQuery({ mode, picks: buildPayload, editions })}`);
+  }, [phase, picks, mode, buildPayload, editions]);
 
   const openSkills = SKILLS.filter(skill => !picks[skill.key]);
 
@@ -178,6 +182,7 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
 
   const start = () => {
     setPicks({});
+    setEditions({ ...DEFAULT_WARDROBE_EDITIONS });
     setReveal(null);
     setSelectedKey(null);
     setSpinning(false);
@@ -224,6 +229,7 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
         mode={mode} spinning={spinning} picks={picks}
         reveal={reveal} selectedKey={selectedKey}
         onSelect={selectSkill} onAssign={assign} showGrades={showGrades}
+        editions={editions} onEdition={onEdition}
       />
       <ForgeOvrPanel picks={picks} overall={liveOvr} showGrades={showGrades} onUndo={undo} />
       </div>
@@ -236,17 +242,18 @@ export default function ForgeDraftGame({ source, league, mode, pool: poolProp })
         <div className="space-y-3">
           <div className="court-panel p-4">
             <p className="bcast-kicker">DJHC skill ratings</p>
-            <div className="mx-auto mt-2 max-w-60"><ForgeBuildWheel picks={picks} overall={overall} /></div>
+            <div className="mx-auto mt-2 max-w-60"><ForgeBuildWheel picks={picks} overall={overall} editions={editions} /></div>
+            <div className="mt-3"><ForgeWardrobeControls picks={picks} editions={editions} onEdition={onEdition} /></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <MetricTile label="Buckets filled" value={SKILLS.length} detail="Real player-season donors" tone="positive" />
             {(() => {
               const top = SKILLS.reduce((best, skill) => (!best || picks[skill.key].value > picks[best.key].value ? skill : best), null);
-              return <MetricTile label="Top contributor" value={top.player.name.split(' ').slice(-1)[0]} detail={`${top.label} · DJHC ${top.fmt(picks[top.key].value)}`} tone="royal" />;
+              return <MetricTile label="Top contributor" value={picks[top.key].player.name.split(' ').slice(-1)[0]} detail={`${top.label} · DJHC ${top.fmt(picks[top.key].value)}`} tone="royal" />;
             })()}
           </div>
           <div className="flex flex-col gap-2">
-            <ForgeShareButton encode={() => forgeBuildQuery({ mode, picks: buildPayload })} />
+            <ForgeShareButton encode={() => forgeBuildQuery({ mode, picks: buildPayload, editions })} />
             <button type="button" onClick={start} className="flex min-h-10 items-center justify-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 text-xs font-semibold text-gold transition-colors hover:bg-gold/20"><RotateCcw className="h-3.5 w-3.5" />Draft a new player</button>
           </div>
         </div>

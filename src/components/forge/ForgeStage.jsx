@@ -1,6 +1,7 @@
 import React from 'react';
 import { SKILLS, gradeFor } from '@/components/forge/bapSkills';
-import ForgeFigure3D from '@/components/forge/ForgeFigure3D';
+import ForgeAthlete3D from '@/components/forge/ForgeAthlete3D';
+import ForgeWardrobeControls from '@/components/forge/ForgeWardrobeControls';
 
 // Chip anchors around the silhouette, as a percentage of the stage box.
 const CHIP_LAYOUT = {
@@ -16,7 +17,7 @@ const CHIP_LAYOUT = {
 };
 
 // Center stage of the Build-A-Bucket layout: silhouette with attribute chips.
-export default function ForgeStage({ mode, picks, reveal, selectedKey, onSelect, onAssign, showGrades, spinning }) {
+export default function ForgeStage({ mode, picks, reveal, selectedKey, onSelect, onAssign, showGrades, spinning, editions, onEdition }) {
   const bestLiveKey = (() => {
     if (!reveal || mode !== 'wheel') return null;
     let best = null;let bestRating = -Infinity;
@@ -32,7 +33,7 @@ export default function ForgeStage({ mode, picks, reveal, selectedKey, onSelect,
     <div className="relative z-10 flex w-full min-w-0 flex-1 items-center justify-center px-4 py-6">
       <div className="relative h-72 w-full max-w-xs sm:h-96 sm:max-w-sm">
         <div aria-hidden="true" className="absolute -inset-8" style={{ background: 'radial-gradient(50% 46% at 50% 44%, hsl(var(--court-royal) / 0.35), transparent 72%), radial-gradient(70% 52% at 50% 100%, hsl(var(--court-accent) / 0.12), transparent 72%)' }} />
-        <ForgeFigure3D filled={SKILLS.filter(skill => picks[skill.key]).length} spinning={spinning} className="absolute inset-0 h-full w-full" />
+        <ForgeAthlete3D picks={picks} editions={editions} spinning={spinning} className="absolute inset-0 h-full w-full" />
         {SKILLS.map((skill) => {
           const layout = CHIP_LAYOUT[skill.key] || { side: 'left', top: 50 };
           const pick = picks[skill.key];
@@ -54,5 +55,6 @@ export default function ForgeStage({ mode, picks, reveal, selectedKey, onSelect,
         })}
       </div>
     </div>
+    <ForgeWardrobeControls picks={picks} editions={editions} onEdition={onEdition} />
   </section>;
 }

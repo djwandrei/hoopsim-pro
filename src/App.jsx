@@ -35,6 +35,7 @@ const Account = lazy(() => import('@/pages/Account'));
 const Playbook = lazy(() => import('@/pages/Playbook'));
 const ForgeModelCompare = lazy(() => import('@/pages/ForgeModelCompare'));
 const RealBook = lazy(() => import('@/pages/RealBook'));
+const FranchiseLab = lazy(() => import('@/pages/FranchiseLab'));
 
 // Public studio: no login gate — every route is open. On the site the router
 // lives under /tools/swishiq-studio/ so existing site links keep working.
@@ -51,6 +52,7 @@ function App() {
             {/* Add your page Route elements here */}
             <Route path="/" element={<StudioHome />} />
             <Route path="/season" element={<SeasonLab />} />
+            <Route path="/franchise" element={<FranchiseLab />} />
             <Route path="/players/*" element={<PlayerLab />} />
             <Route path="/chemistry" element={<ChemistryLab />} />
             <Route path="/forge" element={<ForgeLab />} />

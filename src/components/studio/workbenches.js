@@ -1,4 +1,4 @@
-import { Users, FlaskConical, Swords, Zap, CalendarRange, LineChart, Disc3, Banknote, IdCard, PackageOpen, BookOpen } from 'lucide-react';
+import { Users, FlaskConical, Swords, Zap, CalendarRange, LineChart, Disc3, Banknote, IdCard, PackageOpen, BookOpen, Trophy } from 'lucide-react';
 import { studioAsset } from '@/components/studio/teamAssets';
 const EMBLEMS = 'https://www.djshouseofcards-comics.com/tools/swishiq-studio/assets/workbench-icons/';
 export const WORKBENCHES = [
@@ -7,6 +7,7 @@ export const WORKBENCHES = [
   { path: '/forge', icon: Swords, emblem: `${EMBLEMS}composite-forge-icon.webp`, title: 'Composite Forge', tag: 'BUILD & REVIEW', description: 'Choose real player-season skill donors, build your player, and save or replay the source-backed recipe.', flow: 'Player examples → Skills → Build' },
   { path: '/game', icon: Zap, emblem: `${EMBLEMS}game-lab-icon.webp`, title: 'Game Lab', tag: 'MATCHUP SIMULATION', description: 'Play the original single-game, series and campaign challenges with adaptive trials and seeded replay.', flow: 'Matchup → Make your call → Replay' },
   { path: '/season', icon: CalendarRange, emblem: `${EMBLEMS}season-lab-icon.webp`, title: 'Season Lab', tag: 'SEASON REPLAYS', description: 'Replay the real schedule, review the fixed 16-team postseason, and follow the original season history.', flow: 'Schedule → Replay → Season history' },
+    { path: '/franchise', icon: Trophy, title: 'Franchise Lab', tag: 'FRANCHISE CONTROL ROOM', description: 'Load a pinned exact-season scenario, control your team\'s rotation, and play the schedule out game by game.', flow: 'Source → Rotation → Season' },
   { path: '/career', icon: LineChart, emblem: `${EMBLEMS}career-lab-icon.webp`, title: 'Career Lab', tag: 'RECORDED CAREER HISTORY', description: 'Follow observed seasons and team stints across the original pooled 2017–26 archive.', flow: 'Player → Career path → History' },
   { path: '/spin', icon: Disc3, emblem: `${EMBLEMS}spin-room-icon.webp`, title: 'Spin Room', tag: 'ROLE DRAFT & DISCOVERY', description: 'Build a seeded player pool, set exclusions, and reveal repeatable no-repeat picks.', flow: 'Pool → Draw → Selection' },
   { path: '/book', icon: Banknote, emblem: 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/58ccd83aa_BookRoom.png', title: 'Book Room', tag: 'ODDS, MODEL EDGES & BETS', description: 'Shop real NBA lines, see the studio sim\'s model edge on every price, build parlays and teasers, and track every bet to settlement with a play-money bankroll.', flow: 'Board & edges → Bet slip → Track & settle' },

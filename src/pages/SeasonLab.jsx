@@ -18,7 +18,6 @@ import LeagueAwards from '@/components/season/LeagueAwards';
 import SeasonSummaryPanel from '@/components/season/SeasonSummaryPanel';
 import SeasonHistoryPanel from '@/components/season/SeasonHistoryPanel';
 import SeasonCompare from '@/components/season/SeasonCompare';
-import FranchisePreview from '@/components/season/FranchisePreview';
 import { actualRecordsFrom } from '@/lib/season/seasonRecords';
 import SimErrorBanner from '@/components/game/SimErrorBanner';
 import '@/components/season/seasonTables.css';
@@ -132,9 +131,6 @@ export default function SeasonLab() {
             )}
             {tab === 'log' && (
               <PlayerStatsLog team={team} simGames={simGames} />
-            )}
-            {tab === 'franchise' && (
-              <FranchisePreview />
             )}
           </div>
         </MyNbaHub>

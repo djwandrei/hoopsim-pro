@@ -1,12 +1,14 @@
 const ORIGIN = 'https://www.djshouseofcards-comics.com';
+// Updated whenever a pin below is refreshed after review.
+const PIN_CACHE_BUST = '20261008a';
 export const PINS = {
 '/tools/swishiq-studio/react-game-lab-bridge.js':'401a5bfd8a093fb229da6e3a5eb3d744f70eee1815143051c4f5588bed826cd7',
 '/tools/swishiq-studio/react-season-lab-bridge.js':'405d136a1149a9fcdce63bd92aa04793879f77583b0d4729e906afadaa0b3298',
 '/tools/swishiq-studio/simulation-session-ui.js':'2e8296fa24d45652453fae4673a5287a50cda42a9bf5dd8d2701f5906d3fe5f8',
 '/tools/swishiq-studio/game-lab.js':'3cfeed5aacc57162ec7070b4b99c8cb50a90b335ce5988c76425e92eee6b570d',
 '/tools/swishiq-studio/season-lab.js':'d8124963319f7aaacb0510a564fde319fbf53154fe4f5e696ebd7b781be3f947',
-'/tools/swishiq-studio/chemistry-lab.js':'bd8ce12cd5dbc4aec5a8ab896c8cc8a21253cd61e7cc77a0262c1b3e84705349',
-'/tools/swishiq-studio/advanced-labs.js':'b72f1b43803c3312083299947da4043415e336cac744111afef4bb11a630dfc1',
+'/tools/swishiq-studio/chemistry-lab.js':'b209a3acfd8853eb4bc9423c9396dc99b5e2e7a58b6276df67aa048ccf62a9cf',
+'/tools/swishiq-studio/advanced-labs.js':'a921882d9e8809858e7fb2dc886c2b2c3617f0792a6a0277148509325ad2ce84',
 '/tools/swishiq-studio/engine/game-lab-evaluation.js':'01ecbe66fe28823aae1212a848a3eb35e4b1a938a9ade6f2868d3c79f1376022',
 '/tools/result-visuals.js':'a92079689f46f911ad883c201cc78c670987ef4c8aee1504278d13cbd1c01255',
 '/tools/swishiq-studio/engine/simulation-seed.js':'503d60d1eea095a17c71cdf78132d19f243e195f410f3c43cf09146c1ab4e21a',
@@ -66,7 +68,11 @@ export async function readStudioNativeAsset(assetPath, options = {}) {
   if (url.origin !== ORIGIN || (!PINS[url.pathname] && !data) || [...url.searchParams.keys()].some(key => !['v','rev'].includes(key))) throw new Error('This is not an approved public Studio asset.');
   const key = data ? url.pathname + url.search : url.pathname;
   if (assets.has(key)) return assets.get(key);
-  const response = await fetch(url.href, { signal:AbortSignal.timeout(20000), redirect:'manual' });
+  // Pinned script assets are usually requested without a version query, so a
+  // stale CDN cache entry can keep serving an old revision to some egress
+  // paths. Bust the cache explicitly: the digest still gates the revision.
+  const fetchUrl = data ? url.href : `${url.href}${url.search ? '&' : '?'}v=${PIN_CACHE_BUST}`;
+  const response = await fetch(fetchUrl, { signal:AbortSignal.timeout(20000), redirect:'manual' });
   if (!response.ok) throw new Error(`The original Studio asset is unavailable (${response.status}).`);
   const bytes = new Uint8Array(await response.arrayBuffer());
   if (bytes.byteLength > (data ? 18 : 2) * 1024 * 1024) throw new Error('The Studio asset exceeds the bounded relay size.');

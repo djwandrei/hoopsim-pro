@@ -242,6 +242,19 @@
 .frx2k-switch:disabled { opacity: .5; cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .frx2k-switch, .frx2k-switch::before, .frx2k-btn { transition: none; } }
 
+/* Full-width team row with the 2K tile grid */
+.frx2k-team-row { display: grid; gap: .75rem; padding: .9rem 1.1rem; border-bottom: 1px solid hsl(var(--border) / .22); }
+.frx-team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(7.4rem, 1fr)); gap: .5rem; }
+.frx-team-tile { position: relative; display: flex; flex-direction: column; align-items: center; gap: .35rem; min-width: 0; padding: .7rem .4rem .55rem; border-radius: .6rem; border: 1px solid hsl(var(--border) / .45); background: linear-gradient(160deg, hsl(var(--court-surface) / .7), hsl(var(--court-canvas) / .65)); cursor: pointer; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+.frx-team-tile:hover:not(:disabled) { border-color: hsl(var(--court-accent) / .6); transform: translateY(-2px); box-shadow: 0 10px 22px hsl(var(--court-canvas) / .5); }
+.frx-team-tile[data-checked='true'] { border-color: hsl(var(--court-accent)); background: linear-gradient(160deg, hsl(var(--court-accent) / .16), hsl(var(--court-canvas) / .7)); box-shadow: 0 0 0 1px hsl(var(--court-accent) / .45), 0 0 18px hsl(var(--court-accent) / .25); }
+.frx-team-tile:disabled { opacity: .5; cursor: not-allowed; }
+.frx-team-tile__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-display); font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; color: hsl(var(--foreground)); }
+.frx-team-tile[data-checked='true'] .frx-team-tile__name { color: hsl(var(--court-accent)); }
+.frx-team-tile__code { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .18em; color: hsl(var(--muted-foreground)); }
+.frx-team-tile[data-checked='true'] .frx-team-tile__code { color: hsl(var(--court-accent)); }
+@media (prefers-reduced-motion: reduce) { .frx-team-tile { transition: none; } }
+
 /* Compact roster-set radio chips (inside the season row) */
 .frx2k-chip { display: inline-flex; align-items: center; gap: .55rem; cursor: pointer; border-radius: .45rem; border: 1px solid hsl(var(--border) / .55); background: hsl(var(--court-raised) / .35); padding: .55rem .9rem; font-family: var(--font-display); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: hsl(var(--muted-foreground)); transition: border-color .15s ease, background-color .15s ease, color .15s ease; }
 .frx2k-chip input { appearance: none; height: .8rem; width: .8rem; border-radius: 999px; border: 2px solid hsl(var(--border) / .8); transition: border-color .15s ease, box-shadow .15s ease; }

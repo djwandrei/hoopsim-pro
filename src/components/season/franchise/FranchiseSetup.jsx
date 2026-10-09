@@ -1,6 +1,7 @@
 import React from 'react';
 import { Database, Lock, Play } from 'lucide-react';
 import { GENERATED_SHOOTING_RATING_POLICY } from './franchiseLogic';
+import FranchiseTeamSelect from './FranchiseTeamSelect';
 
 // The selected scenario path's setup screen, styled as a 2K-style options
 // menu. Same controls, states and engine calls as before — presentation only.
@@ -35,16 +36,12 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
               {v4.seasons.map(year => <option key={year} value={year}>{year}–{String(year + 1).slice(2)}</option>)}
             </select>
           </div>
-          <div className="frx2k-row">
+          <div className="frx2k-team-row">
             <div>
-              <label className="frx2k-row__label" htmlFor="frx-v4-team">Team to control</label>
+              <span className="frx2k-row__label">Team to control</span>
               <span className="frx2k-row__hint">{v4.teamDisabled ? 'Available after the season package loads.' : 'Pick any of the 30 exact-season franchises.'}</span>
             </div>
-            <select id="frx-v4-team" className="frx2k-select" value={v4.teamSelected} disabled={v4.teamDisabled}
-              onChange={event => sim.setV4UserTeam(event.target.value)}>
-              <option value="">{v4.teamMessage}</option>
-              {v4.teamOptions.map(option => <option key={option.code} value={option.code}>{option.label}</option>)}
-            </select>
+            <FranchiseTeamSelect v4={v4} onPick={sim.setV4UserTeam} />
           </div>
           <div className="frx2k-row">
             <div>

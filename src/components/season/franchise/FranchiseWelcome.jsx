@@ -24,19 +24,12 @@ export default function FranchiseWelcome({ sim, onStart }) {
   const seasons = sim.view.v4?.seasons ?? [];
   return (
     <div className="space-y-4">
-      <section className="frx2k-hero" aria-labelledby="frx-welcome-title">
-        <span className="frx2k-hero__slash" aria-hidden="true" />
-        <span className="frx2k-hero__ghost" aria-hidden="true">Franchise</span>
-        <p className="frx2k-eyebrow">Franchise control room</p>
-        <h2 className="frx2k-hero__title" id="frx-welcome-title">Run a franchise,<br />season by <em>season</em></h2>
-        <p className="frx2k-hero__sub">Take control of an NBA franchise inside the pinned V4 simulation engine: load a verified season package, set your rotation, then play the schedule game by game with box scores, standings, and checkpoints.</p>
-        <div className="relative mt-3 flex flex-wrap items-center gap-3">
-          <button type="button" onClick={onStart} className="frx2k-cta">
-            <span>Start franchise setup <ArrowRight className="h-4 w-4" aria-hidden="true" /></span>
-          </button>
-          <span className="frx-pill frx-pill--green">Engine connected</span>
-        </div>
-      </section>
+      <div className="flex flex-wrap items-center gap-3">
+        <button type="button" onClick={onStart} className="frx2k-cta">
+          <span>Start franchise setup <ArrowRight className="h-4 w-4" aria-hidden="true" /></span>
+        </button>
+        <span className="frx-pill frx-pill--green">Engine connected</span>
+      </div>
       <div className="grid gap-3 sm:grid-cols-3">
         {STEP_CARDS.map((step, index) => {
           const Icon = step.icon;

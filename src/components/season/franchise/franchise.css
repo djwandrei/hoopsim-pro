@@ -128,6 +128,8 @@
 .frx-roster input[type="number"] { width: 5.5rem; min-height: 2.1rem; border-radius: .45rem; border: 1px solid hsl(var(--border) / .5); background: hsl(var(--court-canvas) / .55); padding: .2rem .5rem; font-family: var(--font-mono); font-size: .8rem; color: hsl(var(--foreground)); }
 .frx-roster input[type="number"]:focus { border-color: hsl(var(--court-accent) / .6); outline: none; box-shadow: 0 0 0 3px hsl(var(--court-accent) / .15); }
 .frx-roster input[type="checkbox"] { height: 1.05rem; width: 1.05rem; accent-color: hsl(var(--court-accent)); }
+.frx-usage-control { display: inline-flex; align-items: center; gap: .45rem; font-family: var(--font-mono); font-size: .7rem; color: hsl(var(--court-accent)); }
+.frx-usage-control input[type="range"] { width: 6.25rem; accent-color: hsl(var(--court-accent)); }
 
 /* === Rotation validation strip === */
 .frx-validation { display: flex; align-items: center; gap: .55rem; padding: .5rem .7rem; border-radius: .55rem; border: 1px solid hsl(var(--border) / .4); font-size: .68rem; line-height: 1.45; }
@@ -172,6 +174,20 @@
 .frx-board-state { display: inline-flex; align-items: center; gap: .3rem; justify-self: end; }
 .frx-board-month { position: sticky; top: 0; z-index: 1; padding: .55rem .6rem .3rem; background: hsl(var(--card)); font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: hsl(var(--court-accent)); }
 @media (max-width: 639px) { .frx-board-row { grid-template-columns: 4.4rem minmax(0, 1fr) auto minmax(0, 1fr); } .frx-board-state { display: none; } }
+.frx-board-calendar-title { min-width: 8rem; text-align: center; font-family: var(--font-display); font-size: 1rem; letter-spacing: .06em; }
+.frx-calendar-scroll { overflow-x: auto; padding-bottom: .25rem; }
+.frx-calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .3rem; min-width: 42rem; }
+.frx-calendar-weekday { padding: .35rem .45rem; border-bottom: 1px solid hsl(var(--border) / .5); font-family: var(--font-mono); font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-align: right; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.frx-calendar-day { display: flex; min-width: 0; min-height: 7rem; flex-direction: column; gap: .3rem; padding: .35rem; border: 1px solid hsl(var(--border) / .34); border-radius: .45rem; background: hsl(var(--court-canvas) / .32); }
+.frx-calendar-day--empty { border-color: transparent; background: transparent; }
+.frx-calendar-day__number { align-self: flex-end; color: hsl(var(--muted-foreground)); font-family: var(--font-mono); font-size: .65rem; }
+.frx-calendar-day__games { display: grid; align-content: start; gap: .2rem; }
+.frx-calendar-game { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: .15rem; padding: .18rem .25rem; border-left: 2px solid hsl(var(--border) / .55); border-radius: .2rem; background: hsl(var(--court-raised) / .55); font-size: .55rem; line-height: 1.25; color: hsl(var(--muted-foreground)); }
+.frx-calendar-game > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.frx-calendar-game strong, .frx-calendar-game small { flex: 0 0 auto; font-family: var(--font-mono); font-size: .52rem; color: hsl(var(--foreground)); }
+.frx-calendar-game--mine { border-left-color: hsl(var(--court-accent)); color: hsl(var(--foreground)); }
+.frx-calendar-game--next { border-color: hsl(var(--court-accent)); background: hsl(var(--court-accent) / .12); color: hsl(var(--court-accent)); }
+@media (max-width: 639px) { .frx-calendar-day { min-height: 5.5rem; padding: .25rem; } .frx-calendar-grid { gap: .2rem; } }
 
 /* === NBA2K-style launch theme (MyNBA control room) === */
 .frx2k-hero { position: relative; overflow: hidden; display: grid; gap: .55rem; padding: 1.9rem 1.5rem 1.6rem; border-radius: 1rem; border: 1px solid hsl(var(--border) / .4); background:

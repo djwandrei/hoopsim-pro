@@ -1,0 +1,19 @@
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType application/wasm .wasm
+</IfModule>
+
+<IfModule mod_headers.c>
+  <Files "index.html">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </Files>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /tools/swishiq-studio/
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  # Rewrite app routes only. Missing data, native modules and assets stay 404.
+  RewriteRule ^(?:sims(?:/(?:season|game|franchise))?|analytics(?:/career)?|players(?:/[^.]*)?|chemistry|forge|forge-models|spin|book|real-book|daily-games(?:/(?:fix-the-five|draft-night))?|lineup-lab|tools/shared-result|pool-mockup|collector|matchups|packs|playbook|workshop|account|login|register|forgot-password|reset-password|oauth-consent)/?$ index.html [L]
+</IfModule>

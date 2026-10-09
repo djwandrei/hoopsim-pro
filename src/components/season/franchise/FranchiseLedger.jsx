@@ -1,7 +1,5 @@
 import React from 'react';
 import { ScrollText } from 'lucide-react';
-import { FranchiseTeamMark } from './FranchiseTeamMark';
-
 // Ledger: the recent completed games and actions as a broadcast timeline.
 export default function FranchiseLedger({ view }) {
   const { history, historyEmpty } = view;

@@ -33,4 +33,9 @@ export function decodeForgeBuild(search) {
   } catch { return null; }
 }
 
+export function initialForgeDraftMode(search, supportedModes = ['wheel']) {
+  const mode = decodeForgeBuild(search)?.mode;
+  return supportedModes.includes(mode) ? mode : supportedModes[0] || 'wheel';
+}
+
 export const forgeBuildQuery = payload => new URLSearchParams({ build: encodeForgeBuild(payload.mode, payload.picks, payload.editions) }).toString();

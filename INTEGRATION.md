@@ -1,122 +1,99 @@
-# SwishIQ Studio — Site Integration Guide
+# SwishIQ Studio site integration
 
-This package is the SwishIQ Studio web app (React + Vite) prepared for direct
-integration into **djshouseofcards-comics.com**, replacing the current
-SwishIQ Studio. It is fully public (no login), self-contained in a static
-build, and loads all of its data and gameplay from your site same-origin —
-**no server-side code or changes to your data pipeline are required.**
+The app builds as a static site under `/tools/swishiq-studio/`. Canonical data,
+native runtime modules, and public media remain at their existing DJHC URLs;
+browsers request them from the same origin as the Studio page. Vite includes
+this repository's checked-in `public/` assets in `dist/`, but the much larger
+external storefront checkout and its 3.83 GB data tree stay outside the app
+build.
 
-## 1. Build
+## Local development
 
-```bash
-npm ci
-npm run build:site
-```
+See [README.md](./README.md) for the install, dev, build, and preview commands.
+Vite's local bridge maps only approved public URL paths to the local DJHC
+checkout, serves files read-only, and streams them without copying the
+storefront data into `dist/`. Set `DJHC_SITE_ROOT` when the checkout is not at
+the default path.
 
-The `VITE_STANDALONE=true` flag compiles the standalone site build:
-- The app is built with the base path `/tools/swishiq-studio/`.
-- All Base44-specific runtime (auth, relays, SDK) is compiled out.
-- Without the flag, the app builds in "Base44 preview" mode (for hosted
-  development only) — never deploy that build to the site.
+The bridge maps these existing public paths:
 
-## 2. Deployment
+- `/lineup-lab/` (the reviewed Lineup Lab source modules and fixture files)
+- `/tools/swishiq-studio/data/`
+- `/tools/swishiq-studio/engine/`
+- `/tools/swishiq-studio/franchise-sim-20261008/`
+- `/tools/swishiq-studio/react-app/`
+- `/tools/swishiq-studio/assets/`
+- `/tools/swishiq-studio/*.js`, `*.mjs`, `*.css`, `*.html`, and supported
+  public static-file types
+- `/products-public.json`, `/backend-config.js`, `/supabase-client.js`,
+  `/vendor/supabase.min.js`, and the public storefront HTML paths used by the
+  Studio shell (`/about.html`, `/account.html`, `/basketball-cards.html`,
+  `/collectibles.html`, `/comics.html`, `/contact.html`, `/index.html`,
+  `/policies.html`, `/returns.html`, `/sell-trade-want-list.html`,
+  `/shipping.html`, `/shop.html`, and `/sports-cards.html`)
+- `/assets/dj-logo.png`, `/assets/placeholder-basketball.svg`,
+  `/tools/collection-lineup-builder/collection-fit-core.js`,
+  `/tools/result-visuals.js`, `/tools/result-passport.js`,
+  `/tools/shared-result/public-keys.js`, `/tools/swishiq-static-projection.js`,
+  `/tools/swishiq-daily-game-client.js`, `/tools/team-assets.js`, and
+  `/tools/fan-tools.css`
+- `/assets/nba-logos/`, `/assets/games/`, and the two public NBA headshot trees
 
-Copy everything from `dist/` into your site so that:
+The bridge also maps checked-in build artifacts under the Studio prefix during
+local development: `/tools/swishiq-studio/djhc-runtime/` and
+`/tools/swishiq-studio/swishiq-game-sim/`. This keeps direct base-path checks
+and native module loading on JavaScript/JSON responses instead of the SPA
+fallback; the same files are copied into `dist/` for preview.
 
-- `/tools/swishiq-studio/index.html` serves the app.
-- `/tools/swishiq-studio/assets/...` (hashed JS/CSS bundles) are served as-is.
-- `/tools/swishiq-studio/djhc-chrome.css` — shared chrome stylesheet (if your
-  site already serves one, it can be skipped/overwritten).
-`dist/` contains only the app itself — no offline data snapshots.
-- `/tools/swishiq-studio/studio-assets/forge/` — two silhouette images used by
-  the Forge workbench. Copy them into your site's asset tree (e.g.
-  `/assets/forge/`) only if you relocate them; see §5.
+Missing files in these namespaces return a plain 404. The bridge has no write
+routes, does not list directories, and rejects paths that target `.env`,
+`.git`, `.deploy`, or `products.json`.
 
-**Server configuration (the one required site change):** the app is a single
-page application. Your server must return `index.html` for **any path under
-`/tools/swishiq-studio/` that does not match a static file** (all other files
-are served statically). The main entry points:
+### Lineup Lab controller
 
-| Route | Page |
+The checked-in `public/djhc-runtime/lineup-controller.js` is generated from
+the reviewed storefront `lineup-lab/app.js` by
+`scripts/prepare-lineup-runtime.mjs`. It contains the original source SHA-256,
+keeps static imports outside `mountLineupController(...)`, rewrites relative
+imports to same-origin `/lineup-lab/` or `/tools/` URLs, and leaves the
+controller's cleanup and initialization under the returned mount handle. The
+generator fails closed if the source import or initialization contract changes.
+`npm run dev`, `npm run build`, and `npm run build:site` prepare it before
+starting or compiling; an existing checked-in module allows builds without a
+local storefront checkout.
+
+## Build output
+
+Run `npm run build` or `npm run build:site`; both write a static app to `dist/`
+with the `/tools/swishiq-studio/` base path. To check that output locally, run
+`npm run preview` and open `http://localhost:4173/tools/swishiq-studio/`.
+
+Serve the built app shell and its generated assets at
+`/tools/swishiq-studio/`. Existing DJHC public data and native files remain
+served at their original website-root paths. The hosting layer must route
+Studio page paths to the app shell while serving data and static files
+directly; a missing data or asset file must remain a 404 instead of receiving
+the app shell.
+
+## Studio routes
+
+The app shell serves these client-side routes:
+
+| Route | Area |
 | --- | --- |
-| `/tools/swishiq-studio/` | Studio home |
-| `/tools/swishiq-studio/sims/…` | Sims & What-ifs hub, Season / Game / Franchise labs |
-| `/tools/swishiq-studio/analytics/…` | Analytics hub, Career Lab |
-| `/tools/swishiq-studio/players/*` | Player Lab (all player pages) |
-| `/tools/swishiq-studio/chemistry/` | Chemistry Lab |
-| `/tools/swishiq-studio/forge/`, `/forge-models/` | Composite Forge |
-| `/tools/swishiq-studio/lineup-lab/` | NBA Lineup Lab |
-| `/tools/swishiq-studio/spin/` | Spin Room |
-| `/tools/swishiq-studio/book/`, `/real-book/` | Sportsbook (play-money / real-money) |
-| `/tools/swishiq-studio/daily-games/…` | Daily Games hub, Fix the Five, Draft Night |
-| `/tools/swishiq-studio/collector/…` | Collector Center, Player & Cards, Virtual Packs |
-| `/tools/swishiq-studio/playbook/` | Playbook |
-| `/tools/swishiq-studio/workshop/` | Workshop |
-| `/tools/swishiq-studio/account/` | Account |
+| `/` | Studio home |
+| `/sims/…` | Sims and What-ifs, Season Lab, Game Lab, Franchise Lab |
+| `/analytics/…` | Analytics and Career Lab |
+| `/players/*` | Player Lab |
+| `/chemistry/` | Chemistry Lab |
+| `/forge/`, `/forge-models/` | Composite Forge |
+| `/lineup-lab/` | NBA Lineup Lab |
+| `/spin/` | Spin Room |
+| `/book/` | Play-money sportsbook |
+| `/daily-games/…` | Daily Games, Fix the Five, Draft Night |
+| `/collector/…` | Collector Center and virtual packs |
+| `/playbook/` | Playbook |
+| `/workshop/` | Workshop |
+| `/account/` | Account |
 
-The previous studio page at `/tools/swishiq-studio/` is fully replaced, so
-every existing site link that points there keeps working.
-
-## 3. Data — loads from your site, same-origin, zero server code
-
-The app reads the same published sources your current studio uses, directly
-from `/tools/swishiq-studio/data/` (same-origin, browser-cached via the
-existing `?v=` / `?rev=` cache-busting parameters):
-
-| Source | Size | Used by |
-| --- | --- | --- |
-| `v4/releases/v4-site-12ad90dc8710/registry.json` | small | release pin + package discovery |
-| exact-season package parts (`team-styles`, `roster-memberships`, `player-seasons`, `player-entities`) per season | ~1–15 MB each | Season/Player/Forge/Game labs |
-| `nba-actual-schedules-v1.json` | ~2 MB | Season Lab schedule |
-| `player-metadata.json` | ~0.2 MB | headshot mapping |
-| `public-player-context-v2.json` | ~34 MB | player context & public stats (cached in-memory + browser cache) |
-| pooled `player-seasons` artifact | ~121 MB | Career Lab only — **streamed** record-by-record in the browser (never fully parsed), reduced to career rows, cached for the session |
-
-Notes:
-- The V4 release pin lives in `src/lib/season/seasonSourceCore.js`
-  (`V4_RELEASE = 'v4/releases/v4-site-12ad90dc8710'`). When you publish a new
-  V4 release, update this constant (and the `?v=` cache-bust strings) — the
-  app discovers everything else from the registry dynamically.
-- Supported seasons: 2017-18 through 2025-26 (`SUPPORTED_YEARS` in the same
-  file).
-
-## 4. Native workbenches (original gameplay)
-
-The Chemistry, Advanced, Game and Season native workbenches load your site's
-own module files (e.g. `chemistry-lab.js`, `advanced-labs.js`,
-`react-*-lab-bridge.js` and their imports) same-origin, and each one is
-verified against reviewed SHA-256 pins **in the browser** before execution:
-- Pins live in `base44/shared/studioNativeAssets.ts` (`PINS` map).
-- If a module's hash does not match its pin, the workbench refuses to run —
-  so a site update can never silently change gameplay.
-- **When your site updates the studio's modules, refresh the pins**: fetch
-  each pinned file, compute SHA-256, and update the map.
-- All pins were last verified against the live site on 2026-10-02.
-
-## 5. Assets the app expects on your site
-
-| Path on the site | Contents |
-| --- | --- |
-| `/assets/nba-logos/…` | team logos, including `retro-opaque/` variants (already on your site) |
-| `/assets/games/swishiq-studio-emblem-20260913.png` | studio emblem / favicon (already on your site) |
-| `/assets/player-headshots/{nba,nba-no-background}/…` | player headshots, referenced from `player-metadata.json` (already on your site) |
-| `/tools/swishiq-studio/studio-assets/forge/` | `basketball-silhouette-light.png` + `basketball-silhouette-dark.png` (new — copy from the build's `dist/studio-assets/forge/`) |
-
-## 6. What was removed for the standalone build
-
-- Login/registration and all auth gating — the studio is public, like your
-  current one. (Auth-related shims remain only to satisfy the app-shell
-  contract and are inert.)
-- The Base44 data relay: replaced by in-browser source building
-  (`src/lib/season/seasonSourceCore.js`) and direct same-origin loading
-  (`src/components/native/nativeTransport.js`).
-- The Base44 SDK itself: aliased to a no-op stub (`src/lib/base44SdkStub.js`)
-  in the standalone build, so no Base44 runtime ships in the site bundle —
-  verified by scanning the built JS for SDK code.
-- The route base name and logo/asset paths switch automatically via
-  `src/lib/deployConfig.js` — no code edits needed at integration time.
-- Hosted-only features degrade inertly on the static site: the real-money
-  book (`/real-book/`), account/checkout flows, and hosted credits need the
-  Base44 runtime and are no-ops in the standalone bundle. The play-money
-  Sportsbook, daily games (which call the site's own evaluator endpoint), and
-  all sim/analytics workbenches are fully functional same-origin.
+Every route is under `/tools/swishiq-studio/` on the site.

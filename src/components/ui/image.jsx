@@ -12,8 +12,8 @@ const FALLBACK_IMAGE_URL =
 
 /**
  * Image with built-in Wix Media Platform support: canonical public images on
- * media.base44.com and static.wixstatic.com/media are resized to the rendered
- * container per device pixel ratio and re-encoded to WebP; `fittingType="fill"`
+ * static.wixstatic.com/media images are resized to the rendered container per
+ * device pixel ratio and re-encoded to WebP; `fittingType="fill"`
  * crops server-side, optionally anchored at a focal point. Other URLs render
  * as a plain <img>. Failed transforms retry the original URL; only a broken
  * original swaps to the generic fallback image.
@@ -33,40 +33,26 @@ const Image = React.forwardRef(
     },
     ref
   ) => {
-    const [previewSource, setPreviewSource] = React.useState(null)
-    const preview = previewSource?.source === source ? previewSource : null
-    const src = preview ? preview.value : source
-    const replaceSource = (value, className) => setPreviewSource({
-      source, value, className, sourceClassName: props.className,
-    })
-    React.useEffect(() => setPreviewSource(null), [source])
-    const parsedSource = src && src !== FALLBACK_IMAGE_URL ? parseWixMediaUrl(src) : null
+    const parsedSource = source && source !== FALLBACK_IMAGE_URL ? parseWixMediaUrl(source) : null
     const initialMode = parsedSource ? IMAGE_LOAD_MODE.OPTIMIZED : IMAGE_LOAD_MODE.ORIGINAL
-    const [loadState, setLoadState] = React.useState({ src, mode: initialMode })
-    const mode = loadState.src === src ? loadState.mode : initialMode
+    const [loadState, setLoadState] = React.useState({ src: source, mode: initialMode })
+    const mode = loadState.src === source ? loadState.mode : initialMode
 
     React.useEffect(() => {
-      setLoadState({ src, mode: initialMode })
-    }, [src, initialMode])
+      setLoadState({ src: source, mode: initialMode })
+    }, [source, initialMode])
 
     const handleError = (event) => {
       if (mode === IMAGE_LOAD_MODE.FALLBACK) return
       const nextMode = nextImageLoadMode(mode)
-      setLoadState({ src, mode: nextMode })
+      setLoadState({ src: source, mode: nextMode })
       if (nextMode === IMAGE_LOAD_MODE.FALLBACK) onError?.(event)
     }
 
-    const imageProps = {
-      ...props,
-      className: preview && preview.sourceClassName === props.className ? preview.className : props.className,
-      onError: handleError,
-    }
+    const imageProps = { ...props, onError: handleError }
 
-    if (!src) {
-      // Renders as a real <img> (not a <div>) — the visual editor's
-      // click-to-edit toolbar keys its "Replace Image" action off the DOM
-      // tag being `img`, so a placeholder div would be unrecoverable in the
-      // editor. FALLBACK_IMAGE_URL doubles as the "no image chosen" graphic.
+    if (!source) {
+      // Keep an empty image source visible as a real image element.
       return <img ref={ref} src={FALLBACK_IMAGE_URL} {...imageProps} data-empty-image />
     }
 
@@ -76,7 +62,7 @@ const Image = React.forwardRef(
 
     if (!parsed) {
       const isErrorMode = mode === IMAGE_LOAD_MODE.FALLBACK
-      const imageSrc = isErrorMode ? FALLBACK_IMAGE_URL : getOriginalImageUrl(src, parsedSource)
+      const imageSrc = isErrorMode ? FALLBACK_IMAGE_URL : getOriginalImageUrl(source, parsedSource)
       return (
         <img ref={ref} src={imageSrc} {...imageProps} data-error-image={isErrorMode || undefined} />
       )
@@ -94,9 +80,7 @@ const Image = React.forwardRef(
     return (
       <ResponsiveImage
         ref={ref}
-        src={src}
         parsed={parsed}
-        onSourceChange={replaceSource}
         fittingType={fittingType}
         focalPoint={focalPoint}
         quality={quality}

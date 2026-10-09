@@ -11,15 +11,13 @@ import BetTracker from '@/components/book/BetTracker';
 import OddsSetupState from '@/components/book/OddsSetupState';
 import ModelEdgePanel from '@/components/book/ModelEdgePanel';
 import WalletPanel from '@/components/book/WalletPanel';
-import BuyCreditsDialog from '@/components/book/BuyCreditsDialog';
 import useSeasonSource from '@/hooks/useSeasonSource';
 import useBookFeed from '@/hooks/useBookFeed';
 import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsStore';
-import { gradeBet, profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRobinCombos, TEASER_POINTS } from '@/components/book/betsMath';
+import { profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRobinCombos, TEASER_POINTS } from '@/components/book/betsMath';
 import { modelEdgePct } from '@/lib/bookRoom/modelEdge';
-import { base44 } from '@/api/base44Client';
 import { trackGa4 } from '@/lib/gaBridge';
-import { AlertTriangle, Coins, RefreshCcw, UserRound, Wallet } from 'lucide-react';
+import { AlertTriangle, RefreshCcw, UserRound, Wallet } from 'lucide-react';
 
 const BONUS_AMOUNT = 250;
 const BONUS_COOLDOWN = 24 * 3600 * 1000;
@@ -40,17 +38,15 @@ const makeBet = (legs, stake, price, extra = {}) => ({
   ...extra,
 });
 
-// Book Room — the studio's play-money sportsbook, powered by our own season
-// sim: real NBA lines with the SwishIQ model edge on every price, parlays,
-// round robins, teasers, boosts, early cash-out and a tracked credits wallet.
+// Book Room — the studio's local play-money shell. The pricing/settlement
+// backend is intentionally disconnected until its separate service is ready.
 export default function BookRoom() {
-  usePageMeta({ title: 'Sportsbook — SwishIQ Studio', description: 'A play-money sportsbook powered by the studio sim: real NBA lines with model edges, parlays, teasers, round robins, odds boosts, early cash-out and a tracked SwishIQ Credits wallet.' });
+  usePageMeta({ title: 'Sportsbook — SwishIQ Studio', description: 'A local play-money sportsbook shell. Live prices, paid credits, and server settlement are planned backend work.' });
   const [view, setView] = useState('events');
   const [format, setFormat] = useState(() => { try { return localStorage.getItem('swishiq-odds-format') || 'american'; } catch { return 'american'; } });
   const [book, setBook] = useState(loadBook);
   const [slipLegs, setSlipLegs] = useState([]);
   const [bookFilter, setBookFilter] = useState('');
-  const [showBuy, setShowBuy] = useState(false);
   const [checking, setChecking] = useState(false);
   const { league, state: seasonState } = useSeasonSource(2025);
   const { feed, loadOdds, model, movement, boosts, propsByEvent } = useBookFeed(league, seasonState);
@@ -59,55 +55,11 @@ export default function BookRoom() {
   useEffect(() => { try { localStorage.setItem('swishiq-odds-format', format); } catch { /* ignore */ } }, [format]);
 
   const checkFinals = useCallback(async () => {
-    setChecking(true);
-    try {
-      const response = await base44.functions.invoke('swishiqOddsFeed', { kind: 'scores' });
-      const finals = response.data?.finals || [];
-      setBook(current => {
-        const entries = [];
-        let bankroll = current.bankroll, changed = false;
-        const bets = current.bets.map(bet => {
-          if (bet.status !== 'open') return bet;
-          const result = gradeBet(bet, key => finals.find(item => item.eventKey === key));
-          if (!result) return bet;
-          changed = true;
-          // Reduced parlays pay at their reduced price.
-          const payoutPrice = Number.isFinite(result.price) ? result.price : bet.price;
-          const returned = result.status === 'won' ? bet.stake + profitFor(bet.stake, payoutPrice) : result.status === 'push' ? bet.stake : 0;
-          bankroll += returned;
-          if (returned > 0) entries.push({ id: `settle-${bet.id}`, at: new Date().toISOString(), type: result.status === 'push' ? 'void' : 'payout', label: `${result.status === 'won' ? 'Won' : 'Push'}: ${bet.matchup}`, amount: returned });
-          return { ...bet, status: result.status, price: payoutPrice, settledAt: new Date().toISOString(), profit: returned - bet.stake };
-        });
-        return changed ? { ...current, bankroll, bets, ledger: pushLedger(current.ledger, entries) } : current;
-      });
-    } catch { /* finals need the connected feed */ }
     setChecking(false);
   }, []);
 
-  useEffect(() => { loadOdds(); }, [loadOdds]);
-
-  // Returning from a credits checkout: verify server-side, then credit the
-  // bankroll exactly once per paid session (ledger id = the session id, so a
-  // re-verified session can never double-credit the wallet).
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get('credits_session');
-    if (!sessionId) return undefined;
-    window.history.replaceState({}, '', window.location.pathname);
-    (async () => {
-      try {
-        const response = await base44.functions.invoke('bookRoomVerifyPurchase', { sessionId });
-        const credits = Math.floor(Number(response.data?.credits)) || 0;
-        if (!credits) return;
-        setBook(current => current.ledger.some(entry => entry.id === `purchase-${sessionId}`) ? current
-          : { ...current, bankroll: current.bankroll + credits, ledger: pushLedger(current.ledger, { id: `purchase-${sessionId}`, at: new Date().toISOString(), type: 'purchase', label: 'SwishIQ Credits pack', amount: credits }) });
-      } catch { /* unverified purchases grant no credits */ }
-    })();
-    return undefined;
-  }, []);
-
   const openCount = book.bets.filter(bet => bet.status === 'open').length;
-  // Live tracking: re-check finals every minute while the book is exposed.
+  // The settlement callback remains a no-op while the backend is planned.
   useEffect(() => {
     if (feed.state !== 'ready' || openCount === 0) return;
     const id = setInterval(checkFinals, 60000);
@@ -196,13 +148,12 @@ export default function BookRoom() {
   }, [feed.games]);
 
   const headerState = feed.state === 'loading' ? 'loading' : feed.state === 'ready' ? 'ready' : 'error';
-  const headerStatus = feed.state === 'ready' ? `${feed.games.length} games priced · model edge live` : feed.state === 'setup' ? 'Feed not connected · tracking still works' : feed.state === 'error' ? 'Feed unavailable' : null;
+  const headerStatus = feed.state === 'ready' ? `${feed.games.length} games priced · model edge live` : feed.state === 'setup' ? 'Odds backend planned · local wallet available' : feed.state === 'error' ? 'Feed unavailable' : null;
   return <StudioShell active="/book">
-    <PickDeskHero description="Play-money sportsbook powered by the studio's own sim — real NBA lines with model edges, featured picks, parlays, round robins and teasers, live movement and daily boosts, early cash-out, all settled against real finals in SwishIQ Credits, never real stakes." games={feed.state === 'ready' ? feed.games : null} status={headerStatus} state={headerState}
+    <PickDeskHero description="Local play-money sportsbook shell with a tracked browser wallet. Live lines, model pricing, paid credits, and server settlement will connect through the planned backend." games={feed.state === 'ready' ? feed.games : null} status={headerStatus} state={headerState}
       balance={<span className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2" aria-label="Bankroll"><Wallet className="h-3.5 w-3.5 text-gold" aria-hidden="true" /><span className="font-mono text-xs font-bold text-gold">{book.bankroll.toLocaleString()} cr</span></span>} />
     <PickDeskStrip tab={view} onTab={setView} tabs={[['events', 'Events'], ['featured', 'Featured'], ['wallet', 'Wallet & Credits']]} format={format} onFormat={setFormat}
       links={[
-        { label: 'Buy credits', Icon: Coins, onClick: () => setShowBuy(true), gold: true },
         { to: '/account', label: 'Account', Icon: UserRound },
       ]} />
     <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
@@ -225,8 +176,7 @@ export default function BookRoom() {
             bets={<BetTracker book={book} format={format} cashOutFor={bet => cashOutValue(bet, priceForLeg)} onSettle={settleBet} onVoid={voidBet} onCashOut={cashOutBet} onCheckFinals={checkFinals} checking={checking} feedReady={feed.state === 'ready'} onReset={() => setBook(resetBook())} />} />
         </div>
       </div>}
-      <BuyCreditsDialog open={showBuy} onOpenChange={setShowBuy} />
-      <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Play-money book: wagers are tracked in SwishIQ Credits and settle against real sportsbook results — no real-money wagering happens here. Model edge is the studio sim's probability minus the book's implied probability at last refresh; boosts apply to new wagers only and cash-out uses the unboosted live market.</p>
+      <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Play-money book: local credits and bet history stay in this browser. Live prices, paid credit purchases, and server settlement remain planned backend work.</p>
     </main>
   </StudioShell>;
 }

@@ -31,9 +31,9 @@ function App() {
           <ErrorBoundary>
           <Suspense fallback={<RouteFallback />}>
           <Routes>
-            <Route element={<Layout />}>
+            <Route path="/*" element={<Layout />}>
               {APP_ROUTES.map(({ path, element }) => (
-                <Route key={path} path={path} element={element} />
+                <Route key={path} path={path.replace(/^\/+/, '')} element={element} />
               ))}
             </Route>
             <Route path="*" element={<PageNotFound />} />

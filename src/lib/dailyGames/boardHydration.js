@@ -56,26 +56,28 @@ export const statDisplay = value => Number.isFinite(value) ? value.toFixed(1) : 
  */
 export function hydratePresentationBoard(board, { playerSeasons = [], metadata } = {}) {
   const byRef = new Map();
+  const v4 = board.format === 'djhc-swishiq-static-daily-board-v4';
+  const year = board.packageRef.scope.seasonStartYear ?? board.packageRef.scope.seasonStartYears?.[0];
+  const nameKey = name => String(name ?? '').normalize('NFC').replace(/[\u2018\u2019\u201B\u0060\u00B4]/g, "'").toLowerCase().trim().replace(/\s+/g, ' ');
+  const scopedKey = (name, team, season, phase) => `${nameKey(name)}|${team}|${season}|${phase}`;
+  const fields = ['games', ...COMPARISON_STAT_FIELDS];
   for (const row of playerSeasons || []) {
     if (!row.playerRef || !row.games || !row.minutes) continue;
     if (board.packageRef.phase && row.phase && row.phase !== board.packageRef.phase) continue;
-    const prev = byRef.get(row.playerRef);
+    if (v4 && (row.seasonStartYear !== year || row.phase !== board.packageRef.phase)) continue;
+    const key = v4 ? scopedKey(row.name, row.teamCode, row.seasonStartYear, row.phase) : row.playerRef;
+    const prev = byRef.get(key);
     if (prev) {
-      prev.games += row.games; prev.minutes += row.minutes;
-      prev.points += row.points; prev.rebounds += row.rebounds; prev.assists += row.assists;
+      for (const field of fields) prev[field] = Number.isFinite(prev[field]) && Number.isFinite(row[field]) ? prev[field] + row[field] : null;
     } else {
-      byRef.set(row.playerRef, { games: row.games, minutes: row.minutes, points: row.points, rebounds: row.rebounds, assists: row.assists });
+      byRef.set(key, Object.fromEntries(fields.map(field => [field, Number.isFinite(row[field]) ? row[field] : null])));
     }
   }
   const decorate = (player) => {
-    const totals = byRef.get(player.playerRef);
+    const key = v4 ? scopedKey(player.displayName, player.teamCode, player.seasonStartYear, player.phase) : player.playerRef;
+    const totals = byRef.get(key);
     const games = totals?.games || 0;
-    const publicStats = games > 0 ? {
-      points: totals.points / games,
-      rebounds: totals.rebounds / games,
-      assists: totals.assists / games,
-      minutes: totals.minutes / games,
-    } : null;
+    const publicStats = games > 0 ? Object.fromEntries(COMPARISON_STAT_FIELDS.map(field => [field, Number.isFinite(totals[field]) ? totals[field] / games : null])) : null;
     const meta = metadata ? metadataForPlayer(metadata, player.displayName, player.seasonStartYear) : null;
     return { ...player, publicStats, headshotPath: meta?.headshotPath || null, age: meta?.age ?? null };
   };

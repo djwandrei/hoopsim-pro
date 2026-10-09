@@ -53,42 +53,24 @@ export async function gameSimJson(path) {
   return { data: JSON.parse(asset.text), sha256: asset.sha256 };
 }
 
-// Module loading mirrors the native bridge: each reviewed module is re-hosted
-// as an immutable Blob module with its relative imports rewritten to verified
-// sibling Blob URLs, so the studio executes only pinned bytes — and the same
-// specifier always resolves to the same module instance.
-const moduleUrls = new Map();
-const importPattern = /from\s*(['"])(\.{1,2}\/[^'"]+)\1/g;
-function gameSimModuleUrl(path) {
-  if (!moduleUrls.has(path)) {
-    const task = (async () => {
-      const asset = await gameSimAsset(path);
-      const matches = [...asset.text.matchAll(importPattern)];
-      const resolved = await Promise.all(matches.map(match => {
-        const directory = path.includes('/') ? path.slice(0, path.lastIndexOf('/') + 1) : '';
-        const stack = [];
-        for (const segment of (directory + match[2]).split('/')) {
-          if (segment === '.' || segment === '') continue;
-          if (segment === '..') stack.pop(); else stack.push(segment);
-        }
-        return gameSimModuleUrl(stack.join('/'));
-      }));
-      let text = asset.text;
-      for (let index = matches.length - 1; index >= 0; index -= 1) {
-        const match = matches[index];
-        const start = match.index;
-        const end = start + match[0].length;
-        text = text.slice(0, start) + match[0].replace(`${match[1]}${match[2]}${match[1]}`, JSON.stringify(resolved[index])) + text.slice(end);
-      }
-      return URL.createObjectURL(new Blob([text], { type: 'text/javascript' }));
-    })();
-    moduleUrls.set(path, task);
-    task.catch(() => moduleUrls.delete(path));
+// Native ESM uses same-origin files, so the host CSP need not permit executable blobs.
+const verifiedModules = new Map();
+async function verifyModuleGraph(path, visited = new Set()) {
+  if (visited.has(path)) return;
+  visited.add(path);
+  const asset = await gameSimAsset(path);
+  for (const match of asset.text.matchAll(/from\s*(['"])(\.{1,2}\/[^'"]+)\1/g)) {
+    const resolved = new URL(match[2], `https://runtime.invalid/${path}`);
+    await verifyModuleGraph(resolved.pathname.slice(1), visited);
   }
-  return moduleUrls.get(path);
 }
-
 export async function gameSimModule(path) {
-  const moduleUrl = await gameSimModuleUrl(path);
-  return import(/* @vite-ignore */ moduleUrl);
+  if (!verifiedModules.has(path)) {
+    const task = verifyModuleGraph(path);
+    verifiedModules.set(path, task);
+    task.catch(() => verifiedModules.delete(path));
+  }
+  await verifiedModules.get(path);
+  const url = new URL(withBase(path), location.origin).href;
+  return import(/* @vite-ignore */ url);
 }

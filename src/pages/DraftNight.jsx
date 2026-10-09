@@ -10,8 +10,8 @@ import TapeDuelCard from '@/components/dailyGames/TapeDuelCard';
 import CardCycler from '@/components/dailyGames/CardCycler';
 import HowToPlay from '@/components/dailyGames/HowToPlay';
 import ProgressRail from '@/components/dailyGames/ProgressRail';
-import DraftDesk from '@/components/dailyGames/DraftDesk';
-import { bestFitFor, deskNeeds, pickedRoster } from '@/components/dailyGames/draftDesk';
+import DraftDesk from '@/components/dailyGames/DraftDesk.jsx';
+import { bestFitFor, deskNeeds, pickedRoster } from '@/components/dailyGames/draftDesk.js';
 import GamePointsBoard from '@/components/dailyGames/GamePointsBoard';
 import CompletionPanel from '@/components/dailyGames/CompletionPanel';
 import { useCourtTheme } from '@/components/djhc/CourtThemeProvider';
@@ -169,11 +169,13 @@ export default function DraftNight() {
     <GameShell>
       <WorkbenchHeader
         title="DRAFT NIGHT"
-        description="Pick one player from each of five different team rounds — locked blind, revealed once, scored by average estimated additive player impact."
+        description={board?.scoringContract === 'observed-box-score-production-v1'
+          ? 'Draft one player from each of five teams. All 243 combinations are ranked by average observed Game Score per 40 minutes.'
+          : 'Draft one player from each of five teams, ranked by average estimated additive player impact.'}
         steps={['Five draft rounds', 'Lock the draft', 'Verified summary']}
         current={outcome ? 2 : allPicked ? 1 : 0}
         state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}
-        status={pending ? 'Evaluating your draft…' : outcome ? 'Draft verified' : status === 'ready' ? 'Blind run in progress' : null}
+        status={pending ? 'Evaluating your draftâ€¦' : outcome ? 'Draft verified' : status === 'ready' ? 'Blind run in progress' : null}
       />
       <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
         <BoardStatusPanel state={status} error={error} onRetry={() => loadBoard(seed)} />
@@ -214,7 +216,7 @@ export default function DraftNight() {
                     <p className="mt-1 text-xs text-muted-foreground">Evaluate the whole five-pick draft once. No partial reveals, no substitute score.</p>
                   </div>
                   <button type="button" onClick={reveal} disabled={pending} className="inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-3 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[0_8px_24px_hsl(43_78%_60%/.35)] hover:brightness-110 disabled:opacity-50">
-                    <Sparkles className="h-4 w-4" /> {pending ? 'Evaluating…' : 'Lock in the draft & evaluate'}
+                    <Sparkles className="h-4 w-4" /> {pending ? 'Evaluatingâ€¦' : 'Lock in the draft & evaluate'}
                   </button>
                 </div>
                 <ul className="dg-lock__list mt-4">
@@ -262,7 +264,7 @@ export default function DraftNight() {
                 total={points.total}
                 max={points.max}
                 seed={presentation.dailySeed}
-                entries={[{ key: 'draft', title: 'Five-pick draft', points: points.total, maxPoints: points.max }]}
+                entries={[{ key: 'draft', title: 'Five-pick draft', points: points.total, maxPoints: points.max, rank: outcome?.evaluation?.decision?.rank, optionCount: outcome?.evaluation?.decision?.optionCount }]}
                 otherGamePath="/daily-games/fix-the-five"
                 otherGameTitle="Fix the Five"
                 onReplay={replay}

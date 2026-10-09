@@ -53,6 +53,6 @@ export default function RealBetList({ bets, format, onSettle, settling, feedRead
     {open.length > 0 && <div><p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-gold">Open · {open.length}</p><div className="space-y-3">{open.map(renderBet)}</div></div>}
     {settled.length > 0 && <div><p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Settled · {settled.length}</p><div className="space-y-3">{settled.map(renderBet)}</div></div>}
     {bets.length === 0 && <div className="court-panel grid place-items-center p-10 text-sm text-muted-foreground">No real-money bets yet — price one on the board.</div>}
-    {!feedReady && open.length > 0 && <p className="text-[11px] text-muted-foreground">Settlement waits on the official-finals feed (ODDS_API_KEY on the dashboard Secrets page). Bets stay open until real finals arrive.</p>}
+    {!feedReady && open.length > 0 && <p className="text-[11px] text-muted-foreground">Settlement is unavailable while the planned real-money backend is disconnected. Any records shown here remain local-only until a reviewed server integration exists.</p>}
   </section>;
 }

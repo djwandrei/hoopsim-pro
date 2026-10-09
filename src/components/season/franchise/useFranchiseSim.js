@@ -5,12 +5,12 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import {
   clone, normalizeName, formatMinutes, humanBytes, leagueStateFor, currentSource, currentModel,
-  sessionForTeam, commandFailure, isStaleMessage, pinDetails, rosterRowsForTeam, savedRotation,
+  sessionForTeam, commandFailure, isStaleMessage, pinDetails, rosterRowsForTeam,
   loadRotationDraft, rotationValidation, rotationMatchesSaved, makeRotationControls, makeBrowserKey,
   exportedSaveMatches, upcomingGame, gameDateMap, completedGames, recordFor, statsForLog, displayBoxStat,
   multiTeamV4Choices, buildV4RosterChoiceReceipt, suggestionLabel, receiptPartSummary,
   deriveRosterModeAssignments, readPayload,
-  GENERATED_SHOOTING_RATING_POLICY, COUNT_FIELDS, SEASON_OPTIONS, SAVE_KEY_PREFIX, NBA_TEAMS,
+  GENERATED_SHOOTING_RATING_POLICY, COUNT_FIELDS, SEASON_OPTIONS, NBA_TEAMS,
 } from './franchiseLogic';
 import {
   loadFranchiseEngine, createFranchiseWorker, fetchJsonText, loadVerifiedFixturePayload,
@@ -49,7 +49,7 @@ const freshState = () => ({
   // Setup inputs (mirror of the preview frame's control values)
   v4Year: 2025, v4YearSelected: false, v4UserTeam: '', fixtureUserTeam: '', generateRating: false,
   // Engine + session
-  client: null, workerCapabilities: null, activeSession: null, activeTeamCode: '',
+  client: null, workerCapabilities: null, activeSession: null, activeTeamCode: '', validateFranchiseRotationState: null,
   rotationDraft: [], draftSessionRef: null, draftTeamRef: '', rawMinutesText: new Map(),
   fixturePayload: null, fixtureName: '', fixtureMeta: null,
   lastGameOutput: null, lastSeasonCompletion: null, lastSeasonCompletionRevision: null,
@@ -364,10 +364,30 @@ function computeView(state) {
       return {
         name: row.name, availabilityLabel, excluded: row.excluded, unavailable: row.unavailable,
         active: Boolean(draft?.active), starter: Boolean(draft?.starter), minutes: displayedMinutes,
+        shotUsageMultiplier: Number.isFinite(Number(draft?.shotUsageMultiplier)) ? Number(draft.shotUsageMultiplier) : 1,
         disabled: row.excluded || row.unavailable || busy,
+        shotUsageDisabled: row.excluded || row.unavailable || !draft?.active || busy,
       };
     });
     const validation = rotationValidation(session, state.activeTeamCode, state.rotationDraft);
+    if (validation.ready) {
+      try {
+        if (typeof state.validateFranchiseRotationState !== 'function') throw new Error('The Franchise control validator is unavailable.');
+        const proposedControls = makeRotationControls(session, state.activeTeamCode, state.rotationDraft);
+        const contract = state.validateFranchiseRotationState({
+          state: session.leagueState,
+          teamCode: state.activeTeamCode,
+          controls: proposedControls,
+        });
+        if (contract.status !== 'pass') {
+          validation.ready = false;
+          validation.messages.push(...(contract.violations ?? []), ...(contract.missingInputs ?? []));
+        }
+      } catch (error) {
+        validation.ready = false;
+        validation.messages.push(`Franchise control validation failed: ${error?.message ?? error}`);
+      }
+    }
     const control = team.franchiseControlsBySeason?.[String(league.seasonStartYear)];
     const saved = control && rotationMatchesSaved(control, state.rotationDraft);
     const prefix = saved ? `Saved control revision ${control.revision ?? '—'}. `
@@ -704,8 +724,9 @@ export default function useFranchiseSim() {
     if (enginePhase !== 'loading') return undefined;
     let live = true;
     loadFranchiseEngine()
-      .then(() => {
+      .then(engine => {
         if (!live) return;
+        ref.current.validateFranchiseRotationState = engine.validateFranchiseRotationState;
         setEnginePhase('ready');
         ref.current.workerStatus = { text: 'Franchise engine connected', state: 'idle' };
         render();
@@ -1029,6 +1050,8 @@ export default function useFranchiseSim() {
       draftRow.minutes = checkedOrValue === '' ? NaN : Number(checkedOrValue);
       draftRow.active = Number(draftRow.minutes) > 0;
       if (!draftRow.active) draftRow.starter = false;
+    } else if (field === 'shotUsageMultiplier') {
+      draftRow.shotUsageMultiplier = Number(checkedOrValue);
     }
     // Keep the numeric control's in-progress text while typing; reflect model
     // changes back into it whenever an edit originates elsewhere.

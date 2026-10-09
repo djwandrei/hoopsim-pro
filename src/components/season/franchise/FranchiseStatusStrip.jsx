@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, Info, Loader2 } from 'lucide-react';
+import { AlertTriangle, Info } from 'lucide-react';
 
 // Command strip: worker status, quality pill and revision in one broadcast
 // bar, then the shared alert banner and the session pulse metric tiles.

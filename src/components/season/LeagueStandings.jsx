@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
+import { hasMetric } from '@/lib/season/seasonMetrics';
 
 function buildRows(league, summary, actualRecords, conference) {
   const rows = league.teams
@@ -9,12 +10,18 @@ function buildRows(league, summary, actualRecords, conference) {
     .map(team => {
       const row = summary ? summary.find(item => item.code === team.code) : null;
       const actual = actualRecords?.get?.(team.code) || null;
-      const wins = row ? Math.round(row.wins) : actual?.w ?? 0;
-      const losses = row ? 82 - wins : actual?.l ?? 0;
-      const net = row ? row.ortg - row.drtg : team.net;
+      const wins = row
+        ? (hasMetric(row.wins) ? Math.round(Number(row.wins)) : null)
+        : (hasMetric(actual?.w) ? Number(actual.w) : null);
+      const losses = row
+        ? (hasMetric(row.losses) ? Math.round(Number(row.losses)) : null)
+        : (hasMetric(actual?.l) ? Number(actual.l) : null);
+      const net = row
+        ? (hasMetric(row.ortg) && hasMetric(row.drtg) ? Number(row.ortg) - Number(row.drtg) : null)
+        : (hasMetric(team.net) ? Number(team.net) : null);
       return { team, row, actual, wins, losses, net };
     });
-  rows.sort((a, b) => b.wins - a.wins || b.net - a.net);
+  rows.sort((a, b) => (b.wins ?? -Infinity) - (a.wins ?? -Infinity) || (b.net ?? -Infinity) - (a.net ?? -Infinity));
   return rows;
 }
 
@@ -98,7 +105,7 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                     const style = ZONE_STYLE[zoneKey];
                     const teamColor = paletteForTeam(entry.team.code).primary;
                     const isFocus = entry.team.code === focusCode;
-                    const netSigned = entry.net > 0 ? '+' : '';
+                    const netSigned = Number.isFinite(entry.net) && entry.net > 0 ? '+' : '';
                     const zoneBreak = index > 0 && shown[index - 1].zone !== zoneKey;
                     return (
                       <React.Fragment key={entry.team.code}>
@@ -132,15 +139,15 @@ export default function LeagueStandings({ league, summary, actualRecords, focusC
                         </td>
                         <td className={`${cell} myna-mono font-bold`}>
                           <span className="inline-flex items-center justify-end gap-1.5">
-                            <span className="inline-block h-1 w-10 overflow-hidden rounded-full bg-[var(--myna-raised)]"><span className="block h-full rounded-full" style={{ width: `${Math.round(entry.wins / 82 * 100)}%`, background: teamColor }} /></span>
-                            {entry.wins}
+                            <span className="inline-block h-1 w-10 overflow-hidden rounded-full bg-[var(--myna-raised)]"><span className="block h-full rounded-full" style={{ width: `${entry.wins === null ? 0 : Math.round(entry.wins / 82 * 100)}%`, background: teamColor }} /></span>
+                            {entry.wins ?? '—'}
                           </span>
                         </td>
-                        <td className={`${cell} myna-mono myna-muted`}>{entry.losses}</td>
-                        <td className={`${cell} myna-mono font-semibold`}>{(entry.wins / Math.max(1, entry.wins + entry.losses)).toFixed(3).slice(1)}</td>
-                        <td className={`${cell} myna-mono font-semibold`} style={{ color: entry.net >= 0 ? 'var(--myna-accent)' : 'var(--myna-trim)' }}>{netSigned}{entry.net.toFixed(1)}</td>
-                        {hasSim && <td className={`${cell} myna-mono`}>{Math.round((entry.row?.playoff || 0) * 100)}%</td>}
-                        {hasSim && <td className={`${cell} myna-mono`}>{Math.round((entry.row?.title || 0) * 100)}%</td>}
+                        <td className={`${cell} myna-mono myna-muted`}>{entry.losses ?? '—'}</td>
+                        <td className={`${cell} myna-mono font-semibold`}>{entry.wins === null || entry.losses === null ? '—' : (entry.wins / Math.max(1, entry.wins + entry.losses)).toFixed(3).slice(1)}</td>
+                        <td className={`${cell} myna-mono font-semibold`} style={{ color: Number.isFinite(entry.net) && entry.net >= 0 ? 'var(--myna-accent)' : 'var(--myna-trim)' }}>{Number.isFinite(entry.net) ? `${netSigned}${entry.net.toFixed(1)}` : '—'}</td>
+                        {hasSim && <td className={`${cell} myna-mono`}>{hasMetric(entry.row?.playoff) ? `${Math.round(Number(entry.row.playoff) * 100)}%` : '—'}</td>}
+                        {hasSim && <td className={`${cell} myna-mono`}>{hasMetric(entry.row?.title) ? `${Math.round(Number(entry.row.title) * 100)}%` : '—'}</td>}
                       </tr>
                       </React.Fragment>
                     );

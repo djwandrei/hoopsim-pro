@@ -24,7 +24,7 @@ export const WORKBENCHES = [
   ] },
   { path: '/forge', icon: Swords, emblem: `${EMBLEMS}composite-forge-icon.webp`, title: 'Composite Forge', tag: 'BUILD & REVIEW', description: 'Choose real player-season skill donors, build your player, and save or replay the source-backed recipe.', flow: 'Player examples → Skills → Build' },
   { path: '/spin', icon: Disc3, emblem: `${EMBLEMS}spin-room-icon.webp`, title: 'Spin Room', tag: 'ROLE DRAFT & DISCOVERY', description: 'Build a seeded player pool, set exclusions, and reveal repeatable no-repeat picks.', flow: 'Pool → Draw → Selection' },
-  { path: '/book', icon: Banknote, emblem: 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/58ccd83aa_BookRoom.png', title: 'Sportsbook', tag: 'ODDS, MODEL EDGES & BETS', description: 'Shop real NBA lines, see the studio sim\'s model edge on every price, build parlays and teasers, and track every bet to settlement with a play-money bankroll.', flow: 'Board & edges → Bet slip → Track & settle' },
+  { path: '/book', icon: Banknote, emblem: studioAsset('games/swishiq-studio-emblem-20260913.png'), title: 'Sportsbook', tag: 'PLAY-MONEY TRACKER', description: 'Track a browser-local play-money balance and ledger, with a daily simulated bonus. Odds, credit purchases, and settlement await the planned backend.', flow: 'Daily bonus → Local ledger · Odds backend planned' },
   { path: '/playbook', icon: BookOpen, emblem: studioAsset('playbook-emblem-20261007.png'), title: 'Playbook', tag: 'INTERACTIVE PLAY ANIMATION', description: 'Learn plays, sets and schemes on an animated half court: labelled players run each step while the who, the what and the why are narrated.', flow: 'Library → Animate → Steps' },
 ];
 
@@ -37,7 +37,7 @@ export const DAILY_GAMES = [
     flow: 'Hub → Pick a game → Verified rank',
     children: [
       { path: '/daily-games/fix-the-five', emblem: `${GAME_ASSETS}fix-the-five-emblem-20260911.png`, title: 'Fix the Five', tag: 'DAILY ROTATION REPAIR', description: 'Repair five exact-season starting fives by swapping in legal replacements, verified by the original private evaluator.', flow: 'Board → Swap call → Verified rank' },
-      { path: '/daily-games/draft-night', emblem: `${GAME_ASSETS}draft-night-emblem-20260911.png`, title: 'Draft Night', tag: 'DAILY FIVE-ROUND DRAFT', description: 'Draft one player from each of five team rounds, then reveal one verified cross-team impact result.', flow: 'Rounds → Lock draft → Verified rank' },
+      { path: '/daily-games/draft-night', emblem: `${GAME_ASSETS}draft-night-emblem-20260911.png`, title: 'Draft Night', tag: 'DAILY FIVE-ROUND DRAFT', description: 'Draft one player from each of five team rounds, then reveal its verified exact-season ranking.', flow: 'Rounds → Lock draft → Verified rank' },
     ],
   },
 ];

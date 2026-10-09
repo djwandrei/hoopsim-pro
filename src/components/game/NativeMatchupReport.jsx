@@ -8,6 +8,7 @@ const tileLabel = 'myna-accent-text text-[10px] font-semibold uppercase tracking
 // shares, expected scoring, sampling error and the margin/length picture.
 export default function NativeMatchupReport({ native, home, away }) {
   if (!native) return null;
+  const localFallback = native.mode === 'local-fallback';
   const homeShare = Number(native.shares?.a) || 0;
   const awayShare = Number(native.shares?.b) || 0;
   const unresolvedShare = Number(native.shares?.unresolved) || 0;
@@ -18,6 +19,23 @@ export default function NativeMatchupReport({ native, home, away }) {
   const bars = histogram.length ? histogram : lengths;
   const maxCount = Math.max(1, ...bars.map(row => row.count));
   const settings = native.settings || {};
+  if (localFallback) {
+    return (
+      <section className="myna-panel p-4" aria-label="Local model report">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="myna-accent-text flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em]"><Activity className="h-3.5 w-3.5" />LOCAL REVIEWED MODEL</p>
+          <span className="myna-mono text-[10px] myna-muted">{native.modelVersion || 'swishiq-local-game-model-v1'}</span>
+        </div>
+        <div className="mt-3 myna-bar"><span style={{ width: `${homeShare * 100}%`, background: 'var(--matchup-home-color)' }} /><span style={{ flex: 1, background: 'var(--matchup-away-color)' }} /></div>
+        <div className="myna-mono mt-1 flex justify-between text-[10px] myna-muted">
+          <span style={{ color: 'var(--matchup-home-color)' }}>{home.code} MODEL TRIAL SHARE {Math.round(homeShare * 100)}%</span>
+          <span style={{ color: 'var(--matchup-away-color)' }}>{Math.round(awayShare * 100)}% {away.code}</span>
+        </div>
+        <p className="myna-muted mt-3 text-[10.4px] leading-relaxed">{native.disclosure || 'This is modeled output from the local season simulator. It is not a native V4 result or an exact-season forecast.'}</p>
+        <p className="myna-mono mt-2 text-[10px] myna-muted">{Number(settings.trials) || 0} modeled draws · attack blend {Number(settings.attackWeight ?? 0.5).toFixed(2)} · season profile inputs</p>
+      </section>
+    );
+  }
   return (
     <section className="myna-panel p-4" aria-label="Native engine report">
       <div className="flex flex-wrap items-center justify-between gap-2">

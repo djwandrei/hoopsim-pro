@@ -319,11 +319,53 @@ function canonicalizeControls(controls, context, seasonStartYear, gameDurationMi
       JSON.stringify(controls.rotationControls.starters.map(asNameKey)) !== JSON.stringify(starters.map(asNameKey)))) {
     violations.push('rotationControls.starters conflicts with the saved starter five.');
   }
+  if (controls.rotationControls?.shotUsageMultipliers !== undefined) {
+    const usageRows = controls.rotationControls.shotUsageMultipliers;
+    if (!Array.isArray(usageRows)) {
+      violations.push('rotationControls.shotUsageMultipliers must be an array.');
+    } else {
+      const seenUsage = new Set();
+      for (const row of usageRows) {
+        const nameKey = asNameKey(row?.canonicalName);
+        const rosterRow = context.eligibleRoster.get(nameKey);
+        const expectedRef = String(rosterRow?.player?.playerRef ?? rosterRow?.canonicalName ?? '').trim();
+        const suppliedRef = String(row?.playerRef ?? '').trim();
+        if (!rosterRow || !nameKey || !suppliedRef || suppliedRef !== expectedRef) {
+          violations.push(`Shot-usage multiplier has an absent or mismatched roster/player identity: ${row?.canonicalName ?? suppliedRef}.`);
+          continue;
+        }
+        if (!activeKeys.has(nameKey)) {
+          violations.push(`Inactive player ${rosterRow.canonicalName} cannot have a shot-usage multiplier.`);
+        }
+        if (seenUsage.has(nameKey)) violations.push(`Shot-usage multipliers contain duplicate player ${rosterRow.canonicalName}.`);
+        seenUsage.add(nameKey);
+        if (typeof row.multiplier !== 'number' || !Number.isFinite(row.multiplier) || row.multiplier < 0 || row.multiplier > 2) {
+          violations.push(`Shot-usage multiplier for ${rosterRow.canonicalName} must be finite and between 0 and 2.`);
+        } else if (Math.abs(row.multiplier * 10 - Math.round(row.multiplier * 10)) > 1e-8) {
+          violations.push(`Shot-usage multiplier for ${rosterRow.canonicalName} must use 0.1 increments.`);
+        }
+      }
+      for (const name of activeRotation) {
+        if (!seenUsage.has(asNameKey(name))) violations.push(`Active player ${name} needs a shot-usage multiplier.`);
+      }
+      if (activeRotation.length && !usageRows.some(row => typeof row?.multiplier === 'number' && row.multiplier > 0)) {
+        violations.push('At least one active player must have a positive shot-usage multiplier.');
+      }
+    }
+  }
   const onCourt = normalizeLiveRotationControls({ players: rotationPlayers, controls: { ...(controls.rotationControls ?? {}), starters } });
   violations.push(...onCourt.violations);
   if (onCourt.status !== 'pass') return null;
   const schedule = createRotationSchedule({ players: rotationPlayers, starters,
     openingStintMinutes: onCourt.controls.openingStintMinutes });
+  if (schedule.status === 'pass') {
+    const usageByRef = new Map(onCourt.controls.shotUsageMultipliers.map(row => [String(row.playerRef), row.multiplier]));
+    for (const stint of schedule.stints) {
+      if (stint.playerRefs.some(ref => (usageByRef.get(String(ref)) ?? 1) > 0)) continue;
+      const start = Number(stint.startMinute.toFixed(2)), end = Number(stint.endMinute.toFixed(2));
+      violations.push(`Planned five-player unit ${start}-${end} minutes has no eligible shooter. Give at least one of ${stint.canonicalNames.join(', ')} a shot-usage multiplier above 0.`);
+    }
+  }
   violations.push(...schedule.violations);
   if (violations.length) return null;
   return {

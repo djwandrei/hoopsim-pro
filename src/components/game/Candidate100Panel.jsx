@@ -17,11 +17,13 @@ export default function Candidate100Panel({ year, home, away, sourceEntry }) {
   const [predicting, setPredicting] = useState(false);
   const [prediction, setPrediction] = useState(null);
   const [predictError, setPredictError] = useState('');
+  const [targetRow, setTargetRow] = useState(null);
 
   useEffect(() => {
     let active = true;
     setRelease(null);
     setPrediction(null);
+    setTargetRow(null);
     setPredictError('');
     setLoading(true);
     setError('');
@@ -32,6 +34,12 @@ export default function Candidate100Panel({ year, home, away, sourceEntry }) {
     return () => { active = false; };
   }, [year]);
 
+  useEffect(() => {
+    setTargetRow(null);
+    setPrediction(null);
+    setPredictError('');
+  }, [home?.code, away?.code]);
+
   if (loading) {
     return <section className="myna-panel p-4 text-xs myna-muted">Loading the Candidate100 pregame release…</section>;
   }
@@ -39,9 +47,10 @@ export default function Candidate100Panel({ year, home, away, sourceEntry }) {
     return <section className="myna-panel p-4 text-xs text-trim-ink">{error}</section>;
   }
 
-  const selectedRow = release.rows.find(row =>
+  const matchupRow = release.rows.find(row =>
     (row.homeTeamRef === home?.code && row.awayTeamRef === away?.code)
     || (row.homeTeamRef === away?.code && row.awayTeamRef === home?.code)) || null;
+  const selectedRow = targetRow || matchupRow;
   const entryPackage = sourceEntry?.packageId && sourceEntry?.packageVersion ? sourceEntry : null;
   const packageMatches = entryPackage
     ? entryPackage.packageId === release.snapshot.packageId && entryPackage.packageVersion === release.snapshot.packageVersion
@@ -49,6 +58,7 @@ export default function Candidate100Panel({ year, home, away, sourceEntry }) {
 
   const runForecast = async row => {
     if (predicting) return;
+    setTargetRow(row);
     setPredicting(true);
     setPredictError('');
     setPrediction(null);
@@ -97,6 +107,7 @@ export default function Candidate100Panel({ year, home, away, sourceEntry }) {
             {predicting ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Sparkles size={14} aria-hidden="true" />}
             {prediction ? 'Re-run forecast' : 'Run forecast'}
           </button>
+          {targetRow && !matchupRow && <button type="button" className="text-xs underline myna-muted" onClick={() => { setTargetRow(null); setPrediction(null); setPredictError(''); }}>Choose another published target</button>}
         </div>
         {predictError && <p className="text-xs text-trim-ink">{predictError}</p>}
         {prediction &&

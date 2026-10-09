@@ -1,9 +1,8 @@
-// Result-desk narrative: one AI-written sentence explaining why the
+// Result-desk narrative: one source-backed summary explaining why the
 // recommended group wins. Presentation only — the button reads the solved
 // result's own DOM (scoreboard cards + lineup table) and renders the returned
 // sentence into a small card under the scoreboard.
 
-import { base44 } from '@/api/base44Client';
 import { captureScoreboard } from '@/lineupLab/lineup-lab/resultCapture';
 
 const text = (node) => (node?.textContent || '').trim();
@@ -24,7 +23,7 @@ export function buildNarrativeButton(keeper) {
       scoreboard.after(card);
     }
     card.replaceChildren(
-      Object.assign(document.createElement('p'), { className: 'll-narrative__kicker', textContent: 'Why this group wins' }),
+      Object.assign(document.createElement('p'), { className: 'll-narrative__kicker', textContent: 'Selected lineup summary' }),
       Object.assign(document.createElement('p'), { className: 'll-narrative__body', textContent: sentence }),
     );
     card.hidden = state === 'pending';
@@ -40,18 +39,13 @@ export function buildNarrativeButton(keeper) {
       return;
     }
     button.disabled = true;
-    button.textContent = 'Writing…';
-    render(results, 'Composing the analysis…', 'pending');
+    button.textContent = 'Writingâ€¦';
+    render(results, 'Composing the analysisâ€¦', 'pending');
     try {
-      const response = await base44.functions.invoke('lineupLabNarrative', {
-        lineup,
-        metrics,
-        team: text(results.closest('.ll-native')?.querySelector('#datasetTeam')) || text(document.getElementById('datasetTeam')),
-        season: text(document.getElementById('datasetSeason')),
-        weights: text(document.getElementById('weightShareSummary')).slice(0, 240),
-      });
-      const narrative = response?.data?.narrative;
-      if (!narrative) throw new Error(response?.data?.error || 'empty');
+      const season = text(document.getElementById('datasetSeason'));
+      const weights = text(document.getElementById('weightShareSummary')).slice(0, 240);
+      const summary = metrics.slice(0, 3).map(metric => `${metric.label}: ${metric.value}`).join(' · ');
+      const narrative = `${lineup.join(', ')}. ${summary}.${season ? ` Season: ${season}.` : ''}${weights ? ` Selected weights: ${weights}.` : ''}`;
       render(results, narrative, 'done');
     } catch {
       render(results, 'The narrative could not be written just now — try again in a moment.', 'error');

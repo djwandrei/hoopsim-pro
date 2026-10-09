@@ -39,7 +39,7 @@ export default function useDailyGameBoard({ gameKind, onBoardReady }) {
   useEffect(() => { loadBoard(seed); }, [seed, loadBoard]);
   useEffect(() => { loadSwishIqPlayerMetadata().then(setMetadata, () => setMetadata(null)); }, []);
   useEffect(() => {
-    const boardYear = board?.packageRef?.scope?.seasonStartYear;
+    const boardYear = board?.packageRef?.scope?.seasonStartYear ?? board?.packageRef?.scope?.seasonStartYears?.[0];
     if (boardYear && String(year) !== String(boardYear)) setYear(boardYear);
   }, [board, year, setYear]);
 

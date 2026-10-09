@@ -79,6 +79,6 @@ export default function RealWalletPanel({ wallet, profile, transactions, busy, o
       {!(transactions || []).length && <li className="rounded-lg border border-dashed border-border/40 px-3 py-4 text-center text-[11px] text-muted-foreground">No wallet activity yet.</li>}
       </ul>
     </div>
-    <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">Deposit processing activates once STRIPE_SECRET_KEY is set on the app dashboard's Secrets page; payout requests are reviewed and paid within five business days.</p>
+    <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">Payment and payout processing are not connected in this local build. No card details, deposits, withdrawals, or real-money wagers are sent from this panel.</p>
   </section>;
 }

@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import siteSpinContext, { SPIN_METRICS } from '@/components/spin/siteSpinContext';
 import { buildSeededPool, spinSeededPool } from '@/components/spin/engine/seededPool';
+import { filterExcludedPlayerEntries } from '@/components/spin/engine/playerExclusions';
 import { stableHash } from '@/components/spin/engine/scenarioContract';
 
 const SPIN_LIMIT = 1000;
@@ -64,13 +65,13 @@ export default function useSpinDraw({ source, year, excluded, onSelection }) {
   stateRef.current = { settings, pool, history, dirty, context, source, excluded, onSelection };
 
   const runRebuild = useCallback(() => {
-    const { settings: s, context: ctx, onSelection: select } = stateRef.current;
+    const { settings: s, context: ctx, excluded: excludedRefs, onSelection: select } = stateRef.current;
     if (ctx.error) { setPool({ status: 'unavailable', reason: ctx.error }); setHistory([]); setDirty(false); select(null); return; }
     const effectiveSeed = randomSeed();
     const role = ctx.options.find(option => option.value === s.roleValue) || ctx.options[0];
     const wantedTeams = Array.isArray(s.teams) ? s.teams : [];
     const wantedPositions = s.positionMode === 'exclude' && Array.isArray(s.positions) ? s.positions : [];
-    const scopedEntries = ctx.entries
+    const scopedEntries = filterExcludedPlayerEntries(ctx.entries, excludedRefs)
       .filter(entry => !wantedTeams.length || wantedTeams.some(team => (entry.teamCodes || []).includes(team) || entry.teamCode === team))
       .filter(entry => !wantedPositions.length || !entry.positions.some(position => wantedPositions.includes(position)));
     let result;

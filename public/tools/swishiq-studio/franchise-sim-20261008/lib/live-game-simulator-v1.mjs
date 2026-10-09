@@ -184,6 +184,34 @@ function chooseWeighted(rows, weight, random, excludedRef = null) {
   return eligible[eligible.length - 1];
 }
 
+export function normalizedShotRecipientWeights(players) {
+  if (!Array.isArray(players) || !players.length) throw new Error('Shot-usage weights need an active lineup.');
+  const baseWeights = players.map(row => {
+    const rate = Number(row.shotUsageBaseWeight ?? row.fgaPer36);
+    const multiplier = row.shotUsageMultiplier === undefined ? 1 : Number(row.shotUsageMultiplier);
+    if (!Number.isFinite(rate) || rate < 0 || !Number.isFinite(multiplier) || multiplier < 0 || multiplier > 2) {
+      throw new Error('Shot-usage weights require finite nonnegative attempt rates and multipliers from 0 through 2.');
+    }
+    return { rate, multiplier, weight: rate * multiplier };
+  });
+  const total = baseWeights.reduce((sum, row) => sum + row.weight, 0);
+  if (!Number.isFinite(total) || total <= 0) {
+    if (baseWeights.every(row => row.rate === 0)) return players.map(() => 1 / players.length);
+    throw new Error('The current five-player lineup has no positive shot-recipient weight.');
+  }
+  return baseWeights.map(row => row.weight / total);
+}
+
+function chooseShotRecipient(lineup, random) {
+  const probabilities = normalizedShotRecipientWeights(lineup);
+  let position = random();
+  for (let index = 0; index < lineup.length; index += 1) {
+    position -= probabilities[index];
+    if (position <= 0) return lineup[index];
+  }
+  return lineup[lineup.length - 1];
+}
+
 function playerRates(model, player, minutesTarget, sharedForecast = null, reboundSplitSelection = 'generated-or-scenario-v1') {
   if (sharedForecast) {
     const shots = projectSharedProductionShotRates(sharedForecast, player);
@@ -368,6 +396,7 @@ function prepareTeam(model, inputTeam, side, productionContext = null) {
     hardMinutesLimit: availability[index].minutesLimit }));
   const rotation = normalizeLiveRotationControls({ players: rotationPlayers, controls: inputTeam.rotationControls ?? {} });
   if (rotation.status !== 'pass') throw Object.assign(new Error('Live rotation controls require review.'), { rotation });
+  const shotUsageByRef = new Map(rotation.controls.shotUsageMultipliers.map(row => [row.playerRef, row.multiplier]));
   const rotationSchedule = createRotationSchedule({ players: rotationPlayers, starters: rotation.controls.starters,
     openingStintMinutes: rotation.controls.openingStintMinutes });
   if (rotationSchedule.status !== 'pass') throw Object.assign(new Error('Live rotation schedule requires review.'), { rotationSchedule });
@@ -377,10 +406,16 @@ function prepareTeam(model, inputTeam, side, productionContext = null) {
     const forecast = productionContext ? forecastGamePlayerProduction(productionContext.candidate, player,
       { ...productionContext, projectedMinutes: minutes[index] }) : null;
     const rates = playerRates(model, player, minutes[index], forecast, productionContext?.reboundSplitSelection);
-    return { ...rates, baseThreeAttemptShare: rates.threeAttemptShare,
+    return { ...rates, shotUsageMultiplier: shotUsageByRef.get(String(player.playerRef)) ?? 1,
+      shotUsageBaseWeight: Math.max(productionContext ? 0 : 0.1, rates.fgaPer36),
+      baseThreeAttemptShare: rates.threeAttemptShare,
       threeAttemptShare: scaleProbabilityOdds(rates.threeAttemptShare, coaching.controls.threePointAttemptMultiplier),
       availabilityMinutesLimit: availability[index].minutesLimit };
   });
+  const rosterByRef = new Map(roster.map(row => [String(row.player.playerRef), row]));
+  for (const stint of rotationSchedule.stints) {
+    normalizedShotRecipientWeights(stint.playerRefs.map(ref => rosterByRef.get(String(ref))).filter(Boolean));
+  }
   const teamExpectedPoints = weightedExpectedRate(roster, 'pointsPer36');
   const fga = weightedExpectedRate(roster, 'fgaPer36');
   const fta = weightedExpectedRate(roster, 'ftAttPer36');
@@ -853,8 +888,7 @@ function* playPossession(state, offense, defense, lineups, context, random, targ
         personalFoulEventId, reason: 'ordinary-common-foul-below-bonus' }, [], shotClockOffset + 0.09);
       continue;
     }
-    const shooter = chooseWeighted(offenseLineup,
-      row => Math.max(state.sharedProductionEnabled ? 0 : 0.1, row.fgaPer36), random);
+    const shooter = chooseShotRecipient(offenseLineup, random);
     const shotType = random() < shooter.threeAttemptShare ? 'three' : 'two';
     const scenarioShootingFoul = foulScenario && foulDraw < foulScenario.commonFoulProbability + foulScenario.shootingFoulProbability;
     const defender = chooseWeighted(defenseLineup, scenarioShootingFoul ? foulActorWeight : row => row.blocksPer36 +
@@ -1266,6 +1300,9 @@ function finalSummary(state, prediction, options) {
       rotations: Object.fromEntries(['home', 'away'].map(side => {
         const team = state.teams[side];
         return [side, { format: 'djhc-live-rotation-result-v1', controls: structuredClone(team.rotationControls),
+          shotUsageWeights: team.roster.map(player => ({ playerRef: player.player.playerRef,
+            canonicalName: player.player.canonicalName, multiplier: player.shotUsageMultiplier })),
+          shotUsageDisclosure: 'Scenario assumption for relative field-goal attempt allocation; not a measured efficiency effect.',
           plannedMinutes: structuredClone(team.rotationSchedule.plannedMinutes),
           minuteDeviations: team.rotationPlayers.map(player => ({ canonicalName: player.canonicalName,
             playerRef: player.playerRef, requestedMinutes: Number(player.projectedMinutes ?? player.minutes ?? 0), targetMinutes: player.minutesTarget,
@@ -1654,6 +1691,7 @@ export function simulateGameLiveSeasonSample(model, input, options = {}) {
     margin: game.score.home - game.score.away,
     total: game.score.home + game.score.away,
     overtimePeriods: game.overtimePeriods,
+    possessionsPerTeam: game.possessionsPerTeam,
     homeBox: game.homePlayerBoxes,
     awayBox: game.awayPlayerBoxes,
     homeTeamStats: game.homeTeamStats,

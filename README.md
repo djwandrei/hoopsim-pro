@@ -1,62 +1,60 @@
-# Base44 Project
+# SwishIQ Studio
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+SwishIQ Studio is a React and Vite app served at `/tools/swishiq-studio/`. The
+project runs locally without a Base44 account, CLI, backend, or SDK.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+## Run locally
 
-## Prerequisites
+Install the locked dependencies and start Vite:
 
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
-5. Install [Deno](https://docs.deno.com/runtime/getting_started/installation/) — the local Base44 backend runs on it.
-
-Run `base44 --help` (or see the [CLI reference](https://docs.base44.com/developers/references/cli/commands/introduction)) for the full command surface.
-
-## Run Locally
-
-Three commands, from the project root:
-
-```bash
-base44 login   # one-time per machine
-base44 link    # one-time per clone
-base44 dev     # local backend + frontend together
+```sh
+npm ci
+npm run dev
 ```
 
-Open the frontend URL that `base44 dev` prints (typically `http://localhost:5173`).
+Open `http://localhost:5173/tools/swishiq-studio/`.
 
-Notes:
+The dev server reads the DJHC storefront's public files through a read-only
+Vite bridge. By default it uses:
 
-- **Every fresh clone needs `base44 link`.** It writes `base44/.app.jsonc` (the app-id pointer), which is deliberately gitignored. Your app id is in the Builder URL (`app.base44.com/apps/<id>/...`); `base44 link --help` shows the non-interactive flags.
-- **`base44 dev` runs the frontend for you** (via `site.serveCommand` in this repo's `base44/config.jsonc`) — never run `npm run dev` yourself: alone it serves a UI with no backend behind it (`[base44] Proxy not enabled`, every `/api` call fails), and alongside `base44 dev` the second Vite silently takes the next port and you end up looking at the wrong one.
-- **The app must be published at least once for the UI to load under `base44 dev`.** The frontend boots by fetching app settings from the hosted app; before the first publish that fails and every page redirects to login. The local API works regardless.
-- Entities, functions, and auth run locally — entity data is **in-memory only**, wiped when `base44 dev` restarts. Everything else (Core integrations, OAuth login) is forwarded to your deployed app. Full breakdown: [Local development overview](https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview).
-
-## Frontend Only, Hosted Backend
-
-To work on just the frontend against your app's live hosted backend:
-
-```bash
-base44 dev --remote
+```text
+C:\Users\djwan\Downloads\djshouseofcards-next-fixes-applied
 ```
 
-⚠️ In this mode writes go to your app's **production data** — plain `base44 dev` keeps everything local.
+On another computer, set `DJHC_SITE_ROOT` to the local storefront checkout
+before starting Vite. The bridge exposes only the Studio data, engine,
+franchise, and public asset paths needed by the app. It accepts `GET` and
+`HEAD`, returns no directory listings, and denies protected paths such as
+`.env`, `.git`, `.deploy`, and `products.json`.
 
-## Publish Your Changes
+The external storefront checkout and its 3.83 GB data tree stay outside the
+app build. Vite still copies this repository's checked-in `public/` assets into
+`dist/`; those are the smaller, already-tracked app assets.
 
-After pushing your changes to git, open the Base44 dashboard and publish the app:
+The Lineup Lab controller is generated into
+`public/djhc-runtime/lineup-controller.js` by
+`scripts/prepare-lineup-runtime.mjs`. The generator records the reviewed
+source SHA-256, rewrites the controller's relative imports to same-origin
+paths, and keeps initialization behind an explicit mount function. `dev`,
+`build`, and `build:site` run this bounded preparation step first. If the
+storefront checkout is unavailable, they use the checked-in generated module.
 
-```bash
-base44 dashboard open
+## Build and preview
+
+Build and preview use the `/tools/swishiq-studio/` base path. Dev serves the
+Vite optimizer from `/` so its dependency modules stay same-origin; the Studio
+shell is still available at `/tools/swishiq-studio/`.
+
+```sh
+npm run build
+npm run build:site
+npm run preview
 ```
 
-This repo syncs to Base44 through git, so publish from the dashboard rather than `base44 deploy` — a CLI deploy ships your local tree directly, bypassing the sync, and the deployed state silently diverges from the repo.
+Both build commands write the static app to `dist/`. Preview serves that build
+and uses the same local read-only bridge for public data and runtime files.
+When using a different storefront checkout, set `DJHC_SITE_ROOT` for both the
+build-time preview server and `npm run dev`.
 
-## Docs & Support
-
-GitHub integration: [https://docs.base44.com/developers/app-code/local-development/github](https://docs.base44.com/developers/app-code/local-development/github)
-
-Local development: [https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview](https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview)
-
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+See [INTEGRATION.md](./INTEGRATION.md) for the static-site path and data
+contract.

@@ -1,20 +1,19 @@
 {
-  "name": "base44-app",
+  "name": "swishiq-studio",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build:site": "VITE_STANDALONE=true vite build",
+    "prepare:lineup": "node scripts/prepare-lineup-runtime.mjs",
+    "dev": "npm run prepare:lineup && vite",
+    "build": "npm run prepare:lineup && vite build",
+    "build:site": "npm run prepare:lineup && vite build",
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@base44/sdk": "^0.8.53",
-    "@base44/vite-plugin": "^1.0.44",
     "@hello-pangea/dnd": "^17.0.0",
     "@hookform/resolvers": "^4.1.2",
     "@radix-ui/react-accordion": "^1.2.3",

@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Image } from '@/components/ui/image';
-import { TIER_META, formatCardValue } from '@/lib/cards/packEngine';
 import './packReveal.css';
 
 const FLIP_STAGGER_MS = 460;
-const TIER_RANKS = ['base', 'uncommon', 'rare', 'super_rare', 'legendary'];
 
-// The pack-opening reveal: five cards deal in face-down, then flip one at a
-// time; rare-or-better pulls glow and fire a gold burst at their flip, with a
-// bigger burst when the best card lands. Reduced-motion users get every card
-// face-up immediately.
+// Reveal a deterministic local draw. Every card has equal weight; the reveal
+// has no rarity, value, or ownership signal.
 export default function PackReveal({ drawnCards }) {
   const [revealed, setRevealed] = useState(0);
-  const bestIndex = drawnCards.reduce((best, card, index) => (
-    TIER_RANKS.indexOf(card.tier || 'base') > (drawnCards[best] ? TIER_RANKS.indexOf(drawnCards[best].tier || 'base') : -1) ? index : best
-  ), 0);
-  const bestIsRarePlus = TIER_RANKS.indexOf(drawnCards[bestIndex]?.tier || 'base') >= TIER_RANKS.indexOf('rare');
 
   useEffect(() => {
     setRevealed(0);
@@ -25,29 +17,25 @@ export default function PackReveal({ drawnCards }) {
       setRevealed(drawnCards.length);
       return undefined;
     }
-    const timers = [];
-    for (let index = 0; index < drawnCards.length; index += 1) {
-      timers.push(setTimeout(() => {
-        setRevealed(value => Math.max(value, index + 1));
-        // The star pull gets its own gold burst the moment it flips.
-        if (index === bestIndex && bestIsRarePlus) {
-          confetti({ particleCount: 60, spread: 60, startVelocity: 30, scalar: 0.8, ticks: 140, origin: { y: 0.55 }, colors: ['#f0c66e', '#ffe49a', '#ffffff'] });
-        }
-        if (index === drawnCards.length - 1) {
-          confetti({ particleCount: 110, spread: 78, startVelocity: 34, scalar: 0.9, ticks: 170, origin: { y: 0.6 }, colors: ['#f0c66e', '#ffe49a', '#4a72d6', '#e4e9ff'] });
-        }
-      }, 620 + index * FLIP_STAGGER_MS));
-    }
+    const timers = drawnCards.map((_, index) => setTimeout(() => {
+      setRevealed(value => Math.max(value, index + 1));
+      if (index === drawnCards.length - 1) {
+        confetti({ particleCount: 90, spread: 72, startVelocity: 30, scalar: 0.85, ticks: 150, origin: { y: 0.58 }, colors: ['#f0c66e', '#ffe49a', '#ffffff'] });
+      }
+    }, 620 + index * FLIP_STAGGER_MS));
     return () => timers.forEach(timer => clearTimeout(timer));
-  }, [drawnCards, bestIndex, bestIsRarePlus]);
-  return <ul className="pack-reveal" aria-label="Latest pack contents">
+  }, [drawnCards]);
+
+  return <ul className="pack-reveal" aria-label="Latest simulated draw">
     {drawnCards.map((card, index) => {
-      const meta = TIER_META[card.tier] || TIER_META.base;
-      const value = formatCardValue(card.valueCents);
-      const glows = ['rare', 'super_rare', 'legendary'].includes(card.tier);
+      const product = card.product || card;
+      const id = product.id ?? card.id ?? index;
+      const mappings = Array.isArray(card.mappings) ? card.mappings : [];
+      const players = [...new Set(mappings.map(mapping => mapping.player?.name).filter(Boolean))];
+      const details = [product.team, product.condition, product.year].filter(Boolean).join(' · ');
       return <li
-        key={card.id}
-        className={`pack-card${index < revealed ? ' pack-card--revealed' : ''}${glows && index === bestIndex && revealed === drawnCards.length ? ' pack-card--star' : ''}`}
+        key={`${id}-${index}`}
+        className={`pack-card${index < revealed ? ' pack-card--revealed' : ''}`}
         style={{ '--deal-delay': `${index * 110}ms` }}
       >
         <div className="pack-card__flip">
@@ -56,19 +44,19 @@ export default function PackReveal({ drawnCards }) {
             <span className="pack-card__mystery">?</span>
           </div>
           <div className="pack-card__face pack-card__face--front">
-            {card.grade && <span className="pack-card__grade" aria-label={`PSA ${card.grade} graded`}>PSA {card.grade}</span>}
             <div className="pack-card__media">
-              {card.imageUrl
-                ? <Image src={card.imageUrl} alt={card.name} fittingType="fit" className="h-full w-full object-contain" />
+              {product.image
+                ? <a href={product.productUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${product.name} in the DJHC shop`}><Image src={product.image} alt={product.name} fittingType="fit" className="h-full w-full object-contain" /></a>
                 : <span className="font-display text-2xl text-muted-foreground">CARD</span>}
             </div>
-            <p className="pack-card__name">{card.name}</p>
-            <p className="mt-1 flex flex-wrap items-center justify-center gap-1.5 font-mono text-[10.4px]">
-              <span className={`rounded border px-1.5 py-0.5 font-semibold uppercase tracking-widest ${meta.chip}`}>{meta.label}</span>
-              {card.grade && <span className="text-muted-foreground">PSA {card.grade}</span>}
-              {value && <span className="font-bold text-gold">{value}</span>}
+            <p className="pack-card__name">
+              {product.productUrl
+                ? <a href={product.productUrl} target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">{product.name}</a>
+                : product.name}
             </p>
-            <p className="mt-0.5 truncate font-mono text-[10.4px] text-muted-foreground">{[card.set, card.cardNumber && `#${card.cardNumber}`].filter(Boolean).join(' · ')}</p>
+            {players.length > 0 && <p className="mt-1 text-center text-[10.4px] text-gold">Verified match · {players.join(', ')}</p>}
+            {details && <p className="mt-1 text-center font-mono text-[10.4px] text-muted-foreground">{details}</p>}
+            {product.displayPrice && <p className="mt-1 text-center font-mono text-[10.4px] text-muted-foreground">Shop listing · {product.displayPrice}</p>}
           </div>
         </div>
       </li>;

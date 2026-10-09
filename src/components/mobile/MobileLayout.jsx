@@ -1,16 +1,14 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Loader2, UserRound } from 'lucide-react';
+import { Loader2, UserRound } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Image } from '@/components/ui/image';
 import useMobileWebView from '@/hooks/useMobileWebView';
 import { MobileTabsContext } from '@/components/mobile/mobileTabsContext';
 import useMobileTabViews from '@/components/mobile/useMobileTabViews';
 import useTouchRefresh, { REFRESH_THRESHOLD } from '@/components/mobile/useTouchRefresh';
 import KeepAliveTab from '@/components/mobile/KeepAliveTab';
 import refreshStudioData from '@/components/mobile/refreshStudioData';
-import { tabForPath } from '@/components/mobile/mobileTabs';
 import MobileHeaderBrand from '@/components/mobile/MobileHeaderBrand';
 import BottomTabBar from '@/components/djhc/BottomTabBar';
 import SiteDrawer from '@/components/djhc/SiteDrawer';
@@ -19,8 +17,6 @@ import CourtThemeProvider from '@/components/djhc/CourtThemeProvider';
 import ThemeToggle from '@/components/djhc/ThemeToggle';
 import HeaderTeamMark from '@/components/djhc/HeaderTeamMark';
 import FanSuiteRail from '@/components/djhc/FanSuiteRail';
-import { SITE } from '@/components/djhc/siteNavigation';
-
 // Sticky top chrome for the WebView shell: the site header markup (brand on
 // roots, back button on child views) reused verbatim so the WebView header
 // styling in fanSuiteChrome.css applies unchanged, wrapped in a Framer Motion

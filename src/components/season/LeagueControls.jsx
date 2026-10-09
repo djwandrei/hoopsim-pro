@@ -13,7 +13,7 @@ const labelCls = 'myna-muted mb-1.5 block text-[9px] font-bold uppercase trackin
 // Broadcast replay console: season, replays, scoring mix, playoffs and the run action.
 export default function LeagueControls({
   years, year, onYearChange, setup, onSetupChange,
-  onRun, running, progress, hasResults, championName, blocked = false,
+  onRun, running, progress, hasResults, championName, blocked = false, modelMode = 'native',
 }) {
   const pct = Math.round((progress || 0) * 100);
   return (
@@ -35,7 +35,7 @@ export default function LeagueControls({
               : { borderColor: 'var(--myna-border)', color: 'var(--myna-muted)' }}
         >
           <span className={`inline-block h-1.5 w-1.5 rounded-full ${running ? 'animate-pulse' : ''}`} style={{ background: running ? 'var(--myna-accent)' : 'var(--myna-muted)' }} />
-          {running ? `RUNNING · ${pct}%` : blocked ? 'V4 GATED' : hasResults ? 'RESULTS READY' : 'READY'}
+          {running ? `RUNNING · ${pct}%` : modelMode === 'local-fallback' ? 'LOCAL MODEL' : blocked ? 'V4 GATED' : hasResults ? 'RESULTS READY' : 'READY'}
         </span>
       </header>
 
@@ -112,7 +112,7 @@ export default function LeagueControls({
         <p className="mt-4 flex items-center gap-2 rounded-lg border px-3 py-2 text-[11px] myna-muted" style={{ borderColor: 'color-mix(in srgb, var(--myna-accent) 35%, transparent)', background: 'color-mix(in srgb, var(--myna-accent) 7%, transparent)' }}>
           <Trophy className="h-3.5 w-3.5" style={{ color: 'var(--myna-accent)' }} />
           {championName
-            ? <>Replay champion: <span className="myna-accent-text font-semibold">{championName}</span> · median standings across {setup.repeats} replays.</>
+            ? <>Replay champion: <span className="myna-accent-text font-semibold">{championName}</span> · median standings across {setup.repeats} replays{modelMode === 'local-fallback' ? ' · local reviewed model' : ''}.</>
             : <>Median standings across {setup.repeats} replays.</>}
         </p>
       )}

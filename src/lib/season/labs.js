@@ -23,10 +23,11 @@ export function observedPlayers(source) {
 
 export function perGameStats(p) {
   const g = Math.max(1, p.games);
+  const perGame = value => Number.isFinite(value) ? value / g : null;
   return {
-    mpg: p.minutes / g,
-    pts: p.points / g, reb: p.rebounds / g, ast: p.assists / g,
-    stl: p.steals / g, blk: p.blocks / g, tov: p.turnovers / g,
+    mpg: perGame(p.minutes),
+    pts: perGame(p.points), reb: perGame(p.rebounds), ast: perGame(p.assists),
+    stl: perGame(p.steals), blk: perGame(p.blocks), tov: perGame(p.turnovers),
   };
 }
 

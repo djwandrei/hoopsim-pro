@@ -9,7 +9,7 @@ const valueAt = (values, ref, fallback = 0) => values instanceof Map ? values.ge
  * the fitted game model. Unknown control names fail instead of being ignored. */
 export function normalizeLiveRotationControls({ players = [], controls = {} } = {}) {
   const violations = [], byName = new Map();
-  const supported = new Set(['format', 'version', 'starters', 'benchOrder', 'closingLineup',
+  const supported = new Set(['format', 'version', 'starters', 'benchOrder', 'closingLineup', 'shotUsageMultipliers',
     'openingStintMinutes', 'closingWindowMinutes', 'conditionalSubstitutions']);
   if (!controls || typeof controls !== 'object' || Array.isArray(controls)) {
     return { status: 'requires-review', violations: ['rotationControls must be an object.'], controls: null };
@@ -36,6 +36,55 @@ export function normalizeLiveRotationControls({ players = [], controls = {} } = 
     if (expected !== null && result.length !== expected) violations.push(`${label} requires exactly ${expected} active players.`);
     return result;
   };
+  const playersByRef = new Map(players.map(player => [String(player.playerRef ?? '').trim(), player]));
+  const activePlayers = players.filter(player => Number(player.minutesTarget ?? player.projectedMinutes) > 0);
+  const usageRows = controls.shotUsageMultipliers;
+  const usageByRef = new Map();
+  if (usageRows !== undefined && !Array.isArray(usageRows)) {
+    violations.push('shotUsageMultipliers must be an array of active-player multiplier rows.');
+  }
+  for (const row of Array.isArray(usageRows) ? usageRows : []) {
+    if (!row || typeof row !== 'object' || Array.isArray(row)) {
+      violations.push('Each shot-usage multiplier must be an object with a playerRef, canonicalName and multiplier.');
+      continue;
+    }
+    for (const field of Object.keys(row)) if (!['playerRef', 'canonicalName', 'multiplier'].includes(field)) {
+      violations.push(`Unsupported shot-usage multiplier field: ${field}.`);
+    }
+    const ref = String(row.playerRef ?? '').trim();
+    const player = playersByRef.get(ref);
+    const playerName = key(row.canonicalName);
+    if (!player || !playerName || key(player.canonicalName ?? player.displayName ?? player.name) !== playerName) {
+      violations.push(`Shot-usage multiplier has an absent or mismatched player identity: ${row.canonicalName ?? ref}.`);
+      continue;
+    }
+    if (!(Number(player.minutesTarget ?? player.projectedMinutes) > 0)) {
+      violations.push(`Inactive player ${row.canonicalName} cannot receive a shot-usage multiplier.`);
+      continue;
+    }
+    if (usageByRef.has(ref)) {
+      violations.push(`Shot-usage multipliers contain duplicate playerRef ${ref}.`);
+      continue;
+    }
+    if (!finite(row.multiplier) || row.multiplier < 0 || row.multiplier > 2) {
+      violations.push(`Shot-usage multiplier for ${player.canonicalName ?? ref} must be finite and between 0 and 2.`);
+      continue;
+    }
+    if (Math.abs(row.multiplier * 10 - Math.round(row.multiplier * 10)) > 1e-8) {
+      violations.push(`Shot-usage multiplier for ${player.canonicalName ?? ref} must use 0.1 increments.`);
+      continue;
+    }
+    usageByRef.set(ref, { playerRef: ref, canonicalName: String(player.canonicalName ?? player.displayName ?? player.name).trim(), multiplier: row.multiplier });
+  }
+  if (usageRows !== undefined) {
+    for (const player of activePlayers) {
+      const ref = String(player.playerRef ?? '').trim();
+      if (!usageByRef.has(ref)) violations.push(`Active player ${player.canonicalName ?? ref} needs a shot-usage multiplier.`);
+    }
+    if (activePlayers.length && ![...usageByRef.values()].some(row => row.multiplier > 0)) {
+      violations.push('At least one active player must have a positive shot-usage multiplier.');
+    }
+  }
   const number = (value, fallback, low, high, label) => {
     if (value === undefined) return fallback;
     if (!finite(value) || value < low || value > high) { violations.push(`${label} must be finite and between ${low} and ${high}.`); return fallback; }
@@ -63,6 +112,11 @@ export function normalizeLiveRotationControls({ players = [], controls = {} } = 
     starters: names(controls.starters, 'starters', controls.starters === undefined || controls.starters?.length === 0 ? null : 5),
     benchOrder: names(controls.benchOrder, 'benchOrder'),
     closingLineup: names(controls.closingLineup, 'closingLineup', controls.closingLineup === undefined || controls.closingLineup?.length === 0 ? null : 5),
+    shotUsageMultipliers: activePlayers.map(player => {
+      const playerRef = String(player.playerRef ?? '').trim();
+      return usageByRef.get(playerRef) ?? { playerRef,
+        canonicalName: String(player.canonicalName ?? player.displayName ?? player.name).trim(), multiplier: 1 };
+    }),
     openingStintMinutes: number(controls.openingStintMinutes, 2, 0.01, 6, 'openingStintMinutes'),
     closingWindowMinutes: number(controls.closingWindowMinutes, 5, 0.01, 12, 'closingWindowMinutes'),
     conditionalSubstitutions: {

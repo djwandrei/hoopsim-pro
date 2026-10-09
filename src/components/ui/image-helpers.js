@@ -1,5 +1,4 @@
 const WIX_MEDIA_HOSTS = {
-  "media.base44.com": "/images/public/",
   "static.wixstatic.com": "/media/",
 }
 
@@ -21,14 +20,6 @@ export function splitImageProps(props) {
     else imageProps[key] = value
   }
   return { wrapperProps, imageProps }
-}
-
-export function getImagePreviewClassName(className, currentClassName, baselineClassName) {
-  const sourceClasses = new Set((className || "").split(/\s+/))
-  const baselineClasses = new Set(baselineClassName.split(/\s+/))
-  return currentClassName.split(/\s+/).filter((token) =>
-    !["inline-block", "relative"].includes(token) || !baselineClasses.has(token) || sourceClasses.has(token)
-  ).join(" ")
 }
 
 /** Returns transform metadata only for canonical public Wix image URLs. */

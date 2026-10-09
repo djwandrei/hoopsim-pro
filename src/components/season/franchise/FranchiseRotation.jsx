@@ -52,11 +52,12 @@ export default function FranchiseRotation({ sim }) {
           {gapPct > 0.05 && <span className="frx-alloc__gap" style={{ width: `${gapPct}%` }} />}
         </div>
       </div>
+      <p className="frx-note">Shot usage ×1.0 is the baseline. Adjusts relative field-goal shooter selection among the five players on court; it is a scenario assumption, not a measured efficiency effect. Possessions stay fixed, while makes, rebounds, fouls, and realized box totals can vary.</p>
       <div className="frx-roster -mx-1 overflow-x-auto">
-        <table className="w-full min-w-[26rem]">
+        <table className="w-full min-w-[36rem]">
           <caption>Rotation draft</caption>
           <thead>
-            <tr><th scope="col">Player</th><th scope="col">Active</th><th scope="col">Starter</th><th scope="col">Minutes</th></tr>
+            <tr><th scope="col">Player</th><th scope="col">Active</th><th scope="col">Starter</th><th scope="col">Minutes</th><th scope="col">Shot usage ×</th></tr>
           </thead>
           <tbody>
             {team.rows.map(row => (
@@ -69,9 +70,18 @@ export default function FranchiseRotation({ sim }) {
                   onChange={event => sim.setDraft(row.name, 'active', event.target.checked)} /></td>
                 <td><input type="checkbox" aria-label={`Start ${row.name}`} checked={row.starter} disabled={row.disabled}
                   onChange={event => sim.setDraft(row.name, 'starter', event.target.checked)} /></td>
-                <td><input type="number" min="0" max="48" step="any" inputmode="decimal" value={row.minutes} disabled={row.disabled}
+                <td><input type="number" min="0" max="48" step="any" inputMode="decimal" value={row.minutes} disabled={row.disabled}
                   aria-label={`Minutes for ${row.name}`} title="Full stored precision; regulation assignments must sum to 240 minutes."
                   onChange={event => sim.setDraft(row.name, 'minutes', event.target.value, { typing: true })} /></td>
+                <td>
+                  <label className="frx-usage-control">
+                    <span>{row.shotUsageMultiplier.toFixed(1)}</span>
+                    <input type="range" min="0" max="2" step="0.1" value={row.shotUsageMultiplier}
+                      disabled={row.shotUsageDisabled} aria-label={`Shot usage scenario multiplier for ${row.name}`}
+                      title="Relative field-goal shooter weight; 1.0 is baseline and 0.0 removes this active player from shot selection."
+                      onChange={event => sim.setDraft(row.name, 'shotUsageMultiplier', event.target.value)} />
+                  </label>
+                </td>
               </tr>
             ))}
           </tbody>

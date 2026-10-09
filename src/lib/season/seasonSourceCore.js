@@ -1,3 +1,5 @@
+import { DATA_PINS } from '../site/dataPins.js';
+import { verifiedBytes, verifiedJson, safeRelativePath } from '../site/verifiedAssets.js';
 // Standalone season-source builder: reproduces the published exact-season and
 // pooled career reductions in the browser against the site's own published
 // data — no server code required when the app is self-hosted on the site.
@@ -35,20 +37,16 @@ export function clearSeasonSourceCache() {
   careerCache = null;
 }
 
-async function readJson(path, label) {
-  const key = path.split('?')[0];
-  if (cache.has(key)) return cache.get(key);
-  let response;
-  try {
-    response = await fetch(DATA_BASE + path);
-  } catch {
-    throw new Error(`${label} could not be reached.`);
+async function readJson(path, label, descriptor = DATA_PINS[path.split('?')[0]]) {
+  const key = `${path.split('?')[0]}|${descriptor?.sha256 || ''}`;
+  if (!cache.has(key)) {
+    const promise = verifiedJson(DATA_BASE + path, descriptor, label);
+    cache.set(key, promise);
+    promise.catch(() => cache.delete(key));
   }
-  if (!response.ok) throw new Error(`${label} is unavailable (${response.status}).`);
-  const value = await response.json();
-  cache.set(key, value);
-  return value;
+  return cache.get(key);
 }
+const finite = value => value == null || value === '' || typeof value === 'boolean' ? null : Number.isFinite(Number(value)) ? Number(value) : null;
 
 function normalizeName(value) {
   return String(value || '')
@@ -62,7 +60,7 @@ function normalizeName(value) {
 }
 
 function metricValue(metric) {
-  return metric?.status === 'available' && Number.isFinite(Number(metric.value)) ? Number(metric.value) : null;
+  return metric?.status === 'available' ? finite(metric.value) : null;
 }
 
 // Canonical V4 records keep identity in `entities`, the season window in `time`,
@@ -81,8 +79,13 @@ async function publishedPackage(kind, year = null) {
   if (!entry) throw new Error(kind === 'pooled-window'
     ? 'No published pooled-window package.'
     : `No published exact-season package for ${year}.`);
-  const packageRoot = `${V4_RELEASE}/${String(entry.projectionIndexPath).split('/').slice(0, -1).join('/')}`;
-  const index = await readJson(`${packageRoot}/index.json?v=20261002b`, 'The projection index');
+  const indexPath = safeRelativePath(entry.projectionIndexPath);
+  const packageRoot = `${V4_RELEASE}/${indexPath.split('/').slice(0, -1).join('/')}`;
+  const index = await readJson(`${V4_RELEASE}/${indexPath}`, 'The projection index', { sha256: entry.indexSha256 });
+  if (index.packageId !== entry.packageId || index.packageVersion !== entry.packageVersion || index.modelId !== entry.modelId || index.scope?.kind !== kind
+      || (kind === 'exact-season' && Number(index.scope.seasonStartYear) !== year)) {
+    throw new Error('The projection index does not match the selected package identity and scope.');
+  }
   return { registry, entry, index, packageRoot };
 }
 
@@ -91,7 +94,7 @@ async function packagePart(index, packageRoot, artifactId) {
   if (!descriptor?.path) throw new Error(`The package is missing its ${artifactId} artifact.`);
   return {
     descriptor,
-    value: await readJson(`${V4_RELEASE}/${descriptor.path}?v=20261002b`, `The ${artifactId} artifact`),
+    value: await readJson(`${V4_RELEASE}/${safeRelativePath(descriptor.path)}`, `The ${artifactId} artifact`, descriptor),
   };
 }
 
@@ -150,11 +153,7 @@ async function streamCanonicalRecords(response, onRecord) {
     capturing = false;
     const text = capture;
     capture = '';
-    try {
-      onRecord(JSON.parse(text));
-    } catch {
-      // A malformed record is skipped rather than failing the archive.
-    }
+    onRecord(JSON.parse(text));
   };
 
   for (;;) {
@@ -200,7 +199,7 @@ async function streamCanonicalRecords(response, onRecord) {
       if (capturing) capture += char;
     }
   }
-  commit();
+  if (capturing || inString || depth !== 0) throw new Error('The career archive is truncated.');
 }
 
 // The pooled V4 player-seasons artifact is very large (over 100MB); it is
@@ -211,13 +210,8 @@ async function careerArchive() {
   const { registry, entry, index } = await publishedPackage('pooled-window');
   const descriptor = (index.artifacts || []).find(item => item.artifactId === 'player-seasons');
   if (!descriptor?.path) throw new Error('The pooled package is missing its player-seasons artifact.');
-  let response;
-  try {
-    response = await fetch(`${DATA_BASE}${V4_RELEASE}/${descriptor.path}?v=20261002b`);
-  } catch {
-    throw new Error('The pooled player-seasons artifact could not be reached.');
-  }
-  if (!response.ok || !response.body) throw new Error(`The pooled player-seasons artifact is unavailable (${response.status}).`);
+  const bytes = await verifiedBytes(`${DATA_BASE}${V4_RELEASE}/${safeRelativePath(descriptor.path)}`, descriptor, 'The pooled player-seasons artifact');
+  const response = new Response(bytes);
   const metadata = await playerMetadata();
   const records = [];
   await streamCanonicalRecords(response, row => {
@@ -231,8 +225,8 @@ async function careerArchive() {
       teamCode: item.teamCode,
       phase: rowPhase(row),
       observed: item.observed === true,
-      games: Number(item.games) || 0,
-      minutes: Number(item.minutes) || 0,
+      games: finite(item.games),
+      minutes: finite(item.minutes),
       positions: Array.isArray(item.positions) ? item.positions : [],
       age: item.age ?? null,
       experience: null,
@@ -263,6 +257,8 @@ function entrySummary(entry, index) {
 // Exact-season source: every published package part plus the public
 // companion sources, built in the browser.
 export async function loadSeasonSourceCore(year) {
+  year = Number(year);
+  if (!SUPPORTED_YEARS.includes(year)) throw new Error('Choose a published exact season.');
   const { registry, entry, index, packageRoot } = await publishedPackage('exact-season', year);
 
   const [teamStylesPart, membershipsPart, playerSeasonsPart, playersPart, metadata, context, scheduleDoc] = await Promise.all([
@@ -301,16 +297,18 @@ export async function loadSeasonSourceCore(year) {
       return {
         playerRef: rowRef(row, 'playerRef'),
         name: item.displayName,
+        seasonStartYear: rowYear(row),
+        phase: rowPhase(row),
         teamCode: item.teamCode,
         positions: Array.isArray(item.positions) ? item.positions : [],
-        games: Number(item.games) || 0,
-        minutes: Number(item.minutes) || 0,
-        points: Number(box.points) || 0,
-        rebounds: Number(box.rebounds) || 0,
-        assists: Number(box.assists) || 0,
-        turnovers: Number(box.turnovers) || 0,
-        steals: Number(box.steals) || 0,
-        blocks: Number(box.blocks) || 0,
+        games: finite(item.games),
+        minutes: finite(item.minutes),
+        points: finite(box.points),
+        rebounds: finite(box.rebounds),
+        assists: finite(box.assists),
+        turnovers: finite(box.turnovers),
+        steals: finite(box.steals),
+        blocks: finite(box.blocks),
         headshotPath: headshotFor(metadata, item.displayName),
       };
     });
@@ -331,7 +329,7 @@ export async function loadSeasonSourceCore(year) {
         headshotPath: headshotFor(metadata, item.displayName),
         metrics: Object.fromEntries(BLUEPRINT_METRIC_KEYS.map(key => {
           const metric = item.metrics?.[key];
-          return [key, { status: metric?.status || 'unavailable', value: Number.isFinite(Number(metric?.value)) ? Number(metric.value) : null }];
+          return [key, { status: metric?.status || 'unavailable', value: metricValue(metric) }];
         })),
       };
     });
@@ -343,6 +341,7 @@ export async function loadSeasonSourceCore(year) {
   const schedule = ((scheduleSeason?.games || []))
     .filter(game => game.phase === 'regular' && game.home && game.away)
     .map(game => ({
+      id: game.id || game.gameId || null,
       at: game.scheduledAt || null,
       home: game.home,
       away: game.away,

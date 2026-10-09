@@ -9,6 +9,7 @@ import ForgePickDraft from '@/components/forge/ForgePickDraft';
 import ForgeTeamDraft from '@/components/forge/ForgeTeamDraft';
 import { MODE_STEPS } from '@/components/forge/ForgeDraftGame';
 import { buildForgePool } from '@/components/forge/forgePool';
+import { initialForgeDraftMode } from '@/components/forge/forgeReceipt';
 
 const DRAFT_MODES = [
   { key:'wheel', label:'Wheel Draft', desc:'Spin the reels for team & player, tap a stat chip to assign it — keep or respin the offered player-season, then the finished build tours the league.' },
@@ -20,7 +21,7 @@ const DRAFT_MODES = [
 export default function ForgeLab() {
   usePageMeta({ title: 'Forge Lab — SwishIQ Studio', description: 'Forge composite players and teams from real season data with live 3D build feedback.' });
   const data = useSeasonSource();
-  const [mode, setMode] = useState('wheel');
+  const [mode, setMode] = useState(() => initialForgeDraftMode(window.location.search, DRAFT_MODES.map(item => item.key)));
   // Season pool built once per source and shared by every draft mode, so
   // switching modes never re-derives the ratings pipeline.
   const pool = useMemo(() => (data.state === 'ready' ? buildForgePool(data.source) : null), [data.source, data.state]);

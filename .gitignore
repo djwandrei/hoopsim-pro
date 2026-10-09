@@ -35,3 +35,9 @@ dist-ssr
 .env
 .vite
 base44/.app.jsonc
+
+# Local browser evidence and release staging; never publish these as source.
+/output/
+/.playwright-cli/
+/.tmp-*.mjs
+/audit-vite.config.mjs

@@ -19,6 +19,7 @@ import CareerSummary from '@/components/career/CareerSummary';
 import CareerBioFallback from '@/components/career/CareerBioFallback';
 import CareerSpotlight from '@/components/career/CareerSpotlight';
 import MyNbaHub from '@/components/season/MyNbaHub';
+import { careerSeasonsThroughCutoff } from '@/components/career/careerCutoffModel';
 
 const CAREER_TABS = [['overview', 'CAREER PATH'], ['history', 'SEASON LEDGER'], ['bio', 'BIO & AWARDS']];
 
@@ -27,13 +28,28 @@ export default function CareerLab() {
   usePageMeta({ title: 'Career Lab — SwishIQ Studio', description: 'Browse the full career archive: season trends, team changes, biographies and awards.' });
   const { source, players, state, error, retry } = useCareerArchive();
   const [player, setPlayer] = useState(null);
+  const [selectedAsOfYear, setSelectedAsOfYear] = useState(null);
   const [view, setView] = useState('overview');
   const [pickerOpen, setPickerOpen] = useState(true);
-  const seasons = useMemo(() => player ? careerSeasons(player) : [], [player]);
+  const allSeasons = useMemo(() => player ? careerSeasons(player) : [], [player]);
+  const cutoffYear = allSeasons.some(row => row.year === selectedAsOfYear)
+    ? selectedAsOfYear
+    : allSeasons.at(-1)?.year ?? null;
+  const seasons = useMemo(() => careerSeasonsThroughCutoff(allSeasons, cutoffYear), [allSeasons, cutoffYear]);
+  const identitySeason = seasons.at(-1);
+  const identityPlayer = identitySeason
+    ? { ...player, teamCode: identitySeason.teams.at(-1) || player.teamCode }
+    : player;
   const { context, status } = usePlayerContext(player?.name || '');
   // Bio tab: when the archive holds no biography record for this player, the
   // page falls back to a stat summary instead of going quiet.
   const hasBioRecord = Boolean(context?.nba?.profiles?.length || context?.nba?.roster);
+  const selectPlayer = value => {
+    setPlayer(value);
+    setSelectedAsOfYear(null);
+    setPickerOpen(false);
+    setView('overview');
+  };
 
   return (
     <StudioShell active="/analytics">
@@ -65,26 +81,43 @@ export default function CareerLab() {
                   <PlayerPicker
                     players={players}
                     selectedRef={player?.playerRef}
-                    onSelect={(value) => {setPlayer(value);setPickerOpen(false);setView('overview');}}
+                    onSelect={selectPlayer}
                     placeholder="Find a career…"
                     teamFilter="chips" />
                 </div>
               )}
             </div>
-            {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={(value) => {setPlayer(value);setView('overview');}} />}
+            {Boolean(players.length) && <CareerSpotlight players={players} selectedRef={player?.playerRef} onSelect={selectPlayer} />}
           </div>
           <CareerArchiveStatus source={source} state={state} error={error} retry={retry} />
           {!player ?
           <WorkspaceEmpty title="FOLLOW THE RECORDED JOURNEY">Select a player to see the original archive's season-by-season rates, team changes and published award records.</WorkspaceEmpty> :
 
           <div className="space-y-4">
+              {allSeasons.length > 0 && <div className="myna-panel flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <p className="court-kicker">Career output cutoff</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Career totals, path and season ledger use observed regular-season records through this season.</p>
+                </div>
+                <label htmlFor="career-as-of-season" className="flex w-full shrink-0 flex-col gap-1.5 sm:w-56">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">As of season</span>
+                  <select
+                    id="career-as-of-season"
+                    value={cutoffYear ?? ''}
+                    onChange={event => setSelectedAsOfYear(Number(event.target.value))}
+                    className="min-h-11 w-full rounded-lg border border-border/60 bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
+                  >
+                    {[...allSeasons].reverse().map(season => <option key={season.year} value={season.year}>{season.label}</option>)}
+                  </select>
+                </label>
+              </div>}
               <div className="grid gap-4 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-                <div className="myna-panel"><PlayerIdentity player={player} year={player.latestYear} /></div>
+                <div className="myna-panel"><PlayerIdentity player={identityPlayer} year={cutoffYear ?? player.latestYear} /></div>
                 <div className="myna-panel p-4"><CareerSummary seasons={seasons} /></div>
               </div>
               {view === 'overview' &&
             <div className="myna-panel p-4">
-                  <RecordedCareerChart key={player.playerRef} seasons={seasons} />
+                  <RecordedCareerChart key={`${player.playerRef}-${cutoffYear}`} seasons={seasons} />
                   
 
 

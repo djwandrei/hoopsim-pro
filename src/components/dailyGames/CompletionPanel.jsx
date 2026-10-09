@@ -51,7 +51,7 @@ export default function CompletionPanel({ total, max, entries, otherGamePath, ot
           <span className="dg-complete__trophy"><Trophy className="h-7 w-7 text-gold" /></span>
           <div>
             <span className="bcast-kicker">Run complete</span>
-            <h3 className="dg-complete__score mt-1">{total}<em>/{max}</em> <span className="text-[0.45em] tracking-[0.14em] text-muted-foreground">GAME POINTS</span></h3>
+            <h3 className="dg-complete__score mt-1">{max > 0 ? <>{total}<em>/{max}</em> <span className="text-[0.45em] tracking-[0.14em] text-muted-foreground">GAME POINTS</span></> : 'Verified rankings'}</h3>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -70,7 +70,7 @@ export default function CompletionPanel({ total, max, entries, otherGamePath, ot
           </button>
         </div>
       </div>
-      <div className="dg-complete__meter mt-4"><span style={{ width: `${pct}%` }} /></div>
+      {max > 0 && <div className="dg-complete__meter mt-4"><span style={{ width: `${pct}%` }} /></div>}
       <ul className="mt-4 grid gap-3 sm:grid-cols-2">
         {entries.map((entry, index) => {
           const entryPct = entry.maxPoints > 0 ? Math.round((entry.points / entry.maxPoints) * 100) : 0;
@@ -78,11 +78,11 @@ export default function CompletionPanel({ total, max, entries, otherGamePath, ot
             <li key={entry.key} className="rounded-lg border border-border/30 bg-canvas/40 px-3 py-2.5">
               <div className="dg-complete__row">
                 <span className="dg-complete__row-name">{index + 1}. {entry.title}</span>
-                <span className="dg-complete__row-pts">{entry.maxPoints > 0 ? `${entry.points}/${entry.maxPoints}` : 'No Game Points'}</span>
+                <span className="dg-complete__row-pts">{entry.maxPoints > 0 ? `${entry.points}/${entry.maxPoints}` : entry.rank ? `Rank ${entry.rank} of ${entry.optionCount}` : 'Verified'}</span>
               </div>
-              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-raised/60">
+              {entry.maxPoints > 0 && <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-raised/60">
                 <span className="block h-full rounded-full bg-gold/80" style={{ width: `${entryPct}%` }} />
-              </div>
+              </div>}
             </li>
           );
         })}

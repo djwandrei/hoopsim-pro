@@ -42,18 +42,20 @@ export default function GameScoreboard({ league, game }) {
   const winnerCode = homeWon ? home.code : away.code;
   const margin = Math.abs(game.homePts - game.awayPts);
   // Quarter-by-quarter line score, derived from the play-by-play score trail.
+  const periodScores = new Map();
+  for (const event of game.pbp || []) {
+    // Local replays have opening and closing events for each period. Keep
+    // the closing cumulative score; FINAL is a total, not another quarter.
+    if ((event.type === 'period' || event.type === 'final')
+      && /^(?:Q\d+|OT\d+)$/.test(event.q) && Array.isArray(event.score)) {
+      periodScores.set(event.q, event.score);
+    }
+  }
   const lineScore = [];
   let prev = [0, 0];
-  const seenQuarters = new Set();
-  for (const event of game.pbp || []) {
-    // The native report appends a final row that repeats the last period's
-    // label (Q4 on a regulation game): skip repeats so the line score shows
-    // one column per period, keeping the final row's OT delta when needed.
-    if ((event.type === 'period' || event.type === 'final') && event.score && !seenQuarters.has(event.q)) {
-      seenQuarters.add(event.q);
-      lineScore.push({ q: event.q, a: event.score[1] - prev[1], h: event.score[0] - prev[0] });
-      prev = event.score;
-    }
+  for (const [q, score] of periodScores) {
+    lineScore.push({ q, a: score[1] - prev[1], h: score[0] - prev[0] });
+    prev = score;
   }
   const maxAway = Math.max(...lineScore.map(row => row.a), 0);
   const maxHome = Math.max(...lineScore.map(row => row.h), 0);

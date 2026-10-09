@@ -1,0 +1,582 @@
+{
+  "format": "swishiq-franchise-site-runtime-v1",
+  "version": 1,
+  "releasePath": "tools/swishiq-studio/franchise-sim-20261008",
+  "status": "development-candidate-not-certified",
+  "selectedEngine": "rate-linked-recovery-possession-v3",
+  "integrationScope": "regular-season-browser-workspace",
+  "unavailableBrowserPhases": [
+    "postseason",
+    "offseason",
+    "year-advancement"
+  ],
+  "artifacts": [
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/checkpoints/2026-10-06-v4-parametric-age-frozen/model.json",
+      "sourcePath": "prototypes/djhc-player-game-sim/checkpoints/2026-10-06-v4-parametric-age-frozen/model.json",
+      "sourceSha256": "6e37df672c7a25f7c2c5f6970afd01ebe3418e4e97f8d7043ab22072b9fdd8fc",
+      "sha256": "6e37df672c7a25f7c2c5f6970afd01ebe3418e4e97f8d7043ab22072b9fdd8fc",
+      "bytes": 4176246
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/data/season-age-anchor-index-v1.json",
+      "sourcePath": "prototypes/djhc-player-game-sim/data/season-age-anchor-index-v1.json",
+      "sourceSha256": "b8d38d4861c2af3a76684c0d228d04dc2c1941f22ed0893688dcdc5961f36df4",
+      "sha256": "b8d38d4861c2af3a76684c0d228d04dc2c1941f22ed0893688dcdc5961f36df4",
+      "bytes": 3121026
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/franchise-execution-input-pins-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-execution-input-pins-v1.mjs",
+      "sourceSha256": "cc13bc4946adc30ceffe9c3c9e005473a7cbf7132cb812727ad72e8660a40602",
+      "sha256": "cc13bc4946adc30ceffe9c3c9e005473a7cbf7132cb812727ad72e8660a40602",
+      "bytes": 7639
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/franchise-worker-client-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-client-v1.mjs",
+      "sourceSha256": "12bb083776129aac87662b582d053bdbc2942028943acec0a8964da5d670dc16",
+      "sha256": "12bb083776129aac87662b582d053bdbc2942028943acec0a8964da5d670dc16",
+      "bytes": 1927
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/franchise-worker-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "sourceSha256": "ffee9bc5d313ac7db9030405457865969f561c013cd62d07ec5bc9aec90f71de",
+      "sha256": "ffee9bc5d313ac7db9030405457865969f561c013cd62d07ec5bc9aec90f71de",
+      "bytes": 14413
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/.htaccess",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-preview/.htaccess",
+      "sourceSha256": "2c59c909569a0341139d7f1ca21750711aea07a265ed0f1e93328c1098cd2b0f",
+      "sha256": "2c59c909569a0341139d7f1ca21750711aea07a265ed0f1e93328c1098cd2b0f",
+      "bytes": 293
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/index.html",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-preview/index.html",
+      "sourceSha256": "7486190591ad8ddba39bd38c17b584b2c74e1483f307b2c90189c59dd4c49458",
+      "sha256": "7486190591ad8ddba39bd38c17b584b2c74e1483f307b2c90189c59dd4c49458",
+      "bytes": 17431
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/preview.css",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-preview/preview.css",
+      "sourceSha256": "dc6c665091a9a9224cbfc231b8873ff9ce882e2d085082967f4c626ca6405785",
+      "sha256": "dc6c665091a9a9224cbfc231b8873ff9ce882e2d085082967f4c626ca6405785",
+      "bytes": 25794
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/preview.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-preview/preview.mjs",
+      "sourceSha256": "d53476d369a88aa37d01977f96bff4bbdd9c6083544d7a105139e5bfb3107eeb",
+      "sha256": "d53476d369a88aa37d01977f96bff4bbdd9c6083544d7a105139e5bfb3107eeb",
+      "bytes": 105619
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/real-v4-browser-fixture-20261008.json",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-preview/real-v4-browser-fixture-20261008.json",
+      "sourceSha256": "57135d9e8eda4b9b13ad0c8a6572b2661d22383bc6e1eda51a4995b2791d3510",
+      "sha256": "57135d9e8eda4b9b13ad0c8a6572b2661d22383bc6e1eda51a4995b2791d3510",
+      "bytes": 686395
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/real-v4-browser-fixture-20261008.receipt.json",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-preview/real-v4-browser-fixture-20261008.receipt.json",
+      "sourceSha256": "4ccfb7481621a5297b0648a44b80edbaa2a2035eece5eeb99a4648b8fab37729",
+      "sha256": "4ccfb7481621a5297b0648a44b80edbaa2a2035eece5eeb99a4648b8fab37729",
+      "bytes": 239
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/v4-franchise-intake-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs",
+      "sourceSha256": "f97bea1650305e19e0a58931a3ccc806452acb734d35c18cb898093b1e06e4c0",
+      "sha256": "ca5360d113ac966a3ab6bbe4232add7954779cb09f18e892f6bac036fc0d3227",
+      "bytes": 62018
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/v4-generated-shooting-rating-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-generated-shooting-rating-v1.mjs",
+      "sourceSha256": "5e2b6e394c01617596fc8e73bf181fc3da73e6d38962b2299aadfeab4b738858",
+      "sha256": "5e2b6e394c01617596fc8e73bf181fc3da73e6d38962b2299aadfeab4b738858",
+      "bytes": 5313
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/integration/v4-snapshot-worker-payload-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-snapshot-worker-payload-v1.mjs",
+      "sourceSha256": "4542ea864d3330b92f24f0811fdd31fc45201786b61415c6cdf439bebc63a251",
+      "sha256": "4542ea864d3330b92f24f0811fdd31fc45201786b61415c6cdf439bebc63a251",
+      "bytes": 13337
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cap-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs",
+      "sourceSha256": "a3360bfedf4a5091f4a112e3a0122a4b2aeed441d35546f976c822621380668d",
+      "sha256": "a3360bfedf4a5091f4a112e3a0122a4b2aeed441d35546f976c822621380668d",
+      "bytes": 27003
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/career-progression-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/career-progression-v1.mjs",
+      "sourceSha256": "5663d12a982783c481957a306c8de5ae0d38e95ca083c3f2ef33410ee8a713dc",
+      "sha256": "5663d12a982783c481957a306c8de5ae0d38e95ca083c3f2ef33410ee8a713dc",
+      "bytes": 16430
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cba-contract-option-rules-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-contract-option-rules-v1.mjs",
+      "sourceSha256": "db113893483dfcdb5bcda9a7a71e6afb604718fda78e59e9ea7d28c1e8eafc59",
+      "sha256": "db113893483dfcdb5bcda9a7a71e6afb604718fda78e59e9ea7d28c1e8eafc59",
+      "bytes": 12427
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cba-restricted-free-agency-rules-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-restricted-free-agency-rules-v1.mjs",
+      "sourceSha256": "699d96bda6ccf8433e40778cb3e7efbdf11b416bfe541a3b3f319444fd1607f9",
+      "sha256": "699d96bda6ccf8433e40778cb3e7efbdf11b416bfe541a3b3f319444fd1607f9",
+      "bytes": 22070
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cba-roster-limits-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-roster-limits-v1.mjs",
+      "sourceSha256": "758f969438320c0b675574eb4ac51b23f1e83947740e6c39f254d28d7fde5d86",
+      "sha256": "758f969438320c0b675574eb4ac51b23f1e83947740e6c39f254d28d7fde5d86",
+      "bytes": 26257
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cba-salary-matching-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-matching-v1.mjs",
+      "sourceSha256": "d66bb403aebafca67ee54a25f3de078da00d934421c40fb636c3efcf14a76e5b",
+      "sha256": "d66bb403aebafca67ee54a25f3de078da00d934421c40fb636c3efcf14a76e5b",
+      "bytes": 9954
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cba-salary-scales-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-scales-v1.mjs",
+      "sourceSha256": "9fbdaabc3756344abaf1889a10cce70ed48a53d96e30c729babc599e04374e03",
+      "sha256": "9fbdaabc3756344abaf1889a10cce70ed48a53d96e30c729babc599e04374e03",
+      "bytes": 18235
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cba-signing-mechanisms-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-signing-mechanisms-v1.mjs",
+      "sourceSha256": "096d79c331068cb4bec0e398bf2b458c70f27921abcc72a32a0ef773a7cf3bdd",
+      "sha256": "096d79c331068cb4bec0e398bf2b458c70f27921abcc72a32a0ef773a7cf3bdd",
+      "bytes": 24160
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cba-trade-rule-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-trade-rule-engine-v1.mjs",
+      "sourceSha256": "b919571e066424ef8eeabc3b0118fd3da1ba72320294d97dc7b09a7a3277eb5c",
+      "sha256": "b919571e066424ef8eeabc3b0118fd3da1ba72320294d97dc7b09a7a3277eb5c",
+      "bytes": 20611
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/coherent-box-score-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/coherent-box-score-v1.mjs",
+      "sourceSha256": "e2fbe8be8640e4d9d914e9c934a0e18a1ba33c964714a6fd0a06b2852493d034",
+      "sha256": "e2fbe8be8640e4d9d914e9c934a0e18a1ba33c964714a6fd0a06b2852493d034",
+      "bytes": 16963
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/coherent-game-simulator-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/coherent-game-simulator-v1.mjs",
+      "sourceSha256": "f3e8b09eec582e33c551bae309c549378d7a49802356d02cc044099d1b766515",
+      "sha256": "f3e8b09eec582e33c551bae309c549378d7a49802356d02cc044099d1b766515",
+      "bytes": 1858
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/cpu-franchise-rotation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-franchise-rotation-v1.mjs",
+      "sourceSha256": "ad369f321108a3c5378536a623cf6aadcafb73b20dbc61c64d695cfe896078ef",
+      "sha256": "ad369f321108a3c5378536a623cf6aadcafb73b20dbc61c64d695cfe896078ef",
+      "bytes": 7503
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/franchise-automation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-automation-v1.mjs",
+      "sourceSha256": "936ee373c071bb2e1d72998b13781ca46b07664be7fb7069ec3cbc188924148b",
+      "sha256": "936ee373c071bb2e1d72998b13781ca46b07664be7fb7069ec3cbc188924148b",
+      "bytes": 15672
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "sourceSha256": "620ff243f102ca4a8d6dc99b1bccea21351f9e379f2db680a61a2b657cb13686",
+      "sha256": "620ff243f102ca4a8d6dc99b1bccea21351f9e379f2db680a61a2b657cb13686",
+      "bytes": 2930
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs",
+      "sourceSha256": "1cf7109d6e2eab1c8ec3361168ac37b5ae6ad47a3d543ff3b4683d2b0afaebce",
+      "sha256": "1cf7109d6e2eab1c8ec3361168ac37b5ae6ad47a3d543ff3b4683d2b0afaebce",
+      "bytes": 22623
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/franchise-browser-store-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-store-v1.mjs",
+      "sourceSha256": "879524a723b0f73f468276616381dd941a3d227d3011e2f05d26335fb4c95d4d",
+      "sha256": "879524a723b0f73f468276616381dd941a3d227d3011e2f05d26335fb4c95d4d",
+      "bytes": 16364
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/franchise-coaching-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-coaching-v1.mjs",
+      "sourceSha256": "d4269a4020d489af36e11a3552d5f16a4fcba2ce5d4fa0d59f1dca2bad0fe7a0",
+      "sha256": "d4269a4020d489af36e11a3552d5f16a4fcba2ce5d4fa0d59f1dca2bad0fe7a0",
+      "bytes": 13523
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/franchise-controls-v1.mjs",
+      "sourcePath": "hoopsim-pro/public/tools/swishiq-studio/franchise-sim-20261008/lib/franchise-controls-v1.mjs",
+      "sourceSha256": "7787b74c094cd40acd74907d6f5fade3892dc40464bc8bcc31de47e4f0d81b17",
+      "sha256": "7787b74c094cd40acd74907d6f5fade3892dc40464bc8bcc31de47e4f0d81b17",
+      "bytes": 36114
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/franchise-game-input-v1.mjs",
+      "sourcePath": "hoopsim-pro/public/tools/swishiq-studio/franchise-sim-20261008/lib/franchise-game-input-v1.mjs",
+      "sourceSha256": "6c09cd7c2bf9f35cc78285a2fc76b088485e1af42d57d9454ac9ac5294a7f39b",
+      "sha256": "6c09cd7c2bf9f35cc78285a2fc76b088485e1af42d57d9454ac9ac5294a7f39b",
+      "bytes": 5380
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/franchise-season-completion-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-season-completion-v1.mjs",
+      "sourceSha256": "8da7b43831568f5b0f9578a05e1ed98164e8f377720f6d974d90ac80ce4e774c",
+      "sha256": "8da7b43831568f5b0f9578a05e1ed98164e8f377720f6d974d90ac80ce4e774c",
+      "bytes": 17265
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/free-agent-cap-holds-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-cap-holds-v1.mjs",
+      "sourceSha256": "2833465d4bc854c3f11ca4cdd19464d78a1201d523bed3d40c59e95ce1f486ce",
+      "sha256": "2833465d4bc854c3f11ca4cdd19464d78a1201d523bed3d40c59e95ce1f486ce",
+      "bytes": 58348
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/game-feature-blocks-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-feature-blocks-v1.mjs",
+      "sourceSha256": "6dac0d263b832192b02dc52963a5261362ba7939a2b2123d1b76f91a9f23910b",
+      "sha256": "6dac0d263b832192b02dc52963a5261362ba7939a2b2123d1b76f91a9f23910b",
+      "bytes": 39707
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/game-simulator-v2.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs",
+      "sourceSha256": "5e391e3a56cd3437805bb5fb8eb2480f6976e9edebd5e57190daf97060168f5c",
+      "sha256": "5e391e3a56cd3437805bb5fb8eb2480f6976e9edebd5e57190daf97060168f5c",
+      "bytes": 41068
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/league-game-roster-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs",
+      "sourceSha256": "48483c6d31c5c481474944ebd545ecd065865814bbe875a2bbc0f211860aff1b",
+      "sha256": "48483c6d31c5c481474944ebd545ecd065865814bbe875a2bbc0f211860aff1b",
+      "bytes": 11211
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/live-game-simulator-v1.mjs",
+      "sourcePath": "hoopsim-pro/public/tools/swishiq-studio/franchise-sim-20261008/lib/live-game-simulator-v1.mjs",
+      "sourceSha256": "418b5b99c3a143dbac4f888834d004ff8fa37f98897fd9db808b57f3b8e8089c",
+      "sha256": "418b5b99c3a143dbac4f888834d004ff8fa37f98897fd9db808b57f3b8e8089c",
+      "bytes": 112706
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/live-minute-budget-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-minute-budget-v1.mjs",
+      "sourceSha256": "d3f50c2e01fb8fe5752ce5fd1790690ec30d7ddf4a8594677552bf3103131de9",
+      "sha256": "d3f50c2e01fb8fe5752ce5fd1790690ec30d7ddf4a8594677552bf3103131de9",
+      "bytes": 5611
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/live-ordinary-foul-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-ordinary-foul-controls-v1.mjs",
+      "sourceSha256": "06062a5711ac3b97bc70de869a0b160c37ff8fc00c7f81b4637ffa15adc2eeb1",
+      "sha256": "06062a5711ac3b97bc70de869a0b160c37ff8fc00c7f81b4637ffa15adc2eeb1",
+      "bytes": 5870
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/live-rotation-controls-v1.mjs",
+      "sourcePath": "hoopsim-pro/public/tools/swishiq-studio/franchise-sim-20261008/lib/live-rotation-controls-v1.mjs",
+      "sourceSha256": "b3fba2e8149a810c390a02dde0b56104b9105b974ba73a957726d055a6b73db6",
+      "sha256": "b3fba2e8149a810c390a02dde0b56104b9105b974ba73a957726d055a6b73db6",
+      "bytes": 15995
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/nba-foul-disqualification-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-foul-disqualification-v1.mjs",
+      "sourceSha256": "5313d8e1a368f783ad7247d01bf1583cb9619497692b0b8d7834fb9ac84f5db5",
+      "sha256": "5313d8e1a368f783ad7247d01bf1583cb9619497692b0b8d7834fb9ac84f5db5",
+      "bytes": 8092
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/nba-postseason-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-postseason-v1.mjs",
+      "sourceSha256": "598b981824ccdb16a1bdefd731396da599d6966f4e091e44f17db1543daeaac8",
+      "sha256": "598b981824ccdb16a1bdefd731396da599d6966f4e091e44f17db1543daeaac8",
+      "bytes": 45624
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/nba-team-foul-penalty-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-team-foul-penalty-v1.mjs",
+      "sourceSha256": "88430a1037db313b1fbd2a3b8cb5b58154e8f5b74b68fb627c977fa77defee94",
+      "sha256": "88430a1037db313b1fbd2a3b8cb5b58154e8f5b74b68fb627c977fa77defee94",
+      "bytes": 6727
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/nba-timeout-state-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-timeout-state-v1.mjs",
+      "sourceSha256": "e5547d076b0fd9588154e7b5c163b27c73c06a42caa0a6f22d8b5a8c8df73894",
+      "sha256": "e5547d076b0fd9588154e7b5c163b27c73c06a42caa0a6f22d8b5a8c8df73894",
+      "bytes": 9044
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/payroll-state-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/payroll-state-v1.mjs",
+      "sourceSha256": "eadc66b31f041524bfd16d50fee480e5d1cafa20eba9f318b9322490e1d84f56",
+      "sha256": "eadc66b31f041524bfd16d50fee480e5d1cafa20eba9f318b9322490e1d84f56",
+      "bytes": 10829
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/player-game-cohort-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-cohort-v1.mjs",
+      "sourceSha256": "7071851dabfd55d7387568583a77085cabd754758a117da049c14645633f595f",
+      "sha256": "7071851dabfd55d7387568583a77085cabd754758a117da049c14645633f595f",
+      "bytes": 28061
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/player-game-development-features-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-development-features-v1.mjs",
+      "sourceSha256": "773dd7ea895710a2482b953a1cd843e7ce1502e3a5bbd676ca812e1c8758ac64",
+      "sha256": "773dd7ea895710a2482b953a1cd843e7ce1502e3a5bbd676ca812e1c8758ac64",
+      "bytes": 13152
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/player-game-shared-evaluation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-shared-evaluation-v1.mjs",
+      "sourceSha256": "213355b86e07a9eb2d623149285dbf1ed38fa8d9b73dcfd530f94e774ce10675",
+      "sha256": "213355b86e07a9eb2d623149285dbf1ed38fa8d9b73dcfd530f94e774ce10675",
+      "bytes": 7812
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/prior-personal-foul-rate-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-personal-foul-rate-v1.mjs",
+      "sourceSha256": "264f39fcaeba06fc95cf0beb1c925726fc3b1b3ad8ce1e35964799086f691c3f",
+      "sha256": "264f39fcaeba06fc95cf0beb1c925726fc3b1b3ad8ce1e35964799086f691c3f",
+      "bytes": 16158
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/prior-rebound-split-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-rebound-split-v1.mjs",
+      "sourceSha256": "d16de6dcebeab14293d27ba11fe64d8c3d3dfb6c4108e8e709d7224eb66b2f16",
+      "sha256": "d16de6dcebeab14293d27ba11fe64d8c3d3dfb6c4108e8e709d7224eb66b2f16",
+      "bytes": 10708
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/prior-shot-efficiency-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-shot-efficiency-v1.mjs",
+      "sourceSha256": "22d9bfe291779812042e33b189ff0b438a9ced8901ab2e7483bc1dfdda3e4074",
+      "sha256": "22d9bfe291779812042e33b189ff0b438a9ced8901ab2e7483bc1dfdda3e4074",
+      "bytes": 7471
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/rebound-ownership-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/rebound-ownership-v1.mjs",
+      "sourceSha256": "cba1ce11aeb3ab4bdcc059a7678b899c1023acc2946f053fd1ee65d64d6938d7",
+      "sha256": "cba1ce11aeb3ab4bdcc059a7678b899c1023acc2946f053fd1ee65d64d6938d7",
+      "bytes": 10352
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/restricted-free-agency-state-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/restricted-free-agency-state-v1.mjs",
+      "sourceSha256": "355df58c74f7a97314b1f8180209bbcaef31b98d087cd0779671f57d92e1bf94",
+      "sha256": "355df58c74f7a97314b1f8180209bbcaef31b98d087cd0779671f57d92e1bf94",
+      "bytes": 10535
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/ridge-regression.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/ridge-regression.mjs",
+      "sourceSha256": "6a5a34eaad0e50c50a330472fde6e2f766547fc218c43c6da11e1bd908fad05c",
+      "sha256": "6a5a34eaad0e50c50a330472fde6e2f766547fc218c43c6da11e1bd908fad05c",
+      "bytes": 2876
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/rotation-schedule-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/rotation-schedule-v1.mjs",
+      "sourceSha256": "b0b40e5fc7da66f8b98e4f7821488ec2c885314c17550f27de234d7179c176f1",
+      "sha256": "b0b40e5fc7da66f8b98e4f7821488ec2c885314c17550f27de234d7179c176f1",
+      "bytes": 13404
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/season-age-transition-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-age-transition-v1.mjs",
+      "sourceSha256": "a10a08ee017c452757484bd6516d6c9025bea289e08668eee0c5f3a109e412c3",
+      "sha256": "a10a08ee017c452757484bd6516d6c9025bea289e08668eee0c5f3a109e412c3",
+      "bytes": 17218
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/season-awards-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-awards-v1.mjs",
+      "sourceSha256": "c87409e527752870b21a419ff4ee86b4246a5d462767b76e97e54c2ad1626cb3",
+      "sha256": "c87409e527752870b21a419ff4ee86b4246a5d462767b76e97e54c2ad1626cb3",
+      "bytes": 49690
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/season-simulation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "sourceSha256": "e3dde4cb7dc7dba1289a6aced5b240ac0c53073881b7bf71b924e4cf8a3cb1cb",
+      "sha256": "e3dde4cb7dc7dba1289a6aced5b240ac0c53073881b7bf71b924e4cf8a3cb1cb",
+      "bytes": 43694
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/shared-event-calibration-cache-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-event-calibration-cache-v1.mjs",
+      "sourceSha256": "e48092ded061cd81f2f26d873b3dfb7b9e4f10b77162d1efc9b8d4dcf7c7d3a0",
+      "sha256": "e48092ded061cd81f2f26d873b3dfb7b9e4f10b77162d1efc9b8d4dcf7c7d3a0",
+      "bytes": 6322
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/shared-player-production-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-player-production-v1.mjs",
+      "sourceSha256": "4afba8620332de9a0498fe73695c47a8c422d5f1cd16d9b29b1f8f0cdf2e3ccf",
+      "sha256": "4afba8620332de9a0498fe73695c47a8c422d5f1cd16d9b29b1f8f0cdf2e3ccf",
+      "bytes": 3386
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/shared-possession-mapping-v2.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v2.mjs",
+      "sourceSha256": "0b2f591fb6e96ea32e70bd0de548960ea43ce6d4bb34b602501c3a67d287e3b8",
+      "sha256": "0b2f591fb6e96ea32e70bd0de548960ea43ce6d4bb34b602501c3a67d287e3b8",
+      "bytes": 8592
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/shared-possession-mapping-v3.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v3.mjs",
+      "sourceSha256": "cbc2cfe882fb560fb7c4eecdd8b8fe337a98279b64672465ff10f4f25a420349",
+      "sha256": "cbc2cfe882fb560fb7c4eecdd8b8fe337a98279b64672465ff10f4f25a420349",
+      "bytes": 9681
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/shared-possession-mapping-v4.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v4.mjs",
+      "sourceSha256": "8f081e2cf855f744c7387c5130699159a6ad249c70c9ad435b74848e36aea018",
+      "sha256": "8f081e2cf855f744c7387c5130699159a6ad249c70c9ad435b74848e36aea018",
+      "bytes": 17037
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/shared-production-game-input-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-production-game-input-v1.mjs",
+      "sourceSha256": "136ae24b58bfe887347cf1a533e3d42dfa3c6e6e3b08aab3ef8a2c86f67fa395",
+      "sha256": "136ae24b58bfe887347cf1a533e3d42dfa3c6e6e3b08aab3ef8a2c86f67fa395",
+      "bytes": 15774
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs",
+      "sourceSha256": "59841c72f511db5101ef56989c57c4c7ef7f9e030ace8cf04edc3f7d605b28a5",
+      "sha256": "59841c72f511db5101ef56989c57c4c7ef7f9e030ace8cf04edc3f7d605b28a5",
+      "bytes": 9670
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/stored-tpe-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/stored-tpe-v1.mjs",
+      "sourceSha256": "c6b34fb0f66c440976b07b92ea746f48c0583b532ea1d30be483b1a66085948f",
+      "sha256": "c6b34fb0f66c440976b07b92ea746f48c0583b532ea1d30be483b1a66085948f",
+      "bytes": 14202
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/transaction-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "sourceSha256": "89282312a6d15b37c2c2a5a7b175d07289fc9ab5d6de08e372b14d20a2110b29",
+      "sha256": "89282312a6d15b37c2c2a5a7b175d07289fc9ab5d6de08e372b14d20a2110b29",
+      "bytes": 80191
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/lib/waiver-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/waiver-accounting-v1.mjs",
+      "sourceSha256": "cc8492061459b53864ccbd78c47e8606cd97c27cdf3e7562e25ad87a2a85205f",
+      "sha256": "cc8492061459b53864ccbd78c47e8606cd97c27cdf3e7562e25ad87a2a85205f",
+      "bytes": 12489
+    },
+    {
+      "path": "tools/swishiq-studio/franchise-sim-20261008/models/shared-player-production-v1-candidate-20261007b.json",
+      "sourcePath": "prototypes/djhc-player-game-sim/models/shared-player-production-v1-candidate-20261007b.json",
+      "sourceSha256": "044386cbe912d03036ef454a185c555da5c356a485288622e722b0c609ee8db4",
+      "sha256": "044386cbe912d03036ef454a185c555da5c356a485288622e722b0c609ee8db4",
+      "bytes": 36920
+    },
+    {
+      "path": "tools/swishiq-studio/data/nba-actual-schedules-v1.json",
+      "sourcePath": "tools/swishiq-studio/data/nba-actual-schedules-v1.json",
+      "sourceSha256": "522ed031595601aff75b26d5f3d3cc8022525c0e8b29d072baa0b626d54d4e3e",
+      "sha256": "522ed031595601aff75b26d5f3d3cc8022525c0e8b29d072baa0b626d54d4e3e",
+      "bytes": 2338128
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "sourceSha256": "75255673400de31557142a65038b7996ffc6496291869c4ea463322878bd4baf",
+      "sha256": "75255673400de31557142a65038b7996ffc6496291869c4ea463322878bd4baf",
+      "bytes": 3338
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "sourceSha256": "d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5",
+      "sha256": "d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5",
+      "bytes": 7711
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "sourceSha256": "8d1fafb6108e437ae2b4ca0b930a25f12368db0bdadcc12d9b7bd9a0b70df58c",
+      "sha256": "8d1fafb6108e437ae2b4ca0b930a25f12368db0bdadcc12d9b7bd9a0b70df58c",
+      "bytes": 20479
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "sourceSha256": "7fb5ce6155135ac7ec9d1c7e5f6a7db5c6a78e329415698e86222d0696b7eee0",
+      "sha256": "7fb5ce6155135ac7ec9d1c7e5f6a7db5c6a78e329415698e86222d0696b7eee0",
+      "bytes": 12566
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "sourceSha256": "8225fde5b9b4b9a347069c724b7b28013fecc5f21c710db2b50623fbaf58332d",
+      "sha256": "8225fde5b9b4b9a347069c724b7b28013fecc5f21c710db2b50623fbaf58332d",
+      "bytes": 27842
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "sourceSha256": "39e737644abc8c478bab692320710f0485cc5e52a107c829d1a6664eae495b78",
+      "sha256": "39e737644abc8c478bab692320710f0485cc5e52a107c829d1a6664eae495b78",
+      "bytes": 22546
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "sourceSha256": "e163bf97d92ca202bbbf46f0afb735eb22e23f2b63f9601b2f36dc0a63c2cc3c",
+      "sha256": "e163bf97d92ca202bbbf46f0afb735eb22e23f2b63f9601b2f36dc0a63c2cc3c",
+      "bytes": 13877
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "sourceSha256": "3f77681775b95b9fba42454d6ed62c785551cdd7db5a439babfbad9d753352bd",
+      "sha256": "3f77681775b95b9fba42454d6ed62c785551cdd7db5a439babfbad9d753352bd",
+      "bytes": 1275737
+    },
+    {
+      "path": "tools/swishiq-studio/engine/nba-schedule-source.js",
+      "sourcePath": "tools/swishiq-studio/engine/nba-schedule-source.js",
+      "sourceSha256": "c2db12f4760563c1fa92df0bc0acd204e6f047059a4829e2b8f5bfb6c7cece00",
+      "sha256": "c2db12f4760563c1fa92df0bc0acd204e6f047059a4829e2b8f5bfb6c7cece00",
+      "bytes": 22848
+    }
+  ]
+}

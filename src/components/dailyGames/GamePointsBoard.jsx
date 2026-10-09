@@ -7,15 +7,16 @@ import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
   const teamLogo = teamCode ? teamAsset(teamCode) : null;
   const passport = outcome?.resultPassport;
-  const decision = passport?.decision;
+  const v4Evaluation = outcome?.evaluation ?? null;
+  const decision = passport?.decision ?? v4Evaluation?.decision;
   const gamePoints = passport?.gamePoints;
   const nativeOutcome = passport?.nativeOutcome;
-  // V4 boards return descriptive source-impact rankings without Game Points.
-  const v4Evaluation = outcome?.evaluation ?? null;
-  const proof = decision ? decisionProofStatus(decision) : null;
-  const unitLabel = nativeOutcome?.unit === 'points-per-100-possessions' ? 'points per 100 possessions' : 'points';
-  const selectedValue = nativeOutcome && Number.isFinite(nativeOutcome.value) ? nativeOutcome.value : null;
-  const bestValue = selectedValue != null && decision ? selectedValue + decision.gapToBest : null;
+  const production = v4Evaluation?.observedProduction;
+  const metric = production ?? v4Evaluation?.estimatedImpact;
+  const proof = passport?.decision ? decisionProofStatus(passport.decision) : null;
+  const unitLabel = production ? 'Game Score per 40 minutes' : 'points per 100 possessions';
+  const selectedValue = Number.isFinite(metric?.value) ? metric.value : Number.isFinite(nativeOutcome?.value) ? nativeOutcome.value : null;
+  const bestValue = Number.isFinite(metric?.bestValue) ? metric.bestValue : selectedValue != null && decision ? selectedValue + decision.gapToBest : null;
   const scale = bestValue != null ? Math.max(Math.abs(selectedValue), Math.abs(bestValue)) || 1 : 1;
   const widthFor = value => `${Math.min(100, (Math.abs(value) / scale) * 100).toFixed(1)}%`;
   return (
@@ -50,10 +51,10 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
       {decision && (
         <div className="dg-tiles mt-4">
           {[
-            ['Choices beaten', decision.choicesBeaten],
-            ['Gap to best', decision.gapToBest.toFixed(2)],
-            ['Rank proof', proof?.countComplete ? 'Complete' : 'Bounded'],
-            ['Placement', `${gamePoints?.placement ?? 0} pts`],
+            ['Choices beaten', decision.choicesBeaten ?? decision.optionCount - decision.rank],
+            ['Gap to best', (metric?.gapToBest ?? decision.gapToBest)?.toFixed(2) ?? '—'],
+            ['Rank proof', (proof?.countComplete ?? decision.countComplete) ? 'Complete' : 'Bounded'],
+            gamePoints ? ['Placement', `${gamePoints.placement} pts`] : ['Scoring', production ? 'Box score' : 'Impact'],
           ].map(([label, value]) => (
             <div key={label} className="dg-tile">
               <p className="dg-tile-label">{label}</p>
@@ -74,12 +75,12 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
             <span className="dg-compare__track"><span className="dg-compare__fill dg-compare__fill--yours" style={{ width: widthFor(selectedValue) }} /></span>
             <span>{selectedValue.toFixed(2)}</span>
           </div>
-          <p className="dg-note">Estimated {unitLabel} — closer to the best legal pick means better.</p>
+          <p className="dg-note">{production ? 'Observed' : 'Estimated'} {unitLabel}. Higher values rank better.</p>
         </div>
       )}
       {proof && <p className="dg-note mt-4"><ShieldCheck className="h-3.5 w-3.5 text-positive" />{proof.disclosure}</p>}
       {!proof && v4Evaluation && (
-        <p className="dg-note mt-4"><ShieldCheck className="h-3.5 w-3.5 text-positive" />V4 summary: descriptive source-impact ranking, verified against the exact-season evaluator. Game Points are not part of the V4 contract.</p>
+        <p className="dg-note mt-4"><ShieldCheck className="h-3.5 w-3.5 text-positive" />V4 {production ? 'box-score production' : 'source-impact'} ranking, verified against every legal choice in the exact-season board.</p>
       )}
       {gamePoints && (
         <p className="dg-note mt-2">
@@ -88,7 +89,7 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
             : 'Each legal pick earns 1 point; placement adds up to 3 place points.'}
         </p>
       )}
-      <p className="dg-note mt-2"><Award className="h-3 w-3 text-gold" />Model estimate of summed additive player impact — not observed five-player performance or causal chemistry.</p>
+      <p className="dg-note mt-2"><Award className="h-3 w-3 text-gold" />{production ? 'The score averages the five players’ observed Hollinger Game Score per 40 minutes in this team, season, and phase. It describes recorded box-score production; it is not a forecast or an observed lineup result.' : 'Model estimate of additive player impact; it is not observed five-player performance or causal chemistry.'}</p>
     </section>
   );
 }

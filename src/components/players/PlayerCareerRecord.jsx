@@ -1,4 +1,5 @@
 import React from 'react';
+import { sumCompleteTotals } from '@/components/players/blueprintModel';
 
 const int = value => Number.isFinite(value) ? Math.round(value).toLocaleString('en-US') : '—';
 const avg = value => Number.isFinite(value) ? value.toFixed(1) : '—';
@@ -22,29 +23,37 @@ export default function PlayerCareerRecord({ context, status }) {
     list.push(row);
     byYear.set(row.seasonStartYear, list);
   });
-  const sum = (list,key) => list.reduce((total,row) => total + (Number.isFinite(row.totals?.[key]) ? row.totals[key] : 0),0);
+  const sum = (list,key) => sumCompleteTotals(list,key);
   const rate = (made,att) => Number.isFinite(made) && Number.isFinite(att) && att > 0 ? made / att : null;
   const records = [...byYear.entries()].sort((a,b) => b[0] - a[0]).map(([year,list]) => {
     const games = sum(list,'gamesPlayed');
+    const average = key => {
+      const total = sum(list,key);
+      return Number.isFinite(total) && Number.isFinite(games) && games > 0 ? total / games : null;
+    };
     return {
       season: `${year}–${String(year + 1).slice(-2)}`,
       teams: [...new Set(list.map(row => row.teamCode))].join(' / '),
       gp: games,
-      mpg: sum(list,'minutesPlayed') / games,
-      ppg: sum(list,'points') / games,
-      rpg: sum(list,'totalRebounds') / games,
-      apg: sum(list,'assists') / games,
+      mpg: average('minutesPlayed'),
+      ppg: average('points'),
+      rpg: average('totalRebounds'),
+      apg: average('assists'),
       fg: rate(sum(list,'fieldGoalsMade'),sum(list,'fieldGoalsAttempted')),
       three: rate(sum(list,'threePointFieldGoalsMade'),sum(list,'threePointFieldGoalsAttempted')),
       ft: rate(sum(list,'freeThrowsMade'),sum(list,'freeThrowsAttempted')),
     };
   });
   const games = sum(rows,'gamesPlayed');
+  const average = key => {
+    const total = sum(rows,key);
+    return Number.isFinite(total) && Number.isFinite(games) && games > 0 ? total / games : null;
+  };
   const career = [
     ['Games',int(games),'total'],['Points',int(sum(rows,'points')),'total'],
     ['Rebounds',int(sum(rows,'totalRebounds')),'total'],['Assists',int(sum(rows,'assists')),'total'],
-    ['PPG',avg(sum(rows,'points') / games),'career average'],['RPG',avg(sum(rows,'totalRebounds') / games),'career average'],
-    ['APG',avg(sum(rows,'assists') / games),'career average'],['MPG',avg(sum(rows,'minutesPlayed') / games),'career average'],
+    ['PPG',avg(average('points')),'career average'],['RPG',avg(average('totalRebounds')),'career average'],
+    ['APG',avg(average('assists')),'career average'],['MPG',avg(average('minutesPlayed')),'career average'],
   ];
   return <>
     <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">{career.map(([label,value,sub]) => <Tile key={label} label={label} value={value} sub={sub} />)}</div>

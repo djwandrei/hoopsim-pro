@@ -30,7 +30,7 @@ export const FAN_TOOLS = [
   ['/tools/workshop/','Workshop','workshop-emblem-20260911.png'],
   ['/tools/swishiq-studio/','SwishIQ Studio','swishiq-studio-emblem-20260913.png'],
 ].map(([path,label,asset,local])=>{
-  const emblem = asset ? (asset.startsWith('local:') ? `/studio-assets/${asset.slice(6)}` : `${SITE}/assets/games/${asset}`) : null;
+  const emblem = asset ? (asset.startsWith('local:') ? studioAsset(asset.slice(6)) : `${SITE}/assets/games/${asset}`) : null;
   return {path,label,route:TOOL_ROUTES[path]||null,href:local?path.replace(/\/+$/,''):SITE+path,emblem};
 });
 // Tools with no in-app page, hidden from the header drawer menu.
@@ -46,3 +46,4 @@ export function teamLogo(palette) {
   const slug=palette.team.toLowerCase().replace(/\s+/g,'-');
   return `${SITE}/assets/nba-logos/${retro ? 'retro-opaque/' : ''}${slug}.png`;
 }
+import { studioAsset } from '../studio/teamAssets.js';

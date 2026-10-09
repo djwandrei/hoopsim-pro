@@ -59,17 +59,23 @@ export default function SeasonLab() {
   const scheduleSimGames = sim.result?.scheduleSource === 'actual'
     ? (sim.result.scheduleGames ?? simGames)
     : null;
+  const comparedRecords = scheduleSimGames
+    ? actualRecordsFrom((source.schedule || []).filter((_, index) => scheduleSimGames[index]))
+    : null;
   const team = league.byCode.get(focus) || league.teams[0];
   const simRow = summary ? summary.find(row => row.code === team.code) || null : null;
   const actualRecord = actualRecords.get(team.code) || null;
   const championName = sim.result?.champion ? league.byCode.get(sim.result.champion)?.name : null;
 
   const winsByCode = new Map();
-  if (summary) for (const row of summary) winsByCode.set(row.code, Math.round(row.wins));
+  if (summary) for (const row of summary) {
+    const wins = Number(row.wins);
+    winsByCode.set(row.code, Number.isFinite(wins) ? Math.round(wins) : null);
+  }
   else for (const [code, rec] of actualRecords) winsByCode.set(code, rec.w);
   const conferenceRank = league.teams
     .filter(item => item.conference === team.conference)
-    .sort((a, b) => (winsByCode.get(b.code) ?? 0) - (winsByCode.get(a.code) ?? 0))
+    .sort((a, b) => (winsByCode.get(b.code) ?? -Infinity) - (winsByCode.get(a.code) ?? -Infinity))
     .findIndex(item => item.code === team.code) + 1;
 
   const changeYear = value => {
@@ -100,13 +106,14 @@ export default function SeasonLab() {
             blocked={sim.policyBlocked}
             hasResults={Boolean(sim.result)}
             championName={championName}
+            modelMode={sim.mode}
           />
           <SeasonHistoryPanel year={year} hasResults={Boolean(sim.result)} result={sim.result} championName={championName} />
           <div key={tab} className="season-view-enter">
             {tab === 'hub' && (
               <div className="space-y-4">
                 {summary && (
-                  <SeasonSummaryPanel summary={summary} repeats={sim.result?.repeats} simGames={simGames} actualRecords={actualRecords} league={league} championCode={sim.result?.champion} onFocusChange={setFocus} />
+                  <SeasonSummaryPanel summary={summary} repeats={sim.result?.repeats} simGames={simGames} actualRecords={comparedRecords} league={league} championCode={sim.result?.champion} onFocusChange={setFocus} />
                 )}
                 <LeagueHero team={team} simRow={simRow} actualRecord={actualRecord} conferenceRank={conferenceRank} />
                 <LeagueStandings league={league} summary={summary} actualRecords={actualRecords} focusCode={team.code} onFocusChange={setFocus} limit={6} />
@@ -127,7 +134,7 @@ export default function SeasonLab() {
               <LeagueSchedule league={league} schedule={source.schedule || []} simGames={scheduleSimGames} focusCode={team.code} onFocusChange={setFocus} />
             )}
             {tab === 'team' && (
-              <LeagueTeamView team={team} simRow={simRow} league={league} actualWins={actualRecord?.w} />
+              <LeagueTeamView team={team} simRow={simRow} league={league} actualWins={comparedRecords?.get(team.code)?.w} />
             )}
             {tab === 'log' && (
               <PlayerStatsLog team={team} simGames={simGames} />

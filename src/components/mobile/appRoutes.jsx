@@ -25,6 +25,11 @@ const DailyGames = lazy(() => import('@/pages/DailyGames'));
 const Analytics = lazy(() => import('@/pages/Analytics'));
 const CollectorCenter = lazy(() => import('@/pages/CollectorCenter'));
 const SimsHub = lazy(() => import('@/pages/SimsHub'));
+const Login = lazy(() => import('@/pages/Login'));
+const Register = lazy(() => import('@/pages/Register'));
+const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
+const OAuthConsent = lazy(() => import('@/pages/OAuthConsent'));
 
 // Single source of truth for the app's page routes. src/App.jsx renders this
 // list on the web; the mobile keep-alive tab layout re-renders the same list
@@ -56,4 +61,11 @@ export const APP_ROUTES = [
   { path: '/playbook', element: <Playbook /> },
   { path: '/workshop', element: <Workshop /> },
   { path: '/account', element: <Account /> },
+  // Keep the legacy auth URLs reachable while the storefront owns identity.
+  // These pages are explicit handoffs and never create a second Studio login.
+  { path: '/login', element: <Login /> },
+  { path: '/register', element: <Register /> },
+  { path: '/forgot-password', element: <ForgotPassword /> },
+  { path: '/reset-password', element: <ResetPassword /> },
+  { path: '/oauth-consent', element: <OAuthConsent /> },
 ];

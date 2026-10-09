@@ -207,6 +207,7 @@ export function defaultDraft(rows) {
     active: chosen.includes(row) && (minutes.get(normalizeName(row.name)) ?? 0) > 0,
     starter: chosen.slice(0, 5).includes(row) && (minutes.get(normalizeName(row.name)) ?? 0) > 0,
     minutes: minutes.get(normalizeName(row.name)) ?? 0,
+    shotUsageMultiplier: 1,
     availability: row.availability,
     limit: row.limit,
     player: row.player,
@@ -220,10 +221,13 @@ export function loadRotationDraft(team, state) {
   const control = savedRotation(team, state.seasonStartYear);
   if (!control) return defaultDraft(rows);
   const saved = splitSavedControls(control);
+  const usageMultipliers = new Map((control.rotationControls?.shotUsageMultipliers ?? [])
+    .map(row => [normalizeName(row.canonicalName), Number(row.multiplier)]));
   return eligible.map((row, index) => {
     const key = normalizeName(row.name);
     return { name: row.name, active: saved.active.has(key), starter: saved.starters.has(key),
       minutes: saved.minutes.get(key) ?? 0, availability: row.availability, limit: row.limit,
+      shotUsageMultiplier: usageMultipliers.get(key) ?? 1,
       player: row.player, order: index, unavailable: row.unavailable };
   });
 }
@@ -250,9 +254,13 @@ export function rotationValidation(activeSession, activeTeamCode, rotationDraft)
     if (!row.active && Math.abs(minutes) > 0) messages.push(`${row.name} is inactive but has minutes.`);
     if (row.active && row.availability === 'unavailable') messages.push(`${row.name} is marked unavailable.`);
     if (minutes > (row.limit ?? 48)) messages.push(`${row.name} exceeds the explicit minutes limit of ${row.limit}.`);
+    const usage = Number(row.shotUsageMultiplier);
+    if (row.active && (!Number.isFinite(usage) || usage < 0 || usage > 2)) messages.push(`${row.name} needs a shot-usage multiplier from 0 through 2.`);
+    else if (row.active && Math.abs(usage * 10 - Math.round(usage * 10)) > 1e-8) messages.push(`${row.name}'s shot-usage multiplier must use 0.1 increments.`);
   }
   for (const row of starters) if (!row.active) messages.push(`${row.name} must be active to start.`);
   if (Math.abs(total - 240) > 1e-7) messages.push(`Minutes total ${formatMinutes(total)}; regulation requires exactly 240.`);
+  if (active.length && !active.some(row => Number(row.shotUsageMultiplier) > 0)) messages.push('At least one active player needs a positive shot-usage multiplier.');
   return { ready: messages.length === 0, messages: [...new Set(messages)], total, active, starters };
 }
 
@@ -273,6 +281,12 @@ export function rotationMatchesSaved(control, rotationDraft) {
   return rotationDraft.length === storedMinutes.size && rotationDraft.every(row => {
     const stored = storedMinutes.get(normalizeName(row.name));
     return Number.isFinite(stored) && Number.isFinite(Number(row.minutes)) && Math.abs(stored - Number(row.minutes)) <= 1e-7;
+  }) && rotationDraft.filter(row => row.active).every(row => {
+    const values = control.rotationControls?.shotUsageMultipliers;
+    if (!Array.isArray(values)) return Math.abs(Number(row.shotUsageMultiplier) - 1) <= 1e-8;
+    const saved = values.find(value => normalizeName(value.canonicalName) === normalizeName(row.name));
+    return saved && String(saved.playerRef ?? '') === String(row.player?.playerRef ?? row.name)
+      && Math.abs(Number(saved.multiplier) - Number(row.shotUsageMultiplier)) <= 1e-8;
   });
 }
 
@@ -310,6 +324,11 @@ export function makeRotationControls(activeSession, activeTeamCode, rotationDraf
     rotationControls: {
       starters,
       benchOrder,
+      shotUsageMultipliers: active.map(row => ({
+        playerRef: String(row.player?.playerRef ?? row.name),
+        canonicalName: row.name,
+        multiplier: Number(row.shotUsageMultiplier),
+      })),
     },
   };
 }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useViewRefresh from '@/components/mobile/useViewRefresh';
 import { loadNativeModule } from '@/components/native/nativeModules';
-import { originalFetch } from '@/components/native/nativeTransport';
+import { originalFetch, ORIGINAL_STUDIO } from '@/components/native/nativeTransport';
 
 // Loads the verified Chemistry data through the site's current canonical V4
 // pipeline: the reviewed release pin, adapter-verified exact-season capability
@@ -30,10 +30,19 @@ export default function useChemistryData(entry) {
         ]);
         if (!live()) return;
         const releasePin = pinModule.CANONICAL_V4_STUDIO_RUNTIME_RELEASE_PIN;
+        // The reviewed pin records the production site's absolute registry URL.
+        // The adapter intentionally accepts only a same-origin immutable URL;
+        // route that path through the local read-only Studio bridge in dev and
+        // keep the production path unchanged.
+        const reviewedRegistry = new URL(releasePin.registryUrl);
+        const localReleasePin = {
+          ...releasePin,
+          registryUrl: new URL(reviewedRegistry.pathname, ORIGINAL_STUDIO).href,
+        };
         const seasonStartYear = Number(entry.scope?.seasonStartYear);
         if (!Number.isInteger(seasonStartYear)) throw new Error('The selected season is not an exact V4 season.');
         const exact = (capabilityId, additionalArtifactIds = []) => adapter.loadCanonicalV4StudioCapabilityData({
-          releasePin,
+          releasePin: localReleasePin,
           scope: { kind: 'exact-season', seasonStartYears: [seasonStartYear], phases: ['regular'] },
           capabilityId,
           additionalArtifactIds,

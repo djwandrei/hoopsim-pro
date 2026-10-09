@@ -1,5 +1,33 @@
 export const SCATTER_METRICS = [['pts','PPG'],['ast','APG'],['reb','RPG'],['stl','SPG'],['blk','BPG'],['tov','TOV'],['oreb','OREB/G'],['dreb','DREB/G'],['mpg','MPG'],['gp','GP'],['fg','FG%'],['three','3P%'],['ft','FT%'],['ts','TS%'],['efg','eFG%'],['pts36','PTS/36'],['ast36','AST/36'],['reb36','REB/36'],['stl36','STL/36'],['blk36','BLK/36'],['tov36','TOV/36'],['ftr','FT rate'],['threeRate','3PA rate'],['pps','PTS/FGA']];
 export const SCATTER_LABEL = key => SCATTER_METRICS.find(([k]) => k === key)?.[1] || key;
+export function metricsAvailableInRows(rows,choices) {
+  if (!Array.isArray(rows) || rows.length === 0) return [];
+  const available = new Set();
+  for (const row of rows) {
+    for (const [key] of choices) {
+      if (Number.isFinite(row?.stats?.[key])) available.add(key);
+    }
+  }
+  return choices.filter(([key]) => available.has(key));
+}
+export const resolveMetricSelection = (metric,choices) =>
+  choices.some(([key]) => key === metric) ? metric : choices[0]?.[0] ?? metric;
+export function resolveScatterSelection(xKey,yKey,choices) {
+  if (!choices.length) return { xKey,yKey };
+  const nextX = resolveMetricSelection(xKey,choices);
+  const nextY = choices.some(([key]) => key === yKey)
+    ? yKey
+    : choices.find(([key]) => key !== nextX)?.[0] ?? nextX;
+  return { xKey:nextX,yKey:nextY };
+}
+export function ordinalText(value) {
+  const ordinal = Math.round(value);
+  const lastTwo = Math.abs(ordinal) % 100;
+  const suffix = lastTwo >= 11 && lastTwo <= 13
+    ? 'th'
+    : ({ 1:'st', 2:'nd', 3:'rd' }[Math.abs(ordinal) % 10] || 'th');
+  return `${ordinal}${suffix}`;
+}
 const PCT_METRICS = new Set(['fg','three','ft','ts','efg','ftr','threeRate']);
 export const scatterText = (key,value) => !Number.isFinite(value) ? '—' : PCT_METRICS.has(key) ? `${(value*100).toFixed(1)}%` : value.toFixed(1);
 export const scatterTick = (key,value) => !Number.isFinite(value) ? '' : PCT_METRICS.has(key) ? `${Math.round(value*100)}%` : Number.isInteger(value) ? String(value) : value.toFixed(1);
@@ -17,6 +45,10 @@ export const scatterDomain = (key,values) => {
   const step = span >= 30 ? 2 : 1;
   return [Math.floor((min - pad) / step) * step, Math.ceil((max + pad) / step) * step];
 };
+export const canRenderScatterReferenceArea = (medianX,medianY,xDomain,yDomain) =>
+  Number.isFinite(medianX) && Number.isFinite(medianY) &&
+  Array.isArray(xDomain) && xDomain.length === 2 &&
+  Array.isArray(yDomain) && yDomain.length === 2;
 export function buildLeagueAtlas(rows) {
   const pools = new Map();
   const poolFor = key => {

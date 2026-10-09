@@ -3,7 +3,7 @@
 // model runtime. The relay pins every byte exactly like the site adapter;
 // the client then proves the release matches the vendored module before any
 // prediction runs.
-import { base44 } from '@/api/base44Client';
+import { loadRelease } from './candidate100Release';
 import { GAME_MODEL_MODULE, predictGameLabGames } from './gameSimEngine';
 import { gameSimModule } from './gameSimSource';
 
@@ -21,9 +21,9 @@ export function candidate100Season(seasonStartYear) {
   const key = Number(seasonStartYear);
   if (!releases.has(key)) {
     const task = (async () => {
-      const { data } = await base44.functions.invoke('swishiqCandidate100Source', { seasonStartYear: key });
+      const data = await loadRelease(key);
       const module = await modelModule();
-      if (data.configurationSha256 !== module.CONFIGURATION_SHA256) {
+      if (data.release.configurationSha256 !== module.CONFIGURATION_SHA256) {
         throw new Error('The Candidate100 release configuration does not match the vendored model module.');
       }
       const rowByRef = new Map((data.rows || []).map(row => [row.gameRef, row]));

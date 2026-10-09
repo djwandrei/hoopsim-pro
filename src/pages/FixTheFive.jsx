@@ -139,7 +139,7 @@ export default function FixTheFive() {
   // points, so the ceiling follows each outcome's own passport, not a constant.
   const maxTotal = challenges.reduce((sum, challenge) => {
     const passportMax = outcomes[challenge.challengeId]?.resultPassport?.gamePoints?.max;
-    return sum + (Number.isInteger(passportMax) ? passportMax : 10);
+    return sum + (Number.isInteger(passportMax) ? passportMax : board?.contractVersion === 2 ? 0 : 10);
   }, 0);
   const activeChallenge = challenges[activeIndex];
   const outgoing = activeChallenge ?
@@ -181,7 +181,9 @@ export default function FixTheFive() {
     <GameShell>
       <WorkbenchHeader
         title="FIX THE FIVE"
-        description="Repair a blind starting five with legal swaps — each call scored by summed estimated additive player impact once the board locks."
+        description={board?.scoringContract === 'observed-box-score-production-v1'
+          ? 'Repair five blind lineups. Legal replacements are ranked by the five players’ average observed Game Score per 40 minutes.'
+          : 'Repair a blind starting five with legal swaps, ranked by estimated additive player impact once the board locks.'}
         steps={['Board & context', 'Five repair calls', 'Verified summary']}
         current={current}
         state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}
@@ -302,7 +304,8 @@ export default function FixTheFive() {
                 seed={presentation.dailySeed}
                 entries={challenges.map((challenge) => {
                   const points = gamePointsForOutcome(outcomes[challenge.challengeId]);
-                  return { key: challenge.challengeId, title: challenge.title, points: points.total, maxPoints: points.max };
+                  const decision = outcomes[challenge.challengeId]?.evaluation?.decision;
+                  return { key: challenge.challengeId, title: challenge.title, points: points.total, maxPoints: points.max, rank: decision?.rank, optionCount: decision?.optionCount };
                 })}
                 otherGamePath="/daily-games/draft-night"
                 otherGameTitle="Draft Night"

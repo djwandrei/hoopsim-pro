@@ -25,6 +25,7 @@ export default function TapeDuelCard({ player, reference = null, selected = fals
   const { mode } = useCourtTheme();
   const ink = readableTeamInk(player.teamCode, mode);
   const headshot = playerAsset(player.headshotPath || null);
+  const positions = Array.isArray(player.positions) ? player.positions.join('/') : player.position || 'Position data unavailable';
   const stats = hasPublicStats(player);
   let net = null;
   if (reference && stats && hasPublicStats(reference)) {
@@ -49,7 +50,7 @@ export default function TapeDuelCard({ player, reference = null, selected = fals
             <h3 className="dg-duel__name">{player.displayName}</h3>
             <span className="hero-rule dg-duel__rule" aria-hidden="true" />
             <p className="dg-duel__meta" style={{ color: ink }}>
-              <span className="truncate">{player.positions.join('/')}{player.age ? ` · Age ${player.age}` : ''}</span>
+              <span className="truncate">{positions}{player.age ? ` · Age ${player.age}` : ''}</span>
             </p>
           </div>
           <span className={`dg-duel__radio ${selected ? 'is-on' : ''}`} aria-hidden="true">{selected && <Check className="h-3 w-3" />}</span>

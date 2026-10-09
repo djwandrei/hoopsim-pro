@@ -31,7 +31,7 @@ export function hydrateGameModelRuntime(checkpointName = 'checkpoint-current') {
         gameModelModule(),
         gameSimJson(`game-model/state/${checkpointName}.json`).then(result => result.data),
       ]);
-      return { runtime: module.hydrateRuntime({ artifact }), module };
+  return { runtime: await module.hydrateRuntime({ artifact }), module };
     })();
     runtimes.set(checkpointName, task);
     task.catch(() => runtimes.delete(checkpointName));
@@ -75,7 +75,7 @@ const SIMULATORS = {
 let simulatorsPromise = null;
 function simulators() {
   if (!simulatorsPromise) {
-    simulatorsPromise = Promise.all(SIMULATORS.map(async ([path, name]) => {
+    simulatorsPromise = Promise.all(Object.values(SIMULATORS).map(async ([path, name]) => {
       const module = await gameSimModule(path);
       return module[name];
     })).then(list => ({ base: list[0], coherent: list[1], live: list[2] }));

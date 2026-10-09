@@ -2,6 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from '@/App.jsx'
 import '@/index.css'
+import { SITE_BASE } from '@/lib/deployConfig'
+
+// Existing storefront links use the old index.html URL. Normalize it before
+// the router mounts so those links open the new Studio home.
+if (window.location.pathname === `${SITE_BASE}/index.html`) {
+  window.history.replaceState(null, '', `${SITE_BASE}/${window.location.search}${window.location.hash}`);
+}
 
 // ResizeObserver fires its callback after layout, so a resize triggered inside
 // the callback (chart sizing, the 3D forge scene, resizable panels) completes

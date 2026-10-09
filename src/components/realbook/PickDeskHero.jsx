@@ -1,8 +1,10 @@
 import React from 'react';
-import { Circle, Loader2 } from 'lucide-react';
-import { Image } from '@/components/ui/image';
+import { Banknote, Circle, Loader2 } from 'lucide-react';
 
-export const PICK_DESK_LOGO = 'https://media.base44.com/images/public/6abc41d86dabd382371f49ea/58ccd83aa_BookRoom.png';
+// Kept as a semantic export for callers that used the old hero contract. The
+// emblem is rendered locally so the BookRoom never depends on a hosted editor
+// image or an external platform asset.
+export const PICK_DESK_LOGO = 'banknote';
 
 const chip = 'inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest';
 
@@ -14,8 +16,8 @@ export default function PickDeskHero({ games, balance, status, state, title = 'P
   const gameCount = games ? games.length : null;
   const liveCount = games ? games.filter(game => Date.parse(game.commenceTime) <= Date.now()).length : null;
   return <header className="relative overflow-hidden border-b border-border/40 bg-canvas">
-    <div className="pointer-events-none absolute -right-16 -top-16 h-96 w-96 opacity-[0.06]" aria-hidden="true">
-      <Image src={PICK_DESK_LOGO} alt="" fittingType="fit" className="h-full w-full" />
+    <div className="pointer-events-none absolute -right-16 -top-16 flex h-96 w-96 items-center justify-center opacity-[0.06]" aria-hidden="true">
+      <Banknote className="h-72 w-72 text-gold" strokeWidth={1} />
     </div>
     <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -35,7 +37,9 @@ export default function PickDeskHero({ games, balance, status, state, title = 'P
           </div>
         </div>
         <div className="flex flex-col items-end gap-3">
-          <Image src={PICK_DESK_LOGO} alt="Pick Desk logo" fittingType="fit" className="h-32 w-32 sm:h-40 sm:w-40" />
+          <span className="flex h-32 w-32 items-center justify-center rounded-3xl border border-gold/25 bg-gold/5 text-gold sm:h-40 sm:w-40" aria-label="Pick Desk">
+            <Banknote className="h-20 w-20 sm:h-24 sm:w-24" strokeWidth={1.25} aria-hidden="true" />
+          </span>
           {balance}
         </div>
       </div>

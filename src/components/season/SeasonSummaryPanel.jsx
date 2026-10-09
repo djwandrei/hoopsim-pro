@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ChevronDown, Crown, TrendingUp, TrendingDown, Star } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
+import { hasMetric } from '@/lib/season/seasonMetrics';
 
 // Interactive post-simulation recap: champion banner and key-metric tiles
 // (clickable to refocus the hub). Leaders live on the League leaders panel.
@@ -9,13 +10,14 @@ export default function SeasonSummaryPanel({ summary, repeats, actualRecords, le
 
   const model = useMemo(() => {
     if (!summary || !summary.length) return null;
-    const rows = [...summary].sort((a, b) => b.wins - a.wins);
-    const netOf = row => row.ortg - row.drtg;
-    const bestNet = [...summary].sort((a, b) => netOf(b) - netOf(a))[0];
+    const validWins = row => hasMetric(row.wins);
+    const rows = [...summary].sort((a, b) => (validWins(b) ? Number(b.wins) : -Infinity) - (validWins(a) ? Number(a.wins) : -Infinity));
+    const netOf = row => hasMetric(row.ortg) && hasMetric(row.drtg) ? Number(row.ortg) - Number(row.drtg) : null;
+    const bestNet = [...summary].filter(row => Number.isFinite(netOf(row))).sort((a, b) => netOf(b) - netOf(a))[0] || null;
     const surprises = summary
       .map(row => {
         const actual = actualRecords?.get?.(row.code);
-        return actual ? { row, delta: Math.round(row.wins) - actual.w } : null;
+        return actual && validWins(row) ? { row, delta: Math.round(Number(row.wins)) - actual.w } : null;
       })
       .filter(Boolean)
       .sort((a, b) => b.delta - a.delta);
@@ -27,7 +29,7 @@ export default function SeasonSummaryPanel({ summary, repeats, actualRecords, le
   if (!model) return null;
   const champion = championCode ? league.byCode.get(championCode) : null;
   const championRow = championCode ? summary.find(row => row.code === championCode) : null;
-  const best = model.rows[0];
+  const best = model.rows[0] || null;
   const signed = value => (value > 0 ? `+${value}` : `${value}`);
 
   const tile = 'group flex w-full flex-col rounded-xl border border-[var(--myna-border)] bg-[var(--myna-canvas)] p-3 text-left transition-colors hover:bg-[var(--myna-raised)]';
@@ -69,30 +71,30 @@ export default function SeasonSummaryPanel({ summary, repeats, actualRecords, le
                 <p className="myna-display text-xl">{champion.name}</p>
               </div>
               <div className="ml-auto flex items-baseline gap-4">
-                <span className="myna-mono text-lg font-bold">{Math.round(championRow?.wins ?? 0)}–{82 - Math.round(championRow?.wins ?? 0)}</span>
-                <span className="myna-mono text-sm" style={{ color: 'var(--myna-accent)' }}>{Math.round((championRow?.title || 0) * 100)}% title odds</span>
+                <span className="myna-mono text-lg font-bold">{hasMetric(championRow?.wins) && hasMetric(championRow?.losses) ? `${Math.round(Number(championRow.wins))}–${Math.round(Number(championRow.losses))}` : 'Record unavailable'}</span>
+                <span className="myna-mono text-sm" style={{ color: 'var(--myna-accent)' }}>{hasMetric(championRow?.title) ? `${Math.round(Number(championRow.title) * 100)}% title odds` : 'Title odds unavailable'}</span>
               </div>
             </button>
           )}
           <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
-            <button type="button" className={tile} onClick={() => onFocusChange?.(best.code)}>
+            {best && <button type="button" className={tile} onClick={() => onFocusChange?.(best.code)}>
               <span className={tileLabel}><Star className="h-3 w-3" />Best record</span>
               <TeamMark code={best.code} name={best.code} className="mt-2 h-8 w-8" />
-              <p className="myna-display mt-1 text-xl">{best.code} · {Math.round(best.wins)}–{82 - Math.round(best.wins)}</p>
-              <p className="myna-muted text-[10px]">Net {signed(Math.round((best.ortg - best.drtg) * 10) / 10)}</p>
-            </button>
-            <button type="button" className={tile} onClick={() => onFocusChange?.(model.bestNet.code)}>
+              <p className="myna-display mt-1 text-xl">{best.code} · {hasMetric(best.wins) && hasMetric(best.losses) ? `${Math.round(Number(best.wins))}–${Math.round(Number(best.losses))}` : 'record unavailable'}</p>
+              <p className="myna-muted text-[10px]">Net {hasMetric(best.ortg) && hasMetric(best.drtg) ? signed(Math.round((Number(best.ortg) - Number(best.drtg)) * 10) / 10) : 'unavailable'}</p>
+            </button>}
+            {model.bestNet && <button type="button" className={tile} onClick={() => onFocusChange?.(model.bestNet.code)}>
               <span className={tileLabel}><Star className="h-3 w-3" />Best net rating</span>
               <TeamMark code={model.bestNet.code} name={model.bestNet.code} className="mt-2 h-8 w-8" />
-              <p className="myna-display mt-1 text-xl">{model.bestNet.code} · {signed(Math.round((model.bestNet.ortg - model.bestNet.drtg) * 10) / 10)}</p>
-              <p className="myna-muted text-[10px]">{model.bestNet.ortg.toFixed(1)} ORTG · {model.bestNet.drtg.toFixed(1)} DRTG</p>
-            </button>
+              <p className="myna-display mt-1 text-xl">{model.bestNet.code} · {signed(Math.round((Number(model.bestNet.ortg) - Number(model.bestNet.drtg)) * 10) / 10)}</p>
+              <p className="myna-muted text-[10px]">{Number(model.bestNet.ortg).toFixed(1)} ORTG · {Number(model.bestNet.drtg).toFixed(1)} DRTG</p>
+            </button>}
             {model.over && (
               <button type="button" className={tile} onClick={() => onFocusChange?.(model.over.row.code)}>
                 <span className={tileLabel}><TrendingUp className="h-3 w-3" />Biggest overperformer</span>
                 <TeamMark code={model.over.row.code} name={model.over.row.code} className="mt-2 h-8 w-8" />
                 <p className="myna-display mt-1 text-xl">{model.over.row.code} · {signed(model.over.delta)} wins</p>
-                <p className="myna-muted text-[10px]">vs observed record</p>
+                <p className="myna-muted text-[10px]">vs observed wins on the same slate</p>
               </button>
             )}
             {model.under && (
@@ -100,7 +102,7 @@ export default function SeasonSummaryPanel({ summary, repeats, actualRecords, le
                 <span className={tileLabel}><TrendingDown className="h-3 w-3" />Biggest underperformer</span>
                 <TeamMark code={model.under.row.code} name={model.under.row.code} className="mt-2 h-8 w-8" />
                 <p className="myna-display mt-1 text-xl">{model.under.row.code} · {signed(model.under.delta)} wins</p>
-                <p className="myna-muted text-[10px]">vs observed record</p>
+                <p className="myna-muted text-[10px]">vs observed wins on the same slate</p>
               </button>
             )}
           </div>

@@ -12,15 +12,17 @@
  */
 import { loadNativeModule } from '@/components/native/nativeModules';
 import { originalFetch } from '@/components/native/nativeTransport';
-import { STANDALONE, SITE_ORIGIN } from '@/lib/deployConfig';
+import { SITE_ORIGIN } from '@/lib/deployConfig';
 
 const SWISHIQ_DAILY_GAME_KINDS = Object.freeze(['fix-the-five', 'draft-night']);
 export const SWISHIQ_DAILY_GAME_FAMILY = 'team-season';
 
-const NATIVE_DAILY_CLIENT_URL = '/tools/swishiq-daily-game-client.js?v=20261001g&rev=swishiq-daily-game-v5-name-identity-cache-closure-v1';
-const NATIVE_RUNTIME_ADAPTER_URL = 'engine/canonical-v4-studio-runtime-adapter.js';
+const NATIVE_DAILY_CLIENT_URL = '/tools/swishiq-daily-game-client.js?v=20261009a&rev=daily-v4-observed-box-score-v1';
+const NATIVE_RUNTIME_ADAPTER_URL = 'engine/canonical-v4-studio-runtime-adapter.js?v=20261009a';
 const SWISHIQ_PUBLIC_REGISTRY_PATH = '/tools/swishiq-studio/data/registry.json';
 const SWISHIQ_PUBLIC_BOARD_ROOT = '/tools/swishiq-studio/data/boards/';
+const V4_RELEASE_REGISTRY_PATH = '/tools/swishiq-studio/data/v4/releases/v4-site-12ad90dc8710/registry.json';
+const REVIEWED_SITE_ORIGIN = 'https://www.djshouseofcards-comics.com';
 
 // The site's own public function config (backend-config.js) — the evaluator is
 // the site's published edge function and its publishable key is public.
@@ -50,6 +52,20 @@ async function reviewedReleasePin() {
     })();
   }
   return releasePinPromise;
+}
+
+function releasePinForCurrentOrigin(releasePin) {
+  if (typeof window === 'undefined' || !releasePin?.registryUrl) return releasePin;
+  const current = new URL(window.location.origin);
+  const isLoopbackPreview = current.protocol === 'http:'
+    && ['127.0.0.1', 'localhost', '[::1]'].includes(current.hostname);
+  if (!isLoopbackPreview) return releasePin;
+
+  const registry = new URL(releasePin.registryUrl);
+  if (registry.origin !== REVIEWED_SITE_ORIGIN || registry.pathname !== V4_RELEASE_REGISTRY_PATH) {
+    return releasePin;
+  }
+  return { ...releasePin, registryUrl: new URL(registry.pathname, current.origin).href };
 }
 
 /** V4 rows carry name keys, not V3 playerRefs; the view aliases the key so the
@@ -84,7 +100,7 @@ function adaptBoardForView(board) {
 export async function loadSwishIQDailyBoard({ gameKind, dailySeed, family = '', sourceMode = 'auto' } = {}) {
   if (!SWISHIQ_DAILY_GAME_KINDS.includes(gameKind)) fail('Choose a supported SwishIQ daily game.');
   const client = await reviewedDailyClient();
-  const releasePin = await reviewedReleasePin().catch(() => null);
+  const releasePin = releasePinForCurrentOrigin(await reviewedReleasePin());
   const native = await client.loadSwishIQDailyBoard({
     gameKind,
     dailySeed,
@@ -101,12 +117,12 @@ export async function loadSwishIQDailyBoard({ gameKind, dailySeed, family = '', 
 }
 
 async function evaluatorInvoke(_functionName, request) {
-  if (STANDALONE) {
     let response;
     try {
-      response = await fetch(SITE_EVALUATOR_URL, {
+      const localPreview = /^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(window.location.origin);
+      response = await fetch(localPreview ? '/__djhc-daily-evaluate' : SITE_EVALUATOR_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SITE_EVALUATOR_KEY}` },
+        headers: { 'Content-Type': 'application/json', apikey: SITE_EVALUATOR_KEY, Authorization: `Bearer ${SITE_EVALUATOR_KEY}` },
         body: JSON.stringify(request),
         cache: 'no-store',
       });
@@ -116,19 +132,6 @@ async function evaluatorInvoke(_functionName, request) {
     if (!response.ok) fail(swishIQDailyGameEvaluatorUnavailableMessage());
     return response.json();
   }
-  const { base44 } = await import('@/api/base44Client');
-  const response = await base44.functions.invoke('swishiqGameEvaluate', { request });
-  const data = response?.data;
-  if (data?.error && /not configured/i.test(String(data.error))) {
-    fail(swishIQDailyGameEvaluatorUnavailableMessage() + ' ' + data.error);
-  }
-  if (data?.error) {
-    const error = new Error(data.error);
-    error.status = 502;
-    throw error;
-  }
-  return data;
-}
 
 function adaptV4Outcome(response) {
   if (response?.status === 'unavailable') {
@@ -153,7 +156,7 @@ export async function revealSwishIQDailyGame({ board, challengeId = '', playerRe
   if (client.isSwishIQDailyBoardV4(board)) {
     const native = viewNativeBoards.get(board);
     if (!native) fail('Reload this board before requesting a result.');
-    const releasePin = await reviewedReleasePin();
+    const releasePin = releasePinForCurrentOrigin(await reviewedReleasePin());
     const response = await client.revealSwishIQDailyGameV4({
       board: native,
       releasePin,

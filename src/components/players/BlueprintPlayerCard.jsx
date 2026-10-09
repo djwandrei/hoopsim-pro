@@ -26,7 +26,7 @@ export default function BlueprintPlayerCard({ player, onRemove, atlas }) {
   const details = [
     bio?.height?.display || null,
     Number.isFinite(bio?.weightPounds) ? `${bio.weightPounds} lb` : null,
-    bio?.jerseyNumber ? `#${bio.jerseyNumber}` : null,
+    bio?.jerseyNumber !== null && bio?.jerseyNumber !== undefined && bio?.jerseyNumber !== '' ? `#${bio.jerseyNumber}` : null,
   ].filter(Boolean).join(' · ');
   return <article className="court-panel overflow-hidden">
     <header className="relative overflow-hidden border-b border-border/30">
@@ -37,7 +37,7 @@ export default function BlueprintPlayerCard({ player, onRemove, atlas }) {
         <span className="bcast-lowerthird"><span className="bcast-lowerthird__bar" aria-hidden="true"></span>Player profile</span>
         {onRemove && <button type="button" onClick={() => onRemove(player)} aria-label={`Remove ${player.name}`} className="rounded-lg border border-border/30 p-2 text-muted-foreground transition-colors hover:border-trim/40 hover:text-foreground"><X className="h-4 w-4" /></button>}
       </div>
-      <div className="relative flex items-end gap-5 pl-5 pr-5">
+      <div className="relative flex flex-col items-start gap-3 pl-5 pr-5 sm:flex-row sm:items-end sm:gap-5">
         <PlayerPortrait key={player.headshotPath || player.playerRef} player={player} frameless className="h-44 w-40 shrink-0 rounded-t-2xl sm:h-52 sm:w-44" />
         <div className="min-w-0 flex-1 pb-4">
           <h2 className="font-display text-4xl uppercase leading-[0.9] sm:text-5xl">{player.name}</h2>

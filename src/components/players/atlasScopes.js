@@ -4,31 +4,38 @@ export const ATLAS_TOP_METRICS = [['pts','PPG'],['ast','APG'],['reb','RPG'],['mp
 export function buildCareerRows(player) {
   const seasons = new Map();
   for (const row of player.rows) {
-    const season = seasons.get(row.seasonStartYear) || { year:row.seasonStartYear,games:0,minutes:0,teams:new Set(),sums:{} };
-    season.games += Number(row.games) || 0;
+    const games = Number.isFinite(row.games) && row.games > 0 ? row.games : 0;
+    if (!games) continue;
+    const season = seasons.get(row.seasonStartYear) || { year:row.seasonStartYear,games:0,minutes:0,minutesComplete:true,teams:new Set(),sums:{},missing:new Set() };
+    season.games += games;
     if (Number.isFinite(row.minutes)) season.minutes += row.minutes;
+    else season.minutesComplete = false;
     for (const field of ['points','rebounds','assists','steals','blocks','turnovers']) {
       const rate = row.careerMetrics?.[field];
-      if (Number.isFinite(rate)) season.sums[field] = (season.sums[field] || 0) + rate * row.games;
+      if (Number.isFinite(rate)) season.sums[field] = (season.sums[field] || 0) + rate * games;
+      else season.missing.add(field);
     }
     season.teams.add(row.teamCode);
     seasons.set(row.seasonStartYear,season);
   }
-  return [...seasons.values()].filter(season => season.games > 0).sort((a,b) => a.year - b.year).map(season => ({
-    id:`${player.playerRef}:${season.year}`,
-    playerRef:player.playerRef,
-    name:player.name,
-    teamCode:[...season.teams].sort().join('/'),
-    positions:player.positions || [],
-    headshotPath:player.headshotPath,
-    seasonStartYear:season.year,
-    observed:true,
-    phase:'regular',
-    seasonLabel:`${season.year}–${String(season.year + 1).slice(-2)}`,
-    stats:{ gp:season.games,mpg:season.minutes / season.games,pts:(season.sums.points || 0) / season.games,ast:(season.sums.assists || 0) / season.games,reb:(season.sums.rebounds || 0) / season.games,stl:(season.sums.steals || 0) / season.games,blk:(season.sums.blocks || 0) / season.games,tov:(season.sums.turnovers || 0) / season.games },
-    available:true,
-    statsSource:'Observed pooled career archive',
-  }));
+  return [...seasons.values()].filter(season => season.games > 0).sort((a,b) => a.year - b.year).map(season => {
+    const average = field => season.missing.has(field) ? null : (season.sums[field] ?? 0) / season.games;
+    return {
+      id:`${player.playerRef}:${season.year}`,
+      playerRef:player.playerRef,
+      name:player.name,
+      teamCode:[...season.teams].sort().join('/'),
+      positions:player.positions || [],
+      headshotPath:player.headshotPath,
+      seasonStartYear:season.year,
+      observed:true,
+      phase:'regular',
+      seasonLabel:`${season.year}–${String(season.year + 1).slice(-2)}`,
+      stats:{ gp:season.games,mpg:season.minutesComplete ? season.minutes / season.games : null,pts:average('points'),ast:average('assists'),reb:average('rebounds'),stl:average('steals'),blk:average('blocks'),tov:average('turnovers') },
+      available:true,
+      statsSource:'Observed pooled career archive',
+    };
+  });
 }
 
 export function applyScope(scope,{ roster,selected,careerPlayer }) {

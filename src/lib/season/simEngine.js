@@ -46,7 +46,6 @@ const num = value => (Number.isFinite(Number(value)) ? Number(value) : null);
 
 export function buildLeague(source) {
   const seasonRows = (source.teamStyles || []).filter(row => row.phase === 'regular' && row.metrics);
-  const seasonByPlayer = new Map((source.playerSeasons || []).map(row => [row.playerRef, row]));
   const membershipsByPlayer = new Map();
   for (const row of source.memberships || []) {
     if (!membershipsByPlayer.has(row.playerRef)) membershipsByPlayer.set(row.playerRef, row);
@@ -65,11 +64,11 @@ export function buildLeague(source) {
             positions: member?.positions || p.positions || [],
             games: p.games,
             minutes: p.minutes,
-            pts: p.points / p.games,
-            reb: p.rebounds / p.games,
-            ast: p.assists / p.games,
-            stl: p.steals / p.games,
-            blk: p.blocks / p.games,
+            pts: num(p.points) === null ? null : num(p.points) / p.games,
+            reb: num(p.rebounds) === null ? null : num(p.rebounds) / p.games,
+            ast: num(p.assists) === null ? null : num(p.assists) / p.games,
+            stl: num(p.steals) === null ? null : num(p.steals) / p.games,
+            blk: num(p.blocks) === null ? null : num(p.blocks) / p.games,
           };
         })
         .sort((a, b) => b.minutes - a.minutes);
@@ -77,20 +76,20 @@ export function buildLeague(source) {
         code: row.teamCode,
         name: TEAM_NAMES[row.teamCode] || row.teamCode,
         conference: CONFERENCE_BY_TEAM[row.teamCode] || 'EAST',
-        off: num(m.offense) || 112,
-        def: num(m.defense) || 112,
-        net: num(m.net) ?? (num(m.offense) || 112) - (num(m.defense) || 112),
-        pace: num(m.pace48) || 99,
+        off: num(m.offense) ?? 112,
+        def: num(m.defense) ?? 112,
+        net: num(m.net) ?? (num(m.offense) ?? 112) - (num(m.defense) ?? 112),
+        pace: num(m.pace48) ?? 99,
         ppg: num(m.pointsPerGame),
         papg: num(m.pointsAllowedPerGame),
-        efg: num(m.effectiveFieldGoal) || 0.53,
-        ftr: num(m.freeThrowAttemptRate) || 0.25,
-        orb: num(m.offensiveReboundRate) || 0.28,
-        drb: num(m.defensiveReboundRate) || 0.72,
-        tov: num(m.turnoverRate) || 0.13,
-        oppEfg: num(m.opponentEffectiveFieldGoal) || 0.53,
-        oppFtr: num(m.opponentFreeThrowAttemptRate) || 0.25,
-        oppTov: num(m.opponentTurnoverRate) || 0.13,
+        efg: num(m.effectiveFieldGoal) ?? 0.53,
+        ftr: num(m.freeThrowAttemptRate) ?? 0.25,
+        orb: num(m.offensiveReboundRate) ?? 0.28,
+        drb: num(m.defensiveReboundRate) ?? 0.72,
+        tov: num(m.turnoverRate) ?? 0.13,
+        oppEfg: num(m.opponentEffectiveFieldGoal) ?? 0.53,
+        oppFtr: num(m.opponentFreeThrowAttemptRate) ?? 0.25,
+        oppTov: num(m.opponentTurnoverRate) ?? 0.13,
         roster,
       };
     })
@@ -255,6 +254,7 @@ export function runRepeat(league, schedule, { seed = 1, playoffs = true, defense
     hs.pf += game.homePts; hs.pa += game.awayPts; hs.poss += game.poss; hs.ortgSum += game.ortgH; hs.games += 1;
     as.pf += game.awayPts; as.pa += game.homePts; as.poss += game.poss; as.ortgSum += game.ortgA; as.games += 1;
     games.push({
+      gameId: g.gameId ?? g.id ?? g.scheduleGameId ?? null,
       at: g.at || null, home: home.code, away: away.code,
       homePts: game.homePts, awayPts: game.awayPts, ot: game.ot, poss: game.poss,
       ortgH: game.ortgH, ortgA: game.ortgA,

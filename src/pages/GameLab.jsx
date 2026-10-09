@@ -154,6 +154,7 @@ export default function GameLab() {
               <GameControls
               settings={sim.settings} onSettingsChange={sim.setSettings}
               running={sim.running} progress={sim.progress} blocked={sim.policyBlocked}
+              mode={sim.mode}
               onShareLink={shareLink} />
               <Candidate100Panel year={year} home={home} away={away} sourceEntry={packageRef} />
               {sim.game ?
@@ -184,6 +185,7 @@ export default function GameLab() {
               <GameControls
               settings={sim.settings} onSettingsChange={sim.setSettings}
               running={sim.running} progress={sim.progress} blocked={sim.policyBlocked}
+              mode={sim.mode}
               onShareLink={shareLink}
               onRunSeries={() => sim.runSeries(league, home, away, { packageRef })}
               hasSeries={Boolean(sim.series)} />

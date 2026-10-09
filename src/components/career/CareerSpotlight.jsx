@@ -14,6 +14,7 @@ export default function CareerSpotlight({ players, selectedRef, onSelect }) {
       <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
         {featured.map(player => {
           const stats = perGameStats(player);
+          const mpg = Number.isFinite(stats.mpg) ? `${stats.mpg.toFixed(1)} MPG` : '— MPG';
           const active = selectedRef === player.playerRef;
           return (
             <button
@@ -27,7 +28,7 @@ export default function CareerSpotlight({ players, selectedRef, onSelect }) {
             >
               <PlayerPortrait player={player} className="h-14 w-14" frameless />
               <span className="w-full truncate text-[11px] font-medium">{player.name}</span>
-              <span className="font-mono text-[10px] text-muted-foreground">{stats.mpg.toFixed(1)} MPG · {player.teamCode}</span>
+              <span className="font-mono text-[10px] text-muted-foreground">{mpg} · {player.teamCode}</span>
             </button>
           );
         })}

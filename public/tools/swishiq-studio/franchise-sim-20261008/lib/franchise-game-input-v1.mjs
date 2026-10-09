@@ -50,9 +50,11 @@ export function applyFranchiseControlsToGameInput(state, input, { commissionerMo
     for (const field of ['overallRating', 'attackRating', 'offenseRating', 'defenseRating']) delete next[side][field];
     applied.push({ side, teamCode: code, controlRevision: controls.revision,
       starters: projection.storedStarters, minuteAssignments: players.map(player => ({ canonicalName: player.canonicalName, minutes: player.projectedMinutes })),
+      shotUsageMultipliers: structuredClone(projection.liveGameTeam.rotationControls.shotUsageMultipliers),
       availabilityDisclosures: projection.availabilityDisclosures,
       starterBehavior: 'Saved starters open the live possession game; aggregate score/box engines use rotation minute weights.',
-      minuteBehavior: 'Targets enter roster ratings and planned live stints; eligible stoppages, conditional substitutions and overtime can change actual minutes.' });
+      minuteBehavior: 'Targets enter roster ratings and planned live stints; eligible stoppages, conditional substitutions and overtime can change actual minutes.',
+      shotUsageBehavior: 'Shot-usage multipliers reweight field-goal attempt recipients only; team possession budget and assist/turnover actor weights are unchanged. This is a scenario assumption, not a measured efficiency effect.' });
   }
   if (applied.length) {
     for (const field of ['overallRatingDiff', 'offenseDefenseMatchupDiff', 'defenseRatingDiff', 'playerProductionDiff', 'playerProductionTotal']) {

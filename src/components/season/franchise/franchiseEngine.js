@@ -2,7 +2,8 @@
 // V4 intake modules, and IndexedDB checkpoint store directly at their
 // same-origin studio paths — exactly as the site's preview frame did — while
 // the V4 release data itself still relays through the connected studio source.
-// The engine, worker, and intake modules are never edited or re-bundled.
+// The runtime modules stay separate from the UI bundle and load from those
+// paths; local source edits are not a deployed release until separately shipped.
 import workerConnection from '@/lineupLab/lineup-lab/workerConnection';
 import loadFranchiseIntake from '@/components/season/franchise/loadFranchiseIntake';
 import { VERIFIED_FIXTURE_NAME, VERIFIED_FIXTURE_RECEIPT_NAME, VERIFIED_FIXTURE_RECEIPT_SHA256, sha256Hex, readPayload, humanBytes } from './franchiseLogic';
@@ -25,12 +26,13 @@ export function loadFranchiseEngine() {
       await workerConnection();
       const origin = ORIGIN();
       const importModule = path => import(/* @vite-ignore */ new URL(path, origin).href);
-      const [clientModule, intakeModule, snapshotModule, storeModule, scheduleModule] = await Promise.all([
+      const [clientModule, intakeModule, snapshotModule, storeModule, scheduleModule, controlsModule] = await Promise.all([
         importModule(`${INTEGRATION_PATH}franchise-worker-client-v1.mjs`),
         importModule(`${INTEGRATION_PATH}v4-franchise-intake-v1.mjs`),
         importModule(`${INTEGRATION_PATH}v4-snapshot-worker-payload-v1.mjs`),
         importModule(`${FRANCHISE_ROOT}lib/franchise-browser-store-v1.mjs`),
         importModule('/tools/swishiq-studio/engine/nba-schedule-source.js?v=20261008&rev=franchise-v4-intake-v1'),
+        importModule(`${FRANCHISE_ROOT}lib/franchise-controls-v1.mjs`),
       ]);
       if (typeof clientModule.createFranchiseWorkerClient !== 'function') throw new Error('Worker client does not export createFranchiseWorkerClient().');
       for (const name of ['loadV4FranchiseIntakeV1', 'loadLastObservedTeamScenarioSuggestionsV1', 'applyV4FranchiseRosterChoicesV1', 'createV4FranchiseLocalMirrorReleasePinV1']) {
@@ -38,6 +40,7 @@ export function loadFranchiseEngine() {
       }
       if (typeof snapshotModule.buildV4SnapshotWorkerPayloadV1 !== 'function') throw new Error('V4 intake or snapshot worker helper is missing a required browser export.');
       if (typeof storeModule.openFranchiseBrowserStore !== 'function') throw new Error('The franchise browser checkpoint store is unavailable.');
+      if (typeof controlsModule.validateFranchiseRotationState !== 'function') throw new Error('Franchise rotation controls cannot be validated.');
       return {
         createFranchiseWorkerClient: clientModule.createFranchiseWorkerClient,
         intake: Object.freeze({ ...intakeModule,
@@ -45,6 +48,7 @@ export function loadFranchiseEngine() {
         }),
         buildV4SnapshotWorkerPayloadV1: snapshotModule.buildV4SnapshotWorkerPayloadV1,
         openFranchiseBrowserStore: storeModule.openFranchiseBrowserStore,
+        validateFranchiseRotationState: controlsModule.validateFranchiseRotationState,
       };
     })();
     enginePromise.catch(() => { enginePromise = null; });

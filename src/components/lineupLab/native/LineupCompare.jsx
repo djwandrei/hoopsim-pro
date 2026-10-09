@@ -143,12 +143,15 @@ export default function LineupCompare() {
 
   if (!data) return null;
 
-  const scaleReady = !data.empty && data.players.every(player => minutes[player.name] != null);
+  const scaleReady = !data.empty && Array.isArray(data.players) && data.players.every(player => minutes[player.name] != null);
   const scaleBar = <div className="cmp-scale" role="group" aria-label="Comparison stat scale">
     {SCALES.map(([key, label, sub]) => <button key={key} type="button" className={scale === key ? 'is-active' : ''} disabled={key !== 'game' && !scaleReady} title={key !== 'game' && !scaleReady ? 'Load the roster to convert rates' : sub} aria-pressed={scale === key} onClick={() => setScale(key)}>{label}</button>)}
   </div>;
 
-  const rows = data.rows.map(row => {
+  // The controller intentionally emits an empty-state object until two
+  // players are selected. Keep the derived table empty for that shape; the
+  // empty-state branch below still renders the useful guidance copy.
+  const rows = data.empty || !Array.isArray(data.rows) ? [] : data.rows.map(row => {
     const fixed = isMinutesRow(row.label);
     const lines = row.lines.map((line, index) => {
       const base = num(line.value);

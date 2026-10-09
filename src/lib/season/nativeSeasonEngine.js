@@ -92,9 +92,12 @@ function repeatRowsOf(report) {
 
 function quantileOf(quantiles, key) {
   if (!quantiles) return null;
-  if (Number.isFinite(Number(quantiles[key]))) return Number(quantiles[key]);
-  if (Number.isFinite(Number(quantiles.p50))) return Number(quantiles.p50);
-  if (Number.isFinite(Number(quantiles.median))) return Number(quantiles.median);
+  const value = nullableNumber(quantiles[key]);
+  if (value != null) return value;
+  const p50 = nullableNumber(quantiles.p50);
+  if (p50 != null) return p50;
+  const median = nullableNumber(quantiles.median);
+  if (median != null) return median;
   return null;
 }
 
@@ -103,67 +106,170 @@ function lineOf(player) {
   const totals = player.totals && typeof player.totals === 'object' ? player.totals : {};
   return {
     name: player.name || player.playerName || 'Player',
-    min: num(player.minutes ?? player.min),
-    pts: num(totals.points ?? player.points),
-    reb: num(totals.rebounds ?? player.rebounds),
-    ast: num(totals.assists ?? player.assists),
-    stl: num(totals.steals ?? player.steals),
-    blk: num(totals.blocks ?? player.blocks),
+    min: nullableNumber(player.minutes ?? player.min),
+    pts: nullableNumber(totals.points ?? player.points),
+    reb: nullableNumber(totals.rebounds ?? totals.totalRebounds ?? player.rebounds),
+    ast: nullableNumber(totals.assists ?? player.assists),
+    stl: nullableNumber(totals.steals ?? player.steals),
+    blk: nullableNumber(totals.blocks ?? player.blocks),
   };
 }
 
-// Per-player game logs are kept per team in schedule order; merge both sides
-// of every game so the studio's box-score consumers see one game object each.
-function gamesFromPlayerLogs(entries) {
+function nullableNumber(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (typeof value !== 'string' || !value.trim()) return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function identifier(value) {
+  if (typeof value !== 'string' && !(typeof value === 'number' && Number.isFinite(value))) return null;
+  const text = String(value).trim();
+  return text || null;
+}
+
+function pairKey(home, away) {
+  return home && away ? JSON.stringify([home, away]) : null;
+}
+
+function mergeScore(current, next, gameId, label) {
+  if (current != null && next != null && current !== next) {
+    throw new Error(`Player game log ${gameId} has conflicting ${label}.`);
+  }
+  return current ?? next;
+}
+
+function playerIdentity(player) {
+  const playerId = identifier(player?.playerId ?? player?.playerRef ?? player?.id);
+  if (playerId) return `id:${playerId}`;
+  const name = typeof (player?.name ?? player?.playerName) === 'string'
+    ? (player.name ?? player.playerName).trim().toLocaleLowerCase('en-US')
+    : '';
+  return name ? `name:${name}` : null;
+}
+
+// Team game logs use one row per team per game. Join the opposing rows by
+// their stable game ID and orient scores/box lines from each row's perspective.
+export function gamesFromPlayerLogs(entries) {
   const byKey = new Map();
-  const seen = new Map();
   for (const entry of Array.isArray(entries) ? entries : []) {
     for (const row of Array.isArray(entry?.games) ? entry.games : []) {
-      const home = codeOf(row.homeTeamId ?? row.home ?? row.homeId);
-      const away = codeOf(row.awayTeamId ?? row.away ?? row.awayId);
-      if (!home || !away) continue;
-      const key = `${home}|${away}`;
-      const occurrence = seen.get(key) || 0;
-      seen.set(key, occurrence + 1);
-      const gameKey = `${key}|${occurrence}`;
-      let game = byKey.get(gameKey);
+      const gameId = identifier(row?.gameId);
+      if (!gameId) throw new Error('Player game log is missing its gameId.');
+      const entryTeam = identifier(entry?.teamId);
+      const rowTeam = identifier(row?.teamId);
+      if (entryTeam && rowTeam && entryTeam !== rowTeam) {
+        throw new Error(`Player game log ${gameId} conflicts with its team's entry.`);
+      }
+      const team = rowTeam || entryTeam;
+      const opponent = identifier(row?.opponentId);
+      if (!team || !opponent || team === opponent || typeof row.home !== 'boolean') {
+        throw new Error(`Player game log ${gameId} has invalid team or home/away identity.`);
+      }
+      const home = row.home ? team : opponent;
+      const away = row.home ? opponent : team;
+      const homePts = row.home ? nullableNumber(row.score) : nullableNumber(row.opponentScore);
+      const awayPts = row.home ? nullableNumber(row.opponentScore) : nullableNumber(row.score);
+      const side = row.home ? 'home' : 'away';
+      let game = byKey.get(gameId);
       if (!game) {
         game = {
-          home, away,
-          homePts: num(row.scoreHome ?? row.homeScore ?? row.homePts),
-          awayPts: num(row.scoreAway ?? row.awayScore ?? row.awayPts),
-          ot: num(row.ot),
+          gameId, home, away, homePts, awayPts,
+          ot: nullableNumber(row.ot),
           boxHome: { lines: [] }, boxAway: { lines: [] },
+          sides: new Set(), playerIds: { home: new Set(), away: new Set() },
         };
-        byKey.set(gameKey, game);
+        byKey.set(gameId, game);
+      } else {
+        if (game.home !== home || game.away !== away) {
+          throw new Error(`Player game log ${gameId} conflicts on home/away teams.`);
+        }
+        game.homePts = mergeScore(game.homePts,homePts,gameId,'home score');
+        game.awayPts = mergeScore(game.awayPts,awayPts,gameId,'away score');
+        game.ot = mergeScore(game.ot,nullableNumber(row.ot),gameId,'overtime count');
       }
-      const isHome = home === codeOf(entry.teamId);
-      const box = isHome ? game.boxHome : game.boxAway;
-      for (const player of Array.isArray(row.players) ? row.players : Array.isArray(row.lines) ? row.lines : []) {
+      if (game.sides.has(side)) throw new Error(`Player game log ${gameId} duplicates its ${side} team row.`);
+      game.sides.add(side);
+      const box = row.home ? game.boxHome : game.boxAway;
+      const players = Array.isArray(row.players) ? row.players : Array.isArray(row.lines) ? row.lines : [];
+      for (const player of players) {
+        const playerId = playerIdentity(player);
+        if (playerId && game.playerIds[side].has(playerId)) {
+          throw new Error(`Player game log ${gameId} duplicates a player line for its ${side} team.`);
+        }
+        if (playerId) game.playerIds[side].add(playerId);
         const line = lineOf(player);
         if (line) box.lines.push(line);
       }
     }
   }
-  return [...byKey.values()];
+  return [...byKey.values()].map(({ sides, playerIds, ...game }) => game);
 }
 
-// Align replayed games onto the studio's schedule rows by home/away pair
-// occurrence, so the schedule tab's replay column stays in position.
-function alignGamesToSchedule(games, scheduleRows) {
+// Prefer the schedule's stable game ID. Games without a corresponding ID fall
+// back to their home/away pair occurrence without consuming an ID-matched row.
+export function alignGamesToSchedule(games, scheduleRows) {
+  const replayGames = Array.isArray(games) ? games : [];
+  const rows = Array.isArray(scheduleRows) ? scheduleRows : [];
+  const byId = new Map();
   const byPair = new Map();
-  for (const game of games) {
-    const key = `${game.home}|${game.away}`;
-    if (!byPair.has(key)) byPair.set(key, []);
-    byPair.get(key).push(game);
-  }
-  const seen = new Map();
-  return (scheduleRows || []).map(row => {
-    const key = `${row.home}|${row.away}`;
-    const occurrence = seen.get(key) || 0;
-    seen.set(key, occurrence + 1);
-    return (byPair.get(key) || [])[occurrence] || null;
+  replayGames.forEach((game,index) => {
+    const id = identifier(game?.gameId ?? game?.id);
+    if (id) {
+      if (byId.has(id)) throw new Error(`Replay has duplicate game ID ${id}.`);
+      byId.set(id,index);
+    }
+    const key = pairKey(game?.home,game?.away);
+    if (key) {
+      const indices = byPair.get(key) || [];
+      indices.push(index);
+      byPair.set(key,indices);
+    }
   });
+
+  const aligned = Array(rows.length).fill(null);
+  const used = new Set();
+  const seenScheduleIds = new Set();
+  rows.forEach((row,index) => {
+    const id = identifier(row?.gameId ?? row?.id ?? row?.scheduleGameId);
+    if (!id) return;
+    if (seenScheduleIds.has(id)) throw new Error(`Schedule has duplicate game ID ${id}.`);
+    seenScheduleIds.add(id);
+    const gameIndex = byId.get(id);
+    if (gameIndex === undefined) return;
+    const game = replayGames[gameIndex];
+    const schedulePair = pairKey(row?.home,row?.away);
+    const replayPair = pairKey(game?.home,game?.away);
+    if (schedulePair && replayPair && schedulePair !== replayPair) {
+      throw new Error(`Replay game ${id} conflicts with the schedule matchup.`);
+    }
+    aligned[index] = game;
+    used.add(gameIndex);
+  });
+
+  const pairCursor = new Map();
+  rows.forEach((row,index) => {
+    if (aligned[index]) return;
+    const key = pairKey(row?.home,row?.away);
+    if (!key) return;
+    const candidates = byPair.get(key) || [];
+    let cursor = pairCursor.get(key) || 0;
+    while (cursor < candidates.length && used.has(candidates[cursor])) cursor += 1;
+    if (cursor < candidates.length) {
+      const gameIndex = candidates[cursor];
+      aligned[index] = replayGames[gameIndex];
+      used.add(gameIndex);
+      cursor += 1;
+    }
+    pairCursor.set(key,cursor);
+  });
+  return aligned;
+}
+
+export function normalizeBlend(value) {
+  if (value == null || (typeof value === 'string' && !value.trim())) return 0.5;
+  const blend = typeof value === 'number' || typeof value === 'string' ? Number(value) : NaN;
+  return Number.isFinite(blend) ? blend : 0.5;
 }
 
 const ROUND_LOCAL = ['First round', 'Conference semifinals', 'Conference finals'];
@@ -187,13 +293,16 @@ function conferenceOf(series) {
 }
 
 function seriesGamesOf(series) {
-  return (Array.isArray(series.games) ? series.games : []).map((game, index) => ({
-    game: Number(game.game) || index + 1,
-    home: codeOf(game.homeTeamId ?? game.home),
-    away: codeOf(game.awayTeamId ?? game.away),
-    homePts: num(game.scoreHome ?? game.homeScore ?? game.homePts),
-    awayPts: num(game.scoreAway ?? game.awayScore ?? game.awayPts),
-  })).filter(game => game.home && game.away);
+  return (Array.isArray(series.games) ? series.games : []).map((game, index) => {
+    const gameNumber = nullableNumber(game.game);
+    return {
+      game: Number.isSafeInteger(gameNumber) && gameNumber > 0 ? gameNumber : index + 1,
+      home: codeOf(game.homeTeamId ?? game.home),
+      away: codeOf(game.awayTeamId ?? game.away),
+      homePts: nullableNumber(game.scoreHome ?? game.homeScore ?? game.homePts),
+      awayPts: nullableNumber(game.scoreAway ?? game.awayScore ?? game.awayPts),
+    };
+  }).filter(game => game.home && game.away);
 }
 
 // The native conference bracket: series carry a/b names, ids, seeds and a
@@ -253,20 +362,28 @@ export function mapSeasonReport(report, meta) {
   const rows = (Array.isArray(report.standings) && report.standings.length ? report.standings : first.standings) || [];
   const summary = rows.map(row => {
     const code = codeOf(row.teamId) || codeOf(row.displayTeam);
-    const games = num(row.games);
-    const repeat = repeatRows.find(item => item?.teamId === code || item?.teamId === row.team || item?.team === row.team) || null;
+    const games = nullableNumber(row.games);
+    const repeat = repeatRows.find(item => {
+      const repeatCode = codeOf(item?.teamId) || codeOf(item?.team) || codeOf(item?.displayTeam);
+      return repeatCode && repeatCode === code;
+    }) || null;
     const medianWins = quantileOf(repeat?.winQuantiles, '0.5');
     const team = league?.byCode?.get(code) || null;
+    const pointsFor = nullableNumber(row.pointsFor);
+    const pointsAgainst = nullableNumber(row.pointsAgainst);
+    const derivedRate = (numerator, denominator) => numerator != null && denominator != null && denominator > 0 ? numerator / denominator : null;
+    const ortg = nullableNumber(row.simulatedMetrics?.offense) ?? derivedRate(pointsFor, games);
+    const drtg = nullableNumber(row.simulatedMetrics?.defense) ?? derivedRate(pointsAgainst, games);
     return {
       code,
-      wins: medianWins ?? num(row.wins),
-      losses: num(row.losses),
-      ties: num(row.ties),
-      ortg: num(row.simulatedMetrics?.offense, games ? num(row.pointsFor) / games : 0),
-      drtg: num(row.simulatedMetrics?.defense, games ? num(row.pointsAgainst) / games : 0),
-      pace: num(row.pace, team?.pace ?? 0),
-      playoff: repeat ? num(repeat.playoffAppearanceRate ?? repeat.playoff, null) ?? undefined : undefined,
-      title: repeat ? num(repeat.titleRate ?? repeat.title, null) ?? undefined : undefined,
+      wins: medianWins ?? nullableNumber(row.wins),
+      losses: nullableNumber(row.losses),
+      ties: nullableNumber(row.ties),
+      ortg,
+      drtg,
+      pace: nullableNumber(row.pace) ?? nullableNumber(team?.pace),
+      playoff: repeat ? nullableNumber(repeat.playoffAppearanceRate ?? repeat.playoff) : undefined,
+      title: repeat ? nullableNumber(repeat.titleRate ?? repeat.title) : undefined,
     };
   }).filter(row => row.code);
   const games = gamesFromPlayerLogs(first.playerGameLogs);
@@ -318,7 +435,7 @@ export async function runNativeSeason(options) {
     },
     horizon: { kind: horizon === 'team' ? 'game' : horizon, seasonStartYears: [seasonStartYear] },
     schedule,
-    matchupWeights: { ownOffense: Number(blend) || 0.5 },
+    matchupWeights: { ownOffense: normalizeBlend(blend) },
     repeats: Number(repeats) || 1,
     seed: String(seed || Math.floor(Math.random() * 4294960000)),
     playoff: { enabled: Boolean(playoffs) && ids.length >= 16, teams: ids.length >= 16 ? 16 : 0, seriesLength: Number(seriesLength) || 7 },

@@ -9,13 +9,49 @@ export function statsFromTotals(totals = {}, advanced = {}) {
   const g = value(totals.gamesPlayed), min = value(totals.minutesPlayed), fga = value(totals.fieldGoalsAttempted), fgm = value(totals.fieldGoalsMade), fta = value(totals.freeThrowsAttempted), points = value(totals.points), threes = value(totals.threePointFieldGoalsMade), threesA = value(totals.threePointFieldGoalsAttempted), ast = value(totals.assists), reb = value(totals.totalRebounds), stl = value(totals.steals), blk = value(totals.blocks), tov = value(totals.turnovers);
   return { gp:g,mpg:ratio(min,g),pts:ratio(points,g),ast:ratio(ast,g),reb:ratio(reb,g),stl:ratio(stl,g),blk:ratio(blk,g),tov:ratio(tov,g),oreb:ratio(value(totals.offensiveRebounds),g),dreb:ratio(value(totals.defensiveRebounds),g),fg:ratio(fgm,fga),three:ratio(threes,threesA),ft:ratio(value(totals.freeThrowsMade),fta),ts:value(advanced.true_shooting_percentage) ?? ratio(points,Number.isFinite(fga) && Number.isFinite(fta) ? 2*(fga+.44*fta) : null),efg:ratio(Number.isFinite(fgm) && Number.isFinite(threes) ? fgm+.5*threes : null,fga),pts36:ratio(points,min,36),ast36:ratio(ast,min,36),reb36:ratio(reb,min,36),stl36:ratio(stl,min,36),blk36:ratio(blk,min,36),tov36:ratio(tov,min,36),ftr:ratio(fta,fga),threeRate:ratio(threesA,fga),pps:ratio(points,fga) };
 }
+
+export function sumCompleteTotals(rows, key) {
+  if (!rows.length) return null;
+  const values = rows.map(row => row.totals?.[key]);
+  if (values.some(value => !Number.isFinite(value))) return null;
+  return values.reduce((total, value) => total + value, 0);
+}
+
+function publicRecordForName(index, name) {
+  const candidates = index.get(normalizePlayerName(name)) || [];
+  if (candidates.length < 1) return null;
+  const exact = candidates.filter(record => record.name === name);
+  if (exact.length === 1) return exact[0];
+  if (exact.length > 1 || candidates.length > 1) return null;
+  return candidates[0];
+}
+
+function publicSeasonForRow(record, row) {
+  const matches = (record?.seasons || []).filter(item =>
+    item.seasonStartYear === row.seasonStartYear
+    && item.seasonPhase === row.phase
+    && item.teamCode === row.teamCode
+    && !item.isMultiTeamAggregate
+  );
+  return matches.length === 1 ? matches[0] : null;
+}
+
 export function buildBlueprintRows(source,phase = 'regular') {
   const names = new Map(source.players.map(row => [row.playerRef,row.displayName]));
-  const official = new Map(source.publicStats.map(row => [normalizePlayerName(row.name),row]));
+  const official = new Map();
+  source.publicStats.forEach(record => {
+    const key = normalizePlayerName(record.normalizedName || record.name);
+    const candidates = official.get(key) || [];
+    candidates.push(record);
+    official.set(key,candidates);
+  });
   return source.blueprintRows.filter(row => row.phase === phase && row.observed && row.games > 0).map(row => {
     const name = names.get(row.playerRef) || row.displayName;
-    const matched = official.get(normalizePlayerName(name))?.seasons?.filter(item => item.seasonStartYear === row.seasonStartYear && item.teamCode === row.teamCode && !item.isMultiTeamAggregate);
-    const publicRow = phase === 'regular' ? matched?.[0] : null;
+    // Public context has no shared playerRef, so exact names disambiguate a
+    // normalized-name collision. If neither source is unique, leave stats out.
+    const publicRecord = publicRecordForName(official,name);
+    const matched = publicSeasonForRow(publicRecord,row);
+    const publicRow = phase === 'regular' ? matched : null;
     const box = row.box || {};
     const totals = publicRow?.totals || (phase !== 'regular' ? { gamesPlayed:row.games,minutesPlayed:row.minutes,points:box.points,totalRebounds:box.rebounds,assists:box.assists,steals:box.steals,blocks:box.blocks,turnovers:box.turnovers,fieldGoalsAttempted:box.fieldGoalAttempts,fieldGoalsMade:box.fieldGoalsMade,threePointFieldGoalsAttempted:box.threePointAttempts,threePointFieldGoalsMade:box.threePointersMade,freeThrowsAttempted:box.freeThrowAttempts,freeThrowsMade:box.freeThrowsMade,offensiveRebounds:box.offensiveRebounds,defensiveRebounds:box.defensiveRebounds } : {});
     const stats = statsFromTotals(totals,publicRow?.advanced);

@@ -2,7 +2,7 @@ import React from 'react';
 export default function PlayerContextTiles({ bio, status }) {
   if (status === 'loading') return <p className="mt-3 text-xs text-muted-foreground">Loading player details…</p>;
   const fields = [
-    ['Jersey', bio?.jerseyNumber ? `#${bio.jerseyNumber}` : null],
+    ['Jersey', bio?.jerseyNumber !== null && bio?.jerseyNumber !== undefined && bio?.jerseyNumber !== '' ? `#${bio.jerseyNumber}` : null],
     ['Height', bio?.height?.display || null],
     ['College', bio?.college || null],
     ['Country', bio?.country || null],

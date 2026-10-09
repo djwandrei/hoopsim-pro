@@ -1,13 +1,14 @@
 import React from 'react';
 import { Shield, Star, Trophy } from 'lucide-react';
 import TeamMark from '@/components/studio/TeamMark';
+import { hasMetric, formatProbability } from '@/lib/season/seasonMetrics';
 
 function OddsBar({ label, value, color, icon: Icon }) {
   return (
     <div>
       <div className="flex items-baseline justify-between text-[11px]">
         <span className="myna-muted flex items-center gap-1.5 font-semibold uppercase tracking-[0.14em]">{Icon && <Icon className="h-3 w-3" />}{label}</span>
-        <span className="myna-mono font-bold">{Math.round((value || 0) * 100)}%</span>
+        <span className="myna-mono font-bold">{formatProbability(value)}</span>
       </div>
       <div className="myna-bar mt-1.5"><span style={{ width: `${Math.min(100, (value || 0) * 100)}%`, background: color, boxShadow: `0 0 10px ${color}` }} /></div>
     </div>
@@ -26,15 +27,20 @@ function Tile({ label, value }) {
 // Team-colored hero banner: record, conference rank, ratings and replay odds.
 export default function LeagueHero({ team, simRow, actualRecord, conferenceRank }) {
   if (!team) return null;
-  const wins = simRow ? Math.round(simRow.wins) : actualRecord?.w ?? 0;
-  const losses = simRow ? 82 - wins : actualRecord?.l ?? 0;
-  const winPct = wins + losses > 0 ? (wins / (wins + losses)).toFixed(3).slice(1) : '—';
+  const wins = simRow
+    ? (hasMetric(simRow.wins) ? Math.round(Number(simRow.wins)) : null)
+    : (hasMetric(actualRecord?.w) ? Number(actualRecord.w) : null);
+  const losses = simRow
+    ? (hasMetric(simRow.losses) ? Math.round(Number(simRow.losses)) : null)
+    : (hasMetric(actualRecord?.l) ? Number(actualRecord.l) : null);
+  const winPct = wins !== null && losses !== null && wins + losses > 0 ? (wins / (wins + losses)).toFixed(3).slice(1) : '—';
+  const metric = value => hasMetric(value) ? Number(value).toFixed(1) : '—';
   const tiles = simRow
     ? [
-      ['ORTG', simRow.ortg.toFixed(1)],
-      ['DRTG', simRow.drtg.toFixed(1)],
-      ['NET', `${simRow.ortg - simRow.drtg > 0 ? '+' : ''}${(simRow.ortg - simRow.drtg).toFixed(1)}`],
-      ['PACE', simRow.pace.toFixed(1)],
+      ['ORTG', metric(simRow.ortg)],
+      ['DRTG', metric(simRow.drtg)],
+      ['NET', hasMetric(simRow.ortg) && hasMetric(simRow.drtg) ? `${simRow.ortg - simRow.drtg > 0 ? '+' : ''}${(simRow.ortg - simRow.drtg).toFixed(1)}` : '—'],
+      ['PACE', metric(simRow.pace)],
     ]
     : [
       ['OFF', team.off.toFixed(1)],
@@ -51,14 +57,14 @@ export default function LeagueHero({ team, simRow, actualRecord, conferenceRank 
           <div className="min-w-0">
             <p className="myna-accent-text text-[10px] font-bold uppercase tracking-[0.22em]">{team.conference} Conference · Seed {conferenceRank || '—'}</p>
             <h3 className="myna-display mt-1 text-3xl sm:text-4xl">{team.name.toUpperCase()}</h3>
-            <p className="myna-muted mt-1 text-[11px]">{simRow ? 'Projected record · median of replays' : 'Observed record from the published schedule'}</p>
+            <p className="myna-muted mt-1 text-[11px]">{simRow ? 'Simulated record · median of replays' : 'Observed record from the published schedule'}</p>
           </div>
         </div>
         <div className="relative text-right">
           <div className="myna-display flex items-baseline justify-end gap-1 text-6xl leading-none sm:text-7xl">
-            <span>{wins}</span>
+            <span>{wins ?? '—'}</span>
             <span className="myna-muted text-4xl">–</span>
-            <span className="myna-muted">{losses}</span>
+            <span className="myna-muted">{losses ?? '—'}</span>
           </div>
           <div className="mt-2 flex items-center justify-end gap-2">
             <span className="myna-mono rounded-md border border-[var(--myna-border)] px-2 py-0.5 text-[10px] font-bold">{winPct}</span>

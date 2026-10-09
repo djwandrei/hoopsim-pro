@@ -1,8 +1,9 @@
 import React from 'react';
 import TeamMark from '@/components/studio/TeamMark';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
+import { hasMetric, formatProbability } from '@/lib/season/seasonMetrics';
 
-const pct = value => `${Math.round((value || 0) * 100)}%`;
+const pct = formatProbability;
 const fmt1 = value => (Number.isFinite(value) ? value.toFixed(1) : '—');
 
 function OddsBar({ label, value, color }) {
@@ -18,15 +19,15 @@ function OddsBar({ label, value, color }) {
 }
 
 function RatingRow({ label, value, leagueAvg, invert = false }) {
-  const diff = value - leagueAvg;
-  const good = invert ? diff < 0 : diff > 0;
+  const diff = Number.isFinite(value) && Number.isFinite(leagueAvg) ? value - leagueAvg : null;
+  const good = Number.isFinite(diff) && (invert ? diff < 0 : diff > 0);
   return (
     <div className="flex items-baseline justify-between border-b border-[var(--myna-border)] py-1.5 last:border-0">
       <span className="text-xs myna-muted">{label}</span>
       <span className="myna-mono flex items-baseline gap-2 text-sm">
         {fmt1(value)}
         <span className="text-xs font-semibold" style={{ color: good ? 'var(--myna-accent)' : 'var(--myna-trim)' }}>
-          {diff > 0 ? '+' : ''}{fmt1(diff)} vs lg
+          {Number.isFinite(diff) ? `${diff > 0 ? '+' : ''}${fmt1(diff)} vs lg` : 'unavailable'}
         </span>
       </span>
     </div>
@@ -46,8 +47,9 @@ function FactorCell({ label, value }) {
 export default function FocusCard({ team, row, leagueAvg, actualWins }) {
   if (!team || !row) return null;
   const palette = paletteForTeam(team.code);
-  const wins = Math.round(row.wins);
-  const net = row.ortg - row.drtg;
+  const wins = hasMetric(row.wins) ? Math.round(Number(row.wins)) : null;
+  const losses = hasMetric(row.losses) ? Math.round(Number(row.losses)) : null;
+  const net = hasMetric(row.ortg) && hasMetric(row.drtg) ? Number(row.ortg) - Number(row.drtg) : null;
   return (
     <section className="myna-panel relative overflow-hidden" aria-label={`${team.name} projection`}>
       <span aria-hidden className="pointer-events-none absolute -bottom-6 right-2 select-none font-display leading-none opacity-[0.07]" style={{ fontSize: 'clamp(4.5rem, 10vw, 8rem)' }}>{team.code}</span>
@@ -60,7 +62,7 @@ export default function FocusCard({ team, row, leagueAvg, actualWins }) {
           </div>
         </div>
         <div className="text-right">
-          <div className="myna-display text-3xl leading-none" style={{ color: 'var(--myna-accent)' }}>{wins}<span className="myna-muted text-lg">–{82 - wins}</span></div>
+          <div className="myna-display text-3xl leading-none" style={{ color: 'var(--myna-accent)' }}>{wins === null ? '—' : wins}<span className="myna-muted text-lg">{losses === null ? '' : `–${losses}`}</span></div>
           <div className="myna-muted mt-1 text-[10px] uppercase tracking-[0.16em]">simulated record (median)</div>
         </div>
       </header>

@@ -61,6 +61,7 @@ export default function PlayerPicker({ players, onSelect, selectedRef, placehold
       <div className="mt-3 max-h-96 space-y-1 overflow-y-auto pr-1">
         {matches.map(p => {
           const stats = perGameStats(p);
+          const mpg = Number.isFinite(stats.mpg) ? `${stats.mpg.toFixed(1)} MPG` : '— MPG';
           return (
             <button
               key={p.playerRef}
@@ -73,7 +74,7 @@ export default function PlayerPicker({ players, onSelect, selectedRef, placehold
             >
               <PlayerPortrait key={p.headshotPath || p.playerRef} player={p} className="h-10 w-10" /><span className="min-w-0 flex-1 truncate">{p.name}</span>
               <span className="shrink-0 font-mono text-xs text-muted-foreground">
-                {p.teamCode} · {stats.mpg.toFixed(1)} MPG
+                {p.teamCode} · {mpg}
               </span>
             </button>
           );

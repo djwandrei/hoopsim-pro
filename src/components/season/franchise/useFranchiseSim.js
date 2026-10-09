@@ -18,6 +18,12 @@ import {
 } from './franchiseEngine';
 
 const upper = value => String(value ?? '').toUpperCase();
+// V4 release data reaches the intake through the page-by-page service-worker
+// relay on this host, so one fetch can stream for minutes. The loaders' 30s
+// default is sized for direct site fetches and aborts long streams mid-read
+// (Safari surfaces that as "Fetch is aborted."), so every intake call from the
+// franchise workspace raises its own relay-sized ceiling.
+const V4_RELAY_TIMEOUT_MS = 300000;
 const readSavedText = key => {
   try { return key ? localStorage.getItem(key) : null; }
   catch { return null; }
@@ -787,7 +793,7 @@ export default function useFranchiseSim() {
       const [model, production, loadedIntake] = await Promise.all([
         fetchJsonText(GAME_MODEL_PATH, 'Game model'),
         fetchJsonText(PRODUCTION_CANDIDATE_PATH, 'Player production candidate'),
-        intake.loadV4FranchiseIntakeV1({ seasonStartYear, phase: 'regular', releasePin, baseUrl }),
+        intake.loadV4FranchiseIntakeV1({ seasonStartYear, phase: 'regular', releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS }),
       ]);
       if (Number(loadedIntake.scenario?.seasonStartYear) !== seasonStartYear || loadedIntake.scenario?.phase !== 'regular') {
         throw new Error('V4 intake returned a different year or phase from the selected exact regular season.');
@@ -836,7 +842,7 @@ export default function useFranchiseSim() {
       const { intake: api } = await ensureV4Api();
       const releasePin = api.createV4FranchiseLocalMirrorReleasePinV1({ origin: window.location.origin });
       const baseUrl = new URL('/tools/swishiq-studio/', window.location.origin).href;
-      const suggestedIntake = await api.loadLastObservedTeamScenarioSuggestionsV1(intake, { releasePin, baseUrl });
+      const suggestedIntake = await api.loadLastObservedTeamScenarioSuggestionsV1(intake, { releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS });
       const nextChoices = new Map(state.v4RosterChoices);
       const nextProvenance = new Map(state.v4ChoiceProvenance);
       const nextSuggestions = new Map(state.v4SuggestionsByName);
@@ -884,7 +890,7 @@ export default function useFranchiseSim() {
       if (!cached || Number(cached.seasonStartYear) !== seasonStartYear) {
         const releasePin = api.createV4FranchiseLocalMirrorReleasePinV1({ origin: window.location.origin });
         const baseUrl = new URL('/tools/swishiq-studio/', window.location.origin).href;
-        cached = { seasonStartYear, part: (await api.loadV4PlayerGamesForFranchiseSuggestionsV1({ seasonStartYear, releasePin, baseUrl })).part };
+        cached = { seasonStartYear, part: (await api.loadV4PlayerGamesForFranchiseSuggestionsV1({ seasonStartYear, releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS })).part };
         state.v4PlayerGamesPart = cached;
       }
       const { applied, held } = deriveRosterModeAssignments(intake, cached.part.records, mode, cached.part);

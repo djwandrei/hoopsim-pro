@@ -5,17 +5,32 @@ let installed = false;
 const waiters = [];
 let active = 0;
 
+// Transient upstream failures on one relay page (site hiccup, cold backend
+// function) are retryable; a mid-stream page failure otherwise aborts the
+// whole streamed response, which Safari surfaces as "Fetch is aborted."
+const RETRYABLE_PAGE_ERROR = /unavailable \(5\d\d\)|temporarily unavailable|timed out|status code|relay failed/i;
+
 export async function requestSourceChunk(path, offset = 0, totalBytes = null) {
   if (active >= 4) await new Promise(resolve => waiters.push(resolve));
   active += 1;
+  let lastError;
   try {
-    const { data } = await base44.functions.invoke('swishiqLineupLabSource', {
-      path, offset, totalBytes, responseFormat: 'base64',
-    });
-    if (typeof data?.dataB64 !== 'string' || !Number.isSafeInteger(data.nextOffset)) {
-      throw new Error(data?.error || 'The Lineup Lab source response was incomplete.');
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      if (attempt) await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+      try {
+        const { data } = await base44.functions.invoke('swishiqLineupLabSource', {
+          path, offset, totalBytes, responseFormat: 'base64',
+        });
+        if (typeof data?.dataB64 !== 'string' || !Number.isSafeInteger(data.nextOffset)) {
+          throw new Error(data?.error || 'The Lineup Lab source response was incomplete.');
+        }
+        return data;
+      } catch (error) {
+        lastError = error;
+        if (!RETRYABLE_PAGE_ERROR.test(String(error?.message))) throw error;
+      }
     }
-    return data;
+    throw lastError;
   } finally {
     active -= 1;
     waiters.shift()?.();

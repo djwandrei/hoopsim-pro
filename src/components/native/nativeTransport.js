@@ -8,7 +8,7 @@ const hex = buffer => [...new Uint8Array(buffer)].map(value => value.toString(16
 // Standalone site build: fetch directly from the site (same-origin) and verify
 // each module against the reviewed SHA-256 pins client-side.
 async function direct(url) {
-  const response = await fetch(url);
+  const response = await fetch(url, { cache: 'no-store' });
   if (!response.ok) throw new Error(`The Studio source is unavailable (${response.status}).`);
   const bytes = await response.arrayBuffer();
   const sha256 = hex(await crypto.subtle.digest('SHA-256', bytes));

@@ -17,8 +17,8 @@ import { SITE_ORIGIN } from '@/lib/deployConfig';
 const SWISHIQ_DAILY_GAME_KINDS = Object.freeze(['fix-the-five', 'draft-night']);
 export const SWISHIQ_DAILY_GAME_FAMILY = 'team-season';
 
-const NATIVE_DAILY_CLIENT_URL = '/tools/swishiq-daily-game-client.js?v=20261009a&rev=daily-v4-observed-box-score-v1';
-const NATIVE_RUNTIME_ADAPTER_URL = 'engine/canonical-v4-studio-runtime-adapter.js?v=20261009a';
+const NATIVE_DAILY_CLIENT_URL = '/tools/swishiq-daily-game-client.js?v=20261009b&rev=daily-v4-observed-box-score-v1';
+const NATIVE_RUNTIME_ADAPTER_URL = 'engine/canonical-v4-studio-runtime-adapter.js?v=20261009b';
 const SWISHIQ_PUBLIC_REGISTRY_PATH = '/tools/swishiq-studio/data/registry.json';
 const SWISHIQ_PUBLIC_BOARD_ROOT = '/tools/swishiq-studio/data/boards/';
 const V4_RELEASE_REGISTRY_PATH = '/tools/swishiq-studio/data/v4/releases/v4-site-12ad90dc8710/registry.json';

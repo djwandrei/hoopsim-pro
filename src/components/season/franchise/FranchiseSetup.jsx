@@ -1,8 +1,6 @@
 import React from 'react';
-import { Database, Loader2, Lock, Play, Sparkles } from 'lucide-react';
+import { Database, Lock, Play } from 'lucide-react';
 import { GENERATED_SHOOTING_RATING_POLICY } from './franchiseLogic';
-
-const goldButton = 'frx2k-btn';
 
 // The selected scenario path's setup screen, styled as a 2K-style options
 // menu. Same controls, states and engine calls as before — presentation only.
@@ -50,12 +48,20 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
           </div>
           <div className="frx2k-row">
             <div>
-              <span className="frx2k-row__label">Season package</span>
-              <span className="frx2k-row__hint">Fetch the pinned source snapshot and run intake with receipts.</span>
+              <span className="frx2k-row__label">Roster set for multi-team players</span>
+              <span className="frx2k-row__hint">Every multi-team player joins a roster set automatically; tied or unknown names stay held for review in the console below.</span>
             </div>
-            <button type="button" className={goldButton} disabled={!v4.canLoad} onClick={sim.loadV4Season}>
-              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : <Database className="h-3.5 w-3.5" aria-hidden="true" />} Load V4 season
-            </button>
+            <fieldset className="flex flex-wrap gap-2" disabled={!v4.canAssign}>
+              <legend className="sr-only">Roster set for multi-team players</legend>
+              <label className="frx2k-chip" data-checked={v4.rosterMode === 'start'}>
+                <input type="radio" name="frx-roster-mode" checked={v4.rosterMode === 'start'} onChange={() => sim.applyRosterMode('start')} />
+                <span>Start of season</span>
+              </label>
+              <label className="frx2k-chip" data-checked={v4.rosterMode === 'end'}>
+                <input type="radio" name="frx-roster-mode" checked={v4.rosterMode === 'end'} onChange={() => sim.applyRosterMode('end')} />
+                <span>End of season</span>
+              </label>
+            </fieldset>
           </div>
           <div className="frx2k-row">
             <div>
@@ -93,52 +99,6 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
                 {rating.kind === 'review' && <><strong>Initialization held: {rating.count} player{rating.count === 1 ? '' : 's'} lack a source shooting rating.</strong><p className="frx-note">Default behavior rejects these missing components. Enable the explicit {GENERATED_SHOOTING_RATING_POLICY} scenario policy and retry. No source rating was changed.</p><ul>{rating.names.map((name, index) => <li key={index}>{name}</li>)}</ul></>}
                 {rating.kind === 'generated' && <><strong>{rating.count} provisional shooting rating{rating.count === 1 ? '' : 's'} generated under {rating.policy}.</strong><ul>{rating.rows.map((row, index) => <li key={index}><span>{row.name}</span>{row.value && <span className="frx-rating__value">· {row.value}</span>}<small>{row.method}</small></li>)}{rating.more > 0 && <li>{rating.more} additional generated rating{rating.more === 1 ? '' : 's'} are recorded in this session receipt.</li>}</ul><p className="frx-note">These are uncalibrated scenario values, not observed source ratings or confidence intervals. Original source values are preserved: {rating.preserved}.</p></>}
                 {(rating.kind === 'idle' || rating.kind === 'ready') && <strong>{rating.text}</strong>}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* V4 roster assignment — a launch step on the exact-season path */}
-      {path === 'v4' && (
-        <section className="frx2k-screen" aria-labelledby="frx-choices-title">
-          <header className="frx2k-screen__head">
-            <span className="frx-head-icon"><Sparkles className="h-4 w-4" aria-hidden="true" /></span>
-            <div className="min-w-0">
-              <p className="bcast-kicker">Multi-team names</p>
-              <h3 className="frx-title" id="frx-choices-title">Roster assignment</h3>
-            </div>
-            <span className="frx-pill frx-pill--slate ml-auto">{v4.choiceCount}</span>
-          </header>
-          <div className="frx2k-tail">
-            {!v4.groups.length && <p className="frx-note">{v4.status.state === 'idle' ? 'Roster assignment appears after V4 intake.' : 'No multi-team player names need a franchise choice in this exact season.'}</p>}
-            {v4.groups.length > 0 && (
-              <>
-                <p className="frx2k-legend">Choose which roster set to use — all multi-team players are assigned automatically</p>
-                <fieldset className="grid gap-2.5 sm:grid-cols-2" disabled={!v4.canAssign}>
-                  <legend className="sr-only">Roster set for multi-team players</legend>
-                  <label className="frx2k-choice" data-checked={v4.rosterMode === 'start'}>
-                    <input type="radio" name="frx-roster-mode" checked={v4.rosterMode === 'start'} onChange={() => sim.applyRosterMode('start')} />
-                    <span><strong>Start of season rosters</strong>
-                      <span className="frx2k-choice__text">Every multi-team player joins the team they first played for in the season.</span></span>
-                  </label>
-                  <label className="frx2k-choice" data-checked={v4.rosterMode === 'end'}>
-                    <input type="radio" name="frx-roster-mode" checked={v4.rosterMode === 'end'} onChange={() => sim.applyRosterMode('end')} />
-                    <span><strong>End of season rosters</strong>
-                      <span className="frx2k-choice__text">Every multi-team player joins the team they last played for in the season.</span></span>
-                  </label>
-                </fieldset>
-              </>
-            )}
-            {v4.appliedSummary && (
-              <div className="rounded-xl border border-border/40 bg-raised/30 p-3">
-                <p className="frx-note"><strong className="text-foreground">{v4.appliedSummary.text}</strong>{v4.appliedSummary.suggestionNote ? <><br />{v4.appliedSummary.suggestionNote}</> : ''}</p>
-                {v4.appliedSummary.appliedRows.length > 0 && (
-                  <details className="mt-1.5">
-                    <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Applied team choices and provenance</summary>
-                    <ul className="frx-choice__evidence">{v4.appliedSummary.appliedRows.map((row, index) => <li key={index}>{row}</li>)}</ul>
-                  </details>
-                )}
               </div>
             )}
           </div>

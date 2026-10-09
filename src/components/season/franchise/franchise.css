@@ -242,6 +242,14 @@
 .frx2k-switch:disabled { opacity: .5; cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .frx2k-switch, .frx2k-switch::before, .frx2k-btn { transition: none; } }
 
+/* Compact roster-set radio chips (inside the season row) */
+.frx2k-chip { display: inline-flex; align-items: center; gap: .55rem; cursor: pointer; border-radius: .45rem; border: 1px solid hsl(var(--border) / .55); background: hsl(var(--court-raised) / .35); padding: .55rem .9rem; font-family: var(--font-display); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: hsl(var(--muted-foreground)); transition: border-color .15s ease, background-color .15s ease, color .15s ease; }
+.frx2k-chip input { appearance: none; height: .8rem; width: .8rem; border-radius: 999px; border: 2px solid hsl(var(--border) / .8); transition: border-color .15s ease, box-shadow .15s ease; }
+.frx2k-chip input:checked { border-color: hsl(var(--court-accent)); box-shadow: inset 0 0 0 2px hsl(var(--court-surface)), inset 0 0 0 4px hsl(var(--court-accent)); }
+.frx2k-chip[data-checked="true"] { border-color: hsl(var(--court-accent) / .7); background: hsl(var(--court-accent) / .12); color: hsl(var(--court-accent)); }
+.frx2k-chip:hover { border-color: hsl(var(--court-accent) / .55); }
+fieldset:disabled .frx2k-chip { opacity: .5; cursor: not-allowed; }
+
 /* Roster-set choice cards */
 .frx2k-legend { font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
 .frx2k-choice { position: relative; display: flex; align-items: flex-start; gap: .75rem; padding: 1rem 1.1rem; border-radius: .6rem; border: 1px solid hsl(var(--border) / .45); background: linear-gradient(150deg, hsl(var(--court-surface) / .7), hsl(var(--court-canvas) / .6)); transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease; }

@@ -567,6 +567,20 @@ export default function useFranchiseSim() {
   const [engineError, setEngineError] = useState(null);
   const [attempt, setAttempt] = useState(0);
 
+  // Speed pass: the two pinned model texts are static same-origin assets, so
+  // they start loading the moment the page opens instead of waiting for the
+  // season pick. A failed prefetch clears itself for a retry on the next load.
+  const modelPrefetch = useRef(null);
+  const startModelPrefetch = () => {
+    if (!modelPrefetch.current) {
+      modelPrefetch.current = Promise.all([
+        fetchJsonText(GAME_MODEL_PATH, 'Game model'),
+        fetchJsonText(PRODUCTION_CANDIDATE_PATH, 'Player production candidate'),
+      ]).catch(error => { modelPrefetch.current = null; throw error; });
+    }
+    return modelPrefetch.current;
+  };
+
   const setWorkerStatus = (text, state = 'idle') => { ref.current.workerStatus = { text, state }; render(); };
   const showMessage = (value, kind = 'error') => { ref.current.message = value ? { text: value, kind } : null; render(); };
   const showFailure = (error, fallback = 'The worker action failed.', context = 'Worker') => {
@@ -684,6 +698,9 @@ export default function useFranchiseSim() {
     return () => { live = false; };
   }, [attempt, enginePhase]);
 
+  // Warm the model texts alongside the engine while the page opens.
+  useEffect(() => { void startModelPrefetch().catch(() => {}); }, []);
+
   // Worker + IndexedDB shutdown.
   useEffect(() => () => {
     const state = ref.current;
@@ -795,11 +812,19 @@ export default function useFranchiseSim() {
       const seasonStartYear = requestedYear;
       const releasePin = intake.createV4FranchiseLocalMirrorReleasePinV1({ origin: window.location.origin });
       const baseUrl = new URL('/tools/swishiq-studio/', window.location.origin).href;
-      const [model, production, loadedIntake] = await Promise.all([
-        fetchJsonText(GAME_MODEL_PATH, 'Game model'),
-        fetchJsonText(PRODUCTION_CANDIDATE_PATH, 'Player production candidate'),
+      // Three relay/fetch streams overlap: model texts (usually already warm),
+      // the season package, and the player-game observations the default
+      // start-of-season roster assignment needs — that last stream previously
+      // waited for the whole intake to finish first.
+      const playerGames = intake.loadV4PlayerGamesForFranchiseSuggestionsV1({ seasonStartYear, releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS })
+        .then(result => { const cached = { seasonStartYear, part: result.part }; state.v4PlayerGamesPart = cached; return cached; })
+        .catch(() => null);
+      const [modelProduction, loadedIntake] = await Promise.all([
+        startModelPrefetch(),
         intake.loadV4FranchiseIntakeV1({ seasonStartYear, phase: 'regular', releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS }),
       ]);
+      void playerGames;
+      const [model, production] = modelProduction;
       if (Number(loadedIntake.scenario?.seasonStartYear) !== seasonStartYear || loadedIntake.scenario?.phase !== 'regular') {
         throw new Error('V4 intake returned a different year or phase from the selected exact regular season.');
       }
@@ -815,7 +840,6 @@ export default function useFranchiseSim() {
       state.v4ChoiceProvenance = new Map();
       state.v4SuggestionsByName = new Map();
       state.v4SuggestionSummary = null;
-      state.v4PlayerGamesPart = null;
       state.v4RosterMode = null;
       state.workerStatus = { text: 'V4 intake verified · worker not initialized', state: 'idle' };
       showMessage('');

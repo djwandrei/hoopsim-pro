@@ -7,17 +7,17 @@ export default function FranchiseStatusStrip({ view }) {
   const { workerStatus, qualityPill, revision, stateMetrics, stateQuality, message } = view;
   return (
     <div className="space-y-3">
-      <div className="court-panel frx-strip hidden">
-        <span className="frx-strip__seg hidden">
-          <span className={`frx-status-dot ${workerStatus?.state === 'ready' ? 'frx-status-dot--ready' : workerStatus?.state === 'error' ? 'frx-status-dot--error' : workerStatus?.state === 'idle' && view.busy ? 'frx-status-dot--busy' : ''}`} aria-hidden="true" />
-          {workerStatus?.text || 'Idle'}
-        </span>
-        <span className="frx-strip__div" aria-hidden="true" />
-        <span className={`frx-pill frx-pill--${qualityPill?.kind === 'green' ? 'green' : 'amber'}`}>{qualityPill?.label}</span>
-        <span className="frx-strip__div" aria-hidden="true" />
-        <span className="frx-pill frx-pill--slate">{revision}</span>
-        {view.busy && <Loader2 className="h-3.5 w-3.5 animate-spin text-gold" aria-hidden="true" />}
-      </div>
+      
+
+
+
+
+
+
+
+
+
+      
       {message &&
       <div
         role="alert"

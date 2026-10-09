@@ -9,26 +9,24 @@ const SOURCES = [
   },
 ];
 
-// Launch phase: hero, a source route picker, and the selected path's setup
-// controls. Every control lives inside the two paths — nothing is removed.
+// Launch phase: 2K-style hero, a scenario source picker, and the selected
+// path's setup screen. Every control lives inside the two paths — nothing is
+// removed and the engine calls are unchanged.
 export default function FranchiseLaunch({ sim, onBack }) {
   const [path, setPath] = useState('v4');
   return (
     <div className="space-y-4">
-      <header className="court-panel frx-panel frx-hero">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="bcast-kicker">Franchise control room · Step 2</p>
-            <h2 className="frx-hero__title">Launch a franchise season</h2>
-            <p className="frx-note max-w-2xl">Pick a verified scenario source, resolve any multi-team roster names, and initialize the session. The pinned simulation engine handles every game from there.</p>
-          </div>
-          {onBack && (
-            <button type="button" onClick={onBack}
-              className="shrink-0 rounded-lg border border-border/50 bg-raised/40 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-foreground transition-colors hover:border-gold/40 hover:text-gold">
-              Back
-            </button>
-          )}
-        </div>
+      <header className="frx2k-hero frx2k-hero--slim">
+        <span className="frx2k-hero__slash" aria-hidden="true" />
+        <span className="frx2k-hero__ghost" aria-hidden="true">Season</span>
+        {onBack && (
+          <button type="button" onClick={onBack} className="frx2k-cta frx2k-cta--ghost relative self-start">
+            <span>Back</span>
+          </button>
+        )}
+        <p className="frx2k-eyebrow">Franchise control room · Step 2</p>
+        <h2 className="frx2k-hero__title frx2k-hero__title--sm">Launch a franchise season</h2>
+        <p className="frx2k-hero__sub">Pick a verified scenario source, choose which roster set multi-team players join, and initialize the session. The pinned simulation engine handles every game from there.</p>
       </header>
       <div className="grid gap-3">
         {SOURCES.map(source => {

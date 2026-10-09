@@ -19,31 +19,33 @@ const STEP_CARDS = [
   },
 ];
 
-// Screen 1: the welcome hero. One call to action into the setup screen.
+// Screen 1: the 2K-style mode hero. One call to action into the setup screen.
 export default function FranchiseWelcome({ sim, onStart }) {
   const seasons = sim.view.v4?.seasons ?? [];
   return (
     <div className="space-y-4">
-      <section className="court-panel frx-panel frx-hero" aria-labelledby="frx-welcome-title">
-        <p className="bcast-kicker">Franchise control room</p>
-        <h2 className="frx-hero__title" id="frx-welcome-title">Run a franchise, season by season</h2>
-        <p className="frx-note max-w-2xl">Take control of an NBA franchise inside the pinned V4 simulation engine: load a verified season package, set your rotation, then play the schedule game by game with box scores, standings, and checkpoints.</p>
-        <div className="flex flex-wrap items-center gap-3 pt-1">
-          <button type="button" onClick={onStart}
-            className="book-cta inline-flex items-center gap-2 rounded-lg border border-gold/50 bg-gold/15 px-5 py-2.5 text-sm font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/25">
-            <Database className="h-4 w-4" aria-hidden="true" /> Start franchise setup <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      <section className="frx2k-hero" aria-labelledby="frx-welcome-title">
+        <span className="frx2k-hero__slash" aria-hidden="true" />
+        <span className="frx2k-hero__ghost" aria-hidden="true">Franchise</span>
+        <p className="frx2k-eyebrow">Franchise control room</p>
+        <h2 className="frx2k-hero__title" id="frx-welcome-title">Run a franchise,<br />season by <em>season</em></h2>
+        <p className="frx2k-hero__sub">Take control of an NBA franchise inside the pinned V4 simulation engine: load a verified season package, set your rotation, then play the schedule game by game with box scores, standings, and checkpoints.</p>
+        <div className="relative mt-3 flex flex-wrap items-center gap-3">
+          <button type="button" onClick={onStart} className="frx2k-cta">
+            <span>Start franchise setup <ArrowRight className="h-4 w-4" aria-hidden="true" /></span>
           </button>
           <span className="frx-pill frx-pill--green">Engine connected</span>
         </div>
       </section>
       <div className="grid gap-3 sm:grid-cols-3">
-        {STEP_CARDS.map(step => {
+        {STEP_CARDS.map((step, index) => {
           const Icon = step.icon;
           return (
-            <article key={step.title} className="court-panel frx-panel p-4">
-              <span className="frx-source__icon"><Icon className="h-5 w-5" aria-hidden="true" /></span>
-              <h3 className="frx-source__title mt-2.5">{step.title}</h3>
-              <p className="frx-note mt-1">{step.text}</p>
+            <article key={step.title} className="frx2k-tile">
+              <span className="frx2k-tile__num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <span className="frx2k-tile__icon"><Icon className="h-5 w-5" aria-hidden="true" /></span>
+              <h3 className="frx2k-tile__title">{step.title}</h3>
+              <p className="frx2k-tile__text">{step.text}</p>
             </article>
           );
         })}

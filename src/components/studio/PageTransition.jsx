@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'framer-motion';
 
 // Smooth slide page transitions: the incoming view slides in from the right
 // while the outgoing view eases out to the left. AnimatePresence holds the
@@ -12,17 +12,19 @@ export default function PageTransition({ children }) {
   const reducedMotion = useReducedMotion();
   if (reducedMotion) return <div className="min-w-0">{children}</div>;
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={pathname}
-        className="min-w-0"
-        initial={{ opacity: 0, x: 32 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -32 }}
-        transition={{ duration: 0.22, ease: [0.2, 0.8, 0.3, 1] }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <LazyMotion features={domAnimation}>
+      <AnimatePresence mode="wait" initial={false}>
+        <m.div
+          key={pathname}
+          className="min-w-0"
+          initial={{ opacity: 0, x: 32 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -32 }}
+          transition={{ duration: 0.22, ease: [0.2, 0.8, 0.3, 1] }}
+        >
+          {children}
+        </m.div>
+      </AnimatePresence>
+    </LazyMotion>
   );
 }

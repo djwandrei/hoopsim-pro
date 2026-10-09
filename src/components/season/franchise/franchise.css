@@ -222,6 +222,26 @@
 .frx2k-console[data-state='error'] { border-color: hsl(var(--court-trim) / .4); background: hsl(var(--court-trim) / .1); }
 .frx2k-console[data-state='loading'] { border-color: hsl(var(--court-accent) / .4); background: hsl(var(--court-accent) / .08); }
 
+/* 2K-style controls */
+.frx2k-select { appearance: none; min-height: 3rem; width: 100%; padding: .55rem 2.4rem .55rem .95rem; border-radius: .5rem; border: 1px solid hsl(var(--border) / .55); background:
+  linear-gradient(45deg, transparent 50%, hsl(var(--court-accent)) 50%) calc(100% - 20px) calc(50% + 3px) / 6px 6px no-repeat,
+  linear-gradient(135deg, hsl(var(--court-accent)) 50%, transparent 50%) calc(100% - 14px) calc(50% + 3px) / 6px 6px no-repeat,
+  linear-gradient(180deg, hsl(var(--court-surface) / .92), hsl(var(--court-canvas) / .92));
+  font-family: var(--font-display); font-size: .95rem; letter-spacing: .07em; text-transform: uppercase; color: hsl(var(--foreground)); transition: border-color .15s ease, box-shadow .15s ease; }
+.frx2k-select:hover:not(:disabled) { border-color: hsl(var(--court-accent) / .55); }
+.frx2k-select:focus-visible { border-color: hsl(var(--court-accent) / .7); box-shadow: 0 0 0 3px hsl(var(--court-accent) / .18); outline: none; }
+.frx2k-select:disabled { opacity: .55; cursor: not-allowed; }
+.frx2k-select option { font-family: var(--font-body); text-transform: none; letter-spacing: 0; }
+.frx2k-btn { position: relative; display: inline-flex; align-items: center; gap: .5rem; padding: .65rem 1.3rem; border-radius: .4rem; border: 1px solid hsl(var(--court-accent) / .55); background: linear-gradient(180deg, hsl(var(--court-accent) / .18), hsl(var(--court-accent) / .08)); color: hsl(var(--court-accent)); font-family: var(--font-mono); font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; transition: background-color .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.frx2k-btn:hover:not(:disabled) { border-color: hsl(var(--court-accent) / .8); background: hsl(var(--court-accent) / .25); box-shadow: 0 8px 20px hsl(var(--court-accent) / .25); }
+.frx2k-btn:disabled { opacity: .45; cursor: not-allowed; }
+.frx2k-switch { position: relative; appearance: none; height: 1.7rem; width: 3.2rem; flex-shrink: 0; border-radius: 999px; border: 1px solid hsl(var(--border) / .7); background: hsl(var(--court-canvas) / .8); cursor: pointer; transition: background-color .18s ease, border-color .18s ease; }
+.frx2k-switch::before { content: ''; position: absolute; top: 50%; left: .22rem; height: 1.25rem; width: 1.25rem; transform: translateY(-50%); border-radius: 999px; background: hsl(var(--muted-foreground) / .8); transition: transform .18s ease, background-color .18s ease; }
+.frx2k-switch:checked { border-color: hsl(var(--court-accent) / .8); background: hsl(var(--court-accent) / .3); }
+.frx2k-switch:checked::before { transform: translate(1.35rem, -50%); background: hsl(var(--court-accent)); box-shadow: 0 0 10px hsl(var(--court-accent) / .6); }
+.frx2k-switch:disabled { opacity: .5; cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { .frx2k-switch, .frx2k-switch::before, .frx2k-btn { transition: none; } }
+
 /* Roster-set choice cards */
 .frx2k-legend { font-family: var(--font-mono); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
 .frx2k-choice { position: relative; display: flex; align-items: flex-start; gap: .75rem; padding: 1rem 1.1rem; border-radius: .6rem; border: 1px solid hsl(var(--border) / .45); background: linear-gradient(150deg, hsl(var(--court-surface) / .7), hsl(var(--court-canvas) / .6)); transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease; }

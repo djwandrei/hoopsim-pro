@@ -2,8 +2,7 @@ import React from 'react';
 import { Database, Loader2, Lock, Play, Sparkles } from 'lucide-react';
 import { GENERATED_SHOOTING_RATING_POLICY } from './franchiseLogic';
 
-const buttonBase = 'inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-xs font-semibold uppercase tracking-widest transition-colors disabled:cursor-not-allowed disabled:opacity-45';
-const goldButton = `${buttonBase} border-gold/50 bg-gold/15 text-gold hover:bg-gold/25`;
+const goldButton = 'frx2k-btn';
 
 // The selected scenario path's setup screen, styled as a 2K-style options
 // menu. Same controls, states and engine calls as before — presentation only.
@@ -27,7 +26,7 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
               <label className="frx2k-row__label" htmlFor="frx-v4-season">Starting season</label>
               <span className="frx2k-row__hint">A verified regular-season package loads as soon as you pick.</span>
             </div>
-            <select id="frx-v4-season" className="studio-select" value={v4.year} disabled={v4.yearDisabled}
+            <select id="frx-v4-season" className="frx2k-select" value={v4.year} disabled={v4.yearDisabled}
               onChange={event => {
                 const value = Number(event.target.value);
                 if (!value) return;
@@ -43,7 +42,7 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
               <label className="frx2k-row__label" htmlFor="frx-v4-team">Team to control</label>
               <span className="frx2k-row__hint">{v4.teamDisabled ? 'Available after the season package loads.' : 'Pick any of the 30 exact-season franchises.'}</span>
             </div>
-            <select id="frx-v4-team" className="studio-select" value={v4.teamSelected} disabled={v4.teamDisabled}
+            <select id="frx-v4-team" className="frx2k-select" value={v4.teamSelected} disabled={v4.teamDisabled}
               onChange={event => sim.setV4UserTeam(event.target.value)}>
               <option value="">{v4.teamMessage}</option>
               {v4.teamOptions.map(option => <option key={option.code} value={option.code}>{option.label}</option>)}
@@ -64,7 +63,7 @@ export default function FranchiseSetup({ sim, path = 'v4' }) {
               <span className="frx2k-row__hint">Allow initialization when players lack a source rating — explicit {GENERATED_SHOOTING_RATING_POLICY} policy, values are uncalibrated.</span>
             </div>
             <label htmlFor="frx-rating-policy" className="flex cursor-pointer items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-foreground">
-              <input id="frx-rating-policy" type="checkbox" className="h-4 w-4" checked={v4.generateRating} disabled={v4.ratingDisabled}
+              <input id="frx-rating-policy" type="checkbox" className="frx2k-switch" checked={v4.generateRating} disabled={v4.ratingDisabled}
                 onChange={event => sim.setGenerateRating(event.target.checked)} />
               {v4.generateRating ? 'Enabled' : 'Off'}
             </label>

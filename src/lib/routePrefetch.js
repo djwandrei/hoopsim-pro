@@ -39,3 +39,15 @@ export function prefetchRoute(path) {
   started.add(chunk.prefix);
   chunk.load().catch(() => started.delete(chunk.prefix));
 }
+
+// After the landing paint, warm the highest-traffic destinations during idle
+// time so a first navigation arrives instantly instead of on hover.
+export function warmHighTrafficRoutes() {
+  const warm = () => { for (const path of ['/daily-games', '/sims/season']) prefetchRoute(path); };
+  if ('requestIdleCallback' in window) {
+    const id = requestIdleCallback(warm, { timeout: 4000 });
+    return () => cancelIdleCallback(id);
+  }
+  const id = setTimeout(warm, 1500);
+  return () => clearTimeout(id);
+}

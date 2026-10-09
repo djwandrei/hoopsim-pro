@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import usePageMeta from '@/hooks/usePageMeta';
+import { warmHighTrafficRoutes } from '@/lib/routePrefetch';
 import StudioShell from '@/components/studio/StudioShell';
 import StudioWelcome from '@/components/studio/StudioWelcome';
 import WorkbenchCard from '@/components/studio/WorkbenchCard';
@@ -11,6 +12,7 @@ import ResumeStrip from '@/components/studio/ResumeStrip';
 import DailyCall from '@/components/studio/DailyCall';
 export default function StudioHome() {
   usePageMeta({ title: 'SwishIQ Studio — DJHC Basketball Analytics', description: 'Eight NBA analytics workbenches and daily games: season and franchise sims, player blueprints, chemistry, Forge drafts, collector tools and lineup solving.' });
+  useEffect(() => warmHighTrafficRoutes(), []);
   const board = [{ value: '08', label: 'Workbenches' }, { value: '2017–26', label: 'Published archive' }, { value: '04', label: 'Comparison slots' }, { value: 'SHA-256', label: 'Verified source' }, { value: 'Original', label: 'Gameplay modules' }, { value: 'Seeded', label: 'Replay engine' }];
   return <StudioShell active="/"><StudioWelcome /><BroadcastTicker items={board} /><ResumeStrip /><DailyCall /><main className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
     

@@ -15,6 +15,7 @@ import MobileHeaderBrand from '@/components/mobile/MobileHeaderBrand';
 import BottomTabBar from '@/components/djhc/BottomTabBar';
 import SiteDrawer from '@/components/djhc/SiteDrawer';
 import useSiteDrawer from '@/components/djhc/useSiteDrawer';
+import CourtThemeProvider from '@/components/djhc/CourtThemeProvider';
 import ThemeToggle from '@/components/djhc/ThemeToggle';
 import HeaderTeamMark from '@/components/djhc/HeaderTeamMark';
 import FanSuiteRail from '@/components/djhc/FanSuiteRail';
@@ -106,17 +107,19 @@ export default function MobileLayout() {
 
   if (!isWebView) return <Outlet />;
   return (
-    <MobileTabsContext.Provider value={tabsContext}>
-      <div className="flex h-full min-h-0 flex-col">
-        <MobileShellHeader />
-        <MobilePullRefresh activeId={activeId} locationKey={location.pathname + location.search}>
-          {tabsContext.tabs.filter(tab => tab.location).map(tab => (
-            <KeepAliveTab key={tab.id} location={tab.location} active={tab.id === activeId} />
-          ))}
-          {activeId == null && <Outlet />}
-        </MobilePullRefresh>
-        <BottomTabBar />
-      </div>
-    </MobileTabsContext.Provider>
+    <CourtThemeProvider>
+      <MobileTabsContext.Provider value={tabsContext}>
+        <div className="flex h-full min-h-0 flex-col">
+          <MobileShellHeader />
+          <MobilePullRefresh activeId={activeId} locationKey={location.pathname + location.search}>
+            {tabsContext.tabs.filter(tab => tab.location).map(tab => (
+              <KeepAliveTab key={tab.id} location={tab.location} active={tab.id === activeId} />
+            ))}
+            {activeId == null && <Outlet />}
+          </MobilePullRefresh>
+          <BottomTabBar />
+        </div>
+      </MobileTabsContext.Provider>
+    </CourtThemeProvider>
   );
 }

@@ -32,7 +32,7 @@ export default function FranchiseStatusStrip({ view }) {
         {stateMetrics.map(metric => (
           <div key={metric.label} className="metric-tile">
             <p className="bcast-kicker">{metric.label}</p>
-            <p className="mt-1.5 font-display text-2xl tracking-wide" style={{ color: metric.value === '—' ? 'hsl(var(--muted-foreground) / .5)' : 'hsl(var(--court-accent))' }}>{metric.value}</p>
+            <p className="mt-1.5 font-display text-2xl tracking-wide" style={{ color: metric.value === '—' ? 'hsl(var(--muted-foreground) / .75)' : 'hsl(var(--court-accent))' }}>{metric.value}</p>
           </div>
         ))}
       </div>

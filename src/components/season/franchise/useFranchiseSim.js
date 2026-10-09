@@ -28,6 +28,22 @@ const readSavedText = key => {
   try { return key ? localStorage.getItem(key) : null; }
   catch { return null; }
 };
+// The package-wide player-games part is a large relay stream; one dropped
+// connection used to fail the whole roster assignment, so the stream gets
+// bounded retries before the failure is surfaced.
+const PLAYER_GAMES_ATTEMPTS = 3;
+const fetchPlayerGamesWithRetry = async (api, options) => {
+  let lastError;
+  for (let attempt = 0; attempt < PLAYER_GAMES_ATTEMPTS; attempt += 1) {
+    try {
+      return await api.loadV4PlayerGamesForFranchiseSuggestionsV1(options);
+    } catch (error) {
+      lastError = error;
+      if (attempt < PLAYER_GAMES_ATTEMPTS - 1) await new Promise(resolve => setTimeout(resolve, 1500 * (attempt + 1)));
+    }
+  }
+  throw lastError;
+};
 
 const freshState = () => ({
   // Setup inputs (mirror of the preview frame's control values)
@@ -816,7 +832,7 @@ export default function useFranchiseSim() {
       // the season package, and the player-game observations the default
       // start-of-season roster assignment needs — that last stream previously
       // waited for the whole intake to finish first.
-      const playerGames = intake.loadV4PlayerGamesForFranchiseSuggestionsV1({ seasonStartYear, releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS })
+      const playerGames = fetchPlayerGamesWithRetry(intake, { seasonStartYear, releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS })
         .then(result => { const cached = { seasonStartYear, part: result.part }; state.v4PlayerGamesPart = cached; return cached; })
         .catch(() => null);
       const [modelProduction, loadedIntake] = await Promise.all([
@@ -923,7 +939,7 @@ export default function useFranchiseSim() {
       if (!cached || Number(cached.seasonStartYear) !== seasonStartYear) {
         const releasePin = api.createV4FranchiseLocalMirrorReleasePinV1({ origin: window.location.origin });
         const baseUrl = new URL('/tools/swishiq-studio/', window.location.origin).href;
-        cached = { seasonStartYear, part: (await api.loadV4PlayerGamesForFranchiseSuggestionsV1({ seasonStartYear, releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS })).part };
+        cached = { seasonStartYear, part: (await fetchPlayerGamesWithRetry(api, { seasonStartYear, releasePin, baseUrl, requestTimeoutMs: V4_RELAY_TIMEOUT_MS })).part };
         state.v4PlayerGamesPart = cached;
       }
       const { applied, held } = deriveRosterModeAssignments(intake, cached.part.records, mode, cached.part);

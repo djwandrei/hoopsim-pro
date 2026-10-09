@@ -522,6 +522,12 @@ body.webview { overflow: hidden; }
 body.webview #root { height: 100dvh; overflow: hidden; }
 body.webview .studio-workspace { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
 body.webview .webview-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(env(safe-area-inset-bottom) + 4.5rem); }
+/* === MobileLayout shell (body.webview.mobile-shell): the layout owns the
+   sticky header, the single scroll region and the bottom tab bar, so the
+   per-page site header is absent (DJHCHeader returns null) and page-level
+   scroll containers pass their content straight through to the shell === */
+body.webview.mobile-shell .studio-workspace { display: block; height: auto; min-height: 0; overflow: visible; }
+body.webview.mobile-shell .studio-workspace .webview-scroll { overflow: visible; flex: 0 0 auto; padding-bottom: 0; }
 
 /* === Light-mode contrast fix for the header dropdown menu (site drawer) ===
    The drawer switches to a white surface in light mode, but several text

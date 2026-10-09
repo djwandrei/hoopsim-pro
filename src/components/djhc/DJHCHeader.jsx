@@ -15,6 +15,9 @@ export default function DJHCHeader() {
   const ref=useRef(null),navRef=useRef(null),toggleRef=useRef(null);
   const {open,close,toggle}=useSiteDrawer(ref,navRef,toggleRef);
   const isWebView = useMobileWebView();
+  // Inside a WebView the MobileLayout shell owns the sticky header, drawer and
+  // bottom tab bar — a per-page header here would duplicate them.
+  if (isWebView) return null;
   return <>
     <header ref={ref} className="djhc-chrome site-header fan-suite-header"><div className="container header-inner">
       {isWebView ? <MobileHeaderBrand /> : <a aria-label="DJ's House of Cards & Comics • Trusted Hobby Finds home" className="brand" href={`${SITE}/index.html`}><Image src={`${SITE}/assets/dj-logo.png`} alt="DJ's House of Cards & Comics logo" className="brand-logo" fittingType="fit" /><span className="brand-copy"><span className="brand-script">DJ's House of Cards</span><span className="brand-kicker">&amp; Comics • Trusted Hobby Finds</span></span></a>}

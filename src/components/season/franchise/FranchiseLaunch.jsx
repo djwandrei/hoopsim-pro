@@ -16,14 +16,18 @@ export default function FranchiseLaunch({ sim, onBack }) {
   const [path, setPath] = useState('v4');
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="frx2k-eyebrow">Franchise control room · Step 2</p>
+      <header className="frx2k-hero frx2k-hero--slim">
+        <span className="frx2k-hero__slash" aria-hidden="true" />
+        <span className="frx2k-hero__ghost" aria-hidden="true">Season</span>
         {onBack && (
-          <button type="button" onClick={onBack} className="frx2k-cta frx2k-cta--ghost relative">
+          <button type="button" onClick={onBack} className="frx2k-cta frx2k-cta--ghost relative self-start">
             <span>Back</span>
           </button>
         )}
-      </div>
+        <p className="frx2k-eyebrow">Franchise control room · Step 2</p>
+        <h2 className="frx2k-hero__title frx2k-hero__title--sm">Launch a franchise season</h2>
+        <p className="frx2k-hero__sub">Pick a verified scenario source, choose which roster set multi-team players join, and initialize the session. The pinned simulation engine handles every game from there.</p>
+      </header>
       <div className="grid gap-3">
         {SOURCES.map(source => {
           const selected = source.id === path;

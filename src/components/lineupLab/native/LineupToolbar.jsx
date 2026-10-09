@@ -1,6 +1,5 @@
 import React from 'react';
 import { Image } from '@/components/ui/image';
-import TeamPalettePicker from '@/components/djhc/TeamPalettePicker';
 
 export default function LineupToolbar() {
   return <>
@@ -14,7 +13,6 @@ export default function LineupToolbar() {
       </nav>
       <div className="experience-switcher" aria-label="Level of detail"><button id="simpleModeButton" type="button" aria-pressed="false">Simple</button><button id="detailedModeButton" type="button" aria-pressed="true" className="is-active">Detailed</button></div>
       <button id="tourReplayButton" type="button" onClick={() => window.dispatchEvent(new CustomEvent('ll-open-tour'))}>Game guide</button>
-      <TeamPalettePicker />
     </div>
   </>;
 }

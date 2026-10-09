@@ -1,3 +1,9 @@
+/* Sidebar and drawer placements: the panel expands inline because both
+   containers scroll/clip absolutely positioned popovers. */
+.studio-sidebar .court-team-picker--hero .court-team-picker__panel,
+.site-nav .court-team-picker--hero .court-team-picker__panel { position:static; width:100%; margin-top:.65rem; box-sizing:border-box; }
+.site-nav__palette { margin-bottom:.75rem; }
+
 /* The site's exact picker geometry and colors; hex tokens are namespaced
    separately from the Studio's HSL channels without altering their values. */
 body.court-themed { --djhc-court-team-edge:color-mix(in srgb,var(--djhc-court-team-primary) 58%,var(--djhc-court-border)); }

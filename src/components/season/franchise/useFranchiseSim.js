@@ -10,7 +10,7 @@ import {
   exportedSaveMatches, upcomingGame, gameDateMap, completedGames, recordFor, statsForLog, displayBoxStat,
   multiTeamV4Choices, buildV4RosterChoiceReceipt, suggestionLabel, receiptPartSummary,
   deriveRosterModeAssignments, readPayload,
-  GENERATED_SHOOTING_RATING_POLICY, COUNT_FIELDS, SEASON_OPTIONS, SAVE_KEY_PREFIX,
+  GENERATED_SHOOTING_RATING_POLICY, COUNT_FIELDS, SEASON_OPTIONS, SAVE_KEY_PREFIX, NBA_TEAMS,
 } from './franchiseLogic';
 import {
   loadFranchiseEngine, createFranchiseWorker, fetchJsonText, loadVerifiedFixturePayload,
@@ -250,14 +250,18 @@ function computeView(state) {
     };
   }
 
+  // Before any V4 intake loads, the static 30-team list keeps the picker
+  // ready; after load, the exact-season intake team list takes over.
   const teamSource = intake?.leagueState?.teams?.length ? intake.leagueState.teams : (intake?.teamRates?.rows ?? []);
-  const teamOptions = [...teamSource]
-    .sort((a, b) => String(a.teamCode).localeCompare(String(b.teamCode)))
-    .map(team => {
-      const code = upper(team.teamCode);
-      return { code, label: `${team.teamName ?? team.name ?? code} · ${code}` };
-    })
-    .filter(option => option.code);
+  const teamOptions = teamSource.length
+    ? [...teamSource]
+      .sort((a, b) => String(a.teamCode).localeCompare(String(b.teamCode)))
+      .map(team => {
+        const code = upper(team.teamCode);
+        return { code, label: `${team.teamName ?? team.name ?? code} · ${code}` };
+      })
+      .filter(option => option.code)
+    : NBA_TEAMS.map(([code, name]) => ({ code, label: `${name} · ${code}` }));
   const v4TeamSelected = teamOptions.some(option => option.code === state.v4UserTeam) ? state.v4UserTeam : '';
 
   view.v4 = {
@@ -265,8 +269,8 @@ function computeView(state) {
     yearDisabled: busy || Boolean(session),
     canLoad: !busy && !session && state.v4YearSelected,
     teamOptions, teamSelected: v4TeamSelected,
-    teamDisabled: busy || Boolean(session) || !loadedForSelectedYear,
-    teamMessage: teamOptions.length ? 'Choose a team to control' : 'Load V4 source first',
+    teamDisabled: busy || Boolean(session),
+    teamMessage: 'Choose a team to control',
     canSuggest: !busy && canReview && Boolean(intake?.unresolvedRosterChoices?.length) && !intake?.suggestionsGenerated,
     ratingDisabled: busy || Boolean(session) || !loadedForSelectedYear,
     generateRating: state.generateRating,
@@ -781,6 +785,7 @@ export default function useFranchiseSim() {
     }
     showMessage('');
     const requestedYear = Number(state.v4Year);
+    let autoRosterStart = false;
     const loadingMessage = `Loading pinned ${requestedYear}–${String(requestedYear + 1).slice(-2)} regular-season V4 sources and the exact model texts…`;
     state.v4OperationNotice = { operation: 'load', kind: 'loading', seasonStartYear: requestedYear, message: loadingMessage };
     setBusy(true);
@@ -814,6 +819,7 @@ export default function useFranchiseSim() {
       state.v4RosterMode = null;
       state.workerStatus = { text: 'V4 intake verified · worker not initialized', state: 'idle' };
       showMessage('');
+      autoRosterStart = true;
     } catch (error) {
       const loadedYear = Number(state.v4Intake?.scenario?.seasonStartYear);
       const retainedSource = Number.isFinite(loadedYear)
@@ -826,6 +832,9 @@ export default function useFranchiseSim() {
       setBusy(false);
       render();
     }
+    // Default roster set: start-of-season assignment runs as soon as the
+    // season package finishes loading, without a separate click.
+    if (autoRosterStart) await applyRosterMode('start');
   };
 
   // === Latest-team suggestions (applyLatestTeamSuggestions) ===

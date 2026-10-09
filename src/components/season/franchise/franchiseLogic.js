@@ -16,6 +16,20 @@ export const COUNT_FIELDS = [
   ['ORB', ['offensiveRebounds']], ['DRB', ['defensiveRebounds']], ['PF', ['personalFouls']],
 ];
 export const SEASON_OPTIONS = [2025, 2024, 2023, 2022, 2021, 2020];
+// Static 30-team league roster: shown before any V4 intake loads so the team
+// grid is ready the moment the page opens.
+export const NBA_TEAMS = [
+  ['ATL', 'Atlanta Hawks'], ['BOS', 'Boston Celtics'], ['BKN', 'Brooklyn Nets'],
+  ['CHA', 'Charlotte Hornets'], ['CHI', 'Chicago Bulls'], ['CLE', 'Cleveland Cavaliers'],
+  ['DAL', 'Dallas Mavericks'], ['DEN', 'Denver Nuggets'], ['DET', 'Detroit Pistons'],
+  ['GSW', 'Golden State Warriors'], ['HOU', 'Houston Rockets'], ['IND', 'Indiana Pacers'],
+  ['LAC', 'LA Clippers'], ['LAL', 'Los Angeles Lakers'], ['MEM', 'Memphis Grizzlies'],
+  ['MIA', 'Miami Heat'], ['MIL', 'Milwaukee Bucks'], ['MIN', 'Minnesota Timberwolves'],
+  ['NOP', 'New Orleans Pelicans'], ['NYK', 'New York Knicks'], ['OKC', 'Oklahoma City Thunder'],
+  ['ORL', 'Orlando Magic'], ['PHI', 'Philadelphia 76ers'], ['PHX', 'Phoenix Suns'],
+  ['POR', 'Portland Trail Blazers'], ['SAC', 'Sacramento Kings'], ['SAS', 'San Antonio Spurs'],
+  ['TOR', 'Toronto Raptors'], ['UTA', 'Utah Jazz'], ['WAS', 'Washington Wizards'],
+];
 
 export const clone = value => structuredClone(value);
 

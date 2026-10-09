@@ -21,7 +21,7 @@ export default function FranchiseLaunch({ sim, onBack }) {
         <span className="frx2k-hero__ghost" aria-hidden="true">Season</span>
         {onBack &&
         <button type="button" onClick={onBack} className="frx2k-cta frx2k-cta--ghost relative self-start">
-            <span className="hidden">Back</span>
+            
           </button>
         }
         <p className="frx2k-eyebrow">Franchise control room · Step 2</p>

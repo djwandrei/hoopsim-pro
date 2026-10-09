@@ -448,8 +448,8 @@ export function receiptPartSummary(receipt) {
 }
 
 // === Start/end-of-season roster assignment for multi-team names ===
-// Mirrors the intake module's name-key and dated-observation rules so the
-// derived boundary team applies through the exact same choice pipeline.
+// Mirrors the intake module's name-key, phase, and dated-observation rules so
+// the derived boundary team applies through the exact same choice pipeline.
 const v4NameKey = name => String(name ?? '').normalize('NFC')
   .replace(/[\u2018\u2019\u201B\u0060\u00B4]/g, "'")
   .toLowerCase().trim().replace(/\s+/g, ' ');
@@ -457,18 +457,26 @@ const v4GameLocalDate = row => row?.time?.gameDateLocal ?? row?.time?.gameLocalD
   ?? row?.values?.localGameDate ?? row?.values?.gameLocalDate ?? null;
 const v4RowTeam = row => String(row?.values?.teamCode ?? row?.entities?.teamCode ?? '').trim().toUpperCase();
 
-export function deriveRosterModeAssignments(intake, playerGameRows, mode) {
+export function deriveRosterModeAssignments(intake, playerGameRows, mode, playerGamesPart = null) {
   const seasonStartYear = Number(intake?.scenario?.seasonStartYear);
   const groups = multiTeamV4Choices(intake);
   const history = new Map();
   for (const row of playerGameRows ?? []) {
     if (Number(row?.time?.seasonStartYear ?? row?.values?.seasonStartYear) !== seasonStartYear) continue;
+    if ((row?.time?.phase ?? row?.values?.phase) !== 'regular') continue;
     const gameLocalDate = v4GameLocalDate(row);
     const teamCode = v4RowTeam(row);
     const nameKey = v4NameKey(row?.values?.displayName);
     if (!nameKey || !teamCode || !/^\d{4}-\d{2}-\d{2}$/.test(gameLocalDate ?? '')) continue;
     const rows = history.get(nameKey) ?? [];
-    rows.push({ teamCode, gameLocalDate, recordId: row?.recordId ?? null, gameRef: row?.entities?.gameRef ?? row?.values?.gameRef ?? null });
+    rows.push({
+      artifactId: 'player-games',
+      partSha256: playerGamesPart?.sha256 ?? null,
+      teamCode, gameLocalDate,
+      recordId: row?.recordId ?? null,
+      gameRef: row?.entities?.gameRef ?? row?.values?.gameRef ?? null,
+      scheduledAtUtc: row?.time?.scheduledAtUtc ?? null,
+    });
     history.set(nameKey, rows);
   }
   const applied = [], held = [];

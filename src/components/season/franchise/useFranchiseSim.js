@@ -887,7 +887,7 @@ export default function useFranchiseSim() {
         cached = { seasonStartYear, part: (await api.loadV4PlayerGamesForFranchiseSuggestionsV1({ seasonStartYear, releasePin, baseUrl })).part };
         state.v4PlayerGamesPart = cached;
       }
-      const { applied, held } = deriveRosterModeAssignments(intake, cached.part.records, mode);
+      const { applied, held } = deriveRosterModeAssignments(intake, cached.part.records, mode, cached.part);
       const nextChoices = new Map(state.v4RosterChoices);
       const nextProvenance = new Map(state.v4ChoiceProvenance);
       const nextSuggestions = new Map(state.v4SuggestionsByName);

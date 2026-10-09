@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
 import useFranchiseSim from './franchise/useFranchiseSim';
 import FranchiseStatusStrip from './franchise/FranchiseStatusStrip';
-import FranchiseStepRail from './franchise/FranchiseStepRail';
 import FranchiseWelcome from './franchise/FranchiseWelcome';
 import FranchiseLaunch from './franchise/FranchiseLaunch';
 import FranchiseSession from './franchise/FranchiseSession';
@@ -10,8 +9,7 @@ import './franchise/franchise.css';
 
 // Three-screen franchise path: welcome → startup (source, season package,
 // team, and initialization options) → the in-season control room. The screen
-// advances automatically once a session exists, and the step rail above every
-// screen shows where you are in the path.
+// advances automatically once a session exists.
 export default function FranchisePreview() {
   const sim = useFranchiseSim();
   const [started, setStarted] = useState(false);
@@ -47,7 +45,6 @@ export default function FranchisePreview() {
 
   return (
     <div className="season-view-enter space-y-4">
-      <FranchiseStepRail active={screen} />
       {screen === 'welcome' && <FranchiseWelcome sim={sim} onStart={() => setStarted(true)} />}
       {screen === 'setup' && (
         <>

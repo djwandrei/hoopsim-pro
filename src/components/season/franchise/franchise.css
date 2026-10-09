@@ -272,3 +272,25 @@ fieldset:disabled .frx2k-chip { opacity: .5; cursor: not-allowed; }
 .frx2k-choice[data-checked='true'] strong { color: hsl(var(--court-accent)); }
 .frx2k-choice__text { display: block; font-size: .68rem; line-height: 1.5; color: hsl(var(--muted-foreground)); }
 @media (prefers-reduced-motion: reduce) { .frx2k-tile, .frx2k-choice { transition: none; } }
+
+/* === Accessibility & readability pass (welcome · setup · session) === */
+/* Micro-label floor: broadcast kickers across the three franchise screens sit
+   at the studio's 10.4px readability floor. */
+.frx2k-hero .bcast-kicker, .frx2k-screen .bcast-kicker,
+.frx-panel .bcast-kicker, .frx-strip .bcast-kicker { font-size: .65rem; }
+
+/* Focus visibility: the clipped 2K CTA's outline must render on its inner
+   face (the button's own outline is cut by the clip-path), and every 2K
+   control gets a clear keyboard ring. */
+.frx2k-cta:focus-visible { outline: none; }
+.frx2k-cta:focus-visible > span { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.frx2k-btn:focus-visible, .frx2k-switch:focus-visible, .frx-team-tile:focus-visible,
+.frx-standing-row:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.frx2k-chip:focus-within, .frx2k-choice:focus-within {
+  outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.frx2k-screen summary:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+
+/* Touch: comfortable row heights on the tappable standings ladder. */
+@media (pointer: coarse) {
+  .frx-standing-row { padding-block: .55rem; }
+}

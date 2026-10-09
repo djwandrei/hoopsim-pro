@@ -30,7 +30,7 @@ export default function FranchiseSchedule({ sim }) {
         <p className="bcast-kicker" id="frx-schedule-title">Game desk · season schedule</p>
         <span className="frx-pill frx-pill--slate">{cursor} / {total} games complete</span>
       </div>
-      <div className={`frx-progress ${scheduleComplete ? 'frx-progress--done' : ''}`} role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={cursor}>
+      <div className={`frx-progress ${scheduleComplete ? 'frx-progress--done' : ''}`} role="progressbar" aria-label="Season schedule progress" aria-valuemin={0} aria-valuemax={total} aria-valuenow={cursor}>
         <span style={{ width: `${pct}%` }} />
       </div>
       {scheduleComplete ? (

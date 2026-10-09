@@ -26,7 +26,7 @@ export default function FranchiseStandings({ view, onFocusTeam }) {
               <BarChart data={chartData} layout="vertical" margin={{ top: 4, right: 30, bottom: 0, left: 0 }}>
                 <XAxis type="number" hide domain={[0, 'dataMax']} />
                 <YAxis type="category" dataKey="code" width={46}
-                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10.4, fontFamily: 'var(--font-mono)' }}
                   axisLine={false} tickLine={false} interval={0} />
                 <Tooltip cursor={{ fill: 'hsl(var(--court-accent) / .08)' }}
                   contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border) / .5)', borderRadius: '.5rem', fontSize: '.72rem', color: 'hsl(var(--foreground))' }}

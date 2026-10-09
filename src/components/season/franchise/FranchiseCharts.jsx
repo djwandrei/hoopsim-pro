@@ -2,7 +2,7 @@ import React from 'react';
 import { TrendingUp } from 'lucide-react';
 import { Bar, BarChart, Cell, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-const axisTick = { fill: 'hsl(var(--muted-foreground))', fontSize: 10 };
+const axisTick = { fill: 'hsl(var(--muted-foreground))', fontSize: 10.4 };
 const tooltipStyle = { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border) / .5)', borderRadius: '.5rem', fontSize: '.72rem', color: 'hsl(var(--foreground))' };
 
 // Season pulse charts: the controlled team's cumulative win/loss curve and

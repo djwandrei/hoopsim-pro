@@ -1,0 +1,286 @@
+{
+  "format": "swishiq-source-milestone-v1",
+  "milestone": "02-workflow-consumers-and-workload-cache",
+  "createdAt": "2026-10-10T05:34:54.553Z",
+  "scope": "development source and documentation; no datasets or credentials",
+  "summary": {
+    "milestone": "02-workflow-consumers-and-workload-cache",
+    "referenceModel": "Candidate100; unchanged",
+    "implemented": [
+      "source-level consumer map for Game Lab, Studio Chemistry, standalone Lineup Lab, and Season Lab",
+      "49-item source-level backlog disposition with implemented, applicable, and data-limited classifications",
+      "verified development launcher resume behavior and completed individual hustle feature-screen comparison receipt",
+      "opt-in canonical workload benchmark consumption of a source- and code-verified appearance cache"
+    ],
+    "evidence": {
+      "hustleScreen": {
+        "games": 4920,
+        "decision": "no feature retained",
+        "reason": "every primary paired 95% date-block interval included zero",
+        "scope": "development screen only"
+      },
+      "workloadCache": {
+        "eligibleGames": 856,
+        "verifiedGames": 120,
+        "cacheKey": "e26fb6c07ada77d81cfc1569a7a65d84bdf7c43396623d8568ce38cf29b29b40",
+        "cacheReceipt": "prototypes/lineup-experiment-tools/workload-cache/runs/receipts/2026-10-10T05-28-21-286Z-benchmark-cache-consumption-cycle6.json",
+        "limitations": "bounded archive slice; legacy PBP-to-team-score reconciliation only; no full-season or player-level official reconciliation claim"
+      }
+    },
+    "pending": [
+      "rotation-continuity feature preparation and screen",
+      "canonical full-result optimizer batch path",
+      "selected successor model",
+      "site runtime integration and separate release review"
+    ],
+    "independentPredictiveValidityEstablished": false,
+    "deploymentPerformed": false
+  },
+  "files": [
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/basketball-lineup-optimizer/workload-model.js",
+      "sha256": "a9d8ed00b325ceed342b3e15e8794d7365498b8a99ab68d83d41cd574eec624b",
+      "bytes": 3118
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/lineup-experiment-tools/workload-cache/extract.mjs",
+      "sha256": "7adb8ca7e2b3a0e9ec0703a8278d1a3d9ea231e9ead19b89766eb56a46c74a85",
+      "bytes": 27880
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/build-candidate100-hustle-alias-adapter.mjs",
+      "sha256": "32ced0f5e44a991d91a6c4c0f7cded62debd6687fa2b882effbaf5ffd44c1839",
+      "bytes": 33675
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/compare-mean-screens.mjs",
+      "sha256": "761b92c2310af0d4e5504ef5cda25778f72fc29eb70c28897d0ed3937f9569d0",
+      "bytes": 39294
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/compose-forecasts.mjs",
+      "sha256": "69d0cf5827b02c8c41dfb4431723839d8e99e9fb541f16335094001d383c7c6c",
+      "bytes": 16898
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/extend-features.mjs",
+      "sha256": "69337e1066580f9357622175b9bc14c6df15876c4b1d409c9af28258c2796545",
+      "bytes": 1204
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/artifacts.mjs",
+      "sha256": "220ff0fc109caa233bff0cad44e254a42f450b2e9eb59dc2221f18baf7979cb8",
+      "bytes": 10095
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/canonical-plan.mjs",
+      "sha256": "16bc151fecc7160465d52a905017ab2815617663ee9fa324fef31708f041b3bb",
+      "bytes": 7526
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/chronology.mjs",
+      "sha256": "b64f3d3e6cf2ea7d7cff7b830f69b33122bfd32b32635b38aebee6d50e768e8f",
+      "bytes": 4104
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/configuration.mjs",
+      "sha256": "267f535a6fe78098570db4277ae895384648a61ab817669e619eec25a8c148a8",
+      "bytes": 2774
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/dependence-planned.mjs",
+      "sha256": "7726c1380002b1b37a68359760bc235dbba9a3dc1f9823704c56ec4c12a3edc0",
+      "bytes": 10540
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/design-cache.mjs",
+      "sha256": "dd09b12d4279760de4e5d832fac1e8932e73a91c5795533450f11616ae6dc516",
+      "bytes": 13630
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/feature-extension.mjs",
+      "sha256": "49778f3e13e8809bca3f41cf676cdb0f5e3f9e6916688456fefd658687f7d4aa",
+      "bytes": 16892
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/mean-batch.mjs",
+      "sha256": "dee34a60dcb006d699c36c9ea767704b95bd6b30e33352f9e6bd68f17a62825e",
+      "bytes": 10056
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/output.mjs",
+      "sha256": "1a622aac0bc2a9023f87c498c0510e1f615a01bf38e1ddb4b58e2ff50976d02a",
+      "bytes": 1246
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/resampling-plan.mjs",
+      "sha256": "dafa011916f03d3d2d90de4c6f48d749d44b8a4dda6b2410cda416fe3d4c8b40",
+      "bytes": 16542
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/screen-metrics.mjs",
+      "sha256": "9be5ff03e7208d0fb0ccbc9335f2b4b2819b6e0d603d264728816c6311919abe",
+      "bytes": 9952
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/screen-stage.mjs",
+      "sha256": "d1f97465ea481cd7f9e0edf0f3432c0296f4251a46a0f5900731f64c15b41d6b",
+      "bytes": 1900
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/shared-input.mjs",
+      "sha256": "3608b8a221a6644509bdbc53efbf5395cb6c758235fd2fdf437ac5f8a89e58ea",
+      "bytes": 1659
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/telemetry.mjs",
+      "sha256": "188c397984935f164be561f410618ebec3a60ee875891da2a65dd11bd1e11107",
+      "bytes": 4588
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/uncertainty-batch.mjs",
+      "sha256": "7ae00e2486087ba5dc1ff80538caadfc4c813eb5499d565b64c001a111a87629",
+      "bytes": 6896
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/lib/worker-pool.mjs",
+      "sha256": "90fe1e3f407c0a42bce68a0ca54e671f22c2258e04f28dbe998c126299283ffb",
+      "bytes": 7982
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/prepare-candidate100-hustle-screen.mjs",
+      "sha256": "d4bd10670ef54f10b64b726ef1bee63953dc4da6f243b612848ce446c17c7534",
+      "bytes": 5306
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/run-inference.mjs",
+      "sha256": "ac252b2e4e4d98fc75bfd877bea2b5046fd4900238c682fb3733771474063169",
+      "bytes": 6026
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/run-means.mjs",
+      "sha256": "e248d1affdfe9ad3e59ab90f44f7bd4b65f0c6422773cf9833f4a99ad7c46561",
+      "bytes": 10703
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/run-plan.mjs",
+      "sha256": "6272ae75c2b54fc41cc1d669a991e61c6647ab04b77142ed98cf409872f0fe96",
+      "bytes": 6821
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/run-screen.mjs",
+      "sha256": "83cdf41cc7d8886e5fb80352fbaf161d39c773cf863d070dfb5669ab9bf16673",
+      "bytes": 13439
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/experiment-tools/summarize-feature-pipeline.mjs",
+      "sha256": "2c9579cf8085db4f9834add32954d2c81c9dec68e61e885514dd4ddeb61ec6e1",
+      "bytes": 21665
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate10-predictive-metrics-v2.mjs",
+      "sha256": "9d12db2b83f42328db3103fc8d5f78f273a893e26bf95f694ab886773a0eb176",
+      "bytes": 3999
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate100-pruned-total-model-blend090-v1.mjs",
+      "sha256": "fe8733d092f2a28b1c5395a035880a58c50650e5e1f918862b32138fd8e4a63c",
+      "bytes": 9001
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate57-c51-pass6-hybrid-v4.mjs",
+      "sha256": "97f644c7fbe70892047bfb5f8f21fb9bbedb106e7eebccfbe8f993eb19ea1a7c",
+      "bytes": 20180
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate57-configurable-uncertainty-v7.mjs",
+      "sha256": "3067506e5496b23fa6f6108ce0d7acc0dad73115ee227fe3417b8ece99bba71f",
+      "bytes": 15625
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate57-dependence-inference-v1.mjs",
+      "sha256": "42b23ee808b0fcd392556bcddce6a6d9c1ff43af04179005cdbcd793015020cd",
+      "bytes": 10587
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate57-fast-empirical-scoring-v1.mjs",
+      "sha256": "63ee56484cc0d0749077fa19cf1e026dffb80a1a0a2e72d38ed419af986538fe",
+      "bytes": 7089
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate57-fast-gaussian-scoring-v1.mjs",
+      "sha256": "49f0fa78d3e367bad599625653d61547e820dae83d15dd1266f3200d69632071",
+      "bytes": 4817
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate57-feature-penalty-fit-v3.mjs",
+      "sha256": "9b9dd43d1a390b952b5122f7f5e4292fcc07991752fcfe839430c29b5c953215",
+      "bytes": 1920
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-candidate57-runtime-checkpoint-v3.mjs",
+      "sha256": "650eae195702d5db7cd18c95bc71e08b8e99e20b9ddc0dd874f00998e8f109e5",
+      "bytes": 17641
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/swishiq-package-v4/models/game-lab-head-feature-policy-v1.mjs",
+      "sha256": "e77000e5187f666d14cee13f0ada57b092d689680b02d137331177ff05bf03c0",
+      "bytes": 2895
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/scripts/benchmark-lineup-workload.mjs",
+      "sha256": "d2425e7f0124433594e4fa0118565d9bad7b3d122613e333b104dcc80798b110",
+      "bytes": 35194
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/scripts/lib/lineup-workload-validation.mjs",
+      "sha256": "6846a8561dd4d339152f38a3fb3d4803083fdf91ac80965e0ff274561e7378d3",
+      "bytes": 7012
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/scripts/prepare-hoopsim-milestone.mjs",
+      "sha256": "9a94a0437b9fe5f73b9f9b95ddd4793f03efad2b6693ae51ae8ada527c0e51e5",
+      "bytes": 5780
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/scripts/swishiq-experiment.mjs",
+      "sha256": "fcab6542d0d20bcc6ec9ea4cec3882b898af19ce75df75ce2fcfa97ae9325ce1",
+      "bytes": 7779
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/docs/lineup-optimizer-experiment-efficiency-plan-20261008.md",
+      "sha256": "071d71df2e93da367a624a2ec339ca1f4066a437678d53cd936fc274011c80ea",
+      "bytes": 55408
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/docs/lineup-optimizer-prepared-context-contract-20261010.md",
+      "sha256": "99788be1a527132aef7d3c3a85bcd73d6c179963f59deea0648f0bb8488e70f7",
+      "bytes": 11391
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/docs/swishiq-implementation-consumer-map-20261010.md",
+      "sha256": "ea0d0689694372a140f056385c3d9a5ef85d9aa6f234fe5983068f6666662027",
+      "bytes": 5758
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/docs/swishiq-implementation-backlog-disposition-20261010.json",
+      "sha256": "4ad8b7a143e2893fe8009702797da1eef0c21519732bec49b058091117bd8c03",
+      "bytes": 23334
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/docs/swishiq-game-lab-feature-readiness-20261010.md",
+      "sha256": "e34ecfd85cd914dc6513d08f3d5080dcab4704dc0efad2ec6a101da264f99eb1",
+      "bytes": 16071
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/docs/swishiq-implementation-ledger-20261010.json",
+      "sha256": "93a5da0e558567261cca32e26ea6e650da670e2c8671c9f19ce9fbd38a5f4ed6",
+      "bytes": 4659
+    },
+    {
+      "path": "site-source/02-workflow-consumers-and-workload-cache/prototypes/lineup-experiment-tools/workload-cache/README.md",
+      "sha256": "ed131cde347ec8d8e706f946eb239b1a2c6a80da2265812ae6fbe40f8a8ee3b7",
+      "bytes": 2741
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+  "format": "swishiq-implementation-backlog-disposition-v1",
+  "asOf": "2026-10-10",
+  "source": "docs/swishiq-model-improvement-project-plan-v1.md",
+  "scope": "Local source inspection only; not a test, deployment, package-approval, or live-behavior receipt.",
+  "classificationDefinitions": {
+    "implemented": "The source inspected contains the core behavior stated by this backlog item. This does not imply release or validation beyond the cited code.",
+    "applicable": "Relevant source behavior exists, but the stated implementation, integration, or validation remains incomplete.",
+    "data-limited": "The requested behavior depends on evidence that the inspected source does not have or explicitly gates as unavailable.",
+    "rejected-current-formulation": "The item's current formulation conflicts with a source contract or evidence boundary and should not be implemented as stated.",
+    "unknown": "The bounded inspection did not establish whether the behavior exists or applies."
+  },
+  "statusCounts": {
+    "implemented": 27,
+    "applicable": 16,
+    "data-limited": 6,
+    "rejected-current-formulation": 0,
+    "unknown": 0
+  },
+  "items": [
+    {
+      "id": 1,
+      "title": "Expected wins from the actual score sampler",
+      "status": "implemented",
+      "disposition": "Season samplers return score-distribution win probability, include overtime, and leave expected wins unavailable when probability coverage is incomplete. The backlog's separate calibration-receipt gate still needs evaluation evidence.",
+      "evidence": ["tools/swishiq-studio/engine/season-lab-model.js#exactExpectedWinShareFromPossessionProfiles", "tools/swishiq-studio/engine/season-lab-model.js"]
+    },
+    {
+      "id": 2,
+      "title": "Chemistry points-per-100 scale check",
+      "status": "implemented",
+      "disposition": "Chemistry checks matching units, computes points per 100 from numerator and denominator, and derives net from offense minus defense.",
+      "evidence": ["tools/swishiq-studio/chemistry-lab.js#chemistryMetricEvidence"]
+    },
+    {
+      "id": 3,
+      "title": "Count-derived true shooting above 100%",
+      "status": "applicable",
+      "disposition": "The count-based TS formula is available, but the Composite count-backed rate adapter rejects values above 1.0; valid over-100% results are not yet preserved end to end.",
+      "evidence": ["tools/swishiq-studio/engine/composite-forge-native.js#componentFromMetric", "tools/swishiq-studio/chemistry-lab.js#TRUE_SHOOTING_MAX"]
+    },
+    {
+      "id": 4,
+      "title": "One Franchise defense direction",
+      "status": "applicable",
+      "disposition": "Franchise code names defensive-strength conventions and reconciles net as offense minus defense, but the requested exact-season refit and held-out game-outcome evidence remain separate work.",
+      "evidence": ["tools/swishiq-studio/engine/franchise-simulation.js#FRANCHISE_DEFENSE_STRENGTH_CONVENTION", "tools/swishiq-studio/engine/franchise-simulation.js#nativeTeamMetrics"]
+    },
+    {
+      "id": 5,
+      "title": "Season Lab player-row scope filter",
+      "status": "implemented",
+      "disposition": "Exact Season Lab package selection validates exact-season scope and required artifacts rather than substituting a pooled package; player logs are labeled allocations.",
+      "evidence": ["tools/swishiq-studio/season-lab.js#resolveNativeSeasonLabSelection", "tools/swishiq-studio/season-lab.js", "tools/swishiq-studio/engine/season-lab-model.js#buildPlayerGameLogs"]
+    },
+    {
+      "id": 6,
+      "title": "Composite missing-donor and normalization handling",
+      "status": "implemented",
+      "disposition": "Missing donors retain requested weight and withhold the affected value; unavailable exact-season normalization does not silently replace the requested recipe.",
+      "evidence": ["tools/swishiq-studio/engine/composite-forge.js", "tools/swishiq-studio/engine/composite-forge.js#recipeHasGaps"]
+    },
+    {
+      "id": 7,
+      "title": "Unclipped optimizer objective gaps",
+      "status": "implemented",
+      "disposition": "The optimizer retains raw objective values for solving and reports bounded presentation scores separately.",
+      "evidence": ["lineup-lab/optimizer-core.js#objectiveMetadata", "lineup-lab/optimizer-core.js#objectiveValueUsesUnclippedImpact", "lineup-lab/app.js"]
+    },
+    {
+      "id": 8,
+      "title": "Version scoring-event construction",
+      "status": "applicable",
+      "disposition": "Season Lab names its bounded native scoring construction separately from the Game Lab outcome layer, but the same exact-season holdout comparison of distribution means and tails is not established.",
+      "evidence": ["tools/swishiq-studio/engine/season-lab-model.js#SEASON_LAB_MODEL_DESIGN", "tools/swishiq-studio/game-lab.js#loadSource"]
+    },
+    {
+      "id": 9,
+      "title": "Score tails only from retained possession outcomes",
+      "status": "implemented",
+      "disposition": "Game Lab uses and discloses a bounded 0–3-point event profile when retained possession outcomes are unavailable; it does not claim observed rare-score tails.",
+      "evidence": ["tools/swishiq-studio/game-lab.js#loadSource", "tools/swishiq-studio/game-lab.js"]
+    },
+    {
+      "id": 10,
+      "title": "Reduce Monte Carlo noise",
+      "status": "implemented",
+      "disposition": "Game Lab evaluation adapts trial counts to a standard-error target and safety limits, and emits trials, seed, and uncertainty fields.",
+      "evidence": ["tools/swishiq-studio/engine/game-lab-evaluation.js", "tools/swishiq-studio/game-lab.js"]
+    },
+    {
+      "id": 11,
+      "title": "Chronological in-season Game Lab evaluation",
+      "status": "data-limited",
+      "disposition": "The Game Lab source identifies absent game-level pregame snapshots and limits evaluation to completed full-season holdouts; in-season as-of scoring remains unavailable.",
+      "evidence": ["tools/swishiq-studio/engine/game-lab-evaluation.js#buildGameLabRollingOriginFolds", "tools/swishiq-studio/game-lab.js"]
+    },
+    {
+      "id": 12,
+      "title": "Coverage-shrink Four-Factor corrections",
+      "status": "implemented",
+      "disposition": "Season Lab factor adjustments use coverage-aware shrinkage, exact-season baseline imputation, and missing-factor quality metadata.",
+      "evidence": ["tools/swishiq-studio/engine/season-lab-model.js#factorQuality", "tools/swishiq-studio/engine/season-lab-model.js#nativeFourFactorMatchup"]
+    },
+    {
+      "id": 13,
+      "title": "Ablate overlapping Franchise team signals",
+      "status": "applicable",
+      "disposition": "Native team rates and Four-Factor signals enter Franchise strength, but no accepted exact-season ablation receipt for their incremental value was located.",
+      "evidence": ["tools/swishiq-studio/engine/franchise-simulation.js#nativeTeamMetrics", "tools/swishiq-studio/engine/franchise-simulation.js#teamStrength"]
+    },
+    {
+      "id": 14,
+      "title": "Forecast-safe, venue-aware playoffs",
+      "status": "implemented",
+      "disposition": "Season Lab distinguishes retrospective exact-playoff evidence from forecast-safe regular-season rates and uses a higher-seed 2-2-1-1-1 venue schedule. Forecast capability remains manifest-gated.",
+      "evidence": ["tools/swishiq-studio/engine/season-lab-model.js#SEASON_LAB_MODEL_DESIGN", "tools/swishiq-studio/engine/season-lab-model.js", "tools/swishiq-studio/engine/season-forecast-evidence.js"]
+    },
+    {
+      "id": 15,
+      "title": "Coherent latent team strength across regular season and playoffs",
+      "status": "applicable",
+      "disposition": "Regular and playoff evidence phases currently construct separate latent draws; a shared coherent team-strength draw remains to be implemented or validated.",
+      "evidence": ["tools/swishiq-studio/engine/season-lab-model.js#regularLatents", "tools/swishiq-studio/engine/season-lab-model.js#buildNativeLatents"]
+    },
+    {
+      "id": 16,
+      "title": "Play-in and season-specific tiebreak rules",
+      "status": "applicable",
+      "disposition": "Generated play-in brackets are rejected, while the current native bracket and tie behavior are generic rather than a full season-specific play-in/tiebreak sequence.",
+      "evidence": ["tools/swishiq-studio/engine/season-lab-model.js#validateSeasonLabSetup", "tools/swishiq-studio/engine/season-lab-model.js"]
+    },
+    {
+      "id": 17,
+      "title": "Consistent overtime completion",
+      "status": "applicable",
+      "disposition": "A shared overtime-completion helper exists, but its module states consumer behavior changes only when callers are explicitly wired to it.",
+      "evidence": ["tools/swishiq-studio/engine/game-overtime-completion.js#runSharedOvertimeCompletion"]
+    },
+    {
+      "id": 18,
+      "title": "Separate player allocations from simulated team outcomes",
+      "status": "implemented",
+      "disposition": "Season Lab deterministically allocates team totals into player logs and labels those rows as modeled allocations rather than observed game logs.",
+      "evidence": ["tools/swishiq-studio/engine/season-lab-model.js#buildPlayerGameLogs", "tools/swishiq-studio/season-lab.js"]
+    },
+    {
+      "id": 19,
+      "title": "Separate preference scores from team value",
+      "status": "implemented",
+      "disposition": "Lineup Lab separates the solver objective and display score and states that the additive impact estimate is not a game forecast or predicted coaching rotation.",
+      "evidence": ["lineup-lab/optimizer-core.js#objectiveMetadata", "lineup-lab/app.js"]
+    },
+    {
+      "id": 20,
+      "title": "Joint uncertainty and probabilistic constraints",
+      "status": "data-limited",
+      "disposition": "The optimizer has per-input downside sensitivities, but the accepted player-game vectors and coefficient uncertainty needed for joint uncertainty and probabilistic constraints were not found in its exact-season source package.",
+      "evidence": ["lineup-lab/optimizer-core.js#projectionRisk", "lineup-lab/native-swishiq-package.js#loadSwishIqV3TeamDataset"]
+    },
+    {
+      "id": 21,
+      "title": "Stint-realistic rotations and minute contract",
+      "status": "data-limited",
+      "disposition": "Lineup Lab enforces rotation/minute feasibility, but the inspected inputs provide position labels and season exposure rather than historical stint, substitution, availability, or overtime records.",
+      "evidence": ["lineup-lab/optimizer-core.js#planRotationUnits", "lineup-lab/optimizer-config.js#assessHistoricalPositionMinuteEvidence"]
+    },
+    {
+      "id": 22,
+      "title": "Soft position-minute targets",
+      "status": "implemented",
+      "disposition": "Position-minute anchors are treated as source-listed estimates with explicit soft ranges, not exact historical assignments.",
+      "evidence": ["lineup-lab/optimizer-config.js#assessHistoricalPositionMinuteEvidence", "lineup-lab/optimizer-config.js#softPositionMinuteRanges"]
+    },
+    {
+      "id": 23,
+      "title": "Role bonuses as explanation or constraint",
+      "status": "implemented",
+      "disposition": "Role fit is explanatory by default; when enabled, the bounded bonus and its objective delta are reported explicitly.",
+      "evidence": ["lineup-lab/lineup-role-model.js#scoreLineupRoleFit", "lineup-lab/optimizer-core.js#objectiveMetadata"]
+    },
+    {
+      "id": 24,
+      "title": "Label optimizer constraints by grain",
+      "status": "data-limited",
+      "disposition": "Current receipts identify player, selected-group, and rotation-minute constraint grain. Full-team residual constraints remain unavailable without paired team-game evidence.",
+      "evidence": ["lineup-lab/optimizer-core.js#buildConstraintAudit", "lineup-lab/optimizer-core.js"]
+    },
+    {
+      "id": 25,
+      "title": "Repair opponent-plan denominators and split style from defense",
+      "status": "implemented",
+      "disposition": "Opponent planning uses complete-stat per-100 estimates when available, otherwise labels a per-game fallback; disclosures say the response proxy is not a defensive-efficiency measure.",
+      "evidence": ["lineup-lab/opponent-gameplan.js", "lineup-lab/opponent-gameplan.js"]
+    },
+    {
+      "id": 26,
+      "title": "Expose contributions and reduce double counting",
+      "status": "implemented",
+      "disposition": "Ranked alternatives expose metric and family contributions, reconciliation residuals, and separate group-only/minute adjustments.",
+      "evidence": ["lineup-lab/optimizer-core.js", "lineup-lab/app.js"]
+    },
+    {
+      "id": 27,
+      "title": "Generate meaningfully different alternatives",
+      "status": "applicable",
+      "disposition": "The worker supports multiple scalar scenario configurations and top alternatives, but separate downside-risk and roster-diversity alternatives are not established.",
+      "evidence": ["lineup-lab/app.js#runOptimization", "lineup-lab/optimizer-worker.js", "lineup-lab/optimizer-core.js#optimizeLineups"]
+    },
+    {
+      "id": 28,
+      "title": "Tie-aware challenge ranks and uncertainty",
+      "status": "applicable",
+      "disposition": "Daily challenge result code validates complete rank/option-count proofs and reports bounded rank scope, but does not provide tie-aware uncertainty intervals for ranks.",
+      "evidence": ["tools/draft-night/swishiq-draft-night.js#decisionProofStatus", "tools/draft-night/swishiq-draft-night.js#rankDisclosure", "tools/fix-the-five/swishiq-fix-the-five.js#decisionProofStatus"]
+    },
+    {
+      "id": 29,
+      "title": "Keep impact, lineup, exact-five scopes distinct",
+      "status": "implemented",
+      "disposition": "Exact-five and lineup evidence have separate required artifacts/capability gates; Chemistry and Composite describe observational or synthetic outputs without causal/forecast claims.",
+      "evidence": ["tools/swishiq-studio/chemistry-lab.js#assertVerifiedExactLineupEvidenceProof", "tools/swishiq-studio/engine/composite-forge-native.js#canonicalProfile"]
+    },
+    {
+      "id": 30,
+      "title": "Reconcile box-count identities at adapter boundaries",
+      "status": "implemented",
+      "disposition": "The native Composite adapter checks count-identity errors and rejects non-reconciled player box-count rows.",
+      "evidence": ["tools/swishiq-studio/engine/composite-forge-native.js#canonicalProfile", "tools/swishiq-studio/engine/composite-forge-native.js#boxCountIdentityErrors"]
+    },
+    {
+      "id": 31,
+      "title": "One Composite donor per player-season",
+      "status": "implemented",
+      "disposition": "Composite keys profiles by player-season reference and rejects duplicate player-season identities before use.",
+      "evidence": ["tools/swishiq-studio/engine/composite-forge-native.js#canonicalProfile", "tools/swishiq-studio/engine/composite-forge-native.js#playerSeasonRef"]
+    },
+    {
+      "id": 32,
+      "title": "Carry source limitations through Composite transformations",
+      "status": "implemented",
+      "disposition": "Composite donor transformations preserve source status/reason and surface limited-sample caveats.",
+      "evidence": ["tools/swishiq-studio/engine/composite-forge-native.js#componentFromMetric", "tools/swishiq-studio/engine/composite-forge.js"]
+    },
+    {
+      "id": 33,
+      "title": "Bind synthetic profile ID to its stat line",
+      "status": "implemented",
+      "disposition": "Composite profile fingerprints include model/recipe version, package, cohort, component values, weights, archetype, and normalization inputs.",
+      "evidence": ["tools/swishiq-studio/engine/composite-forge.js#buildPlayerProfile", "tools/swishiq-studio/engine/composite-forge.js#profileFingerprint"]
+    },
+    {
+      "id": 34,
+      "title": "Separate placement and simulation seeds",
+      "status": "implemented",
+      "disposition": "Composite placement seeds are distinct from simulation seeds; simulation is unavailable unless an explicit approved runner is supplied.",
+      "evidence": ["tools/swishiq-studio/engine/composite-forge.js#placementSeed", "tools/swishiq-studio/engine/composite-forge.js#runCompositeForgeSimulation"]
+    },
+    {
+      "id": 35,
+      "title": "Sort Chemistry by the displayed evidence source",
+      "status": "implemented",
+      "disposition": "Chemistry roster values, sort values, and comparisons are sourced from the selected exact-season package.",
+      "evidence": ["tools/swishiq-studio/chemistry-lab.js", "tools/swishiq-studio/chemistry-lab.js"]
+    },
+    {
+      "id": 36,
+      "title": "Show Chemistry exposure with headline rates",
+      "status": "implemented",
+      "disposition": "Chemistry metric evidence and support displays carry numerator, denominator, and observed exposure alongside rate values.",
+      "evidence": ["tools/swishiq-studio/chemistry-lab.js#metricEvidenceText", "tools/swishiq-studio/chemistry-lab.js#chemistryMetricEvidence"]
+    },
+    {
+      "id": 37,
+      "title": "Keep Chemistry and Composite descriptive pending outcome validation",
+      "status": "implemented",
+      "disposition": "Chemistry labels observed differences descriptive and non-causal; Composite labels synthetic profiles as scenarios rather than forecasts.",
+      "evidence": ["tools/swishiq-studio/chemistry-lab.js", "tools/swishiq-studio/engine/composite-forge.js#buildPlayerProfile"]
+    },
+    {
+      "id": 38,
+      "title": "Trade-evidence as-of cutoff",
+      "status": "implemented",
+      "disposition": "Trade evaluation requires an explicit transaction instant and injected, source-pinned eligibility/deadline policy; missing cutoff or policy evidence makes the result unavailable.",
+      "evidence": ["tools/swishiq-studio/engine/franchise-trade-evaluator.js#evaluateFranchiseTrade", "tools/swishiq-studio/engine/franchise-trade-evaluator.js#evaluateTradeDate"]
+    },
+    {
+      "id": 39,
+      "title": "Deterministic Franchise roster evidence",
+      "status": "applicable",
+      "disposition": "Exact-season roster rows are preferred, duplicate player refs are removed, and trimming/order are stable; source-as-of ownership semantics still depend on the supplied roster snapshot.",
+      "evidence": ["tools/swishiq-studio/engine/franchise-simulation.js#normalizeRoster", "tools/swishiq-studio/engine/franchise-simulation.js#normalizeScheduleGames"]
+    },
+    {
+      "id": 40,
+      "title": "Season-indexed contracts and cap-state gates",
+      "status": "implemented",
+      "disposition": "Contract terms and cap history are keyed by season and source; incomplete, imputed, or scenario-only values are excluded or disclosed in observed commitment summaries.",
+      "evidence": ["tools/swishiq-studio/engine/franchise-trade-value.js#contractCommitment", "tools/swishiq-studio/engine/franchise-trade-evaluator.js#resolveContractStructure"]
+    },
+    {
+      "id": 41,
+      "title": "Explicit draft pool, rights ledger, and qualified lottery output",
+      "status": "data-limited",
+      "disposition": "Draft-rights completeness is source/as-of gated and lottery policies are versioned, but no accepted season-specific prospect pool evidence was found; 2030+ lottery rules are unavailable.",
+      "evidence": ["tools/swishiq-studio/engine/franchise-draft-rights.js", "tools/swishiq-studio/engine/franchise-draft-lottery.js#getFranchiseDraftLotteryPolicy"]
+    },
+    {
+      "id": 42,
+      "title": "Enforce feasible Franchise roster transitions",
+      "status": "applicable",
+      "disposition": "CPU roster management signs free agents toward its target when the pool permits, but if the pool is exhausted the code can leave the team below target without a dedicated blocked-transition receipt.",
+      "evidence": ["tools/swishiq-studio/engine/franchise-simulation.js#cpuManageTeam"]
+    },
+    {
+      "id": 43,
+      "title": "Use schedule rest gaps for fatigue, no inferred travel",
+      "status": "applicable",
+      "disposition": "Team fatigue currently updates by a fixed per-game recurrence; no rest-gap feature is consumed by that update. The model does not infer travel from the inspected path.",
+      "evidence": ["tools/swishiq-studio/engine/franchise-simulation.js#simulateGame", "tools/swishiq-studio/engine/franchise-simulation.js#normalizeScheduleGames"]
+    },
+    {
+      "id": 44,
+      "title": "Player-cluster Career transition support",
+      "status": "applicable",
+      "disposition": "Career transition blocks are built from adjacent seasons, but a player-clustered resampling/uncertainty receipt was not found.",
+      "evidence": ["tools/swishiq-studio/engine/season-forecast-evidence.js#buildContiguousSeasonTransitionBlocks", "tools/swishiq-studio/engine/career-simulation-model.js#buildCareerCohort"]
+    },
+    {
+      "id": 45,
+      "title": "Do not infer transitions across missing career seasons",
+      "status": "implemented",
+      "disposition": "Career transition-block construction only links contiguous season records and does not bridge a missing season.",
+      "evidence": ["tools/swishiq-studio/engine/season-forecast-evidence.js#buildContiguousSeasonTransitionBlocks"]
+    },
+    {
+      "id": 46,
+      "title": "Contiguous-block observed Career replay",
+      "status": "applicable",
+      "disposition": "Observed career replay exists, and contiguous season blocks are available as a building block; an observed contiguous-block bootstrap/replay path was not established.",
+      "evidence": ["tools/swishiq-studio/engine/career-simulator.js#replayObservedCareer", "tools/swishiq-studio/engine/season-forecast-evidence.js#buildContiguousSeasonTransitionBlocks"]
+    },
+    {
+      "id": 47,
+      "title": "Joint censored forward Career model only with outcome labels",
+      "status": "data-limited",
+      "disposition": "The source has career-state evidence gates, but no sufficiently complete longitudinal availability/retirement outcome labels were found to support a joint censored forward model.",
+      "evidence": ["tools/swishiq-studio/engine/career-state-source.js#auditCareerStateCoverage", "tools/swishiq-studio/engine/career-simulation-model.js#simulateCareer"]
+    },
+    {
+      "id": 48,
+      "title": "Phase-consistent Career and denominator-aware shooting",
+      "status": "applicable",
+      "disposition": "Career is a separate consumer with phase/count evidence paths, but complete reconciled shooting-denominator coverage and separate regular/all-phase outputs are not established for every accepted profile.",
+      "evidence": ["tools/swishiq-studio/engine/career-simulation-model.js#buildCareerCohort", "tools/swishiq-studio/engine/career-state-source.js#augmentCareerProfiles"]
+    },
+    {
+      "id": 49,
+      "title": "Integrate and continue calibrating DJHC ratings from observed 2K baselines",
+      "status": "applicable",
+      "disposition": "Versioned DJHC ratings and a one-edition holdout diagnostic exist, but the plan's multi-edition chronological calibration and separately requested complete 2025–26 list remain outstanding in this source pass.",
+      "evidence": ["prototypes/swishiq-package-v4/docs/PLAYER-RATING-DERIVATION.md", "prototypes/swishiq-package-v4/diagnostics/djhc-2k26-edition-heldout-v1/summary.md"]
+    }
+  ]
+}

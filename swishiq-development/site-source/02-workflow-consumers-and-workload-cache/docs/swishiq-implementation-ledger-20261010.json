@@ -1,0 +1,51 @@
+{
+  "format": "swishiq-implementation-ledger-v1",
+  "date": "2026-10-10",
+  "reference": "game-lab-candidate100",
+  "targetRepository": "djwandrei/hoopsim-pro",
+  "developmentSeasons": [2022, 2023, 2024, 2025],
+  "deploymentStage": "later release stage",
+  "cycles": [
+    { "id": 1, "status": "completed", "deliverable": "pinned Candidate100 baseline, local consumer map and 49-item source-level backlog disposition" },
+    { "id": 2, "status": "implemented-partial", "deliverable": "canonical development launcher; cached baseline screen reuse verified", "remaining": ["source-data shared inference comparison", "complete feature-family state checkpoints"] },
+    { "id": 3, "status": "completed-partial", "deliverable": "eight individual hustle predictor screens", "cohortGames": 4920, "remaining": ["select and screen the next data-ready predictor family", "combine only individually justified feature additions"] },
+    { "id": 4, "status": "queued", "deliverable": "canonical prepared optimizer context and complete shared-five results" },
+    { "id": 5, "status": "queued", "deliverable": "bounded head and uncertainty tuning; selected successor specification" },
+    { "id": 6, "status": "implemented-partial", "deliverable": "verified real archive appearance cache and opt-in canonical workload consumption", "remaining": ["native warm starts", "rotation structural reuse"] },
+    { "id": 7, "status": "queued", "deliverable": "remaining simulation and consumer corrections" },
+    { "id": 8, "status": "queued", "deliverable": "frozen candidate, consolidated assessment and narrow release manifest" }
+  ],
+  "priorFeatureDecisions": [
+    { "family": "prior-season play-type", "status": "rejected-current-formulation", "reason": "completed development comparisons did not support retention" },
+    { "family": "player tracking drive/catch-shoot/pullup/created-points-per-pass", "status": "rejected-current-formulations", "reason": "completed individual family screens" },
+    { "family": "exact/linear duplicate removal", "status": "inconclusive", "reason": "small changes; paired primary intervals included zero" }
+  ],
+  "featureScreens": [
+    {
+      "family": "hustle: contested shots, deflections, defensive loose-ball recoveries, charges drawn",
+      "screen": "individual total-head and margin-head additions",
+      "cohort": { "seasonStartYears": [2022, 2023, 2024, 2025], "games": 4920, "gamesPerSeason": 1230 },
+      "status": "completed-development-screen-only",
+      "decision": "no feature retained yet",
+      "reason": "Every primary paired 95% date-block interval included zero. Charges drawn and defensive loose-ball recoveries had small favorable point estimates, but remain provisional rather than selected.",
+      "evidence": "prototypes/swishiq-package-v4/experiment-tools/runs/hustle-individual/feature-pipeline-summaries/run-1791609650263-25772/summary.json"
+    }
+  ],
+  "efficiencyActions": [
+    { "id": 1, "name": "immutable roster preparation", "cycle": 4, "status": "queued-canonical" },
+    { "id": 2, "name": "shared complete five enumeration", "cycle": 4, "status": "ranking-prototype; full-result pending" },
+    { "id": 3, "name": "rotation preparation reuse", "cycle": 6, "status": "queued" },
+    { "id": 4, "name": "fresh-feasibility constraint reuse", "cycle": 6, "status": "queued" },
+    { "id": 5, "name": "checked neighboring incumbents", "cycle": 6, "status": "queued" },
+    { "id": 6, "name": "input-stability invariant reuse", "cycle": 6, "status": "queued" },
+    { "id": 7, "name": "prepared workload scoring", "cycle": 6, "status": "opt-in canonical cache consumption verified on a 120-game archive slice; full archive remains unrun" },
+    { "id": 8, "name": "reconciled appearance extraction cache", "cycle": 6, "status": "real-120-game-parity-and-invalidation-passed" },
+    { "id": 9, "name": "shared sparse native designs", "cycle": 6, "status": "opt-in prototype; limited parity" },
+    { "id": 10, "name": "warm starts and numeric buffers", "cycle": 6, "status": "queued" },
+    { "id": 11, "name": "separate fit baseline prediction caches", "cycle": 2, "status": "prototype-implemented" },
+    { "id": 12, "name": "paired resampling reuse", "cycle": 2, "status": "screen reuse implemented; source-data full inference pending" },
+    { "id": 13, "name": "stage timings and throughput", "cycle": 2, "status": "implemented" },
+    { "id": 14, "name": "managed independent workers", "cycle": 2, "status": "implemented; measured workload defaults exposed" },
+    { "id": 15, "name": "compact artifacts and resumability", "cycle": 2, "status": "implemented; canonical launcher added" }
+  ]
+}

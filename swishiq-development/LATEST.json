@@ -1,0 +1,38 @@
+{
+  "milestone": "02-workflow-consumers-and-workload-cache",
+  "manifest": "milestones/02-workflow-consumers-and-workload-cache.json",
+  "files": 49,
+  "summary": {
+    "milestone": "02-workflow-consumers-and-workload-cache",
+    "referenceModel": "Candidate100; unchanged",
+    "implemented": [
+      "source-level consumer map for Game Lab, Studio Chemistry, standalone Lineup Lab, and Season Lab",
+      "49-item source-level backlog disposition with implemented, applicable, and data-limited classifications",
+      "verified development launcher resume behavior and completed individual hustle feature-screen comparison receipt",
+      "opt-in canonical workload benchmark consumption of a source- and code-verified appearance cache"
+    ],
+    "evidence": {
+      "hustleScreen": {
+        "games": 4920,
+        "decision": "no feature retained",
+        "reason": "every primary paired 95% date-block interval included zero",
+        "scope": "development screen only"
+      },
+      "workloadCache": {
+        "eligibleGames": 856,
+        "verifiedGames": 120,
+        "cacheKey": "e26fb6c07ada77d81cfc1569a7a65d84bdf7c43396623d8568ce38cf29b29b40",
+        "cacheReceipt": "prototypes/lineup-experiment-tools/workload-cache/runs/receipts/2026-10-10T05-28-21-286Z-benchmark-cache-consumption-cycle6.json",
+        "limitations": "bounded archive slice; legacy PBP-to-team-score reconciliation only; no full-season or player-level official reconciliation claim"
+      }
+    },
+    "pending": [
+      "rotation-continuity feature preparation and screen",
+      "canonical full-result optimizer batch path",
+      "selected successor model",
+      "site runtime integration and separate release review"
+    ],
+    "independentPredictiveValidityEstablished": false,
+    "deploymentPerformed": false
+  }
+}

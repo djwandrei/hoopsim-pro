@@ -18,7 +18,7 @@ export default function RealBetSlip({ legs, wallet, format, onRemoveLeg, onClear
     <p className="bcast-kicker mb-2"><Receipt className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" />Bet slip</p>
     <p className="text-xs leading-relaxed text-muted-foreground">Select a price on the board to price a real-money wager — one pick per game, $1–$500 per combo. Stakes come from your deposited balance.</p>
   </section>;
-  const teaserEligible = legs.length >= 2 && legs.every(leg => leg.market === 'spread' || leg.market === 'total');
+  const teaserEligible = legs.length >= 2 && legs.length <= 8 && legs.every(leg => leg.market === 'spread' || leg.market === 'total');
   const rrEligible = legs.length >= 3 && legs.length <= 6;
   const mode = modeChoice === 'teaser' && teaserEligible ? 'teaser' : modeChoice === 'roundrobin' && rrEligible ? 'roundrobin' : 'parlay';
   const combos = mode === 'roundrobin' ? roundRobinCombos(legs, 2) : [];

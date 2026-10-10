@@ -9,7 +9,7 @@
   Header always edit Content-Security-Policy "script-src 'self'" "script-src 'self' https://www.googletagmanager.com"
   Header always edit Content-Security-Policy "style-src 'self' 'unsafe-inline'" "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com"
   Header always edit Content-Security-Policy "font-src 'self' data:" "font-src 'self' data: https://fonts.gstatic.com"
-  Header always edit Content-Security-Policy "connect-src 'self'" "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.google.com"
+  Header always edit Content-Security-Policy "connect-src 'self'" "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.google.com https://site.api.espn.com https://sports.core.api.espn.com"
   <Files "index.html">
     Header always set Cache-Control "no-cache, must-revalidate"
   </Files>

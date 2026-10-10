@@ -41,7 +41,9 @@ export function parlayAmerican(legs) {
 export const TEASER_POINTS = 6;
 const TEASER_PAYTABLE = { 2: -110, 3: 150, 4: 260, 5: 450, 6: 700, 7: 900, 8: 1000 };
 export function teaserPrice(legCount) {
-  return TEASER_PAYTABLE[Math.min(Math.max(legCount, 2), 8)] ?? null;
+  return Number.isInteger(legCount) && legCount >= 2 && legCount <= 8
+    ? TEASER_PAYTABLE[legCount] ?? null
+    : null;
 }
 
 // Every 2-leg (or size-leg) combination of the slip legs, for round robins.
@@ -61,10 +63,22 @@ export function formatCommence(iso) {
   return date.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 }
 
+// A past start time alone cannot tell us whether a game is still live or final.
+// Use the feed's explicit status when available and disable stale/unknown games.
+export function eventPhase(game, now = Date.now()) {
+  const status = String(game?.status ?? game?.state ?? game?.phase ?? '').toLowerCase().replace(/[_-]+/g, ' ');
+  if (/\b(final|complete|completed|ended|postponed|cancelled|canceled)\b/.test(status)) return 'final';
+  if (/\b(live|in progress|halftime|half time|quarter|period|overtime)\b/.test(status)) return 'live';
+  if (/\b(scheduled|upcoming|pre game|pregame|not started|future)\b/.test(status)) return 'upcoming';
+  const start = Date.parse(game?.commenceTime);
+  if (!Number.isFinite(start)) return 'unknown';
+  return start > now ? 'upcoming' : 'started';
+}
+
 export function commenceStatus(iso) {
   const start = Date.parse(iso);
   if (!Number.isFinite(start)) return 'TBD';
-  return start <= Date.now() ? 'In progress / final' : `Starts ${formatCommence(iso)}`;
+  return start <= Date.now() ? 'Started · result pending' : `Starts ${formatCommence(iso)}`;
 }
 
 export function pickKey(eventKey, market, side) {
@@ -77,24 +91,30 @@ export function gradeLeg(leg, final) {
   const home = Number(final?.homeScore), away = Number(final?.awayScore);
   if (!Number.isFinite(home) || !Number.isFinite(away)) return null;
   if (leg.market === 'moneyline') {
+    if (!['home', 'away'].includes(leg.pickSide)) return null;
     if (home === away) return 'push';
     return (home > away ? 'home' : 'away') === leg.pickSide ? 'won' : 'lost';
   }
   if (leg.market === 'spread') {
-    const margin = (leg.pickSide === 'home' ? home - away : away - home) + Number(leg.line);
+    const line = Number(leg.line);
+    if (!['home', 'away'].includes(leg.pickSide) || !Number.isFinite(line)) return null;
+    const margin = (leg.pickSide === 'home' ? home - away : away - home) + line;
     return margin > 0 ? 'won' : margin < 0 ? 'lost' : 'push';
   }
   if (leg.market === 'total') {
     const sum = home + away, line = Number(leg.line);
+    if (!['over', 'under'].includes(leg.totalPick) || !Number.isFinite(line)) return null;
     if (sum === line) return 'push';
     return (leg.totalPick === 'over') === (sum > line) ? 'won' : 'lost';
   }
   if (leg.market === 'prop') {
     // "N+ points" milestone: graded on the box score; a player missing from
     // the box (DNP) voids the leg (push) like a real book.
+    const propLine = Number(leg.propLine);
+    if (!leg.propPlayer || !Number.isFinite(propLine)) return null;
     const pts = Number(final?.pointsByPlayer?.[leg.propPlayer]);
     if (!Number.isFinite(pts)) return 'push';
-    return pts >= Number(leg.propLine) ? 'won' : 'lost';
+    return pts >= propLine ? 'won' : 'lost';
   }
   return null;
 }

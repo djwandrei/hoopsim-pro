@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCcw, Trophy, Ban, Receipt, Brain } from 'lucide-react';
+import { Trophy, Ban, Receipt, Brain } from 'lucide-react';
 import { formatOdds, profitFor, commenceStatus } from '@/components/book/betsMath';
 
 const MARKET_LABEL = { moneyline: 'Moneyline', spread: 'Spread', total: 'Total', prop: 'Prop' };
@@ -8,11 +8,11 @@ const RESULT_CLASS = { won: 'border-positive/50 bg-positive/10 text-positive', l
 const STRIPE = { open: 'border-l-border', won: 'border-l-positive', lost: 'border-l-trim', push: 'border-l-border/50', cashedout: 'border-l-gold' };
 const credits = value => `${Number(value).toLocaleString()} cr`;
 const betType = bet => bet.teaser ? 'Teaser' : bet.roundRobin ? 'Round robin' : bet.parlay ? 'Parlay' : MARKET_LABEL[bet.legs?.[0]?.market] || 'Bet';
-const edgeChip = edge => <span className="shrink-0 rounded-full border border-positive/50 bg-positive/10 px-2 py-0.5 font-mono text-[10px] text-positive" title="Studio model edge vs the closing price">Model {edge >= 0 ? '+' : ''}{edge.toFixed(1)}</span>;
+const edgeChip = edge => <span className="shrink-0 rounded-full border border-positive/50 bg-positive/10 px-2 py-0.5 font-mono text-[10px] text-positive" title="Studio model estimate vs the selected price">Model {edge >= 0 ? '+' : ''}{edge.toFixed(1)}</span>;
 
-// Live bet tracking: open positions with early cash-out, automatic settlement
-// against real finals, bet analytics, model-backed pick tracking and the ledger.
-export default function BetTracker({ book, format, cashOutFor, onSettle, onVoid, onCashOut, onCheckFinals, checking, feedReady, onReset }) {
+// Local play-money tracker. Results are marked manually until an official
+// finals feed is connected; the real-money route is separate and disabled.
+export default function BetTracker({ book, format, cashOutFor, onSettle, onVoid, onCashOut, onReset }) {
   const open = book.bets.filter(bet => bet.status === 'open');
   const settled = book.bets.filter(bet => bet.status !== 'open').reverse();
   const risk = open.reduce((sum, bet) => sum + bet.stake, 0);
@@ -42,18 +42,16 @@ export default function BetTracker({ book, format, cashOutFor, onSettle, onVoid,
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {analytics.map(([label, value]) => <div key={label} className="metric-tile"><p className="bcast-kicker mb-1">{label}</p><p className="font-display text-2xl tracking-wide text-foreground">{value}</p></div>)}
     </div>
-    {modelBacked.length > 0 && <p className="flex flex-wrap items-center gap-1.5 px-1 text-[11px] text-muted-foreground"><Brain className="h-3.5 w-3.5 text-positive" aria-hidden="true" />Model-backed picks: <span className="font-mono text-foreground">{modelWon}-{modelDecided - modelWon}</span> settled{modelAvgEdge != null && <>, avg edge <span className="font-mono text-positive">{modelAvgEdge >= 0 ? '+' : ''}{modelAvgEdge.toFixed(1)}</span></>} — the studio sim flagged these as positive-value against the market.</p>}
+    {modelBacked.length > 0 && <p className="flex flex-wrap items-center gap-1.5 px-1 text-[11px] text-muted-foreground"><Brain className="h-3.5 w-3.5 text-positive" aria-hidden="true" />Model-backed picks: <span className="font-mono text-foreground">{modelWon}-{modelDecided - modelWon}</span> settled{modelAvgEdge != null && <>, avg estimated edge <span className="font-mono text-positive">{modelAvgEdge >= 0 ? '+' : ''}{modelAvgEdge.toFixed(1)}</span></>} — model estimates are directional and not a guarantee of value.</p>}
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h2 className="font-display text-xl tracking-wide text-foreground">OPEN BETS · {open.length}</h2>
       <div className="flex items-center gap-2">
-        <button type="button" onClick={onCheckFinals} disabled={checking || !feedReady || open.length === 0} className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold transition-colors hover:bg-gold/20 disabled:cursor-not-allowed disabled:opacity-40">
-          <RefreshCcw className={`h-3.5 w-3.5 ${checking ? 'animate-spin' : ''}`} aria-hidden="true" />Check finals now
-        </button>
         <button type="button" onClick={() => { if (window.confirm('Reset the book? This clears every bet and restores the starting bankroll.')) onReset(); }} className="inline-flex items-center gap-2 rounded-lg border border-border/50 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-trim/50 hover:text-trim-ink">
           <Ban className="h-3.5 w-3.5" aria-hidden="true" />Reset book
         </button>
       </div>
     </div>
+    {open.length > 0 && <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Practice results are marked manually. Official finals are not connected to this play-money tracker.</p>}
     {open.length === 0 ? <div className="court-panel grid place-items-center p-8 text-sm text-muted-foreground">No open bets — price one on the odds board.</div> :
       <ul className="space-y-3">{open.map(bet => {
         const cashOut = cashOutFor(bet);

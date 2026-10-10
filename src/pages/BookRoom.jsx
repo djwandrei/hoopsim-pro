@@ -8,10 +8,7 @@ import PickDeskBoard from '@/components/realbook/PickDeskBoard';
 import PickSlipRail from '@/components/realbook/PickSlipRail';
 import BetSlip from '@/components/book/BetSlip';
 import BetTracker from '@/components/book/BetTracker';
-import OddsSetupState from '@/components/book/OddsSetupState';
-import ModelEdgePanel from '@/components/book/ModelEdgePanel';
 import WalletPanel from '@/components/book/WalletPanel';
-import useSeasonSource from '@/hooks/useSeasonSource';
 import useBookFeed from '@/hooks/useBookFeed';
 import { loadBook, saveBook, resetBook, pushLedger } from '@/lib/bookRoom/betsStore';
 import { profitFor, parlayAmerican, cashOutValue, teaserPrice, roundRobinCombos, TEASER_POINTS } from '@/components/book/betsMath';
@@ -41,32 +38,19 @@ const makeBet = (legs, stake, price, extra = {}) => ({
 // Book Room — the studio's local play-money shell. The pricing/settlement
 // backend is intentionally disconnected until its separate service is ready.
 export default function BookRoom() {
-  usePageMeta({ title: 'Sportsbook — SwishIQ Studio', description: 'A local play-money sportsbook shell. Live prices, paid credits, and server settlement are planned backend work.' });
+  usePageMeta({ title: 'Sportsbook — SwishIQ Studio', description: 'NBA odds displayed from ESPN with a local play-money wallet. No real-money wagering is processed.' });
   const [view, setView] = useState('events');
   const [format, setFormat] = useState(() => { try { return localStorage.getItem('swishiq-odds-format') || 'american'; } catch { return 'american'; } });
   const [book, setBook] = useState(loadBook);
   const [slipLegs, setSlipLegs] = useState([]);
   const [bookFilter, setBookFilter] = useState('');
-  const [checking, setChecking] = useState(false);
-  const { league, state: seasonState } = useSeasonSource(2025);
-  const { feed, loadOdds, model, movement, boosts, propsByEvent } = useBookFeed(league, seasonState);
+  const { feed, loadOdds, model, movement, boosts, propsByEvent, propsStates, loadProps } = useBookFeed();
 
   useEffect(() => { saveBook(book); }, [book]);
   useEffect(() => { try { localStorage.setItem('swishiq-odds-format', format); } catch { /* ignore */ } }, [format]);
 
-  const checkFinals = useCallback(async () => {
-    setChecking(false);
-  }, []);
-
   const openCount = book.bets.filter(bet => bet.status === 'open').length;
-  // The settlement callback remains a no-op while the backend is planned.
-  useEffect(() => {
-    if (feed.state !== 'ready' || openCount === 0) return;
-    const id = setInterval(checkFinals, 60000);
-    return () => clearInterval(id);
-  }, [feed.state, openCount, checkFinals]);
 
-  const bonusReady = !book.lastBonusAt || Date.now() - Date.parse(book.lastBonusAt) > BONUS_COOLDOWN;
   // The cooldown re-check runs inside the updater, so a double-click can
   // never double-claim the bonus.
   const claimBonus = () => setBook(current => {
@@ -76,9 +60,20 @@ export default function BookRoom() {
   });
 
   const placeBet = ({ legs, stake, mode = 'parlay' }) => {
-    if (!Array.isArray(legs) || legs.length === 0) return;
+    if (!Array.isArray(legs) || legs.length === 0 || legs.some(leg => !leg?.eventKey || !leg?.matchup)
+      || new Set(legs.map(leg => leg.eventKey)).size !== legs.length) return;
+    const validLeg = leg => Number.isFinite(Number(leg.price)) && Number(leg.price) !== 0
+      && (leg.market === 'moneyline' ? ['home', 'away'].includes(leg.pickSide)
+        : leg.market === 'spread' ? ['home', 'away'].includes(leg.pickSide) && Number.isFinite(Number(leg.line))
+          : leg.market === 'total' ? ['over', 'under'].includes(leg.totalPick) && Number.isFinite(Number(leg.line))
+            : leg.market === 'prop' ? Boolean(leg.propPlayer) && Number.isFinite(Number(leg.propLine))
+              : false);
+    if (!legs.every(validLeg)) return;
     const stakeCredits = Math.round(Number(stake));
-    if (!Number.isFinite(stakeCredits) || stakeCredits < 1) return;
+    if (!Number.isFinite(stakeCredits) || stakeCredits < 1 || Number(stake) !== stakeCredits) return;
+    if (!['parlay', 'roundrobin', 'teaser'].includes(mode)) return;
+    if (mode === 'roundrobin' && (legs.length < 3 || legs.length > 6)) return;
+    if (mode === 'teaser' && (legs.length < 2 || legs.length > 8 || legs.some(leg => !['spread', 'total'].includes(leg.market)))) return;
     const outlay = mode === 'roundrobin' ? stakeCredits * roundRobinCombos(legs, 2).length : stakeCredits;
     if (outlay > book.bankroll) return;
     trackGa4('bet_placed', { mode, legs: legs.length, stake: stakeCredits });
@@ -108,14 +103,15 @@ export default function BookRoom() {
   // slip, the placed bet and the settled ledger.
   // Real books don't take correlated same-game parlays: one pick per event.
   const addLeg = leg => {
-    if (slipLegs.some(existing => existing.eventKey === leg.eventKey)) return;
     const modelData = model?.byEvent?.[leg.eventKey];
     // The sim models game outcomes, not player props — no edge chip on props.
     const edge = leg.market !== 'prop' && modelData ? modelEdgePct(modelData, leg, leg.price) : null;
-    setSlipLegs(current => [...current, Number.isFinite(edge) ? { ...leg, modelEdge: edge } : leg]);
+    const pricedLeg = Number.isFinite(edge) ? { ...leg, modelEdge: edge } : leg;
+    setSlipLegs(current => current.some(existing => existing.eventKey === leg.eventKey) ? current : [...current, pricedLeg]);
   };
 
   const settleBet = (id, result) => setBook(current => {
+    if (!['won', 'lost', 'push'].includes(result)) return current;
     const bet = current.bets.find(item => item.id === id);
     if (!bet || bet.status !== 'open') return current;
     const returned = result === 'won' ? bet.stake + profitFor(bet.stake, bet.price) : result === 'push' ? bet.stake : 0;
@@ -147,36 +143,34 @@ export default function BookRoom() {
     return game ? bestPriceFor(game, leg) : null;
   }, [feed.games]);
 
-  const headerState = feed.state === 'loading' ? 'loading' : feed.state === 'ready' ? 'ready' : 'error';
-  const headerStatus = feed.state === 'ready' ? `${feed.games.length} games priced · model edge live` : feed.state === 'setup' ? 'Odds backend planned · local wallet available' : feed.state === 'error' ? 'Feed unavailable' : null;
-  return <StudioShell active="/book">
-    <PickDeskHero description="Local play-money sportsbook shell with a tracked browser wallet. Live lines, model pricing, paid credits, and server settlement will connect through the planned backend." games={feed.state === 'ready' ? feed.games : null} status={headerStatus} state={headerState}
+  const headerState = feed.state;
+  const headerStatus = feed.state === 'ready' ? (feed.error ? 'ESPN refresh delayed · showing last prices' : `${feed.games.length} games priced · ESPN`) : feed.state === 'error' ? 'ESPN feed unavailable' : null;
+  return <StudioShell active="/book" footerAttribution="espn">
+    <PickDeskHero description="NBA lines displayed from ESPN. Picks use a local play-money wallet; cash wagers and deposits are not available here." games={feed.state === 'ready' ? feed.games : null} status={headerStatus} state={headerState}
       balance={<span className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2" aria-label="Bankroll"><Wallet className="h-3.5 w-3.5 text-gold" aria-hidden="true" /><span className="font-mono text-xs font-bold text-gold">{book.bankroll.toLocaleString()} cr</span></span>} />
-    <PickDeskStrip tab={view} onTab={setView} tabs={[['events', 'Events'], ['featured', 'Featured'], ['wallet', 'Wallet & Credits']]} format={format} onFormat={setFormat}
+    <PickDeskStrip tab={view} onTab={setView} tabs={[['events', 'Events'], ['wallet', 'Wallet & Credits']]} format={format} onFormat={setFormat}
       links={[
         { to: '/account', label: 'Account', Icon: UserRound },
       ]} />
-    <main className="mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 sm:px-6">
-      {view === 'wallet' && <WalletPanel bankroll={book.bankroll} ledger={book.ledger} bonusReady={bonusReady} onClaim={claimBonus} />}
+    <main className="book-content mx-auto min-w-0 max-w-7xl space-y-5 px-4 py-6 pb-28 sm:px-6 lg:pb-6">
+      {view === 'wallet' && <WalletPanel bankroll={book.bankroll} ledger={book.ledger} lastBonusAt={book.lastBonusAt} onClaim={claimBonus} />}
       {view !== 'wallet' && <div className="grid items-start gap-5 lg:grid-cols-3">
         <div className="min-w-0 lg:col-span-2">
-          {feed.state === 'setup' ? <OddsSetupState onRetry={loadOdds} /> :
-            feed.state === 'error' ? <section className="court-panel flex flex-wrap items-center gap-x-4 gap-y-3 p-4" role="alert">
+          {feed.state === 'error' ? <section className="court-panel flex flex-wrap items-center gap-x-4 gap-y-3 p-4" role="alert">
               <AlertTriangle className="h-5 w-5 shrink-0 text-trim-ink" aria-hidden="true" />
               <p className="min-w-0 flex-1 text-xs leading-relaxed text-trim-ink">{feed.error}</p>
               <button type="button" onClick={loadOdds} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gold hover:bg-gold/20"><RefreshCcw className="h-3.5 w-3.5" aria-hidden="true" />Retry</button>
             </section> :
               feed.state === 'loading' ? <div className="court-panel grid place-items-center p-14 text-sm text-muted-foreground">Loading live prices…</div> :
-                view === 'featured' ? <ModelEdgePanel model={model} games={feed.games} format={format} leagueLabel={model?.leagueLabel || league?.label} onModelPick={addLeg} /> :
-                  <PickDeskBoard games={feed.games} quota={feed.quota} movement={movement} boosts={boosts} format={format} model={model} bookFilter={bookFilter} onBookFilter={setBookFilter} onPick={addLeg} onRefresh={loadOdds} loading={feed.state === 'loading'} propsByEvent={propsByEvent} />}
+              <PickDeskBoard games={feed.games} quota={feed.quota} movement={movement} boosts={boosts} format={format} model={model} bookFilter={bookFilter} onBookFilter={setBookFilter} onPick={addLeg} onRefresh={loadOdds} loading={feed.refreshing} propsByEvent={propsByEvent} propsStates={propsStates} onLoadProps={loadProps} />}
         </div>
         <div className="min-w-0 self-start lg:sticky lg:top-[calc(var(--djhc-header-h,0px)+1rem)]">
           <PickSlipRail legsCount={slipLegs.length} openCount={openCount}
             slip={<BetSlip legs={slipLegs} bankroll={book.bankroll} format={format} onRemoveLeg={index => setSlipLegs(current => current.filter((_, i) => i !== index))} onClear={() => setSlipLegs([])} onPlace={placeBet} />}
-            bets={<BetTracker book={book} format={format} cashOutFor={bet => cashOutValue(bet, priceForLeg)} onSettle={settleBet} onVoid={voidBet} onCashOut={cashOutBet} onCheckFinals={checkFinals} checking={checking} feedReady={feed.state === 'ready'} onReset={() => setBook(resetBook())} />} />
+            bets={<BetTracker book={book} format={format} cashOutFor={bet => cashOutValue(bet, priceForLeg)} onSettle={settleBet} onVoid={voidBet} onCashOut={cashOutBet} onReset={() => setBook(resetBook())} />} />
         </div>
       </div>}
-      <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Play-money book: local credits and bet history stay in this browser. Live prices, paid credit purchases, and server settlement remain planned backend work.</p>
+      <p className="px-1 text-[11px] leading-relaxed text-muted-foreground">Play-money only: credits and bet history stay in this browser. Lines are sourced from ESPN and may change or be unavailable. No cash wagers or deposits are processed.</p>
     </main>
   </StudioShell>;
 }

@@ -5,9 +5,11 @@ const TYPE_LABEL = { bet: 'Wager', payout: 'Payout', bonus: 'Daily bonus', casho
 
 // SwishIQ Credits wallet: balance, the daily sportsbook bonus, and the last
 // wallet movements (wagers, payouts, cash-outs, bonuses).
-export default function WalletPanel({ bankroll, ledger, bonusReady, onClaim }) {
-  const [, setTick] = useState(0);
-  useEffect(() => { const id = setInterval(() => setTick(t => t + 1), 30000); return () => clearInterval(id); }, []);
+export default function WalletPanel({ bankroll, ledger, lastBonusAt, onClaim }) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => { const id = setInterval(() => setNow(Date.now()), 30000); return () => clearInterval(id); }, []);
+  const lastBonusTime = Date.parse(lastBonusAt || '');
+  const bonusReady = !lastBonusAt || !Number.isFinite(lastBonusTime) || now - lastBonusTime >= 24 * 3600 * 1000;
   const shown = (ledger || []).slice(0, 6);
   return <section className="court-panel p-4" aria-label="Studio wallet">
     <div className="flex flex-wrap items-center justify-between gap-2">

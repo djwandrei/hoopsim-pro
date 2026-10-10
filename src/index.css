@@ -309,6 +309,14 @@ body.dark-mode .studio-workspace tbody tr:nth-child(even) { background: transpar
 .book-price-btn__price { display: inline-flex; align-items: center; gap: .3rem; font-family: var(--font-mono); font-size: .85rem; font-weight: 700; color: hsl(var(--court-accent)); font-variant-numeric: tabular-nums; }
 .book-price-btn--empty { display: grid; place-items: center; border-style: dashed; color: hsl(var(--muted-foreground) / .55); }
 .book-boost { display: inline-grid; place-items: center; border-radius: .25rem; background: hsl(var(--court-accent) / .25); padding: 0 .22rem; font-family: var(--font-mono); font-size: .55rem; font-weight: 700; color: hsl(var(--court-accent)); }
+/* Keep long slips inside the viewport; mobile gets a persistent dock. */
+.book-slip-rail.court-panel { max-height: calc(100dvh - var(--djhc-header-h, 64px) - 2rem); overflow-y: auto; }
+@media (max-width: 1023px) {
+  /* A transformed entrance animation would contain the fixed slip. */
+  .studio-workspace main.book-content { animation: none; }
+  .book-slip-rail.court-panel { position: fixed; inset: auto .75rem calc(env(safe-area-inset-bottom) + .75rem); z-index: 100; }
+  body.webview .book-slip-rail.court-panel { bottom: calc(env(safe-area-inset-bottom) + 4.75rem); max-height: calc(100dvh - var(--djhc-header-h, 64px) - env(safe-area-inset-bottom) - 6rem); }
+}
 /* Slip payout summary: ticket treatment with perforated edges */
 .slip-ticket { position: relative; border: 1px dashed hsl(var(--court-accent) / .45); border-radius: .7rem; background: hsl(var(--court-canvas) / .55); padding: .95rem 1.1rem; }
 .slip-ticket::before, .slip-ticket::after { content: ''; position: absolute; top: 50%; width: .9rem; height: .9rem; transform: translateY(-50%); border-radius: 50%; background: hsl(var(--card)); border: 1px dashed hsl(var(--court-accent) / .45); }

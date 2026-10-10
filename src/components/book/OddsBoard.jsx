@@ -1,6 +1,6 @@
 import React from 'react';
 import { CalendarClock, RefreshCcw, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { formatOdds, formatCommence, pickKey } from '@/components/book/betsMath';
+import { formatOdds, formatCommence, pickKey, eventPhase } from '@/components/book/betsMath';
 import { CODE_BY_NAME } from '@/lib/bookRoom/modelEdge';
 import { buildPriceCell } from '@/lib/bookRoom/oddsCells';
 import TeamMark from '@/components/studio/TeamMark';
@@ -8,27 +8,38 @@ import TeamMark from '@/components/studio/TeamMark';
 export function bestMoneyline(books, side) {
   let best = null;
   for (const book of books || []) {
-    const price = book.moneyline?.[side];
-    if (Number.isFinite(price) && (!best || price > best.price)) best = { price, book: book.title };
+    const price = Number(book.moneyline?.[side]);
+    if (Number.isFinite(price) && price !== 0 && (!best || price > best.price)) best = { price, book: book.title || book.key || 'Book not named' };
   }
   return best;
 }
 export function bestSpread(books, side) {
-  let best = null;
+  const offers = [];
   for (const book of books || []) {
     const offer = book.spreads?.[side];
-    if (offer && Number.isFinite(offer.price) && (!best || offer.price > best.price)) best = { ...offer, book: book.title };
+    const price = Number(offer?.price), point = Number(offer?.point ?? offer?.line);
+    if (offer && Number.isFinite(price) && price !== 0 && Number.isFinite(point)) offers.push({ ...offer, price, point, book: book.title || book.key || 'Book not named' });
   }
-  return best;
+  if (!offers.length) return null;
+  // Compare the most favorable line first, then compare price at that line.
+  // Comparing American odds across different spread points can select a worse bet.
+  const bestPoint = Math.max(...offers.map(offer => offer.point));
+  return offers.filter(offer => Math.abs(offer.point - bestPoint) < 1e-9).reduce((best, offer) => !best || offer.price > best.price ? offer : best, null);
 }
 export function bestTotal(books, pick) {
-  let best = null;
+  const offers = [];
   for (const book of books || []) {
     const total = book.total;
-    if (!total || !Number.isFinite(total[pick])) continue;
-    if (!best || total[pick] > best.price) best = { price: total[pick], line: total.point, book: book.title };
+    if (!total) continue;
+    const selected = total[pick];
+    const price = Number(selected && typeof selected === 'object' ? selected.price : selected);
+    const line = Number((selected && typeof selected === 'object' ? selected.line ?? selected.point : null) ?? total.point ?? total.line);
+    if (Number.isFinite(price) && price !== 0 && Number.isFinite(line)) offers.push({ price, line, book: book.title || book.key || 'Book not named' });
   }
-  return best;
+  if (!offers.length) return null;
+  // The bettor-favorable number is lower for an over and higher for an under.
+  const bestLine = pick === 'over' ? Math.min(...offers.map(offer => offer.line)) : Math.max(...offers.map(offer => offer.line));
+  return offers.filter(offer => Math.abs(offer.line - bestLine) < 1e-9).reduce((best, offer) => !best || offer.price > best.price ? offer : best, null);
 }
 
 // Live price for a leg, used for early cash-out (real market, never boosted).
@@ -60,14 +71,17 @@ export function bookOptions(games) {
   return options;
 }
 
-const spreadLabel = offer => (offer && Number.isFinite(offer.point) ? `${offer.point > 0 ? '+' : ''}${offer.point}` : '');
+const spreadLabel = offer => {
+  const point = Number(offer?.point ?? offer?.line);
+  return Number.isFinite(point) ? `${point > 0 ? '+' : ''}${point}` : '';
+};
 
 // One price cell, sportsbook-style: the pick label sits above the mono price,
 // with the model edge, movement arrow and boost chip inline.
-function PriceButton({ cell, format }) {
+function PriceButton({ cell, format, disabled = false }) {
   if (!cell?.offer) return <div className="book-price-btn book-price-btn--empty" role="presentation">—</div>;
   const { label, offer, edge, onPick } = cell;
-  return <button type="button" onClick={onPick} className="book-price-btn" aria-label={`Add ${label} at ${formatOdds(offer.price, format)}`}>
+  return <button type="button" onClick={onPick} disabled={disabled} title={disabled ? 'Wagering is disabled because the current game status is unavailable.' : undefined} className="book-price-btn disabled:cursor-not-allowed disabled:opacity-50" aria-label={`Add ${label} at ${formatOdds(offer.price, format)}`}>
     <span className="book-price-btn__label">
       {label}
       {Number.isFinite(edge) && Math.abs(edge) >= 2 && <span className={edge >= 3 ? 'text-positive' : edge <= -3 ? 'text-trim-ink' : 'text-muted-foreground'} title="Studio model edge vs this price">{edge >= 0 ? '+' : ''}{edge.toFixed(1)}</span>}
@@ -94,13 +108,16 @@ function TeamCell({ code, name }) {
 // live pricing, movement arrows, book shopping and inline model-edge chips.
 export default function OddsBoard({ games, quota, movement, boosts, format, model, bookFilter, onBookFilter, onPick, onRefresh, loading }) {
   const now = Date.now();
-  const live = games.filter(game => Date.parse(game.commenceTime) <= now);
-  const upcoming = games.filter(game => Date.parse(game.commenceTime) > now);
+  const live = games.filter(game => eventPhase(game, now) === 'live');
+  const upcoming = games.filter(game => eventPhase(game, now) === 'upcoming');
+  const inactive = games.filter(game => !['live', 'upcoming'].includes(eventPhase(game, now)));
   const renderGame = game => {
+    const phase = eventPhase(game, now);
+    const canBet = phase === 'live' || phase === 'upcoming';
     const books = (game.books || []).filter(book => !bookFilter || book.key === bookFilter);
     const modelData = model?.byEvent?.[game.eventKey];
     const { cell } = buildPriceCell({ game, modelData, boosts, movement, onPick });
-    const awayCode = CODE_BY_NAME[game.away], homeCode = CODE_BY_NAME[game.home];
+    const awayCode = game.awayCode || CODE_BY_NAME[game.away], homeCode = game.homeCode || CODE_BY_NAME[game.home];
     const cells = {
       awayMl: cell('moneyline', 'away', bestMoneyline(books, 'away'), awayCode, `${game.away} ML`),
       homeMl: cell('moneyline', 'home', bestMoneyline(books, 'home'), homeCode, `${game.home} ML`),
@@ -109,13 +126,15 @@ export default function OddsBoard({ games, quota, movement, boosts, format, mode
       over: cell('total', 'over', bestTotal(books, 'over'), `O ${bestTotal(books, 'over')?.line ?? ''}`, bestTotal(books, 'over') ? `Over ${bestTotal(books, 'over').line}` : ''),
       under: cell('total', 'under', bestTotal(books, 'under'), `U ${bestTotal(books, 'under')?.line ?? ''}`, bestTotal(books, 'under') ? `Under ${bestTotal(books, 'under').line}` : ''),
     };
-    const gameLive = Date.parse(game.commenceTime) <= now;
     return <article key={game.eventKey} className="book-card court-panel p-4">
       <header className="flex items-center justify-between gap-2 border-b border-border/30 pb-2.5">
         <p className="min-w-0 truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{game.away} @ {game.home}</p>
         <span className="inline-flex shrink-0 items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-          {gameLive && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-trim" aria-hidden="true" />}
-          {gameLive && <span className="font-semibold text-trim-ink">Live</span>}
+          {phase === 'live' && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-trim" aria-hidden="true" />}
+          {phase === 'live' && <span className="font-semibold text-trim-ink">Live</span>}
+          {phase === 'final' && <span className="font-semibold">Final</span>}
+          {phase === 'started' && <span className="font-semibold">Started · status unavailable</span>}
+          {phase === 'unknown' && <span className="font-semibold">Status unavailable</span>}
           <CalendarClock className="h-3 w-3" aria-hidden="true" />{formatCommence(game.commenceTime)}
         </span>
       </header>
@@ -125,13 +144,13 @@ export default function OddsBoard({ games, quota, movement, boosts, format, mode
         <p className="book-market-head">Spread</p>
         <p className="book-market-head">Total</p>
         <TeamCell code={awayCode} name={game.away} />
-        <PriceButton cell={cells.awayMl} format={format} />
-        <PriceButton cell={cells.awaySp} format={format} />
-        <PriceButton cell={cells.over} format={format} />
+        <PriceButton cell={cells.awayMl} format={format} disabled={!canBet} />
+        <PriceButton cell={cells.awaySp} format={format} disabled={!canBet} />
+        <PriceButton cell={cells.over} format={format} disabled={!canBet} />
         <TeamCell code={homeCode} name={game.home} />
-        <PriceButton cell={cells.homeMl} format={format} />
-        <PriceButton cell={cells.homeSp} format={format} />
-        <PriceButton cell={cells.under} format={format} />
+        <PriceButton cell={cells.homeMl} format={format} disabled={!canBet} />
+        <PriceButton cell={cells.homeSp} format={format} disabled={!canBet} />
+        <PriceButton cell={cells.under} format={format} disabled={!canBet} />
       </div>
       <footer className="mt-3 flex items-center justify-between gap-2 border-t border-border/30 pt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
         <span>{books.length} book{books.length === 1 ? '' : 's'} · best price per side</span>
@@ -160,6 +179,10 @@ export default function OddsBoard({ games, quota, movement, boosts, format, mode
     {upcoming.length > 0 && <div>
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Upcoming · {upcoming.length}</p>
       <div className="space-y-3">{upcoming.map(renderGame)}</div>
+    </div>}
+    {inactive.length > 0 && <div>
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Started, final, or status unavailable · {inactive.length}</p>
+      <div className="space-y-3">{inactive.map(renderGame)}</div>
     </div>}
     {games.length === 0 && <div className="court-panel grid place-items-center p-10 text-sm text-muted-foreground">No NBA games on the board right now.</div>}
   </section>;

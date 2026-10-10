@@ -1,0 +1,17 @@
+{
+  "format": "swishiq-impact-daily-acceptance-v1",
+  "recordedAt": "2026-10-10T10:48:33.147Z",
+  "status": "passed",
+  "boardsVerified": 180,
+  "legalSelectionChecks": 540,
+  "tamperedBoardsRejected": 180,
+  "tamperedResultsRejected": 540,
+  "archivedPinsChecked": 26,
+  "serverHandler": "passed",
+  "illegalSelection": "rejected",
+  "missingHorizon": "unavailable",
+  "evaluatorOutage": "unavailable",
+  "elapsedMs": 29607.8735,
+  "modelReleaseId": "swishiq-v4-impact-native-20261010-v1",
+  "scope": "historical descriptive contest ranking; no prospective game prediction or individual rank validation claim"
+}

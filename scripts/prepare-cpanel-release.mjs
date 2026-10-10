@@ -199,7 +199,9 @@ function assertManifestPath(value, label) {
 
 async function collectClosureFiles(projectRoot, distRoot, closureManifest) {
   if (closureManifest?.format !== 'djhc-react-studio-native-release-closure-v1'
-    || !Array.isArray(closureManifest.entries) || closureManifest.entries.length !== 99) {
+    || !Array.isArray(closureManifest.entries)
+    || !Number.isInteger(closureManifest.counts?.requiredStaticClosureEntries)
+    || closureManifest.entries.length !== closureManifest.counts.requiredStaticClosureEntries) {
     throw new Error('The reviewed Studio native source closure manifest is missing or malformed.');
   }
 

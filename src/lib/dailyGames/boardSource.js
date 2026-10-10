@@ -18,10 +18,8 @@ import { SITE_ORIGIN } from '@/lib/deployConfig';
 const SWISHIQ_DAILY_GAME_KINDS = Object.freeze(['fix-the-five', 'draft-night']);
 export const SWISHIQ_DAILY_GAME_FAMILY = 'team-season';
 
-const NATIVE_DAILY_CLIENT_URL = 'studio-runtime/modules/swishiq-daily-game-client.js?v=20261010a&rev=daily-v4-error-classification-v1';
-const NATIVE_RUNTIME_ADAPTER_URL = 'engine/canonical-v4-studio-runtime-adapter.js?v=20261009b';
-const SWISHIQ_PUBLIC_REGISTRY_PATH = '/tools/swishiq-studio/data/registry.json';
-const SWISHIQ_PUBLIC_BOARD_ROOT = '/tools/swishiq-studio/data/boards/';
+const NATIVE_DAILY_CLIENT_URL = 'studio-runtime/modules/swishiq-daily-game-client.js?v=20261010d&rev=daily-impact-native-v1';
+const NATIVE_RUNTIME_ADAPTER_URL = 'engine/canonical-v4-studio-runtime-adapter.js?v=20261010d';
 const V4_RELEASE_REGISTRY_PATH = '/tools/swishiq-studio/data/v4/releases/v4-site-12ad90dc8710/registry.json';
 const REVIEWED_SITE_ORIGIN = 'https://www.djshouseofcards-comics.com';
 
@@ -98,22 +96,55 @@ function adaptBoardForView(board) {
   return view;
 }
 
-export async function loadSwishIQDailyBoard({ gameKind, dailySeed, family = '', sourceMode = 'auto' } = {}) {
+function boardRefFor(board, releasePin, requestedBoardSha256 = '') {
+  const activePins = Array.isArray(releasePin?.dailyGamePins) ? releasePin.dailyGamePins : [];
+  const historyPins = Array.isArray(releasePin?.dailyGamePinHistory) ? releasePin.dailyGamePinHistory : [];
+  const pins = requestedBoardSha256 ? [...activePins, ...historyPins] : activePins;
+  const matchingPins = [...new Map(pins.filter(pin => pin.gameKind === board.gameKind
+    && pin.dailySeed === board.dailySeed
+    && pin.boardContentSha256 === board.boardContentSha256
+    && (!requestedBoardSha256 || pin.boardSha256 === requestedBoardSha256))
+    .map(pin => [pin.boardSha256, pin])).values()];
+  if (matchingPins.length !== 1) fail('This exact SwishIQ board revision is not pinned. No substitute board was used.');
+  const pin = matchingPins[0];
+  const packageRef = board.packageRef || {};
+  if (pin.packageId !== packageRef.packageId || pin.packageVersion !== packageRef.packageVersion) {
+    fail('This SwishIQ board revision does not match its pinned package. No substitute board was used.');
+  }
+  const releaseId = packageRef.releaseId || releasePin.releaseId;
+  if (!releaseId) fail('This SwishIQ board revision has no reviewed release identity.');
+  return Object.freeze({
+    releaseId,
+    gameKind: board.gameKind,
+    dailySeed: board.dailySeed,
+    boardId: board.boardId,
+    path: pin.path,
+    boardSha256: pin.boardSha256,
+    boardContentSha256: pin.boardContentSha256,
+    packageId: pin.packageId,
+    packageVersion: pin.packageVersion,
+    scope: pin.scope,
+    phase: pin.phase,
+  });
+}
+
+export async function loadSwishIQDailyBoard({ gameKind, dailySeed, family = '', boardSha256 = '' } = {}) {
   if (!SWISHIQ_DAILY_GAME_KINDS.includes(gameKind)) fail('Choose a supported SwishIQ daily game.');
+  if (family && family !== SWISHIQ_DAILY_GAME_FAMILY) fail('Only exact team-season boards are supported.');
   const client = await reviewedDailyClient();
   const releasePin = releasePinForCurrentOrigin(await reviewedReleasePin());
-  const native = await client.loadSwishIQDailyBoard({
+  // The daily game route is pinned to V4. Passing the saved byte hash directly
+  // to the V4 loader restores the original board, including retained revisions.
+  const native = await client.loadSwishIQDailyBoardV4({
     gameKind,
     dailySeed,
-    family,
-    sourceMode,
+    boardSha256,
     releasePin,
-    registryUrl: SWISHIQ_PUBLIC_REGISTRY_PATH,
-    boardRootUrl: SWISHIQ_PUBLIC_BOARD_ROOT,
     fetcher: originalFetch,
   });
   const view = adaptBoardForView(native);
   if (view !== native) viewNativeBoards.set(view, native);
+  if (isSwishIQDailyBoardV4(native)) view.boardRef = boardRefFor(native, releasePin, boardSha256);
   return view;
 }
 
@@ -147,7 +178,11 @@ function adaptV4Outcome(response) {
     action: response.action,
     status: response.status,
     runId: response.runId,
+    boardRef: response.boardRef,
+    resultContract: response.resultContract,
+    selection: response.selection,
     evaluation: response.evaluation,
+    sourcePins: response.sourcePins,
     resultPassport: null,
   };
 }

@@ -23,6 +23,39 @@ import '@/components/dailyGames/dailyGames.css';
 
 const RUN_STORE = createRunStore('swishiq-studio-draft-night');
 
+function sameBoardRevision(left, right) {
+  return Boolean(left?.boardSha256 && right?.boardSha256
+    && left.boardSha256 === right.boardSha256
+    && left.boardContentSha256 === right.boardContentSha256
+    && left.gameKind === right.gameKind
+    && left.dailySeed === right.dailySeed);
+}
+
+function outcomeMatchesRevision(outcome, boardRef) {
+  return sameBoardRevision(outcome?.boardRef, boardRef);
+}
+
+function restorePicks(board, value) {
+  const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  const restored = {};
+  let invalid = false;
+  const rounds = board.deck?.rounds || [];
+  const roundIds = new Set(rounds.map(round => round.roundId));
+  for (const [roundId, playerRef] of Object.entries(source)) {
+    const round = rounds.find(entry => entry.roundId === roundId);
+    if (!round || typeof playerRef !== 'string'
+      || !round.candidates.some(candidate => candidate.playerRef === playerRef)) {
+      invalid = true;
+      continue;
+    }
+    restored[roundId] = playerRef;
+  }
+  if (Object.keys(source).some(roundId => !roundIds.has(roundId))) invalid = true;
+  return { restored, invalid };
+}
+
+const hasSavedOutcome = value => Boolean(value && typeof value === 'object');
+
 // Rendered inside GameShell's CourtThemeProvider, so it can read the team the
 // visitor picked in the palette picker and theme the sim court from it — the
 // draft roster mixes teams, so no single player's team can own the floor.
@@ -48,11 +81,16 @@ export default function DraftNight() {
   const [sharedRun] = useState(() => decodeSharedRun(window.location.search));
   const sharedRunRef = useRef(sharedRun && sharedRun.gameKind === 'draft-night' ? sharedRun : null);
   const autoRevealRef = useRef(false);
+  const getSavedBoardRef = useCallback((targetSeed) => {
+    if (sharedRun?.seed === targetSeed) return null;
+    return RUN_STORE.read(targetSeed).boardRef || null;
+  }, [sharedRun]);
   const {
-    seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, league,
+    seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, startNewRunOnCurrentRevision, league,
   } = useDailyGameBoard({
     gameKind: 'draft-night',
-    onBoardReady: (loaded) => {
+    getSavedBoardRef,
+    onBoardReady: (loaded, { resetRun = false } = {}) => {
       const shared = sharedRunRef.current;
       if (shared) {
         if (shared.seed !== loaded.dailySeed) { setSeed(shared.seed); return; }
@@ -66,18 +104,43 @@ export default function DraftNight() {
         setActiveIndex(firstOpen >= 0 ? firstOpen : loaded.deck.rounds.length);
         return;
       }
-      const store = RUN_STORE.read(loaded.dailySeed);
-      const storedPicks = store.picks && typeof store.picks === 'object' ? store.picks : {};
-      setPicks(storedPicks);
-      setOutcome(store.outcome || null);
-      const firstOpen = loaded.deck.rounds.findIndex(round => !storedPicks[round.roundId]);
+      const boardRef = loaded.boardRef || null;
+      if (resetRun) {
+        RUN_STORE.write(loaded.dailySeed, { picks: {}, outcome: null, ...(boardRef ? { boardRef } : {}) });
+        setPicks({}); setOutcome(null); setActiveIndex(0); setNotice('Started a fresh run on the current published board revision.');
+        return;
+      }
+      const store = RUN_STORE.read(loaded.dailySeed, boardRef?.boardSha256);
+      const hasRevision = Boolean(store.boardRef?.boardSha256);
+      const revisionMismatch = Boolean(boardRef && hasRevision && !sameBoardRevision(store.boardRef, boardRef));
+      const { restored: storedPicks, invalid: invalidPicks } = restorePicks(loaded, store.picks);
+      const unpinnedOutcome = Boolean(boardRef && !hasRevision && hasSavedOutcome(store.outcome));
+      const mismatchedOutcome = Boolean(boardRef && hasSavedOutcome(store.outcome) && !outcomeMatchesRevision(store.outcome, boardRef));
+      const stale = revisionMismatch || invalidPicks || unpinnedOutcome || mismatchedOutcome;
+      const restoredPicks = revisionMismatch ? {} : storedPicks;
+      const restoredOutcome = stale ? null : store.outcome || null;
+      setPicks(restoredPicks);
+      setOutcome(restoredOutcome);
+      if (boardRef && !revisionMismatch && (!hasRevision || invalidPicks || mismatchedOutcome)) {
+        RUN_STORE.write(loaded.dailySeed, {
+          picks: restoredPicks,
+          outcome: restoredOutcome,
+          ...((unpinnedOutcome || mismatchedOutcome) ? { staleOutcome: store.outcome } : {}),
+          boardRef,
+        });
+      }
+      if (revisionMismatch) setNotice('This saved run belongs to a different board revision. Its picks and result were not restored. Start a fresh run on the current revision to continue.');
+      else if (unpinnedOutcome) setNotice('A saved result has no pinned board revision, so it was marked stale. Saved legal picks were restored; lock in the draft again to verify them on this board.');
+      else if (mismatchedOutcome) setNotice('A saved result belongs to a different board revision, so it was marked stale. Saved legal picks were restored; lock in the draft again to verify them on this board.');
+      else if (invalidPicks) setNotice('Some saved picks are not legal on this board and were cleared. Review the remaining picks before revealing.');
+      const firstOpen = loaded.deck.rounds.findIndex(round => !restoredPicks[round.roundId]);
       setActiveIndex(firstOpen >= 0 ? firstOpen : loaded.deck.rounds.length);
     },
   });
 
   const persist = useCallback((nextSeed, nextPicks, nextOutcome) => {
-    RUN_STORE.write(nextSeed, { picks: nextPicks, outcome: nextOutcome });
-  }, []);
+    RUN_STORE.write(nextSeed, { picks: nextPicks, outcome: nextOutcome, ...(board?.boardRef ? { boardRef: board.boardRef } : {}) });
+  }, [board]);
 
   const rounds = presentation?.deck?.rounds || [];
   const pickCount = rounds.filter(round => picks[round.roundId]).length;
@@ -143,6 +206,16 @@ export default function DraftNight() {
     players: draftRoster,
   }] : []), [outcome, presentation, draftRoster]);
   const points = gamePointsForOutcome(outcome);
+  const productionBoard = board?.scoringContract === 'observed-box-score-production-v1';
+  const sourceImpactBoard = board?.scoringContract === 'swishiq-impact-combined-source-ranking-v1';
+  const bestSelectionLabel = useMemo(() => {
+    const bestSelection = outcome?.evaluation?.bestSelection;
+    if (!Array.isArray(bestSelection)) return undefined;
+    return rounds.map((round, index) => {
+      const candidate = round.candidates.find(entry => entry.playerRef === bestSelection[index]);
+      return `${round.teamCode}: ${candidate?.displayName || 'Unavailable'}`;
+    }).join(' · ');
+  }, [outcome, rounds]);
 
   useEffect(() => {
     if (interacted.current && roundRef.current) roundRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -169,9 +242,11 @@ export default function DraftNight() {
     <GameShell>
       <WorkbenchHeader
         title="DRAFT NIGHT"
-        description={board?.scoringContract === 'observed-box-score-production-v1'
+        description={productionBoard
           ? 'Draft one player from each of five teams. All 243 combinations are ranked by average observed Game Score per 40 minutes.'
-          : 'Draft one player from each of five teams, ranked by average estimated additive player impact.'}
+          : sourceImpactBoard
+            ? 'Draft one player from each of five teams, ranked by the descriptive combined-source impact mean for each full roster.'
+            : 'Draft one player from each of five teams, ranked by the board’s verified model comparison.'}
         steps={['Five draft rounds', 'Lock the draft', 'Verified summary']}
         current={outcome ? 2 : allPicked ? 1 : 0}
         state={status === 'ready' ? 'ready' : status === 'loading' ? 'idle' : 'error'}
@@ -183,12 +258,25 @@ export default function DraftNight() {
           <>
             <HowToPlay
               defaultOpen={pickCount === 0 && !outcome}
-              controls={<BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />}
+              controls={(
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <BoardControlStrip presentation={presentation} seed={seed} onSeedChange={setSeed} bare />
+                  <button type="button" onClick={() => startNewRunOnCurrentRevision(seed)} disabled={pending} className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-[11px] font-semibold uppercase tracking-widest text-gold hover:bg-gold/20 disabled:opacity-50">Start fresh on current revision</button>
+                </div>
+              )}
               steps={[
                 'Draft one player per round — each round belongs to a different team, so pick with role fit in mind.',
-                'Compare candidates by their stat tiles: gold tiles (PPG, RPG, APG) carry the most scoring weight, and the per-36 chips show true pace-adjusted output.',
+                productionBoard
+                  ? 'Compare candidates by their stat tiles. The final ranking uses the five players’ observed Game Score per 40 minutes.'
+                  : sourceImpactBoard
+                    ? 'Use stat tiles for context. The final rank compares the full five-pick roster by its combined-source model estimate, not a sum of individual tiles.'
+                    : 'Compare the candidates by their stat tiles for context; the final rank follows the board’s verified scoring contract.',
                 'Lock all five rounds blind — scores stay hidden and nothing is evaluated until the draft is locked.',
-                'Reveal once to score the draft against the verified evaluator. A perfect round earns 10 Game Points; exact estimates score in tiers.',
+                productionBoard
+                  ? 'Reveal once to compare the roster by observed box-score production.'
+                  : sourceImpactBoard
+                    ? 'Reveal to see the descriptive model rank, gap to best, and best legal roster. Uncertainty is not estimated; this is not a forecast or a causal effect.'
+                    : 'Reveal once to verify the roster rank and gap to the best legal roster.',
               ]}
               note="Your picks save in this browser — refresh anytime and the draft picks up where you left off."
             />
@@ -205,7 +293,7 @@ export default function DraftNight() {
             {!outcome && (
               <DraftDesk rounds={rounds} picks={picks} roster={draftRoster} needs={needs} fit={fit} activeRound={activeRound} onSelectRound={jumpToRound} complete={allPicked} />
             )}
-            {outcome && <div ref={resultRef} className="dg-reveal"><GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} /></div>}
+            {outcome && <div ref={resultRef} className="dg-reveal"><GamePointsBoard outcome={outcome} contextTitle={`${presentation.deck.title} · five-pick draft`} bestSelectionLabel={bestSelectionLabel} impactModelRef={board?.impactModelRef} /></div>}
             {outcome && simSquads.length > 0 && <DraftSimPanel league={league} squads={simSquads} lineupLabel="Your draft five" />}
             {!outcome && allPicked && (
               <section ref={lockRef} className="dg-lock dg-flow-in" aria-label="Lock the draft">

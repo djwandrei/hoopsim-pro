@@ -1,15 +1,15 @@
 {
   "format": "djhc-react-studio-native-release-closure-v1",
-  "releaseId": "swishiq-studio-self-contained-native-20261010-v1",
-  "createdAt": "2026-10-10",
+  "releaseId": "studio-impact-daily-boards-20261010-v1",
+  "createdAt": "2026-10-10T10:48:38.522Z",
   "counts": {
-    "pinnedAssets": 64,
-    "nonNestedPinnedAssets": 57,
+    "pinnedAssets": 67,
+    "nonNestedPinnedAssets": 60,
     "nestedStudioRuntimePins": 7,
     "impactEngineSources": 14,
     "impactCompanionDataAndReceipts": 12,
     "candidate100BundlePayloads": 13,
-    "requiredStaticClosureEntries": 99,
+    "requiredStaticClosureEntries": 100,
     "dynamicWorkerDependencies": 1,
     "dynamicStylesheetDependencies": 2,
     "dynamicRuntimeDependencies": 4,
@@ -28,8 +28,6 @@
   "integrationGate": {
     "unknownNativeAssetsRemainUnpinned": [
       "tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js",
-      "tools/swishiq-studio/engine/canonical-v4-impact-model-resolver.js",
-      "tools/swishiq-studio/engine/canonical-v4-impact-model-release-pin.js",
       "tools/swishiq-studio/engine/canonical-v4-impact-lineup-adapter.js",
       "tools/swishiq-studio/engine/canonical-v4-player-builder-adapter.js",
       "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js"
@@ -515,9 +513,10 @@
       "bytes": 1825,
       "sha256": "a6f47e3b031b7ac0b72c0a41d2d8e685808cf5a0d8a634bb065ddcc19629b146",
       "roles": [
-        "impact-engine-source"
+        "impact-engine-source",
+        "native-pinned-source"
       ],
-      "pinStatus": "not-in-PINS"
+      "pinStatus": "pinned"
     },
     {
       "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-impact-model-resolver.js",
@@ -527,9 +526,10 @@
       "bytes": 36848,
       "sha256": "5a86337c533d37019accff6e489b6f09eb83e9f85ad42d9c057c41b18113ee67",
       "roles": [
-        "impact-engine-source"
+        "impact-engine-source",
+        "native-pinned-source"
       ],
-      "pinStatus": "not-in-PINS"
+      "pinStatus": "pinned"
     },
     {
       "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js",
@@ -637,8 +637,8 @@
       "sourceKind": "dist",
       "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
       "sourceLabel": "DJHC pinned source",
-      "bytes": 13862,
-      "sha256": "42cfbcd4641c783e6f150a230d81c15d589a126cb9e1acbe3f215055d99f619d",
+      "bytes": 13847,
+      "sha256": "4728db3aecedabafb2e67ad574ac94c3e164dd60a876ea8588a0ec5a4de207cb",
       "roles": [
         "native-pinned-source",
         "impact-engine-source"
@@ -650,8 +650,8 @@
       "sourceKind": "dist",
       "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
       "sourceLabel": "DJHC pinned source",
-      "bytes": 1291995,
-      "sha256": "a8e47f1cbafcbf6ea7b2f35736a68391c99253c72f889c28fd3a3cdeefdd16b0",
+      "bytes": 1401099,
+      "sha256": "555af2ffa2fefc1d43723d45d6fb2c31325ffaa15155e948de41b1f02346bad8",
       "roles": [
         "native-pinned-source",
         "impact-engine-source"
@@ -951,12 +951,24 @@
       "sourceKind": "dist",
       "sourcePath": "tools/swishiq-studio/engine/swishiq-daily-game-v4-contract.js",
       "sourceLabel": "DJHC pinned source",
-      "bytes": 45499,
-      "sha256": "beafa62560550e7a2fd2221080843dac8d3f90d2e604433d1775d9c0fed9f370",
+      "bytes": 50664,
+      "sha256": "df1e58435b718e759f7a0ff8237440b4c98c894f7fd5e37123887e768e08e91c",
       "roles": [
         "native-pinned-source"
       ],
       "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/swishiq-daily-game-v4-impact.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/swishiq-daily-game-v4-impact.js",
+      "sourceLabel": "Impact daily contest runtime",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned",
+      "bytes": 8042,
+      "sha256": "e385ed2e4682ea097426fd155c0b32c3791cb64514c9cdf3589a127c5bd39550"
     },
     {
       "deploymentPath": "tools/swishiq-studio/game-lab.js",
@@ -1191,8 +1203,8 @@
       "sourceKind": "dist",
       "sourcePath": "studio-runtime/modules/swishiq-daily-game-client.js",
       "sourceLabel": "React public/studio-runtime/modules/swishiq-daily-game-client.js",
-      "bytes": 44073,
-      "sha256": "3cbc2d1d830126492ce075c2c0f3a9d7cfad4dbf0b788e47aad59a0543fdf1f4",
+      "bytes": 44098,
+      "sha256": "ea1fa0c91585cc4717215c58a396b3ad8ef9ea4bf1a9cb041f59183b92d2e89c",
       "roles": [
         "native-pinned-source"
       ],

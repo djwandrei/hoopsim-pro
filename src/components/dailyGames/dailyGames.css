@@ -403,6 +403,8 @@ body:not(.dark-mode) .dg-depth__portrait { filter: drop-shadow(0 3px 4px hsl(20 
 
 /* Mobile card cycler: one candidate at a time with cycle controls */
 .dg-cycle { display: grid; gap: .55rem; }
+/* This unlayered display rule otherwise overrides Tailwind's sm:hidden. */
+@media (min-width: 640px) { .dg-cycle { display: none; } }
 .dg-cycle__bar { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
 .dg-cycle__nav { display: inline-flex; align-items: center; justify-content: center; height: 2.2rem; width: 2.2rem; flex-shrink: 0; border-radius: .5rem; border: 1px solid hsl(var(--court-accent) / .4); background: hsl(var(--court-accent) / .1); color: hsl(var(--court-accent)); }
 .dg-cycle__nav:hover { background: hsl(var(--court-accent) / .22); }

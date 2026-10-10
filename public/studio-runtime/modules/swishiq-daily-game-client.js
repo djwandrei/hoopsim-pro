@@ -33,7 +33,7 @@ import {
   resolveSwishIqDailyGameSourceMode,
   validateSwishIqV4DailyBoard,
   validateSwishIqV4DailyGameResponse,
-} from '../../engine/swishiq-daily-game-v4-contract.js?v=20261009b&rev=daily-v4-observed-box-score-v1';
+} from '../../engine/swishiq-daily-game-v4-contract.js?v=20261010d&rev=daily-impact-native-v1';
 
 export const SWISHIQ_DAILY_GAME_FORMAT = 'djhc-swishiq-static-daily-board-v1';
 export const SWISHIQ_DAILY_GAME_CONTRACT_VERSION = 1;
@@ -691,6 +691,7 @@ export function normalizeGameFamily(value) {
 export async function loadSwishIQDailyBoardV4({
   gameKind,
   dailySeed,
+  boardSha256 = '',
   releasePin,
   fetcher = globalThis.fetch?.bind(globalThis),
 } = {}) {
@@ -699,7 +700,7 @@ export async function loadSwishIQDailyBoardV4({
   }
   let selected;
   try {
-    selected = findSwishIqV4DailyGamePin(releasePin, { gameKind, dailySeed });
+    selected = findSwishIqV4DailyGamePin(releasePin, { gameKind, dailySeed, boardSha256 });
   } catch (error) {
     if (error instanceof SwishIqDailyGameV4Error) throw error;
     throw new SwishIqDailyGameV4Error('v4-daily-release-pin-unavailable', 'The reviewed V4 daily release pin is unavailable.');

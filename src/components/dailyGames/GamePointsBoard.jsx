@@ -4,21 +4,46 @@ import { decisionProofStatus } from '@/lib/dailyGames/resultPassportCore';
 import { teamAsset } from '@/components/studio/teamAssets';
 import { paletteForTeam } from '@/components/djhc/basketballPalettes';
 
-export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
+const humanizeUnit = value => ({
+  'game-score-per-40-minutes': 'Game Score per 40 minutes',
+  'points-per-100-possessions': 'points per 100 possessions',
+}[value] || (typeof value === 'string' ? value.replaceAll('-', ' ') : 'model units'));
+
+function comparisonLabel(value) {
+  if (typeof value === 'string') return value.replaceAll('-', ' ');
+  if (!value || typeof value !== 'object') return '';
+  const label = value.label || value.description || (typeof value.kind === 'string' ? value.kind.replaceAll('-', ' ') : '');
+  return typeof label === 'string' ? label : '';
+}
+
+export default function GamePointsBoard({ outcome, contextTitle, teamCode, bestSelectionLabel, impactModelRef: boardImpactModelRef }) {
   const teamLogo = teamCode ? teamAsset(teamCode) : null;
   const passport = outcome?.resultPassport;
   const v4Evaluation = outcome?.evaluation ?? null;
+  const scoringContract = outcome?.resultContract?.scoringContract || outcome?.scoringContract;
+  const sourceImpact = v4Evaluation?.evaluationKind === 'descriptive-source-impact-ranking'
+    || scoringContract === 'swishiq-impact-combined-source-ranking-v1';
   const decision = passport?.decision ?? v4Evaluation?.decision;
   const gamePoints = passport?.gamePoints;
   const nativeOutcome = passport?.nativeOutcome;
-  const production = v4Evaluation?.observedProduction;
-  const metric = production ?? v4Evaluation?.estimatedImpact;
+  const production = Boolean(v4Evaluation?.observedProduction)
+    || v4Evaluation?.evaluationKind === 'descriptive-box-score-production-ranking'
+    || scoringContract === 'observed-box-score-production-v1';
+  const metric = v4Evaluation?.observedProduction ?? v4Evaluation?.estimatedImpact;
   const proof = passport?.decision ? decisionProofStatus(passport.decision) : null;
-  const unitLabel = production ? 'Game Score per 40 minutes' : 'points per 100 possessions';
+  const unitLabel = metric?.unit ? humanizeUnit(metric.unit) : production ? 'Game Score per 40 minutes' : 'model units';
   const selectedValue = Number.isFinite(metric?.value) ? metric.value : Number.isFinite(nativeOutcome?.value) ? nativeOutcome.value : null;
-  const bestValue = Number.isFinite(metric?.bestValue) ? metric.bestValue : selectedValue != null && decision ? selectedValue + decision.gapToBest : null;
-  const scale = bestValue != null ? Math.max(Math.abs(selectedValue), Math.abs(bestValue)) || 1 : 1;
-  const widthFor = value => `${Math.min(100, (Math.abs(value) / scale) * 100).toFixed(1)}%`;
+  const gapToBest = Number.isFinite(metric?.gapToBest) ? metric.gapToBest : Number.isFinite(decision?.gapToBest) ? decision.gapToBest : null;
+  const bestValue = Number.isFinite(metric?.bestValue) ? metric.bestValue : selectedValue != null && gapToBest != null ? selectedValue + gapToBest : null;
+  const scaleMin = bestValue != null ? Math.min(0, selectedValue, bestValue) : 0;
+  const scaleMax = bestValue != null ? Math.max(0, selectedValue, bestValue) : 1;
+  const scale = scaleMax - scaleMin || 1;
+  const widthFor = value => `${Math.max(0, Math.min(100, ((value - scaleMin) / scale) * 100)).toFixed(1)}%`;
+  const metricComparison = comparisonLabel(metric?.comparison);
+  const impactModelRef = outcome?.sourcePins?.impactModelRef || outcome?.impactModelRef || boardImpactModelRef;
+  const modelIdentity = impactModelRef?.modelId
+    ? `${impactModelRef.modelId}${impactModelRef.modelVersion ? `@${impactModelRef.modelVersion}` : ''}`
+    : '';
   return (
     <section className="dg-result dg-reveal" aria-label="Verified result" style={teamCode ? { '--dg-team': paletteForTeam(teamCode)?.primary } : undefined}>
       <span className="dg-result__watermark" aria-hidden="true">{gamePoints ? `${gamePoints.total}` : '—'}</span>
@@ -43,6 +68,7 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
             {decision ? `Rank ${decision.rank} of ${decision.optionCount}` : v4Evaluation ? 'Descriptive rank verified' : 'Result unavailable'}
           </h3>
           {contextTitle && <p className="dg-result__context mt-1">{contextTitle}</p>}
+          {bestSelectionLabel && <p className="dg-result__context mt-2"><strong>Best legal choice:</strong> {bestSelectionLabel}</p>}
         </div>
         {gamePoints && (
           <span className="dg-badge ml-auto"><Trophy className="h-3 w-3" /> {gamePoints.total}/{gamePoints.max} game points</span>
@@ -52,9 +78,9 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
         <div className="dg-tiles mt-4">
           {[
             ['Choices beaten', decision.choicesBeaten ?? decision.optionCount - decision.rank],
-            ['Gap to best', (metric?.gapToBest ?? decision.gapToBest)?.toFixed(2) ?? '—'],
+            ['Gap to best', gapToBest != null ? `${gapToBest.toFixed(2)} ${unitLabel}` : '—'],
             ['Rank proof', (proof?.countComplete ?? decision.countComplete) ? 'Complete' : 'Bounded'],
-            gamePoints ? ['Placement', `${gamePoints.placement} pts`] : ['Scoring', production ? 'Box score' : 'Impact'],
+            gamePoints ? ['Placement', `${gamePoints.placement} pts`] : ['Scoring', production ? 'Box score' : sourceImpact ? 'Source impact' : 'Impact'],
           ].map(([label, value]) => (
             <div key={label} className="dg-tile">
               <p className="dg-tile-label">{label}</p>
@@ -75,7 +101,7 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
             <span className="dg-compare__track"><span className="dg-compare__fill dg-compare__fill--yours" style={{ width: widthFor(selectedValue) }} /></span>
             <span>{selectedValue.toFixed(2)}</span>
           </div>
-          <p className="dg-note">{production ? 'Observed' : 'Estimated'} {unitLabel}. Higher values rank better.</p>
+          <p className="dg-note">{production ? 'Observed' : sourceImpact ? 'Descriptive model estimate' : 'Estimated'} {unitLabel}. Higher values rank better.{metricComparison ? ` ${metricComparison}.` : sourceImpact ? ' Full five-player mean, not a replacement-only difference.' : ''}</p>
         </div>
       )}
       {proof && <p className="dg-note mt-4"><ShieldCheck className="h-3.5 w-3.5 text-positive" />{proof.disclosure}</p>}
@@ -89,7 +115,10 @@ export default function GamePointsBoard({ outcome, contextTitle, teamCode }) {
             : 'Each legal pick earns 1 point; placement adds up to 3 place points.'}
         </p>
       )}
-      <p className="dg-note mt-2"><Award className="h-3 w-3 text-gold" />{production ? 'The score averages the five players’ observed Hollinger Game Score per 40 minutes in this team, season, and phase. It describes recorded box-score production; it is not a forecast or an observed lineup result.' : 'Model estimate of additive player impact; it is not observed five-player performance or causal chemistry.'}</p>
+      {sourceImpact && <p className="dg-note mt-2"><Award className="h-3 w-3 text-gold" />Descriptive combined-source ranking of the full five-player result. Uncertainty is not estimated; this is not a forecast or a causal effect.</p>}
+      {production && <p className="dg-note mt-2"><Award className="h-3 w-3 text-gold" />The score averages the five players’ observed Hollinger Game Score per 40 minutes in this team, season, and phase. It describes recorded box-score production; it is not a forecast or an observed lineup result.</p>}
+      {!sourceImpact && !production && <p className="dg-note mt-2"><Award className="h-3 w-3 text-gold" />Model estimate of player impact; it is not observed five-player performance or causal chemistry.</p>}
+      {sourceImpact && modelIdentity && <p className="dg-note mt-2">Impact model {modelIdentity} · release {impactModelRef.releaseId}{impactModelRef.manifestSha256 ? ` · manifest SHA-256 ${impactModelRef.manifestSha256.slice(0, 12)}…` : ''}</p>}
     </section>
   );
 }

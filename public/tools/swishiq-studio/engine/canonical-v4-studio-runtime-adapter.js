@@ -8,7 +8,7 @@ import {
   loadCanonicalV4PublicPackageProof,
   loadCanonicalV4PublicParts,
 } from './canonical-v4-public-network-loader.js?v=20261002e&rev=canonical-v4-public-network-loader-v4-dependency-cache-closure';
-import { CANONICAL_V4_STUDIO_RUNTIME_RELEASE_PIN as REVIEWED_V4_RELEASE_PIN } from './canonical-v4-studio-runtime-release-pin.js?v=20261009b&rev=canonical-v4-daily-boards-observed-v1';
+import { CANONICAL_V4_STUDIO_RUNTIME_RELEASE_PIN as REVIEWED_V4_RELEASE_PIN } from './canonical-v4-studio-runtime-release-pin.js?v=20261010d&rev=daily-impact-native-v1';
 
 export const CANONICAL_V4_STUDIO_RUNTIME_ADAPTER_FORMAT = 'djhc-swishiq-v4-studio-runtime-adapter-v2';
 export const CANONICAL_V4_STUDIO_RUNTIME_ADAPTER_VERSION = 'swishiq-v4-studio-runtime-adapter-v2';

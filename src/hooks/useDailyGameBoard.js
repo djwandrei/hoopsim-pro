@@ -9,7 +9,7 @@ const BOARD_ERROR_KINDS = ['board-unavailable', 'board-invalid', 'evaluator-unav
 // Shared board lifecycle for the two daily games: seed/board/error state, the
 // season source the sim panels draw from, and hydrated presentation data. Each
 // page restores its own saved run via onBoardReady.
-export default function useDailyGameBoard({ gameKind, onBoardReady }) {
+export default function useDailyGameBoard({ gameKind, onBoardReady, getSavedBoardRef }) {
   const urlSeed = useMemo(() => dailySeedFromPageSearch(window.location.search), []);
   const urlFamily = useMemo(() => { try { return normalizeGameFamily(new URLSearchParams(window.location.search).get('family')); } catch { return ''; } }, []);
   const [seed, setSeed] = useState(urlSeed);
@@ -22,18 +22,28 @@ export default function useDailyGameBoard({ gameKind, onBoardReady }) {
   const readyRef = useRef(onBoardReady);
   readyRef.current = onBoardReady;
 
-  const loadBoard = useCallback(async (targetSeed = seed) => {
+  const loadBoard = useCallback(async (targetSeed = seed, { useCurrentPin = false, resetRun = false } = {}) => {
     setStatus('loading'); setError(null); setNotice('');
     try {
-      const loaded = await loadSwishIQDailyBoard({ gameKind, dailySeed: targetSeed, family: urlFamily });
+      const savedBoardRef = useCurrentPin ? null : getSavedBoardRef?.(targetSeed);
+      const loaded = await loadSwishIQDailyBoard({
+        gameKind,
+        dailySeed: targetSeed,
+        family: urlFamily,
+        boardSha256: savedBoardRef?.boardSha256 || '',
+      });
       setBoard(loaded); setStatus('ready');
-      readyRef.current?.(loaded);
+      readyRef.current?.(loaded, { resetRun });
     } catch (loadError) {
       setBoard(null); setError(loadError);
       const kind = swishIQDailyGameErrorKind(loadError);
       setStatus(BOARD_ERROR_KINDS.includes(kind) ? kind : 'error');
     }
-  }, [gameKind, seed, urlFamily]);
+  }, [gameKind, getSavedBoardRef, seed, urlFamily]);
+
+  const startNewRunOnCurrentRevision = useCallback((targetSeed = seed) => {
+    return loadBoard(targetSeed, { useCurrentPin: true, resetRun: true });
+  }, [loadBoard, seed]);
 
   useViewRefresh(() => loadBoard(seed));
   useEffect(() => { loadBoard(seed); }, [seed, loadBoard]);
@@ -45,5 +55,5 @@ export default function useDailyGameBoard({ gameKind, onBoardReady }) {
 
   const presentation = useMemo(() => board ? hydratePresentationBoard(board, { playerSeasons: source?.playerSeasons || [], metadata }) : null, [board, source, metadata]);
 
-  return { seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, league };
+  return { seed, setSeed, board, presentation, status, error, notice, setNotice, loadBoard, startNewRunOnCurrentRevision, league };
 }

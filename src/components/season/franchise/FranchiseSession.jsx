@@ -7,6 +7,7 @@ import FranchiseStandings from './FranchiseStandings';
 import FranchiseLedger from './FranchiseLedger';
 import FranchiseBoxScore from './FranchiseBoxScore';
 import FranchiseSaves from './FranchiseSaves';
+import FranchiseRosterContracts from './FranchiseRosterContracts';
 
 // In-season control room (screen 3): the game desk and rotation HQ in the main
 // column, the league ladder and ledger on the rail, and the season charts, the
@@ -17,6 +18,7 @@ export default function FranchiseSession({ sim, view }) {
       <div className="min-w-0 space-y-4">
         <FranchiseSchedule sim={sim} />
         <FranchiseRotation sim={sim} />
+        <FranchiseRosterContracts sim={sim} view={view} />
       </div>
       <div className="min-w-0 space-y-4">
         <FranchiseStandings view={view} />

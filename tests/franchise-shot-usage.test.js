@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { applyFranchiseControlsToGameInput } from '../public/tools/swishiq-studio/franchise-sim-20261008/lib/franchise-game-input-v1.mjs';
-import { updateFranchiseRotationState, validateFranchiseRotationState } from '../public/tools/swishiq-studio/franchise-sim-20261008/lib/franchise-controls-v1.mjs';
-import { normalizedShotRecipientWeights, simulateGameLiveSeasonSample } from '../public/tools/swishiq-studio/franchise-sim-20261008/lib/live-game-simulator-v1.mjs';
-import { normalizeLiveRotationControls } from '../public/tools/swishiq-studio/franchise-sim-20261008/lib/live-rotation-controls-v1.mjs';
+import { applyFranchiseControlsToGameInput } from '../public/tools/swishiq-studio/franchise-sim-20261010/lib/franchise-game-input-v1.mjs';
+import { updateFranchiseRotationState, validateFranchiseRotationState } from '../public/tools/swishiq-studio/franchise-sim-20261010/lib/franchise-controls-v1.mjs';
+import { normalizedShotRecipientWeights, simulateGameLiveSeasonSample } from '../public/tools/swishiq-studio/franchise-sim-20261010/lib/live-game-simulator-v1.mjs';
+import { normalizeLiveRotationControls } from '../public/tools/swishiq-studio/franchise-sim-20261010/lib/live-rotation-controls-v1.mjs';
 import { buildScheduleCalendarCells, formatScheduleMonth, paginateScheduleRows, scheduleMonthKeys } from '../src/components/season/franchise/franchiseScheduleCalendar.js';
 
 const fixture = JSON.parse(readFileSync(new URL('../public/tools/swishiq-studio/franchise-sim-20261008/integration/season-lab-preview/real-v4-browser-fixture-20261008.json', import.meta.url), 'utf8'));

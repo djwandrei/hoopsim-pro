@@ -1,10 +1,9 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { WARDROBE_EDITIONS, WARDROBE_SKILLS } from '@/components/forge/forgeWardrobeRules';
+import { BODY_COLORS, DEFAULT_APPEARANCE, WARDROBE_EDITIONS, WARDROBE_SKILLS } from '@/components/forge/forgeWardrobeRules';
 
-export default function ForgeWardrobeControls({ picks, editions, onEdition }) {
-  if (!picks.scoring && !picks.rebounding) return null;
-  return <div aria-label="Unlocked uniform variations" className="grid w-full gap-2 rounded-lg border border-border/40 bg-raised p-2 text-xs">
+export default function ForgeWardrobeControls({ picks, editions, onEdition, appearance = DEFAULT_APPEARANCE, onAppearance = () => {} }) {
+  return <div aria-label="Player appearance and uniform controls" className="grid w-full gap-2 rounded-lg border border-border/40 bg-raised p-2 text-xs">
     {['jersey', 'shorts'].map(element => {
       const pick = picks[WARDROBE_SKILLS[element]];
       if (!pick) return null;
@@ -19,5 +18,8 @@ export default function ForgeWardrobeControls({ picks, editions, onEdition }) {
         </div>
       </div>;
     })}
+    <label className="flex items-center justify-between gap-2">Player color<select value={appearance.bodyColor || 'silhouette'} onChange={e => onAppearance('bodyColor', e.target.value)} className="studio-select w-28">{Object.keys(BODY_COLORS).map(color => <option key={color} value={color}>{color}</option>)}</select></label>
+    <label className="flex items-center justify-between gap-2">Basketball<select value={appearance.ballColor || 'classic'} onChange={e => onAppearance('ballColor', e.target.value)} className="studio-select w-28"><option value="classic">Classic orange</option><option value="midnight">Midnight</option></select></label>
+    <fieldset className="grid grid-cols-2 gap-2 border-t border-border/30 pt-2"><legend className="px-1 text-muted-foreground">Accessories</legend>{[['headband','Headband'],['rightSleeve','Shooting sleeve'],['wristband','Wristband'],['kneeSleeve','Knee sleeve']].map(([key,label]) => <label key={key} className="flex items-center gap-2"><input type="checkbox" checked={appearance[key] !== false} onChange={e => onAppearance(key, e.target.checked)} />{label}</label>)}</fieldset>
   </div>;
 }

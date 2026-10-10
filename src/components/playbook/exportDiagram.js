@@ -6,7 +6,8 @@ export async function exportCourtDiagram(svg, filename) {
   if (!svg) return;
   const styles = window.getComputedStyle(svg);
   const clone = svg.cloneNode(true);
-  clone.setAttribute('width', '1000');
+  const width = svg.viewBox.baseVal.width * 2;
+  clone.setAttribute('width', String(width));
   const height = svg.viewBox.baseVal.height * 2;
   clone.setAttribute('height', String(height));
   let markup = new XMLSerializer().serializeToString(clone);
@@ -25,7 +26,7 @@ export async function exportCourtDiagram(svg, filename) {
       image.src = svgUrl;
     });
     const canvas = document.createElement('canvas');
-    canvas.width = 1000;
+    canvas.width = width;
     canvas.height = height;
     const context = canvas.getContext('2d');
     const canvasColor = styles.getPropertyValue('--court-canvas').trim();

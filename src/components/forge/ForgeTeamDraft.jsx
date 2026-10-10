@@ -1,228 +1,121 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Loader2, Play } from 'lucide-react';
-import PlayerPortrait from '@/components/players/PlayerPortrait';
-import { buildForgePool } from '@/components/forge/forgePool';
-import { decodeForgeBuild, forgeBuildQuery } from '@/components/forge/forgeReceipt';
-import { simulateForgeSeason } from '@/components/forge/forgeTeamSim';
-import ForgeTeamSpinPanel from '@/components/forge/ForgeTeamSpinPanel';
-import ForgeTeamPickPanel from '@/components/forge/ForgeTeamPickPanel';
-import ForgePlayerCard from '@/components/forge/ForgePlayerCard';
-import ForgeTeamSetupPanel from '@/components/forge/ForgeTeamSetupPanel';
-import ForgeRosterBoard from '@/components/forge/ForgeRosterBoard';
-import ForgeTeamBoard from '@/components/forge/ForgeTeamBoard';
-import ForgeTeamResult from '@/components/forge/ForgeTeamResult';
+import { buildForgePool } from './forgePool';
+import { decodeForgeBuild, forgeBuildQuery, restoreForgePicks, updateForgeBuildUrl } from './forgeReceipt';
+import { simulateForgeSeason } from './forgeTeamSim';
+import { TEAM_SLOTS, rotationValid } from './forgeSimulation';
+import { chooseForgeOffer } from './forgeDraftRules';
+import { newForgeSeed, readForgeSession, saveForgeSession, sessionKey } from './forgeSession';
+import ForgeDraftSettings from './ForgeDraftSettings';
+import ForgeSaveButton from './ForgeSaveButton';
+import ForgeTeamSpinPanel from './ForgeTeamSpinPanel';
+import ForgeTeamPickPanel from './ForgeTeamPickPanel';
+import ForgePlayerCard from './ForgePlayerCard';
+import ForgeTeamSetupPanel from './ForgeTeamSetupPanel';
+import ForgeRosterBoard from './ForgeRosterBoard';
+import ForgeTeamBoard from './ForgeTeamBoard';
+import ForgeTeamResult from './ForgeTeamResult';
+export { TEAM_SLOTS } from './forgeSimulation';
+const TEAM_RESPINS = 2, PLAYER_RESPINS = 3, SPIN_MS = 1250;
 
-export const TEAM_SLOTS = [
-  { key:'PG', label:'PG', starter:true, minutes:34 },
-  { key:'SG', label:'SG', starter:true, minutes:33 },
-  { key:'SF', label:'SF', starter:true, minutes:32 },
-  { key:'PF', label:'PF', starter:true, minutes:31 },
-  { key:'C', label:'C', starter:true, minutes:30 },
-  { key:'bench1', label:'BENCH 1', minutes:22 },
-  { key:'bench2', label:'BENCH 2', minutes:18 },
-  { key:'bench3', label:'BENCH 3', minutes:15 },
-];
-
-const TEAM_RESPINS = 2;
-const PLAYER_RESPINS = 3;
-const SPIN_MS = 1250;
-const FAST_AFTER_SPINS = 8;
-
-// Team Forge · 98-0: spin for a player every round, choose where they slot
-// into the eight-man rotation, then simulate the season and chase perfection.
 export default function ForgeTeamDraft({ source, league, pickMode = false, pool: poolProp }) {
-  // Shared season pool from the Forge Lab level — no re-derivation per mode.
-  const allPool = useMemo(() => poolProp || buildForgePool(source), [poolProp, source]);
-  const [boot] = useState(() => {
-    const shared = decodeForgeBuild(window.location.search);
-    return shared?.mode === (pickMode ? 'teamPick' : 'team') ? shared : null;
-  });
-  const [phase, setPhase] = useState('setup');
-  const [picks, setPicks] = useState({});
-  const [reveal, setReveal] = useState(null);
+  const mode = pickMode ? 'teamPick' : 'team';
+  const allPool = useMemo(() => poolProp || buildForgePool(source), [poolProp, source]), key = sessionKey(mode, source);
+  const [saved] = useState(() => readForgeSession(key));
+  const [boot] = useState(() => { const shared = decodeForgeBuild(window.location.search); return shared?.mode === mode ? shared : decodeForgeBuild(`?${saved?.build || ''}`); });
+  const [restored] = useState(() => restoreForgePicks(boot, allPool, source));
+  const [picks, setPicks] = useState(restored.picks);
+  const [phase, setPhase] = useState(() => TEAM_SLOTS.every(s => restored.picks[s.key]) ? 'ready' : Object.keys(restored.picks).length || saved?.phase === 'drafting' ? 'drafting' : 'setup');
+  const [slots, setSlots] = useState(() => TEAM_SLOTS.map(s => ({ ...s, minutes: boot?.minutes?.[s.key] ?? s.minutes })));
+  const [seed, setSeed] = useState(boot?.seed ?? saved?.seed ?? newForgeSeed());
+  const [hostCode, setHostCode] = useState(boot?.hostCode || saved?.hostCode || league.teams[0]?.code);
+  const [repeats, setRepeats] = useState(boot?.repeats || saved?.repeats || 12);
+  const [sampling, setSampling] = useState(boot?.sampling || saved?.sampling || (pickMode ? 'team' : 'player'));
+  const [reveal, setReveal] = useState(() => allPool.find(p => p.playerRef === saved?.reveal) || null);
+  const [activeTeam, setActiveTeam] = useState(() => league.byCode.get(saved?.activeTeam) || null);
   const [spinning, setSpinning] = useState(false);
-  const [teamSpin, setTeamSpin] = useState({ token:0, targetKey:null });
-  const [playerSpin, setPlayerSpin] = useState({ token:0, targetKey:null });
-  const [activeTeam, setActiveTeam] = useState(null);
-  const [teamRespins, setTeamRespins] = useState(TEAM_RESPINS);
-  const [playerRespins, setPlayerRespins] = useState(PLAYER_RESPINS);
-  const [result, setResult] = useState(null);
-  const timer = useRef(null);
-  const spinCount = useRef(0);
-
-  const draftedRefs = useMemo(() => new Set(Object.values(picks).map(pick => pick.player.playerRef)), [picks]);
-
-  const rosters = useMemo(() => {
-    const map = new Map();
-    for (const player of allPool) {
-      const list = map.get(player.teamCode) || [];
-      list.push(player);
-      map.set(player.teamCode, list);
-    }
-    return map;
-  }, [allPool]);
-  const wheelTeams = useMemo(() => {
-    const present = new Set(allPool.map(player => player.teamCode));
-    return (league.teams || []).filter(team => present.has(team.code));
-  }, [league, allPool]);
-  const playerItems = useMemo(() => (activeTeam ? (rosters.get(activeTeam.code) || []).filter(player => !draftedRefs.has(player.playerRef)) : allPool.slice(0, 24)), [activeTeam, rosters, draftedRefs, allPool]);
-
-  useEffect(() => () => window.clearTimeout(timer.current), []);
-
-  // Shared build: a ?build= link restores the locked rotation once the season
-  // pool is available; the recipient re-runs the season sim on their side.
-  useEffect(() => {
-    if (!boot || !allPool.length) return;
-    const byRef = new Map(allPool.map(player => [player.playerRef, player]));
-    const restored = {};
-    for (const [slotKey, pick] of Object.entries(boot.picks)) {
-      const player = byRef.get(pick.playerRef);
-      if (player) restored[slotKey] = { player };
-    }
-    if (TEAM_SLOTS.every(slot => restored[slot.key])) {
-      setPicks(restored);
-      setPhase('ready');
-    }
-  }, [boot, allPool]);
-
-  // A locked rotation lives in the URL, so copying the page link shares it.
-  useEffect(() => {
-    if (phase !== 'ready' || !TEAM_SLOTS.every(slot => picks[slot.key])) return;
-    const payload = {};
-    for (const slot of TEAM_SLOTS) if (picks[slot.key]) payload[slot.key] = [picks[slot.key].player.playerRef];
-    window.history.replaceState(null, '', `${window.location.pathname}?${forgeBuildQuery({ mode: pickMode ? 'teamPick' : 'team', picks: payload })}`);
-  }, [phase, picks, pickMode]);
-
-  const available = code => (rosters.get(code) || []).filter(player => !draftedRefs.has(player.playerRef));
-
-  const spin = (freshTeam, spend) => {
-    if (spinning) return;
-    spinCount.current += 1;
-    if (spend === 'team' && !teamRespins) return;
-    if (spend === 'player' && !playerRespins) return;
-    if (pickMode && spend === 'player') return;
-    let team = activeTeam;
-    const needTeam = freshTeam || spend === 'team' || !team || !available(team.code).length;
-    if (needTeam) {
-      const options = wheelTeams.filter(item => available(item.code).length);
-      if (!options.length) return;
-      team = options[Math.floor(Math.random() * options.length)];
-    }
-    if (pickMode) {
-      setActiveTeam(team);
-      setReveal(null);
-      setTeamSpin(value => ({ token:value.token + 1, targetKey:team.code }));
-      setSpinning(true);
-      timer.current = window.setTimeout(() => setSpinning(false), SPIN_MS);
-      return;
-    }
-    const roster = available(team.code);
-    const player = roster[Math.floor(Math.random() * roster.length)];
-    if (spend === 'team') setTeamRespins(value => value - 1);
-    if (spend === 'player') setPlayerRespins(value => value - 1);
-    setActiveTeam(team);
-    setReveal(null);
-    if (needTeam) setTeamSpin(value => ({ token:value.token + 1, targetKey:team.code }));
-    setPlayerSpin(value => ({ token:value.token + 1, targetKey:player.playerRef }));
-    setSpinning(true);
-    timer.current = window.setTimeout(() => { setSpinning(false); setReveal(player); }, SPIN_MS);
+  const [teamSpin, setTeamSpin] = useState({ token: 0, targetKey: null });
+  const [playerSpin, setPlayerSpin] = useState({ token: 0, targetKey: null });
+  const [teamRespins, setTeamRespins] = useState(saved?.teamRespins ?? TEAM_RESPINS);
+  const [playerRespins, setPlayerRespins] = useState(saved?.playerRespins ?? PLAYER_RESPINS);
+  const [result, setResult] = useState(null), [error, setError] = useState(''), [drawOdds, setDrawOdds] = useState(null);
+  const timer = useRef(null), worker = useRef(null), job = useRef(0), spinCount = useRef(saved?.spinCount || 0);
+  const draftedRefs = useMemo(() => new Set(Object.values(picks).map(p => p.player.playerRef)), [picks]);
+  const rosters = useMemo(() => { const map = new Map(); for (const p of allPool) map.set(p.teamCode, [...(map.get(p.teamCode) || []), p]); return map; }, [allPool]);
+  const wheelTeams = useMemo(() => league.teams.filter(t => rosters.has(t.code)), [league, rosters]);
+  const available = code => (rosters.get(code) || []).filter(p => !draftedRefs.has(p.playerRef));
+  const playerItems = activeTeam ? available(activeTeam.code) : allPool.slice(0, 24);
+  const filled = slots.filter(s => picks[s.key]).length;
+  const payload = useMemo(() => ({ mode, picks: Object.fromEntries(Object.entries(picks).map(([k, p]) => [k, [p.player.playerRef]])), year: Number(source.entry.scope.seasonStartYears[0]), packageVersion: source.entry.packageVersion, seed, hostCode, minutes: Object.fromEntries(slots.map(s => [s.key, s.minutes])), sampling, repeats }), [mode, picks, source, seed, hostCode, slots, sampling, repeats]);
+  useEffect(() => () => { window.clearTimeout(timer.current); worker.current?.terminate(); job.current++; }, []);
+  useEffect(() => { saveForgeSession(key, { build: forgeBuildQuery(payload), phase: phase === 'complete' || phase === 'simulating' ? 'ready' : phase, sampling, seed, hostCode, repeats, activeTeam: activeTeam?.code, reveal: reveal?.playerRef, teamRespins, playerRespins, spinCount: spinCount.current }); }, [key, payload, phase, sampling, seed, hostCode, repeats, activeTeam, reveal, teamRespins, playerRespins]);
+  useEffect(() => { if (phase === 'ready' || phase === 'complete') updateForgeBuildUrl(forgeBuildQuery(payload)); }, [phase, payload]);
+  const spin = (fresh, spend) => {
+    if (spinning || filled === slots.length || spend === 'team' && !teamRespins || spend === 'player' && (!playerRespins || pickMode)) return;
+    const options = wheelTeams.filter(t => available(t.code).length), needTeam = fresh || !activeTeam || !available(activeTeam.code).length;
+    const offer = chooseForgeOffer({ teams: options, players: options.flatMap(t => available(t.code)), sampling, activeTeam: activeTeam?.code, sameTeam: !needTeam, seed, step: spinCount.current });
+    if (!offer) { setError('No eligible undrafted players remain. Restart to choose a different pool.'); return; }
+    spinCount.current++;
+    if (spend === 'team') setTeamRespins(v => v - 1);
+    if (spend === 'player') setPlayerRespins(v => v - 1);
+    setError(''); setActiveTeam(offer.team); setReveal(null); setDrawOdds(offer.probability);
+    if (needTeam) setTeamSpin(v => ({ token: v.token + 1, targetKey: offer.team.code }));
+    if (!pickMode) setPlayerSpin(v => ({ token: v.token + 1, targetKey: offer.player.playerRef }));
+    setSpinning(true); timer.current = window.setTimeout(() => { setSpinning(false); if (!pickMode) setReveal(offer.player); }, SPIN_MS);
   };
-
-  const selectPlayer = player => {
-    if (!spinning) setReveal(player);
-  };
-
-  const filled = TEAM_SLOTS.filter(slot => picks[slot.key]).length;
-
   const assign = slotKey => {
-    if (!reveal || picks[slotKey]) return;
-    const next = { ...picks, [slotKey]: { player: reveal } };
-    setPicks(next);
-    setReveal(null);
-    if (TEAM_SLOTS.every(slot => next[slot.key])) setPhase('ready');
+    if (!reveal || spinning || picks[slotKey] || draftedRefs.has(reveal.playerRef)) return;
+    const next = { ...picks, [slotKey]: { player: reveal } }; setPicks(next); setReveal(null);
+    if (slots.every(s => next[s.key])) setPhase('ready');
   };
-
-  const runSeason = nextPicks => {
-    setPhase('simulating');
-    timer.current = window.setTimeout(() => {
-      const sim = simulateForgeSeason({ league, pool: allPool, picks: nextPicks, slots: TEAM_SLOTS, seed: Math.floor(Math.random() * 2 ** 31) });
-      setResult(sim);
-      setPhase('complete');
-      if (sim.perfect) confetti({ particleCount: 240, spread: 100, origin: { y: 0.55 }, colors: ['#E9B949','#3E63DD','#D63A4B'] });
-    }, 900);
+  const swap = (first, second) => {
+    if (!picks[first] || !picks[second] || first === second) return;
+    setPicks(current => ({ ...current, [first]: current[second], [second]: current[first] })); setResult(null);
   };
-
-  const rerun = () => runSeason(picks);
-
   const reset = () => {
-    setPicks({});
-    setReveal(null);
-    setSpinning(false);
-    setActiveTeam(null);
-    setResult(null);
-    setTeamSpin({ token:0, targetKey:null });
-    setPlayerSpin({ token:0, targetKey:null });
-    setTeamRespins(TEAM_RESPINS);
-    setPlayerRespins(PLAYER_RESPINS);
+    window.clearTimeout(timer.current); worker.current?.terminate(); worker.current = null; job.current++; spinCount.current = 0; updateForgeBuildUrl(null);
+    setPicks({}); setReveal(null); setSpinning(false); setActiveTeam(null); setResult(null); setError(''); setDrawOdds(null); setSlots(TEAM_SLOTS.map(s => ({ ...s })));
+    setTeamSpin({ token: 0, targetKey: null }); setPlayerSpin({ token: 0, targetKey: null }); setTeamRespins(TEAM_RESPINS); setPlayerRespins(PLAYER_RESPINS);
   };
-  const start = () => { reset(); setPhase('drafting'); };
-  const newDraft = () => { reset(); setPhase('setup'); };
-
-  const revealNote = reveal ? `${TEAM_SLOTS.length - filled} open spots · tap one to place them` : null;
-
+  const restart = () => { reset(); setPhase('setup'); };
+  const runSeason = (simulationSeed = seed) => {
+    if (!rotationValid(slots, picks)) { setError('Allocate exactly 240 minutes across eight unique players, with each player at 0–48 minutes.'); return; }
+    setPhase('simulating'); setError(''); const token = ++job.current;
+    const args = { league, picks, slots, seed: simulationSeed, hostCode, schedule: source.schedule, repeats };
+    const finish = message => {
+      if (token !== job.current) return;
+      worker.current?.terminate(); worker.current = null;
+      if (message.error) { setError(message.error); setPhase('ready'); return; }
+      setResult(message.result); setPhase('complete');
+      if (message.result.perfect && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) confetti({ particleCount: 180, spread: 85, colors: ['#E9B949', '#3E63DD', '#D63A4B'] });
+    };
+    try {
+      if (typeof Worker === 'undefined') { timer.current = window.setTimeout(() => { try { finish({ result: simulateForgeSeason(args) }); } catch (e) { finish({ error: e.message }); } }, 30); return; }
+      worker.current = new Worker(new URL('./forgeSimulation.worker.js', import.meta.url), { type: 'module' });
+      worker.current.onmessage = event => finish(event.data); worker.current.onerror = () => finish({ error: 'The season worker could not complete. Retry or reduce the repeat count.' }); worker.current.postMessage(args);
+    } catch (e) { finish({ error: e.message }); }
+  };
   return <section aria-label="Team forge game" className="space-y-4">
-    {phase === 'setup' && <ForgeTeamSetupPanel pickMode={pickMode} slots={TEAM_SLOTS} poolCount={allPool.length} onStart={start} />}
-    {/* Drafting is one screen: spin controls, the landed player's profile (or
-        the pickable roster), and the depth chart sit side by side from lg up. */}
-    {phase === 'drafting' && <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,16rem),minmax(0,1fr),minmax(0,17rem)]">
-      {pickMode ? <ForgeTeamPickPanel
-        teamItems={wheelTeams} teamSpin={teamSpin} spinning={spinning}
-        activeTeam={activeTeam}
-        onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')}
-        teamRespins={teamRespins} filled={filled} total={TEAM_SLOTS.length}
-        pending={Boolean(reveal)}
-      /> : <ForgeTeamSpinPanel
-        teamItems={wheelTeams} playerItems={playerItems}
-        teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning}
-        fast={spinCount.current > FAST_AFTER_SPINS}
-        onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')}
-        teamRespins={teamRespins} playerRespins={playerRespins}
-        filled={filled} total={TEAM_SLOTS.length}
-        pending={Boolean(reveal)}
-      />}
-      {pickMode
-        ? <ForgeRosterBoard team={activeTeam} roster={activeTeam ? available(activeTeam.code) : []} selectedRef={reveal ? reveal.playerRef : null} onPick={selectPlayer} />
-        : <ForgePlayerCard player={reveal} note={revealNote} emptyHint="Spin the reels — the landed player lands here until you place them in the rotation." />}
-      <ForgeTeamBoard slots={TEAM_SLOTS} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} />
+    {restored.warning && <p role="status" className="court-panel p-3 text-xs">{restored.warning}</p>}
+    {error && <p role="alert" className="court-panel p-3 text-xs text-trim-ink">{error}</p>}
+    <ForgeDraftSettings sampling={sampling} onSampling={setSampling} seed={seed} onSeed={setSeed} locked={phase !== 'setup'} />
+    {phase !== 'setup' && <div className="flex flex-wrap items-center justify-between gap-2"><p aria-live="polite" className="text-xs text-muted-foreground">{filled}/8 players locked · Draft seed {seed}{!pickMode && drawOdds ? ` · Last draw chance ${(drawOdds * 100).toFixed(2)}%` : ''}</p><button type="button" onClick={restart} className="min-h-10 rounded-lg border border-border px-4 text-xs">Restart game / roster</button></div>}
+    {phase === 'setup' && <ForgeTeamSetupPanel pickMode={pickMode} slots={slots} poolCount={allPool.length} onStart={() => setPhase('drafting')} />}
+    {phase === 'drafting' && <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,16rem),minmax(0,1fr),minmax(0,18rem)]">
+      {pickMode ? <ForgeTeamPickPanel teamItems={wheelTeams} teamSpin={teamSpin} spinning={spinning} activeTeam={activeTeam} onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')} teamRespins={teamRespins} filled={filled} total={slots.length} pending={Boolean(reveal)} />
+        : <ForgeTeamSpinPanel teamItems={wheelTeams} playerItems={playerItems} teamSpin={teamSpin} playerSpin={playerSpin} spinning={spinning} fast={spinCount.current > 8} onSpin={() => spin(true, null)} onRespinTeam={() => spin(true, 'team')} onRespinPlayer={() => spin(false, 'player')} teamRespins={teamRespins} playerRespins={playerRespins} filled={filled} total={slots.length} pending={Boolean(reveal)} />}
+      {pickMode ? <ForgeRosterBoard team={activeTeam} roster={activeTeam ? available(activeTeam.code) : []} selectedRef={reveal?.playerRef} onPick={p => { if (!spinning && !draftedRefs.has(p.playerRef)) setReveal(p); }} disabled={spinning} /> : <ForgePlayerCard player={reveal} note={reveal ? `${8 - filled} open spots` : null} />}
+      <ForgeTeamBoard slots={slots} picks={picks} reveal={reveal} revealPositions={reveal?.positions || []} spinning={spinning} onAssign={assign} onSwap={swap} />
     </div>}
-    {phase === 'ready' && <div className="court-panel relative overflow-hidden p-6">
-      <span className="bcast-watermark" aria-hidden="true">LOCKED</span>
-      <div className="relative text-center">
-        <p className="bcast-kicker">Roster complete</p>
-        <h2 className="mt-1 font-display text-3xl">REVIEW YOUR ROTATION</h2>
-        <p className="mt-2 text-sm text-muted-foreground">All eight spots are filled. Release anyone to rearrange, or lock in and run the 82-game season plus playoff bracket.</p>
-        <div className="mx-auto mt-4 grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4">
-          {TEAM_SLOTS.map(slot => <div key={slot.key} className="flex items-center gap-2 rounded-xl border border-border/25 bg-raised/40 p-2 text-left">
-            <PlayerPortrait player={picks[slot.key].player} className="h-9 w-9" />
-            <div className="min-w-0"><p className="truncate text-[11px] font-bold leading-tight">{picks[slot.key].player.name}</p><p className="font-mono text-[9px] text-muted-foreground">{slot.label}</p></div>
-          </div>)}
-        </div>
-        <div className="mt-5 flex flex-wrap justify-center gap-2">
-          <button type="button" onClick={() => runSeason(picks)} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:bg-goldSoft"><Play className="h-4 w-4" />Simulate the season</button>
-          <button type="button" onClick={() => setPhase('drafting')} className="inline-flex min-h-11 items-center rounded-lg border border-border/30 px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold">Adjust rotation</button>
-        </div>
-      </div>
+    {phase === 'ready' && <div className="court-panel p-4 sm:p-6 space-y-4">
+      <header><p className="bcast-kicker">Roster complete</p><h2 className="font-display text-3xl">REVIEW YOUR ROTATION</h2><p className="text-xs text-muted-foreground">Players stay locked. Swap positions and set their minutes; the rotation must total 240 minutes.</p></header>
+      <ForgeTeamBoard slots={slots} picks={picks} spinning={false} onSwap={swap} onMinutes={(key, value) => setSlots(current => current.map(s => s.key === key ? { ...s, minutes: Math.max(0, Math.min(48, Math.round(Number(value) || 0))) } : s))} />
+      <div className="grid gap-3 sm:grid-cols-3"><label className="text-xs">Replace this franchise<select value={hostCode} onChange={e => setHostCode(e.target.value)} className="studio-select mt-1 w-full">{league.teams.map(t => <option key={t.code} value={t.code}>{t.name} · {t.conference}</option>)}</select></label><label className="text-xs">Simulation seed<input type="number" min="0" max="4294967295" value={seed} onChange={e => setSeed(Math.max(0, Math.min(4294967295, Number(e.target.value) || 0)) >>> 0)} className="studio-input mt-1 w-full" /></label><label className="text-xs">Season samples<select className="studio-select mt-1 w-full" value={repeats} onChange={e => setRepeats(Number(e.target.value))}><option value="1">1 season</option><option value="12">12 seasons</option><option value="32">32 seasons</option></select></label></div>
+      <p className="text-xs text-muted-foreground">The franchise sets conference and schedule context. Results are game simulations using observed statistical proxies, not calibrated NBA forecasts.</p>
+      <div className="flex flex-wrap gap-2"><button type="button" disabled={!rotationValid(slots, picks)} onClick={runSeason} className="min-h-11 rounded-lg bg-primary px-6 text-sm font-semibold text-primary-foreground disabled:opacity-40"><Play className="mr-2 inline h-4 w-4" />Simulate season</button><ForgeSaveButton payload={payload} /></div>
     </div>}
-    {phase === 'simulating' && <div className="court-panel p-10 text-center">
-      <Loader2 className="mx-auto h-8 w-8 animate-spin text-gold" />
-      <p className="mt-4 font-display text-2xl tracking-wide">SIMULATING THE SEASON</p>
-      <p className="mt-2 text-sm text-muted-foreground">82 regular-season games, then the playoff bracket…</p>
-    </div>}
-    {phase === 'complete' && result && <ForgeTeamResult result={result} onRerun={rerun} onNewDraft={newDraft} shareEncode={() => {
-      const payload = {};
-      for (const slot of TEAM_SLOTS) if (picks[slot.key]) payload[slot.key] = [picks[slot.key].player.playerRef];
-      return forgeBuildQuery({ mode: pickMode ? 'teamPick' : 'team', picks: payload });
-    }} />}
+    {phase === 'simulating' && <div className="court-panel p-10 text-center" role="status"><Loader2 className="mx-auto h-8 w-8 animate-spin text-gold" /><p className="mt-4 font-display text-2xl">SIMULATING {repeats} SEASONS</p><p className="mt-2 text-xs text-muted-foreground">82 games per team, Play-In and playoffs. You can restart while this runs.</p></div>}
+    {phase === 'complete' && result && <ForgeTeamResult result={result} onRerun={() => { const next = newForgeSeed(); setSeed(next); runSeason(next); }} onNewDraft={restart} onEdit={() => setPhase('ready')} shareEncode={() => forgeBuildQuery(payload)} />}
   </section>;
 }

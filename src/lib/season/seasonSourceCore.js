@@ -1,5 +1,6 @@
 import { DATA_PINS } from '../site/dataPins.js';
 import { verifiedBytes, verifiedJson, safeRelativePath } from '../site/verifiedAssets.js';
+import { loadForgeEvidence } from '../../components/forge/forgeEvidenceLoader.js';
 // Standalone season-source builder: reproduces the published exact-season and
 // pooled career reductions in the browser against the site's own published
 // data — no server code required when the app is self-hosted on the site.
@@ -256,19 +257,20 @@ function entrySummary(entry, index) {
 
 // Exact-season source: every published package part plus the public
 // companion sources, built in the browser.
-export async function loadSeasonSourceCore(year) {
+export async function loadSeasonSourceCore(year, { profile = 'full' } = {}) {
   year = Number(year);
   if (!SUPPORTED_YEARS.includes(year)) throw new Error('Choose a published exact season.');
   const { registry, entry, index, packageRoot } = await publishedPackage('exact-season', year);
 
-  const [teamStylesPart, membershipsPart, playerSeasonsPart, playersPart, metadata, context, scheduleDoc] = await Promise.all([
+  const [teamStylesPart, membershipsPart, playerSeasonsPart, playersPart, metadata, context, scheduleDoc, forgeEvidence] = await Promise.all([
     packagePart(index, packageRoot, 'team-styles'),
     packagePart(index, packageRoot, 'roster-memberships'),
     packagePart(index, packageRoot, 'player-seasons'),
     packagePart(index, packageRoot, 'player-entities'),
     playerMetadata(),
-    publicContext(),
+    profile === 'forge' ? Promise.resolve(null) : publicContext(),
     readJson(SCHEDULE_FILE, 'The NBA schedule artifact'),
+    profile === 'forge' ? loadForgeEvidence(year, entry.packageVersion) : Promise.resolve(null),
   ]);
 
   const styles = (teamStylesPart.value.records || [])
@@ -335,7 +337,7 @@ export async function loadSeasonSourceCore(year) {
     });
 
   const playerNameSet = new Set(players.map(row => normalizeName(row.displayName)));
-  const publicStats = publicStatsForYear(context, year, playerNameSet);
+  const publicStats = context ? publicStatsForYear(context, year, playerNameSet) : [];
 
   const scheduleSeason = (scheduleDoc.seasons || []).find(item => Number(item.seasonStartYear) === year);
   const schedule = ((scheduleSeason?.games || []))
@@ -360,11 +362,13 @@ export async function loadSeasonSourceCore(year) {
     playerSeasons,
     memberships,
     blueprintRows,
+    forgeEvidence,
     players,
     publicStats,
     schedule,
     supportedYears: SUPPORTED_YEARS,
     scheduleStatus: scheduleSeason?.status || 'unknown',
+    loadingProfile: profile,
   };
 }
 

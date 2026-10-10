@@ -1,9 +1,10 @@
-import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
+import { applyForgeDunk } from '@/components/forge/forgeAthleteBinding';
+import { FORGE_ATHLETE_RELEASE } from '@/components/forge/forgeAthleteRelease';
+import { FORGE_POSE_RELEASE } from './forgePoseRelease.js';
 
-export const ATHLETE_ASSET_ROOT = `${import.meta.env.BASE_URL}studio-assets/forge/athlete/`;
-const MODEL_SHA = '85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7';
+export const ATHLETE_ASSET_ROOT = `${import.meta.env?.BASE_URL || '/tools/swishiq-studio/'}studio-assets/forge/athlete/`;
 let modelPromise, catalogPromise;
 const images = new Map();
 async function read(path, binary = false) {
@@ -12,36 +13,26 @@ async function read(path, binary = false) {
   return binary ? response.arrayBuffer() : response.json();
 }
 export function loadUniformCatalog() {
-  if (!catalogPromise) catalogPromise = read('uniform-catalog.json').catch(error => { catalogPromise = null; throw error; });
+  if (!catalogPromise) catalogPromise = verifiedAsset(FORGE_ATHLETE_RELEASE.catalog).then(bytes => JSON.parse(new TextDecoder().decode(bytes))).catch(error => { catalogPromise = null; throw error; });
   return catalogPromise;
 }
-function applyDunk(root, rig) {
-  const axis = new THREE.Vector3(), turn = new THREE.Quaternion();
-  rig.bones.forEach((bone, index) => {
-    const node = root.getObjectByName(bone.name);
-    if (!node) throw new Error(`The athlete joint ${bone.name} is missing.`);
-    node.position.add(new THREE.Vector3(...rig.pose.translations[index]));
-    node.quaternion.identity();
-    bone.axes.forEach((direction, slot) => node.quaternion.multiply(turn.setFromAxisAngle(axis.fromArray(direction), THREE.MathUtils.degToRad(rig.pose.rotations[index][slot]))));
-  });
-  root.updateMatrixWorld(true);
-  root.traverse(mesh => { if (mesh.isSkinnedMesh) mesh.skeleton.update(); });
-  const box = new THREE.Box3().setFromObject(root, true), center = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
-  root.position.sub(center);
-  root.updateMatrixWorld(true);
-  return { halfY: size.y * .57, sweep: Math.hypot(size.x, size.z) * .57 };
+async function verifiedAsset(item) {
+  const bytes = await read(item.path, true);
+  const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), byte => byte.toString(16).padStart(2, '0')).join('');
+  if (digest !== item.sha256) throw new Error('The athlete assets failed their integrity check. Retry to load the matching model and pose.');
+  return bytes;
 }
 export async function loadForgeAthlete() {
-  if (!modelPromise) modelPromise = Promise.all([read('basketball-athlete-outfit.glb', true), read('dunk-rig.json')]).then(async ([bytes, rig]) => {
-    const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), byte => byte.toString(16).padStart(2, '0')).join('');
-    if (digest !== MODEL_SHA) throw new Error('The athlete model failed its integrity check.');
+  if (!modelPromise) modelPromise = Promise.all([verifiedAsset(FORGE_ATHLETE_RELEASE.model), verifiedAsset(FORGE_ATHLETE_RELEASE.rig), verifiedAsset(FORGE_POSE_RELEASE)]).then(async ([bytes, rigBytes, poseBytes]) => {
+    const rig = JSON.parse(new TextDecoder().decode(rigBytes));
+    const poses = JSON.parse(new TextDecoder().decode(poseBytes));
     const gltf = await new GLTFLoader().parseAsync(bytes, ATHLETE_ASSET_ROOT);
-    return { template: gltf.scene, fit: applyDunk(gltf.scene, rig) };
+    return { template: gltf.scene, rig, poses, fit: applyForgeDunk(gltf.scene, rig, FORGE_ATHLETE_RELEASE) };
   }).catch(error => { modelPromise = null; throw error; });
-  const { template, fit } = await modelPromise;
+  const { template, fit, rig, poses } = await modelPromise;
   const model = clone(template);
   model.traverse(mesh => { if (mesh.isMesh) { mesh.material = mesh.material.clone(); mesh.frustumCulled = false; } });
-  return { model, fit };
+  return { model, fit, rig, poses };
 }
 export async function loadUniformImages(item) {
   if (!images.has(item.id)) {

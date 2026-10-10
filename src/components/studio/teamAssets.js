@@ -1,4 +1,4 @@
-import { STANDALONE, SITE_BASE } from '@/lib/deployConfig';
+import { STANDALONE } from '@/lib/deployConfig';
 // The standalone build serves the logos from the DJHC asset directory.
 const LOGO_BASE = STANDALONE ? '/assets/nba-logos/' : '/studio-assets/nba-logos/';
 const FILES = { ATL:'retro-opaque/atlanta-hawks', BKN:'brooklyn-nets', BOS:'boston-celtics', CHA:'retro-opaque/charlotte-hornets', CHI:'chicago-bulls', CLE:'retro-opaque/cleveland-cavaliers', DAL:'dallas-mavericks', DEN:'retro-opaque/denver-nuggets', DET:'retro-opaque/detroit-pistons', GSW:'golden-state-warriors', HOU:'retro-opaque/houston-rockets', IND:'indiana-pacers', LAC:'los-angeles-clippers', LAL:'los-angeles-lakers', MEM:'retro-opaque/memphis-grizzlies', MIA:'miami-heat', MIL:'milwaukee-bucks', MIN:'retro-opaque/minnesota-timberwolves', NOP:'new-orleans-pelicans', NYK:'new-york-knicks', OKC:'oklahoma-city-thunder', ORL:'retro-opaque/orlando-magic', PHI:'philadelphia-76ers', PHX:'retro-opaque/phoenix-suns', POR:'portland-trail-blazers', SAC:'sacramento-kings', SAS:'retro-opaque/san-antonio-spurs', TOR:'retro-opaque/toronto-raptors', UTA:'retro-opaque/utah-jazz', WAS:'retro-opaque/washington-wizards' };
@@ -7,4 +7,4 @@ export const STUDIO_EMBLEM = STANDALONE ? '/assets/games/swishiq-studio-emblem-2
 export const playerAsset = path => /^\/assets\/player-headshots\/(nba|nba-no-background)\/[a-z0-9._-]+\.(webp|png|jpg|jpeg)$/i.test(path || '') ? (STANDALONE ? path : `https://www.djshouseofcards-comics.com${path}`) : null;
 // Studio-local emblem art shipped from public/studio-assets: on the site the
 // same folder deploys under the studio root.
-export const studioAsset = path => `${STANDALONE ? SITE_BASE : ''}/studio-assets/${path}`;
+export const studioAsset = path => `${import.meta.env.BASE_URL}studio-assets/${path}`;

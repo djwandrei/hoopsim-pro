@@ -1,151 +1,203 @@
-import { SKILLS, RATING_MODEL, ROLE_SAMPLE_MIN, ROLE_BLEND } from '@/components/forge/bapSkills';
+import { SKILLS, RATING_MODEL, RATING_POLICY, ROLE_SAMPLE_MIN, ROLE_BLEND } from './bapSkills.js';
+import { forgeOverallScore, forgeCompositeOverallScore } from './forgeOverall.js';
 
-const number = value => (value != null && value !== '' && Number.isFinite(Number(value)) ? Number(value) : null);
-const fromBox = (box, key) => number(box?.[key]);
-const fromMetric = (row, key) => {
-  const metric = row.metrics?.[key];
-  return metric?.status === 'available' ? number(metric.value) : null;
-};
-const per36 = (total, minutes) => (Number.isFinite(total) && Number.isFinite(minutes) && minutes > 0 ? total * 36 / minutes : null);
-
-// Midpoint percentile rank inside a sorted ascending population.
-function percentileRank(value, sorted, direction = 'higher') {
+const number = value => value != null && value !== '' && Number.isFinite(Number(value)) ? Number(value) : null;
+const metric = (row, key) => row.metrics?.[key]?.status === 'available' ? number(row.metrics[key].value) : null;
+const divide = (a, b) => Number.isFinite(a) && Number.isFinite(b) && b > 0 ? a / b : null;
+const clamp = (value, lo, hi) => Math.max(lo, Math.min(hi, value));
+const pair = (made, attempted) => Number.isFinite(made) && Number.isFinite(attempted) && attempted >= 0 && made >= 0 && made <= attempted;
+export function forgeRole(positions = []) {
+  if (positions.some(p => ['C', 'PF'].includes(p))) return 'Big';
+  if (positions.some(p => ['G', 'PG', 'SG'].includes(p))) return 'Guard';
+  return positions.some(p => ['F', 'SF'].includes(p)) ? 'Wing' : 'Unknown';
+}
+export function percentileRank(value, sorted) {
   if (!Number.isFinite(value) || !sorted.length) return null;
-  const keyed = item => (direction === 'lower' ? -item : item);
-  const target = keyed(value);
-  let low = 0; let high = sorted.length;
-  while (low < high) {
-    const mid = low + high >>> 1;
-    if (keyed(sorted[mid]) < target) low = mid + 1; else high = mid;
-  }
-  const below = low;
-  for (low = below, high = sorted.length; low < high;) {
-    const mid = low + high >>> 1;
-    if (keyed(sorted[mid]) <= target) low = mid + 1; else high = mid;
-  }
-  return (below + (low - below) / 2) / sorted.length;
+  const bound = inclusive => {
+    let lo = 0, hi = sorted.length;
+    while (lo < hi) { const mid = (lo + hi) >>> 1; if (sorted[mid] < value || inclusive && sorted[mid] === value) lo = mid + 1; else hi = mid; }
+    return lo;
+  };
+  return (bound(false) + bound(true)) / (2 * sorted.length);
 }
-
-// Attempt-shrunk percentage: blend a sparse sample toward the season rate.
-function attemptShrunk(makes, attempts, leagueRate, shrink) {
-  if (!Number.isFinite(attempts) || attempts < 0 || !Number.isFinite(leagueRate) || leagueRate < 0 || leagueRate > 1) return null;
-  if (attempts === 0) return leagueRate;
-  if (!Number.isFinite(makes) || makes < 0 || makes > attempts) return null;
-  return (makes + shrink * leagueRate) / (attempts + shrink);
+// Unpaired or invalid shooting counts never enter a league prior.
+function leaguePercentage(rows, makes, attempts) {
+  const valid = rows.filter(row => pair(row.totals[makes], row.totals[attempts]));
+  return divide(valid.reduce((s, r) => s + r.totals[makes], 0), valid.reduce((s, r) => s + r.totals[attempts], 0));
 }
-
-// Raw per-36 and shrunk-efficiency rows behind the rating pool.
-function buildForgeRows(source) {
-  return (source?.blueprintRows || [])
-    .filter(row => row.phase === 'regular' && row.observed && Number(row.games) >= 15 && Number(row.minutes) >= 300)
-    .map(row => {
-      const box = row.box || {};
-      const games = number(row.games) || 0;
-      const minutes = number(row.minutes) || 0;
-      const ppg = fromMetric(row, 'pointsPerGame');
-      const apg = fromMetric(row, 'assistsPerGame');
-      const rpg = fromMetric(row, 'reboundsPerGame');
-      const spg = fromMetric(row, 'stealsPerGame');
-      const bpg = fromMetric(row, 'blocksPerGame');
-      const pointsPer36Metric = fromMetric(row, 'pointsPer36');
-      const totals = {
-        points: fromBox(box, 'points') ?? (ppg === null ? null : ppg * games),
-        assists: fromBox(box, 'assists') ?? (apg === null ? null : apg * games),
-        rebounds: fromBox(box, 'rebounds') ?? (rpg === null ? null : rpg * games),
-        turnovers: fromBox(box, 'turnovers'),
-        steals: fromBox(box, 'steals') ?? (spg === null ? null : spg * games),
-        blocks: fromBox(box, 'blocks') ?? (bpg === null ? null : bpg * games),
-        offensiveRebounds: fromBox(box, 'offensiveRebounds'),
-        fieldGoalsAttempted: fromBox(box, 'fieldGoalsAttempted'),
-        fieldGoalsMade: fromBox(box, 'fieldGoalsMade'),
-        threePointAttempts: fromBox(box, 'threePointAttempts'),
-        threePointersMade: fromBox(box, 'threePointersMade'),
-      };
-      const twoPointAttempts = Number.isFinite(totals.fieldGoalsAttempted) && Number.isFinite(totals.threePointAttempts) ? totals.fieldGoalsAttempted - totals.threePointAttempts : null;
-      const twoPointMakes = Number.isFinite(totals.fieldGoalsMade) && Number.isFinite(totals.threePointersMade) ? totals.fieldGoalsMade - totals.threePointersMade : null;
-      const roleGroup = (row.positions || []).includes('G') ? 'Guard' : (row.positions || []).some(code => code === 'F' || code === 'C') ? 'Big' : null;
-      return { sourceRow: row, games, minutes, pointsPer36Metric, roleGroup, totals, twoPointAttempts, twoPointMakes };
-    });
+function shrunkPercentage(makes, attempts, prior, strength) {
+  if (!pair(makes, attempts) || attempts <= 0 || prior === null) return null;
+  return (makes + prior * strength) / (attempts + strength);
 }
+export const FORGE_COMPONENTS = {
+  scoring: [['pointsPer36', .65], ['trueShooting', .35]],
+  jumpShot: [['threeAccuracy', .6], ['threeVolume', .25], ['freeThrowAccuracy', .15]],
+  finishing: [['twoAccuracy', .6], ['twoVolume', .25], ['freeThrowVolume', .15]],
+  playmaking: [['assistsPer36', .8], ['assistTurnoverRatio', .2]],
+  decision: [['assistTurnoverRatio', .55], ['ballSecurity', .45]],
+  rebounding: [['defensiveReboundsPer36', .8], ['reboundsPer36', .2]],
+  clutch: [['clutchPointsPer36', .45], ['clutchTrueShooting', .4], ['clutchSecurity', .15]],
+  perimeterDefense: [['perimeterSuppression', .4], ['deflectionsPer36', .3], ['stealsPer36', .3]],
+  rimProtection: [['blocksPer36', 1]], body: [['height', .45], ['wingspan', .45], ['weight', .1]],
+};
+const REQUIRED = { jumpShot: 'threeAccuracy', finishing: 'twoAccuracy', scoring: 'pointsPer36', decision: 'ballSecurity', clutch: 'clutchTrueShooting', body: 'height' };
+const bodyPosition = row => String(row.evidence?.body?.position || row.source.positions?.[0] || 'Unknown').split(/[-/]/)[0].trim();
+const LIMITATIONS = {
+  finishing: '2P shooting proxy; rim-location data is unavailable.',
+  perimeterDefense: 'Outside defended shooting, deflections and steals are descriptive proxies; matchup difficulty and complete defensive impact are not measured.',
+  rimProtection: 'Blocks are a box-score proxy, not a complete rim-defense impact rating.',
+  clutch: 'Observed NBA clutch scoring (last five minutes, score within five points); small samples shrink toward neutral. This does not predict future clutch performance.',
+  body: 'Position-relative size and reach, not athleticism. Height and weight use a current roster snapshot; wingspan uses an earlier combine measurement where verified.',
+};
 
-function attachRawValues(rows) {
-  const threeAttempts = rows.reduce((sum, row) => sum + (row.totals.threePointAttempts || 0), 0);
-  const league3p = threeAttempts ? rows.reduce((sum, row) => sum + (row.totals.threePointersMade || 0), 0) / threeAttempts : null;
-  const twoAttempts = rows.reduce((sum, row) => sum + (row.twoPointAttempts || 0), 0);
-  const league2p = twoAttempts ? rows.reduce((sum, row) => sum + (row.twoPointMakes || 0), 0) / twoAttempts : null;
-  const assists = rows.reduce((sum, row) => sum + (row.totals.assists || 0), 0);
-  const turnovers = rows.reduce((sum, row) => sum + (row.totals.turnovers || 0), 0);
-  const leagueAstTo = turnovers > 0 ? assists / turnovers : null;
+function addForgeEvidence(rows) {
+  const validClutch = rows.map(row => row.evidence?.clutch).filter(c => c && c.minutes >= RATING_POLICY.clutchMinMinutes && c.games >= 3 && Number.isFinite(c.points) && c.points >= 0 && c.fga >= RATING_POLICY.clutchMinAttempts && pair(c.fgm, c.fga) && pair(c.ftm, c.fta));
+  const clutchMinutes = validClutch.reduce((s, c) => s + c.minutes, 0);
+  const clutchRate = divide(validClutch.reduce((s, c) => s + c.points * 36, 0), clutchMinutes);
+  const clutchTs = divide(validClutch.reduce((s, c) => s + c.points / 2, 0), validClutch.reduce((s, c) => s + c.fga + .44 * c.fta, 0));
   for (const row of rows) {
-    const { totals, minutes } = row;
-    row.raw = {
-      pointsPer36: per36(totals.points, minutes) ?? row.pointsPer36Metric,
-      threePointPercentage: attemptShrunk(totals.threePointersMade, totals.threePointAttempts, league3p, 75) ?? fromMetric(row.sourceRow, 'threePointPercentage'),
-      twoPointPercentage: attemptShrunk(row.twoPointMakes, row.twoPointAttempts, league2p, 50) ?? fromMetric(row.sourceRow, 'fieldGoalPercentage'),
-      assistsPer36: per36(totals.assists, minutes),
-      assistTurnoverRatio: Number.isFinite(totals.assists) && Number.isFinite(totals.turnovers) && Number.isFinite(leagueAstTo) ? (totals.assists + 15 * leagueAstTo) / (totals.turnovers + 15) : fromMetric(row.sourceRow, 'assistTurnoverRatio'),
-      reboundsPer36: per36(totals.rebounds, minutes),
-      offensiveReboundsPer36: per36(totals.offensiveRebounds, minutes),
-      stealsPer36: per36(totals.steals, minutes),
-      blocksPer36: per36(totals.blocks, minutes),
-    };
+    const { clutch: c, perimeter: p, body: b } = row.evidence || {};
+    for (const key of ['clutchPointsPer36', 'clutchTrueShooting', 'clutchSecurity', 'deflectionsPer36', 'perimeterSuppression', 'height', 'weight', 'wingspan']) { row.raw[key] = null; row.reliability[key] = 0; }
+    if (c && validClutch.includes(c) && clutchRate !== null && clutchTs !== null) {
+      const exposure = c.fga + .44 * c.fta, minutesPrior = RATING_POLICY.clutchPriorMinutes, attemptsPrior = RATING_POLICY.clutchPriorAttempts;
+      row.raw.clutchPointsPer36 = (c.points * 36 + minutesPrior * clutchRate) / (c.minutes + minutesPrior);
+      row.raw.clutchTrueShooting = (c.points / 2 + attemptsPrior * clutchTs) / (exposure + attemptsPrior);
+      row.reliability.clutchPointsPer36 = c.minutes / (c.minutes + minutesPrior);
+      row.reliability.clutchTrueShooting = exposure / (exposure + attemptsPrior);
+      if (Number.isFinite(c.turnovers) && c.turnovers >= 0) {
+        row.raw.clutchSecurity = 1 - (c.turnovers + 25 * .13) / (exposure + c.turnovers + 25);
+        row.reliability.clutchSecurity = exposure / (exposure + 25);
+      }
+    }
+    if (p?.minutes > 0 && Number.isFinite(p.deflections) && p.deflections >= 0) {
+      row.raw.deflectionsPer36 = p.deflections * 36 / p.minutes;
+      row.reliability.deflectionsPer36 = p.minutes / (p.minutes + RATING_POLICY.ratePriorMinutes);
+    }
+    if (p?.defendedAttempts > 0 && pair(p.defendedMakes, p.defendedAttempts) && Number.isFinite(p.expectedPercentage) && p.expectedPercentage > 0 && p.expectedPercentage < 1) {
+      row.raw.perimeterSuppression = (p.expectedPercentage * p.defendedAttempts - p.defendedMakes) / (p.defendedAttempts + 100);
+      row.reliability.perimeterSuppression = p.defendedAttempts / (p.defendedAttempts + 100);
+    }
+    if (b) for (const [key, min, max] of [['height', 60, 96], ['weight', 130, 400], ['wingspan', 60, 110]]) {
+      if (Number.isFinite(b[key]) && b[key] >= min && b[key] <= max) { row.raw[key] = b[key]; row.reliability[key] = 1; }
+    }
+    row.bodyPosition = bodyPosition(row);
   }
-  return rows;
 }
-
-// Shared player-season pool for the forge draft games: raw rows plus the nine
-// 25–99 DJHC skill ratings, each a season percentile blended toward a role
-// percentile when the role sample supports it.
 export function buildForgePool(source) {
-  const rows = attachRawValues(buildForgeRows(source));
-  const populations = new Map();
-  const rolePopulations = new Map();
-  for (const skill of SKILLS) {
-    populations.set(skill.key, rows.map(row => row.raw[skill.metricKey]).filter(Number.isFinite).sort((a, b) => a - b));
-    for (const role of ['Guard', 'Big']) {
-      rolePopulations.set(`${skill.key}:${role}`, rows
-        .filter(row => row.roleGroup === role && Number.isFinite(row.raw[skill.metricKey]))
-        .map(row => row.raw[skill.metricKey])
-        .sort((a, b) => a - b));
+  // One reel entry per player and season. Add regular-season team stints
+  // together; keep the highest-minute team row only for the displayed team.
+  const segments = [];
+  for (const row of source?.blueprintRows || []) {
+    const games = number(row.games), minutes = number(row.minutes);
+    if (!row.playerRef || row.phase !== 'regular' || !row.observed || !Number.isFinite(games) || !Number.isFinite(minutes) || games <= 0 || minutes <= 0) continue;
+    const box = row.box || {};
+    const total = (key, fallback) => number(box[key]) ?? (fallback && metric(row, fallback) !== null ? metric(row, fallback) * games : null);
+    const totals = {
+      points: total('points', 'pointsPerGame'), assists: total('assists', 'assistsPerGame'), rebounds: total('rebounds', 'reboundsPerGame'),
+      turnovers: total('turnovers'), steals: total('steals', 'stealsPerGame'), blocks: total('blocks', 'blocksPerGame'),
+      offensiveRebounds: total('offensiveRebounds'), defensiveRebounds: total('defensiveRebounds'),
+      fga: number(box.fieldGoalAttempts) ?? number(box.fieldGoalsAttempted), fgm: total('fieldGoalsMade'),
+      threeAttempts: total('threePointAttempts'), threeMade: total('threePointersMade'),
+      fta: number(box.freeThrowAttempts) ?? number(box.freeThrowsAttempted), ftm: total('freeThrowsMade'),
+      twoAttempts: number(box.twoPointAttempts), twoMade: number(box.twoPointMakes),
+    };
+    segments.push({ playerRef: row.playerRef, source: row, games, minutes, totals });
+  }
+  const grouped = new Map();
+  for (const segment of segments) {
+    if (!grouped.has(segment.playerRef)) grouped.set(segment.playerRef, { source: segment.source, games: 0, minutes: 0, segments: [] });
+    const group = grouped.get(segment.playerRef);
+    group.games += segment.games; group.minutes += segment.minutes; group.segments.push(segment);
+    if (segment.minutes > number(group.source.minutes)) group.source = segment.source;
+  }
+  const rows = [...grouped.values()].map(group => {
+    const totals = {};
+    for (const key of Object.keys(group.segments[0].totals)) {
+      const values = group.segments.map(segment => segment.totals[key]);
+      totals[key] = values.every(Number.isFinite) ? values.reduce((sum, value) => sum + value, 0) : null;
+    }
+    if (totals.twoAttempts === null && totals.fga !== null && totals.threeAttempts !== null) totals.twoAttempts = totals.fga - totals.threeAttempts;
+    if (totals.twoMade === null && totals.fgm !== null && totals.threeMade !== null) totals.twoMade = totals.fgm - totals.threeMade;
+    if (totals.defensiveRebounds === null && totals.rebounds !== null && totals.offensiveRebounds !== null) totals.defensiveRebounds = totals.rebounds - totals.offensiveRebounds;
+    const evidence = source.forgeEvidence;
+    const matchingSeason = evidence?.year === Number(group.source.seasonStartYear) && (!source.entry?.packageVersion || evidence.packageVersion === source.entry.packageVersion);
+    return { source: group.source, totals, games: group.games, minutes: group.minutes, role: forgeRole(group.source.positions || []), evidence: matchingSeason ? evidence.records?.[group.source.playerRef] : null, raw: {}, reliability: {} };
+  }).filter(row => row.games >= RATING_POLICY.minGames && row.minutes >= RATING_POLICY.minMinutes);
+  const priors = { three: leaguePercentage(rows, 'threeMade', 'threeAttempts'), two: leaguePercentage(rows, 'twoMade', 'twoAttempts'), ft: leaguePercentage(rows, 'ftm', 'fta') };
+  const countRates = { pointsPer36: 'points', assistsPer36: 'assists', reboundsPer36: 'rebounds', defensiveReboundsPer36: 'defensiveRebounds', offensiveReboundsPer36: 'offensiveRebounds', stealsPer36: 'steals', blocksPer36: 'blocks', threeVolume: 'threeAttempts', twoVolume: 'twoAttempts', freeThrowVolume: 'fta' };
+  for (const [key, totalKey] of Object.entries(countRates)) {
+    const valid = rows.filter(row => Number.isFinite(row.totals[totalKey]) && row.totals[totalKey] >= 0);
+    const prior = divide(valid.reduce((s, r) => s + r.totals[totalKey] * 36, 0), valid.reduce((s, r) => s + r.minutes, 0));
+    for (const row of rows) {
+      const raw = divide(row.totals[totalKey] === null ? null : row.totals[totalKey] * 36, row.minutes);
+      row.raw[key] = raw === null || raw < 0 || prior === null ? null : (raw * row.minutes + prior * RATING_POLICY.ratePriorMinutes) / (row.minutes + RATING_POLICY.ratePriorMinutes);
+      row.reliability[key] = row.minutes / (row.minutes + RATING_POLICY.ratePriorMinutes);
     }
   }
+  const validDecision = rows.filter(r => r.totals.assists !== null && r.totals.turnovers !== null && r.totals.turnovers >= 0);
+  const priorRatio = divide(validDecision.reduce((s, r) => s + r.totals.assists, 0), validDecision.reduce((s, r) => s + r.totals.turnovers, 0));
+  const tsRows = rows.filter(r => r.totals.points !== null && pair(r.totals.fgm, r.totals.fga) && pair(r.totals.ftm, r.totals.fta));
+  const priorTs = divide(tsRows.reduce((s, r) => s + r.totals.points, 0), tsRows.reduce((s, r) => s + 2 * (r.totals.fga + .44 * r.totals.fta), 0));
+  for (const row of rows) {
+    const t = row.totals;
+    for (const [key, made, attempts, prior, strength] of [
+      ['threeAccuracy', t.threeMade, t.threeAttempts, priors.three, RATING_POLICY.threePriorAttempts],
+      ['twoAccuracy', t.twoMade, t.twoAttempts, priors.two, RATING_POLICY.twoPriorAttempts],
+      ['freeThrowAccuracy', t.ftm, t.fta, priors.ft, RATING_POLICY.freeThrowPriorAttempts],
+    ]) { row.raw[key] = shrunkPercentage(made, attempts, prior, strength); row.reliability[key] = attempts > 0 ? attempts / (attempts + strength) : 0; }
+    const opportunities = t.fga !== null && t.fta !== null && t.turnovers !== null ? t.fga + .44 * t.fta + t.turnovers : null;
+    row.raw.ballSecurity = opportunities > 0 ? 1 - (t.turnovers + 10 * .13) / (opportunities + 10) : null;
+    row.raw.assistTurnoverRatio = t.assists !== null && t.turnovers !== null && priorRatio !== null ? (t.assists + 20 * priorRatio) / (t.turnovers + 20) : null;
+    row.reliability.ballSecurity = opportunities > 0 ? opportunities / (opportunities + 100) : 0;
+    row.reliability.assistTurnoverRatio = t.turnovers >= 0 && t.turnovers !== null ? t.turnovers / (t.turnovers + 20) : 0;
+    const shooting = t.fga !== null && t.fta !== null ? t.fga + .44 * t.fta : null;
+    row.raw.trueShooting = shooting > 0 && t.points !== null && priorTs !== null ? (t.points / 2 + 100 * priorTs) / (shooting + 100) : null;
+    row.reliability.trueShooting = shooting > 0 ? shooting / (shooting + 100) : 0;
+  }
+  addForgeEvidence(rows);
+  const keys = [...new Set(Object.values(FORGE_COMPONENTS).flat().map(c => c[0]))];
+  const population = new Map(keys.map(key => [key, rows.map(r => r.raw[key]).filter(Number.isFinite).sort((a, b) => a - b)]));
+  const roles = new Map(keys.flatMap(key => ['Guard', 'Wing', 'Big'].map(role => [`${key}:${role}`, rows.filter(r => r.role === role).map(r => r.raw[key]).filter(Number.isFinite).sort((a, b) => a - b)])));
+  const bodyGroups = new Map(['height', 'wingspan', 'weight'].flatMap(key => [...new Set(rows.map(row => row.bodyPosition))].map(position => [`${key}:${position}`, rows.filter(row => row.bodyPosition === position).map(row => row.raw[key]).filter(Number.isFinite).sort((a, b) => a - b)])));
   return rows.map(row => {
-    const sourceRow = row.sourceRow;
+    const t = row.totals, r = row.source;
     const player = {
-      playerRef: sourceRow.playerRef, name: sourceRow.displayName, teamCode: sourceRow.teamCode,
-      positions: sourceRow.positions || [], headshotPath: sourceRow.headshotPath || null,
-      seasonStartYear: Number(sourceRow.seasonStartYear), games: row.games, minutes: row.minutes,
-      pts: Number.isFinite(row.totals.points) ? row.totals.points / (row.games || 1) : null,
-      ast: Number.isFinite(row.totals.assists) ? row.totals.assists / (row.games || 1) : null,
-      reb: Number.isFinite(row.totals.rebounds) ? row.totals.rebounds / (row.games || 1) : null,
-      mpg: row.minutes / (row.games || 1),
-      stl: Number.isFinite(row.totals.steals) ? row.totals.steals / (row.games || 1) : null,
-      blk: Number.isFinite(row.totals.blocks) ? row.totals.blocks / (row.games || 1) : null,
-      fg: Number.isFinite(row.totals.fieldGoalsMade) && Number.isFinite(row.totals.fieldGoalsAttempted) && row.totals.fieldGoalsAttempted > 0 ? row.totals.fieldGoalsMade / row.totals.fieldGoalsAttempted : null,
-      tpp: Number.isFinite(row.totals.threePointAttempts) && row.totals.threePointAttempts > 0 ? row.totals.threePointersMade / row.totals.threePointAttempts : null,
-      ratingModel: RATING_MODEL, ratingEvidence: {},
+      playerRef: r.playerRef, name: r.displayName, teamCode: r.teamCode, positions: r.positions || [], headshotPath: r.headshotPath || null,
+      seasonStartYear: Number(r.seasonStartYear), games: row.games, minutes: row.minutes, mpg: row.minutes / row.games,
+      pts: divide(t.points, row.games), ast: divide(t.assists, row.games), reb: divide(t.rebounds, row.games), stl: divide(t.steals, row.games), blk: divide(t.blocks, row.games),
+      fg: pair(t.fgm, t.fga) ? divide(t.fgm, t.fga) : null, tpp: pair(t.threeMade, t.threeAttempts) ? divide(t.threeMade, t.threeAttempts) : null,
+      totals: t, roleGroup: row.role, ratingModel: RATING_MODEL, ratingEvidence: {}, measurements: row.evidence?.body || null,
     };
     for (const skill of SKILLS) {
-      const rawValue = row.raw[skill.metricKey];
-      const seasonPopulation = populations.get(skill.key);
-      const seasonPercentile = percentileRank(rawValue, seasonPopulation, skill.direction);
-      const rolePopulation = row.roleGroup && rolePopulations.get(`${skill.key}:${row.roleGroup}`) || [];
-      const rolePercentile = rolePopulation.length >= ROLE_SAMPLE_MIN ? percentileRank(rawValue, rolePopulation, skill.direction) : null;
-      const blended = seasonPercentile === null ? null : rolePercentile === null ? seasonPercentile : (1 - ROLE_BLEND) * seasonPercentile + ROLE_BLEND * rolePercentile;
-      player[skill.key] = blended === null ? null : Math.round(25 + 74 * blended);
-      player.ratingEvidence[skill.key] = {
-        rawValue, seasonStartYear: Number(sourceRow.seasonStartYear),
-        seasonPopulation: seasonPopulation.length, seasonPercentile,
-        roleGroup: row.roleGroup, rolePopulation: rolePopulation.length,
-        roleRelativeApplied: rolePercentile !== null, rolePercentile,
-      };
+      const components = FORGE_COMPONENTS[skill.key].map(([key, weight]) => {
+        const season = population.get(key), role = roles.get(`${key}:${row.role}`) || [];
+        const seasonPercentile = percentileRank(row.raw[key], season), rolePercentile = role.length >= ROLE_SAMPLE_MIN ? percentileRank(row.raw[key], role) : null;
+        let percentile = seasonPercentile === null ? null : rolePercentile === null ? seasonPercentile : (1 - ROLE_BLEND) * seasonPercentile + ROLE_BLEND * rolePercentile;
+        let comparison = 'season + role';
+        if (skill.key === 'body') {
+          const position = bodyGroups.get(`${key}:${row.bodyPosition}`) || [];
+          const peers = position.length >= RATING_POLICY.bodyPopulationMin ? position : role;
+          percentile = peers.length >= RATING_POLICY.bodyPopulationMin ? percentileRank(row.raw[key], peers) : null;
+          comparison = position.length >= RATING_POLICY.bodyPopulationMin ? row.bodyPosition : row.role;
+        }
+        return { key, weight, rawValue: row.raw[key], seasonPopulation: season.length, seasonPercentile, rolePercentile, percentile, comparison, reliability: row.reliability[key] || 0 };
+      });
+      const available = components.filter(c => c.percentile !== null), coverage = available.reduce((s, c) => s + c.weight, 0);
+      const missingRequired = REQUIRED[skill.key] && row.raw[REQUIRED[skill.key]] === null || skill.key === 'perimeterDefense' && row.raw.perimeterSuppression === null && row.raw.deflectionsPer36 === null;
+      const percentile = !coverage || missingRequired ? null : available.reduce((s, c) => s + c.weight * c.percentile, 0) / coverage;
+      // Curved display scale: a median skill is ~78, not an automatic failing grade.
+      const confidence = percentile === null ? 0 : available.reduce((s, c) => s + c.weight * c.reliability, 0);
+      const scaled = percentile === null ? null : 25 + 74 * Math.pow(percentile, .48);
+      player[skill.key] = scaled === null ? null : Math.round(clamp(skill.key === 'clutch' ? 75 + (scaled - 75) * (.35 + .65 * confidence) : scaled, 25, 99));
+      player.ratingEvidence[skill.key] = { model: RATING_MODEL, seasonStartYear: player.seasonStartYear, roleGroup: row.role, seasonPopulation: rows.length, components, percentile, confidence, coverage, confidenceLabel: confidence >= .8 ? 'High' : confidence >= .55 - 1e-9 ? 'Moderate' : 'Limited', limitation: LIMITATIONS[skill.key] || null, ...(skill.key === 'clutch' ? { observed: row.evidence?.clutch || null } : {}) };
     }
     return player;
   });
 }
-
-// Mean of the finite 25–99 skill ratings; 50 when none are rated.
-export function forgePlayerScore(player) {
-  const values = SKILLS.map(skill => player[skill.key]).filter(Number.isFinite);
-  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 50;
+// Missing skills carry a neutral contribution, rather than inflating a partial OVR.
+export function forgePlayerScore(player, weights = {}) {
+  return forgeOverallScore(player, weights);
+}
+export function forgeCompositeScore(picks, group = 'All') {
+  return forgeCompositeOverallScore(picks, group);
 }

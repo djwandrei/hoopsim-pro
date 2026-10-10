@@ -1,10 +1,59 @@
 {
-  "modelSha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7",
-  "source": "uploaded basketball-athlete-pose-studio nine-part archive",
+  "version": "arm-cloth967k-20261010",
+  "triangles": 967181,
+  "controls": 48,
+  "skinJoints": 47,
+  "elements": [
+    "body",
+    "jersey",
+    "shorts",
+    "right-shoe",
+    "left-shoe",
+    "basketball",
+    "head-neck",
+    "exposed-upper-body",
+    "right-arm",
+    "left-arm",
+    "headband",
+    "right-sleeve",
+    "left-sleeve"
+  ],
+  "sourceSha256": "90c7a782efdc5d6d7b8c74c871a67e8fb133d8837d421630b3f9d1ab6d4fb717",
+  "model": {
+    "path": "basketball-athlete-outfit-a4afc942b31d.glb",
+    "bytes": 52437492,
+    "sha256": "a4afc942b31d81292600ba24c23d5da891e347b97868fd017c1a0b5b0726a1a1"
+  },
+  "rig": {
+    "path": "dunk-rig-036605c54da4.json",
+    "bytes": 28538,
+    "sha256": "036605c54da48ec28e6d864602c3fd25a479ef10223d658b849531251a778960"
+  },
+  "atlasSha256": "e2c35a54b52c575e6e724a9b38dbfcb8bd2501ba71d426d9821fb43dcc246c50",
+  "catalog": {
+    "path": "uniform-catalog-fa37b44ba679.json",
+    "bytes": 95635,
+    "sha256": "fa37b44ba6794add9b1820b07ced95b40e5f3bfa7749afe737d025652b9d9cc1"
+  },
+  "source": "local validated basketball-silhouette authoring workspace",
   "uniforms": 90,
-  "sourceModel": {
-    "path": "basketball-athlete-outfit.glb",
-    "bytes": 37321108,
-    "sha256": "85a6251a2adc36c3992845076fd6b2464f88ad6a4ad358a8176098b08e61b2b7"
+  "uniformImages": 270,
+  "uniformBytes": 67061577,
+  "preserved": [
+    "draft rules",
+    "team and edition identities",
+    "original uniform catalog and images",
+    "separate garment/accessory names",
+    "earlier model and pose assets"
+  ],
+  "deployed": false,
+  "armRefinement": {
+    "baseModelSha256": "2e4b44a67c3c610d7e831bed8b973b835cde3fe11529b51a9269ca46e82078c0",
+    "correctives": [
+      "dunk",
+      "jump-shot",
+      "dribble"
+    ],
+    "method": "Original dunk/shot/dribble joint centers and hand contact retained; centerline-preserving elbow correctives; athletic defense retained separately"
   }
 }

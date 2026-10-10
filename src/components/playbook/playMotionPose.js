@@ -1,29 +1,48 @@
-import { pointOnRoute } from '@/components/playbook/playMotion';
+import { pointOnRoute, routeLength } from '@/components/playbook/playMotion';
 export const actorsForFrame = frame => ({ ...frame.offense, ...(frame.defense || {}) });
-const ballAt = (pos, owner) => { const p = pos[owner]; return [p[0] + 24, p[1] - 17]; };
-export function staticPose(frame) {
-  return { actors: actorsForFrame(frame), ball: ballAt(frame.offense, frame.ballOwner), progress: 1, routes: frame.routes || {} };
+export function ballAt(actors, owner, loose = null) {
+  const point = actors[owner];
+  return point ? [point[0] + 24, point[1] - 17] : loose;
 }
-// Ball-first phases let a pass trigger a closeout, or let a passer cut AFTER
-// releasing the ball. Movement-first phases preserve screen/roll timing.
-export function samplePose(frame, routes, progress) {
-  const exchanges = frame.exchanges || [];
-  const hasMovement = Object.values(routes).some(r => r.length > 1 && (r[0][0] !== r[r.length-1][0] || r[0][1] !== r[r.length-1][1]));
-  const ballFirst = frame.passFirst && exchanges.length;
-  const moveT = ballFirst ? Math.max(0, (progress-0.35)/0.65) : Math.min(1, progress/(exchanges.length ? 0.65 : 1));
-  const smooth = moveT*moveT*(3-2*moveT);
-  const actors = Object.fromEntries(Object.entries(routes).map(([id, route]) => [id, pointOnRoute(route, smooth)]));
-  const start = ballFirst ? 0 : hasMovement ? 0.65 : 0.12;
-  const end = ballFirst ? 0.35 : hasMovement ? 1 : 0.75;
-  let ball = ballAt(actors, exchanges[0]?.from || frame.ballOwner);
-  if (exchanges.length && progress >= start) {
-    const flight = Math.min(0.999999, Math.max(0, (progress-start)/(end-start))) * exchanges.length;
-    const exchange = exchanges[Math.floor(flight)], t = flight % 1;
-    const from = ballAt(actors, exchange.from), to = ballAt(actors, exchange.to);
-    const chord = Math.hypot(to[0]-from[0], to[1]-from[1]);
-    const peak = exchange.handoff ? 4 : Math.min(44, 14 + chord * 0.14);
-    ball = [from[0]+(to[0]-from[0])*t,from[1]+(to[1]-from[1])*t-peak*4*t*(1-t)];
-    if (progress >= end) ball = ballAt(actors, frame.ballOwner);
+// The drawn arrow and the moving ball use exactly the same quadratic curve.
+export function ballArc(from, to, handoff = false) {
+  const chord = Math.hypot(to[0] - from[0], to[1] - from[1]);
+  const peak = handoff ? 4 : Math.min(44, 14 + chord * 0.14);
+  return { from, to, control: [(from[0] + to[0]) / 2, (from[1] + to[1]) / 2 - peak * 2] };
+}
+export function pointOnArc(path, t) {
+  const k = 1 - t;
+  return [0, 1].map(axis => k * k * path.from[axis] + 2 * k * t * path.control[axis] + t * t * path.to[axis]);
+}
+function phasePaths(phase, actors) {
+  if (phase.exchange) return [ballArc(ballAt(actors, phase.exchange.from), ballAt(actors, phase.exchange.to), phase.exchange.handoff)];
+  if (phase.shot) return [ballArc(ballAt(actors, phase.shot.from), phase.shot.to)];
+  return [];
+}
+export function staticPose(frame) {
+  const actors = actorsForFrame(frame), last = frame.phases?.[frame.phases.length - 1];
+  return { actors, ball: ballAt(actors, frame.ballOwner, frame.ball), ballOwner: frame.ballOwner, matchups: frame.matchups || {}, screens: frame.screens || [],
+    passPaths: last ? phasePaths(last, actors) : [], progress: 1, routes: frame.routes || {}, phaseIndex: frame.phases?.length - 1 };
+}
+// Every screen approach, cut, transfer and finish has its own timed phase.
+// Sampling a frame never infers a pass from the final owner's position.
+export function samplePose(frame, _routes, progress) {
+  if (!frame.phases?.length || progress >= 1) return staticPose(frame);
+  const elapsed = Math.max(0, progress) * frame.duration;
+  let remaining = elapsed, index = 0;
+  while (index < frame.phases.length - 1 && remaining + 0.000001 >= frame.phases[index].duration) remaining = Math.max(0, remaining - frame.phases[index++].duration);
+  const phase = frame.phases[index], t = Math.min(1, remaining / phase.duration), smooth = t * t * (3 - 2 * t);
+  const actors = Object.fromEntries(Object.entries(phase.routes).map(([id, route]) => [id, pointOnRoute(route, smooth)]));
+  const passPaths = phasePaths(phase, actors);
+  let ballOwner = phase.startOwner, ball = ballAt(actors, ballOwner, phase.startBall);
+  if (passPaths.length) {
+    ball = pointOnArc(passPaths[0], smooth);
+    if (phase.shot && t > 0) ballOwner = null;
+    if (t >= 1) ballOwner = phase.ballOwner;
+  } else if (ballOwner && routeLength(phase.routes[ballOwner]) > 10 && t > 0 && t < 1) {
+    ball = [ball[0], ball[1] + Math.abs(Math.sin(remaining * Math.PI / 260)) * Math.sin(Math.PI * t) * 18];
   }
-  return { actors, ball, progress, routes };
+  const screens = phase.startScreens.filter(screen => phase.screens.some(end => end.screener === screen.screener && end.target === screen.target) && routeLength(phase.routes[screen.screener]) < 1);
+  if (t >= 0.999) for (const screen of phase.screens) if (!screens.some(old => old.screener === screen.screener && old.target === screen.target)) screens.push(screen);
+  return { actors, ball, ballOwner, matchups: t < 1 ? phase.startMatchups : phase.matchups, screens, passPaths, progress, routes: phase.routes, phaseIndex: index };
 }

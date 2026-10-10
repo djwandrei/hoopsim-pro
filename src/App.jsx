@@ -25,7 +25,7 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router basename={STANDALONE ? SITE_BASE : undefined}>
+        <Router basename={STANDALONE && SITE_BASE ? SITE_BASE : undefined}>
           <ScrollToTop />
           <GaPageView />
           <ErrorBoundary>

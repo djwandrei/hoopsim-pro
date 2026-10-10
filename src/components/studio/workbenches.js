@@ -25,7 +25,7 @@ export const WORKBENCHES = [
   { path: '/forge', icon: Swords, emblem: `${EMBLEMS}composite-forge-icon.webp`, title: 'Composite Forge', tag: 'BUILD & REVIEW', description: 'Choose real player-season skill donors, build your player, and save or replay the source-backed recipe.', flow: 'Player examples → Skills → Build' },
   { path: '/spin', icon: Disc3, emblem: `${EMBLEMS}spin-room-icon.webp`, title: 'Spin Room', tag: 'ROLE DRAFT & DISCOVERY', description: 'Build a seeded player pool, set exclusions, and reveal repeatable no-repeat picks.', flow: 'Pool → Draw → Selection' },
   { path: '/book', icon: Banknote, emblem: studioAsset('games/swishiq-studio-emblem-20260913.png'), title: 'Sportsbook', tag: 'PLAY-MONEY TRACKER', description: 'Track a browser-local play-money balance and ledger, with a daily simulated bonus. Odds, credit purchases, and settlement await the planned backend.', flow: 'Daily bonus → Local ledger · Odds backend planned' },
-  { path: '/playbook', icon: BookOpen, emblem: studioAsset('playbook-emblem-20261007.png'), title: 'Playbook', tag: 'INTERACTIVE PLAY ANIMATION', description: 'Learn plays, sets and schemes on an animated half court: labelled players run each step while the who, the what and the why are narrated.', flow: 'Library → Animate → Steps' },
+  { path: '/playbook', icon: BookOpen, emblem: studioAsset('playbook-emblem-20261007.png'), useEmblemInRail: true, title: 'Playbook', tag: 'INTERACTIVE PLAY ANIMATION', description: 'Learn plays, sets and schemes on an animated half court: labelled players run each step while the who, the what and the why are narrated.', flow: 'Library → Animate → Steps' },
 ];
 
 // The Daily Games desk and its two verified games. Lineup Lab is deliberately

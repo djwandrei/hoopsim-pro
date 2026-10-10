@@ -11,8 +11,9 @@ const CENTRAL = new Set(['top', 'rim', 'lane', 'nail', 'high_post', 'free_throw'
 export const ZONE_RE = /\b(short[-\s]+corner|deep[-\s]+corner|dunker(?:[-\s]+spot)?|free[-\s]throw[-\s]+line|high[-\s]+post|mid[-\s]post|low[-\s]post|restricted[-\s]+area|half[-\s]court|nail|slot|wing|corner|elbow|block|rim|basket|paint|lane|middle|center|perimeter|top(?:[-\s]+of[-\s]+the[-\s]+(?:key|arc))?(?!-lock)|baseline|post|arc)(?:s|es)?\b/gi;
 export const clonePositions = (pos) => Object.fromEntries(Object.entries(pos).map(([id, pt]) => [id, [...pt]]));
 export const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
-export const clampPoint = ([x, y], height = COURT.height) => [Math.max(32, Math.min(468, x)), Math.max(32, Math.min(height - 32, y))];
-export const sideAt = ([x]) => x < 250 ? 'left' : 'right';
+/** @param {number[]} point */
+export const clampPoint = (point, height = COURT.height) => [Math.max(32, Math.min(468, point[0])), Math.max(32, Math.min(height - 32, point[1]))];
+export const sideAt = point => point[0] < 250 ? 'left' : 'right';
 export function zoneKey(phrase) {
   const p = phrase.toLowerCase().replace(/-/g, ' ');
   if (/short corner/.test(p)) return 'short_corner';

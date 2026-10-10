@@ -39,7 +39,7 @@ function slug(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
-function parseLibrary(markdown) {
+export function parseLibrary(markdown) {
   const categories = [];
   let category = null;
   let play = null;

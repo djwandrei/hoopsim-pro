@@ -1,6 +1,6 @@
 {
   "format": "djhc-react-studio-native-release-closure-v1",
-  "releaseId": "studio-impact-daily-boards-20261010-v1",
+  "releaseId": "studio-consolidated-20261010g",
   "createdAt": "2026-10-10T10:48:38.522Z",
   "counts": {
     "pinnedAssets": 67,
@@ -9,11 +9,12 @@
     "impactEngineSources": 14,
     "impactCompanionDataAndReceipts": 12,
     "candidate100BundlePayloads": 13,
-    "requiredStaticClosureEntries": 100,
+    "requiredStaticClosureEntries": 192,
     "dynamicWorkerDependencies": 1,
     "dynamicStylesheetDependencies": 2,
     "dynamicRuntimeDependencies": 4,
-    "historicalReplayModelDependencies": 1
+    "historicalReplayModelDependencies": 1,
+    "franchiseRuntimeFiles": 92
   },
   "sourceIntegrity": {
     "candidate100FilesCleanAgainstDjhcHead": true,
@@ -23,7 +24,8 @@
     "candidate100IndependentPredictiveValidityEstablished": false,
     "candidate100ProspectiveValidityEstablished": false,
     "impactReceiptPath": "integration/site/tools/swishiq-studio/impact-native-release-receipt-20261010-v1.json",
-    "impactReceiptSha256": "4a504510fdea28b10e127c765bbcaa59f9c41d84bf5d56b9361eb2e44ab4cd74"
+    "impactReceiptSha256": "4a504510fdea28b10e127c765bbcaa59f9c41d84bf5d56b9361eb2e44ab4cd74",
+    "releaseConsolidatedFromCurrentLocalSource": true
   },
   "integrationGate": {
     "unknownNativeAssetsRemainUnpinned": [
@@ -969,6 +971,1110 @@
       "pinStatus": "pinned",
       "bytes": 8042,
       "sha256": "e385ed2e4682ea097426fd155c0b32c3791cb64514c9cdf3589a127c5bd39550"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/checkpoints/2026-10-06-v4-parametric-age-frozen/model.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/checkpoints/2026-10-06-v4-parametric-age-frozen/model.json",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 4176246,
+      "sha256": "6e37df672c7a25f7c2c5f6970afd01ebe3418e4e97f8d7043ab22072b9fdd8fc",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/data/season-age-anchor-index-v1.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/data/season-age-anchor-index-v1.json",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 3121026,
+      "sha256": "b8d38d4861c2af3a76684c0d228d04dc2c1941f22ed0893688dcdc5961f36df4",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/franchise-runtime-closure-manifest.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/franchise-runtime-closure-manifest.json",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 107314,
+      "sha256": "093e9974ff2c6306aaef68520137b7dcde26314ca1b959ba681f2db7596c5355",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/draft-night-orchestration-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/draft-night-orchestration-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 24435,
+      "sha256": "213837fd874c15036ff5397c61a087ab771d1941764d21b5b27cbc17c4a2b853",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-execution-input-pins-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-execution-input-pins-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 7639,
+      "sha256": "cc13bc4946adc30ceffe9c3c9e005473a7cbf7132cb812727ad72e8660a40602",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-game-input-bundle-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-game-input-bundle-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 3102,
+      "sha256": "76828599907334c83fa636a00c13bc391a6e8cf6814dcdfc08b81f5f343acfa2",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-draft-phase-executor-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-draft-phase-executor-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 15353,
+      "sha256": "9554e62e77a615144693c3b6e2f90249c805073134be797013d0abf4d04deeda",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-lifecycle-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-lifecycle-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 21868,
+      "sha256": "ec5ab68d1f24a4aaabe70f8ae7c068c6dcb2bd8943da2ec7a6ab473129966c30",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-phase-executor-map-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-phase-executor-map-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 1585,
+      "sha256": "083a7d96729cb80e3d9b4b5d7e9473e358f1f6d99ad26f93d497e7826a1d6fe5",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-phase-executors-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-phase-executors-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 19384,
+      "sha256": "5688ae1602cb30bacd468d2f14bd92421aed13e72c4c9b1477aa3f3f07349a82",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-transaction-approval-resolver-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-offseason-transaction-approval-resolver-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 1120,
+      "sha256": "aa48f1c820ecaad8dd42aa7cefd9b8424c26066873a5b903917b6ce0c636b8e4",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-postseason-completion-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-postseason-completion-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 14150,
+      "sha256": "3bf13d313ca43733730594e196c813479a496f8c4ac45a6471072a769a01bce7",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-season-awards-preview-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-season-awards-preview-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 24638,
+      "sha256": "238f5fd22c16031ec58db66176152f8e5f86b2c9222579a3c1e760d486139938",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-season-end-handoff-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-season-end-handoff-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 10530,
+      "sha256": "1c4ad96416b17c889aab38a40d33c115618ea925a72452f2a554290800ae1c2a",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-worker-client-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-worker-client-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 3329,
+      "sha256": "6d2af121b97f4a65a88a05051d860e3aa74f6696f6a8f42310562d580a346071",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-worker-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/franchise-worker-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 57264,
+      "sha256": "92338e28b7d21e188eae35ad2d7e06e435854d9eb2e12e48d18eb453c45c7dd6",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/season-lab-franchise-adapter-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/season-lab-franchise-adapter-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 67479,
+      "sha256": "c8156f3a8413748c6f0cff698f4928092f93f090b02a9c7a09488ac8cc0a0c53",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/transaction-proposal-decision-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/transaction-proposal-decision-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 6630,
+      "sha256": "62a74bc083ed2b146e3c57e2ce9c2c078458450386829d637ad2ef93e7beae88",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/v4-franchise-intake-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/v4-franchise-intake-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 62106,
+      "sha256": "3170b613915b8c11a73b88d58b5ad10d58958fe6233e0a27e29775ca93ef0411",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/v4-generated-shooting-rating-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/v4-generated-shooting-rating-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 5313,
+      "sha256": "5e2b6e394c01617596fc8e73bf181fc3da73e6d38962b2299aadfeab4b738858",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/integration/v4-snapshot-worker-payload-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/integration/v4-snapshot-worker-payload-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 13337,
+      "sha256": "4542ea864d3330b92f24f0811fdd31fc45201786b61415c6cdf439bebc63a251",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cap-accounting-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cap-accounting-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 27003,
+      "sha256": "a3360bfedf4a5091f4a112e3a0122a4b2aeed441d35546f976c822621380668d",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/career-progression-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/career-progression-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 16430,
+      "sha256": "5663d12a982783c481957a306c8de5ae0d38e95ca083c3f2ef33410ee8a713dc",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cash-consideration-ledger-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cash-consideration-ledger-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 39284,
+      "sha256": "9e5af17403ba038e65c91d60ad563189eeac959a0cdcdbdf18e4aad89b87ad37",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-contract-option-rules-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-contract-option-rules-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 12427,
+      "sha256": "db113893483dfcdb5bcda9a7a71e6afb604718fda78e59e9ea7d28c1e8eafc59",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-restricted-free-agency-rules-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-restricted-free-agency-rules-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 22070,
+      "sha256": "699d96bda6ccf8433e40778cb3e7efbdf11b416bfe541a3b3f319444fd1607f9",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-roster-limits-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-roster-limits-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 26307,
+      "sha256": "41b0aaf35f881d5b9dfd4ba2e045cdb0d340482395f44f4ff7658c54307d8849",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-salary-matching-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-salary-matching-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 10852,
+      "sha256": "eb53d3f26431596aa82366546ac8dd3f6fe036c1b20e7e6340e27591f62de12e",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-salary-scales-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-salary-scales-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 18235,
+      "sha256": "9fbdaabc3756344abaf1889a10cce70ed48a53d96e30c729babc599e04374e03",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-signing-mechanisms-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-signing-mechanisms-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 24160,
+      "sha256": "096d79c331068cb4bec0e398bf2b458c70f27921abcc72a32a0ef773a7cf3bdd",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-trade-rule-engine-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-trade-rule-engine-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 31566,
+      "sha256": "68b5a4c1d7b44690bc66a552bf4f2337513fea84cd7b1e5a848831c5bab2463e",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-two-way-conversion-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cba-two-way-conversion-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 14216,
+      "sha256": "4035842cd864a6f025e3f74d07cc87cabad73b8e79f3b92a2ccd608565f16425",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/coherent-box-score-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/coherent-box-score-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 18141,
+      "sha256": "a1a4afdeee96cccee67673f9a1e6f03fcd6a62f6850dd39eac428846e8e0f1aa",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/coherent-game-simulator-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/coherent-game-simulator-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 1858,
+      "sha256": "f3e8b09eec582e33c551bae309c549378d7a49802356d02cc044099d1b766515",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cpu-franchise-rotation-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cpu-franchise-rotation-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 7503,
+      "sha256": "ad369f321108a3c5378536a623cf6aadcafb73b20dbc61c64d695cfe896078ef",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cpu-free-agency-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cpu-free-agency-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 12405,
+      "sha256": "48177c2169754f059c5555153dca845d24b33e8368ec59174f860376950323c5",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/cpu-strategy-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/cpu-strategy-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 28862,
+      "sha256": "e913df18e44f96ccfdd262f7dbc8894e28c76ec7ba5093d857da1f5e120e8066",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/draft-lottery-policy-adapter-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/draft-lottery-policy-adapter-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 19403,
+      "sha256": "357b03d1d9dce5c624b1cce641b933508f2f13c494d55517b755bd7a9f037290",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/draft-simulation-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/draft-simulation-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 20950,
+      "sha256": "805ae1108e5c2830fbc346f77cd4d6bab01d85d433b5809588f0b11ff2fcfbec",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-automation-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-automation-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 15672,
+      "sha256": "936ee373c071bb2e1d72998b13781ca46b07664be7fb7069ec3cbc188924148b",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 4953,
+      "sha256": "4e29975c0ac113901caf65f4c4d28c7fc19d2a272c9d518b01c024a8ac2a68cb",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-browser-session-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-browser-session-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 24515,
+      "sha256": "771353570e7e4f98942bb033f259b98954d50b8e038317bf3dda06ff410ea5d5",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-browser-store-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-browser-store-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 16364,
+      "sha256": "879524a723b0f73f468276616381dd941a3d227d3011e2f05d26335fb4c95d4d",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-coaching-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-coaching-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 13523,
+      "sha256": "d4269a4020d489af36e11a3552d5f16a4fcba2ce5d4fa0d59f1dca2bad0fe7a0",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-controls-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-controls-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 36114,
+      "sha256": "7787b74c094cd40acd74907d6f5fade3892dc40464bc8bcc31de47e4f0d81b17",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-game-input-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-game-input-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 5380,
+      "sha256": "6c09cd7c2bf9f35cc78285a2fc76b088485e1af42d57d9454ac9ac5294a7f39b",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-season-completion-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/franchise-season-completion-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 17265,
+      "sha256": "8da7b43831568f5b0f9578a05e1ed98164e8f377720f6d974d90ac80ce4e774c",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agency-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agency-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 23285,
+      "sha256": "ce710b1448b1e2ec5d6e442c783fd846458865f04f9a1bf44aadf8bbf0f51366",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agent-cap-holds-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agent-cap-holds-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 58348,
+      "sha256": "2833465d4bc854c3f11ca4cdd19464d78a1201d523bed3d40c59e95ce1f486ce",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agent-market-decision-receipt-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agent-market-decision-receipt-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 9708,
+      "sha256": "7ceda8b0f49f52f4d08bf6308b4abf7a149ccd1179c962d458d72ebb10ae26e7",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agent-offer-builder-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agent-offer-builder-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 21651,
+      "sha256": "7f7802904986af9e054095e72bae9ab416ed693fe45dbd9baf9bc72adcd07622",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agent-team-targeting-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/free-agent-team-targeting-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 30995,
+      "sha256": "e812036583624681c3053bbec88c1f49cd63e87dcf5ea338edc3a536e50b5aa8",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/game-feature-blocks-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/game-feature-blocks-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 39707,
+      "sha256": "6dac0d263b832192b02dc52963a5261362ba7939a2b2123d1b76f91a9f23910b",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/game-simulator-v2.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/game-simulator-v2.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 41068,
+      "sha256": "5e391e3a56cd3437805bb5fb8eb2480f6976e9edebd5e57190daf97060168f5c",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/league-game-roster-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/league-game-roster-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 11211,
+      "sha256": "48483c6d31c5c481474944ebd545ecd065865814bbe875a2bbc0f211860aff1b",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/live-game-simulator-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/live-game-simulator-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 113970,
+      "sha256": "c1e0d141d3a97c01dab2b1eb7b3eadad2678f8ca384f692b2f99ff98ab2e705e",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/live-minute-budget-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/live-minute-budget-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 5611,
+      "sha256": "d3f50c2e01fb8fe5752ce5fd1790690ec30d7ddf4a8594677552bf3103131de9",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/live-ordinary-foul-controls-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/live-ordinary-foul-controls-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 5870,
+      "sha256": "06062a5711ac3b97bc70de869a0b160c37ff8fc00c7f81b4637ffa15adc2eeb1",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/live-rotation-controls-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/live-rotation-controls-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 15995,
+      "sha256": "b3fba2e8149a810c390a02dde0b56104b9105b974ba73a957726d055a6b73db6",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-draft-lottery-source-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-draft-lottery-source-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 38768,
+      "sha256": "e90006748ae15ef6e1b5b2efb423d5d028f36c72bfbdbb3898103e5e452a5b1c",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-foul-disqualification-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-foul-disqualification-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 8092,
+      "sha256": "5313d8e1a368f783ad7247d01bf1583cb9619497692b0b8d7834fb9ac84f5db5",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-postseason-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-postseason-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 50876,
+      "sha256": "e15f51f4fe0d57bc30646541ae63421710ab785f5be15fcdae43a43b5b27c68c",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-schedule-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-schedule-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 76822,
+      "sha256": "aa562c1b0a026f494cdef6c6aa8ab46905e16d767a7fe59b7202ed3d2c57cc6c",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-team-foul-penalty-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-team-foul-penalty-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 6727,
+      "sha256": "88430a1037db313b1fbd2a3b8cb5b58154e8f5b74b68fb627c977fa77defee94",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-timeout-state-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/nba-timeout-state-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 9044,
+      "sha256": "e5547d076b0fd9588154e7b5c163b27c73c06a42caa0a6f22d8b5a8c8df73894",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/payroll-state-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/payroll-state-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 10829,
+      "sha256": "eadc66b31f041524bfd16d50fee480e5d1cafa20eba9f318b9322490e1d84f56",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/player-game-cohort-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/player-game-cohort-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 28061,
+      "sha256": "7071851dabfd55d7387568583a77085cabd754758a117da049c14645633f595f",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/player-game-development-features-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/player-game-development-features-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 13152,
+      "sha256": "773dd7ea895710a2482b953a1cd843e7ce1502e3a5bbd676ca812e1c8758ac64",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/player-game-shared-evaluation-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/player-game-shared-evaluation-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 7812,
+      "sha256": "213355b86e07a9eb2d623149285dbf1ed38fa8d9b73dcfd530f94e774ce10675",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/prior-personal-foul-rate-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/prior-personal-foul-rate-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 16158,
+      "sha256": "264f39fcaeba06fc95cf0beb1c925726fc3b1b3ad8ce1e35964799086f691c3f",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/prior-rebound-split-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/prior-rebound-split-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 10708,
+      "sha256": "d16de6dcebeab14293d27ba11fe64d8c3d3dfb6c4108e8e709d7224eb66b2f16",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/prior-shot-efficiency-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/prior-shot-efficiency-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 7471,
+      "sha256": "22d9bfe291779812042e33b189ff0b438a9ced8901ab2e7483bc1dfdda3e4074",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/rebound-ownership-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/rebound-ownership-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 10351,
+      "sha256": "44e69b077c223ce957ba6223966093b8ba9c97ab403fb290e2c9bec0e1f656f7",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/restricted-free-agency-state-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/restricted-free-agency-state-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 14843,
+      "sha256": "20d7184659e76737d091533831dba273d8d92b439811a9ed5c2611c2cc8c5116",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/ridge-regression.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/ridge-regression.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 2876,
+      "sha256": "6a5a34eaad0e50c50a330472fde6e2f766547fc218c43c6da11e1bd908fad05c",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/rotation-schedule-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/rotation-schedule-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 13404,
+      "sha256": "b0b40e5fc7da66f8b98e4f7821488ec2c885314c17550f27de234d7179c176f1",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/scenario-pick-ledger-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/scenario-pick-ledger-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 13082,
+      "sha256": "76365e3a21303301451e59cb16cf3473ce4373f27c957672f32582308adc65f7",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/season-age-transition-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/season-age-transition-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 17218,
+      "sha256": "a10a08ee017c452757484bd6516d6c9025bea289e08668eee0c5f3a109e412c3",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/season-awards-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/season-awards-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 74415,
+      "sha256": "addca7e62729e2193eaca35b5f1b96cfb48b74f53df86313d4eb89b472f2f4f4",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/season-simulation-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/season-simulation-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 73167,
+      "sha256": "14488524fa96d8e6dec772d9771fd233d18bd388b3e50d092dcd8207a2ae8124",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/sha256-isomorphic-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/sha256-isomorphic-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 3678,
+      "sha256": "2f4d67149b4a8baf90d2df0864fab3783e24bfe83b30775abbe512535c99ca3a",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-event-calibration-cache-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-event-calibration-cache-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 6322,
+      "sha256": "e48092ded061cd81f2f26d873b3dfb7b9e4f10b77162d1efc9b8d4dcf7c7d3a0",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-player-production-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-player-production-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 3386,
+      "sha256": "4afba8620332de9a0498fe73695c47a8c422d5f1cd16d9b29b1f8f0cdf2e3ccf",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-possession-mapping-v2.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-possession-mapping-v2.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 8592,
+      "sha256": "0b2f591fb6e96ea32e70bd0de548960ea43ce6d4bb34b602501c3a67d287e3b8",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-possession-mapping-v3.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-possession-mapping-v3.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 9681,
+      "sha256": "cbc2cfe882fb560fb7c4eecdd8b8fe337a98279b64672465ff10f4f25a420349",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-possession-mapping-v4.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-possession-mapping-v4.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 17037,
+      "sha256": "8f081e2cf855f744c7387c5130699159a6ad249c70c9ad435b74848e36aea018",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-production-game-input-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/shared-production-game-input-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 15793,
+      "sha256": "35f7860448984d6531a83d6e2d6c9d0db99cbf3bfa681a0f2feb51fe2a67f991",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/simulation-contracts-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/simulation-contracts-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 9818,
+      "sha256": "3834de85553591c542139fab819c2809c0e5aada3434186d58eee2455d5e09fa",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/stored-tpe-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/stored-tpe-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 15084,
+      "sha256": "3d876d1aba2436b7c04d4fc0460bd4014e9559a5799b0258a674af22d17695f2",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/transaction-engine-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/transaction-engine-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 99834,
+      "sha256": "36107a8f2a16410e5a9b9b4292c8f7516c2e2d1168bdf0f4c607d97a3ce1d5ed",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/lib/waiver-accounting-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/lib/waiver-accounting-v1.mjs",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 12489,
+      "sha256": "cc8492061459b53864ccbd78c47e8606cd97c27cdf3e7562e25ad87a2a85205f",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/franchise-sim-20261010/models/shared-player-production-v1-candidate-20261007b.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/franchise-sim-20261010/models/shared-player-production-v1-candidate-20261007b.json",
+      "sourceLabel": "Reviewed standalone Franchise worker closure",
+      "bytes": 36920,
+      "sha256": "044386cbe912d03036ef454a185c555da5c356a485288622e722b0c609ee8db4",
+      "roles": [
+        "franchise-runtime"
+      ],
+      "pinStatus": "closure-verified"
     },
     {
       "deploymentPath": "tools/swishiq-studio/game-lab.js",

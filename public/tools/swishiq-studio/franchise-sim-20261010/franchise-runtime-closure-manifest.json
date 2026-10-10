@@ -1,0 +1,2171 @@
+{
+  "format": "swishiq-franchise-browser-runtime-closure-v2",
+  "version": 2,
+  "generatedBy": "scripts/stage-franchise-browser-closure-20261010.mjs",
+  "runtimePath": "public/tools/swishiq-studio/franchise-sim-20261010",
+  "sourceRoot": "djshouseofcards-next-fixes-applied",
+  "sourcePathsRelativeTo": "sourceRoot",
+  "copyPrefix": "prototypes/djhc-player-game-sim",
+  "manifestPath": "franchise-runtime-closure-manifest.json",
+  "entrypointGroups": [
+    {
+      "name": "app-bridge",
+      "entrypoints": [
+        {
+          "sourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+          "outputPath": "integration/season-lab-franchise-adapter-v1.mjs"
+        },
+        {
+          "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-store-v1.mjs",
+          "outputPath": "lib/franchise-browser-store-v1.mjs"
+        },
+        {
+          "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs",
+          "outputPath": "lib/franchise-controls-v1.mjs"
+        }
+      ],
+      "copiedModules": [
+        "integration/franchise-execution-input-pins-v1.mjs",
+        "integration/franchise-game-input-bundle-v1.mjs",
+        "integration/franchise-worker-client-v1.mjs",
+        "integration/season-lab-franchise-adapter-v1.mjs",
+        "integration/v4-franchise-intake-v1.mjs",
+        "integration/v4-generated-shooting-rating-v1.mjs",
+        "integration/v4-snapshot-worker-payload-v1.mjs",
+        "lib/cap-accounting-v1.mjs",
+        "lib/career-progression-v1.mjs",
+        "lib/cash-consideration-ledger-v1.mjs",
+        "lib/cba-contract-option-rules-v1.mjs",
+        "lib/cba-restricted-free-agency-rules-v1.mjs",
+        "lib/cba-roster-limits-v1.mjs",
+        "lib/cba-salary-scales-v1.mjs",
+        "lib/cba-signing-mechanisms-v1.mjs",
+        "lib/cba-two-way-conversion-v1.mjs",
+        "lib/coherent-box-score-v1.mjs",
+        "lib/coherent-game-simulator-v1.mjs",
+        "lib/cpu-franchise-rotation-v1.mjs",
+        "lib/franchise-automation-v1.mjs",
+        "lib/franchise-browser-checkpoint-codec-v1.mjs",
+        "lib/franchise-browser-session-v1.mjs",
+        "lib/franchise-browser-store-v1.mjs",
+        "lib/franchise-coaching-v1.mjs",
+        "lib/franchise-controls-v1.mjs",
+        "lib/franchise-game-input-v1.mjs",
+        "lib/franchise-season-completion-v1.mjs",
+        "lib/free-agent-cap-holds-v1.mjs",
+        "lib/game-feature-blocks-v1.mjs",
+        "lib/game-simulator-v2.mjs",
+        "lib/league-game-roster-v1.mjs",
+        "lib/live-minute-budget-v1.mjs",
+        "lib/live-rotation-controls-v1.mjs",
+        "lib/nba-postseason-v1.mjs",
+        "lib/nba-schedule-v1.mjs",
+        "lib/payroll-state-v1.mjs",
+        "lib/player-game-cohort-v1.mjs",
+        "lib/player-game-development-features-v1.mjs",
+        "lib/player-game-shared-evaluation-v1.mjs",
+        "lib/restricted-free-agency-state-v1.mjs",
+        "lib/ridge-regression.mjs",
+        "lib/rotation-schedule-v1.mjs",
+        "lib/season-age-transition-v1.mjs",
+        "lib/season-awards-v1.mjs",
+        "lib/season-simulation-v1.mjs",
+        "lib/sha256-isomorphic-v1.mjs",
+        "lib/shared-player-production-v1.mjs",
+        "lib/simulation-contracts-v1.mjs",
+        "lib/stored-tpe-v1.mjs",
+        "lib/transaction-engine-v1.mjs",
+        "lib/waiver-accounting-v1.mjs"
+      ],
+      "externalModules": [
+        "/tools/swishiq-studio/engine/canonical-v4-identity.js",
+        "/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+        "/tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+        "/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+        "/tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+        "/tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+        "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+        "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+        "/tools/swishiq-studio/engine/nba-schedule-source.js"
+      ]
+    },
+    {
+      "name": "standalone-worker",
+      "entrypoints": [
+        {
+          "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-client-v1.mjs",
+          "outputPath": "integration/franchise-worker-client-v1.mjs"
+        },
+        {
+          "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+          "outputPath": "integration/franchise-worker-v1.mjs"
+        }
+      ],
+      "copiedModules": [
+        "integration/draft-night-orchestration-v1.mjs",
+        "integration/franchise-execution-input-pins-v1.mjs",
+        "integration/franchise-game-input-bundle-v1.mjs",
+        "integration/franchise-offseason-draft-phase-executor-v1.mjs",
+        "integration/franchise-offseason-lifecycle-v1.mjs",
+        "integration/franchise-offseason-phase-executor-map-v1.mjs",
+        "integration/franchise-offseason-phase-executors-v1.mjs",
+        "integration/franchise-offseason-transaction-approval-resolver-v1.mjs",
+        "integration/franchise-postseason-completion-v1.mjs",
+        "integration/franchise-season-awards-preview-v1.mjs",
+        "integration/franchise-season-end-handoff-v1.mjs",
+        "integration/franchise-worker-client-v1.mjs",
+        "integration/franchise-worker-v1.mjs",
+        "integration/transaction-proposal-decision-v1.mjs",
+        "lib/cap-accounting-v1.mjs",
+        "lib/career-progression-v1.mjs",
+        "lib/cash-consideration-ledger-v1.mjs",
+        "lib/cba-contract-option-rules-v1.mjs",
+        "lib/cba-restricted-free-agency-rules-v1.mjs",
+        "lib/cba-roster-limits-v1.mjs",
+        "lib/cba-salary-matching-v1.mjs",
+        "lib/cba-salary-scales-v1.mjs",
+        "lib/cba-signing-mechanisms-v1.mjs",
+        "lib/cba-trade-rule-engine-v1.mjs",
+        "lib/cba-two-way-conversion-v1.mjs",
+        "lib/coherent-box-score-v1.mjs",
+        "lib/coherent-game-simulator-v1.mjs",
+        "lib/cpu-franchise-rotation-v1.mjs",
+        "lib/cpu-free-agency-v1.mjs",
+        "lib/cpu-strategy-v1.mjs",
+        "lib/draft-lottery-policy-adapter-v1.mjs",
+        "lib/draft-simulation-v1.mjs",
+        "lib/franchise-automation-v1.mjs",
+        "lib/franchise-browser-checkpoint-codec-v1.mjs",
+        "lib/franchise-browser-session-v1.mjs",
+        "lib/franchise-coaching-v1.mjs",
+        "lib/franchise-controls-v1.mjs",
+        "lib/franchise-game-input-v1.mjs",
+        "lib/franchise-season-completion-v1.mjs",
+        "lib/free-agency-v1.mjs",
+        "lib/free-agent-cap-holds-v1.mjs",
+        "lib/free-agent-market-decision-receipt-v1.mjs",
+        "lib/free-agent-offer-builder-v1.mjs",
+        "lib/free-agent-team-targeting-v1.mjs",
+        "lib/game-feature-blocks-v1.mjs",
+        "lib/game-simulator-v2.mjs",
+        "lib/league-game-roster-v1.mjs",
+        "lib/live-game-simulator-v1.mjs",
+        "lib/live-minute-budget-v1.mjs",
+        "lib/live-ordinary-foul-controls-v1.mjs",
+        "lib/live-rotation-controls-v1.mjs",
+        "lib/nba-draft-lottery-source-v1.mjs",
+        "lib/nba-foul-disqualification-v1.mjs",
+        "lib/nba-postseason-v1.mjs",
+        "lib/nba-schedule-v1.mjs",
+        "lib/nba-team-foul-penalty-v1.mjs",
+        "lib/nba-timeout-state-v1.mjs",
+        "lib/payroll-state-v1.mjs",
+        "lib/player-game-cohort-v1.mjs",
+        "lib/player-game-development-features-v1.mjs",
+        "lib/player-game-shared-evaluation-v1.mjs",
+        "lib/prior-personal-foul-rate-v1.mjs",
+        "lib/prior-rebound-split-v1.mjs",
+        "lib/prior-shot-efficiency-v1.mjs",
+        "lib/rebound-ownership-v1.mjs",
+        "lib/restricted-free-agency-state-v1.mjs",
+        "lib/ridge-regression.mjs",
+        "lib/rotation-schedule-v1.mjs",
+        "lib/scenario-pick-ledger-v1.mjs",
+        "lib/season-age-transition-v1.mjs",
+        "lib/season-awards-v1.mjs",
+        "lib/season-simulation-v1.mjs",
+        "lib/sha256-isomorphic-v1.mjs",
+        "lib/shared-event-calibration-cache-v1.mjs",
+        "lib/shared-player-production-v1.mjs",
+        "lib/shared-possession-mapping-v2.mjs",
+        "lib/shared-possession-mapping-v3.mjs",
+        "lib/shared-possession-mapping-v4.mjs",
+        "lib/shared-production-game-input-v1.mjs",
+        "lib/simulation-contracts-v1.mjs",
+        "lib/stored-tpe-v1.mjs",
+        "lib/transaction-engine-v1.mjs",
+        "lib/waiver-accounting-v1.mjs"
+      ],
+      "externalModules": []
+    }
+  ],
+  "files": [
+    {
+      "path": "checkpoints/2026-10-06-v4-parametric-age-frozen/model.json",
+      "kind": "asset",
+      "owners": [
+        "app-bridge"
+      ],
+      "sourcePath": "prototypes/djhc-player-game-sim/checkpoints/2026-10-06-v4-parametric-age-frozen/model.json",
+      "sourceSha256": "6e37df672c7a25f7c2c5f6970afd01ebe3418e4e97f8d7043ab22072b9fdd8fc",
+      "sha256": "6e37df672c7a25f7c2c5f6970afd01ebe3418e4e97f8d7043ab22072b9fdd8fc",
+      "bytes": 4176246
+    },
+    {
+      "path": "data/season-age-anchor-index-v1.json",
+      "kind": "asset",
+      "owners": [
+        "app-bridge"
+      ],
+      "sourcePath": "prototypes/djhc-player-game-sim/data/season-age-anchor-index-v1.json",
+      "sourceSha256": "b8d38d4861c2af3a76684c0d228d04dc2c1941f22ed0893688dcdc5961f36df4",
+      "sha256": "b8d38d4861c2af3a76684c0d228d04dc2c1941f22ed0893688dcdc5961f36df4",
+      "bytes": 3121026
+    },
+    {
+      "path": "integration/draft-night-orchestration-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/draft-night-orchestration-v1.mjs",
+      "sourceSha256": "213837fd874c15036ff5397c61a087ab771d1941764d21b5b27cbc17c4a2b853",
+      "sha256": "213837fd874c15036ff5397c61a087ab771d1941764d21b5b27cbc17c4a2b853",
+      "bytes": 24435
+    },
+    {
+      "path": "integration/franchise-execution-input-pins-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-execution-input-pins-v1.mjs",
+      "sourceSha256": "cc13bc4946adc30ceffe9c3c9e005473a7cbf7132cb812727ad72e8660a40602",
+      "sha256": "cc13bc4946adc30ceffe9c3c9e005473a7cbf7132cb812727ad72e8660a40602",
+      "bytes": 7639
+    },
+    {
+      "path": "integration/franchise-game-input-bundle-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-game-input-bundle-v1.mjs",
+      "sourceSha256": "76828599907334c83fa636a00c13bc391a6e8cf6814dcdfc08b81f5f343acfa2",
+      "sha256": "76828599907334c83fa636a00c13bc391a6e8cf6814dcdfc08b81f5f343acfa2",
+      "bytes": 3102
+    },
+    {
+      "path": "integration/franchise-offseason-draft-phase-executor-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-draft-phase-executor-v1.mjs",
+      "sourceSha256": "9554e62e77a615144693c3b6e2f90249c805073134be797013d0abf4d04deeda",
+      "sha256": "9554e62e77a615144693c3b6e2f90249c805073134be797013d0abf4d04deeda",
+      "bytes": 15353
+    },
+    {
+      "path": "integration/franchise-offseason-lifecycle-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-lifecycle-v1.mjs",
+      "sourceSha256": "ec5ab68d1f24a4aaabe70f8ae7c068c6dcb2bd8943da2ec7a6ab473129966c30",
+      "sha256": "ec5ab68d1f24a4aaabe70f8ae7c068c6dcb2bd8943da2ec7a6ab473129966c30",
+      "bytes": 21868
+    },
+    {
+      "path": "integration/franchise-offseason-phase-executor-map-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executor-map-v1.mjs",
+      "sourceSha256": "083a7d96729cb80e3d9b4b5d7e9473e358f1f6d99ad26f93d497e7826a1d6fe5",
+      "sha256": "083a7d96729cb80e3d9b4b5d7e9473e358f1f6d99ad26f93d497e7826a1d6fe5",
+      "bytes": 1585
+    },
+    {
+      "path": "integration/franchise-offseason-phase-executors-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executors-v1.mjs",
+      "sourceSha256": "5688ae1602cb30bacd468d2f14bd92421aed13e72c4c9b1477aa3f3f07349a82",
+      "sha256": "5688ae1602cb30bacd468d2f14bd92421aed13e72c4c9b1477aa3f3f07349a82",
+      "bytes": 19384
+    },
+    {
+      "path": "integration/franchise-offseason-transaction-approval-resolver-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-transaction-approval-resolver-v1.mjs",
+      "sourceSha256": "aa48f1c820ecaad8dd42aa7cefd9b8424c26066873a5b903917b6ce0c636b8e4",
+      "sha256": "aa48f1c820ecaad8dd42aa7cefd9b8424c26066873a5b903917b6ce0c636b8e4",
+      "bytes": 1120
+    },
+    {
+      "path": "integration/franchise-postseason-completion-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-postseason-completion-v1.mjs",
+      "sourceSha256": "3bf13d313ca43733730594e196c813479a496f8c4ac45a6471072a769a01bce7",
+      "sha256": "3bf13d313ca43733730594e196c813479a496f8c4ac45a6471072a769a01bce7",
+      "bytes": 14150
+    },
+    {
+      "path": "integration/franchise-season-awards-preview-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-awards-preview-v1.mjs",
+      "sourceSha256": "238f5fd22c16031ec58db66176152f8e5f86b2c9222579a3c1e760d486139938",
+      "sha256": "238f5fd22c16031ec58db66176152f8e5f86b2c9222579a3c1e760d486139938",
+      "bytes": 24638
+    },
+    {
+      "path": "integration/franchise-season-end-handoff-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-end-handoff-v1.mjs",
+      "sourceSha256": "1c4ad96416b17c889aab38a40d33c115618ea925a72452f2a554290800ae1c2a",
+      "sha256": "1c4ad96416b17c889aab38a40d33c115618ea925a72452f2a554290800ae1c2a",
+      "bytes": 10530
+    },
+    {
+      "path": "integration/franchise-worker-client-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-client-v1.mjs",
+      "sourceSha256": "6d2af121b97f4a65a88a05051d860e3aa74f6696f6a8f42310562d580a346071",
+      "sha256": "6d2af121b97f4a65a88a05051d860e3aa74f6696f6a8f42310562d580a346071",
+      "bytes": 3329
+    },
+    {
+      "path": "integration/franchise-worker-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "sourceSha256": "92338e28b7d21e188eae35ad2d7e06e435854d9eb2e12e48d18eb453c45c7dd6",
+      "sha256": "92338e28b7d21e188eae35ad2d7e06e435854d9eb2e12e48d18eb453c45c7dd6",
+      "bytes": 57264
+    },
+    {
+      "path": "integration/season-lab-franchise-adapter-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+      "sourceSha256": "c8156f3a8413748c6f0cff698f4928092f93f090b02a9c7a09488ac8cc0a0c53",
+      "sha256": "c8156f3a8413748c6f0cff698f4928092f93f090b02a9c7a09488ac8cc0a0c53",
+      "bytes": 67479
+    },
+    {
+      "path": "integration/transaction-proposal-decision-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/transaction-proposal-decision-v1.mjs",
+      "sourceSha256": "62a74bc083ed2b146e3c57e2ce9c2c078458450386829d637ad2ef93e7beae88",
+      "sha256": "62a74bc083ed2b146e3c57e2ce9c2c078458450386829d637ad2ef93e7beae88",
+      "bytes": 6630
+    },
+    {
+      "path": "integration/v4-franchise-intake-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs",
+      "sourceSha256": "f97bea1650305e19e0a58931a3ccc806452acb734d35c18cb898093b1e06e4c0",
+      "sha256": "3170b613915b8c11a73b88d58b5ad10d58958fe6233e0a27e29775ca93ef0411",
+      "bytes": 62106
+    },
+    {
+      "path": "integration/v4-generated-shooting-rating-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-generated-shooting-rating-v1.mjs",
+      "sourceSha256": "5e2b6e394c01617596fc8e73bf181fc3da73e6d38962b2299aadfeab4b738858",
+      "sha256": "5e2b6e394c01617596fc8e73bf181fc3da73e6d38962b2299aadfeab4b738858",
+      "bytes": 5313
+    },
+    {
+      "path": "integration/v4-snapshot-worker-payload-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-snapshot-worker-payload-v1.mjs",
+      "sourceSha256": "4542ea864d3330b92f24f0811fdd31fc45201786b61415c6cdf439bebc63a251",
+      "sha256": "4542ea864d3330b92f24f0811fdd31fc45201786b61415c6cdf439bebc63a251",
+      "bytes": 13337
+    },
+    {
+      "path": "lib/cap-accounting-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs",
+      "sourceSha256": "a3360bfedf4a5091f4a112e3a0122a4b2aeed441d35546f976c822621380668d",
+      "sha256": "a3360bfedf4a5091f4a112e3a0122a4b2aeed441d35546f976c822621380668d",
+      "bytes": 27003
+    },
+    {
+      "path": "lib/career-progression-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/career-progression-v1.mjs",
+      "sourceSha256": "5663d12a982783c481957a306c8de5ae0d38e95ca083c3f2ef33410ee8a713dc",
+      "sha256": "5663d12a982783c481957a306c8de5ae0d38e95ca083c3f2ef33410ee8a713dc",
+      "bytes": 16430
+    },
+    {
+      "path": "lib/cash-consideration-ledger-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cash-consideration-ledger-v1.mjs",
+      "sourceSha256": "9e5af17403ba038e65c91d60ad563189eeac959a0cdcdbdf18e4aad89b87ad37",
+      "sha256": "9e5af17403ba038e65c91d60ad563189eeac959a0cdcdbdf18e4aad89b87ad37",
+      "bytes": 39284
+    },
+    {
+      "path": "lib/cba-contract-option-rules-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-contract-option-rules-v1.mjs",
+      "sourceSha256": "db113893483dfcdb5bcda9a7a71e6afb604718fda78e59e9ea7d28c1e8eafc59",
+      "sha256": "db113893483dfcdb5bcda9a7a71e6afb604718fda78e59e9ea7d28c1e8eafc59",
+      "bytes": 12427
+    },
+    {
+      "path": "lib/cba-restricted-free-agency-rules-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-restricted-free-agency-rules-v1.mjs",
+      "sourceSha256": "699d96bda6ccf8433e40778cb3e7efbdf11b416bfe541a3b3f319444fd1607f9",
+      "sha256": "699d96bda6ccf8433e40778cb3e7efbdf11b416bfe541a3b3f319444fd1607f9",
+      "bytes": 22070
+    },
+    {
+      "path": "lib/cba-roster-limits-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-roster-limits-v1.mjs",
+      "sourceSha256": "41b0aaf35f881d5b9dfd4ba2e045cdb0d340482395f44f4ff7658c54307d8849",
+      "sha256": "41b0aaf35f881d5b9dfd4ba2e045cdb0d340482395f44f4ff7658c54307d8849",
+      "bytes": 26307
+    },
+    {
+      "path": "lib/cba-salary-matching-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-matching-v1.mjs",
+      "sourceSha256": "eb53d3f26431596aa82366546ac8dd3f6fe036c1b20e7e6340e27591f62de12e",
+      "sha256": "eb53d3f26431596aa82366546ac8dd3f6fe036c1b20e7e6340e27591f62de12e",
+      "bytes": 10852
+    },
+    {
+      "path": "lib/cba-salary-scales-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-scales-v1.mjs",
+      "sourceSha256": "9fbdaabc3756344abaf1889a10cce70ed48a53d96e30c729babc599e04374e03",
+      "sha256": "9fbdaabc3756344abaf1889a10cce70ed48a53d96e30c729babc599e04374e03",
+      "bytes": 18235
+    },
+    {
+      "path": "lib/cba-signing-mechanisms-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-signing-mechanisms-v1.mjs",
+      "sourceSha256": "096d79c331068cb4bec0e398bf2b458c70f27921abcc72a32a0ef773a7cf3bdd",
+      "sha256": "096d79c331068cb4bec0e398bf2b458c70f27921abcc72a32a0ef773a7cf3bdd",
+      "bytes": 24160
+    },
+    {
+      "path": "lib/cba-trade-rule-engine-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-trade-rule-engine-v1.mjs",
+      "sourceSha256": "68b5a4c1d7b44690bc66a552bf4f2337513fea84cd7b1e5a848831c5bab2463e",
+      "sha256": "68b5a4c1d7b44690bc66a552bf4f2337513fea84cd7b1e5a848831c5bab2463e",
+      "bytes": 31566
+    },
+    {
+      "path": "lib/cba-two-way-conversion-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-two-way-conversion-v1.mjs",
+      "sourceSha256": "4035842cd864a6f025e3f74d07cc87cabad73b8e79f3b92a2ccd608565f16425",
+      "sha256": "4035842cd864a6f025e3f74d07cc87cabad73b8e79f3b92a2ccd608565f16425",
+      "bytes": 14216
+    },
+    {
+      "path": "lib/coherent-box-score-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/coherent-box-score-v1.mjs",
+      "sourceSha256": "a1a4afdeee96cccee67673f9a1e6f03fcd6a62f6850dd39eac428846e8e0f1aa",
+      "sha256": "a1a4afdeee96cccee67673f9a1e6f03fcd6a62f6850dd39eac428846e8e0f1aa",
+      "bytes": 18141
+    },
+    {
+      "path": "lib/coherent-game-simulator-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/coherent-game-simulator-v1.mjs",
+      "sourceSha256": "f3e8b09eec582e33c551bae309c549378d7a49802356d02cc044099d1b766515",
+      "sha256": "f3e8b09eec582e33c551bae309c549378d7a49802356d02cc044099d1b766515",
+      "bytes": 1858
+    },
+    {
+      "path": "lib/cpu-franchise-rotation-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-franchise-rotation-v1.mjs",
+      "sourceSha256": "ad369f321108a3c5378536a623cf6aadcafb73b20dbc61c64d695cfe896078ef",
+      "sha256": "ad369f321108a3c5378536a623cf6aadcafb73b20dbc61c64d695cfe896078ef",
+      "bytes": 7503
+    },
+    {
+      "path": "lib/cpu-free-agency-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-free-agency-v1.mjs",
+      "sourceSha256": "48177c2169754f059c5555153dca845d24b33e8368ec59174f860376950323c5",
+      "sha256": "48177c2169754f059c5555153dca845d24b33e8368ec59174f860376950323c5",
+      "bytes": 12405
+    },
+    {
+      "path": "lib/cpu-strategy-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-strategy-v1.mjs",
+      "sourceSha256": "e913df18e44f96ccfdd262f7dbc8894e28c76ec7ba5093d857da1f5e120e8066",
+      "sha256": "e913df18e44f96ccfdd262f7dbc8894e28c76ec7ba5093d857da1f5e120e8066",
+      "bytes": 28862
+    },
+    {
+      "path": "lib/draft-lottery-policy-adapter-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/draft-lottery-policy-adapter-v1.mjs",
+      "sourceSha256": "357b03d1d9dce5c624b1cce641b933508f2f13c494d55517b755bd7a9f037290",
+      "sha256": "357b03d1d9dce5c624b1cce641b933508f2f13c494d55517b755bd7a9f037290",
+      "bytes": 19403
+    },
+    {
+      "path": "lib/draft-simulation-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/draft-simulation-v1.mjs",
+      "sourceSha256": "805ae1108e5c2830fbc346f77cd4d6bab01d85d433b5809588f0b11ff2fcfbec",
+      "sha256": "805ae1108e5c2830fbc346f77cd4d6bab01d85d433b5809588f0b11ff2fcfbec",
+      "bytes": 20950
+    },
+    {
+      "path": "lib/franchise-automation-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-automation-v1.mjs",
+      "sourceSha256": "936ee373c071bb2e1d72998b13781ca46b07664be7fb7069ec3cbc188924148b",
+      "sha256": "936ee373c071bb2e1d72998b13781ca46b07664be7fb7069ec3cbc188924148b",
+      "bytes": 15672
+    },
+    {
+      "path": "lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "sourceSha256": "4e29975c0ac113901caf65f4c4d28c7fc19d2a272c9d518b01c024a8ac2a68cb",
+      "sha256": "4e29975c0ac113901caf65f4c4d28c7fc19d2a272c9d518b01c024a8ac2a68cb",
+      "bytes": 4953
+    },
+    {
+      "path": "lib/franchise-browser-session-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs",
+      "sourceSha256": "771353570e7e4f98942bb033f259b98954d50b8e038317bf3dda06ff410ea5d5",
+      "sha256": "771353570e7e4f98942bb033f259b98954d50b8e038317bf3dda06ff410ea5d5",
+      "bytes": 24515
+    },
+    {
+      "path": "lib/franchise-browser-store-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-store-v1.mjs",
+      "sourceSha256": "879524a723b0f73f468276616381dd941a3d227d3011e2f05d26335fb4c95d4d",
+      "sha256": "879524a723b0f73f468276616381dd941a3d227d3011e2f05d26335fb4c95d4d",
+      "bytes": 16364
+    },
+    {
+      "path": "lib/franchise-coaching-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-coaching-v1.mjs",
+      "sourceSha256": "d4269a4020d489af36e11a3552d5f16a4fcba2ce5d4fa0d59f1dca2bad0fe7a0",
+      "sha256": "d4269a4020d489af36e11a3552d5f16a4fcba2ce5d4fa0d59f1dca2bad0fe7a0",
+      "bytes": 13523
+    },
+    {
+      "path": "lib/franchise-controls-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs",
+      "sourceSha256": "3b09fcbb095c392b9db60b90d6a9cdac3295bab6e176d1cc220aacbfa4ab688a",
+      "sha256": "7787b74c094cd40acd74907d6f5fade3892dc40464bc8bcc31de47e4f0d81b17",
+      "bytes": 36114
+    },
+    {
+      "path": "lib/franchise-game-input-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-game-input-v1.mjs",
+      "sourceSha256": "938b69a121ec14dca59504e4789dca7cf20f59f01454e828c7d3394d9803a03d",
+      "sha256": "6c09cd7c2bf9f35cc78285a2fc76b088485e1af42d57d9454ac9ac5294a7f39b",
+      "bytes": 5380
+    },
+    {
+      "path": "lib/franchise-season-completion-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-season-completion-v1.mjs",
+      "sourceSha256": "8da7b43831568f5b0f9578a05e1ed98164e8f377720f6d974d90ac80ce4e774c",
+      "sha256": "8da7b43831568f5b0f9578a05e1ed98164e8f377720f6d974d90ac80ce4e774c",
+      "bytes": 17265
+    },
+    {
+      "path": "lib/free-agency-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agency-v1.mjs",
+      "sourceSha256": "ce710b1448b1e2ec5d6e442c783fd846458865f04f9a1bf44aadf8bbf0f51366",
+      "sha256": "ce710b1448b1e2ec5d6e442c783fd846458865f04f9a1bf44aadf8bbf0f51366",
+      "bytes": 23285
+    },
+    {
+      "path": "lib/free-agent-cap-holds-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-cap-holds-v1.mjs",
+      "sourceSha256": "2833465d4bc854c3f11ca4cdd19464d78a1201d523bed3d40c59e95ce1f486ce",
+      "sha256": "2833465d4bc854c3f11ca4cdd19464d78a1201d523bed3d40c59e95ce1f486ce",
+      "bytes": 58348
+    },
+    {
+      "path": "lib/free-agent-market-decision-receipt-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-market-decision-receipt-v1.mjs",
+      "sourceSha256": "7ceda8b0f49f52f4d08bf6308b4abf7a149ccd1179c962d458d72ebb10ae26e7",
+      "sha256": "7ceda8b0f49f52f4d08bf6308b4abf7a149ccd1179c962d458d72ebb10ae26e7",
+      "bytes": 9708
+    },
+    {
+      "path": "lib/free-agent-offer-builder-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-offer-builder-v1.mjs",
+      "sourceSha256": "7f7802904986af9e054095e72bae9ab416ed693fe45dbd9baf9bc72adcd07622",
+      "sha256": "7f7802904986af9e054095e72bae9ab416ed693fe45dbd9baf9bc72adcd07622",
+      "bytes": 21651
+    },
+    {
+      "path": "lib/free-agent-team-targeting-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-team-targeting-v1.mjs",
+      "sourceSha256": "e812036583624681c3053bbec88c1f49cd63e87dcf5ea338edc3a536e50b5aa8",
+      "sha256": "e812036583624681c3053bbec88c1f49cd63e87dcf5ea338edc3a536e50b5aa8",
+      "bytes": 30995
+    },
+    {
+      "path": "lib/game-feature-blocks-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-feature-blocks-v1.mjs",
+      "sourceSha256": "6dac0d263b832192b02dc52963a5261362ba7939a2b2123d1b76f91a9f23910b",
+      "sha256": "6dac0d263b832192b02dc52963a5261362ba7939a2b2123d1b76f91a9f23910b",
+      "bytes": 39707
+    },
+    {
+      "path": "lib/game-simulator-v2.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs",
+      "sourceSha256": "5e391e3a56cd3437805bb5fb8eb2480f6976e9edebd5e57190daf97060168f5c",
+      "sha256": "5e391e3a56cd3437805bb5fb8eb2480f6976e9edebd5e57190daf97060168f5c",
+      "bytes": 41068
+    },
+    {
+      "path": "lib/league-game-roster-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs",
+      "sourceSha256": "48483c6d31c5c481474944ebd545ecd065865814bbe875a2bbc0f211860aff1b",
+      "sha256": "48483c6d31c5c481474944ebd545ecd065865814bbe875a2bbc0f211860aff1b",
+      "bytes": 11211
+    },
+    {
+      "path": "lib/live-game-simulator-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "sourceSha256": "55858db995ca44a6b8ef77fe0e3cfaad94972c4e6914076b1b7cd9c93b917832",
+      "sha256": "c1e0d141d3a97c01dab2b1eb7b3eadad2678f8ca384f692b2f99ff98ab2e705e",
+      "bytes": 113970
+    },
+    {
+      "path": "lib/live-minute-budget-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-minute-budget-v1.mjs",
+      "sourceSha256": "d3f50c2e01fb8fe5752ce5fd1790690ec30d7ddf4a8594677552bf3103131de9",
+      "sha256": "d3f50c2e01fb8fe5752ce5fd1790690ec30d7ddf4a8594677552bf3103131de9",
+      "bytes": 5611
+    },
+    {
+      "path": "lib/live-ordinary-foul-controls-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-ordinary-foul-controls-v1.mjs",
+      "sourceSha256": "06062a5711ac3b97bc70de869a0b160c37ff8fc00c7f81b4637ffa15adc2eeb1",
+      "sha256": "06062a5711ac3b97bc70de869a0b160c37ff8fc00c7f81b4637ffa15adc2eeb1",
+      "bytes": 5870
+    },
+    {
+      "path": "lib/live-rotation-controls-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-rotation-controls-v1.mjs",
+      "sourceSha256": "561b1bf3cd181d7d0650765e13de6acbeae260420dd22ff08f43b86f676a5447",
+      "sha256": "b3fba2e8149a810c390a02dde0b56104b9105b974ba73a957726d055a6b73db6",
+      "bytes": 15995
+    },
+    {
+      "path": "lib/nba-draft-lottery-source-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-draft-lottery-source-v1.mjs",
+      "sourceSha256": "e90006748ae15ef6e1b5b2efb423d5d028f36c72bfbdbb3898103e5e452a5b1c",
+      "sha256": "e90006748ae15ef6e1b5b2efb423d5d028f36c72bfbdbb3898103e5e452a5b1c",
+      "bytes": 38768
+    },
+    {
+      "path": "lib/nba-foul-disqualification-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-foul-disqualification-v1.mjs",
+      "sourceSha256": "5313d8e1a368f783ad7247d01bf1583cb9619497692b0b8d7834fb9ac84f5db5",
+      "sha256": "5313d8e1a368f783ad7247d01bf1583cb9619497692b0b8d7834fb9ac84f5db5",
+      "bytes": 8092
+    },
+    {
+      "path": "lib/nba-postseason-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-postseason-v1.mjs",
+      "sourceSha256": "e15f51f4fe0d57bc30646541ae63421710ab785f5be15fcdae43a43b5b27c68c",
+      "sha256": "e15f51f4fe0d57bc30646541ae63421710ab785f5be15fcdae43a43b5b27c68c",
+      "bytes": 50876
+    },
+    {
+      "path": "lib/nba-schedule-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-schedule-v1.mjs",
+      "sourceSha256": "aa562c1b0a026f494cdef6c6aa8ab46905e16d767a7fe59b7202ed3d2c57cc6c",
+      "sha256": "aa562c1b0a026f494cdef6c6aa8ab46905e16d767a7fe59b7202ed3d2c57cc6c",
+      "bytes": 76822
+    },
+    {
+      "path": "lib/nba-team-foul-penalty-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-team-foul-penalty-v1.mjs",
+      "sourceSha256": "88430a1037db313b1fbd2a3b8cb5b58154e8f5b74b68fb627c977fa77defee94",
+      "sha256": "88430a1037db313b1fbd2a3b8cb5b58154e8f5b74b68fb627c977fa77defee94",
+      "bytes": 6727
+    },
+    {
+      "path": "lib/nba-timeout-state-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-timeout-state-v1.mjs",
+      "sourceSha256": "e5547d076b0fd9588154e7b5c163b27c73c06a42caa0a6f22d8b5a8c8df73894",
+      "sha256": "e5547d076b0fd9588154e7b5c163b27c73c06a42caa0a6f22d8b5a8c8df73894",
+      "bytes": 9044
+    },
+    {
+      "path": "lib/payroll-state-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/payroll-state-v1.mjs",
+      "sourceSha256": "eadc66b31f041524bfd16d50fee480e5d1cafa20eba9f318b9322490e1d84f56",
+      "sha256": "eadc66b31f041524bfd16d50fee480e5d1cafa20eba9f318b9322490e1d84f56",
+      "bytes": 10829
+    },
+    {
+      "path": "lib/player-game-cohort-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-cohort-v1.mjs",
+      "sourceSha256": "7071851dabfd55d7387568583a77085cabd754758a117da049c14645633f595f",
+      "sha256": "7071851dabfd55d7387568583a77085cabd754758a117da049c14645633f595f",
+      "bytes": 28061
+    },
+    {
+      "path": "lib/player-game-development-features-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-development-features-v1.mjs",
+      "sourceSha256": "773dd7ea895710a2482b953a1cd843e7ce1502e3a5bbd676ca812e1c8758ac64",
+      "sha256": "773dd7ea895710a2482b953a1cd843e7ce1502e3a5bbd676ca812e1c8758ac64",
+      "bytes": 13152
+    },
+    {
+      "path": "lib/player-game-shared-evaluation-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-shared-evaluation-v1.mjs",
+      "sourceSha256": "213355b86e07a9eb2d623149285dbf1ed38fa8d9b73dcfd530f94e774ce10675",
+      "sha256": "213355b86e07a9eb2d623149285dbf1ed38fa8d9b73dcfd530f94e774ce10675",
+      "bytes": 7812
+    },
+    {
+      "path": "lib/prior-personal-foul-rate-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-personal-foul-rate-v1.mjs",
+      "sourceSha256": "264f39fcaeba06fc95cf0beb1c925726fc3b1b3ad8ce1e35964799086f691c3f",
+      "sha256": "264f39fcaeba06fc95cf0beb1c925726fc3b1b3ad8ce1e35964799086f691c3f",
+      "bytes": 16158
+    },
+    {
+      "path": "lib/prior-rebound-split-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-rebound-split-v1.mjs",
+      "sourceSha256": "d16de6dcebeab14293d27ba11fe64d8c3d3dfb6c4108e8e709d7224eb66b2f16",
+      "sha256": "d16de6dcebeab14293d27ba11fe64d8c3d3dfb6c4108e8e709d7224eb66b2f16",
+      "bytes": 10708
+    },
+    {
+      "path": "lib/prior-shot-efficiency-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-shot-efficiency-v1.mjs",
+      "sourceSha256": "22d9bfe291779812042e33b189ff0b438a9ced8901ab2e7483bc1dfdda3e4074",
+      "sha256": "22d9bfe291779812042e33b189ff0b438a9ced8901ab2e7483bc1dfdda3e4074",
+      "bytes": 7471
+    },
+    {
+      "path": "lib/rebound-ownership-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/rebound-ownership-v1.mjs",
+      "sourceSha256": "44e69b077c223ce957ba6223966093b8ba9c97ab403fb290e2c9bec0e1f656f7",
+      "sha256": "44e69b077c223ce957ba6223966093b8ba9c97ab403fb290e2c9bec0e1f656f7",
+      "bytes": 10351
+    },
+    {
+      "path": "lib/restricted-free-agency-state-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/restricted-free-agency-state-v1.mjs",
+      "sourceSha256": "20d7184659e76737d091533831dba273d8d92b439811a9ed5c2611c2cc8c5116",
+      "sha256": "20d7184659e76737d091533831dba273d8d92b439811a9ed5c2611c2cc8c5116",
+      "bytes": 14843
+    },
+    {
+      "path": "lib/ridge-regression.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/ridge-regression.mjs",
+      "sourceSha256": "6a5a34eaad0e50c50a330472fde6e2f766547fc218c43c6da11e1bd908fad05c",
+      "sha256": "6a5a34eaad0e50c50a330472fde6e2f766547fc218c43c6da11e1bd908fad05c",
+      "bytes": 2876
+    },
+    {
+      "path": "lib/rotation-schedule-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/rotation-schedule-v1.mjs",
+      "sourceSha256": "b0b40e5fc7da66f8b98e4f7821488ec2c885314c17550f27de234d7179c176f1",
+      "sha256": "b0b40e5fc7da66f8b98e4f7821488ec2c885314c17550f27de234d7179c176f1",
+      "bytes": 13404
+    },
+    {
+      "path": "lib/scenario-pick-ledger-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/scenario-pick-ledger-v1.mjs",
+      "sourceSha256": "76365e3a21303301451e59cb16cf3473ce4373f27c957672f32582308adc65f7",
+      "sha256": "76365e3a21303301451e59cb16cf3473ce4373f27c957672f32582308adc65f7",
+      "bytes": 13082
+    },
+    {
+      "path": "lib/season-age-transition-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-age-transition-v1.mjs",
+      "sourceSha256": "a10a08ee017c452757484bd6516d6c9025bea289e08668eee0c5f3a109e412c3",
+      "sha256": "a10a08ee017c452757484bd6516d6c9025bea289e08668eee0c5f3a109e412c3",
+      "bytes": 17218
+    },
+    {
+      "path": "lib/season-awards-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-awards-v1.mjs",
+      "sourceSha256": "addca7e62729e2193eaca35b5f1b96cfb48b74f53df86313d4eb89b472f2f4f4",
+      "sha256": "addca7e62729e2193eaca35b5f1b96cfb48b74f53df86313d4eb89b472f2f4f4",
+      "bytes": 74415
+    },
+    {
+      "path": "lib/season-simulation-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "sourceSha256": "14488524fa96d8e6dec772d9771fd233d18bd388b3e50d092dcd8207a2ae8124",
+      "sha256": "14488524fa96d8e6dec772d9771fd233d18bd388b3e50d092dcd8207a2ae8124",
+      "bytes": 73167
+    },
+    {
+      "path": "lib/sha256-isomorphic-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs",
+      "sourceSha256": "2f4d67149b4a8baf90d2df0864fab3783e24bfe83b30775abbe512535c99ca3a",
+      "sha256": "2f4d67149b4a8baf90d2df0864fab3783e24bfe83b30775abbe512535c99ca3a",
+      "bytes": 3678
+    },
+    {
+      "path": "lib/shared-event-calibration-cache-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-event-calibration-cache-v1.mjs",
+      "sourceSha256": "e48092ded061cd81f2f26d873b3dfb7b9e4f10b77162d1efc9b8d4dcf7c7d3a0",
+      "sha256": "e48092ded061cd81f2f26d873b3dfb7b9e4f10b77162d1efc9b8d4dcf7c7d3a0",
+      "bytes": 6322
+    },
+    {
+      "path": "lib/shared-player-production-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-player-production-v1.mjs",
+      "sourceSha256": "4afba8620332de9a0498fe73695c47a8c422d5f1cd16d9b29b1f8f0cdf2e3ccf",
+      "sha256": "4afba8620332de9a0498fe73695c47a8c422d5f1cd16d9b29b1f8f0cdf2e3ccf",
+      "bytes": 3386
+    },
+    {
+      "path": "lib/shared-possession-mapping-v2.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v2.mjs",
+      "sourceSha256": "0b2f591fb6e96ea32e70bd0de548960ea43ce6d4bb34b602501c3a67d287e3b8",
+      "sha256": "0b2f591fb6e96ea32e70bd0de548960ea43ce6d4bb34b602501c3a67d287e3b8",
+      "bytes": 8592
+    },
+    {
+      "path": "lib/shared-possession-mapping-v3.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v3.mjs",
+      "sourceSha256": "cbc2cfe882fb560fb7c4eecdd8b8fe337a98279b64672465ff10f4f25a420349",
+      "sha256": "cbc2cfe882fb560fb7c4eecdd8b8fe337a98279b64672465ff10f4f25a420349",
+      "bytes": 9681
+    },
+    {
+      "path": "lib/shared-possession-mapping-v4.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v4.mjs",
+      "sourceSha256": "8f081e2cf855f744c7387c5130699159a6ad249c70c9ad435b74848e36aea018",
+      "sha256": "8f081e2cf855f744c7387c5130699159a6ad249c70c9ad435b74848e36aea018",
+      "bytes": 17037
+    },
+    {
+      "path": "lib/shared-production-game-input-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-production-game-input-v1.mjs",
+      "sourceSha256": "35f7860448984d6531a83d6e2d6c9d0db99cbf3bfa681a0f2feb51fe2a67f991",
+      "sha256": "35f7860448984d6531a83d6e2d6c9d0db99cbf3bfa681a0f2feb51fe2a67f991",
+      "bytes": 15793
+    },
+    {
+      "path": "lib/simulation-contracts-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs",
+      "sourceSha256": "3834de85553591c542139fab819c2809c0e5aada3434186d58eee2455d5e09fa",
+      "sha256": "3834de85553591c542139fab819c2809c0e5aada3434186d58eee2455d5e09fa",
+      "bytes": 9818
+    },
+    {
+      "path": "lib/stored-tpe-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/stored-tpe-v1.mjs",
+      "sourceSha256": "3d876d1aba2436b7c04d4fc0460bd4014e9559a5799b0258a674af22d17695f2",
+      "sha256": "3d876d1aba2436b7c04d4fc0460bd4014e9559a5799b0258a674af22d17695f2",
+      "bytes": 15084
+    },
+    {
+      "path": "lib/transaction-engine-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "sourceSha256": "36107a8f2a16410e5a9b9b4292c8f7516c2e2d1168bdf0f4c607d97a3ce1d5ed",
+      "sha256": "36107a8f2a16410e5a9b9b4292c8f7516c2e2d1168bdf0f4c607d97a3ce1d5ed",
+      "bytes": 99834
+    },
+    {
+      "path": "lib/waiver-accounting-v1.mjs",
+      "kind": "module",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/waiver-accounting-v1.mjs",
+      "sourceSha256": "cc8492061459b53864ccbd78c47e8606cd97c27cdf3e7562e25ad87a2a85205f",
+      "sha256": "cc8492061459b53864ccbd78c47e8606cd97c27cdf3e7562e25ad87a2a85205f",
+      "bytes": 12489
+    },
+    {
+      "path": "models/shared-player-production-v1-candidate-20261007b.json",
+      "kind": "asset",
+      "owners": [
+        "app-bridge"
+      ],
+      "sourcePath": "prototypes/djhc-player-game-sim/models/shared-player-production-v1-candidate-20261007b.json",
+      "sourceSha256": "044386cbe912d03036ef454a185c555da5c356a485288622e722b0c609ee8db4",
+      "sha256": "044386cbe912d03036ef454a185c555da5c356a485288622e722b0c609ee8db4",
+      "bytes": 36920
+    }
+  ],
+  "externalModuleRoots": [
+    {
+      "sourcePrefix": "tools/swishiq-studio/engine",
+      "browserUrlPrefix": "/tools/swishiq-studio/engine",
+      "reason": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    }
+  ],
+  "externalModules": [
+    {
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "sourceSha256": "75255673400de31557142a65038b7996ffc6496291869c4ea463322878bd4baf",
+      "bytes": 3338,
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    },
+    {
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "sourceSha256": "d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5",
+      "bytes": 7711,
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    },
+    {
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "sourceSha256": "8d1fafb6108e437ae2b4ca0b930a25f12368db0bdadcc12d9b7bd9a0b70df58c",
+      "bytes": 20479,
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    },
+    {
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "sourceSha256": "7fb5ce6155135ac7ec9d1c7e5f6a7db5c6a78e329415698e86222d0696b7eee0",
+      "bytes": 12566,
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    },
+    {
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "sourceSha256": "8225fde5b9b4b9a347069c724b7b28013fecc5f21c710db2b50623fbaf58332d",
+      "bytes": 27842,
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    },
+    {
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "sourceSha256": "39e737644abc8c478bab692320710f0485cc5e52a107c829d1a6664eae495b78",
+      "bytes": 22546,
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    },
+    {
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "sourceSha256": "42cfbcd4641c783e6f150a230d81c15d589a126cb9e1acbe3f215055d99f619d",
+      "bytes": 13862,
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    },
+    {
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "sourceSha256": "a8e47f1cbafcbf6ea7b2f35736a68391c99253c72f889c28fd3a3cdeefdd16b0",
+      "bytes": 1291995,
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    },
+    {
+      "sourcePath": "tools/swishiq-studio/engine/nba-schedule-source.js",
+      "sourceSha256": "c2db12f4760563c1fa92df0bc0acd204e6f047059a4829e2b8f5bfb6c7cece00",
+      "bytes": 22848,
+      "browserUrl": "/tools/swishiq-studio/engine/nba-schedule-source.js",
+      "sourceRoot": "tools/swishiq-studio/engine",
+      "owner": "Canonical V4 Studio engine is owned and served by the existing site runtime."
+    }
+  ],
+  "externalEdges": [
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/draft-night-orchestration-v1.mjs",
+      "specifier": "../lib/draft-lottery-policy-adapter-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/draft-lottery-policy-adapter-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/draft-night-orchestration-v1.mjs",
+      "specifier": "../lib/draft-simulation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/draft-simulation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/draft-night-orchestration-v1.mjs",
+      "specifier": "../lib/scenario-pick-ledger-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/scenario-pick-ledger-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/draft-night-orchestration-v1.mjs",
+      "specifier": "../lib/sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/draft-night-orchestration-v1.mjs",
+      "specifier": "../lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-game-input-bundle-v1.mjs",
+      "specifier": "../lib/sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-game-input-bundle-v1.mjs",
+      "specifier": "./franchise-execution-input-pins-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-execution-input-pins-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-draft-phase-executor-v1.mjs",
+      "specifier": "../lib/sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-draft-phase-executor-v1.mjs",
+      "specifier": "../lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-draft-phase-executor-v1.mjs",
+      "specifier": "../lib/transaction-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-draft-phase-executor-v1.mjs",
+      "specifier": "./draft-night-orchestration-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/draft-night-orchestration-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-lifecycle-v1.mjs",
+      "specifier": "../lib/franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-lifecycle-v1.mjs",
+      "specifier": "../lib/season-simulation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-lifecycle-v1.mjs",
+      "specifier": "../lib/sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-lifecycle-v1.mjs",
+      "specifier": "../lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-lifecycle-v1.mjs",
+      "specifier": "./franchise-postseason-completion-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-postseason-completion-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executor-map-v1.mjs",
+      "specifier": "./franchise-offseason-draft-phase-executor-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-draft-phase-executor-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executor-map-v1.mjs",
+      "specifier": "./franchise-offseason-phase-executors-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executors-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executors-v1.mjs",
+      "specifier": "../lib/cpu-free-agency-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-free-agency-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executors-v1.mjs",
+      "specifier": "../lib/cpu-strategy-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-strategy-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executors-v1.mjs",
+      "specifier": "../lib/free-agency-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agency-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executors-v1.mjs",
+      "specifier": "../lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-transaction-approval-resolver-v1.mjs",
+      "specifier": "./transaction-proposal-decision-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/transaction-proposal-decision-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-postseason-completion-v1.mjs",
+      "specifier": "../lib/franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-postseason-completion-v1.mjs",
+      "specifier": "../lib/season-simulation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-postseason-completion-v1.mjs",
+      "specifier": "../lib/sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-postseason-completion-v1.mjs",
+      "specifier": "./franchise-season-awards-preview-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-awards-preview-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-awards-preview-v1.mjs",
+      "specifier": "../lib/franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-awards-preview-v1.mjs",
+      "specifier": "../lib/franchise-season-completion-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-season-completion-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-awards-preview-v1.mjs",
+      "specifier": "../lib/season-awards-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-awards-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-awards-preview-v1.mjs",
+      "specifier": "./franchise-season-end-handoff-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-end-handoff-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-end-handoff-v1.mjs",
+      "specifier": "../lib/franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-end-handoff-v1.mjs",
+      "specifier": "../lib/franchise-season-completion-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-season-completion-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-end-handoff-v1.mjs",
+      "specifier": "../lib/season-simulation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "../lib/cba-trade-rule-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-trade-rule-engine-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "../lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-checkpoint-codec-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "../lib/franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "../lib/franchise-season-completion-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-season-completion-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "../lib/live-game-simulator-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "../lib/sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "../lib/shared-event-calibration-cache-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-event-calibration-cache-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "./franchise-execution-input-pins-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-execution-input-pins-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "./franchise-game-input-bundle-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-game-input-bundle-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "./franchise-offseason-lifecycle-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-lifecycle-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "./franchise-offseason-phase-executor-map-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-phase-executor-map-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "./franchise-offseason-transaction-approval-resolver-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-offseason-transaction-approval-resolver-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "./franchise-postseason-completion-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-postseason-completion-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "./franchise-season-awards-preview-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-awards-preview-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-v1.mjs",
+      "specifier": "./franchise-season-end-handoff-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-season-end-handoff-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+      "specifier": "../lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-checkpoint-codec-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+      "specifier": "../lib/franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+      "specifier": "../lib/franchise-season-completion-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-season-completion-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+      "specifier": "./franchise-game-input-bundle-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-game-input-bundle-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+      "specifier": "./franchise-worker-client-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/franchise-worker-client-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+      "specifier": "./v4-franchise-intake-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/season-lab-franchise-adapter-v1.mjs",
+      "specifier": "./v4-snapshot-worker-payload-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-snapshot-worker-payload-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/transaction-proposal-decision-v1.mjs",
+      "specifier": "../lib/sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/transaction-proposal-decision-v1.mjs",
+      "specifier": "../lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/transaction-proposal-decision-v1.mjs",
+      "specifier": "../lib/transaction-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs",
+      "specifier": "../../../tools/swishiq-studio/engine/canonical-v4-player-name-identity.js?v=20261008&rev=franchise-v4-intake-v1",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js?v=20261008&rev=franchise-v4-intake-v1"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs",
+      "specifier": "../../../tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js?v=20261008&rev=franchise-v4-intake-v1",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js?v=20261008&rev=franchise-v4-intake-v1"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs",
+      "specifier": "../../../tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js?v=20261008&rev=franchise-v4-intake-v1",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js?v=20261008&rev=franchise-v4-intake-v1"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs",
+      "specifier": "../../../tools/swishiq-studio/engine/nba-schedule-source.js?v=20261008&rev=franchise-v4-intake-v1",
+      "sourcePath": "tools/swishiq-studio/engine/nba-schedule-source.js",
+      "browserUrl": "/tools/swishiq-studio/engine/nba-schedule-source.js?v=20261008&rev=franchise-v4-intake-v1"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs",
+      "specifier": "../lib/season-age-transition-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-age-transition-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-franchise-intake-v1.mjs",
+      "specifier": "../lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-generated-shooting-rating-v1.mjs",
+      "specifier": "../lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-snapshot-worker-payload-v1.mjs",
+      "specifier": "../lib/cpu-franchise-rotation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-franchise-rotation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-snapshot-worker-payload-v1.mjs",
+      "specifier": "../lib/franchise-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-snapshot-worker-payload-v1.mjs",
+      "specifier": "../lib/shared-player-production-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-player-production-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-snapshot-worker-payload-v1.mjs",
+      "specifier": "../lib/simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/integration/v4-snapshot-worker-payload-v1.mjs",
+      "specifier": "./v4-generated-shooting-rating-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/integration/v4-generated-shooting-rating-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/career-progression-v1.mjs",
+      "specifier": "./ridge-regression.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/ridge-regression.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/career-progression-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cba-roster-limits-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cba-signing-mechanisms-v1.mjs",
+      "specifier": "./cba-salary-scales-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-scales-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cba-signing-mechanisms-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cba-trade-rule-engine-v1.mjs",
+      "specifier": "./cba-salary-matching-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-matching-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cba-trade-rule-engine-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cba-two-way-conversion-v1.mjs",
+      "specifier": "./cba-salary-scales-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-scales-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cba-two-way-conversion-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/coherent-game-simulator-v1.mjs",
+      "specifier": "./coherent-box-score-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/coherent-box-score-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/coherent-game-simulator-v1.mjs",
+      "specifier": "./game-simulator-v2.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-franchise-rotation-v1.mjs",
+      "specifier": "./franchise-automation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-automation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-franchise-rotation-v1.mjs",
+      "specifier": "./franchise-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-franchise-rotation-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-free-agency-v1.mjs",
+      "specifier": "./free-agency-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agency-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-free-agency-v1.mjs",
+      "specifier": "./free-agent-offer-builder-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-offer-builder-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-free-agency-v1.mjs",
+      "specifier": "./free-agent-team-targeting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-team-targeting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-free-agency-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-strategy-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/cpu-strategy-v1.mjs",
+      "specifier": "./transaction-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/draft-lottery-policy-adapter-v1.mjs",
+      "specifier": "./draft-simulation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/draft-simulation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/draft-lottery-policy-adapter-v1.mjs",
+      "specifier": "./nba-draft-lottery-source-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-draft-lottery-source-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/draft-lottery-policy-adapter-v1.mjs",
+      "specifier": "./sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/draft-simulation-v1.mjs",
+      "specifier": "./scenario-pick-ledger-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/scenario-pick-ledger-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/draft-simulation-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/draft-simulation-v1.mjs",
+      "specifier": "./transaction-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "specifier": "./franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-checkpoint-codec-v1.mjs",
+      "specifier": "./sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs",
+      "specifier": "./franchise-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs",
+      "specifier": "./season-simulation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs",
+      "specifier": "./sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs",
+      "specifier": "./transaction-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-store-v1.mjs",
+      "specifier": "./franchise-browser-session-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-browser-session-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-coaching-v1.mjs",
+      "specifier": "./franchise-automation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-automation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs",
+      "specifier": "./franchise-automation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-automation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs",
+      "specifier": "./live-rotation-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-rotation-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs",
+      "specifier": "./rotation-schedule-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/rotation-schedule-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-game-input-v1.mjs",
+      "specifier": "./franchise-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/franchise-game-input-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agency-v1.mjs",
+      "specifier": "./free-agent-market-decision-receipt-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-market-decision-receipt-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agency-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agency-v1.mjs",
+      "specifier": "./transaction-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-cap-holds-v1.mjs",
+      "specifier": "./cap-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-cap-holds-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-market-decision-receipt-v1.mjs",
+      "specifier": "./sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-offer-builder-v1.mjs",
+      "specifier": "./cap-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-offer-builder-v1.mjs",
+      "specifier": "./cba-salary-scales-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-scales-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-offer-builder-v1.mjs",
+      "specifier": "./cba-signing-mechanisms-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-signing-mechanisms-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-offer-builder-v1.mjs",
+      "specifier": "./free-agency-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agency-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-offer-builder-v1.mjs",
+      "specifier": "./free-agent-team-targeting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-team-targeting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-offer-builder-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-team-targeting-v1.mjs",
+      "specifier": "./cpu-strategy-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-strategy-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-team-targeting-v1.mjs",
+      "specifier": "./franchise-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-team-targeting-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs",
+      "specifier": "./game-feature-blocks-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-feature-blocks-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs",
+      "specifier": "./ridge-regression.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/ridge-regression.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs",
+      "specifier": "./season-age-transition-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-age-transition-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs",
+      "specifier": "./cpu-franchise-rotation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cpu-franchise-rotation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs",
+      "specifier": "./franchise-automation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-automation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs",
+      "specifier": "./franchise-coaching-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-coaching-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs",
+      "specifier": "./franchise-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs",
+      "specifier": "./franchise-game-input-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-game-input-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./franchise-coaching-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-coaching-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./franchise-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/franchise-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./game-simulator-v2.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./live-minute-budget-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-minute-budget-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./live-ordinary-foul-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-ordinary-foul-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./live-rotation-controls-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-rotation-controls-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./nba-foul-disqualification-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-foul-disqualification-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./nba-team-foul-penalty-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-team-foul-penalty-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./nba-timeout-state-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-timeout-state-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./prior-rebound-split-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-rebound-split-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./rebound-ownership-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/rebound-ownership-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./rotation-schedule-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/rotation-schedule-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./shared-event-calibration-cache-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-event-calibration-cache-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./shared-possession-mapping-v2.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v2.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./shared-possession-mapping-v3.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v3.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./shared-possession-mapping-v4.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v4.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./shared-production-game-input-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-production-game-input-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-game-simulator-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-ordinary-foul-controls-v1.mjs",
+      "specifier": "./prior-personal-foul-rate-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-personal-foul-rate-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-rotation-controls-v1.mjs",
+      "specifier": "./live-minute-budget-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/live-minute-budget-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/live-rotation-controls-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/nba-postseason-v1.mjs",
+      "specifier": "./coherent-game-simulator-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/coherent-game-simulator-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/nba-postseason-v1.mjs",
+      "specifier": "./game-simulator-v2.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/nba-postseason-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/payroll-state-v1.mjs",
+      "specifier": "./cap-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/payroll-state-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/player-game-cohort-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/player-game-development-features-v1.mjs",
+      "specifier": "./player-game-cohort-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-cohort-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/player-game-shared-evaluation-v1.mjs",
+      "specifier": "./player-game-development-features-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-development-features-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/player-game-shared-evaluation-v1.mjs",
+      "specifier": "./ridge-regression.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/ridge-regression.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/prior-personal-foul-rate-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/prior-rebound-split-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/prior-shot-efficiency-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/restricted-free-agency-state-v1.mjs",
+      "specifier": "./cba-restricted-free-agency-rules-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-restricted-free-agency-rules-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/restricted-free-agency-state-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/rotation-schedule-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/scenario-pick-ledger-v1.mjs",
+      "specifier": "./sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/scenario-pick-ledger-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-awards-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./cap-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./career-progression-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/career-progression-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./game-simulator-v2.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/game-simulator-v2.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./league-game-roster-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/league-game-roster-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./nba-postseason-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-postseason-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./nba-schedule-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/nba-schedule-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./payroll-state-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/payroll-state-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./season-awards-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/season-awards-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/season-simulation-v1.mjs",
+      "specifier": "./transaction-engine-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-player-production-v1.mjs",
+      "specifier": "./player-game-development-features-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-development-features-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-player-production-v1.mjs",
+      "specifier": "./player-game-shared-evaluation-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/player-game-shared-evaluation-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-player-production-v1.mjs",
+      "specifier": "./ridge-regression.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/ridge-regression.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v2.mjs",
+      "specifier": "./shared-production-game-input-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-production-game-input-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v3.mjs",
+      "specifier": "./rebound-ownership-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/rebound-ownership-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v3.mjs",
+      "specifier": "./shared-possession-mapping-v2.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v2.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-possession-mapping-v4.mjs",
+      "specifier": "./shared-production-game-input-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-production-game-input-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-production-game-input-v1.mjs",
+      "specifier": "./prior-shot-efficiency-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/prior-shot-efficiency-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-production-game-input-v1.mjs",
+      "specifier": "./shared-player-production-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/shared-player-production-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/shared-production-game-input-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/stored-tpe-v1.mjs",
+      "specifier": "./cap-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/stored-tpe-v1.mjs",
+      "specifier": "./payroll-state-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/payroll-state-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./cap-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./cash-consideration-ledger-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cash-consideration-ledger-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./cba-contract-option-rules-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-contract-option-rules-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./cba-roster-limits-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-roster-limits-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./cba-salary-scales-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-salary-scales-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./cba-signing-mechanisms-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-signing-mechanisms-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./cba-two-way-conversion-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cba-two-way-conversion-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./free-agent-cap-holds-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/free-agent-cap-holds-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./payroll-state-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/payroll-state-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./restricted-free-agency-state-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/restricted-free-agency-state-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./sha256-isomorphic-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/sha256-isomorphic-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./stored-tpe-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/stored-tpe-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/transaction-engine-v1.mjs",
+      "specifier": "./waiver-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/waiver-accounting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/waiver-accounting-v1.mjs",
+      "specifier": "./cap-accounting-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/cap-accounting-v1.mjs"
+    },
+    {
+      "fromSourcePath": "prototypes/djhc-player-game-sim/lib/waiver-accounting-v1.mjs",
+      "specifier": "./simulation-contracts-v1.mjs",
+      "sourcePath": "prototypes/djhc-player-game-sim/lib/simulation-contracts-v1.mjs"
+    },
+    {
+      "fromSourcePath": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "specifier": "./canonical-v4-player-name-identity.js?v=20261001d&rev=canonical-v4-player-name-identity-v1",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js?v=20261001d&rev=canonical-v4-player-name-identity-v1"
+    },
+    {
+      "fromSourcePath": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "specifier": "./canonical-v4-studio-runtime-adapter.js?v=20261002e&rev=canonical-v4-studio-runtime-adapter-v4-dependency-cache-closure",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js?v=20261002e&rev=canonical-v4-studio-runtime-adapter-v4-dependency-cache-closure"
+    },
+    {
+      "fromSourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "specifier": "./canonical-v4-identity.js?v=20260927s&rev=canonical-v4-identity-v1",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-identity.js?v=20260927s&rev=canonical-v4-identity-v1"
+    },
+    {
+      "fromSourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "specifier": "./canonical-v4-projection-capability-map.js?v=20261001d&rev=capability-map-v1",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js?v=20261001d&rev=capability-map-v1"
+    },
+    {
+      "fromSourcePath": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "specifier": "./canonical-v4-identity.js?v=20260927s&rev=canonical-v4-identity-v1",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-identity.js?v=20260927s&rev=canonical-v4-identity-v1"
+    },
+    {
+      "fromSourcePath": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "specifier": "./canonical-v4-projection-resolver.js?v=20261002e&rev=canonical-v4-projection-resolver-v4-dependency-cache-closure",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-projection-resolver.js?v=20261002e&rev=canonical-v4-projection-resolver-v4-dependency-cache-closure"
+    },
+    {
+      "fromSourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "specifier": "./canonical-v4-public-network-loader.js?v=20261002e&rev=canonical-v4-public-network-loader-v4-dependency-cache-closure",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-public-network-loader.js?v=20261002e&rev=canonical-v4-public-network-loader-v4-dependency-cache-closure"
+    },
+    {
+      "fromSourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "specifier": "./canonical-v4-studio-runtime-release-pin.js?v=20261009b&rev=canonical-v4-daily-boards-observed-v1",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "browserUrl": "/tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js?v=20261009b&rev=canonical-v4-daily-boards-observed-v1"
+    }
+  ],
+  "nonJavaScriptImports": [],
+  "externalResources": [
+    {
+      "sourcePath": "tools/swishiq-studio/data/nba-actual-schedules-v1.json",
+      "browserUrl": "/tools/swishiq-studio/data/nba-actual-schedules-v1.json",
+      "sha256": "522ed031595601aff75b26d5f3d3cc8022525c0e8b29d072baa0b626d54d4e3e",
+      "bytes": 2338128,
+      "purpose": "Pinned V4 franchise schedule input. The new app bridge must pass this absolute URL as scheduleUrl because the prototype-relative default changes when staged."
+    }
+  ],
+  "limitations": [
+    "Only literal relative JavaScript import/export specifiers are traversed. Non-JavaScript assets must be declared explicitly.",
+    "The worker URL constructed with new URL() is represented by the standalone-worker declared entrypoint group.",
+    "The app bridge must pass the declared absolute scheduleUrl; the original module-relative schedule pin is not rewritten.",
+    "This manifest records source and output hashes; it does not prove deployment or browser acceptance.",
+    "Source paths are relative to the named project root; machine-specific absolute paths are omitted."
+  ],
+  "localAmendments": [
+    {
+      "path": "lib/live-rotation-controls-v1.mjs",
+      "reason": "Merged the existing tested shot-usage controls from the 20261008 runtime while preserving the 20261010 rating and free-throw fixes."
+    },
+    {
+      "path": "lib/franchise-controls-v1.mjs",
+      "reason": "Merged the existing tested shot-usage controls from the 20261008 runtime while preserving the 20261010 rating and free-throw fixes."
+    },
+    {
+      "path": "lib/franchise-game-input-v1.mjs",
+      "reason": "Merged the existing tested shot-usage controls from the 20261008 runtime while preserving the 20261010 rating and free-throw fixes."
+    },
+    {
+      "path": "lib/live-game-simulator-v1.mjs",
+      "reason": "Merged the existing tested shot-usage controls from the 20261008 runtime while preserving the 20261010 rating and free-throw fixes."
+    }
+  ]
+}

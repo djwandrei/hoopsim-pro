@@ -1,13 +1,14 @@
 import React from 'react';
-import { CalendarCheck2, ChevronRight, FastForward, ShieldCheck } from 'lucide-react';
+import { CalendarCheck2, ChevronRight, FastForward } from 'lucide-react';
 import { FranchiseTeamMark } from './FranchiseTeamMark';
-import { ghostButton, goldButton, pillClass } from './franchiseUi';
+import FranchiseSeasonCloseout from './FranchiseSeasonCloseout';
+import { goldButton, pillClass } from './franchiseUi';
 
 // Game desk: progress rail, the next-game matchup card with both records and
 // a YOU badge on the controlled team, advance controls, and the read-only
 // season-completion verification.
 export default function FranchiseSchedule({ sim }) {
-  const { scheduleProgress, nextGame, scheduleComplete, completion, busy, records, team } = sim.view;
+  const { scheduleProgress, nextGame, scheduleComplete, busy, records, team } = sim.view;
   const total = scheduleProgress?.total ?? 0;
   const cursor = scheduleProgress?.cursor ?? 0;
   const pct = total ? Math.min(100, Math.round((cursor / total) * 100)) : 0;
@@ -37,7 +38,7 @@ export default function FranchiseSchedule({ sim }) {
         <div className="rounded-xl border border-positive/40 bg-positive/8 p-4 text-center">
           <CalendarCheck2 className="mx-auto h-6 w-6 text-positive" aria-hidden="true" />
           <p className="mt-2 font-display text-lg tracking-wide text-positive">Regular-season schedule complete</p>
-          <p className="frx-note mt-1">Season advancement is not available in this preview. Verify the completed-game ledger below.</p>
+          <p className="frx-note mt-1">Verify the completed-game ledger below, then close the regular season when the runtime marks that action ready.</p>
         </div>
       ) : nextGame ? (
         <div>
@@ -65,24 +66,7 @@ export default function FranchiseSchedule({ sim }) {
         </button>
       </div>
       <div className="bcast-divider" aria-hidden="true" />
-      <div className="space-y-2">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="bcast-kicker">Season completion</p>
-          <button type="button" className={ghostButton} disabled={!completion.enabled} title={completion.title} onClick={sim.verifyCompletion}>
-            {busy ? <span className="h-3.5 w-3.5 animate-spin rounded-full border border-current border-r-transparent" aria-hidden="true" /> : <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />} Verify completion
-          </button>
-        </div>
-        <p className={`frx-validation frx-validation--${completion.status.state === 'verified' ? 'ready' : 'dirty'}`} role="status">{completion.hint}</p>
-        {completion.status.state === 'verified' && (
-          <div className="space-y-1.5">
-            <p className="frx-note">{completion.status.text}</p>
-            <details>
-              <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">Completion receipt</summary>
-              <pre className="mt-1.5 overflow-x-auto rounded-lg border border-border/40 bg-court-canvas/50 p-3 font-mono text-[10px] leading-relaxed text-muted-foreground">{completion.status.receipt}</pre>
-            </details>
-          </div>
-        )}
-      </div>
+      <FranchiseSeasonCloseout sim={sim} view={sim.view} onVerifyCompletion={sim.verifyCompletion} onCloseout={sim.closeout} onFinalizeAwards={sim.finalizeAwards} busy={busy} />
     </section>
   );
 }

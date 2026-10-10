@@ -19,8 +19,8 @@ function cacheSeason(year, value) {
   }
 }
 
-export default function useSeasonSource(initialYear = 2025) {
-  const [year, setYear] = useStudioSeason(initialYear);
+export default function useSeasonSource(initialYear = 2025, profile = 'full', preferredYear = null) {
+  const [year, setYear] = useStudioSeason(initialYear, preferredYear);
   const [retryToken, setRetryToken] = useState(0);
   const [source, setSource] = useState(null);
   const [league, setLeague] = useState(null);
@@ -29,16 +29,16 @@ export default function useSeasonSource(initialYear = 2025) {
   const currentYear = useRef(year);
   currentYear.current = year;
   useViewRefresh(async () => {
-    const data = await loadSeasonSource(year);
+    const data = await loadSeasonSource(year, { profile });
     if (currentYear.current !== year) return;
     const built = buildLeague(data);
-    cacheSeason(year, { source: data, league: built });
+    cacheSeason(`${year}:${profile}`, { source: data, league: built });
     setSource(data); setLeague(built); setState('ready'); setError('');
   });
 
   useEffect(() => {
     let cancelled = false;
-    const cached = seasonCache.get(year);
+    const cached = seasonCache.get(`${year}:${profile}`);
     if (cached) {
       setSource(cached.source);
       setLeague(cached.league);
@@ -52,10 +52,10 @@ export default function useSeasonSource(initialYear = 2025) {
     setError('');
     (async () => {
       try {
-        const data = await loadSeasonSource(year);
+        const data = await loadSeasonSource(year, { profile });
         if (cancelled) return;
         const built = buildLeague(data);
-        cacheSeason(year, { source: data, league: built });
+        cacheSeason(`${year}:${profile}`, { source: data, league: built });
         setSource(data);
         setLeague(built);
         setState('ready');
@@ -66,7 +66,7 @@ export default function useSeasonSource(initialYear = 2025) {
       }
     })();
     return () => { cancelled = true; };
-  }, [year, retryToken]);
+  }, [year, retryToken, profile]);
 
   return { year, setYear, years: AVAILABLE_YEARS, source, league, state, error, retry: () => setRetryToken(value => value + 1) };
 }

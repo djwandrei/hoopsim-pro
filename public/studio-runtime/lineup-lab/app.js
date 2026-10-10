@@ -43,7 +43,7 @@ import {
   CANONICAL_V4_IMPACT_LINEUP_EVIDENCE_FORMAT,
   canonicalV4ImpactLineupAvailability,
   loadCanonicalV4ImpactForLineupDataset,
-} from "../../engine/canonical-v4-impact-lineup-adapter.js?v=20261010a&rev=native-v4-impact-lineup-wiring-v1";
+} from "../../engine/canonical-v4-impact-lineup-adapter.js?v=20261010b&rev=native-v4-impact-lineup-wiring-v2";
 import {
   SWISHIQ_V3_PACKAGE_DEFAULT_SEASON_END_YEAR,
   SWISHIQ_V3_PACKAGE_PHASES,
@@ -71,7 +71,7 @@ import {
   resolveSwishIQObjectiveWeights,
   SWISHIQ_IMPACT_OBJECTIVE_VERSION,
   swishIQFamilyContributionBreakdown,
-} from "./swishiq-impact.js?v=20261010a&rev=native-v4-impact-mean-only-v1";
+} from "./swishiq-impact.js?v=20261010g&rev=consolidated-runtime-v1";
 import { createWorkflowView } from "./workflow-view.js?v=20261002c&rev=lineup-workflow-view-phase12-annotation-polish-v1";
 import {
   loadSwishIqPlayerMetadata,
@@ -92,7 +92,7 @@ import {
 import {
   createSignedPublicResultShareLink,
   isSignedPublicResultShareAvailable,
-} from "../../engine/public-result-share-client.js?v=20261001f&rev=studio-runtime-shared-dependency-closure-v1";
+} from "../../engine/public-result-share-client.js?v=20261001f&rev=lineup-v4-share-client-contract-pin-closure-v1";
 import { renderResultContext } from "../modules/result-visuals.js?v=20261001g&rev=browser-native-result-visuals-v2";
 import { renderRoleCoverageVisual } from "../modules/result-visuals.js?v=20261001g&rev=browser-native-result-visuals-v2";
 import { createConditionalLineupPanel } from "./conditional-lineup-panel.js?v=20261008n&rev=conditional-lineup-projection-v1";
@@ -139,7 +139,7 @@ function canonicalSourceKind(value) {
 // requests prevent a newly deployed app shell from pairing with an old solver,
 // dataset adapter, worker, or course-fixture response.
 const FIXTURE_URL = "./fixtures/timberwolves-2021-22.json?v=20261002c";
-const OPTIMIZER_WORKER_URL = new URL("./optimizer-worker.js?v=20261010a&rev=native-v4-impact-mean-only-v1", import.meta.url);
+const OPTIMIZER_WORKER_URL = new URL("./optimizer-worker.js?v=20261010g&rev=consolidated-runtime-v1", import.meta.url);
 // Five-player lineup mode keeps its bounded-search watchdog. Rotation mode is
 // intentionally different: it has no candidate-count cutoff and therefore no
 // elapsed-time cutoff. That work stays in a background Worker until it finishes
@@ -808,17 +808,6 @@ function invalidateDatasetLoad() {
 function beginNonLiveDatasetLoad() {
   const generation = invalidateDatasetLoad();
   state.liveTeamOptionsGeneration += 1;
-  // A demo or CSV load can supersede an in-flight native Impact request. Its
-  // stale completion is intentionally ignored, so clear the loading state here
-  // and refresh the preflight instead of leaving the workflow disabled.
-  if (state.swishIqProjectionStatus === "loading") {
-    state.swishIqProjectionStatus = "idle";
-    if ($("#modelModeInput")?.value === "swishiq-impact") {
-      syncSwishIqAvailabilityStatus();
-      updateRunSummary();
-      workflowView?.refresh();
-    }
-  }
   return generation;
 }
 
@@ -5836,13 +5825,13 @@ function renderObjectiveScenarioTable(baseline, scenarios) {
   section.setAttribute("aria-label", "Objective scenario comparison results");
   const note = document.createElement("p");
   note.className = "audit-list__note";
-  note.textContent = "Each row is an independent solve with the same source roster and hard constraints. Objective values use each scenario's own units and are not comparable across rows. The constraint-margin alternative prioritizes only metrics with active rules; displayed slack stays in each rule's native units and is not a clearance probability.";
+  note.textContent = "Each row is an exact objective score over the same source roster and hard constraints. Objective values use each scenario's own units and are not comparable across rows. The constraint-margin alternative prioritizes only metrics with active rules; displayed slack stays in each rule's native units and is not a clearance probability.";
   const wrap = document.createElement("div");
   wrap.className = "table-wrap";
   const table = document.createElement("table");
   table.className = "alternatives-table";
   const caption = document.createElement("caption");
-  caption.textContent = "Current result and independently optimized preference scenarios";
+  caption.textContent = "Current result and exact preference scenarios";
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
   for (const heading of ["Objective scenario", "Selected players", "Current-group overlap", "Membership distance", "Players changed", "Hard-rule margin", "Scenario objective"]) {
@@ -5937,7 +5926,7 @@ async function runObjectiveScenarioComparison(button, status, output, baseline, 
   const scenarioVersion = state.scenarioVersion;
   button.disabled = true;
   button.textContent = "Comparing objectives…";
-  status.textContent = "Running separate exact solves with the same roster and rules…";
+  status.textContent = "Running exact objective scenarios with the same roster and rules…";
   output.replaceChildren();
   state.activeOptimizationToken = jobToken;
   elements.form.setAttribute("aria-busy", "true");
@@ -5962,7 +5951,7 @@ async function runObjectiveScenarioComparison(button, status, output, baseline, 
     output.replaceChildren(renderObjectiveScenarioTable(baseline, scenarioResults));
     status.textContent = failed.length
       ? `${scenarioResults.length - failed.length} of ${scenarioResults.length} objective scenarios returned a feasible result; unavailable rows show their reason.`
-      : `Completed ${scenarioResults.length} independent objective scenarios.`;
+      : `Completed ${scenarioResults.length} exact objective scenarios.`;
     setSolverStatus("Objective scenario comparison ready", failed.length ? "warning" : "success");
   } catch (error) {
     if (error?.name === "AbortError") {

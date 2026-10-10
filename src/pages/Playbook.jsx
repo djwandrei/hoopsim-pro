@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import usePageMeta from '@/hooks/usePageMeta';
-import { Download, Loader2, RefreshCw } from 'lucide-react';
+import { Download, Loader2, RefreshCw, Plus, Upload, Pencil, Trash2 } from 'lucide-react';
 import { exportCourtDiagram } from '@/components/playbook/exportDiagram';
 import StudioShell from '@/components/studio/StudioShell';
 import WorkbenchHeader from '@/components/studio/WorkbenchHeader';
 import { loadPlayLibrary, findPlay } from '@/components/playbook/playLibrary';
 import { buildFrames } from '@/components/playbook/playAnimation';
+import { mirrorText } from '@/components/playbook/playNarration';
 import { tagLabel } from '@/components/playbook/playTags';
 import { filmLinksForPlay } from '@/components/playbook/playVideos';
 import PlayCourt from '@/components/playbook/PlayCourt';
@@ -13,9 +14,12 @@ import PlayControls from '@/components/playbook/PlayControls';
 import PlayFilmPanel from '@/components/playbook/PlayFilmPanel';
 import PlayStepPanel from '@/components/playbook/PlayStepPanel';
 import PlayLibraryList from '@/components/playbook/PlayLibraryList';
+import PlayBuilder from '@/components/playbook/PlayBuilder';
+import { createCustomPlay, customLibraryPlay, compileCustomPlay, readCustomPlays, writeCustomPlays, exportCustomPlay, importCustomPlay } from '@/components/playbook/customPlays';
 import '@/components/playbook/playbook.css';
 
 const SPEEDS = [1, 1.5, 2];
+const actionButton = 'inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-border/50 bg-raised/40 px-3 text-sm text-foreground hover:border-gold/50';
 
 // Interactive Playbook: every play from the animation dictionary runs on an
 // animated half court, step by step, with the who/what/why narrated beside it.
@@ -37,19 +41,32 @@ export default function Playbook() {
     return () => { cancelled = true; };
   }, [load]);
 
-  const initialParams = useMemo(() => new URLSearchParams(window.location.search), []);
+  const initialParams = useMemo(() => new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search), []);
   const [playId, setPlayId] = useState(initialParams.get('play'));
-  const [stepIndex, setStepIndex] = useState(Number(initialParams.get('step')) || 0);
+  const [stepIndex, setStepIndex] = useState(() => {
+    const step = Number(initialParams.get('step'));
+    return Number.isFinite(step) ? Math.max(0, Math.floor(step)) : 0;
+  });
   const [playing, setPlaying] = useState(false);
   const [paused, setPaused] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [mirrored, setMirrored] = useState(false);
   const courtRef = useRef(null);
   const [exporting, setExporting] = useState(false);
+  const [saved, setSaved] = useState(readCustomPlays);
+  const [editing, setEditing] = useState(null);
+  const [deleted, setDeleted] = useState(null);
+  const [showDefense, setShowDefense] = useState(() => saved.plays.find(item => item.id === initialParams.get('play'))?.showDefense !== false);
+  const importRef = useRef(null);
 
-  const play = useMemo(() => (library ? findPlay(library, playId) || library.categories[0]?.plays[0] : null), [library, playId]);
-  const filmLinks = useMemo(() => filmLinksForPlay(play), [play]);
-  const animation = useMemo(() => (play ? buildFrames(play) : null), [play]);
+  const combinedLibrary = useMemo(() => ({ categories: [...(saved.plays.length ? [{ title: 'My plays', plays: saved.plays.map(customLibraryPlay) }] : []), ...(library?.categories || [])] }), [library, saved.plays]);
+  const play = useMemo(() => findPlay(combinedLibrary, playId) || combinedLibrary.categories[0]?.plays[0] || null, [combinedLibrary, playId]);
+  const filmLinks = useMemo(() => play?.customDraft ? [] : filmLinksForPlay(play), [play]);
+  const animationResult = useMemo(() => {
+    try { return { animation: play ? play.customDraft ? compileCustomPlay(play.customDraft) : buildFrames(play) : null, error: '' }; }
+    catch (err) { return { animation: null, error: err.message || 'This play could not be animated.' }; }
+  }, [play]);
+  const animation = animationResult.animation;
   const frames = useMemo(() => (animation ? [{ ...animation.setup }, ...animation.frames] : []), [animation]);
   const stepCount = frames.length;
   const safeStep = Math.max(0, Math.min(stepIndex, stepCount - 1));
@@ -68,15 +85,17 @@ export default function Playbook() {
   // final step. Pausing and speed changes never reset a second timeout.
   const handleFrameComplete = useCallback(() => {
     if (!playing) return;
-    if (safeStep < stepCount - 1) setStepIndex(current => Math.min(current + 1, stepCount - 1));
+    if (safeStep < stepCount - 1) setStepIndex(safeStep + 1);
     else setPlaying(false);
   }, [playing, safeStep, stepCount]);
 
   // Shareable call: the selected play and step live in the URL.
   useEffect(() => {
     if (!play) return;
-    const query = new URLSearchParams({ play: play.id, step: String(safeStep) }).toString();
-    window.history.replaceState(null, '', `${window.location.pathname}?${query}`);
+    const url = new URL(window.location.href);
+    url.searchParams.set('play', play.id);
+    url.searchParams.set('step', String(safeStep));
+    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
   }, [play, safeStep]);
 
   const handleTogglePlay = () => {
@@ -86,10 +105,37 @@ export default function Playbook() {
   };
   const handleRestart = () => { setPaused(false); setPlaying(false); setStepIndex(0); };
   const handleCycleSpeed = () => setSpeed((current) => SPEEDS[(SPEEDS.indexOf(current) + 1) % SPEEDS.length]);
+  const selectPlay = id => {
+    setPaused(false); setPlaying(false); setStepIndex(0); setPlayId(id);
+    setShowDefense(findPlay(combinedLibrary, id)?.customDraft?.showDefense !== false);
+  };
+  const persist = (plays, message) => {
+    const persisted = writeCustomPlays(plays);
+    setSaved({ plays, message: persisted ? message : `${message} Browser storage is unavailable or full; this change is kept for this session. Export your play JSON to keep a copy.` });
+  };
+  const savePlay = draft => {
+    const plays = saved.plays.some(item => item.id === draft.id) ? saved.plays.map(item => item.id === draft.id ? draft : item) : [draft, ...saved.plays];
+    persist(plays, `“${draft.name}” saved to My plays.`);
+    setEditing(null); setDeleted(null); setPlayId(draft.id); setShowDefense(draft.showDefense); handleRestart();
+  };
+  const startEditing = draft => { setEditing(draft); setPlaying(false); setPaused(false); };
+  const downloadPlay = draft => {
+    const url = URL.createObjectURL(new Blob([exportCustomPlay(draft)], { type: 'application/json' }));
+    const link = document.createElement('a'); link.href = url; link.download = `swishiq-${draft.id}.json`; link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const importPlay = async event => {
+    const file = event.target.files?.[0]; event.target.value = ''; if (!file) return;
+    try {
+      if (file.size > 200000) throw new Error('Choose a SwishIQ play JSON file smaller than 200 KB.');
+      startEditing(importCustomPlay(await file.text()));
+    } catch (err) { setSaved(current => ({ ...current, message: err.message })); }
+  };
 
   return (
     <StudioShell active="/playbook">
       <WorkbenchHeader
+        showEmblemOnMobile
         title="INTERACTIVE PLAYBOOK"
         description="Learn the dictionary of basketball plays, sets and schemes on an animated court. Labelled players run each step of the action while the narration explains what is happening, who is involved and what each move is trying to accomplish."
         steps={['Browse the play library', 'Run the step animation', 'Study the reads & goals']}
@@ -98,20 +144,34 @@ export default function Playbook() {
         status={library ? `${library.playCount} plays, sets & schemes` : undefined}
       />
       <main className="mx-auto min-w-0 max-w-7xl px-4 py-6 sm:px-6">
-        {error && (
+        {!editing && <div className="mb-4 flex flex-wrap items-center gap-3">
+          <button type="button" className={`${actionButton} border-gold/50 bg-gold/10 text-gold`} onClick={() => startEditing(createCustomPlay())}><Plus className="h-4 w-4" />Create play</button>
+          <button type="button" className={actionButton} onClick={() => importRef.current?.click()}><Upload className="h-4 w-4" />Import play</button>
+          <input ref={importRef} className="hidden" type="file" accept=".json,application/json" aria-label="Import a SwishIQ custom play" onChange={importPlay} />
+          <p className="text-xs text-muted-foreground">Custom plays save in this browser. Export JSON to share or back them up.</p>
+        </div>}
+        {saved.message && <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-lg border border-border/50 bg-raised/30 p-3 text-sm text-muted-foreground">
+          <p>{saved.message}</p>
+          {deleted && <button type="button" className={actionButton} onClick={() => {
+            try { persist([deleted, ...saved.plays], `“${deleted.name}” restored.`); setPlayId(deleted.id); setDeleted(null); }
+            catch (err) { setSaved(current => ({ ...current, message: err.message })); }
+          }}>Undo delete</button>}
+        </div>}
+        {editing && <PlayBuilder key={editing.id} initialDraft={editing} onSave={savePlay} onCancel={() => setEditing(null)} />}
+        {!editing && error && (
           <div className="court-panel flex flex-wrap items-center justify-between gap-3 p-4">
             <p className="text-sm text-trim-ink">{error}</p>
             <button type="button" onClick={load} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 text-xs font-semibold uppercase tracking-widest text-gold"><RefreshCw className="h-4 w-4" />Retry</button>
           </div>
         )}
-        {!library && !error && (
+        {!editing && !library && !error && !saved.plays.length && (
           <div className="court-panel grid h-64 place-items-center p-4">
             <span className="inline-flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />Loading the play library…</span>
           </div>
         )}
-        {library && play && frame && (
+        {!editing && play && (
           <div className="grid items-start gap-4 lg:grid-cols-[290px_minmax(0,1fr)]">
-            <PlayLibraryList categories={library.categories} selectedId={play.id} onSelect={(id) => { setPaused(false); setPlaying(false); setStepIndex(0); setPlayId(id); }} />
+            <PlayLibraryList categories={combinedLibrary.categories} selectedId={play.id} onSelect={selectPlay} />
             <div className="min-w-0 space-y-4">
               <div className="court-panel p-4 sm:p-5">
                 <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
@@ -121,13 +181,24 @@ export default function Playbook() {
                     {(play.tags || []).map((id) => (
                       <span key={id} className="rounded-full border border-border/40 bg-raised/30 px-2 py-0.5 font-mono text-[10.4px] text-muted-foreground">{tagLabel(id)}</span>
                     ))}
-                    <button type="button" onClick={handleExport} disabled={exporting} className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-border/40 bg-raised/30 px-2.5 font-mono text-[10.4px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40">
+                    <button type="button" onClick={handleExport} disabled={exporting || !frame} className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-border/40 bg-raised/30 px-2.5 font-mono text-[10.4px] font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40">
                       <Download className="h-3 w-3 shrink-0" />{exporting ? 'Exporting…' : 'Export PNG'}
                     </button>
                   </div>
                 </div>
-                <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} mirrored={mirrored} speed={speed} paused={paused} playing={playing} onComplete={handleFrameComplete} /></div>
-                <div className="mt-4">
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <label className="inline-flex min-h-10 items-center gap-2 text-sm text-foreground"><input type="checkbox" checked={showDefense} onChange={event => setShowDefense(event.target.checked)} />Show defense</label>
+                  {play.customDraft && <>
+                    <button type="button" className={actionButton} onClick={() => startEditing(play.customDraft)}><Pencil className="h-4 w-4" />Edit play</button>
+                    <button type="button" className={actionButton} onClick={() => downloadPlay(play.customDraft)}><Download className="h-4 w-4" />Export JSON</button>
+                    <button type="button" className={actionButton} onClick={() => {
+                      persist(saved.plays.filter(item => item.id !== play.id), `“${play.name}” removed from My plays.`); setDeleted(play.customDraft); setPlayId(null); handleRestart();
+                    }}><Trash2 className="h-4 w-4" />Delete play</button>
+                  </>}
+                </div>
+                {animationResult.error && <p role="alert" className="rounded-lg border border-trim/50 p-3 text-sm text-trim-ink">{animationResult.error}{play.customDraft ? ' Edit this play to correct its steps.' : ''}</p>}
+                {frame && <div ref={courtRef}><PlayCourt key={play.id} playId={play.id} frame={frame} showDefense={showDefense} mirrored={mirrored} speed={speed} paused={paused} playing={playing} onComplete={handleFrameComplete} /></div>}
+                {frame && <div className="mt-4">
                   <PlayControls
                     stepIndex={safeStep}
                     stepCount={stepCount}
@@ -142,10 +213,10 @@ export default function Playbook() {
                     onToggleMirror={() => setMirrored((current) => !current)}
                     onScrub={(index) => { setPaused(false); setPlaying(false); setStepIndex(index); }}
                   />
-                </div>
+                </div>}
               </div>
-              <PlayStepPanel play={play} label={`Step ${safeStep} of ${stepCount - 1}`} text={frame.text} involved={frame.involved} actions={frame.actions || []} isSetup={safeStep === 0} />
-              <PlayFilmPanel play={play} films={filmLinks} />
+              {frame && <PlayStepPanel play={mirrored ? { ...play, alignment: mirrorText(play.alignment, true), goal: mirrorText(play.goal, true), reads: play.reads.map(read => mirrorText(read, true)) } : play} label={`Step ${safeStep} of ${stepCount - 1}`} text={mirrorText(frame.text, mirrored)} involved={frame.involved} actions={(frame.actions || []).map(action => mirrorText(action, mirrored))} isSetup={safeStep === 0} />}
+              {!play.customDraft && <PlayFilmPanel play={play} films={filmLinks} />}
             </div>
           </div>
         )}

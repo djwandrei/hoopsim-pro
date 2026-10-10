@@ -11,7 +11,7 @@ export default function StudioNavigation({ active, collapsed = false, onToggle }
   const items = WORKBENCHES;
   // The tool a route belongs to — a workbench or one of its grouped screens —
   // drives the highlight, so grouped children light up under their workbench.
-  const currentPath = findStudioTool(pathname)?.tool.path ?? pathname;
+  const currentPath = findStudioTool(pathname)?.tool.path ?? active ?? pathname;
   // Narrow / mobile: no studio menu at all — the site header's dropdown is
   // the navigation there, keeping the studio chrome out of the way.
 
@@ -35,7 +35,13 @@ export default function StudioNavigation({ active, collapsed = false, onToggle }
       {!collapsed && <p className="hidden px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground lg:block">Workbenches</p>}
       <nav aria-label="Studio workbenches" className="hidden flex-wrap gap-1 px-3 pb-3 lg:flex lg:flex-col lg:px-3">{items.map(({ path, title, icon: Icon, emblem, children: sub }) => <React.Fragment key={path}>
         <Link to={path} onPointerEnter={() => prefetchRoute(path)} onFocus={() => prefetchRoute(path)} title={collapsed ? title : undefined} aria-current={currentPath === path ? 'page' : undefined} className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs lg:gap-3 lg:text-sm ${currentPath === path ? 'border-gold/20 bg-gold/10 font-medium text-gold' : 'border-transparent text-muted-foreground hover:bg-raised hover:text-foreground'} ${collapsed ? 'lg:justify-center lg:px-2' : ''}`}>{emblem ? <Image src={emblem} alt="" fittingType="fit" className="h-8 w-8 shrink-0 object-contain" /> : <Icon className="h-6 w-6 shrink-0" />}{!collapsed && title}{currentPath === path && !collapsed && <ArrowUpRight className="ml-auto hidden h-3 w-3 lg:block" />}</Link>
-        {sub && !collapsed && (currentPath === path || (sub ?? []).some(child => pathname === child.path || pathname.startsWith(`${child.path}/`))) && <div className="ml-4 flex flex-col gap-1 border-l border-border/30 pl-2 lg:ml-6">{sub.map((item) => <Link key={item.path} to={item.path} onPointerEnter={() => prefetchRoute(item.path)} onFocus={() => prefetchRoute(item.path)} aria-current={pathname === item.path ? 'page' : undefined} className={pathname === item.path ? 'rounded-md px-2 py-1.5 text-[11px] font-semibold text-gold' : 'rounded-md px-2 py-1.5 text-[11px] text-muted-foreground hover:text-foreground'}>{item.title}</Link>)}</div>}
+        {sub && !collapsed && (currentPath === path || (sub ?? []).some(child => pathname === child.path || pathname.startsWith(`${child.path}/`))) && <div className="ml-4 flex flex-col gap-1 border-l border-border/30 pl-2 lg:ml-6">{sub.map((item) => {
+          const ChildIcon = item.icon;
+          return <Link key={item.path} to={item.path} onPointerEnter={() => prefetchRoute(item.path)} onFocus={() => prefetchRoute(item.path)} aria-current={pathname === item.path ? 'page' : undefined} className={`flex min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-[11px] ${pathname === item.path ? 'font-semibold text-gold' : 'text-muted-foreground hover:text-foreground'}`}>
+            {item.emblem ? <Image src={item.emblem} alt="" fittingType="fit" className="h-6 w-6 shrink-0 object-contain" /> : ChildIcon ? <ChildIcon aria-hidden="true" className="h-4 w-4 shrink-0" /> : null}
+            <span className="min-w-0 truncate">{item.title}</span>
+          </Link>;
+        })}</div>}
       </React.Fragment>)}</nav>
       {!collapsed &&
       <div className="mt-auto hidden border-t border-border/40 px-4 py-4 lg:block">

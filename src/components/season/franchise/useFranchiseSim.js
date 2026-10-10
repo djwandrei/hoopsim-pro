@@ -16,8 +16,47 @@ import {
   loadFranchiseEngine, createFranchiseWorker, fetchJsonText, loadVerifiedFixturePayload,
   GAME_MODEL_PATH, PRODUCTION_CANDIDATE_PATH,
 } from './franchiseEngine';
+import {
+  createStandaloneFranchiseWorkerAdapter,
+  validateStandaloneSeasonAwardsFinalization,
+  validateStandaloneTransactionCommit,
+  validateStandaloneTransactionEvaluation,
+  validateStandaloneNextSeasonAdvance,
+  validateStandaloneOffseasonApproval,
+  validateStandaloneOffseasonPhase,
+  validateStandaloneOffseasonWindowAdvance,
+  validateStandalonePostseasonCommit,
+  validateStandalonePostseasonPreparation,
+  validateStandaloneRotationRefresh,
+} from './standaloneFranchiseWorkerAdapter';
 
 const upper = value => String(value ?? '').toUpperCase();
+const plainReceipt = value => Boolean(value && typeof value === 'object' && !Array.isArray(value));
+const ROSTER_MOVE_WINDOWS = new Set(['option-decisions', 'free-agency', 'trade-window', 'roster-finalization']);
+const OFFSEASON_WINDOWS = ['preseason', 'option-decisions', 'draft', 'free-agency', 'trade-window', 'roster-finalization', 'games'];
+const nextOffseasonWindow = window => {
+  const index = OFFSEASON_WINDOWS.indexOf(window);
+  return index >= 0 ? OFFSEASON_WINDOWS[index + 1] ?? null : null;
+};
+const sameSnapshot = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+function transactionBindingMatches(binding, session) {
+  return Boolean(binding && session
+    && binding.sessionRevision === session.revision
+    && binding.leagueStateRevision === session.leagueState?.revision
+    && binding.seasonStartYear === session.leagueState?.seasonStartYear
+    && binding.transactionWindow === session.leagueState?.transactionWindow
+    && sameSnapshot(binding.sourceReceipt, session.sourceReceipt)
+    && sameSnapshot(binding.modelReceipt, session.modelReceipt)
+    && sameSnapshot(binding.schedule, session.schedule)
+    && binding.scheduleCursor === session.scheduleCursor);
+}
+function resolvedMoney(value) {
+  const status = String(value?.valueStatus ?? value?.status ?? '').toLowerCase();
+  if (/unknown|candidate|conflict|unresolved|missing|invalid/.test(status)) return null;
+  const amount = value && typeof value === 'object' && Object.hasOwn(value, 'value') ? value.value : value;
+  return amount !== null && amount !== undefined && amount !== '' && typeof amount !== 'boolean' && Number.isFinite(Number(amount))
+    ? Number(amount) : null;
+}
 // V4 release data reaches the intake through the page-by-page service-worker
 // relay on this host, so one fetch can stream for minutes. The loaders' 30s
 // default is sized for direct site fetches and aborts long streams mid-read
@@ -53,6 +92,10 @@ const freshState = () => ({
   rotationDraft: [], draftSessionRef: null, draftTeamRef: '', rawMinutesText: new Map(),
   fixturePayload: null, fixtureName: '', fixtureMeta: null,
   lastGameOutput: null, lastSeasonCompletion: null, lastSeasonCompletionRevision: null,
+  lastSeasonAwardsFinalization: null,
+  lastPreparedPostseason: null, lastLifecycleAction: null,
+  lastTransactionEvaluation: null, lastTransactionProposal: null, lastTransactionEvaluationRevision: null,
+  lastTransactionSessionBinding: null,
   busy: false,
   // V4 intake
   v4Api: null, v4Intake: null, v4GameModelText: '', v4ProductionCandidateText: '', v4GameModelMeta: null, v4ProductionMeta: null,
@@ -187,7 +230,7 @@ function computeView(state) {
         `${forecastLabel} · ${scenario.gameInputReadiness ?? 'rotation readiness unavailable'}`,
         `Game model: ${model?.modelId ?? model?.format ?? 'not loaded'} · ${model?.status ?? model?.version ?? 'status not supplied'}`,
         `Production source: ${production?.modelId ?? production?.candidateId ?? production?.format ?? 'not loaded'} · ${production?.status ?? production?.version ?? 'status not supplied'}`,
-        'Contracts / payroll: unknown · postseason / offseason: disabled',
+        'Contracts / payroll: unknown · postseason / offseason: worker-supported, capability-gated; controls not exposed here',
       ],
       issues: (intake.issues ?? []).map(issue => issue.message ?? issue.code ?? 'V4 issue requires review'),
     };
@@ -408,9 +451,99 @@ function computeView(state) {
     // Rotation / advance gates (updateButtons)
     const next = upcomingGame(session);
     view.canSaveRotation = !busy && validation.ready && !saved;
-    view.canAdvanceGame = !busy && Boolean(next) && Boolean(saved) && validation.ready;
+    view.canAdvanceGame = !busy && Boolean(next) && Boolean(saved) && validation.ready
+      && state.workerCapabilities?.preparedGameInputs === true;
     view.canAdvanceUserGame = view.canAdvanceGame;
     view.rotationSaved = Boolean(saved);
+  }
+
+  if (!session || !team) {
+    view.contracts = { empty: true, text: 'Initialize a franchise scenario to inspect contract and payroll inputs.' };
+  } else {
+    const year = Number(league.seasonStartYear);
+    const payroll = team.payrollState ?? {};
+    const roster = rosterRowsForTeam(team, league).map(row => {
+      const terms = row.player?.contractSeasons ?? row.player?.contract?.seasons ?? [];
+      const currentTerms = Array.isArray(terms)
+        ? terms.filter(term => Number(term.seasonStartYear ?? term.fromYear) === year) : [];
+      const term = currentTerms.length === 1 ? currentTerms[0] : null;
+      const termStatus = currentTerms.length > 1 ? 'Multiple current-season terms'
+        : !row.player ? 'Player state missing'
+          : !term ? 'No exact-season term' : String(term.optionDecisionStatus ?? term.optionStatus ?? term.status ?? 'Term present');
+      return {
+        name: row.name,
+        availableForWaiver: Boolean(row.player && !row.excluded),
+        contractStatus: termStatus,
+        salaryUsd: term ? resolvedMoney(term.salary) : null,
+        capHitUsd: term ? resolvedMoney(term.capHit) : null,
+        contractTerm: term,
+      };
+    });
+    const evaluationIsCurrent = state.lastTransactionEvaluationRevision === session.revision
+      && transactionBindingMatches(state.lastTransactionSessionBinding, session);
+    const evaluation = evaluationIsCurrent ? state.lastTransactionEvaluation : null;
+    const proposal = evaluationIsCurrent ? state.lastTransactionProposal : null;
+    const approvalOnlyBlocks = (evaluation?.blockedReasons ?? []).filter(reason => !/user approval is required/i.test(String(reason)));
+    const transactionWindow = String(league.transactionWindow ?? 'unknown');
+    const transactionCapability = state.workerCapabilities?.transactions === true;
+    const windowAllowsRosterMove = ROSTER_MOVE_WINDOWS.has(transactionWindow);
+    const canApprove = Boolean(!busy && evaluation && proposal && evaluation.userApprovalRequired === true
+      && evaluation.approvalReceived !== true && approvalOnlyBlocks.length === 0
+      && transactionCapability && windowAllowsRosterMove
+      && (evaluation.status === 'confirmed-legal'
+        || (league.mode === 'provisional-sandbox' && evaluation.status === 'provisional')));
+    const canEvaluate = Boolean(!busy && transactionCapability && windowAllowsRosterMove && roster.some(row => row.availableForWaiver));
+    const transactionMessage = !transactionCapability
+      ? 'The initialized worker does not advertise transaction evaluation.'
+      : !windowAllowsRosterMove
+        ? `The worker supports transactions, but the ${transactionWindow} window does not allow roster moves.`
+        : !roster.some(row => row.availableForWaiver)
+          ? 'No exact rostered player is available for a waiver proposal.'
+          : 'Select one rostered player to build an exact-revision waiver proposal; the worker reports any missing contract or payroll evidence.';
+    const payrollSources = Array.isArray(payroll.sourceRefs) ? payroll.sourceRefs : [];
+    view.contracts = {
+      empty: false,
+      teamCode: state.activeTeamCode,
+      teamName: team.teamName ?? team.name ?? state.activeTeamCode,
+      seasonStartYear: year,
+      transactionWindow,
+      mode: league.mode ?? 'unknown',
+      rulesReferenceStatus: league.rulesReference?.status ?? 'missing',
+      payroll: {
+        status: payroll.status ?? 'unknown',
+        seasonStartYear: payroll.seasonStartYear ?? null,
+        rulesVersionId: payroll.rulesVersionId ?? null,
+        sourceCount: payrollSources.length,
+        totalTeamSalaryUsd: resolvedMoney(payroll.totalTeamSalaryUsd ?? payroll.components?.totalTeamSalaryUsd),
+        apronTeamSalaryUsd: resolvedMoney(payroll.apronTeamSalaryUsd ?? payroll.components?.apronTeamSalaryUsd),
+        taxTeamSalaryUsd: resolvedMoney(payroll.taxTeamSalaryUsd ?? payroll.components?.taxTeamSalaryUsd),
+        unresolvedLiabilityCount: Array.isArray(payroll.unresolvedLiabilities) ? payroll.unresolvedLiabilities.length : null,
+      },
+      roster,
+      transactionMessage,
+      canEvaluateTransaction: canEvaluate,
+      canApproveTransaction: canApprove,
+      needsSandboxApproval: Boolean(evaluation?.status === 'provisional' && league.mode === 'provisional-sandbox'),
+      evaluation: evaluation ? {
+        proposal,
+        playerName: proposal?.legs?.[0]?.canonicalName ?? '',
+        status: evaluation.status,
+        legalityOutcome: evaluation.legalityOutcome ?? 'unknown',
+        evidenceBasis: evaluation.evidenceBasis ?? 'unknown',
+        executionStatus: evaluation.executionStatus ?? 'blocked',
+        blockedReasons: evaluation.blockedReasons,
+        missingInputs: evaluation.missingInputs,
+        violations: evaluation.violations,
+        payrollAfterByTeam: evaluation.legality?.calculations?.resultingPayrollByTeam ?? null,
+        provisionalSandbox: league.mode === 'provisional-sandbox',
+      } : state.lastTransactionEvaluation ? {
+        stale: true,
+        evaluatedRevision: state.lastTransactionEvaluationRevision,
+        currentRevision: session.revision,
+        playerName: state.lastTransactionProposal?.legs?.[0]?.canonicalName ?? '',
+      } : null,
+      latestTransaction: league.transactionLedger?.at(-1) ?? null,
+    };
   }
 
   // === Schedule panel (renderGame) ===
@@ -428,7 +561,7 @@ function computeView(state) {
       ? {
         away: upper(game.awayTeamCode), home: upper(game.homeTeamCode),
         date: game.gameLocalDate, gameId: game.gameId,
-        available: Object.hasOwn(state.fixturePayload?.gameInputs ?? {}, game.gameId),
+        available: state.workerCapabilities?.preparedGameInputs === true,
       }
       : null;
   }
@@ -453,7 +586,7 @@ function computeView(state) {
         homeScore: played ? played.homeScore : null,
         status: played ? 'played' : index === boardCursor ? 'next' : 'upcoming',
         isUserGame: away === userTeamCode || home === userTeamCode,
-        inputReady: played ? null : Object.hasOwn(state.fixturePayload?.gameInputs ?? {}, game.gameId),
+        inputReady: played ? null : state.workerCapabilities?.preparedGameInputs === true,
       };
     });
     let wins = 0; let losses = 0;
@@ -475,6 +608,10 @@ function computeView(state) {
   const hasSchedule = schedule.length > 0;
   const validCursor = Number.isInteger(cursor) && cursor >= 0 && cursor <= schedule.length;
   const exhausted = Boolean(session) && hasSchedule && validCursor && cursor === schedule.length;
+  const seasonKey = Number.isInteger(session?.leagueState?.seasonStartYear)
+    ? String(session.leagueState.seasonStartYear) : null;
+  const closeoutReceipt = seasonKey
+    ? session?.leagueState?.franchiseLifecycleReceiptsBySeason?.[seasonKey] ?? null : null;
   let completionHint; let completionTitle;
   if (!session) {
     completionHint = 'Initialize a pinned season to inspect its scheduled games.';
@@ -489,6 +626,9 @@ function computeView(state) {
     const remaining = schedule.length - cursor;
     completionHint = `${remaining} scheduled game${remaining === 1 ? '' : 's'} remain. Finish every scheduled game before verification is enabled.`;
     completionTitle = `Complete all ${schedule.length} scheduled games first.`;
+  } else if (closeoutReceipt) {
+    completionHint = 'The regular season is already closed with a revision-bound handoff receipt.';
+    completionTitle = 'The completed schedule has already been closed for this franchise revision.';
   } else if (state.workerCapabilities?.seasonCompletion !== true) {
     completionHint = 'The initialized worker does not advertise the versioned season-completion check.';
     completionTitle = 'Season completion verification is unavailable in this worker.';
@@ -501,12 +641,235 @@ function computeView(state) {
   }
   const receiptIsCurrent = state.lastSeasonCompletion && state.lastSeasonCompletionRevision === session?.revision;
   view.completion = {
-    enabled: !busy && exhausted && state.workerCapabilities?.seasonCompletion === true,
+    enabled: !busy && exhausted && !closeoutReceipt && state.workerCapabilities?.seasonCompletion === true,
     hint: completionHint, title: completionTitle,
     status: receiptIsCurrent
       ? { state: 'verified', text: `Verified ${state.lastSeasonCompletion.status} for ${state.lastSeasonCompletion.seasonStartYear}; session revision ${state.lastSeasonCompletionRevision} is unchanged.`, receipt: JSON.stringify(state.lastSeasonCompletion, null, 2) }
       : { state: 'idle', text: exhausted ? 'Schedule cursor is exhausted; the ledger has not been verified yet.' : 'No completion receipt verified.', receipt: 'The exact worker receipt will appear here after verification.' },
   };
+  const closeoutReady = !busy && exhausted && receiptIsCurrent
+    && session?.leagueState?.transactionWindow === 'games'
+    && state.workerCapabilities?.seasonEndTransition === true;
+  view.closeout = session ? {
+    state: closeoutReceipt ? 'closed'
+      : state.workerCapabilities?.seasonEndTransition !== true ? 'unavailable'
+        : closeoutReady ? 'ready' : 'blocked',
+    seasonStartYear: session.leagueState?.seasonStartYear ?? null,
+    statusText: closeoutReceipt
+      ? `Regular season closed at session revision ${session.revision}.`
+      : state.workerCapabilities?.seasonEndTransition !== true
+        ? 'The initialized runtime does not support the versioned regular-season closeout transition.'
+        : closeoutReady
+          ? 'The completed schedule is verified and ready for regular-season closeout.'
+          : 'Finish and verify the exact regular-season schedule before closeout is available.',
+    hint: closeoutReceipt
+      ? 'This handoff records the games-to-season-end state transition. It does not simulate postseason or advance the season year.'
+      : 'Closeout is bound to the current completion receipt and cannot run against a stale session revision.',
+    receipt: closeoutReceipt,
+  } : null;
+
+  const savedAwardsRecord = seasonKey ? session?.leagueState?.awardHistoryBySeason?.[seasonKey] ?? null : null;
+  const savedAwardsReceipt = savedAwardsRecord?.finalizationReceipt ?? null;
+  const awardActions = (session?.actionHistory ?? []).filter(action => action.kind === 'finalize-season-awards'
+    && action.seasonStartYear === session?.leagueState?.seasonStartYear);
+  const awardReceiptHasSupportedShape = Boolean(savedAwardsRecord
+    && savedAwardsRecord.seasonStartYear === session?.leagueState?.seasonStartYear
+    && savedAwardsReceipt?.format === 'djhc-franchise-season-awards-finalize-v1'
+    && savedAwardsReceipt.version === '1.0.0'
+    && savedAwardsReceipt.previewFeatureFlag === 'seasonAwardsFinalizeV1'
+    && savedAwardsReceipt.classification === 'development-scenario; not-certified'
+    && savedAwardsReceipt.status === 'season-awards-finalized'
+    && savedAwardsReceipt.seasonStartYear === session?.leagueState?.seasonStartYear
+    && Number.isSafeInteger(savedAwardsReceipt.awardsSeed)
+    && Number.isSafeInteger(savedAwardsReceipt.priorSessionRevision)
+    && savedAwardsReceipt.sessionRevision === savedAwardsReceipt.priorSessionRevision + 1
+    && Number.isSafeInteger(savedAwardsReceipt.priorLeagueStateRevision)
+    && savedAwardsReceipt.leagueStateRevision === savedAwardsReceipt.priorLeagueStateRevision + 1
+    && /^[a-f0-9]{64}$/.test(savedAwardsReceipt.receiptSha256 ?? '')
+    && /^[a-f0-9]{64}$/.test(savedAwardsReceipt.completionReceiptSha256 ?? '')
+    && /^[a-f0-9]{64}$/.test(savedAwardsReceipt.historyRecordSha256 ?? '')
+    && /^[a-f0-9]{64}$/.test(savedAwardsReceipt.inputKeySha256 ?? '')
+    && savedAwardsReceipt.allStarSelectionTiming === 'end-of-season-modeled-selection'
+    && savedAwardsReceipt.handoffReceiptSha256 === closeoutReceipt?.receiptSha256
+    && savedAwardsReceipt.canonicalScheduleSha256 === closeoutReceipt?.canonicalScheduleSha256
+    && JSON.stringify(savedAwardsReceipt.sourceReceipt) === JSON.stringify(session?.sourceReceipt)
+    && JSON.stringify(savedAwardsReceipt.modelReceipt) === JSON.stringify(session?.modelReceipt)
+    && savedAwardsReceipt.sessionRevision <= session?.revision
+    && savedAwardsReceipt.leagueStateRevision <= session?.leagueState?.revision);
+  const awardActionMatchesReceipt = awardReceiptHasSupportedShape && awardActions.length === 1
+    && awardActions[0].revision === savedAwardsReceipt.sessionRevision
+    && awardActions[0].finalizationReceiptSha256 === savedAwardsReceipt.receiptSha256
+    && awardActions[0].canonicalScheduleSha256 === savedAwardsReceipt.canonicalScheduleSha256
+    && awardActions[0].handoffReceiptSha256 === savedAwardsReceipt.handoffReceiptSha256;
+  const seasonEndClosed = Boolean(session && exhausted
+    && session.leagueState?.transactionWindow === 'season-end'
+    && closeoutReceipt?.status === 'regular-season-closed'
+    && closeoutReceipt.seasonStartYear === session.leagueState.seasonStartYear
+    && plainReceipt(closeoutReceipt.completionReceipt)
+    && /^[a-f0-9]{64}$/.test(closeoutReceipt.receiptSha256 ?? '')
+    && /^[a-f0-9]{64}$/.test(closeoutReceipt.canonicalScheduleSha256 ?? ''));
+  const closeoutRevisionIsCurrent = closeoutReceipt?.sessionRevision === session?.revision
+    && closeoutReceipt?.leagueStateRevision === session?.leagueState?.revision;
+  const verifiedAwards = Boolean(awardActionMatchesReceipt
+    && state.lastSeasonAwardsFinalization?.sessionRevision === session?.revision
+    && state.lastSeasonAwardsFinalization?.receiptSha256 === savedAwardsReceipt?.receiptSha256);
+  const historyRecord = savedAwardsRecord
+    ? Object.fromEntries(Object.entries(savedAwardsRecord).filter(([key]) => key !== 'finalizationReceipt'))
+    : null;
+  let awardsState = 'blocked';
+  let awardsStatusText = 'Close and verify the regular season before simulated awards are available.';
+  if (!session) {
+    awardsState = 'unavailable';
+    awardsStatusText = 'Initialize a franchise season before checking season-end awards.';
+  } else if (state.workerCapabilities?.seasonAwardsFinalization !== true) {
+    awardsState = 'unavailable';
+    awardsStatusText = 'The initialized worker does not advertise revision-bound season-awards finalization.';
+  } else if (!seasonEndClosed) {
+    awardsState = session.leagueState?.transactionWindow === 'season-end'
+      ? 'error' : 'blocked';
+    awardsStatusText = session.leagueState?.transactionWindow === 'season-end'
+      ? 'The season-end handoff receipt is missing or does not match this completed schedule.'
+      : 'Close the verified regular season before simulated awards can be recorded.';
+  } else if (savedAwardsRecord && (!awardActionMatchesReceipt || awardActions.length !== 1)) {
+    awardsState = 'error';
+    awardsStatusText = 'Saved awards history or action history does not match a supported finalization receipt.';
+  } else if (savedAwardsRecord) {
+    awardsState = verifiedAwards ? 'finalized' : 'recorded';
+    awardsStatusText = verifiedAwards
+      ? `Simulated awards receipt verified for the ${session.leagueState.seasonStartYear} season at session revision ${session.revision}.`
+      : 'A saved awards receipt is present. Verify it against the current franchise session before treating it as finalized.';
+  } else if (awardActions.length) {
+    awardsState = 'error';
+    awardsStatusText = 'Award action history exists without a matching saved awards record; finalization is held for review.';
+  } else if (!closeoutRevisionIsCurrent) {
+    awardsState = 'blocked';
+    awardsStatusText = 'The closeout receipt is stale for this session revision. Restore the exact closed-season checkpoint before finalizing awards.';
+  } else {
+    awardsState = 'ready';
+    awardsStatusText = `The ${session.leagueState.seasonStartYear} regular season is closed with a current receipt. Enter a seed to record simulated awards.`;
+  }
+  const awardsAvailable = state.workerCapabilities?.seasonAwardsFinalization === true
+    && seasonEndClosed
+    && (savedAwardsRecord ? awardActionMatchesReceipt : awardActions.length === 0 && closeoutRevisionIsCurrent);
+  const awardsCanRun = !busy && awardsAvailable;
+  view.awards = session ? {
+    state: awardsState,
+    available: awardsAvailable,
+    enabled: awardsCanRun,
+    hasSavedRecord: Boolean(savedAwardsRecord),
+    verifiedForCurrentRevision: verifiedAwards,
+    seasonStartYear: session.leagueState?.seasonStartYear ?? null,
+    seed: savedAwardsReceipt?.awardsSeed ?? 1,
+    historyRecord,
+    receipt: savedAwardsReceipt,
+    formKey: `${seasonKey ?? 'season'}:${closeoutReceipt?.receiptSha256 ?? 'no-closeout'}:${savedAwardsReceipt?.receiptSha256 ?? 'new-awards'}`,
+    statusText: awardsStatusText,
+    hint: awardsCanRun
+      ? 'The worker will recheck the exact closed-season ledger, pinned source/model, and receipt before recording this action.'
+      : 'Award finalization uses this franchise session only. It does not advance the season year or open offseason actions.',
+    buttonTitle: savedAwardsRecord
+      ? 'Ask the worker to revalidate the stored simulated awards receipt for this exact session.'
+      : 'Record simulated awards from the verified closed-season ledger using the explicit seed.',
+  } : null;
+
+  // === Verified postseason, offseason, and rollover controls ===
+  if (!session) {
+    view.lifecycle = null;
+  } else {
+    const lifecycleCapabilities = state.workerCapabilities ?? {};
+    const currentWindow = session.leagueState?.transactionWindow ?? 'unknown';
+    const nextWindow = nextOffseasonWindow(currentWindow);
+    const postseasonReceipt = session.leagueState?.franchisePostseasonReceiptsBySeason?.[seasonKey] ?? null;
+    const postseasonHistory = session.leagueState?.postseasonHistoryBySeason?.[seasonKey] ?? null;
+    const postseasonSaved = postseasonReceipt?.status === 'franchise-postseason-completed'
+      && postseasonReceipt.seasonStartYear === session.leagueState?.seasonStartYear
+      && /^[a-f0-9]{64}$/.test(postseasonReceipt.receiptSha256 ?? '')
+      && postseasonHistory?.champion?.teamCode === postseasonReceipt.champion?.teamCode;
+    const preview = state.lastPreparedPostseason;
+    const previewCurrent = Boolean(preview && preview.sessionRevision === session.revision
+      && preview.receipt?.priorSessionRevision === session.revision);
+    const canPreparePostseason = !busy && lifecycleCapabilities.postseasonInputPreparation === true
+      && seasonEndClosed && awardActionMatchesReceipt && !postseasonSaved && !session.pendingOffseasonApproval;
+    const canCommitPostseason = !busy && lifecycleCapabilities.postseason === true && previewCurrent;
+    const postseasonStatus = postseasonSaved ? 'completed'
+      : previewCurrent ? 'prepared'
+        : currentWindow !== 'season-end' ? 'blocked'
+          : !seasonEndClosed ? 'blocked'
+            : !awardActionMatchesReceipt ? 'blocked'
+              : lifecycleCapabilities.postseasonInputPreparation === true ? 'ready' : 'unavailable';
+    const pendingApproval = session.pendingOffseasonApproval ?? null;
+    const phaseCapability = currentWindow === 'free-agency' ? lifecycleCapabilities.freeAgencyMarket === true
+      : currentWindow === 'trade-window' ? lifecycleCapabilities.tradeWindow === true
+        : currentWindow === 'draft' ? lifecycleCapabilities.draft === true : false;
+    const latestPhase = state.lastLifecycleAction?.window === currentWindow
+      && state.lastLifecycleAction?.sessionRevision === session.revision ? state.lastLifecycleAction : null;
+    const phaseMissingInputs = latestPhase?.missingInputs ?? [];
+    const canRunPhase = !busy && lifecycleCapabilities.offseasonPhaseRunner === true
+      && phaseCapability && !pendingApproval && phaseMissingInputs.length === 0;
+    const phaseName = currentWindow === 'free-agency' ? 'free agency'
+      : currentWindow === 'trade-window' ? 'trade window'
+        : currentWindow === 'draft' ? 'draft' : null;
+    const nextSeasonReady = currentWindow === 'season-end'
+      && lifecycleCapabilities.seasonRollover === true
+      && seasonEndClosed && awardActionMatchesReceipt && postseasonSaved && !pendingApproval;
+    const windowAdvanceReady = !busy && lifecycleCapabilities.offseasonWindowAdvance === true
+      && Boolean(nextWindow) && !['games', 'season-end'].includes(currentWindow) && !pendingApproval;
+    let lifecycleHint;
+    if (currentWindow === 'season-end' && !seasonEndClosed) lifecycleHint = 'The regular-season closeout receipt must match this schedule before later season steps can run.';
+    else if (currentWindow === 'season-end' && !awardActionMatchesReceipt) lifecycleHint = 'Finalize and verify simulated awards against the saved closeout receipt before postseason.';
+    else if (currentWindow === 'season-end' && !postseasonSaved && !previewCurrent) lifecycleHint = lifecycleCapabilities.postseasonInputPreparation === true
+      ? 'Postseason results are prepared for review, then committed as a separate approved action.'
+      : 'The worker has not prepared postseason inputs for this revision.';
+    else if (currentWindow === 'season-end' && postseasonSaved && !nextSeasonReady) lifecycleHint = 'The saved postseason receipt is present; the worker will revalidate it before any next-season transition.';
+    else if (phaseName && !phaseCapability) lifecycleHint = `No ready ${phaseName} executor is advertised by this worker.`;
+    else if (phaseMissingInputs.length) lifecycleHint = `The latest ${phaseName} run needs inputs: ${phaseMissingInputs.join(', ')}.`;
+    else if (pendingApproval && pendingApproval.stateRevision !== session.leagueState?.revision) lifecycleHint = 'The saved offseason proposal is stale and cannot be approved.';
+    else lifecycleHint = 'Each offseason window advances one step. The worker checks the current revision and transaction rules.';
+    view.lifecycle = {
+      seasonStartYear: session.leagueState?.seasonStartYear ?? null,
+      currentWindow,
+      capabilities: lifecycleCapabilities,
+      hint: lifecycleHint,
+      postseason: {
+        state: postseasonStatus,
+        available: canPreparePostseason,
+        enabled: canPreparePostseason,
+        canCommit: canCommitPostseason,
+        preview: previewCurrent ? preview : null,
+        receipt: postseasonSaved ? postseasonReceipt : null,
+        history: postseasonSaved ? postseasonHistory : null,
+        formKey: `${session.leagueState?.seasonStartYear ?? 'season'}:${closeoutReceipt?.receiptSha256 ?? 'no-closeout'}:${savedAwardsReceipt?.receiptSha256 ?? 'no-awards'}`,
+        statusText: postseasonSaved ? `Postseason completed for ${session.leagueState.seasonStartYear}; ${postseasonHistory.champion.teamCode} won the simulated championship.`
+          : previewCurrent ? `${preview.postseason?.games?.length ?? 0} simulated postseason games are prepared and waiting for your commit approval.`
+            : canPreparePostseason ? 'Verified closeout and award receipts are ready for a reproducible postseason run.'
+              : currentWindow === 'season-end' ? lifecycleHint
+                : 'Postseason opens after a verified regular-season closeout and finalized awards.',
+      },
+      nextSeason: {
+        enabled: !busy && nextSeasonReady,
+        targetSeasonStartYear: Number(session.leagueState?.seasonStartYear) + 1,
+        statusText: currentWindow === 'season-end'
+          ? postseasonSaved ? 'A verified simulated championship is saved. The next action advances exactly one season into preseason.'
+            : 'Complete postseason before advancing this Franchise season.'
+          : 'Next-season rollover becomes available after postseason completion.',
+      },
+      offseason: {
+        pendingApproval,
+        canResolveApproval: !busy && lifecycleCapabilities.offseasonApprovalResolution === true
+          && Boolean(pendingApproval) && pendingApproval.stateRevision === session.leagueState?.revision,
+        canRunPhase,
+        phaseName,
+        phaseMissingInputs,
+        phaseResult: latestPhase?.status ?? null,
+        canAdvanceWindow: windowAdvanceReady,
+        nextWindow,
+        statusText: currentWindow === 'season-end' ? 'Offseason windows open after the postseason is complete and the season advances to preseason.'
+          : phaseName && !phaseCapability ? `${phaseName} is the current window; this worker does not expose a ready phase executor.`
+            : `Current window: ${currentWindow.replaceAll('-', ' ')}${nextWindow ? ` · next: ${nextWindow.replaceAll('-', ' ')}` : ''}.`,
+      },
+      latestAction: state.lastLifecycleAction,
+    };
+  }
 
   // === History (renderHistory) ===
   const historyItems = [];
@@ -633,7 +996,10 @@ export default function useFranchiseSim() {
 
   const ensureClient = async () => {
     const state = ref.current;
-    if (!state.client) state.client = await createFranchiseWorker();
+    if (!state.client) {
+      const client = await createFranchiseWorker();
+      state.client = createStandaloneFranchiseWorkerAdapter(client);
+    }
     return state.client;
   };
   const ensureV4Api = async () => {
@@ -657,7 +1023,13 @@ export default function useFranchiseSim() {
     const failure = commandFailure(result);
     if (failure) throw new Error(failure);
     if (!result.session || typeof result.session !== 'object') throw new Error('Worker action did not return a verified session snapshot.');
+    if (result.session.revision !== ref.current.activeSession?.revision) {
+      ref.current.lastPreparedPostseason = null;
+      ref.current.lastLifecycleAction = null;
+    }
+    if (result.capabilities && typeof result.capabilities === 'object') ref.current.workerCapabilities = result.capabilities;
     clearSeasonCompletionReceipt();
+    ref.current.lastSeasonAwardsFinalization = null;
     ref.current.activeSession = result.session;
     if (gameResult) ref.current.lastGameOutput = result.game ?? result.result ?? null;
     render();
@@ -769,7 +1141,7 @@ export default function useFranchiseSim() {
       let prepared;
       if (path === 'v4') {
         const { intake, snapshotBuilder } = await ensureV4Api();
-        prepared = snapshotBuilder({
+        prepared = await snapshotBuilder({
           intake: state.v4Intake,
           userTeamCode: selectedTeam,
           gameModelText: state.v4GameModelText,
@@ -795,6 +1167,9 @@ export default function useFranchiseSim() {
       state.fixtureName = path === 'v4' ? `V4 regular-season scenario · ${state.v4Intake.scenario.seasonStartYear}` : state.fixtureName;
       state.activeSession = result.session;
       state.workerCapabilities = result.capabilities ?? {};
+      state.lastSeasonAwardsFinalization = null;
+      state.lastPreparedPostseason = null;
+      state.lastLifecycleAction = null;
       clearSeasonCompletionReceipt();
       state.activeTeamCode = upper(selectedTeam);
       state.storageBackend = path === 'v4' ? 'indexeddb' : 'localstorage';
@@ -1063,22 +1438,35 @@ export default function useFranchiseSim() {
   // === Rotation save (saveRotation) ===
   const saveRotation = async () => {
     const state = ref.current;
-    if (!state.activeSession) return;
+    const currentSession = state.activeSession;
+    if (!currentSession) return;
     showMessage('');
     setBusy(true);
     try {
       const worker = await ensureClient();
-      const result = await worker.command('rotation', {
-        expectedRevision: state.activeSession.revision,
+      const result = await worker.saveRotation({
+        expectedRevision: currentSession.revision,
         teamCode: state.activeTeamCode,
-        controls: makeRotationControls(state.activeSession, state.activeTeamCode, state.rotationDraft),
+        controls: makeRotationControls(currentSession, state.activeTeamCode, state.rotationDraft),
       });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
       const status = String(result?.status ?? '').toLowerCase();
-      if (!['created', 'updated', 'ready', 'pass'].includes(status) && !result?.session) {
-        throw new Error(commandFailure(result) ?? `Rotation was not saved (worker status: ${result?.status ?? 'unknown'}).`);
-      }
+      if (!['created', 'updated', 'ready', 'pass'].includes(status)) throw new Error(`Rotation was not saved (worker status: ${result?.status ?? 'unknown'}).`);
+      const verifiedSession = await validateStandaloneRotationRefresh({ result, currentSession,
+        teamCode: state.activeTeamCode });
       replaceSession(result);
-      state.saveStatus = 'Rotation saved with an action receipt. Save the franchise checkpoint separately when ready.';
+      state.activeSession = verifiedSession;
+      state.workerCapabilities = result.capabilities;
+      state.saveStatus = result.capabilities?.preparedGameInputs === true
+        ? `Rotation and refreshed game-input bundle verified · revision ${verifiedSession.revision}. Save the franchise checkpoint separately when ready.`
+        : `Rotation saved · revision ${verifiedSession.revision}. The worker did not refresh prepared game inputs, so game advancement remains disabled.`;
+      setWorkerStatus(result.capabilities?.preparedGameInputs === true
+        ? 'Rotation saved · game inputs refreshed and verified' : 'Rotation saved · game inputs need refresh',
+      result.capabilities?.preparedGameInputs === true ? 'ready' : 'review');
+      if (result.capabilities?.preparedGameInputs !== true) {
+        showMessage('Rotation was saved, but the worker did not return a current prepared game-input receipt. Game advancement stays disabled until the inputs are refreshed.', 'notice');
+      }
     } catch (error) { showFailure(error, 'Rotation was not saved.'); }
     finally { setBusy(false); render(); }
   };
@@ -1090,11 +1478,12 @@ export default function useFranchiseSim() {
     showMessage('');
     setBusy(true);
     try {
+      if (state.workerCapabilities?.preparedGameInputs !== true) throw new Error('The worker has no receipt-validated prepared game inputs for this session revision. Save or refresh the rotation inputs before advancing.');
       const worker = await ensureClient();
-      const result = await worker.command('next-game', { expectedRevision: state.activeSession.revision });
+      const result = await worker.advanceNextGame(state.activeSession.revision);
       if (result?.status === 'season-games-complete') {
         replaceSession(result);
-        showMessage('The selected regular-season schedule is complete. A new season or postseason cannot be started in this preview.', 'notice');
+        showMessage('The regular-season flow is complete. Postseason and next-season steps are runtime-gated worker actions; this UI exposes the regular-season flow only.', 'notice');
         return;
       }
       if (result?.status !== 'game-completed') throw new Error(commandFailure(result) ?? `Next game did not complete (worker status: ${result?.status ?? 'unknown'}).`);
@@ -1112,8 +1501,9 @@ export default function useFranchiseSim() {
     showMessage('');
     setBusy(true);
     try {
+      if (state.workerCapabilities?.preparedGameInputs !== true) throw new Error('The worker has no receipt-validated prepared game inputs for this session revision. Save or refresh the rotation inputs before advancing.');
       const worker = await ensureClient();
-      const result = await worker.command('next-user-game', { expectedRevision: state.activeSession.revision });
+      const result = await worker.advanceNextUserGame(state.activeSession.revision);
       if (result?.status !== 'game-completed') throw new Error(commandFailure(result) ?? `Advance through next user game did not complete (worker status: ${result?.status ?? 'unknown'}).`);
       if (result.atomicCheckpoint !== true || !Number.isInteger(result.gamesAdvanced) || !Array.isArray(result.advancedGames)) {
         throw new Error('Worker did not confirm an atomic schedule checkpoint with game summaries. The visible session was not updated.');
@@ -1147,7 +1537,7 @@ export default function useFranchiseSim() {
     try {
       if (state.workerCapabilities?.seasonCompletion !== true) throw new Error('The initialized worker does not support season completion verification.');
       const worker = await ensureClient();
-      const result = await worker.command('verify-season-completion', { expectedRevision: revision });
+      const result = await worker.verifySeasonCompletion(revision);
       const failure = commandFailure(result);
       if (failure) throw new Error(failure);
       if (result?.status !== 'season-games-complete') {
@@ -1184,12 +1574,503 @@ export default function useFranchiseSim() {
     } finally { setBusy(false); render(); }
   };
 
+  // === Regular-season closeout (closeRegularSeason) ===
+  // The worker recomputes the completion receipt against the exact schedule and
+  // ledger, then performs only games -> season-end. It does not imply
+  // postseason, awards, offseason transactions, or next-season readiness.
+  const closeRegularSeason = async () => {
+    const state = ref.current;
+    const session = state.activeSession;
+    const completion = state.lastSeasonCompletion;
+    const completionRevision = state.lastSeasonCompletionRevision;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      if (state.workerCapabilities?.seasonEndTransition !== true) {
+        throw new Error('The initialized franchise runtime does not support regular-season closeout.');
+      }
+      if (session.leagueState?.transactionWindow !== 'games'
+        || session.scheduleCursor !== session.schedule?.length || !session.schedule?.length) {
+        throw new Error('Finish the canonical regular-season schedule before closeout.');
+      }
+      if (!completion || completionRevision !== session.revision) {
+        throw new Error('Verify season completion against the exact current session before closeout.');
+      }
+      const worker = await ensureClient();
+      const expectedRevision = session.revision;
+      const result = await worker.closeRegularSeason({
+        expectedRevision,
+        completionSessionRevision: expectedRevision,
+        completionReceipt: clone(completion),
+      });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      if (result?.status !== 'regular-season-closed' || !result.session
+        || result.session.revision !== expectedRevision + 1
+        || result.session.leagueState?.transactionWindow !== 'season-end') {
+        throw new Error(`Regular-season closeout did not return a valid season-end session (status: ${result?.status ?? 'unknown'}).`);
+      }
+      const receipt = result.handoffReceipt;
+      const year = result.session.leagueState.seasonStartYear;
+      const savedReceipt = result.session.leagueState?.franchiseLifecycleReceiptsBySeason?.[String(year)];
+      if (!receipt || receipt.status !== 'regular-season-closed'
+        || receipt.priorSessionRevision !== expectedRevision
+        || receipt.sessionRevision !== result.session.revision
+        || savedReceipt?.receiptSha256 !== receipt.receiptSha256) {
+        throw new Error('Regular-season closeout returned an unbound handoff receipt.');
+      }
+      if (JSON.stringify(result.completion) !== JSON.stringify(completion)) {
+        throw new Error('Regular-season closeout returned a completion receipt that does not match the verified session.');
+      }
+      state.activeSession = result.session;
+      state.workerCapabilities = result.capabilities ?? state.workerCapabilities;
+      state.lastSeasonAwardsFinalization = null;
+      state.lastPreparedPostseason = null;
+      state.lastLifecycleAction = null;
+      clearSeasonCompletionReceipt();
+      state.lastGameOutput = null;
+      state.saveStatus = `Regular season closed and receipt-bound · revision ${state.activeSession.revision}. Save or export this season-end checkpoint before a later lifecycle step.`;
+      state.lastPreparedPostseason = null;
+      state.lastLifecycleAction = null;
+      setWorkerStatus('Regular season closed · season-end actions ready', 'ready');
+      showMessage(`The ${year} regular-season schedule is closed with a revision-bound receipt. Finalize simulated awards, then use the season lifecycle panel below for postseason and next-season steps.`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Regular-season closeout could not be completed.', 'Season closeout');
+    } finally { setBusy(false); render(); }
+  };
+
+  // === Season-awards finalization (finalizeSeasonAwards) ===
+  // The worker owns the season-end simulation and receipt. Keep the exact
+  // current closeout/session pins in view until its revision-bound result has
+  // passed local receipt and SHA-256 validation.
+  const finalizeSeasonAwards = async awardsSeed => {
+    const state = ref.current;
+    const session = state.activeSession;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      if (state.workerCapabilities?.seasonAwardsFinalization !== true) {
+        throw new Error('The initialized franchise runtime does not support simulated season-awards finalization.');
+      }
+      if (!Number.isSafeInteger(awardsSeed) || awardsSeed < 0 || awardsSeed > 0xffffffff) {
+        throw new Error('Enter an explicit unsigned 32-bit integer awards seed.');
+      }
+      const year = session.leagueState?.seasonStartYear;
+      const closeout = session.leagueState?.franchiseLifecycleReceiptsBySeason?.[String(year)];
+      if (session.leagueState?.transactionWindow !== 'season-end'
+        || !session.schedule?.length || session.scheduleCursor !== session.schedule.length
+        || closeout?.status !== 'regular-season-closed' || closeout.seasonStartYear !== year
+        || !plainReceipt(closeout.completionReceipt)) {
+        throw new Error('Close and verify this exact regular season before finalizing simulated awards.');
+      }
+      const worker = await ensureClient();
+      const expectedRevision = session.revision;
+      const result = await worker.finalizeSeasonAwards({
+        expectedRevision,
+        awardsSeed,
+        awardsPolicy: null,
+        userApproved: true,
+      });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      let verifiedSession;
+      try {
+        verifiedSession = await validateStandaloneSeasonAwardsFinalization({
+          result,
+          currentSession: session,
+          awardsSeed,
+        });
+      } catch (error) {
+        try { worker.dispose?.(); } catch { /* The prior verified session remains visible. */ }
+        if (state.client === worker) state.client = null;
+        state.workerCapabilities = null;
+        throw new Error(`Season-awards finalization returned an invalid receipt; the worker was closed and the prior view was preserved. ${error.message}`,
+          { cause: error });
+      }
+      state.activeSession = verifiedSession;
+      state.workerCapabilities = result.capabilities ?? state.workerCapabilities;
+      state.lastSeasonAwardsFinalization = {
+        sessionRevision: verifiedSession.revision,
+        receiptSha256: result.receipt.receiptSha256,
+      };
+      state.saveStatus = `Simulated season awards recorded with a verified receipt · revision ${verifiedSession.revision}. Save or export this season-end checkpoint.`;
+      setWorkerStatus(result.idempotentReplay ? 'Saved season-awards receipt reverified' : 'Simulated season awards finalized · receipt verified', 'ready');
+      showMessage(`Simulated awards were recorded for the ${year} season at revision ${verifiedSession.revision}. They are development-scenario results, not official NBA awards or calibrated forecasts. Save or export the season-end checkpoint to keep this result.`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Season-awards finalization could not be completed.', 'Season awards');
+    } finally { setBusy(false); render(); }
+  };
+
+  // === Receipt-bound postseason and offseason lifecycle ===
+  const preparePostseason = async postseasonSeed => {
+    const state = ref.current;
+    const session = state.activeSession;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      if (state.workerCapabilities?.postseasonInputPreparation !== true) {
+        throw new Error('The worker has not advertised postseason preparation for this session revision.');
+      }
+      if (!Number.isSafeInteger(postseasonSeed) || postseasonSeed < 0 || postseasonSeed > 0xffffffff) {
+        throw new Error('Enter an explicit unsigned 32-bit postseason seed.');
+      }
+      const worker = await ensureClient();
+      const result = await worker.preparePostseason({ expectedRevision: session.revision,
+        userApproved: true, postseasonSeed, playInPolicy: 'auto' });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      try {
+        const prepared = await validateStandalonePostseasonPreparation({ result, currentSession: session, postseasonSeed });
+        state.lastPreparedPostseason = { ...prepared, sessionRevision: session.revision };
+      } catch (error) {
+        try { worker.dispose?.(); } catch { /* Preserve the prior verified session. */ }
+        if (state.client === worker) state.client = null;
+        state.workerCapabilities = null;
+        throw new Error(`Postseason preparation returned an invalid review receipt; the worker was closed and the prior session was preserved. ${error.message}`, { cause: error });
+      }
+      state.workerCapabilities = result.capabilities ?? state.workerCapabilities;
+      state.lastLifecycleAction = { kind: 'postseason-prepared', status: result.status,
+        sessionRevision: session.revision, receipt: result.receipt };
+      setWorkerStatus('Postseason prepared · review before commit', 'ready');
+      showMessage(`The simulated postseason preview is ready for the ${session.leagueState.seasonStartYear} season. Review the champion and receipt, then explicitly commit it.`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Postseason could not be prepared.', 'Postseason');
+    } finally { setBusy(false); render(); }
+  };
+
+  const commitPostseason = async () => {
+    const state = ref.current;
+    const session = state.activeSession;
+    const prepared = state.lastPreparedPostseason;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      if (state.workerCapabilities?.postseason !== true || !prepared || prepared.sessionRevision !== session.revision) {
+        throw new Error('Prepare the postseason again against the current revision before committing.');
+      }
+      const worker = await ensureClient();
+      const result = await worker.commitPostseason({ expectedRevision: session.revision, userApproved: true });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      let verifiedSession;
+      try {
+        verifiedSession = await validateStandalonePostseasonCommit({ result, currentSession: session, prepared });
+      } catch (error) {
+        try { worker.dispose?.(); } catch { /* Preserve the prior verified session. */ }
+        if (state.client === worker) state.client = null;
+        state.workerCapabilities = null;
+        throw new Error(`Postseason commit returned an invalid receipt; the worker was closed and the prior session was preserved. ${error.message}`, { cause: error });
+      }
+      replaceSession(result);
+      state.activeSession = verifiedSession;
+      state.lastPreparedPostseason = null;
+      state.lastLifecycleAction = { kind: 'postseason-committed', status: result.status,
+        sessionRevision: verifiedSession.revision, receipt: result.receipt };
+      state.saveStatus = `Simulated postseason committed with a verified receipt · revision ${verifiedSession.revision}. Save or export this Franchise checkpoint.`;
+      setWorkerStatus('Postseason receipt verified · championship saved', 'ready');
+      showMessage(`${result.postseason.champion.teamCode} won the simulated ${session.leagueState.seasonStartYear} postseason. Receipt ${result.receipt.receiptSha256.slice(0, 16)}… Save or export the Franchise checkpoint.`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Postseason could not be committed.', 'Postseason');
+    } finally { setBusy(false); render(); }
+  };
+
+  const advanceNextSeason = async () => {
+    const state = ref.current;
+    const session = state.activeSession;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      if (state.workerCapabilities?.seasonRollover !== true
+        || session.leagueState?.transactionWindow !== 'season-end') {
+        throw new Error('The worker or current season window does not allow next-season rollover.');
+      }
+      const worker = await ensureClient();
+      const result = await worker.advanceNextSeason({ expectedRevision: session.revision, userApproved: true });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      let verifiedSession;
+      try {
+        verifiedSession = await validateStandaloneNextSeasonAdvance({ result, currentSession: session });
+      } catch (error) {
+        try { worker.dispose?.(); } catch { /* Preserve the prior verified session. */ }
+        if (state.client === worker) state.client = null;
+        state.workerCapabilities = null;
+        throw new Error(`Next-season transition returned an invalid receipt; the worker was closed and the prior session was preserved. ${error.message}`, { cause: error });
+      }
+      replaceSession(result);
+      state.activeSession = verifiedSession;
+      state.lastPreparedPostseason = null;
+      state.lastLifecycleAction = { kind: 'season-advanced', status: result.status,
+        sessionRevision: verifiedSession.revision, receipt: result.receipt };
+      state.saveStatus = `Advanced to ${verifiedSession.leagueState.seasonStartYear} preseason with a verified transition receipt. Save or export this Franchise checkpoint.`;
+      setWorkerStatus(`${verifiedSession.leagueState.seasonStartYear} preseason ready · transition receipt verified`, 'ready');
+      showMessage(`Franchise advanced one season to ${verifiedSession.leagueState.seasonStartYear} preseason. The generated-scenario source, schedule, and transition receipt were verified.`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Next season could not be started.', 'Season transition');
+    } finally { setBusy(false); render(); }
+  };
+
+  const advanceOffseasonWindow = async nextWindow => {
+    const state = ref.current;
+    const session = state.activeSession;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      if (state.workerCapabilities?.offseasonWindowAdvance !== true
+        || nextOffseasonWindow(session.leagueState?.transactionWindow) !== nextWindow) {
+        throw new Error('The requested offseason window is not the single next step for this session.');
+      }
+      const worker = await ensureClient();
+      const result = await worker.advanceOffseasonWindow({ expectedRevision: session.revision, nextWindow });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      let verifiedSession;
+      try { verifiedSession = validateStandaloneOffseasonWindowAdvance({ result, currentSession: session, nextWindow }); }
+      catch (error) {
+        try { worker.dispose?.(); } catch { /* Preserve the prior verified session. */ }
+        if (state.client === worker) state.client = null;
+        state.workerCapabilities = null;
+        throw new Error(`Offseason window transition was not receipt-aligned; the worker was closed and the prior session was preserved. ${error.message}`, { cause: error });
+      }
+      replaceSession(result);
+      state.activeSession = verifiedSession;
+      state.lastLifecycleAction = { kind: 'window-advanced', status: result.status,
+        sessionRevision: verifiedSession.revision, fromWindow: session.leagueState.transactionWindow, window: nextWindow };
+      state.saveStatus = `Advanced to the ${nextWindow.replaceAll('-', ' ')} window · revision ${verifiedSession.revision}. Save this Franchise checkpoint when ready.`;
+      setWorkerStatus(`Offseason window advanced · ${nextWindow}`, 'ready');
+      showMessage(`Franchise moved one transaction window forward to ${nextWindow.replaceAll('-', ' ')}.`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Offseason window could not be advanced.', 'Offseason');
+    } finally { setBusy(false); render(); }
+  };
+
+  const runOffseasonPhase = async () => {
+    const state = ref.current;
+    const session = state.activeSession;
+    const window = session?.leagueState?.transactionWindow;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      const capability = window === 'free-agency' ? state.workerCapabilities?.freeAgencyMarket
+        : window === 'trade-window' ? state.workerCapabilities?.tradeWindow
+          : window === 'draft' ? state.workerCapabilities?.draft : false;
+      if (state.workerCapabilities?.offseasonPhaseRunner !== true || capability !== true) {
+        throw new Error(`No ready phase executor is advertised for ${window ?? 'the current'} window.`);
+      }
+      if (session.pendingOffseasonApproval) throw new Error('Resolve the saved offseason proposal before running another phase.');
+      const worker = await ensureClient();
+      const result = await worker.runOffseasonPhase({ expectedRevision: session.revision,
+        userApproved: true, window });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      let verifiedSession;
+      try { verifiedSession = validateStandaloneOffseasonPhase({ result, currentSession: session, window }); }
+      catch (error) {
+        try { worker.dispose?.(); } catch { /* Preserve the prior verified session. */ }
+        if (state.client === worker) state.client = null;
+        state.workerCapabilities = null;
+        throw new Error(`Offseason phase returned an invalid session or approval snapshot; the worker was closed and the prior session was preserved. ${error.message}`, { cause: error });
+      }
+      replaceSession(result);
+      state.activeSession = verifiedSession;
+      const phaseResult = result.result ?? {};
+      state.lastLifecycleAction = { kind: 'phase-run', status: result.status, window,
+        sessionRevision: verifiedSession.revision,
+        missingInputs: Array.isArray(phaseResult.missingInputs) ? phaseResult.missingInputs : [],
+        receipt: phaseResult.receipt ?? phaseResult.decisionReceipt ?? null,
+        evaluation: phaseResult.evaluation ?? null };
+      state.saveStatus = `Offseason phase ${result.status} · revision ${verifiedSession.revision}. Save this Franchise checkpoint when ready.`;
+      const pending = verifiedSession.pendingOffseasonApproval;
+      setWorkerStatus(pending ? 'Offseason proposal waiting for your decision' : `Offseason phase · ${result.status}`,
+        pending ? 'review' : 'ready');
+      showMessage(pending
+        ? `The ${window.replaceAll('-', ' ')} phase produced a saved proposal that needs your approval. Review its exact terms below.`
+        : Array.isArray(phaseResult.missingInputs) && phaseResult.missingInputs.length
+          ? `The ${window.replaceAll('-', ' ')} phase could not run. Missing inputs: ${phaseResult.missingInputs.join(', ')}.`
+          : `The ${window.replaceAll('-', ' ')} phase returned ${result.status}.`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Offseason phase could not be run.', 'Offseason');
+    } finally { setBusy(false); render(); }
+  };
+
+  const resolveOffseasonApproval = async decision => {
+    const state = ref.current;
+    const session = state.activeSession;
+    const pending = session?.pendingOffseasonApproval;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      if (state.workerCapabilities?.offseasonApprovalResolution !== true || !['approve', 'reject'].includes(decision)
+        || !pending || pending.stateRevision !== session.leagueState?.revision) {
+        throw new Error('There is no current revision-bound offseason proposal to approve or reject.');
+      }
+      const worker = await ensureClient();
+      const result = await worker.resolveOffseasonApproval({ expectedRevision: session.revision,
+        userApproved: true, decision });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      let verifiedSession;
+      try {
+        verifiedSession = await validateStandaloneOffseasonApproval({ result, currentSession: session, decision });
+      } catch (error) {
+        try { worker.dispose?.(); } catch { /* Preserve the prior verified session. */ }
+        if (state.client === worker) state.client = null;
+        state.workerCapabilities = null;
+        throw new Error(`Offseason decision returned an invalid receipt; the worker was closed and the prior session was preserved. ${error.message}`, { cause: error });
+      }
+      replaceSession(result);
+      state.activeSession = verifiedSession;
+      state.lastLifecycleAction = { kind: 'approval-resolved', status: result.status,
+        window: pending.window, sessionRevision: verifiedSession.revision,
+        missingInputs: result.result?.evaluation?.missingInputs ?? [],
+        receipt: result.result?.receipt ?? result.result?.decisionReceipt ?? null,
+        evaluation: result.result?.evaluation ?? null };
+      state.saveStatus = `Offseason proposal ${result.status} · revision ${verifiedSession.revision}. Save this Franchise checkpoint when ready.`;
+      setWorkerStatus(`Offseason proposal ${result.status}`, result.status === 'committed' || result.status === 'rejected' ? 'ready' : 'review');
+      showMessage(result.status === 'committed'
+        ? 'The proposal was approved and committed with a verified roster-transition receipt.'
+        : result.status === 'rejected' ? 'The proposal was rejected. The LeagueState and roster were not changed.'
+          : `The worker returned ${result.status}; review the updated proposal and diagnostics below.`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Offseason proposal decision could not be saved.', 'Offseason approval');
+    } finally { setBusy(false); render(); }
+  };
+
+  // === Revision-bound roster-waiver evaluation and approval ===
+  const evaluateWaiverTransaction = async canonicalName => {
+    const state = ref.current;
+    const session = state.activeSession;
+    if (!session || state.busy) return;
+    state.lastTransactionEvaluation = null;
+    state.lastTransactionProposal = null;
+    state.lastTransactionEvaluationRevision = null;
+    state.lastTransactionSessionBinding = null;
+    showMessage('');
+    setBusy(true);
+    try {
+      const league = session.leagueState;
+      const teamCode = state.activeTeamCode;
+      const team = league.teams?.find(row => upper(row.teamCode) === teamCode);
+      const player = league.players?.find(row => normalizeName(row.canonicalName ?? row.name) === normalizeName(canonicalName));
+      if (state.workerCapabilities?.transactions !== true) throw new Error('The initialized worker does not support transaction evaluation.');
+      if (!ROSTER_MOVE_WINDOWS.has(league.transactionWindow)) throw new Error(`Roster moves are unavailable during the ${league.transactionWindow ?? 'unknown'} transaction window.`);
+      if (!team || !(team.rosterNames ?? []).some(name => normalizeName(name) === normalizeName(canonicalName))
+        || !player || upper(player.teamCode) !== teamCode) throw new Error('Select a player with an exact current roster and player-state match for the user-controlled team.');
+      const slug = normalizeName(canonicalName).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'player';
+      const proposal = {
+        proposalId: `waive-${league.seasonStartYear}-${teamCode}-${league.revision}-${slug}`,
+        kind: 'roster-move',
+        seasonStartYear: Number(league.seasonStartYear),
+        transactionWindow: league.transactionWindow,
+        actor: 'user',
+        userControlledTeamCodes: [teamCode],
+        legs: [{ assetType: 'player', canonicalName: player.canonicalName, fromTeamCode: teamCode, action: 'waive' }],
+        expectedStateRevision: league.revision,
+      };
+      const worker = await ensureClient();
+      const result = await worker.evaluateTransaction(proposal);
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      const evaluation = validateStandaloneTransactionEvaluation({ result, currentSession: session, proposal });
+      state.lastTransactionProposal = clone(proposal);
+      state.lastTransactionEvaluation = clone(evaluation);
+      state.lastTransactionEvaluationRevision = session.revision;
+      state.lastTransactionSessionBinding = {
+        sessionRevision: session.revision,
+        leagueStateRevision: league.revision,
+        seasonStartYear: league.seasonStartYear,
+        transactionWindow: league.transactionWindow,
+        sourceReceipt: clone(session.sourceReceipt),
+        modelReceipt: clone(session.modelReceipt),
+        schedule: clone(session.schedule),
+        scheduleCursor: session.scheduleCursor,
+      };
+      const label = evaluation.legalityOutcome === 'confirmed-legal' ? 'confirmed legal'
+        : evaluation.legalityOutcome === 'scenario-compliant' ? 'scenario-compliant' : 'provisional / unresolved';
+      showMessage(`Waiver evaluation: ${label}. No roster or payroll state changed; review the worker's missing inputs and approval gate below.`, 'notice');
+      setWorkerStatus(`Waiver proposal evaluated · ${evaluation.status}`, evaluation.status === 'confirmed-legal' ? 'ready' : 'review');
+    } catch (error) {
+      showFailure(error, 'Waiver proposal could not be evaluated.', 'Roster transaction');
+    } finally { setBusy(false); render(); }
+  };
+
+  const approveWaiverTransaction = async allowProvisionalSandbox => {
+    const state = ref.current;
+    const session = state.activeSession;
+    const proposal = state.lastTransactionProposal;
+    const evaluation = state.lastTransactionEvaluation;
+    if (!session || state.busy) return;
+    showMessage('');
+    setBusy(true);
+    try {
+      if (!proposal || !evaluation || state.lastTransactionEvaluationRevision !== session.revision
+        || !transactionBindingMatches(state.lastTransactionSessionBinding, session)
+        || proposal.expectedStateRevision !== session.leagueState.revision) {
+        throw new Error('Re-evaluate the waiver against the current session revision before approval.');
+      }
+      if (state.workerCapabilities?.transactions !== true || !ROSTER_MOVE_WINDOWS.has(session.leagueState.transactionWindow)) {
+        throw new Error('The current worker capability or transaction window no longer allows roster moves.');
+      }
+      const approvalBlocks = (evaluation.blockedReasons ?? []).filter(reason => !/user approval is required/i.test(String(reason)));
+      const confirmedLegal = evaluation.status === 'confirmed-legal' && evaluation.legalityOutcome === 'confirmed-legal';
+      const sandboxScenario = session.leagueState.mode === 'provisional-sandbox' && evaluation.status === 'provisional';
+      if (evaluation.userApprovalRequired !== true || evaluation.approvalReceived === true || approvalBlocks.length) {
+        throw new Error(`The transaction is not ready for approval. ${approvalBlocks.join(' ') || 'A fresh user approval is required.'}`);
+      }
+      if (!confirmedLegal && !sandboxScenario) {
+        throw new Error('Only a confirmed-legal proposal or an explicitly approved Provisional Sandbox proposal can be committed.');
+      }
+      if (sandboxScenario && allowProvisionalSandbox !== true) {
+        throw new Error('Explicitly enable Provisional Sandbox approval before committing a provisional move.');
+      }
+      const worker = await ensureClient();
+      const expectedRevision = session.revision;
+      const result = await worker.executeTransaction({
+        proposal: clone(proposal),
+        expectedRevision,
+        userApproved: true,
+        allowProvisionalSandbox: sandboxScenario && allowProvisionalSandbox === true,
+      });
+      const failure = commandFailure(result);
+      if (failure) throw new Error(failure);
+      let verifiedSession;
+      try {
+        verifiedSession = await validateStandaloneTransactionCommit({ result, currentSession: session, proposal });
+      } catch (error) {
+        try { worker.dispose?.(); } catch { /* Preserve the prior verified franchise view. */ }
+        if (state.client === worker) state.client = null;
+        state.workerCapabilities = null;
+        throw new Error(`Transaction commit returned an invalid receipt; the worker was closed and the prior view was preserved. ${error.message}`, { cause: error });
+      }
+      const receipt = result.evaluation.rosterTransitionReceipt;
+      state.activeSession = verifiedSession;
+      state.workerCapabilities = result.capabilities ?? state.workerCapabilities;
+      state.lastTransactionEvaluation = null;
+      state.lastTransactionProposal = null;
+      state.lastTransactionEvaluationRevision = null;
+      state.lastTransactionSessionBinding = null;
+      state.saveStatus = `Roster transaction committed with a verified receipt · revision ${verifiedSession.revision}. Save or export this franchise checkpoint.`;
+      setWorkerStatus('Roster transaction committed · receipt verified', 'ready');
+      showMessage(`The ${proposal.legs[0].canonicalName} waiver was approved and committed at LeagueState revision ${verifiedSession.leagueState.revision}. Receipt ${receipt.receiptSha256.slice(0, 16)}…`, 'notice');
+    } catch (error) {
+      showFailure(error, 'Waiver approval could not be completed.', 'Roster transaction');
+    } finally { setBusy(false); render(); }
+  };
+
   // === Portable export (exportCurrentSave) ===
   const exportCurrentSave = async () => {
     const state = ref.current;
     if (!state.activeSession) return null;
     const worker = await ensureClient();
-    const result = await worker.command('export', {});
+    const result = await worker.exportSave();
     const failure = commandFailure(result);
     if (failure) throw new Error(failure);
     exportedSaveMatches(result?.saveText, state.activeSession, state.activeTeamCode);
@@ -1247,13 +2128,17 @@ export default function useFranchiseSim() {
     const candidateTeams = (candidate?.leagueState?.userControlledTeamCodes ?? []).map(upper);
     if (candidateTeams.length !== 1) throw new Error('A portable franchise save must contain exactly one user-controlled team.');
     const worker = await ensureClient();
-    const result = await worker.command('restore', { saveText });
+    const result = await worker.importSave(saveText);
     const failure = commandFailure(result);
     if (failure) throw new Error(failure);
     if (!result?.session) throw new Error('Worker restore did not return a verified session snapshot.');
     const restoredTeam = (result.session.leagueState?.userControlledTeamCodes ?? [])[0];
     if (!restoredTeam) throw new Error('Restored session has no user-controlled team.');
     state.activeSession = result.session;
+    state.workerCapabilities = result.capabilities ?? state.workerCapabilities;
+    state.lastSeasonAwardsFinalization = null;
+    state.lastPreparedPostseason = null;
+    state.lastLifecycleAction = null;
     clearSeasonCompletionReceipt();
     state.activeTeamCode = upper(restoredTeam);
     state.storageBackend = candidate?.sourceReceipt?.mode === 'retrospective-user-scenario' && candidate?.sourceReceipt?.intakeVersion
@@ -1277,11 +2162,15 @@ export default function useFranchiseSim() {
         const store = await ensureFranchiseBrowserStore();
         const loaded = await store.load(indexedDbLoadOptions());
         const worker = await ensureClient();
-        const result = await worker.command('restore-session', { session: loaded.session });
+        const result = await worker.restoreSession(loaded.session);
         const failure = commandFailure(result);
         if (failure) throw new Error(failure);
         if (!result?.session) throw new Error('Worker did not return the pinned IndexedDB checkpoint snapshot.');
         state.activeSession = result.session;
+        state.workerCapabilities = result.capabilities ?? state.workerCapabilities;
+        state.lastSeasonAwardsFinalization = null;
+        state.lastPreparedPostseason = null;
+        state.lastLifecycleAction = null;
         clearSeasonCompletionReceipt();
         state.activeTeamCode = upper((result.session.leagueState?.userControlledTeamCodes ?? [])[0] ?? '');
         state.lastGameOutput = null;
@@ -1357,6 +2246,9 @@ export default function useFranchiseSim() {
       state.fixtureMeta = { name: file.name, detail: `${humanBytes(file.size)} · parsed locally` };
       state.activeSession = null;
       state.workerCapabilities = null;
+      state.lastSeasonAwardsFinalization = null;
+      state.lastPreparedPostseason = null;
+      state.lastLifecycleAction = null;
       clearSeasonCompletionReceipt();
       state.activeTeamCode = '';
       state.storageBackend = 'localstorage';
@@ -1390,6 +2282,9 @@ export default function useFranchiseSim() {
       state.fixtureMeta = meta;
       state.activeSession = null;
       state.workerCapabilities = null;
+      state.lastSeasonAwardsFinalization = null;
+      state.lastPreparedPostseason = null;
+      state.lastLifecycleAction = null;
       clearSeasonCompletionReceipt();
       state.activeTeamCode = '';
       state.storageBackend = 'localstorage';
@@ -1417,7 +2312,11 @@ export default function useFranchiseSim() {
     onRosterChoice, setDraft,
     loadV4Season, applySuggestions, applyRosterMode, initializeScenario,
     loadFixture, loadVerifiedFixture,
-    saveRotation, advanceGame, advanceUserGame, verifyCompletion,
+    saveRotation, advanceGame, advanceUserGame, verifyCompletion, closeout: closeRegularSeason,
+    finalizeAwards: finalizeSeasonAwards,
+    preparePostseason, commitPostseason, advanceNextSeason,
+    advanceOffseasonWindow, runOffseasonPhase, resolveOffseasonApproval,
+    evaluateWaiverTransaction, approveWaiverTransaction,
     saveLocal, resumeLocal, exportSave, importSave,
   };
 }

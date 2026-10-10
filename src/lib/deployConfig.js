@@ -1,6 +1,7 @@
 // Studio is hosted with the existing DJHC storefront and public data.
 export const STANDALONE = true;
-export const SITE_BASE = '/tools/swishiq-studio';
+export const SITE_BASE = String(import.meta.env?.BASE_URL || '/tools/swishiq-studio/')
+  .replace(/\/+$/, '');
 export const SITE_ORIGIN = typeof window !== 'undefined'
   ? window.location.origin : 'https://www.djshouseofcards-comics.com';
 export function siteUrl(path = '/') {

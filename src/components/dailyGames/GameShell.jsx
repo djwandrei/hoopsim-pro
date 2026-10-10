@@ -1,21 +1,8 @@
 import React from 'react';
-import DJHCHeader from '@/components/djhc/DJHCHeader';
-import DJHCFooter from '@/components/djhc/DJHCFooter';
-import CourtThemeProvider from '@/components/djhc/CourtThemeProvider';
-import PullToRefresh from '@/components/djhc/PullToRefresh';
-import PageTransition from '@/components/studio/PageTransition';
+import StudioShell from '@/components/studio/StudioShell';
 
-// Daily games run standalone — site header/footer chrome only, no SwishIQ
-// Studio sidebar, matching how the live /tools/ pages present these games.
-export default function GameShell({ children }) {
-  return (
-    <CourtThemeProvider>
-      <div className="studio-workspace min-h-screen bg-canvas">
-        <DJHCHeader />
-        <a href="#game-content" className="sr-only z-50 rounded bg-gold p-3 text-primary-foreground focus:not-sr-only focus:fixed focus:left-3 focus:top-3">Skip to game</a>
-        <PullToRefresh className="min-w-0"><PageTransition>{children}</PageTransition></PullToRefresh>
-        <DJHCFooter />
-      </div>
-    </CourtThemeProvider>
-  );
+// Daily games and Lineup Lab use the same Studio shell as the other tools so
+// the persistent desktop workbench sidebar remains available on every route.
+export default function GameShell({ children, active = '/daily-games' }) {
+  return <StudioShell active={active}>{children}</StudioShell>;
 }

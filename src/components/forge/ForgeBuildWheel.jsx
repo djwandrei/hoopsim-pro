@@ -5,9 +5,9 @@ import ForgeAthlete3D from '@/components/forge/ForgeAthlete3D';
 
 const initials = pick => (pick?.player?.name || '?').split(/\s+/).filter(Boolean).map(word => word[0]).slice(0, 2).join('');
 
-// Circular attribute wheel: nine slots around a central silhouette, each
+// Circular attribute wheel: attribute slots around a central silhouette, each
 // segment lighting up as its pick lands, graded by the DJHC rating.
-export default function ForgeBuildWheel({ picks, overall, selectedKey, spinning = false, editions }) {
+export default function ForgeBuildWheel({ picks, overall, selectedKey, spinning = false, editions, appearance }) {
   const slice = 360 / SKILLS.length;
   const segments = SKILLS.map((skill, index) => {
     const pick = picks[skill.key];
@@ -30,7 +30,7 @@ export default function ForgeBuildWheel({ picks, overall, selectedKey, spinning 
       })}
     </div>
     <div className="absolute inset-[26%] flex flex-col items-center justify-center rounded-full border-2 border-gold/50 bg-card shadow-[0_0_30px_hsl(var(--court-accent)/0.2)]">
-      <div className="absolute inset-[10%]"><ForgeAthlete3D picks={picks} editions={editions} spinning={spinning} /></div>
+      <div className="absolute inset-[10%]"><ForgeAthlete3D picks={picks} editions={editions} appearance={appearance} spinning={spinning} /></div>
       <motion.span key={overall ?? 'none'} initial={{ scale:1.3, opacity:.3 }} animate={{ scale:1, opacity:1 }} transition={{ type:'spring', stiffness:320, damping:18 }} className="relative font-display text-4xl leading-none text-gold">{overall ?? '—'}</motion.span>
       <span className="relative mt-1 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">OVR</span>
     </div>

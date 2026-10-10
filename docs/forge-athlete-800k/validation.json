@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "triangles": 967181,
+  "controls": 48,
+  "modelSha256": "a4afc942b31d81292600ba24c23d5da891e347b97868fd017c1a0b5b0726a1a1",
+  "rigSha256": "036605c54da48ec28e6d864602c3fd25a479ef10223d658b849531251a778960",
+  "uniformDesigns": 90,
+  "uniformImages": 270,
+  "existingFallbackPanels": 0,
+  "checks": [
+    "actual GLTFLoader and SkeletonUtils clones",
+    "rig and model integrity plus retry",
+    "all material/element names",
+    "donor unlocks",
+    "independent garment editions",
+    "undo/restart",
+    "late load cancellation",
+    "body remains silhouette"
+  ],
+  "scope": "Windowless Three.js and real local 2D texture rendering; no app/browser/GPU visual check",
+  "deployed": false,
+  "archivesRebuilt": false
+}

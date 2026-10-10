@@ -4,7 +4,7 @@ import { SKILLS, GROUPS } from '@/components/forge/bapSkills';
 
 // Build-A-Bucket-style setup screen shared by both Forge draft modes — a
 // two-column briefing: the mode story, pool state and numbered workflow on
-// the left, and the Guard/Big toggle with the nine-skill DJHC slate on the
+// the left, and the Guard/Big toggle with the DJHC attribute slate on the
 // right. Replaces the single centered column for a clear information split.
 export default function ForgeSetupPanel({ kicker, title, intro, group, onGroup, poolCount, onStart, respinNote, steps = [] }) {
   return <section className="court-panel relative overflow-hidden p-5 sm:p-7">
@@ -28,7 +28,7 @@ export default function ForgeSetupPanel({ kicker, title, intro, group, onGroup, 
       </div>
       <aside className="min-w-0 rounded-2xl border border-border/30 bg-raised/30 p-4" aria-label="Skill slate">
         <p className="bcast-kicker">Skill slate</p>
-        <p className="mt-1 text-[11px] text-muted-foreground">Nine DJHC ratings, each backed by an observed season metric.</p>
+        <p className="mt-1 text-[11px] text-muted-foreground">Observed season counts and rates, shrunk for small samples, ranked within the season and role adjusted when supported.</p>
         <div className="mt-3 grid grid-cols-2 gap-1.5">
           {GROUPS.map(item => <button key={item.key} type="button" onClick={() => onGroup(item.key)} className={`rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${group === item.key ? 'border-gold/60 bg-gradient-to-r from-gold/15 to-royal/10 text-gold shadow-[0_0_18px_rgba(233,185,73,0.12)]' : 'border-border/30 text-muted-foreground hover:border-gold/40'}`}>{item.key} <span className="font-mono opacity-70">{item.hint}</span></button>)}
         </div>

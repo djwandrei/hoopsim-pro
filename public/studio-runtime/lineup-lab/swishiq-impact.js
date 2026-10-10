@@ -36,7 +36,7 @@ export const SWISHIQ_MODEL_MODES = Object.freeze(["historical", "hybrid", "swish
 // boundary so a transport or package cannot silently invert defense.
 export const SWISHIQ_DEFENSIVE_SIGN_CONVENTION = "positive_is_better_and_reduces_predicted_opponent_scoring";
 export const CANONICAL_V4_IMPACT_LINEUP_EVIDENCE_FORMAT = "djhc-canonical-v4-lineup-impact-evidence-v1";
-export const CANONICAL_V4_IMPACT_LINEUP_EVIDENCE_VERSION = "swishiq-v4-lineup-impact-evidence-v1";
+export const CANONICAL_V4_IMPACT_LINEUP_EVIDENCE_VERSION = "swishiq-v4-impact-lineup-evidence-v1";
 
 const PLAYER_IMPACT_ALIASES = Object.freeze({
   offense: [
@@ -837,7 +837,7 @@ function buildCanonicalV4ImpactModel(players, evidence, {
     });
   }
   return {
-    version: model.modelVersion,
+    version: SWISHIQ_IMPACT_MODEL_VERSION,
     mode,
     available: impactsById.size > 0,
     applied: impactsById.size > 0,

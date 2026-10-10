@@ -12,19 +12,18 @@ const projectRoot = fileURLToPath(new URL('.', import.meta.url));
 // only the generated JavaScript files needed by the local dev client; the
 // production build never installs this middleware.
 function djhcDevDependencyBridge() {
-  const depsRoot = path.join(projectRoot, 'node_modules', '.vite', 'deps');
   return {
     name: 'djhc-dev-dependency-bridge',
     apply: 'serve',
     configureServer(server) {
+      const depsRoot = path.join(server.config.cacheDir, 'deps');
+      const prefix = `/${path.relative(projectRoot, depsRoot).replaceAll(path.sep, '/')}/`;
       server.middlewares.use((request, response, next) => {
         const pathname = String(request.url || '').split('?', 1)[0];
-        const prefix = '/node_modules/.vite/deps/';
         if (!pathname.startsWith(prefix) || !['GET', 'HEAD'].includes(request.method)) return next();
         const relative = pathname.slice(prefix.length);
         if (!/^[A-Za-z0-9@._-]+\.js$/.test(relative)) return next();
         const filePath = path.join(depsRoot, relative);
-        const version = new URL(`http://localhost${request.url}`).searchParams.get('v');
         void stat(filePath).then(async info => {
           if (!info.isFile()) return next();
           if (request.method === 'HEAD') {
@@ -34,13 +33,18 @@ function djhcDevDependencyBridge() {
             return response.end();
           }
           const source = await readFile(filePath, 'utf8');
-          // The prebundled React DOM chunks use relative imports. Add the
-          // same optimizer version to those imports so React is evaluated as
-          // one browser module rather than once with and once without `?v`.
-          const body = version
-            ? source.replace(/(from\s*["']\.\/[^"']+\.js)(["'])/g, `$1?v=${version}$2`)
-              .replace(/(import\s*\(\s*["']\.\/[^"']+\.js)(["'])/g, `$1?v=${version}$2`)
-            : source;
+          // Each optimized file has its own browser hash after lazy discovery.
+          // Use the imported file's hash, never its parent's: React must have
+          // the same URL in app code, React DOM, and third-party dependencies.
+          const metadata = server.environments.client?.depsOptimizer?.metadata;
+          const rewriteImport = (_match, start, filename, quote) => {
+            const dependency = metadata?.depInfoList.find(item => path.basename(item.file) === filename);
+            const version = dependency?.browserHash || metadata?.browserHash;
+            return `${start}${version ? `?v=${version}` : ''}${quote}`;
+          };
+          const body = source
+            .replace(/(from\s*["']\.\/([^"'?]+\.js))(["'])/g, rewriteImport)
+            .replace(/(import\s*\(\s*["']\.\/([^"'?]+\.js))(["'])/g, rewriteImport);
           const bytes = Buffer.byteLength(body);
           response.statusCode = 200;
           response.setHeader('Content-Type', 'text/javascript; charset=utf-8');
@@ -57,6 +61,8 @@ export default defineConfig(({ command, isPreview }) => ({
   // the deployment prefix for production preserves cPanel routing while
   // avoiding broken `/tools/.../node_modules/.vite` imports in local smoke.
   base: command === 'build' || isPreview ? '/tools/swishiq-studio/' : '/',
+  // node_modules may be shared with another checkout through a junction.
+  cacheDir: path.join(projectRoot, '.vite'),
   define: {
     'import.meta.env.VITE_STANDALONE': JSON.stringify('true'),
   },

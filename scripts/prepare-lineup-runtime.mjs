@@ -12,7 +12,7 @@ const IMPORT_BASE = 'https://djhc-local.invalid' + LINEUP_RUNTIME_PREFIX + '/app
 const STATIC_IMPORT_PATTERN = /^import\s[\s\S]*?\bfrom\s+("([^"\r\n]+)"|'([^'\r\n]+)')\s*;[\t ]*(?:\r?\n|$)/gm;
 const FINAL_INITIALIZE_PATTERN = /\ninitialize\(\);\s*$/;
 const FIXTURE_ASSIGNMENT_PATTERN = /^const FIXTURE_URL = "\.\/fixtures\/timberwolves-2021-22\.json\?v=20261002c";$/m;
-const WORKER_ASSIGNMENT_PATTERN = /^const OPTIMIZER_WORKER_URL = new URL\("\.\/optimizer-worker\.js\?v=20261010a&rev=native-v4-impact-mean-only-v1", import\.meta\.url\);$/m;
+const WORKER_ASSIGNMENT_PATTERN = /^const OPTIMIZER_WORKER_URL = new URL\("\.\/optimizer-worker\.js\?v=20261010g&rev=consolidated-runtime-v1", import\.meta\.url\);$/m;
 
 function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -109,7 +109,7 @@ function makeGeneratedModule(inputBytes) {
   );
   body = body.replace(
     WORKER_ASSIGNMENT_PATTERN,
-    'const OPTIMIZER_WORKER_URL = new URL("' + LINEUP_RUNTIME_PREFIX + '/optimizer-worker.js?v=20261010a&rev=native-v4-impact-mean-only-v1", window.location.origin);',
+    'const OPTIMIZER_WORKER_URL = new URL("' + LINEUP_RUNTIME_PREFIX + '/optimizer-worker.js?v=20261010g&rev=consolidated-runtime-v1", window.location.origin);',
   );
   body = body.replace(FINAL_INITIALIZE_PATTERN, `
   return {

@@ -1,6 +1,6 @@
 // Match the app shell's revision so the worker cannot run an older solver from
 // an existing browser cache after a targeted cPanel release.
-import { analyzeLineupInputStability, optimizeLineups } from "./optimizer-core.js?v=20261010a&rev=native-v4-impact-mean-only-v1";
+import { analyzeLineupInputStability, analyzeWeightSensitivity, canShareWeightOnlyLineupScenarios, optimizeLineups } from "./optimizer-core.js?v=20261010g&rev=consolidated-runtime-v1";
 import { canonicalV4LineupModelExecutionAvailability } from "../../engine/canonical-v4-lineup-model-gate.js?v=20261008n&rev=historical-optimizer-gate-6a0e4d0ed273a71e";
 
 self.addEventListener("message", (event) => {
@@ -46,6 +46,58 @@ self.addEventListener("message", (event) => {
       ? event.data.scenarioConfigs
       : null;
     if (scenarioConfigs?.length) {
+      if (canShareWeightOnlyLineupScenarios(scenarioConfigs)) {
+        const scenarioRows = scenarioConfigs.map((scenario, index) => {
+          const id = typeof scenario.id === "string" ? scenario.id : `scenario-${index + 1}`;
+          return { id, label: String(scenario.label || id), config: scenario.config };
+        });
+        const [baselineScenario, ...weightScenarios] = scenarioRows;
+        const idByInternalId = new Map();
+        const sensitivityScenarios = weightScenarios.map((scenario, index) => {
+          const internalId = `weight-scenario-${index + 1}`;
+          idByInternalId.set(internalId, scenario);
+          return {
+            id: internalId,
+            label: scenario.label,
+            weights: scenario.config.weights,
+          };
+        });
+        const sensitivity = analyzeWeightSensitivity(
+          players,
+          baselineScenario.config,
+          sensitivityScenarios,
+          {
+            onProgress: (progress) => {
+              const scenario = progress.scenarioId === "baseline"
+                ? baselineScenario
+                : idByInternalId.get(progress.scenarioId);
+              onProgress({
+                ...progress,
+                scenarioId: scenario?.id || baselineScenario.id,
+                scenarioLabel: scenario?.label || baselineScenario.label,
+              });
+            },
+          },
+        );
+        const toScenarioResult = (scenario, result) => ({
+          id: scenario.id,
+          label: scenario.label,
+          ok: Boolean(result?.ok),
+          status: result?.status,
+          objectiveMetadata: result?.objectiveMetadata || null,
+          result,
+        });
+        const scenarios = [
+          toScenarioResult(baselineScenario, sensitivity.baseline.result),
+          ...sensitivity.scenarios.map((scenario, index) => toScenarioResult(weightScenarios[index], scenario.result)),
+        ];
+        self.postMessage({
+          requestId,
+          type: "result",
+          result: { kind: "objective-scenario-comparison", scenarios },
+        });
+        return;
+      }
       const scenarios = [];
       for (const [index, scenario] of scenarioConfigs.entries()) {
         const scenarioId = typeof scenario?.id === "string" ? scenario.id : `scenario-${index + 1}`;

@@ -43,7 +43,7 @@ import {
   scoreSwishIQCandidate,
   resolveSwishIQObjectiveWeights,
   SWISHIQ_IMPACT_PER100_LIMIT,
-} from "./swishiq-impact.js?v=20261010a&rev=native-v4-impact-mean-only-v1";
+} from "./swishiq-impact.js?v=20261010g&rev=consolidated-runtime-v1";
 import { planRotationUnits } from "./rotation-unit-planner.js?v=20261002c";
 
 export {
@@ -73,6 +73,52 @@ const ADVANCED_IMPACT_OBJECTIVE_METRICS = new Set([
   "offensiveImpact",
   "defensiveImpact",
 ]);
+
+// The optional weight-sensitivity path stores only exact feasible five-player
+// compositions. Full optimizer results are still rebuilt for every scenario.
+const MAX_SHARED_WEIGHT_SWEEP_COMBINATIONS = 25_000;
+const SHARED_WEIGHT_SWEEP_CONTEXT = Symbol("shared-weight-sweep-context");
+
+function weightSweepConfigurationSignature(config) {
+  const signatureConfig = { ...config };
+  delete signatureConfig.weights;
+  delete signatureConfig.normalizedWeights;
+  delete signatureConfig.presetName;
+  try {
+    return JSON.stringify(signatureConfig);
+  } catch {
+    return null;
+  }
+}
+
+// The worker may opt into the shared enumerator only when the submitted
+// scenarios differ in their explicit objective weights. Every other solver
+// setting stays part of the comparison contract.
+export function canShareWeightOnlyLineupScenarios(scenarioConfigs) {
+  if (!Array.isArray(scenarioConfigs) || scenarioConfigs.length < 2) return false;
+  let sharedSignature = null;
+  for (const [index, scenario] of scenarioConfigs.entries()) {
+    const config = scenario?.config;
+    if (!isPlainObject(config)
+      || config.mode !== "lineup"
+      || Number(config.size) !== 5
+      || !isPlainObject(config.weights)
+      || !String(scenario?.id ?? `scenario-${index + 1}`).trim()) {
+      return false;
+    }
+    const signatureConfig = { ...config };
+    delete signatureConfig.weights;
+    let signature;
+    try {
+      signature = JSON.stringify(signatureConfig);
+    } catch {
+      return false;
+    }
+    if (sharedSignature === null) sharedSignature = signature;
+    else if (signature !== sharedSignature) return false;
+  }
+  return true;
+}
 
 // SwishIQ RAPM has separate offense/defense components. These familiar game-plan
 // families determine the blend when SwishIQ mode is selected; they do not create
@@ -7026,6 +7072,11 @@ function formatPositionMinimums(minimums) {
  * never alter selection, allocation, ranking, or the returned result.
  */
 export function optimizeLineups(players, config = {}, runtime = {}) {
+  const requestedWeightSweepContext = runtime?.[SHARED_WEIGHT_SWEEP_CONTEXT];
+  const weightSweepContext = requestedWeightSweepContext
+    && typeof requestedWeightSweepContext === "object"
+    ? requestedWeightSweepContext
+    : null;
   const onProgress = typeof runtime?.onProgress === "function"
     ? runtime.onProgress
     : null;
@@ -7249,6 +7300,46 @@ export function optimizeLineups(players, config = {}, runtime = {}) {
 
   const estimatedCombinations = chooseCount(availablePlayers.length, slotsToChoose);
   const hasSwishIQGameEvidence = objectivePlayers.some(player => Object.hasOwn(player?.analytics ?? {}, "swishiqPlayerGameEvidence"));
+  const hasWeightSweepRequest = weightSweepContext?.playersRef === players
+    && (weightSweepContext.phase === "capture" || weightSweepContext.phase === "replay");
+  const weightSweepSignature = hasWeightSweepRequest
+    && normalizedConfig.mode === "lineup"
+    && normalizedConfig.size === 5
+    && normalizedConfig.modelMode === "historical"
+    && normalizedConfig.swishiqEvidence == null
+    && !hasSwishIQGameEvidence
+    ? weightSweepConfigurationSignature(normalizedConfig)
+    : null;
+  const weightSweepSupported = Boolean(
+    weightSweepSignature
+    && estimatedCombinations <= MAX_SHARED_WEIGHT_SWEEP_COMBINATIONS
+    && runtime?.metricInputOffsetsByPlayerId == null
+    && runtime?.impactInputOffsetsByPlayerId == null
+    && runtime?.captureInputStabilityEvidence !== true,
+  );
+  const capturingWeightSweep = Boolean(
+    weightSweepContext?.phase === "capture"
+    && weightSweepContext.playersRef === players
+    && weightSweepSupported,
+  );
+  const replayingWeightSweep = Boolean(
+    weightSweepContext?.phase === "replay"
+    && weightSweepContext.playersRef === players
+    && weightSweepContext.ready === true
+    && weightSweepSupported
+    && weightSweepContext.configurationSignature === weightSweepSignature
+    && weightSweepContext.estimatedCombinations === estimatedCombinations
+    && Array.isArray(weightSweepContext.candidates)
+    && weightSweepContext.candidates.every(candidate => candidate.playerIds.every(id => playerById.has(id))),
+  );
+  if (capturingWeightSweep) {
+    weightSweepContext.configurationSignature = weightSweepSignature;
+    weightSweepContext.estimatedCombinations = estimatedCombinations;
+    weightSweepContext.captureActive = true;
+    weightSweepContext.enumerationComplete = false;
+    weightSweepContext.overflow = false;
+    weightSweepContext.candidates = [];
+  }
   const projectionParameters = Object.freeze({
     // Matching the calendar year alone does not validate an older fitted
     // workload response for newly reconciled, potentially partial SwishIQ game
@@ -8020,6 +8111,23 @@ export function optimizeLineups(players, config = {}, runtime = {}) {
   function retainFeasibleCombination(selectedPlayers, positionResult, rotation, totals, rawScore) {
     if (rotation) rotation.projectedTotals = { ...totals };
     feasibleCombinations += 1;
+    if (capturingWeightSweep && weightSweepContext.captureActive) {
+      if (weightSweepContext.candidates.length < MAX_SHARED_WEIGHT_SWEEP_COMBINATIONS) {
+        weightSweepContext.candidates.push({
+          playerIds: selectedPlayers.map(player => player.id),
+          combinationsEvaluated: combinationsEvaluated,
+          positionAssignment: Object.fromEntries(POSITION_KEYS.map(position => [
+            position,
+            [...(positionResult.assignment?.[position] ?? [])],
+          ])),
+          totals: { ...totals },
+        });
+      } else {
+        weightSweepContext.overflow = true;
+        weightSweepContext.captureActive = false;
+        weightSweepContext.candidates = [];
+      }
+    }
     insertTopAlternative(
       topAlternatives,
       {
@@ -8330,8 +8438,56 @@ export function optimizeLineups(players, config = {}, runtime = {}) {
   }
 
   reportRotationProgress({ force: true });
-  enumerate(0, slotsToChoose);
+  if (replayingWeightSweep) {
+    for (const candidate of weightSweepContext.candidates) {
+      if (cancellationRequested()) {
+        exactSearchAbort ??= { category: "cancelled" };
+        break;
+      }
+      const selectedPlayers = candidate.playerIds.map(id => playerById.get(id));
+      const positionResult = {
+        feasible: true,
+        assignment: Object.fromEntries(POSITION_KEYS.map(position => [
+          position,
+          [...candidate.positionAssignment[position]],
+        ])),
+      };
+      const totals = { ...candidate.totals };
+      const modelAdjustments = candidateModelAdjustments(selectedPlayers, null);
+      combinationsEvaluated = candidate.combinationsEvaluated;
+      reportRotationProgress();
+      retainFeasibleCombination(
+        selectedPlayers,
+        positionResult,
+        null,
+        totals,
+        calculateObjectiveScore(
+          selectedPlayers,
+          playerStrategyScores,
+          null,
+          null,
+          usesRoleConditionedObjective ? roleConditionedProjectionPlan : null,
+          modelAdjustments.totalAdjustmentPoints,
+          solverObjectiveScale,
+          solverObjectiveOffset,
+        ),
+      );
+    }
+    if (!exactSearchAbort) {
+      combinationsEvaluated = weightSweepContext.combinationsEvaluated;
+      for (const [key, value] of Object.entries(weightSweepContext.rejectedByConstraint)) {
+        rejectedByConstraint[key] = value && typeof value === "object" ? { ...value } : value;
+      }
+      weightSweepContext.replayCount += 1;
+    }
+  } else {
+    enumerate(0, slotsToChoose);
+  }
   if (exactSearchAbort?.category === "cancelled") {
+    if (capturingWeightSweep) {
+      weightSweepContext.captureActive = false;
+      weightSweepContext.candidates = [];
+    }
     reportRotationProgress({ phase: "cancelled", force: true });
     return cancelledResult(mode, size, {
       combinationsEvaluated,
@@ -8339,6 +8495,15 @@ export function optimizeLineups(players, config = {}, runtime = {}) {
       exactSearchCompleted: false,
       ...buildDiagnostics(),
     });
+  }
+  if (capturingWeightSweep && weightSweepContext.captureActive) {
+    weightSweepContext.captureActive = false;
+    weightSweepContext.enumerationComplete = true;
+    weightSweepContext.combinationsEvaluated = combinationsEvaluated;
+    weightSweepContext.feasibleCombinations = feasibleCombinations;
+    weightSweepContext.rejectedByConstraint = Object.fromEntries(Object.entries(rejectedByConstraint).map(
+      ([key, value]) => [key, value && typeof value === "object" ? { ...value } : value],
+    ));
   }
   reportRotationProgress({
     phase: hasRotationProjectedConstraints ? "proving-constraints" : "complete",
@@ -8698,12 +8863,12 @@ export function optimizeLineups(players, config = {}, runtime = {}) {
 
 /**
  * Run the exact solver against explicitly supplied weight scenarios and
- * return a compact, deterministic comparison. The baseline and each scenario
- * are independent solves; no scenario is allowed to mutate the caller's
- * config or reuse a partial result. This is intentionally opt-in because a
- * sensitivity sweep can be as expensive as the original exact search.
+ * return a compact, deterministic comparison. Compatible historical starting-
+ * five scenarios reuse the exact feasible composition set, then rebuild the
+ * complete result independently for every weight set. Other requests fall back
+ * to ordinary exact solves. No scenario mutates the caller's config.
  */
-export function analyzeWeightSensitivity(players, config = {}, scenarios = []) {
+export function analyzeWeightSensitivity(players, config = {}, scenarios = [], runtime = {}) {
   if (!Array.isArray(scenarios) || scenarios.length === 0) {
     return {
       ok: false,
@@ -8712,16 +8877,61 @@ export function analyzeWeightSensitivity(players, config = {}, scenarios = []) {
       scenarios: [],
     };
   }
-  const baseline = optimizeLineups(players, config);
+  const weightSweepContext = {
+    phase: "capture",
+    playersRef: players,
+    ready: false,
+    replayCount: 0,
+    candidates: [],
+  };
+  const onProgress = typeof runtime?.onProgress === "function" ? runtime.onProgress : null;
+  const notifyProgress = (progress) => {
+    if (!onProgress) return;
+    try {
+      onProgress(progress);
+    } catch {
+      // Progress consumers are observational and cannot change exact results.
+    }
+  };
+  const baseline = optimizeLineups(players, config, {
+    [SHARED_WEIGHT_SWEEP_CONTEXT]: weightSweepContext,
+    ...(onProgress ? {
+      onProgress: progress => notifyProgress({ ...progress, scenarioId: "baseline", scenarioLabel: "Baseline" }),
+    } : {}),
+  });
+  weightSweepContext.ready = Boolean(
+    baseline.ok
+    && weightSweepContext.enumerationComplete === true
+    && weightSweepContext.overflow !== true
+    && weightSweepContext.candidates.length === baseline.diagnostics?.feasibleCombinations,
+  );
+  weightSweepContext.phase = weightSweepContext.ready ? "replay" : "independent";
+  if (!weightSweepContext.ready) weightSweepContext.candidates = [];
   const comparisons = scenarios.map((scenario, index) => {
     const id = typeof scenario?.id === "string" && scenario.id.trim()
       ? scenario.id.trim()
       : `scenario-${index + 1}`;
+    const label = typeof scenario?.label === "string" && scenario.label.trim()
+      ? scenario.label.trim()
+      : id;
     const weights = scenario?.weights;
     if (!weights || typeof weights !== "object" || Array.isArray(weights)) {
       return { id, ok: false, reason: "weights must be an object.", result: null };
     }
-    const result = optimizeLineups(players, { ...config, weights: { ...weights } });
+    notifyProgress({ phase: "scenario-start", scenarioId: id, scenarioLabel: label });
+    const result = optimizeLineups(players, { ...config, weights: { ...weights } }, {
+      [SHARED_WEIGHT_SWEEP_CONTEXT]: weightSweepContext,
+      ...(onProgress ? {
+        onProgress: progress => notifyProgress({ ...progress, scenarioId: id, scenarioLabel: label }),
+      } : {}),
+    });
+    notifyProgress({
+      phase: result.ok ? "scenario-complete" : "scenario-failed",
+      scenarioId: id,
+      scenarioLabel: label,
+      combinationsEvaluated: result.combinationsEvaluated,
+      feasibleCombinations: result.diagnostics?.feasibleCombinations ?? 0,
+    });
     return {
       id,
       ok: result.ok,
@@ -8734,6 +8944,14 @@ export function analyzeWeightSensitivity(players, config = {}, scenarios = []) {
   });
   return {
     ok: baseline.ok && comparisons.every((scenario) => scenario.ok),
+    execution: {
+      reuseMode: weightSweepContext.ready ? "shared-feasible-enumeration" : "independent-solves",
+      baselineEnumerationComplete: weightSweepContext.enumerationComplete === true,
+      sharedScenariosReplayed: weightSweepContext.replayCount,
+      feasibleCombinationsReplayedPerScenario: weightSweepContext.replayCount > 0
+        ? weightSweepContext.candidates.length
+        : 0,
+    },
     baseline: {
       ok: baseline.ok,
       status: baseline.status,

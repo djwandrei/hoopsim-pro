@@ -1,16 +1,17 @@
-// Native franchise engine bridge: loads the vendored release's worker client,
-// V4 intake modules, and IndexedDB checkpoint store directly at their
-// same-origin studio paths — exactly as the site's preview frame did — while
-// the V4 release data itself still relays through the connected studio source.
-// The runtime modules stay separate from the UI bundle and load from those
-// paths; local source edits are not a deployed release until separately shipped.
+// Native franchise engine bridge: loads the versioned worker client, V4 intake
+// modules, and IndexedDB checkpoint store from their
+// same-origin studio paths while V4 data still relays through the connected
+// studio source. The bridge does not fall back to an older franchise package.
+// Runtime modules stay separate from the UI bundle; local edits are not a
+// deployed release until separately shipped.
 import workerConnection from '@/lineupLab/lineup-lab/workerConnection';
 import loadFranchiseIntake from '@/components/season/franchise/loadFranchiseIntake';
 import { VERIFIED_FIXTURE_NAME, VERIFIED_FIXTURE_RECEIPT_NAME, VERIFIED_FIXTURE_RECEIPT_SHA256, sha256Hex, readPayload, humanBytes } from './franchiseLogic';
 
 const ORIGIN = () => window.location.origin;
-export const INTEGRATION_PATH = '/tools/swishiq-studio/franchise-sim-20261008/integration/';
-export const FRANCHISE_ROOT = '/tools/swishiq-studio/franchise-sim-20261008/';
+export const INTEGRATION_PATH = '/tools/swishiq-studio/franchise-sim-20261010/integration/';
+export const FRANCHISE_ROOT = '/tools/swishiq-studio/franchise-sim-20261010/';
+export const FRANCHISE_SCHEDULE_URL = '/tools/swishiq-studio/data/nba-actual-schedules-v1.json';
 export const GAME_MODEL_PATH = `${FRANCHISE_ROOT}checkpoints/2026-10-06-v4-parametric-age-frozen/model.json`;
 export const PRODUCTION_CANDIDATE_PATH = `${FRANCHISE_ROOT}models/shared-player-production-v1-candidate-20261007b.json`;
 export const VERIFIED_FIXTURE_PATH = `${INTEGRATION_PATH}season-lab-preview/${VERIFIED_FIXTURE_NAME}`;
@@ -25,14 +26,19 @@ export function loadFranchiseEngine() {
       // standalone site build (V4 release data only).
       await workerConnection();
       const origin = ORIGIN();
-      const importModule = path => import(/* @vite-ignore */ new URL(path, origin).href);
+      const importModule = (path, label) => {
+        const url = new URL(path, origin);
+        return import(/* @vite-ignore */ url.href).catch(error => {
+          throw new Error(`${label} is unavailable at ${url.pathname}${url.search}: ${error?.message ?? error}`);
+        });
+      };
       const [clientModule, intakeModule, snapshotModule, storeModule, scheduleModule, controlsModule] = await Promise.all([
-        importModule(`${INTEGRATION_PATH}franchise-worker-client-v1.mjs`),
-        importModule(`${INTEGRATION_PATH}v4-franchise-intake-v1.mjs`),
-        importModule(`${INTEGRATION_PATH}v4-snapshot-worker-payload-v1.mjs`),
-        importModule(`${FRANCHISE_ROOT}lib/franchise-browser-store-v1.mjs`),
-        importModule('/tools/swishiq-studio/engine/nba-schedule-source.js?v=20261008&rev=franchise-v4-intake-v1'),
-        importModule(`${FRANCHISE_ROOT}lib/franchise-controls-v1.mjs`),
+        importModule(`${INTEGRATION_PATH}franchise-worker-client-v1.mjs`, 'Franchise worker client'),
+        importModule(`${INTEGRATION_PATH}v4-franchise-intake-v1.mjs`, 'Franchise V4 intake'),
+        importModule(`${INTEGRATION_PATH}v4-snapshot-worker-payload-v1.mjs`, 'Franchise V4 snapshot helper'),
+        importModule(`${FRANCHISE_ROOT}lib/franchise-browser-store-v1.mjs`, 'Franchise checkpoint store'),
+        importModule('/tools/swishiq-studio/engine/nba-schedule-source.js?v=20261008&rev=franchise-v4-intake-v1', 'Franchise schedule source'),
+        importModule(`${FRANCHISE_ROOT}lib/franchise-controls-v1.mjs`, 'Franchise rotation controls'),
       ]);
       if (typeof clientModule.createFranchiseWorkerClient !== 'function') throw new Error('Worker client does not export createFranchiseWorkerClient().');
       for (const name of ['loadV4FranchiseIntakeV1', 'loadLastObservedTeamScenarioSuggestionsV1', 'applyV4FranchiseRosterChoicesV1', 'createV4FranchiseLocalMirrorReleasePinV1']) {
@@ -43,8 +49,12 @@ export function loadFranchiseEngine() {
       if (typeof controlsModule.validateFranchiseRotationState !== 'function') throw new Error('Franchise rotation controls cannot be validated.');
       return {
         createFranchiseWorkerClient: clientModule.createFranchiseWorkerClient,
+        scheduleUrl: FRANCHISE_SCHEDULE_URL,
         intake: Object.freeze({ ...intakeModule,
-          loadV4FranchiseIntakeV1: options => loadFranchiseIntake(intakeModule, scheduleModule, options),
+          loadV4FranchiseIntakeV1: options => loadFranchiseIntake(intakeModule, scheduleModule, {
+            scheduleUrl: new URL(FRANCHISE_SCHEDULE_URL, origin).href,
+            ...options,
+          }),
         }),
         buildV4SnapshotWorkerPayloadV1: snapshotModule.buildV4SnapshotWorkerPayloadV1,
         openFranchiseBrowserStore: storeModule.openFranchiseBrowserStore,

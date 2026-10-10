@@ -1,0 +1,75 @@
+{
+  "format": "swishiq-development-milestone-summary-v1",
+  "milestone": "05-experiment-workflow-and-adjusted-pace-20261010",
+  "date": "2026-10-10",
+  "reference": "Candidate100",
+  "targetRepository": "djwandrei/hoopsim-pro",
+  "status": "workflow-screen-orchestration-tested; adjusted-pace-feature-screen-complete-and-rejected",
+  "workflowChanges": [
+    "Canonical screen-plan runner supports opt-in bounded parallel scheduling.",
+    "Exact duplicate screen plans share one dispatch and preserve ordered alias receipts.",
+    "Comparison plans use serial fallback to avoid shared resampling-cache races.",
+    "Failure or programmatic interruption stops new dispatch, drains active screens, and records deterministic receipts.",
+    "Workflow wrapper preserves complete screen summaries."
+  ],
+  "workflowEvidence": {
+    "receiptFixture": "prototypes/swishiq-package-v4/experiment-tools/test-cycle2-workflow-receipts-20261010.mjs",
+    "orchestrationFixture": "prototypes/swishiq-package-v4/experiment-tools/test-screen-orchestration-20261010.mjs",
+    "scope": "Deterministic fixture parity and process orchestration only; no throughput improvement claim outside measured workloads. Windows force termination cannot run JavaScript signal handlers."
+  },
+  "paceScreen": {
+    "candidate": "c21-adjusted-pace-total",
+    "cohort": {
+      "seasonStartYears": [
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "games": 4920
+    },
+    "decision": "rejected-current-formulation",
+    "totalMaeBaseline": 14.639368378511803,
+    "totalMaeCandidate": 14.639999578481516,
+    "totalMaeDelta": 0.0006311999696537761,
+    "paired95PercentInterval": [
+      -0.004142082802541208,
+      0.005710962957283541
+    ],
+    "marginMaeDelta": 0,
+    "brierDelta": -5.551115123125783e-17,
+    "logLossDelta": 1.1102230246251565e-16,
+    "seasonTotalMaeDeltas": {
+      "2022": -0.0009756484530645441,
+      "2023": 0.006235179015927021,
+      "2024": 0.0008597296799070186,
+      "2025": -0.003594460364154391
+    },
+    "reason": "Pooled intended total MAE worsened; season effects split 2-2; margin and probability were unchanged; no combination is justified.",
+    "evidenceStatus": "development-only; not independent predictive validation",
+    "resultsDocumentation": "docs/swishiq-candidate100-adjusted-pace-screen-results-20261010.md",
+    "resultsSummary": "docs/swishiq-candidate100-adjusted-pace-screen-summary-20261010.json"
+  },
+  "sourceDataAndForecasts": "Not included. Diagnostic plans require separately available pinned input artifacts.",
+  "productionSiteOrPackageChanged": false,
+  "sourceInferenceParity": {
+    "status": "exact-representative-real-source-data-parity",
+    "rows": 2460,
+    "seasons": [
+      2021,
+      2022
+    ],
+    "replicates": 40,
+    "blockLengths": [
+      7,
+      14
+    ],
+    "evidence": "docs/swishiq-inference-source-data-parity-20261010.md",
+    "fullCohortParity": false
+  },
+  "sourceFeatureContinuation": {
+    "status": "not-yet-implemented",
+    "evidence": "docs/swishiq-feature-continuation-state-20261010.md",
+    "currentSupportedFallback": "rebuild from full pinned feature inputs"
+  }
+}

@@ -1,0 +1,324 @@
+{
+  "format": "swishiq-implementation-ledger-v1",
+  "date": "2026-10-10",
+  "reference": "game-lab-candidate100",
+  "targetRepository": "djwandrei/hoopsim-pro",
+  "developmentSeasons": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "deploymentStage": "later release stage",
+  "cycles": [
+    {
+      "id": 1,
+      "status": "completed",
+      "deliverable": "pinned Candidate100 baseline, local consumer map and 49-item source-level backlog disposition"
+    },
+    {
+      "id": 2,
+      "status": "implemented-partial",
+      "deliverable": "canonical cached development launcher plus bounded parallel screen scheduling, duplicate dispatch reuse, serial comparison fallback and graceful screen drain",
+      "remaining": [
+        "complete feature-family state checkpoints"
+      ],
+      "evidence": [
+        "prototypes/swishiq-package-v4/experiment-tools/test-cycle2-workflow-receipts-20261010.mjs",
+        "prototypes/swishiq-package-v4/experiment-tools/test-screen-orchestration-20261010.mjs",
+        "docs/swishiq-inference-source-data-parity-20261010.md"
+      ],
+      "sourceInferenceParity": {
+        "status": "exact-representative-real-source-data-parity",
+        "rows": 2460,
+        "seasons": [2021, 2022],
+        "replicates": 40,
+        "blockLengths": [7, 14],
+        "fullSourceCohortParity": false
+      }
+    },
+    {
+      "id": 3,
+      "status": "completed-partial",
+      "deliverable": "eight individual hustle screens, six individual rotation-continuity screens, four history-reliability screens, and seven raw Candidate21 pace/Four-Factor screens; eight opponent-adjusted Four-Factor screens; one opponent-adjusted pace total-head screen",
+      "cohortGames": 4920,
+      "remaining": [
+        "opponent-adjusted efficiency: reconcile distinct formulation against existing adjusted-scoring evidence",
+        "schedule-pressure thresholds: reconcile existing feature/ablation receipts",
+        "venue/travel: document readiness from actual dated venue evidence",
+        "combine only individually justified additions; no combination currently justified"
+      ]
+    },
+    {
+      "id": 4,
+      "status": "implemented-partial",
+      "deliverable": "weights-only five-player shared feasible enumeration integrated into the current Lineup Lab worker with complete per-scenario results",
+      "evidence": "docs/lineup-lab-weight-only-sweep-sharing-20261010.md",
+      "remaining": [
+        "reconcile the older prototype generator with the newer locally wired optimizer before regenerating release modules",
+        "mirror this path into the Studio runtime only after its current solver and generated controller ownership are reconciled",
+        "continue with complete shared-five result and differential coverage across remaining supported workloads"
+      ]
+    },
+    {
+      "id": 5,
+      "status": "in-progress",
+      "deliverable": "completed local post-mean calibration, half-life/refit and per-head ridge grids; provisional Candidate101 blend095/offset000 mean lead",
+      "evidence": "docs/candidate100-cycle5-tuning-ledger-20261010.md",
+      "remaining": [
+        "reconcile uncertainty receipts; run unresolved compact grid with fixed mean forecasts",
+        "selected candidate canonical assessment and readable specification"
+      ]
+    },
+    {
+      "id": 6,
+      "status": "implemented-partial",
+      "deliverable": "verified real archive appearance cache and opt-in canonical workload consumption",
+      "remaining": [
+        "native warm starts",
+        "rotation structural reuse"
+      ]
+    },
+    {
+      "id": 7,
+      "status": "queued",
+      "deliverable": "remaining simulation and consumer corrections"
+    },
+    {
+      "id": 8,
+      "status": "queued",
+      "deliverable": "frozen candidate, consolidated assessment and narrow release manifest"
+    }
+  ],
+  "priorFeatureDecisions": [
+    {
+      "family": "prior-season play-type",
+      "status": "rejected-current-formulation",
+      "reason": "completed development comparisons did not support retention"
+    },
+    {
+      "family": "player tracking drive/catch-shoot/pullup/created-points-per-pass",
+      "status": "rejected-current-formulations",
+      "reason": "completed individual family screens"
+    },
+    {
+      "family": "exact/linear duplicate removal",
+      "status": "inconclusive",
+      "reason": "small changes; paired primary intervals included zero"
+    }
+  ],
+  "featureScreens": [
+    {
+      "family": "hustle: contested shots, deflections, defensive loose-ball recoveries, charges drawn",
+      "screen": "individual total-head and margin-head additions",
+      "cohort": {
+        "seasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "games": 4920,
+        "gamesPerSeason": 1230
+      },
+      "status": "completed-development-screen-only",
+      "decision": "no feature retained yet",
+      "reason": "Every primary paired 95% date-block interval included zero. Charges drawn and defensive loose-ball recoveries had small favorable point estimates, but remain provisional rather than selected.",
+      "evidence": "prototypes/swishiq-package-v4/experiment-tools/runs/hustle-individual/feature-pipeline-summaries/run-1791609650263-25772/summary.json"
+    },
+    {
+      "family": "rotation continuity: active-player, starter, and minute-share overlap",
+      "screen": "individual total-head and margin-head additions",
+      "cohort": {
+        "seasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "games": 4920,
+        "gamesPerSeason": 1230
+      },
+      "status": "completed-development-screen-only",
+      "decision": "no feature retained yet; do not run a combination from this family",
+      "reason": "Active-player and starter overlap had interval-separated harm in their tested heads. Minute-share margin overlap had a negligible favorable point estimate but its paired 95% interval crossed zero; the total-head minute-share input had no point gain. The six inputs were not exact or near duplicates of selected Candidate100 fields, so the non-selection reflects screen results rather than redundant aliases.",
+      "evidence": "prototypes/swishiq-package-v4/experiment-tools/runs/rotation-continuity-individual/run-1791611514047-b52cc30a-3db1-4147-90a7-a50e470f86ef/pipeline/run-1791611552949-25524/summary.json",
+      "redundancyReview": "docs/candidate100-rotation-continuity-redundancy-review-20261010.md"
+    },
+    {
+      "family": "history reliability: current-season and prior-season support",
+      "screen": "four isolated total-head and margin-head additions",
+      "cohort": {
+        "seasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "games": 4920,
+        "gamesPerSeason": 1230
+      },
+      "status": "completed-development-screen-only",
+      "decision": "no feature retained; do not run a history-reliability combination",
+      "reason": "The prior-season total-support feature had a negligible favorable raw-total-MAE point estimate (-0.00027), but its paired 95% interval crossed zero and raw total squared error worsened. The current-season margin-support feature slightly improved Brier/log loss but had interval-separated harm in home-score CRPS and interval score. The other two additions had no primary point gain. None clears the rule requiring an intended-metric benefit without clear repeated primary or distribution harm.",
+      "evidence": "prototypes/swishiq-package-v4/experiment-tools/runs/history-reliability-individual/run-1791613941936-18308b31-287e-43af-95dc-05de988a822b/history-pipeline/run-1791614823239-26168/summary.json",
+      "baselineParity": "prototypes/swishiq-package-v4/experiment-tools/runs/history-reliability-individual/run-1791613941936-18308b31-287e-43af-95dc-05de988a822b/parity/run-1791614646558-2dcdcbf1-9228-4e6e-8689-73cc3fd69866/parity.json"
+    },
+    {
+      "family": "Candidate21 raw pace and Four Factors",
+      "screen": "seven isolated total-head or margin-head additions against Candidate100",
+      "cohort": {
+        "seasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "games": 4920,
+        "gamesPerSeason": 1230
+      },
+      "status": "completed-development-screen-only",
+      "decision": "no feature retained; no raw-feature combination scheduled",
+      "reason": "All seven primary paired 95% intervals for their intended MAE include zero. Three margin additions worsen pooled margin MAE and probability point estimates. Raw offensive-rebound context in the total head has a tiny favorable MAE/RMSE point estimate but mixed season results and a clear +0.265-point signed-error increase (95% interval +0.229 to +0.297). The covariance audit found no tested C21 addition at |Pearson r| >= 0.80 against active Candidate100 features, so non-selection is based on predictive results rather than high linear redundancy.",
+      "evidence": "docs/swishiq-candidate100-candidate21-raw-boxscore-screen-results-20261010.md",
+      "comparison": "prototypes/swishiq-package-v4/experiment-tools/runs/candidate100-candidate21-boxscore-individual/run-1791616949620-3c251eb0-5179-463e-a8af-5389bac30991/prototypes/swishiq-package-v4/experiment-tools/runs/candidate100-candidate21-boxscore-individual/run-1791616949620-3c251eb0-5179-463e-a8af-5389bac30991/comparison/run-1791617599993-15772/comparison-index.json",
+      "covariance": "prototypes/swishiq-package-v4/experiment-tools/runs/candidate100-candidate21-covariance/run-1791617543662-8106abc8-fd34-4a28-9f6e-11317e3cd53f/covariance.md"
+    },
+    {
+      "family": "Candidate21 opponent-adjusted Four Factors",
+      "screen": "eight isolated total-head or margin-head additions",
+      "cohort": {
+        "seasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "games": 4920,
+        "gamesPerSeason": 1230
+      },
+      "status": "completed-development-screen-only",
+      "decision": "no feature retained; no combination justified",
+      "reason": "Two tiny eFG MAE point gains have worse RMSE/distribution or probability evidence; all other intended MAE point estimates worsen. All primary paired intervals include zero. This is exploratory development evidence.",
+      "evidence": "docs/swishiq-candidate100-adjusted-fourfactor-screen-results-20261010.md",
+      "summary": "C:/Users/djwan/Downloads/djshouseofcards-next-fixes-applied/prototypes/swishiq-package-v4/experiment-tools/runs/candidate100-candidate21-adjusted-individual/run-1791618804601-593f8396-3b2a-455e-b11f-a0474072a648/summaries/run-1791619799972-82a20f63-f2ed-48fd-ba81-1f182820abb3/summary.json",
+      "sourceRelocation": "C:/Users/djwan/Downloads/djshouseofcards-next-fixes-applied/prototypes/swishiq-package-v4/experiment-tools/runs/candidate100-candidate21-adjusted-individual/run-1791618804601-593f8396-3b2a-455e-b11f-a0474072a648/source-path-map.json"
+    },
+    {
+      "family": "Candidate21 opponent-adjusted pace",
+      "screen": "one isolated total-head addition",
+      "cohort": {
+        "targetSeasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "expectedTargets": 4920,
+        "perSeason": {
+          "2022": 1230,
+          "2023": 1230,
+          "2024": 1230,
+          "2025": 1230
+        }
+      },
+      "status": "completed-development-screen-only",
+      "decision": "rejected-current-formulation",
+      "reason": "Intended pooled total MAE worsened, season results split 2/2, margin/probability unchanged; no combination justified.",
+      "evidence": "docs/swishiq-candidate100-adjusted-pace-screen-results-20261010.md",
+      "summary": "docs/swishiq-candidate100-adjusted-pace-screen-summary-20261010.json"
+    }
+  ],
+  "efficiencyActions": [
+    {
+      "id": 1,
+      "name": "immutable roster preparation",
+      "cycle": 4,
+      "status": "queued-canonical"
+    },
+    {
+      "id": 2,
+      "name": "shared complete five enumeration",
+      "cycle": 4,
+      "status": "ranking-prototype; full-result pending"
+    },
+    {
+      "id": 3,
+      "name": "rotation preparation reuse",
+      "cycle": 6,
+      "status": "queued"
+    },
+    {
+      "id": 4,
+      "name": "fresh-feasibility constraint reuse",
+      "cycle": 6,
+      "status": "queued"
+    },
+    {
+      "id": 5,
+      "name": "checked neighboring incumbents",
+      "cycle": 6,
+      "status": "queued"
+    },
+    {
+      "id": 6,
+      "name": "input-stability invariant reuse",
+      "cycle": 6,
+      "status": "queued"
+    },
+    {
+      "id": 7,
+      "name": "prepared workload scoring",
+      "cycle": 6,
+      "status": "opt-in canonical cache consumption verified on a 120-game archive slice; full archive remains unrun"
+    },
+    {
+      "id": 8,
+      "name": "reconciled appearance extraction cache",
+      "cycle": 6,
+      "status": "real-120-game-parity-and-invalidation-passed"
+    },
+    {
+      "id": 9,
+      "name": "shared sparse native designs",
+      "cycle": 6,
+      "status": "opt-in prototype; limited parity"
+    },
+    {
+      "id": 10,
+      "name": "warm starts and numeric buffers",
+      "cycle": 6,
+      "status": "queued"
+    },
+    {
+      "id": 11,
+      "name": "separate fit baseline prediction caches",
+      "cycle": 2,
+      "status": "prototype-implemented"
+    },
+    {
+      "id": 12,
+      "name": "paired resampling reuse",
+      "cycle": 2,
+      "status": "screen reuse implemented; source-data full inference pending"
+    },
+    {
+      "id": 13,
+      "name": "stage timings and throughput",
+      "cycle": 2,
+      "status": "implemented"
+    },
+    {
+      "id": 14,
+      "name": "managed independent workers",
+      "cycle": 2,
+      "status": "implemented; measured workload defaults exposed"
+    },
+    {
+      "id": 15,
+      "name": "compact artifacts and resumability",
+      "cycle": 2,
+      "status": "implemented; canonical launcher added"
+    }
+  ]
+}

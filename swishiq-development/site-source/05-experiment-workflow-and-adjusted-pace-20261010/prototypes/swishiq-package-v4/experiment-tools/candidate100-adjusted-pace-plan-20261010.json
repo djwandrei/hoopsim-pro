@@ -1,0 +1,14 @@
+{
+  "format": "swishiq-candidate100-candidate21-boxscore-feature-artifact-plan-v1",
+  "featureSet": "opponent-adjusted-pace",
+  "baseFeatures": "../diagnostics/game-lab-candidate57-source-cache-20261007/feature-rows.jsonl",
+  "baseSourceManifest": "../diagnostics/game-lab-candidate57-source-cache-20261007/manifest.json",
+  "teamGames": "../../../tools/swishiq-studio/data/v4/releases/v4-site-12ad90dc8710/packages/nba-swishiq-v4-2017-26/v4-canonical-20260929-aa835b795d8c/parts/team-games.json",
+  "playerGames": "../../../tools/swishiq-studio/data/v4/releases/v4-site-12ad90dc8710/packages/nba-swishiq-v4-2017-26/v4-canonical-20260929-aa835b795d8c/parts/player-games.json",
+  "candidate100Configuration": "../diagnostics/game-lab-candidate100-pruned-total-model-blend090-v1-20261008/configuration.json",
+  "warmupSeasonStartYear": 2020,
+  "throughSeasonStartYear": 2025,
+  "screenTargetSeasonStartYears": [2022, 2023, 2024, 2025],
+  "cacheRoot": "./runs/cache",
+  "outputDirectory": "./runs/adjusted-pace-artifacts"
+}

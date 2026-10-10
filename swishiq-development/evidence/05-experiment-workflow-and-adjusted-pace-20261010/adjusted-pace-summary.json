@@ -1,0 +1,416 @@
+{
+  "format": "swishiq-adjusted-pace-development-summary-v1",
+  "date": "2026-10-10",
+  "reference": "Candidate100",
+  "candidate": "c21-adjusted-pace-total",
+  "feature": "c21:meanOpponentAdjustedPace20",
+  "decision": "rejected-current-formulation",
+  "reason": "Intended pooled total MAE worsened, season results split 2/2, margin/probability unchanged; no combination justified.",
+  "evidenceStatus": "development-only; not-independent-validation",
+  "coverage": {
+    "targetSeasonStartYears": [
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "expectedTargets": 4920,
+    "perSeason": {
+      "2022": 1230,
+      "2023": 1230,
+      "2024": 1230,
+      "2025": 1230
+    }
+  },
+  "targets": {
+    "n": 4920,
+    "targetSeasonStartYears": [
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "targetIdentitySha256": "882f0fefac210cd093c1ef44404a312a21d7c4f4b7e64b239b3162088a6dd9ef",
+    "targetRowsSha256": "50e2b19174cb536e2448348162e39bd3542abab9ccdb1c67782bf8e860fde757"
+  },
+  "rawMeanForecastErrors": {
+    "baseline": {
+      "total": {
+        "n": 4920,
+        "mae": 14.639368378511803,
+        "rmse": 18.465539652350245,
+        "bias": 0.037000262593373794,
+        "errorConvention": "prediction minus observed target"
+      },
+      "margin": {
+        "n": 4920,
+        "mae": 10.801746519186628,
+        "rmse": 13.829066722965196,
+        "bias": -0.05377822230653323,
+        "errorConvention": "prediction minus observed target"
+      }
+    },
+    "c21-adjusted-pace-total": {
+      "total": {
+        "n": 4920,
+        "mae": 14.639999578481516,
+        "rmse": 18.465307678660434,
+        "bias": 0.05477563202946816,
+        "errorConvention": "prediction minus observed target"
+      },
+      "margin": {
+        "n": 4920,
+        "mae": 10.801746519186628,
+        "rmse": 13.829066722965196,
+        "bias": -0.05377822230653323,
+        "errorConvention": "prediction minus observed target"
+      }
+    }
+  },
+  "rawMeanForecastErrorsBySeason": {
+    "baseline": {
+      "2022": {
+        "total": {
+          "n": 1230,
+          "mae": 14.545264312796593,
+          "rmse": 18.658299385102733,
+          "bias": -0.19749934223277,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 1230,
+          "mae": 10.253887691390291,
+          "rmse": 12.960535744108741,
+          "bias": -0.4882494483691991,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "2023": {
+        "total": {
+          "n": 1230,
+          "mae": 14.466729275176911,
+          "rmse": 18.09647615055979,
+          "bias": 0.5649062527202564,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 1230,
+          "mae": 10.942817634172535,
+          "rmse": 14.060498764339528,
+          "bias": -0.20098291455609224,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "2024": {
+        "total": {
+          "n": 1230,
+          "mae": 14.585706725439042,
+          "rmse": 18.17426805869222,
+          "bias": 0.16863777761278956,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 1230,
+          "mae": 10.842337267198184,
+          "rmse": 13.931027732001985,
+          "bias": 0.29924911545212307,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "2025": {
+        "total": {
+          "n": 1230,
+          "mae": 14.959773200634894,
+          "rmse": 18.920518336688737,
+          "bias": -0.3880436377267831,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 1230,
+          "mae": 11.16794348398558,
+          "rmse": 14.325700672803798,
+          "bias": 0.1748703582470346,
+          "errorConvention": "prediction minus observed target"
+        }
+      }
+    },
+    "c21-adjusted-pace-total": {
+      "2022": {
+        "total": {
+          "n": 1230,
+          "mae": 14.54428866434355,
+          "rmse": 18.651638720160605,
+          "bias": -0.16809758712047163,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 1230,
+          "mae": 10.253887691390291,
+          "rmse": 12.960535744108741,
+          "bias": -0.4882494483691991,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "2023": {
+        "total": {
+          "n": 1230,
+          "mae": 14.472964454192827,
+          "rmse": 18.098867357034,
+          "bias": 0.6356138350123076,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 1230,
+          "mae": 10.942817634172535,
+          "rmse": 14.060498764339528,
+          "bias": -0.20098291455609224,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "2024": {
+        "total": {
+          "n": 1230,
+          "mae": 14.586566455118941,
+          "rmse": 18.177331809711966,
+          "bias": 0.14302224537772418,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 1230,
+          "mae": 10.842337267198184,
+          "rmse": 13.931027732001985,
+          "bias": 0.29924911545212307,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "2025": {
+        "total": {
+          "n": 1230,
+          "mae": 14.956178740270728,
+          "rmse": 18.920949563780155,
+          "bias": -0.39143596515168955,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 1230,
+          "mae": 11.16794348398558,
+          "rmse": 14.325700672803798,
+          "bias": 0.1748703582470346,
+          "errorConvention": "prediction minus observed target"
+        }
+      }
+    }
+  },
+  "pooledDistribution": {
+    "baseline": {
+      "n": 4920,
+      "probability": {
+        "brier": 0.21122311512499076,
+        "logLoss": 0.610191559651337
+      },
+      "marginAbsoluteError": 10.801746519186624,
+      "sides": {
+        "home": {
+          "mae": 9.26803952215813,
+          "rmse": 11.596373962657053,
+          "bias": -0.013270518106410193,
+          "crps": 6.55064786784927,
+          "intervalScore": 42.83299478809611
+        },
+        "away": {
+          "mae": 9.104238169134991,
+          "rmse": 11.470105107335572,
+          "bias": 0.04050770420011801,
+          "crps": 6.454881280479971,
+          "intervalScore": 42.81430412855575
+        },
+        "margin": {
+          "mae": 10.801746519186624,
+          "rmse": 13.8290667229652,
+          "bias": -0.05377822230653377,
+          "crps": 7.730169472475464,
+          "intervalScore": 52.76036382906927
+        }
+      }
+    },
+    "c21-adjusted-pace-total": {
+      "n": 4920,
+      "probability": {
+        "brier": 0.2112231151249907,
+        "logLoss": 0.6101915596513371
+      },
+      "marginAbsoluteError": 10.801746519186628,
+      "sides": {
+        "home": {
+          "mae": 9.268638588242657,
+          "rmse": 11.59678179645178,
+          "bias": -0.006413095305161982,
+          "crps": 6.5509425891667155,
+          "intervalScore": 42.835674170119454
+        },
+        "away": {
+          "mae": 9.102821650926431,
+          "rmse": 11.469257091047687,
+          "bias": 0.047365127001373394,
+          "crps": 6.454299300630466,
+          "intervalScore": 42.81553031682307
+        },
+        "margin": {
+          "mae": 10.801746519186628,
+          "rmse": 13.829066722965198,
+          "bias": -0.0537782223065337,
+          "crps": 7.730169472475464,
+          "intervalScore": 52.76036382906929
+        }
+      }
+    }
+  },
+  "pairedIntervals": {
+    "c21-adjusted-pace-total:brier": {
+      "name": "c21-adjusted-pace-total:brier",
+      "estimate": -2.794685355988042e-19,
+      "lower": -8.678919944931788e-18,
+      "upper": 8.123713586765606e-18,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:logLoss": {
+      "name": "c21-adjusted-pace-total:logLoss",
+      "estimate": -1.4456028966473393e-18,
+      "lower": -2.327201877025717e-17,
+      "upper": 2.0512982665727836e-17,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:marginDistributionMae": {
+      "name": "c21-adjusted-pace-total:marginDistributionMae",
+      "estimate": -9.066821367772112e-17,
+      "lower": -4.583388090830627e-16,
+      "upper": 3.0567823900002314e-16,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:rawTotalMae": {
+      "name": "c21-adjusted-pace-total:rawTotalMae",
+      "estimate": 0.0006311999696537761,
+      "lower": -0.004142082802541208,
+      "upper": 0.005710962957283541,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:rawTotalSquaredError": {
+      "name": "c21-adjusted-pace-total:rawTotalSquaredError",
+      "estimate": -0.008566984923987319,
+      "lower": -0.21393119679185787,
+      "upper": 0.22258784477986024,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:rawTotalSignedError": {
+      "name": "c21-adjusted-pace-total:rawTotalSignedError",
+      "estimate": 0.017775369436094035,
+      "lower": 0.0040420176786335115,
+      "upper": 0.032572487135084004,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:rawMarginMae": {
+      "name": "c21-adjusted-pace-total:rawMarginMae",
+      "estimate": 0,
+      "lower": 0,
+      "upper": 0,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:rawMarginSquaredError": {
+      "name": "c21-adjusted-pace-total:rawMarginSquaredError",
+      "estimate": 0,
+      "lower": 0,
+      "upper": 0,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:rawMarginSignedError": {
+      "name": "c21-adjusted-pace-total:rawMarginSignedError",
+      "estimate": 0,
+      "lower": 0,
+      "upper": 0,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:home:distribution:mae": {
+      "name": "c21-adjusted-pace-total:home:distribution:mae",
+      "estimate": 0.0005990660845263158,
+      "lower": -0.0018760274801832703,
+      "upper": 0.0035340039216753575,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:home:distribution:crps": {
+      "name": "c21-adjusted-pace-total:home:distribution:crps",
+      "estimate": 0.0002947213174462899,
+      "lower": -0.0012566265960560945,
+      "upper": 0.0020965970896979023,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:home:distribution:intervalScore": {
+      "name": "c21-adjusted-pace-total:home:distribution:intervalScore",
+      "estimate": 0.0026793820234403314,
+      "lower": -0.00997572977020668,
+      "upper": 0.015636464404359056,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:away:distribution:mae": {
+      "name": "c21-adjusted-pace-total:away:distribution:mae",
+      "estimate": -0.0014165182085479214,
+      "lower": -0.003523418383369352,
+      "upper": 0.0006331241185467085,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:away:distribution:crps": {
+      "name": "c21-adjusted-pace-total:away:distribution:crps",
+      "estimate": -0.0005819798495092407,
+      "lower": -0.00173341309273068,
+      "upper": 0.0007152411422052416,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:away:distribution:intervalScore": {
+      "name": "c21-adjusted-pace-total:away:distribution:intervalScore",
+      "estimate": 0.0012261882675966077,
+      "lower": -0.014133933242004982,
+      "upper": 0.016685174811451882,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:margin:distribution:mae": {
+      "name": "c21-adjusted-pace-total:margin:distribution:mae",
+      "estimate": -9.066821367772112e-17,
+      "lower": -4.583388090830627e-16,
+      "upper": 3.0567823900002314e-16,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:margin:distribution:crps": {
+      "name": "c21-adjusted-pace-total:margin:distribution:crps",
+      "estimate": -5.596246140386968e-17,
+      "lower": -2.8591297786678113e-16,
+      "upper": 2.1325388877667738e-16,
+      "interval": "95% bootstrap percentile"
+    },
+    "c21-adjusted-pace-total:margin:distribution:intervalScore": {
+      "name": "c21-adjusted-pace-total:margin:distribution:intervalScore",
+      "estimate": 5.343512443724331e-16,
+      "lower": -2.7719789381028774e-15,
+      "upper": 4.232425542454775e-15,
+      "interval": "95% bootstrap percentile"
+    }
+  },
+  "resampling": {
+    "method": "same-season circular moving blocks over observed game-date clusters",
+    "nGames": 4920,
+    "nDateClusters": 651,
+    "replicates": 1000,
+    "commonDrawsAcrossColumns": true
+  },
+  "comparisonKey": "de1f6c2694e60339f8240a03b596cd6872616d05b14ad6276d66bdff560319fe",
+  "resamplingKey": "70e9733d3ca1d27cc03c154054ea3af3481f6597527919dff1e5e16155239620",
+  "cacheHits": {
+    "resampling": true,
+    "comparison": false
+  },
+  "receipt": "prototypes/swishiq-package-v4/experiment-tools/runs/adjusted-pace-screen/run-1791658905689-84f85e75-992e-4070-8666-6110798f1cfe/comparison/run-1791659169752-28232/comparison-index.json",
+  "limitations": [
+    "This is a paired opened-label screen, not independent validation or formal model inference.",
+    "Date-block draws are same-season circular blocks over game-date clusters and are shared across all candidate contrasts.",
+    "Raw total/margin head mean errors are computed from the pinned mean forecast inputs; distribution scores come from the pinned uncertainty screen outputs.",
+    "The resampling API is SCREEN ONLY and does not implement shared-team resampling or maxT correction."
+  ]
+}

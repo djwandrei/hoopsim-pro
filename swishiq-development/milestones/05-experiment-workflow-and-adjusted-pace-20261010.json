@@ -1,0 +1,343 @@
+{
+  "format": "swishiq-source-milestone-v1",
+  "milestone": "05-experiment-workflow-and-adjusted-pace-20261010",
+  "createdAt": "2026-10-10T20:18:33.293Z",
+  "scope": "development source and documentation; no datasets or credentials",
+  "summary": {
+    "format": "swishiq-development-milestone-summary-v1",
+    "milestone": "05-experiment-workflow-and-adjusted-pace-20261010",
+    "date": "2026-10-10",
+    "reference": "Candidate100",
+    "targetRepository": "djwandrei/hoopsim-pro",
+    "status": "workflow-screen-orchestration-tested; adjusted-pace-feature-screen-complete-and-rejected",
+    "workflowChanges": [
+      "Canonical screen-plan runner supports opt-in bounded parallel scheduling.",
+      "Exact duplicate screen plans share one dispatch and preserve ordered alias receipts.",
+      "Comparison plans use serial fallback to avoid shared resampling-cache races.",
+      "Failure or programmatic interruption stops new dispatch, drains active screens, and records deterministic receipts.",
+      "Workflow wrapper preserves complete screen summaries."
+    ],
+    "workflowEvidence": {
+      "receiptFixture": "prototypes/swishiq-package-v4/experiment-tools/test-cycle2-workflow-receipts-20261010.mjs",
+      "orchestrationFixture": "prototypes/swishiq-package-v4/experiment-tools/test-screen-orchestration-20261010.mjs",
+      "scope": "Deterministic fixture parity and process orchestration only; no throughput improvement claim outside measured workloads. Windows force termination cannot run JavaScript signal handlers."
+    },
+    "paceScreen": {
+      "candidate": "c21-adjusted-pace-total",
+      "cohort": {
+        "seasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "games": 4920
+      },
+      "decision": "rejected-current-formulation",
+      "totalMaeBaseline": 14.639368378511803,
+      "totalMaeCandidate": 14.639999578481516,
+      "totalMaeDelta": 0.0006311999696537761,
+      "paired95PercentInterval": [
+        -0.004142082802541208,
+        0.005710962957283541
+      ],
+      "marginMaeDelta": 0,
+      "brierDelta": -5.551115123125783e-17,
+      "logLossDelta": 1.1102230246251565e-16,
+      "seasonTotalMaeDeltas": {
+        "2022": -0.0009756484530645441,
+        "2023": 0.006235179015927021,
+        "2024": 0.0008597296799070186,
+        "2025": -0.003594460364154391
+      },
+      "reason": "Pooled intended total MAE worsened; season effects split 2-2; margin and probability were unchanged; no combination is justified.",
+      "evidenceStatus": "development-only; not independent predictive validation",
+      "resultsDocumentation": "docs/swishiq-candidate100-adjusted-pace-screen-results-20261010.md",
+      "resultsSummary": "docs/swishiq-candidate100-adjusted-pace-screen-summary-20261010.json"
+    },
+    "sourceDataAndForecasts": "Not included. Diagnostic plans require separately available pinned input artifacts.",
+    "productionSiteOrPackageChanged": false,
+    "sourceInferenceParity": {
+      "status": "exact-representative-real-source-data-parity",
+      "rows": 2460,
+      "seasons": [
+        2021,
+        2022
+      ],
+      "replicates": 40,
+      "blockLengths": [
+        7,
+        14
+      ],
+      "evidence": "docs/swishiq-inference-source-data-parity-20261010.md",
+      "fullCohortParity": false
+    },
+    "sourceFeatureContinuation": {
+      "status": "not-yet-implemented",
+      "evidence": "docs/swishiq-feature-continuation-state-20261010.md",
+      "currentSupportedFallback": "rebuild from full pinned feature inputs"
+    }
+  },
+  "files": [
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/build-candidate100-candidate21-boxscore-feature-artifact-v2.mjs",
+      "sha256": "3c75ec76cf34652a56bb7e7ff506d0bb0c0e42f3565aeb6c1f07d25282c95ea6",
+      "bytes": 26162
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/candidate100-adjusted-pace-plan-20261010.json",
+      "sha256": "6476366be64d7f238c66987d71fcbd73527bd3325240242426545c55485bbaf0",
+      "bytes": 1021
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/compare-mean-screens.mjs",
+      "sha256": "761b92c2310af0d4e5504ef5cda25778f72fc29eb70c28897d0ed3937f9569d0",
+      "bytes": 39294
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/compose-forecasts.mjs",
+      "sha256": "69d0cf5827b02c8c41dfb4431723839d8e99e9fb541f16335094001d383c7c6c",
+      "bytes": 16898
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/extend-features.mjs",
+      "sha256": "69337e1066580f9357622175b9bc14c6df15876c4b1d409c9af28258c2796545",
+      "bytes": 1204
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/artifacts.mjs",
+      "sha256": "220ff0fc109caa233bff0cad44e254a42f450b2e9eb59dc2221f18baf7979cb8",
+      "bytes": 10095
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/canonical-plan.mjs",
+      "sha256": "16bc151fecc7160465d52a905017ab2815617663ee9fa324fef31708f041b3bb",
+      "bytes": 7526
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/chronology.mjs",
+      "sha256": "b64f3d3e6cf2ea7d7cff7b830f69b33122bfd32b32635b38aebee6d50e768e8f",
+      "bytes": 4104
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/configuration.mjs",
+      "sha256": "cb10d8ed6cbc4776fcf58fa7ae9f4a97ab1aca985d9981712062cce75172b1b1",
+      "bytes": 3980
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/dependence-planned.mjs",
+      "sha256": "7726c1380002b1b37a68359760bc235dbba9a3dc1f9823704c56ec4c12a3edc0",
+      "bytes": 10540
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/design-cache.mjs",
+      "sha256": "ee465dfced52f720739aa19edcf7446b7817ee27fbb0ad56c52f4d02e07d706d",
+      "bytes": 13874
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/feature-extension.mjs",
+      "sha256": "49778f3e13e8809bca3f41cf676cdb0f5e3f9e6916688456fefd658687f7d4aa",
+      "bytes": 16892
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/mean-batch.mjs",
+      "sha256": "dee34a60dcb006d699c36c9ea767704b95bd6b30e33352f9e6bd68f17a62825e",
+      "bytes": 10056
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/opponent-adjusted-pace-context.mjs",
+      "sha256": "43f3b0ecc1e91f36b3c9052652560ea6c19586c7a1b9e491427e9b2829152d70",
+      "bytes": 4064
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/output.mjs",
+      "sha256": "1a622aac0bc2a9023f87c498c0510e1f615a01bf38e1ddb4b58e2ff50976d02a",
+      "bytes": 1246
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/resampling-plan.mjs",
+      "sha256": "dafa011916f03d3d2d90de4c6f48d749d44b8a4dda6b2410cda416fe3d4c8b40",
+      "bytes": 16542
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/screen-metrics.mjs",
+      "sha256": "9be5ff03e7208d0fb0ccbc9335f2b4b2819b6e0d603d264728816c6311919abe",
+      "bytes": 9952
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/screen-stage.mjs",
+      "sha256": "d1f97465ea481cd7f9e0edf0f3432c0296f4251a46a0f5900731f64c15b41d6b",
+      "bytes": 1900
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/shared-input.mjs",
+      "sha256": "3608b8a221a6644509bdbc53efbf5395cb6c758235fd2fdf437ac5f8a89e58ea",
+      "bytes": 1659
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/telemetry.mjs",
+      "sha256": "188c397984935f164be561f410618ebec3a60ee875891da2a65dd11bd1e11107",
+      "bytes": 4588
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/uncertainty-batch.mjs",
+      "sha256": "7ae00e2486087ba5dc1ff80538caadfc4c813eb5499d565b64c001a111a87629",
+      "bytes": 6896
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/worker-pool.mjs",
+      "sha256": "90fe1e3f407c0a42bce68a0ca54e671f22c2258e04f28dbe998c126299283ffb",
+      "bytes": 7982
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/prepare-candidate100-candidate21-boxscore-screen.mjs",
+      "sha256": "364c75a97e70c3f06f56cadc467117cbcd6e030a7e993aea1c79320a8d241759",
+      "bytes": 14734
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/run-inference.mjs",
+      "sha256": "ac252b2e4e4d98fc75bfd877bea2b5046fd4900238c682fb3733771474063169",
+      "bytes": 6026
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/run-means.mjs",
+      "sha256": "e248d1affdfe9ad3e59ab90f44f7bd4b65f0c6422773cf9833f4a99ad7c46561",
+      "bytes": 10703
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/run-plan.mjs",
+      "sha256": "0605da92705ef1d8c751f86455d6369fbc5c9b5f0bfbd5f617d39f7379af7e6e",
+      "bytes": 16033
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/run-screen.mjs",
+      "sha256": "67f56558dd209f7d10f4b2bc944be87b120215b539b2ba599402e94e7f163c2c",
+      "bytes": 13758
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/test-adjusted-pace-context-20261010.mjs",
+      "sha256": "39a9839b0750b40b8269437ef9fb2b03d4406d633e423fbb42724229a542e75f",
+      "bytes": 6941
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/test-cycle2-workflow-receipts-20261010.mjs",
+      "sha256": "863404508a49153c81976e7aa08adfba8acfda3d33828a0efd3b31a51689b42a",
+      "bytes": 6021
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/test-screen-orchestration-20261010.mjs",
+      "sha256": "cb6b5bc7290649bf3b0ee0dfcc35ed9d5bf2d71146464a0a6ce8267c83eccd4a",
+      "bytes": 20445
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate10-predictive-metrics-v2.mjs",
+      "sha256": "9d12db2b83f42328db3103fc8d5f78f273a893e26bf95f694ab886773a0eb176",
+      "bytes": 3999
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate21-boxscore-history-context-v1.mjs",
+      "sha256": "2939104c1ee672a08a21d196fdc125b0a84f52d5c329e195d51156dd8809ad8b",
+      "bytes": 15108
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-c51-pass6-hybrid-v4.mjs",
+      "sha256": "62eb8e270c46ae830d9bfb84b68c58e35009632f1a122fba8025a7dba035ecbe",
+      "bytes": 22521
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-configurable-uncertainty-v7.mjs",
+      "sha256": "3067506e5496b23fa6f6108ce0d7acc0dad73115ee227fe3417b8ece99bba71f",
+      "bytes": 15625
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-dependence-inference-v1.mjs",
+      "sha256": "42b23ee808b0fcd392556bcddce6a6d9c1ff43af04179005cdbcd793015020cd",
+      "bytes": 10587
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-fast-empirical-scoring-v1.mjs",
+      "sha256": "63ee56484cc0d0749077fa19cf1e026dffb80a1a0a2e72d38ed419af986538fe",
+      "bytes": 7089
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-fast-gaussian-scoring-v1.mjs",
+      "sha256": "49f0fa78d3e367bad599625653d61547e820dae83d15dd1266f3200d69632071",
+      "bytes": 4817
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-feature-penalty-fit-v3.mjs",
+      "sha256": "9b9dd43d1a390b952b5122f7f5e4292fcc07991752fcfe839430c29b5c953215",
+      "bytes": 1920
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-head-feature-policy-v1.mjs",
+      "sha256": "e77000e5187f666d14cee13f0ada57b092d689680b02d137331177ff05bf03c0",
+      "bytes": 2895
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/scripts/prepare-hoopsim-milestone.mjs",
+      "sha256": "207068ff7e8d59d33731959cf6b4a5ecaa1f2e535a36c2712815429a96e0d3ee",
+      "bytes": 8497
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/scripts/swishiq-experiment.mjs",
+      "sha256": "edc5b91ab80512430937afa5cdbcbf9b208455582e084aa33e77cc06dc39c5f5",
+      "bytes": 7864
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/experiment-tools/README.md",
+      "sha256": "12a44b1e424eecf4c73327d974d3b54f46e9a0ddc9f3a765206a316e669de689",
+      "bytes": 58417
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate100-pruned-total-model-blend090-v1.mjs",
+      "sha256": "fe8733d092f2a28b1c5395a035880a58c50650e5e1f918862b32138fd8e4a63c",
+      "bytes": 9001
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/prototypes/swishiq-package-v4/diagnostics/game-lab-candidate100-pruned-total-model-blend090-v1-20261008/configuration.json",
+      "sha256": "6e7fa2868fb9bcf4716603a15a953f42f1f6faa0b70e3ecd7f1ea56b45992e94",
+      "bytes": 7763
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/docs/swishiq-implementation-ledger-20261010.json",
+      "sha256": "c30d2dadd37bea6b627548d8547c2bc2b3b7286ea681910c500a6f48d49ea550",
+      "bytes": 14025
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/docs/candidate100-cycle5-tuning-ledger-20261010.md",
+      "sha256": "c3f1b1044b8ccface8013f6932942567471cb2363365d994f355a748acfc13ac",
+      "bytes": 4995
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/docs/swishiq-candidate100-adjusted-pace-screen-results-20261010.md",
+      "sha256": "d4624dc01bfd0caadb30befae250bc38c514cf8334ef280cfe10a998c5b74ed4",
+      "bytes": 4943
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/docs/swishiq-feature-continuation-state-20261010.md",
+      "sha256": "8460d4c70f3ee2bdcff3d53e16fded9a42dcb4a07cedec18d6ed4e868a9ba32c",
+      "bytes": 7543
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/docs/swishiq-cycle3-final-disposition-20261010.md",
+      "sha256": "967788c381864bc7867e4395992a2918b1c95c1ccf3d97cc22d20684d275a056",
+      "bytes": 10573
+    },
+    {
+      "path": "site-source/05-experiment-workflow-and-adjusted-pace-20261010/docs/candidate100-cycle5-uncertainty-queue-20261010.md",
+      "sha256": "b1afd2bb95fb01205b592591097c2689444654f7ce1b6767489eb64529999ddb",
+      "bytes": 7692
+    },
+    {
+      "path": "evidence/05-experiment-workflow-and-adjusted-pace-20261010/milestone-summary.json",
+      "sha256": "42b22e4a03e93d8fc20d552121ddaa7380f56c2d0ae69b2e9910de550289e1f3",
+      "bytes": 3167
+    },
+    {
+      "path": "evidence/05-experiment-workflow-and-adjusted-pace-20261010/adjusted-pace-summary.json",
+      "sha256": "804e6ce8e65f1d48d7dbce6fff2500ff848be8c5200e10d487b3790669a6848a",
+      "bytes": 13937
+    }
+  ]
+}

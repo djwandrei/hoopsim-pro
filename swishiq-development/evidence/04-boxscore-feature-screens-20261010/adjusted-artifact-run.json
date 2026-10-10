@@ -1,0 +1,105 @@
+{
+  "format": "swishiq-candidate100-candidate21-boxscore-feature-artifact-v1-run-v1",
+  "status": "completed-feature-artifact; model-screen-not-run",
+  "promotionAllowed": false,
+  "modelFitExecuted": false,
+  "modelScreenExecuted": false,
+  "generatedAtUtc": "2026-10-10T07:53:03.039Z",
+  "cacheHit": false,
+  "cacheKey": "aea43839005c2b5a9e16edeb98c361f588b93dff03582cc9d32c7aa93cab6f29",
+  "cacheDirectory": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\cache\\candidate100-candidate21-boxscore-features\\aea43839005c2b5a9e16edeb98c361f588b93dff03582cc9d32c7aa93cab6f29",
+  "receipt": {
+    "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\cache\\candidate100-candidate21-boxscore-features\\aea43839005c2b5a9e16edeb98c361f588b93dff03582cc9d32c7aa93cab6f29\\receipt.json",
+    "bytes": 9325,
+    "sha256": "86338704e10ea72ed36279623cf24858f2773abd29d3bfb5b2a73d93d25ac39a"
+  },
+  "featureFamily": {
+    "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\cache\\candidate100-candidate21-boxscore-features\\aea43839005c2b5a9e16edeb98c361f588b93dff03582cc9d32c7aa93cab6f29\\feature-family.json",
+    "bytes": 7901,
+    "sha256": "791050bd4d9cde79b4f741191b84c11ce92956bd90f2b04ce46fd33cf72af456"
+  },
+  "featureRows": {
+    "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\cache\\candidate100-candidate21-boxscore-features\\aea43839005c2b5a9e16edeb98c361f588b93dff03582cc9d32c7aa93cab6f29\\feature-rows.jsonl",
+    "bytes": 37528600,
+    "sha256": "18ef2a04556055c78cc1a62fdccf43d99cfb6a5c1eaef4dac0d994b44e5829e9"
+  },
+  "sourcePins": {
+    "baseFeatureRows": {
+      "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\diagnostics\\game-lab-candidate57-source-cache-20261007\\feature-rows.jsonl",
+      "bytes": 34346629,
+      "sha256": "3e9c5e6b3102464b686dea5e43277e80166e67702628e74b14ba56b0c23ede3d"
+    },
+    "baseSourceManifest": {
+      "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\diagnostics\\game-lab-candidate57-source-cache-20261007\\manifest.json",
+      "bytes": 18213,
+      "sha256": "cd0ddcbc5f9bb147d48adf502f7f0a47f015200b19a0c6a9490ba41798c1d749"
+    },
+    "teamGames": {
+      "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\tools\\swishiq-studio\\data\\v4\\releases\\v4-site-12ad90dc8710\\packages\\nba-swishiq-v4-2017-26\\v4-canonical-20260929-aa835b795d8c\\parts\\team-games.json",
+      "bytes": 27456936,
+      "sha256": "083514fac8c656fc406a60481713aefbb399ff4c0c852472b64b3e09582d081f"
+    },
+    "playerGames": {
+      "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\tools\\swishiq-studio\\data\\v4\\releases\\v4-site-12ad90dc8710\\packages\\nba-swishiq-v4-2017-26\\v4-canonical-20260929-aa835b795d8c\\parts\\player-games.json",
+      "bytes": 301937756,
+      "sha256": "05dd2ba0cb47f940d7c14152e271bd4e0138655f587c8bffad3dfd905a7dd49a"
+    },
+    "candidate100Configuration": {
+      "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\diagnostics\\game-lab-candidate100-pruned-total-model-blend090-v1-20261008\\configuration.json",
+      "bytes": 7763,
+      "sha256": "6e7fa2868fb9bcf4716603a15a953f42f1f6faa0b70e3ecd7f1ea56b45992e94"
+    }
+  },
+  "featureSet": "opponent-adjusted",
+  "featureNames": {
+    "total": {
+      "effectiveFieldGoal": [
+        "c21:meanOpponentAdjustedEfg20"
+      ],
+      "turnover": [
+        "c21:meanOpponentAdjustedTov20"
+      ],
+      "offensiveRebound": [
+        "c21:meanOpponentAdjustedOrb20"
+      ],
+      "freeThrow": [
+        "c21:meanOpponentAdjustedFtr20"
+      ]
+    },
+    "margin": {
+      "effectiveFieldGoal": [
+        "c21:opponentAdjustedEfgAdvantage20"
+      ],
+      "turnover": [
+        "c21:opponentAdjustedTovAdvantage20"
+      ],
+      "offensiveRebound": [
+        "c21:opponentAdjustedOrbAdvantage20"
+      ],
+      "freeThrow": [
+        "c21:opponentAdjustedFtrAdvantage20"
+      ]
+    }
+  },
+  "coverage": {
+    "rows": 7230,
+    "playerRowAudit": {
+      "eligiblePlayerRows": 228883,
+      "duplicatePlayerGameRows": 0,
+      "impossibleMadeAttemptRows": 0
+    },
+    "seasonCounts": {
+      "2020": 1080,
+      "2021": 1230,
+      "2022": 1230,
+      "2023": 1230,
+      "2024": 1230,
+      "2025": 1230
+    },
+    "targetIdentitySha256": "7feca31ebd4fec36c26ecd6a09b31801563390ba15d5bbb67f4fbf640b081de9",
+    "strictPriorDateRows": 7230,
+    "invalidOrSameDateRows": 0,
+    "contextCount": 10749
+  },
+  "writeScope": "diagnostic cache and one immutable invocation receipt only"
+}

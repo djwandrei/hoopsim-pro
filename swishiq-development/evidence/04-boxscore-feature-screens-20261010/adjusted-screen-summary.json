@@ -1,0 +1,3325 @@
+{
+  "format": "swishiq-candidate21-screen-summary-v1",
+  "status": "completed-development-screen; selection-requires-review",
+  "featureSet": "opponent-adjusted",
+  "promotionAllowed": false,
+  "sourcePathMap": {
+    "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\build-candidate100-candidate21-boxscore-feature-artifact.mjs": "C:/Users/djwan/Downloads/djshouseofcards-next-fixes-applied/prototypes/swishiq-package-v4/experiment-tools/build-candidate100-candidate21-boxscore-feature-artifact-v2.mjs"
+  },
+  "preparation": {
+    "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\candidate100-candidate21-adjusted-individual\\run-1791618804601-593f8396-3b2a-455e-b11f-a0474072a648\\preparation.json",
+    "bytes": 11725,
+    "sha256": "783387cedc1c476c99cb6a45fb98d4426649f83ef439e6ea36dc7ce69e23b490"
+  },
+  "pipelineComplete": {
+    "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\candidate100-candidate21-adjusted-individual\\run-1791618804601-593f8396-3b2a-455e-b11f-a0474072a648\\candidate-pipeline\\run-1791618848894-15900\\complete.json",
+    "bytes": 9488,
+    "sha256": "c90d1754e56ee21633f58373669a546e5fc404e8ea91beb8e2bb526354218cec"
+  },
+  "comparisonIndex": {
+    "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\candidate100-candidate21-adjusted-individual\\run-1791618804601-593f8396-3b2a-455e-b11f-a0474072a648\\summaries\\run-1791619799972-82a20f63-f2ed-48fd-ba81-1f182820abb3\\comparison\\run-1791619837111-30348\\comparison-index.json",
+    "bytes": 253505,
+    "sha256": "4de7d803ff7fcac14b222782000362d29a9b143db4e2104641218ff1a0e2f34a"
+  },
+  "coverage": {
+    "targetSeasonStartYears": [
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "expectedTargets": 4920,
+    "perSeason": {
+      "2022": 1230,
+      "2023": 1230,
+      "2024": 1230,
+      "2025": 1230
+    }
+  },
+  "cacheHits": {
+    "resampling": true,
+    "comparison": false
+  },
+  "pairedResampling": {
+    "repetitions": 1000,
+    "blockLengthDates": 7,
+    "seed": 20261010,
+    "games": 4920,
+    "dateClusters": 651,
+    "inferenceScope": "SCREEN ONLY"
+  },
+  "baseline": {
+    "rawMeanErrors": {
+      "total": {
+        "n": 4920,
+        "mae": 14.639368378511803,
+        "rmse": 18.465539652350245,
+        "bias": 0.037000262593373794,
+        "errorConvention": "prediction minus observed target"
+      },
+      "margin": {
+        "n": 4920,
+        "mae": 10.801746519186628,
+        "rmse": 13.829066722965196,
+        "bias": -0.05377822230653323,
+        "errorConvention": "prediction minus observed target"
+      }
+    },
+    "distributionLosses": {
+      "pooledGameWeighted": {
+        "n": 4920,
+        "probability": {
+          "brier": 0.21122311512499076,
+          "logLoss": 0.610191559651337
+        },
+        "marginAbsoluteError": 10.801746519186624,
+        "sides": {
+          "home": {
+            "mae": 9.26803952215813,
+            "rmse": 11.596373962657053,
+            "bias": -0.013270518106410193,
+            "crps": 6.55064786784927,
+            "intervalScore": 42.83299478809611
+          },
+          "away": {
+            "mae": 9.104238169134991,
+            "rmse": 11.470105107335572,
+            "bias": 0.04050770420011801,
+            "crps": 6.454881280479971,
+            "intervalScore": 42.81430412855575
+          },
+          "margin": {
+            "mae": 10.801746519186624,
+            "rmse": 13.8290667229652,
+            "bias": -0.05377822230653377,
+            "crps": 7.730169472475464,
+            "intervalScore": 52.76036382906927
+          }
+        }
+      },
+      "perSeasonGameWeighted": {
+        "2022": {
+          "n": 1230,
+          "probability": {
+            "brier": 0.228276556982363,
+            "logLoss": 0.6486541389774102
+          },
+          "marginAbsoluteError": 10.25388769139029,
+          "sides": {
+            "home": {
+              "mae": 9.144252964046922,
+              "rmse": 11.505939476571346,
+              "bias": -0.3128137777128463,
+              "crps": 6.4639909383225955,
+              "intervalScore": 42.977198227674535
+            },
+            "away": {
+              "mae": 8.804599729456696,
+              "rmse": 11.215415467939287,
+              "bias": 0.17543567065634827,
+              "crps": 6.28489571345664,
+              "intervalScore": 42.14370115434221
+            },
+            "margin": {
+              "mae": 10.25388769139029,
+              "rmse": 12.960535744108741,
+              "bias": -0.488249448369199,
+              "crps": 7.2783619381843385,
+              "intervalScore": 49.351009889241425
+            }
+          }
+        },
+        "2023": {
+          "n": 1230,
+          "probability": {
+            "brier": 0.21053618767618615,
+            "logLoss": 0.6091165454052084
+          },
+          "marginAbsoluteError": 10.942817634172538,
+          "sides": {
+            "home": {
+              "mae": 9.212291248588006,
+              "rmse": 11.476524371175982,
+              "bias": 0.10111081306226989,
+              "crps": 6.490468606245359,
+              "intervalScore": 42.43487599959227
+            },
+            "away": {
+              "mae": 9.171131507588703,
+              "rmse": 11.428526096911957,
+              "bias": 0.3020937276183531,
+              "crps": 6.456211032014761,
+              "intervalScore": 42.46665897253983
+            },
+            "margin": {
+              "mae": 10.942817634172538,
+              "rmse": 14.06049876433953,
+              "bias": -0.20098291455609238,
+              "crps": 7.845052219487912,
+              "intervalScore": 54.07709854668785
+            }
+          }
+        },
+        "2024": {
+          "n": 1230,
+          "probability": {
+            "brier": 0.2055609835425572,
+            "logLoss": 0.5963088845158654
+          },
+          "marginAbsoluteError": 10.842337267198184,
+          "sides": {
+            "home": {
+              "mae": 9.053242262222833,
+              "rmse": 11.311451755246395,
+              "bias": 0.2534923313799979,
+              "crps": 6.408811669056293,
+              "intervalScore": 41.457317089902745
+            },
+            "away": {
+              "mae": 9.227873889698056,
+              "rmse": 11.585374978202157,
+              "bias": -0.04575678407212603,
+              "crps": 6.520220774940789,
+              "intervalScore": 43.321414343353645
+            },
+            "margin": {
+              "mae": 10.842337267198184,
+              "rmse": 13.931027732001985,
+              "bias": 0.2992491154521235,
+              "crps": 7.790098423480593,
+              "intervalScore": 53.2546191123727
+            }
+          }
+        },
+        "2025": {
+          "n": 1230,
+          "probability": {
+            "brier": 0.20051873229886044,
+            "logLoss": 0.5866866697068658
+          },
+          "marginAbsoluteError": 11.167943483985582,
+          "sides": {
+            "home": {
+              "mae": 9.662371613774694,
+              "rmse": 12.077142072327202,
+              "bias": -0.09487143915506223,
+              "crps": 6.8393202577727985,
+              "intervalScore": 44.462587835215295
+            },
+            "away": {
+              "mae": 9.213347549796511,
+              "rmse": 11.646268863522769,
+              "bias": -0.2697417974021013,
+              "crps": 6.55819760150772,
+              "intervalScore": 43.325442043987195
+            },
+            "margin": {
+              "mae": 11.167943483985582,
+              "rmse": 14.325700672803796,
+              "bias": 0.17487035824703484,
+              "crps": 8.007165308749089,
+              "intervalScore": 54.35872776797488
+            }
+          }
+        }
+      }
+    }
+  },
+  "candidates": [
+    {
+      "id": "c21-adjusted-effectiveFieldGoal-total",
+      "head": "total",
+      "group": "effectiveFieldGoal",
+      "features": [
+        "c21:meanOpponentAdjustedEfg20"
+      ],
+      "primaryMetric": "rawTotalMae",
+      "primaryDifference": {
+        "name": "c21-adjusted-effectiveFieldGoal-total:rawTotalMae",
+        "estimate": -0.0005114992802522072,
+        "lower": -0.0019296265579807344,
+        "upper": 0.0007753918352517764,
+        "interval": "95% bootstrap percentile"
+      },
+      "classification": "provisional-point-gain",
+      "rawMeanErrors": {
+        "total": {
+          "n": 4920,
+          "mae": 14.638856879231593,
+          "rmse": 18.46626259380318,
+          "bias": 0.03673248979189692,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 4920,
+          "mae": 10.801746519186628,
+          "rmse": 13.829066722965196,
+          "bias": -0.05377822230653323,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "rawMeanErrorsBySeason": {
+        "2022": {
+          "total": {
+            "n": 1230,
+            "mae": 14.54462340220086,
+            "rmse": 18.659006452979952,
+            "bias": -0.20091886008531246,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.253887691390291,
+            "rmse": 12.960535744108741,
+            "bias": -0.4882494483691991,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2023": {
+          "total": {
+            "n": 1230,
+            "mae": 14.466987670125654,
+            "rmse": 18.097114446429494,
+            "bias": 0.57858391643106,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.942817634172535,
+            "rmse": 14.060498764339528,
+            "bias": -0.20098291455609224,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2024": {
+          "total": {
+            "n": 1230,
+            "mae": 14.584673355539351,
+            "rmse": 18.17486454240066,
+            "bias": 0.18474047140353364,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.842337267198184,
+            "rmse": 13.931027732001985,
+            "bias": 0.29924911545212307,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2025": {
+          "total": {
+            "n": 1230,
+            "mae": 14.959143089060538,
+            "rmse": 18.921459840589698,
+            "bias": -0.4154755685816921,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 11.16794348398558,
+            "rmse": 14.325700672803798,
+            "bias": 0.1748703582470346,
+            "errorConvention": "prediction minus observed target"
+          }
+        }
+      },
+      "distributionLosses": {
+        "pooledGameWeighted": {
+          "n": 4920,
+          "probability": {
+            "brier": 0.2112231151249907,
+            "logLoss": 0.6101915596513369
+          },
+          "marginAbsoluteError": 10.801746519186626,
+          "sides": {
+            "home": {
+              "mae": 9.268085875395663,
+              "rmse": 11.596495606039465,
+              "bias": -0.0133749481001519,
+              "crps": 6.550649828404832,
+              "intervalScore": 42.833772119567904
+            },
+            "away": {
+              "mae": 9.104243640982194,
+              "rmse": 11.470547710860853,
+              "bias": 0.04040327420638496,
+              "crps": 6.45510048752976,
+              "intervalScore": 42.81719910680323
+            },
+            "margin": {
+              "mae": 10.801746519186626,
+              "rmse": 13.829066722965198,
+              "bias": -0.05377822230653351,
+              "crps": 7.730169472475464,
+              "intervalScore": 52.76036382906926
+            }
+          }
+        },
+        "perSeasonGameWeighted": {
+          "2022": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.228276556982363,
+              "logLoss": 0.64865413897741
+            },
+            "marginAbsoluteError": 10.253887691390291,
+            "sides": {
+              "home": {
+                "mae": 9.143722479014652,
+                "rmse": 11.505832346838119,
+                "bias": -0.3142197486192567,
+                "crps": 6.463788326227862,
+                "intervalScore": 42.978665408570855
+              },
+              "away": {
+                "mae": 8.804345390379682,
+                "rmse": 11.21618716956711,
+                "bias": 0.17402969974994378,
+                "crps": 6.2851508580087385,
+                "intervalScore": 42.15107239708904
+              },
+              "margin": {
+                "mae": 10.253887691390291,
+                "rmse": 12.960535744108741,
+                "bias": -0.488249448369199,
+                "crps": 7.2783619381843385,
+                "intervalScore": 49.3510098892414
+              }
+            }
+          },
+          "2023": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2105361876761861,
+              "logLoss": 0.6091165454052083
+            },
+            "marginAbsoluteError": 10.942817634172535,
+            "sides": {
+              "home": {
+                "mae": 9.212448068416856,
+                "rmse": 11.47663763871855,
+                "bias": 0.10671769915664878,
+                "crps": 6.4904291413268735,
+                "intervalScore": 42.437582462126585
+              },
+              "away": {
+                "mae": 9.171320619975166,
+                "rmse": 11.428951512515575,
+                "bias": 0.30770061371274643,
+                "crps": 6.456457004039662,
+                "intervalScore": 42.46860725298124
+              },
+              "margin": {
+                "mae": 10.942817634172535,
+                "rmse": 14.060498764339531,
+                "bias": -0.2009829145560923,
+                "crps": 7.845052219487914,
+                "intervalScore": 54.077098546687836
+              }
+            }
+          },
+          "2024": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2055609835425572,
+              "logLoss": 0.5963088845158655
+            },
+            "marginAbsoluteError": 10.842337267198182,
+            "sides": {
+              "home": {
+                "mae": 9.05316036955185,
+                "rmse": 11.311727866591681,
+                "bias": 0.2599657577774311,
+                "crps": 6.408943931381868,
+                "intervalScore": 41.45704160708797
+              },
+              "away": {
+                "mae": 9.227270559282362,
+                "rmse": 11.585547606837203,
+                "bias": -0.03928335767469213,
+                "crps": 6.520354184461266,
+                "intervalScore": 43.32076393380376
+              },
+              "margin": {
+                "mae": 10.842337267198182,
+                "rmse": 13.931027732001985,
+                "bias": 0.2992491154521236,
+                "crps": 7.790098423480593,
+                "intervalScore": 53.25461911237268
+              }
+            }
+          },
+          "2025": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20051873229886044,
+              "logLoss": 0.5866866697068658
+            },
+            "marginAbsoluteError": 11.16794348398558,
+            "sides": {
+              "home": {
+                "mae": 9.663012584599311,
+                "rmse": 12.077345095332198,
+                "bias": -0.10596350071543136,
+                "crps": 6.8394379146826525,
+                "intervalScore": 44.46179900048609
+              },
+              "away": {
+                "mae": 9.214037994291603,
+                "rmse": 11.646680149298158,
+                "bias": -0.2808338589624581,
+                "crps": 6.55843990360943,
+                "intervalScore": 43.3283528433394
+              },
+              "margin": {
+                "mae": 11.16794348398558,
+                "rmse": 14.3257006728038,
+                "bias": 0.17487035824703434,
+                "crps": 8.007165308749089,
+                "intervalScore": 54.35872776797488
+              }
+            }
+          }
+        }
+      },
+      "pairedDifferences": {
+        "brier": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:brier",
+          "estimate": 4.450738064571084e-18,
+          "lower": -2.3881918131408616e-18,
+          "upper": 1.204837315694662e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:logLoss",
+          "estimate": 1.4760663332986394e-17,
+          "lower": -2.978583219429217e-18,
+          "upper": 3.375980821459379e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "marginDistributionMae": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:marginDistributionMae",
+          "estimate": -1.3663415475823827e-16,
+          "lower": -4.775521372067985e-16,
+          "upper": 2.07472116311654e-16,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalMae": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:rawTotalMae",
+          "estimate": -0.0005114992802522072,
+          "lower": -0.0019296265579807344,
+          "upper": 0.0007753918352517764,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSquaredError": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:rawTotalSquaredError",
+          "estimate": 0.026699530774265113,
+          "lower": -0.024651295574639825,
+          "upper": 0.08438565681010368,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSignedError": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:rawTotalSignedError",
+          "estimate": -0.00026777280147607745,
+          "lower": -0.004323057075559306,
+          "upper": 0.0038199096919721703,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginMae": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:rawMarginMae",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSquaredError": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:rawMarginSquaredError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSignedError": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:rawMarginSignedError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:home:distribution:mae",
+          "estimate": 0.00004635323755482014,
+          "lower": -0.0006766454364309575,
+          "upper": 0.0008417465994550209,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:crps": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:home:distribution:crps",
+          "estimate": 0.0000019605555488929244,
+          "lower": -0.00044682207715675157,
+          "upper": 0.000507072560062529,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:intervalScore": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:home:distribution:intervalScore",
+          "estimate": 0.0007773314717076168,
+          "lower": -0.0025736035734240208,
+          "upper": 0.004309623166573423,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:away:distribution:mae",
+          "estimate": 0.000005471847214009679,
+          "lower": -0.0005266498871065644,
+          "upper": 0.0005116333534213697,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:crps": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:away:distribution:crps",
+          "estimate": 0.00021920704980148899,
+          "lower": -0.0001082636569392354,
+          "upper": 0.0005245238522059304,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:intervalScore": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:away:distribution:intervalScore",
+          "estimate": 0.0028949782476577262,
+          "lower": 0.000027771494967577893,
+          "upper": 0.005761019693326739,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:margin:distribution:mae",
+          "estimate": -1.3663415475823827e-16,
+          "lower": -4.775521372067985e-16,
+          "upper": 2.07472116311654e-16,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:crps": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:margin:distribution:crps",
+          "estimate": -8.304107176058081e-17,
+          "lower": -2.9553697587784507e-16,
+          "upper": 1.443729373951083e-16,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:intervalScore": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:margin:distribution:intervalScore",
+          "estimate": -3.8559941147956656e-16,
+          "lower": -3.4926076227466987e-15,
+          "upper": 3.0285495583016814e-15,
+          "interval": "95% bootstrap percentile"
+        }
+      }
+    },
+    {
+      "id": "c21-adjusted-turnover-total",
+      "head": "total",
+      "group": "turnover",
+      "features": [
+        "c21:meanOpponentAdjustedTov20"
+      ],
+      "primaryMetric": "rawTotalMae",
+      "primaryDifference": {
+        "name": "c21-adjusted-turnover-total:rawTotalMae",
+        "estimate": 0.0021423730638098974,
+        "lower": -0.0026635170189966712,
+        "upper": 0.007167940484284419,
+        "interval": "95% bootstrap percentile"
+      },
+      "classification": "no-point-gain",
+      "rawMeanErrors": {
+        "total": {
+          "n": 4920,
+          "mae": 14.641510751575659,
+          "rmse": 18.46684435235577,
+          "bias": 0.06594394303883419,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 4920,
+          "mae": 10.801746519186628,
+          "rmse": 13.829066722965196,
+          "bias": -0.05377822230653323,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "rawMeanErrorsBySeason": {
+        "2022": {
+          "total": {
+            "n": 1230,
+            "mae": 14.54836893781428,
+            "rmse": 18.65203028050062,
+            "bias": -0.13846650963419035,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.253887691390291,
+            "rmse": 12.960535744108741,
+            "bias": -0.4882494483691991,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2023": {
+          "total": {
+            "n": 1230,
+            "mae": 14.467060246010776,
+            "rmse": 18.102392094564742,
+            "bias": 0.630371683041756,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.942817634172535,
+            "rmse": 14.060498764339528,
+            "bias": -0.20098291455609224,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2024": {
+          "total": {
+            "n": 1230,
+            "mae": 14.589759681630646,
+            "rmse": 18.17970431275546,
+            "bias": 0.15375685072671216,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.842337267198184,
+            "rmse": 13.931027732001985,
+            "bias": 0.29924911545212307,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2025": {
+          "total": {
+            "n": 1230,
+            "mae": 14.96085414084693,
+            "rmse": 18.92091116482615,
+            "bias": -0.3818862519789414,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 11.16794348398558,
+            "rmse": 14.325700672803798,
+            "bias": 0.1748703582470346,
+            "errorConvention": "prediction minus observed target"
+          }
+        }
+      },
+      "distributionLosses": {
+        "pooledGameWeighted": {
+          "n": 4920,
+          "probability": {
+            "brier": 0.2112231151249907,
+            "logLoss": 0.610191559651337
+          },
+          "marginAbsoluteError": 10.801746519186624,
+          "sides": {
+            "home": {
+              "mae": 9.270440764505333,
+              "rmse": 11.597278008097259,
+              "bias": -0.0017397047360666463,
+              "crps": 6.551334558403053,
+              "intervalScore": 42.835439404524756
+            },
+            "away": {
+              "mae": 9.102470104011092,
+              "rmse": 11.469945365401966,
+              "bias": 0.0520385175704684,
+              "crps": 6.4545226701347564,
+              "intervalScore": 42.81958491032512
+            },
+            "margin": {
+              "mae": 10.801746519186624,
+              "rmse": 13.829066722965202,
+              "bias": -0.0537782223065329,
+              "crps": 7.730169472475464,
+              "intervalScore": 52.760363829069256
+            }
+          }
+        },
+        "perSeasonGameWeighted": {
+          "2022": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.228276556982363,
+              "logLoss": 0.6486541389774102
+            },
+            "marginAbsoluteError": 10.25388769139029,
+            "sides": {
+              "home": {
+                "mae": 9.151160981534943,
+                "rmse": 11.50671886209976,
+                "bias": -0.28798434661242744,
+                "crps": 6.464920233453437,
+                "intervalScore": 42.97557308895146
+              },
+              "away": {
+                "mae": 8.796519131064136,
+                "rmse": 11.209640416349428,
+                "bias": 0.20026510175677345,
+                "crps": 6.281325166773561,
+                "intervalScore": 42.13651395150142
+              },
+              "margin": {
+                "mae": 10.25388769139029,
+                "rmse": 12.960535744108743,
+                "bias": -0.48824944836919854,
+                "crps": 7.2783619381843385,
+                "intervalScore": 49.351009889241425
+              }
+            }
+          },
+          "2023": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.21053618767618615,
+              "logLoss": 0.6091165454052082
+            },
+            "marginAbsoluteError": 10.942817634172538,
+            "sides": {
+              "home": {
+                "mae": 9.211180596815296,
+                "rmse": 11.47642722977405,
+                "bias": 0.1258492070812132,
+                "crps": 6.490148814461405,
+                "intervalScore": 42.444497115726385
+              },
+              "away": {
+                "mae": 9.172940445632337,
+                "rmse": 11.431952390645646,
+                "bias": 0.3268321216373016,
+                "crps": 6.4579012204228325,
+                "intervalScore": 42.477709858617004
+              },
+              "margin": {
+                "mae": 10.942817634172538,
+                "rmse": 14.060498764339531,
+                "bias": -0.20098291455609155,
+                "crps": 7.845052219487917,
+                "intervalScore": 54.077098546687836
+              }
+            }
+          },
+          "2024": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2055609835425572,
+              "logLoss": 0.5963088845158656
+            },
+            "marginAbsoluteError": 10.842337267198182,
+            "sides": {
+              "home": {
+                "mae": 9.055223477153191,
+                "rmse": 11.3136928624435,
+                "bias": 0.24741603870493015,
+                "crps": 6.410303115962689,
+                "intervalScore": 41.45952360744663
+              },
+              "away": {
+                "mae": 9.227375154793226,
+                "rmse": 11.58726700796259,
+                "bias": -0.051833076747187436,
+                "crps": 6.520802059150646,
+                "intervalScore": 43.33907785286882
+              },
+              "margin": {
+                "mae": 10.842337267198182,
+                "rmse": 13.931027732001985,
+                "bias": 0.29924911545212307,
+                "crps": 7.790098423480595,
+                "intervalScore": 53.254619112372694
+              }
+            }
+          },
+          "2025": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20051873229886047,
+              "logLoss": 0.5866866697068658
+            },
+            "marginAbsoluteError": 11.167943483985578,
+            "sides": {
+              "home": {
+                "mae": 9.66419800251794,
+                "rmse": 12.07786494671047,
+                "bias": -0.0922397181179818,
+                "crps": 6.839966069734659,
+                "intervalScore": 44.462163805974576
+              },
+              "away": {
+                "mae": 9.21304568455472,
+                "rmse": 11.645954503670456,
+                "bias": -0.2671100763650174,
+                "crps": 6.55806223419194,
+                "intervalScore": 43.32503797831345
+              },
+              "margin": {
+                "mae": 11.167943483985578,
+                "rmse": 14.325700672803794,
+                "bias": 0.17487035824703456,
+                "crps": 8.007165308749087,
+                "intervalScore": 54.358727767974884
+              }
+            }
+          }
+        }
+      },
+      "pairedDifferences": {
+        "brier": {
+          "name": "c21-adjusted-turnover-total:brier",
+          "estimate": -1.763723680427842e-18,
+          "lower": -9.342355470673464e-18,
+          "upper": 6.429342469547102e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-turnover-total:logLoss",
+          "estimate": -3.319950457275938e-18,
+          "lower": -2.2975696724153193e-17,
+          "upper": 1.7693980575354166e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "marginDistributionMae": {
+          "name": "c21-adjusted-turnover-total:marginDistributionMae",
+          "estimate": -4.0737512730808845e-16,
+          "lower": -7.937000651691292e-16,
+          "upper": -2.0494800676974356e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalMae": {
+          "name": "c21-adjusted-turnover-total:rawTotalMae",
+          "estimate": 0.0021423730638098974,
+          "lower": -0.0026635170189966712,
+          "upper": 0.007167940484284419,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSquaredError": {
+          "name": "c21-adjusted-turnover-total:rawTotalSquaredError",
+          "estimate": 0.04818568161394274,
+          "lower": -0.1497445505830532,
+          "upper": 0.24422756644299254,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSignedError": {
+          "name": "c21-adjusted-turnover-total:rawTotalSignedError",
+          "estimate": 0.028943680445460706,
+          "lower": 0.012879314657670957,
+          "upper": 0.045364248670196165,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginMae": {
+          "name": "c21-adjusted-turnover-total:rawMarginMae",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSquaredError": {
+          "name": "c21-adjusted-turnover-total:rawMarginSquaredError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSignedError": {
+          "name": "c21-adjusted-turnover-total:rawMarginSignedError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:mae": {
+          "name": "c21-adjusted-turnover-total:home:distribution:mae",
+          "estimate": 0.002401242347232864,
+          "lower": -0.00039690448783501013,
+          "upper": 0.005383025181455739,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:crps": {
+          "name": "c21-adjusted-turnover-total:home:distribution:crps",
+          "estimate": 0.0006866905537863047,
+          "lower": -0.0008542471208753394,
+          "upper": 0.002284142732247215,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:intervalScore": {
+          "name": "c21-adjusted-turnover-total:home:distribution:intervalScore",
+          "estimate": 0.0024446164285500493,
+          "lower": -0.009855669260315085,
+          "upper": 0.015479032173128177,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:mae": {
+          "name": "c21-adjusted-turnover-total:away:distribution:mae",
+          "estimate": -0.0017680651238866413,
+          "lower": -0.004389949506868448,
+          "upper": 0.0007505210527859439,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:crps": {
+          "name": "c21-adjusted-turnover-total:away:distribution:crps",
+          "estimate": -0.0003586103452309888,
+          "lower": -0.0017307845442433689,
+          "upper": 0.0010067936675324499,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:intervalScore": {
+          "name": "c21-adjusted-turnover-total:away:distribution:intervalScore",
+          "estimate": 0.0052807817694294785,
+          "lower": -0.008896180640438475,
+          "upper": 0.019730570057853364,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:mae": {
+          "name": "c21-adjusted-turnover-total:margin:distribution:mae",
+          "estimate": -4.0737512730808845e-16,
+          "lower": -7.937000651691292e-16,
+          "upper": -2.0494800676974356e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:crps": {
+          "name": "c21-adjusted-turnover-total:margin:distribution:crps",
+          "estimate": -2.693419110147534e-16,
+          "lower": -5.220564111692894e-16,
+          "upper": -8.940542189419837e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:intervalScore": {
+          "name": "c21-adjusted-turnover-total:margin:distribution:intervalScore",
+          "estimate": -2.38291771139058e-16,
+          "lower": -3.360750005069489e-15,
+          "upper": 3.0862904060211136e-15,
+          "interval": "95% bootstrap percentile"
+        }
+      }
+    },
+    {
+      "id": "c21-adjusted-offensiveRebound-total",
+      "head": "total",
+      "group": "offensiveRebound",
+      "features": [
+        "c21:meanOpponentAdjustedOrb20"
+      ],
+      "primaryMetric": "rawTotalMae",
+      "primaryDifference": {
+        "name": "c21-adjusted-offensiveRebound-total:rawTotalMae",
+        "estimate": 0.0022706263018983084,
+        "lower": -0.002472572093841397,
+        "upper": 0.0064342592755010945,
+        "interval": "95% bootstrap percentile"
+      },
+      "classification": "no-point-gain",
+      "rawMeanErrors": {
+        "total": {
+          "n": 4920,
+          "mae": 14.641639004813719,
+          "rmse": 18.46804329224709,
+          "bias": 0.05949875133261441,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 4920,
+          "mae": 10.801746519186628,
+          "rmse": 13.829066722965196,
+          "bias": -0.05377822230653323,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "rawMeanErrorsBySeason": {
+        "2022": {
+          "total": {
+            "n": 1230,
+            "mae": 14.546037818967685,
+            "rmse": 18.65924339214005,
+            "bias": -0.1795468349843624,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.253887691390291,
+            "rmse": 12.960535744108741,
+            "bias": -0.4882494483691991,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2023": {
+          "total": {
+            "n": 1230,
+            "mae": 14.473691252467727,
+            "rmse": 18.103397654661162,
+            "bias": 0.580945966526183,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.942817634172535,
+            "rmse": 14.060498764339528,
+            "bias": -0.20098291455609224,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2024": {
+          "total": {
+            "n": 1230,
+            "mae": 14.590982130647147,
+            "rmse": 18.177345941406426,
+            "bias": 0.2134069779817489,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.842337267198184,
+            "rmse": 13.931027732001985,
+            "bias": 0.29924911545212307,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2025": {
+          "total": {
+            "n": 1230,
+            "mae": 14.955844817172462,
+            "rmse": 18.91978372217224,
+            "bias": -0.3768111041931151,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 11.16794348398558,
+            "rmse": 14.325700672803798,
+            "bias": 0.1748703582470346,
+            "errorConvention": "prediction minus observed target"
+          }
+        }
+      },
+      "distributionLosses": {
+        "pooledGameWeighted": {
+          "n": 4920,
+          "probability": {
+            "brier": 0.2112231151249907,
+            "logLoss": 0.610191559651337
+          },
+          "marginAbsoluteError": 10.801746519186628,
+          "sides": {
+            "home": {
+              "mae": 9.269358770480567,
+              "rmse": 11.596891002104,
+              "bias": -0.00436677654089295,
+              "crps": 6.551126073203578,
+              "intervalScore": 42.83102137874068
+            },
+            "away": {
+              "mae": 9.10497127923831,
+              "rmse": 11.471557231038895,
+              "bias": 0.04941144576563953,
+              "crps": 6.4557844322924725,
+              "intervalScore": 42.81510620809956
+            },
+            "margin": {
+              "mae": 10.801746519186628,
+              "rmse": 13.829066722965198,
+              "bias": -0.0537782223065339,
+              "crps": 7.730169472475469,
+              "intervalScore": 52.76036382906929
+            }
+          }
+        },
+        "perSeasonGameWeighted": {
+          "2022": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.22827655698236296,
+              "logLoss": 0.6486541389774102
+            },
+            "marginAbsoluteError": 10.253887691390291,
+            "sides": {
+              "home": {
+                "mae": 9.142848299879558,
+                "rmse": 11.504366221182213,
+                "bias": -0.305368054288615,
+                "crps": 6.462939315268373,
+                "intervalScore": 42.974444647012966
+              },
+              "away": {
+                "mae": 8.80826013842347,
+                "rmse": 11.217755499240821,
+                "bias": 0.1828813940805828,
+                "crps": 6.28663974097192,
+                "intervalScore": 42.140346348915635
+              },
+              "margin": {
+                "mae": 10.253887691390291,
+                "rmse": 12.960535744108741,
+                "bias": -0.4882494483691999,
+                "crps": 7.278361938184338,
+                "intervalScore": 49.351009889241425
+              }
+            }
+          },
+          "2023": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2105361876761861,
+              "logLoss": 0.6091165454052083
+            },
+            "marginAbsoluteError": 10.942817634172533,
+            "sides": {
+              "home": {
+                "mae": 9.215276743726788,
+                "rmse": 11.479770050293322,
+                "bias": 0.10725280474284532,
+                "crps": 6.492673849456483,
+                "intervalScore": 42.4378874292472
+              },
+              "away": {
+                "mae": 9.172461803613176,
+                "rmse": 11.43090653551815,
+                "bias": 0.3082357192989374,
+                "crps": 6.457662665697467,
+                "intervalScore": 42.474677224177036
+              },
+              "margin": {
+                "mae": 10.942817634172533,
+                "rmse": 14.060498764339528,
+                "bias": -0.20098291455609218,
+                "crps": 7.845052219487916,
+                "intervalScore": 54.077098546687836
+              }
+            }
+          },
+          "2024": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20556098354255717,
+              "logLoss": 0.5963088845158655
+            },
+            "marginAbsoluteError": 10.842337267198184,
+            "sides": {
+              "home": {
+                "mae": 9.056964687038658,
+                "rmse": 11.313415288790145,
+                "bias": 0.2714425539535053,
+                "crps": 6.410214586425999,
+                "intervalScore": 41.45559782811239
+              },
+              "away": {
+                "mae": 9.228045289558164,
+                "rmse": 11.585891786032166,
+                "bias": -0.027806561498614147,
+                "crps": 6.5206016018072095,
+                "intervalScore": 43.316417465208275
+              },
+              "margin": {
+                "mae": 10.842337267198184,
+                "rmse": 13.931027732001985,
+                "bias": 0.2992491154521236,
+                "crps": 7.790098423480595,
+                "intervalScore": 53.25461911237269
+              }
+            }
+          },
+          "2025": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20051873229886047,
+              "logLoss": 0.5866866697068661
+            },
+            "marginAbsoluteError": 11.16794348398558,
+            "sides": {
+              "home": {
+                "mae": 9.66234535127722,
+                "rmse": 12.075702696050504,
+                "bias": -0.09079441057130576,
+                "crps": 6.838676541663489,
+                "intervalScore": 44.45615561059008
+              },
+              "away": {
+                "mae": 9.211117885358455,
+                "rmse": 11.646885853216515,
+                "bias": -0.265664768818349,
+                "crps": 6.55823372069323,
+                "intervalScore": 43.328983794097084
+              },
+              "margin": {
+                "mae": 11.16794348398558,
+                "rmse": 14.325700672803796,
+                "bias": 0.17487035824703454,
+                "crps": 8.007165308749089,
+                "intervalScore": 54.35872776797486
+              }
+            }
+          }
+        }
+      },
+      "pairedDifferences": {
+        "brier": {
+          "name": "c21-adjusted-offensiveRebound-total:brier",
+          "estimate": -2.1121227931716597e-18,
+          "lower": -9.687163615466707e-18,
+          "upper": 6.0340512524664195e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-offensiveRebound-total:logLoss",
+          "estimate": -5.312766938215148e-18,
+          "lower": -2.342670161902054e-17,
+          "upper": 1.5469807419803586e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "marginDistributionMae": {
+          "name": "c21-adjusted-offensiveRebound-total:marginDistributionMae",
+          "estimate": -2.5636674355216267e-16,
+          "lower": -6.345546146738302e-16,
+          "upper": 1.741114813249275e-16,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalMae": {
+          "name": "c21-adjusted-offensiveRebound-total:rawTotalMae",
+          "estimate": 0.0022706263018983084,
+          "lower": -0.002472572093841397,
+          "upper": 0.0064342592755010945,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSquaredError": {
+          "name": "c21-adjusted-offensiveRebound-total:rawTotalSquaredError",
+          "estimate": 0.0924683917931512,
+          "lower": -0.07655301964200069,
+          "upper": 0.27161076704075127,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSignedError": {
+          "name": "c21-adjusted-offensiveRebound-total:rawTotalSignedError",
+          "estimate": 0.022498488739240728,
+          "lower": 0.016799102833508443,
+          "upper": 0.02823927522987696,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginMae": {
+          "name": "c21-adjusted-offensiveRebound-total:rawMarginMae",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSquaredError": {
+          "name": "c21-adjusted-offensiveRebound-total:rawMarginSquaredError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSignedError": {
+          "name": "c21-adjusted-offensiveRebound-total:rawMarginSignedError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:mae": {
+          "name": "c21-adjusted-offensiveRebound-total:home:distribution:mae",
+          "estimate": 0.0013192483224489502,
+          "lower": -0.0008820037311728099,
+          "upper": 0.0034384702331991214,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:crps": {
+          "name": "c21-adjusted-offensiveRebound-total:home:distribution:crps",
+          "estimate": 0.00047820535432106684,
+          "lower": -0.0009197880833391107,
+          "upper": 0.0018872939956464752,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:intervalScore": {
+          "name": "c21-adjusted-offensiveRebound-total:home:distribution:intervalScore",
+          "estimate": -0.0019734093555367985,
+          "lower": -0.013870176473368544,
+          "upper": 0.008901691200005564,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:mae": {
+          "name": "c21-adjusted-offensiveRebound-total:away:distribution:mae",
+          "estimate": 0.0007331101033381459,
+          "lower": -0.0018005582990247948,
+          "upper": 0.0029736747699928767,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:crps": {
+          "name": "c21-adjusted-offensiveRebound-total:away:distribution:crps",
+          "estimate": 0.0009031518124827449,
+          "lower": -0.0004662720838740686,
+          "upper": 0.0022683568221620095,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:intervalScore": {
+          "name": "c21-adjusted-offensiveRebound-total:away:distribution:intervalScore",
+          "estimate": 0.0008020795437877894,
+          "lower": -0.009125386395284738,
+          "upper": 0.010901956599538222,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:mae": {
+          "name": "c21-adjusted-offensiveRebound-total:margin:distribution:mae",
+          "estimate": -2.5636674355216267e-16,
+          "lower": -6.345546146738302e-16,
+          "upper": 1.741114813249275e-16,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:crps": {
+          "name": "c21-adjusted-offensiveRebound-total:margin:distribution:crps",
+          "estimate": -2.1211578112757057e-16,
+          "lower": -4.279536940186854e-16,
+          "upper": 4.965337276672437e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:intervalScore": {
+          "name": "c21-adjusted-offensiveRebound-total:margin:distribution:intervalScore",
+          "estimate": -3.841552189272086e-16,
+          "lower": -3.251183644008415e-15,
+          "upper": 2.4749390591821324e-15,
+          "interval": "95% bootstrap percentile"
+        }
+      }
+    },
+    {
+      "id": "c21-adjusted-freeThrow-total",
+      "head": "total",
+      "group": "freeThrow",
+      "features": [
+        "c21:meanOpponentAdjustedFtr20"
+      ],
+      "primaryMetric": "rawTotalMae",
+      "primaryDifference": {
+        "name": "c21-adjusted-freeThrow-total:rawTotalMae",
+        "estimate": 0.002229227430189418,
+        "lower": -0.002195822785996863,
+        "upper": 0.006493822865023594,
+        "interval": "95% bootstrap percentile"
+      },
+      "classification": "no-point-gain",
+      "rawMeanErrors": {
+        "total": {
+          "n": 4920,
+          "mae": 14.64159760594204,
+          "rmse": 18.467869603300013,
+          "bias": 0.04059374183513626,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 4920,
+          "mae": 10.801746519186628,
+          "rmse": 13.829066722965196,
+          "bias": -0.05377822230653323,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "rawMeanErrorsBySeason": {
+        "2022": {
+          "total": {
+            "n": 1230,
+            "mae": 14.547003718533174,
+            "rmse": 18.65944531808437,
+            "bias": -0.18856271497739358,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.253887691390291,
+            "rmse": 12.960535744108741,
+            "bias": -0.4882494483691991,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2023": {
+          "total": {
+            "n": 1230,
+            "mae": 14.470982076890833,
+            "rmse": 18.10079404804102,
+            "bias": 0.5630008858860935,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.942817634172535,
+            "rmse": 14.060498764339528,
+            "bias": -0.20098291455609224,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2024": {
+          "total": {
+            "n": 1230,
+            "mae": 14.588891580875835,
+            "rmse": 18.176910516607087,
+            "bias": 0.17404596986532261,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.842337267198184,
+            "rmse": 13.931027732001985,
+            "bias": 0.29924911545212307,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2025": {
+          "total": {
+            "n": 1230,
+            "mae": 14.959513047468398,
+            "rmse": 18.921815717870537,
+            "bias": -0.3861091734334789,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 11.16794348398558,
+            "rmse": 14.325700672803798,
+            "bias": 0.1748703582470346,
+            "errorConvention": "prediction minus observed target"
+          }
+        }
+      },
+      "distributionLosses": {
+        "pooledGameWeighted": {
+          "n": 4920,
+          "probability": {
+            "brier": 0.21122311512499076,
+            "logLoss": 0.610191559651337
+          },
+          "marginAbsoluteError": 10.801746519186626,
+          "sides": {
+            "home": {
+              "mae": 9.268206104862005,
+              "rmse": 11.596623520224687,
+              "bias": -0.011734809851211028,
+              "crps": 6.55067405221136,
+              "intervalScore": 42.83438493613894
+            },
+            "away": {
+              "mae": 9.106271038952391,
+              "rmse": 11.47170810827683,
+              "bias": 0.04204341245532375,
+              "crps": 6.455932190118835,
+              "intervalScore": 42.817789478346526
+            },
+            "margin": {
+              "mae": 10.801746519186626,
+              "rmse": 13.8290667229652,
+              "bias": -0.053778222306533355,
+              "crps": 7.730169472475464,
+              "intervalScore": 52.76036382906927
+            }
+          }
+        },
+        "perSeasonGameWeighted": {
+          "2022": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2282765569823631,
+              "logLoss": 0.6486541389774102
+            },
+            "marginAbsoluteError": 10.253887691390291,
+            "sides": {
+              "home": {
+                "mae": 9.143161391634441,
+                "rmse": 11.503482984176934,
+                "bias": -0.3088071374987532,
+                "crps": 6.462487580115999,
+                "intervalScore": 42.969699816249566
+              },
+              "away": {
+                "mae": 8.809552549371732,
+                "rmse": 11.218817918507229,
+                "bias": 0.17944231087045137,
+                "crps": 6.287164045935497,
+                "intervalScore": 42.150088144687174
+              },
+              "margin": {
+                "mae": 10.253887691390291,
+                "rmse": 12.960535744108741,
+                "bias": -0.48824944836919915,
+                "crps": 7.2783619381843385,
+                "intervalScore": 49.35100988924141
+              }
+            }
+          },
+          "2023": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2105361876761861,
+              "logLoss": 0.6091165454052083
+            },
+            "marginAbsoluteError": 10.942817634172535,
+            "sides": {
+              "home": {
+                "mae": 9.215363296671622,
+                "rmse": 11.478930463342826,
+                "bias": 0.09989969228855862,
+                "crps": 6.4919264169945015,
+                "intervalScore": 42.440104984207565
+              },
+              "away": {
+                "mae": 9.171708475349106,
+                "rmse": 11.429469779994577,
+                "bias": 0.3008826068446525,
+                "crps": 6.456761469147956,
+                "intervalScore": 42.46860223341876
+              },
+              "margin": {
+                "mae": 10.942817634172535,
+                "rmse": 14.060498764339528,
+                "bias": -0.20098291455609266,
+                "crps": 7.845052219487912,
+                "intervalScore": 54.077098546687836
+              }
+            }
+          },
+          "2024": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2055609835425572,
+              "logLoss": 0.5963088845158655
+            },
+            "marginAbsoluteError": 10.842337267198186,
+            "sides": {
+              "home": {
+                "mae": 9.053817358865443,
+                "rmse": 11.312183110975575,
+                "bias": 0.2557857048521917,
+                "crps": 6.409250945478244,
+                "intervalScore": 41.45989763018486
+              },
+              "away": {
+                "mae": 9.229859168520061,
+                "rmse": 11.586792788685374,
+                "bias": -0.043463410599932195,
+                "crps": 6.521261763789307,
+                "intervalScore": 43.32315725994388
+              },
+              "margin": {
+                "mae": 10.842337267198186,
+                "rmse": 13.931027732001986,
+                "bias": 0.2992491154521233,
+                "crps": 7.790098423480595,
+                "intervalScore": 53.2546191123727
+              }
+            }
+          },
+          "2025": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20051873229886047,
+              "logLoss": 0.5866866697068658
+            },
+            "marginAbsoluteError": 11.16794348398558,
+            "sides": {
+              "home": {
+                "mae": 9.660482372276588,
+                "rmse": 12.077468948151493,
+                "bias": -0.09381749904684042,
+                "crps": 6.839031266256673,
+                "intervalScore": 44.46783731391332
+              },
+              "away": {
+                "mae": 9.21396396256868,
+                "rmse": 11.646970662694137,
+                "bias": -0.2686878572938768,
+                "crps": 6.558541481602608,
+                "intervalScore": 43.329310275334855
+              },
+              "margin": {
+                "mae": 11.16794348398558,
+                "rmse": 14.325700672803794,
+                "bias": 0.17487035824703412,
+                "crps": 8.007165308749089,
+                "intervalScore": 54.35872776797488
+              }
+            }
+          }
+        }
+      },
+      "pairedDifferences": {
+        "brier": {
+          "name": "c21-adjusted-freeThrow-total:brier",
+          "estimate": -3.3267377391687336e-18,
+          "lower": -1.0310564370034027e-17,
+          "upper": 4.249013593419934e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-freeThrow-total:logLoss",
+          "estimate": -4.277574229786712e-18,
+          "lower": -2.2315592213305064e-17,
+          "upper": 1.5165242291055766e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "marginDistributionMae": {
+          "name": "c21-adjusted-freeThrow-total:marginDistributionMae",
+          "estimate": -2.9129815091232006e-16,
+          "lower": -6.170107065570985e-16,
+          "upper": 3.577207304459439e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalMae": {
+          "name": "c21-adjusted-freeThrow-total:rawTotalMae",
+          "estimate": 0.002229227430189418,
+          "lower": -0.002195822785996863,
+          "upper": 0.006493822865023594,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSquaredError": {
+          "name": "c21-adjusted-freeThrow-total:rawTotalSquaredError",
+          "estimate": 0.08605303197339291,
+          "lower": -0.06998010644303863,
+          "upper": 0.2403665629591176,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSignedError": {
+          "name": "c21-adjusted-freeThrow-total:rawTotalSignedError",
+          "estimate": 0.0035934792417624643,
+          "lower": -0.006563965080284438,
+          "upper": 0.012428614081900201,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginMae": {
+          "name": "c21-adjusted-freeThrow-total:rawMarginMae",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSquaredError": {
+          "name": "c21-adjusted-freeThrow-total:rawMarginSquaredError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSignedError": {
+          "name": "c21-adjusted-freeThrow-total:rawMarginSignedError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:mae": {
+          "name": "c21-adjusted-freeThrow-total:home:distribution:mae",
+          "estimate": 0.0001665827039214802,
+          "lower": -0.0019561901469072112,
+          "upper": 0.0022749570113420963,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:crps": {
+          "name": "c21-adjusted-freeThrow-total:home:distribution:crps",
+          "estimate": 0.00002618436209514701,
+          "lower": -0.0012563619738166704,
+          "upper": 0.001218947855333545,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:intervalScore": {
+          "name": "c21-adjusted-freeThrow-total:home:distribution:intervalScore",
+          "estimate": 0.0013901480426489075,
+          "lower": -0.008603844713918288,
+          "upper": 0.010846517163034908,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:mae": {
+          "name": "c21-adjusted-freeThrow-total:away:distribution:mae",
+          "estimate": 0.002032869817403517,
+          "lower": 0.00006126362541337217,
+          "upper": 0.004024489656755484,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:crps": {
+          "name": "c21-adjusted-freeThrow-total:away:distribution:crps",
+          "estimate": 0.0010509096388618936,
+          "lower": -0.00007365382479586704,
+          "upper": 0.0022326126494181626,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:intervalScore": {
+          "name": "c21-adjusted-freeThrow-total:away:distribution:intervalScore",
+          "estimate": 0.0034853497905276156,
+          "lower": -0.005041471152526738,
+          "upper": 0.012244942333433163,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:mae": {
+          "name": "c21-adjusted-freeThrow-total:margin:distribution:mae",
+          "estimate": -2.9129815091232006e-16,
+          "lower": -6.170107065570985e-16,
+          "upper": 3.577207304459439e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:crps": {
+          "name": "c21-adjusted-freeThrow-total:margin:distribution:crps",
+          "estimate": -1.9406337422309648e-16,
+          "lower": -3.963453119919887e-16,
+          "upper": 1.641204871549447e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:intervalScore": {
+          "name": "c21-adjusted-freeThrow-total:margin:distribution:intervalScore",
+          "estimate": 7.509801272261221e-17,
+          "lower": -2.939394441840488e-15,
+          "upper": 3.0578440508355414e-15,
+          "interval": "95% bootstrap percentile"
+        }
+      }
+    },
+    {
+      "id": "c21-adjusted-effectiveFieldGoal-margin",
+      "head": "margin",
+      "group": "effectiveFieldGoal",
+      "features": [
+        "c21:opponentAdjustedEfgAdvantage20"
+      ],
+      "primaryMetric": "rawMarginMae",
+      "primaryDifference": {
+        "name": "c21-adjusted-effectiveFieldGoal-margin:rawMarginMae",
+        "estimate": -0.0004380632732192428,
+        "lower": -0.003584957627574509,
+        "upper": 0.0029108940621084957,
+        "interval": "95% bootstrap percentile"
+      },
+      "classification": "provisional-point-gain",
+      "rawMeanErrors": {
+        "total": {
+          "n": 4920,
+          "mae": 14.639368378511803,
+          "rmse": 18.465539652350245,
+          "bias": 0.037000262593373794,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 4920,
+          "mae": 10.801308455913452,
+          "rmse": 13.82972816483737,
+          "bias": -0.05238361755238544,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "rawMeanErrorsBySeason": {
+        "2022": {
+          "total": {
+            "n": 1230,
+            "mae": 14.545264312796593,
+            "rmse": 18.658299385102733,
+            "bias": -0.19749934223277,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.25476644423147,
+            "rmse": 12.961947260774961,
+            "bias": -0.4876464111548228,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2023": {
+          "total": {
+            "n": 1230,
+            "mae": 14.466729275176911,
+            "rmse": 18.09647615055979,
+            "bias": 0.5649062527202564,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.938974082388677,
+            "rmse": 14.057398108035326,
+            "bias": -0.20145886759710815,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2024": {
+          "total": {
+            "n": 1230,
+            "mae": 14.585706725439042,
+            "rmse": 18.17426805869222,
+            "bias": 0.16863777761278956,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.84344069396486,
+            "rmse": 13.93334347148897,
+            "bias": 0.3063867286062508,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2025": {
+          "total": {
+            "n": 1230,
+            "mae": 14.959773200634894,
+            "rmse": 18.920518336688737,
+            "bias": -0.3880436377267831,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 11.168052603068697,
+            "rmse": 14.32776834680799,
+            "bias": 0.17318407993613893,
+            "errorConvention": "prediction minus observed target"
+          }
+        }
+      },
+      "distributionLosses": {
+        "pooledGameWeighted": {
+          "n": 4920,
+          "probability": {
+            "brier": 0.21122554020782608,
+            "logLoss": 0.6101963694443003
+          },
+          "marginAbsoluteError": 10.801308455913452,
+          "sides": {
+            "home": {
+              "mae": 9.268175425240875,
+              "rmse": 11.596347337537658,
+              "bias": -0.012573215729339457,
+              "crps": 6.550771955106483,
+              "intervalScore": 42.82961849071854
+            },
+            "away": {
+              "mae": 9.104413134350544,
+              "rmse": 11.470530764739465,
+              "bias": 0.039810401823043344,
+              "crps": 6.454956475412563,
+              "intervalScore": 42.8182522793906
+            },
+            "margin": {
+              "mae": 10.801308455913452,
+              "rmse": 13.829728164837366,
+              "bias": -0.05238361755238563,
+              "crps": 7.730381706622681,
+              "intervalScore": 52.76833550083137
+            }
+          }
+        },
+        "perSeasonGameWeighted": {
+          "2022": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.22830825534536534,
+              "logLoss": 0.6487319930339728
+            },
+            "marginAbsoluteError": 10.254766444231471,
+            "sides": {
+              "home": {
+                "mae": 9.144500843277068,
+                "rmse": 11.506644605635964,
+                "bias": -0.31251225910566294,
+                "crps": 6.464367515198955,
+                "intervalScore": 42.980141840458046
+              },
+              "away": {
+                "mae": 8.80419415377226,
+                "rmse": 11.215507669517187,
+                "bias": 0.17513415204915742,
+                "crps": 6.284890546679164,
+                "intervalScore": 42.14634102939017
+              },
+              "margin": {
+                "mae": 10.254766444231471,
+                "rmse": 12.961947260774961,
+                "bias": -0.48764641115482377,
+                "crps": 7.279159442250364,
+                "intervalScore": 49.35632406126951
+              }
+            }
+          },
+          "2023": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.21048385356126564,
+              "logLoss": 0.6089696311365654
+            },
+            "marginAbsoluteError": 10.938974082388677,
+            "sides": {
+              "home": {
+                "mae": 9.211646664425771,
+                "rmse": 11.475773084959748,
+                "bias": 0.10087283654175282,
+                "crps": 6.490073728473329,
+                "intervalScore": 42.43151183095979
+              },
+              "away": {
+                "mae": 9.1692516642355,
+                "rmse": 11.427373299468623,
+                "bias": 0.3023317041388562,
+                "crps": 6.4554033194044775,
+                "intervalScore": 42.46475815168466
+              },
+              "margin": {
+                "mae": 10.938974082388677,
+                "rmse": 14.057398108035326,
+                "bias": -0.20145886759710838,
+                "crps": 7.84350945452868,
+                "intervalScore": 54.06494790377358
+              }
+            }
+          },
+          "2024": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20556458483527446,
+              "logLoss": 0.5963564728860983
+            },
+            "marginAbsoluteError": 10.843440693964862,
+            "sides": {
+              "home": {
+                "mae": 9.054885265506636,
+                "rmse": 11.311796512617702,
+                "bias": 0.2570611379570551,
+                "crps": 6.40949072807626,
+                "intervalScore": 41.44591130929885
+              },
+              "away": {
+                "mae": 9.229304572647772,
+                "rmse": 11.58643073453973,
+                "bias": -0.049325590649186055,
+                "crps": 6.520619176287527,
+                "intervalScore": 43.328438639113706
+              },
+              "margin": {
+                "mae": 10.843440693964862,
+                "rmse": 13.93334347148897,
+                "bias": 0.30638672860625055,
+                "crps": 7.7907938627312925,
+                "intervalScore": 53.286728473438394
+              }
+            }
+          },
+          "2025": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2005454670894008,
+              "logLoss": 0.5867273807205696
+            },
+            "marginAbsoluteError": 11.168052603068698,
+            "sides": {
+              "home": {
+                "mae": 9.661668927753944,
+                "rmse": 12.076759001093809,
+                "bias": -0.09571457831050205,
+                "crps": 6.839155848677341,
+                "intervalScore": 44.46090898215822
+              },
+              "away": {
+                "mae": 9.214902146746576,
+                "rmse": 11.647937762653344,
+                "bias": -0.26889865824665465,
+                "crps": 6.558912859279161,
+                "intervalScore": 43.333471297375
+              },
+              "margin": {
+                "mae": 11.168052603068698,
+                "rmse": 14.327768346807991,
+                "bias": 0.1731840799361386,
+                "crps": 8.008064066980438,
+                "intervalScore": 54.365341564843156
+              }
+            }
+          }
+        }
+      },
+      "pairedDifferences": {
+        "brier": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:brier",
+          "estimate": 0.0000024250828350381787,
+          "lower": -0.00008077850184349022,
+          "upper": 0.00007902689127405937,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:logLoss",
+          "estimate": 0.000004809792963360875,
+          "lower": -0.000173810797251549,
+          "upper": 0.00017757559444195418,
+          "interval": "95% bootstrap percentile"
+        },
+        "marginDistributionMae": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:marginDistributionMae",
+          "estimate": -0.00043806327321963516,
+          "lower": -0.0035849576275752137,
+          "upper": 0.002910894062108191,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalMae": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:rawTotalMae",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSquaredError": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:rawTotalSquaredError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSignedError": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:rawTotalSignedError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginMae": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:rawMarginMae",
+          "estimate": -0.0004380632732192428,
+          "lower": -0.003584957627574509,
+          "upper": 0.0029108940621084957,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSquaredError": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:rawMarginSquaredError",
+          "estimate": 0.018294685072584423,
+          "lower": -0.06698205191538133,
+          "upper": 0.09610332895056772,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSignedError": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:rawMarginSignedError",
+          "estimate": 0.001394604754148123,
+          "lower": -0.001199689684006955,
+          "upper": 0.004149365823119847,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:home:distribution:mae",
+          "estimate": 0.0001359030827445987,
+          "lower": -0.0012370505925333947,
+          "upper": 0.0014134159097713278,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:crps": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:home:distribution:crps",
+          "estimate": 0.0001240872572060182,
+          "lower": -0.0007126347041178966,
+          "upper": 0.0008887705776621546,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:intervalScore": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:home:distribution:intervalScore",
+          "estimate": -0.0033762973775117496,
+          "lower": -0.010482222132910361,
+          "upper": 0.0029913377747705365,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:away:distribution:mae",
+          "estimate": 0.00017496521553230656,
+          "lower": -0.0012528822588294632,
+          "upper": 0.0016016611736299135,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:crps": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:away:distribution:crps",
+          "estimate": 0.00007519493260904918,
+          "lower": -0.0007827405449846033,
+          "upper": 0.0009170958411255876,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:intervalScore": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:away:distribution:intervalScore",
+          "estimate": 0.003948150835139546,
+          "lower": -0.003129423984405298,
+          "upper": 0.010952792148282538,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:margin:distribution:mae",
+          "estimate": -0.00043806327321963516,
+          "lower": -0.0035849576275752137,
+          "upper": 0.002910894062108191,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:crps": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:margin:distribution:crps",
+          "estimate": 0.00021223414720876563,
+          "lower": -0.0015318975222504622,
+          "upper": 0.0019276604144520613,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:intervalScore": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:margin:distribution:intervalScore",
+          "estimate": 0.007971671761973642,
+          "lower": -0.005901679443752631,
+          "upper": 0.021536634533075364,
+          "interval": "95% bootstrap percentile"
+        }
+      }
+    },
+    {
+      "id": "c21-adjusted-turnover-margin",
+      "head": "margin",
+      "group": "turnover",
+      "features": [
+        "c21:opponentAdjustedTovAdvantage20"
+      ],
+      "primaryMetric": "rawMarginMae",
+      "primaryDifference": {
+        "name": "c21-adjusted-turnover-margin:rawMarginMae",
+        "estimate": 0.003798763165196723,
+        "lower": -0.0017349941128088533,
+        "upper": 0.009765326673272724,
+        "interval": "95% bootstrap percentile"
+      },
+      "classification": "no-point-gain",
+      "rawMeanErrors": {
+        "total": {
+          "n": 4920,
+          "mae": 14.639368378511803,
+          "rmse": 18.465539652350245,
+          "bias": 0.037000262593373794,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 4920,
+          "mae": 10.805545282351826,
+          "rmse": 13.832545211059564,
+          "bias": -0.05639048846498824,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "rawMeanErrorsBySeason": {
+        "2022": {
+          "total": {
+            "n": 1230,
+            "mae": 14.545264312796593,
+            "rmse": 18.658299385102733,
+            "bias": -0.19749934223277,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.25959860145454,
+            "rmse": 12.964406094940632,
+            "bias": -0.5005528032679917,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2023": {
+          "total": {
+            "n": 1230,
+            "mae": 14.466729275176911,
+            "rmse": 18.09647615055979,
+            "bias": 0.5649062527202564,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.94759048774771,
+            "rmse": 14.061956252229436,
+            "bias": -0.1996193201348431,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2024": {
+          "total": {
+            "n": 1230,
+            "mae": 14.585706725439042,
+            "rmse": 18.17426805869222,
+            "bias": 0.16863777761278956,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.843115971064512,
+            "rmse": 13.935064785249663,
+            "bias": 0.299933909834281,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2025": {
+          "total": {
+            "n": 1230,
+            "mae": 14.959773200634894,
+            "rmse": 18.920518336688737,
+            "bias": -0.3880436377267831,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 11.171876069140625,
+            "rmse": 14.330274193495914,
+            "bias": 0.1746762597086011,
+            "errorConvention": "prediction minus observed target"
+          }
+        }
+      },
+      "distributionLosses": {
+        "pooledGameWeighted": {
+          "n": 4920,
+          "probability": {
+            "brier": 0.21126086317228354,
+            "logLoss": 0.6102626381883713
+          },
+          "marginAbsoluteError": 10.805545282351828,
+          "sides": {
+            "home": {
+              "mae": 9.267486967257074,
+              "rmse": 11.595432637590397,
+              "bias": -0.014576651185640022,
+              "crps": 6.550187851224519,
+              "intervalScore": 42.83047319981392
+            },
+            "away": {
+              "mae": 9.105067148971022,
+              "rmse": 11.473153554978314,
+              "bias": 0.04181383727934954,
+              "crps": 6.456272986551758,
+              "intervalScore": 42.83184048397769
+            },
+            "margin": {
+              "mae": 10.805545282351828,
+              "rmse": 13.83254521105957,
+              "bias": -0.05639048846498859,
+              "crps": 7.732156477098551,
+              "intervalScore": 52.77200779599731
+            }
+          }
+        },
+        "perSeasonGameWeighted": {
+          "2022": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.22829338252040343,
+              "logLoss": 0.6487114655229138
+            },
+            "marginAbsoluteError": 10.259598601454538,
+            "sides": {
+              "home": {
+                "mae": 9.144269543661618,
+                "rmse": 11.505044389619208,
+                "bias": -0.31896545516224095,
+                "crps": 6.463485362470079,
+                "intervalScore": 42.983798093568915
+              },
+              "away": {
+                "mae": 8.807690559239148,
+                "rmse": 11.21856988479427,
+                "bias": 0.18158734810575278,
+                "crps": 6.286248590391888,
+                "intervalScore": 42.157074845409774
+              },
+              "margin": {
+                "mae": 10.259598601454538,
+                "rmse": 12.964406094940632,
+                "bias": -0.500552803267993,
+                "crps": 7.280885767830014,
+                "intervalScore": 49.34812778723409
+              }
+            }
+          },
+          "2023": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2106360424916612,
+              "logLoss": 0.6092823634098732
+            },
+            "marginAbsoluteError": 10.94759048774771,
+            "sides": {
+              "home": {
+                "mae": 9.211164627070136,
+                "rmse": 11.475934904299024,
+                "bias": 0.10179261027288772,
+                "crps": 6.490626171759515,
+                "intervalScore": 42.42469455215853
+              },
+              "away": {
+                "mae": 9.169851829560743,
+                "rmse": 11.43001454640788,
+                "bias": 0.3014119304077338,
+                "crps": 6.45667898655411,
+                "intervalScore": 42.48348732469925
+              },
+              "margin": {
+                "mae": 10.94759048774771,
+                "rmse": 14.061956252229436,
+                "bias": -0.1996193201348435,
+                "crps": 7.846076639125448,
+                "intervalScore": 54.08742100847061
+              }
+            }
+          },
+          "2024": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20550652056186652,
+              "logLoss": 0.5961849271198466
+            },
+            "marginAbsoluteError": 10.84311597106451,
+            "sides": {
+              "home": {
+                "mae": 9.052741196129999,
+                "rmse": 11.308813379301245,
+                "bias": 0.25383472857108047,
+                "crps": 6.407291906723072,
+                "intervalScore": 41.449383400520176
+              },
+              "away": {
+                "mae": 9.228320907759581,
+                "rmse": 11.590377155149229,
+                "bias": -0.04609918126319806,
+                "crps": 6.52270676943542,
+                "intervalScore": 43.34729456516191
+              },
+              "margin": {
+                "mae": 10.84311597106451,
+                "rmse": 13.935064785249665,
+                "bias": 0.29993390983428153,
+                "crps": 7.791962114432054,
+                "intervalScore": 53.2710280715922
+              }
+            }
+          },
+          "2025": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20060750711520436,
+              "logLoss": 0.5868717967008446
+            },
+            "marginAbsoluteError": 11.171876069140625,
+            "sides": {
+              "home": {
+                "mae": 9.66177250216647,
+                "rmse": 12.07741047695676,
+                "bias": -0.09496848842428689,
+                "crps": 6.839347963945453,
+                "intervalScore": 44.46401675300707
+              },
+              "away": {
+                "mae": 9.214405299324685,
+                "rmse": 11.64880356923973,
+                "bias": -0.26964474813288913,
+                "crps": 6.559457599825637,
+                "intervalScore": 43.33950520063998
+              },
+              "margin": {
+                "mae": 11.171876069140625,
+                "rmse": 14.330274193495919,
+                "bias": 0.1746762597086004,
+                "crps": 8.009701387006803,
+                "intervalScore": 54.38145431669268
+              }
+            }
+          }
+        }
+      },
+      "pairedDifferences": {
+        "brier": {
+          "name": "c21-adjusted-turnover-margin:brier",
+          "estimate": 0.000037748047292382946,
+          "lower": -0.00008314958262017957,
+          "upper": 0.00017505855371590236,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-turnover-margin:logLoss",
+          "estimate": 0.00007107853703244483,
+          "lower": -0.0002076458336115008,
+          "upper": 0.0003743130031709454,
+          "interval": "95% bootstrap percentile"
+        },
+        "marginDistributionMae": {
+          "name": "c21-adjusted-turnover-margin:marginDistributionMae",
+          "estimate": 0.003798763165196628,
+          "lower": -0.0017349941128085703,
+          "upper": 0.00976532667327239,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalMae": {
+          "name": "c21-adjusted-turnover-margin:rawTotalMae",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSquaredError": {
+          "name": "c21-adjusted-turnover-margin:rawTotalSquaredError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSignedError": {
+          "name": "c21-adjusted-turnover-margin:rawTotalSignedError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginMae": {
+          "name": "c21-adjusted-turnover-margin:rawMarginMae",
+          "estimate": 0.003798763165196723,
+          "lower": -0.0017349941128088533,
+          "upper": 0.009765326673272724,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSquaredError": {
+          "name": "c21-adjusted-turnover-margin:rawMarginSquaredError",
+          "estimate": 0.09622058778393791,
+          "lower": -0.05136607459667868,
+          "upper": 0.24201714038849526,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSignedError": {
+          "name": "c21-adjusted-turnover-margin:rawMarginSignedError",
+          "estimate": -0.0026122661584547452,
+          "lower": -0.009336871152519929,
+          "upper": 0.003649305011967136,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:mae": {
+          "name": "c21-adjusted-turnover-margin:home:distribution:mae",
+          "estimate": -0.0005525549010520903,
+          "lower": -0.003614666997942226,
+          "upper": 0.0024349792478547618,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:crps": {
+          "name": "c21-adjusted-turnover-margin:home:distribution:crps",
+          "estimate": -0.0004600166247305541,
+          "lower": -0.0021040089278360507,
+          "upper": 0.001217908896230341,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:intervalScore": {
+          "name": "c21-adjusted-turnover-margin:home:distribution:intervalScore",
+          "estimate": -0.0025215882825098063,
+          "lower": -0.016484621783861994,
+          "upper": 0.009982640466128406,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:mae": {
+          "name": "c21-adjusted-turnover-margin:away:distribution:mae",
+          "estimate": 0.000828979836047161,
+          "lower": -0.0016077373673876114,
+          "upper": 0.0033510216164450734,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:crps": {
+          "name": "c21-adjusted-turnover-margin:away:distribution:crps",
+          "estimate": 0.0013917060717884848,
+          "lower": -0.00002305746025482175,
+          "upper": 0.0028497619625509544,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:intervalScore": {
+          "name": "c21-adjusted-turnover-margin:away:distribution:intervalScore",
+          "estimate": 0.017536355422023385,
+          "lower": 0.004593087471786257,
+          "upper": 0.02998415213811145,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:mae": {
+          "name": "c21-adjusted-turnover-margin:margin:distribution:mae",
+          "estimate": 0.003798763165196628,
+          "lower": -0.0017349941128085703,
+          "upper": 0.00976532667327239,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:crps": {
+          "name": "c21-adjusted-turnover-margin:margin:distribution:crps",
+          "estimate": 0.001987004623096374,
+          "lower": -0.0009853217505279397,
+          "upper": 0.005051559811429104,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:intervalScore": {
+          "name": "c21-adjusted-turnover-margin:margin:distribution:intervalScore",
+          "estimate": 0.011643966928222777,
+          "lower": -0.01360789019381825,
+          "upper": 0.03722188311474382,
+          "interval": "95% bootstrap percentile"
+        }
+      }
+    },
+    {
+      "id": "c21-adjusted-offensiveRebound-margin",
+      "head": "margin",
+      "group": "offensiveRebound",
+      "features": [
+        "c21:opponentAdjustedOrbAdvantage20"
+      ],
+      "primaryMetric": "rawMarginMae",
+      "primaryDifference": {
+        "name": "c21-adjusted-offensiveRebound-margin:rawMarginMae",
+        "estimate": 0.005989608741272856,
+        "lower": -0.002500993075746314,
+        "upper": 0.01547153999746227,
+        "interval": "95% bootstrap percentile"
+      },
+      "classification": "no-point-gain",
+      "rawMeanErrors": {
+        "total": {
+          "n": 4920,
+          "mae": 14.639368378511803,
+          "rmse": 18.465539652350245,
+          "bias": 0.037000262593373794,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 4920,
+          "mae": 10.807736127927933,
+          "rmse": 13.83484948169415,
+          "bias": -0.053137586234018604,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "rawMeanErrorsBySeason": {
+        "2022": {
+          "total": {
+            "n": 1230,
+            "mae": 14.545264312796593,
+            "rmse": 18.658299385102733,
+            "bias": -0.19749934223277,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.269745686132088,
+            "rmse": 12.98125129882257,
+            "bias": -0.49547514988350577,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2023": {
+          "total": {
+            "n": 1230,
+            "mae": 14.466729275176911,
+            "rmse": 18.09647615055979,
+            "bias": 0.5649062527202564,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.947757288117254,
+            "rmse": 14.066502505291037,
+            "bias": -0.19665296845584038,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2024": {
+          "total": {
+            "n": 1230,
+            "mae": 14.585706725439042,
+            "rmse": 18.17426805869222,
+            "bias": 0.16863777761278956,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.8484328109305,
+            "rmse": 13.934485488386116,
+            "bias": 0.30005282439219066,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2025": {
+          "total": {
+            "n": 1230,
+            "mae": 14.959773200634894,
+            "rmse": 18.920518336688737,
+            "bias": -0.3880436377267831,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 11.16500872653189,
+            "rmse": 14.320020142581715,
+            "bias": 0.1795249490110814,
+            "errorConvention": "prediction minus observed target"
+          }
+        }
+      },
+      "distributionLosses": {
+        "pooledGameWeighted": {
+          "n": 4920,
+          "probability": {
+            "brier": 0.21141107363956388,
+            "logLoss": 0.6105958199023932
+          },
+          "marginAbsoluteError": 10.807736127927935,
+          "sides": {
+            "home": {
+              "mae": 9.273033773996433,
+              "rmse": 11.600248746929056,
+              "bias": -0.0129502000701536,
+              "crps": 6.553132744291704,
+              "intervalScore": 42.833656127115944
+            },
+            "away": {
+              "mae": 9.102963293499833,
+              "rmse": 11.46967375913287,
+              "bias": 0.04018738616386256,
+              "crps": 6.45438569937694,
+              "intervalScore": 42.82196573567155
+            },
+            "margin": {
+              "mae": 10.807736127927935,
+              "rmse": 13.83484948169415,
+              "bias": -0.0531375862340193,
+              "crps": 7.73392571740913,
+              "intervalScore": 52.77286815292682
+            }
+          }
+        },
+        "perSeasonGameWeighted": {
+          "2022": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2288388734653164,
+              "logLoss": 0.64985229575293
+            },
+            "marginAbsoluteError": 10.269745686132088,
+            "sides": {
+              "home": {
+                "mae": 9.161810888659915,
+                "rmse": 11.517661042964894,
+                "bias": -0.3164266284700025,
+                "crps": 6.472256374761693,
+                "intervalScore": 42.96028164820186
+              },
+              "away": {
+                "mae": 8.800073059592943,
+                "rmse": 11.215363155547605,
+                "bias": 0.17904852141350122,
+                "crps": 6.284035475915522,
+                "intervalScore": 42.17739227465616
+              },
+              "margin": {
+                "mae": 10.269745686132088,
+                "rmse": 12.98125129882257,
+                "bias": -0.4954751498835056,
+                "crps": 7.291127836456848,
+                "intervalScore": 49.397975782488935
+              }
+            }
+          },
+          "2023": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2106747972738032,
+              "logLoss": 0.6094170951837694
+            },
+            "marginAbsoluteError": 10.947757288117256,
+            "sides": {
+              "home": {
+                "mae": 9.214262012603516,
+                "rmse": 11.479620204087611,
+                "bias": 0.10327578611239609,
+                "crps": 6.491652759097052,
+                "intervalScore": 42.456591762194286
+              },
+              "away": {
+                "mae": 9.173713066824192,
+                "rmse": 11.429110812945211,
+                "bias": 0.2999287545682283,
+                "crps": 6.457019542559182,
+                "intervalScore": 42.45882889551036
+              },
+              "margin": {
+                "mae": 10.947757288117256,
+                "rmse": 14.066502505291037,
+                "bias": -0.1966529684558405,
+                "crps": 7.848237059565313,
+                "intervalScore": 54.091899652214515
+              }
+            }
+          },
+          "2024": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.205731880815945,
+              "logLoss": 0.5967208613291041
+            },
+            "marginAbsoluteError": 10.848432810930497,
+            "sides": {
+              "home": {
+                "mae": 9.054855320009398,
+                "rmse": 11.314359237356433,
+                "bias": 0.2538941858500326,
+                "crps": 6.410462011736485,
+                "intervalScore": 41.46611124137465
+              },
+              "away": {
+                "mae": 9.226754264285912,
+                "rmse": 11.584615026965015,
+                "bias": -0.04615863854215441,
+                "crps": 6.5196631758741885,
+                "intervalScore": 43.32089001165493
+              },
+              "margin": {
+                "mae": 10.848432810930497,
+                "rmse": 13.934485488386112,
+                "bias": 0.30005282439219166,
+                "crps": 7.792458046112287,
+                "intervalScore": 53.260143590614
+              }
+            }
+          },
+          "2025": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2003987430031911,
+              "logLoss": 0.5863930273437671
+            },
+            "marginAbsoluteError": 11.165008726531884,
+            "sides": {
+              "home": {
+                "mae": 9.661206874713027,
+                "rmse": 12.075187910746424,
+                "bias": -0.09254414377304093,
+                "crps": 6.838159831571535,
+                "intervalScore": 44.45163985669299
+              },
+              "away": {
+                "mae": 9.21131278329626,
+                "rmse": 11.644802040197439,
+                "bias": -0.27206909278412555,
+                "crps": 6.556824603158846,
+                "intervalScore": 43.3307517608648
+              },
+              "margin": {
+                "mae": 11.165008726531884,
+                "rmse": 14.320020142581717,
+                "bias": 0.17952494901108143,
+                "crps": 8.003879927502066,
+                "intervalScore": 54.34145358638975
+              }
+            }
+          }
+        }
+      },
+      "pairedDifferences": {
+        "brier": {
+          "name": "c21-adjusted-offensiveRebound-margin:brier",
+          "estimate": 0.00018795851457242347,
+          "lower": -0.00007252316973187064,
+          "upper": 0.00045884990477707856,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-offensiveRebound-margin:logLoss",
+          "estimate": 0.00040426025105504344,
+          "lower": -0.00015060097596389905,
+          "upper": 0.0009803727081090937,
+          "interval": "95% bootstrap percentile"
+        },
+        "marginDistributionMae": {
+          "name": "c21-adjusted-offensiveRebound-margin:marginDistributionMae",
+          "estimate": 0.005989608741272366,
+          "lower": -0.002500993075746684,
+          "upper": 0.015471539997461748,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalMae": {
+          "name": "c21-adjusted-offensiveRebound-margin:rawTotalMae",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSquaredError": {
+          "name": "c21-adjusted-offensiveRebound-margin:rawTotalSquaredError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSignedError": {
+          "name": "c21-adjusted-offensiveRebound-margin:rawTotalSignedError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginMae": {
+          "name": "c21-adjusted-offensiveRebound-margin:rawMarginMae",
+          "estimate": 0.005989608741272856,
+          "lower": -0.002500993075746314,
+          "upper": 0.01547153999746227,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSquaredError": {
+          "name": "c21-adjusted-offensiveRebound-margin:rawMarginSquaredError",
+          "estimate": 0.1599737529093421,
+          "lower": -0.07467450244836657,
+          "upper": 0.38405985618831745,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSignedError": {
+          "name": "c21-adjusted-offensiveRebound-margin:rawMarginSignedError",
+          "estimate": 0.0006406360725151524,
+          "lower": -0.008026929827535778,
+          "upper": 0.010346086244425555,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:mae": {
+          "name": "c21-adjusted-offensiveRebound-margin:home:distribution:mae",
+          "estimate": 0.004994251838346069,
+          "lower": 0.0013812195162730533,
+          "upper": 0.0090648643882294,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:crps": {
+          "name": "c21-adjusted-offensiveRebound-margin:home:distribution:crps",
+          "estimate": 0.0024848764424337715,
+          "lower": 0.0002857529464522364,
+          "upper": 0.004902400189007726,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:intervalScore": {
+          "name": "c21-adjusted-offensiveRebound-margin:home:distribution:intervalScore",
+          "estimate": 0.000661339019826924,
+          "lower": -0.01754754964528736,
+          "upper": 0.018876326575020568,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:mae": {
+          "name": "c21-adjusted-offensiveRebound-margin:away:distribution:mae",
+          "estimate": -0.0012748756351564073,
+          "lower": -0.0059031524210373075,
+          "upper": 0.0030480419504979746,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:crps": {
+          "name": "c21-adjusted-offensiveRebound-margin:away:distribution:crps",
+          "estimate": -0.0004955811030380754,
+          "lower": -0.0029382920538731697,
+          "upper": 0.0017909862873836345,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:intervalScore": {
+          "name": "c21-adjusted-offensiveRebound-margin:away:distribution:intervalScore",
+          "estimate": 0.0076616071159136675,
+          "lower": -0.008849005617003042,
+          "upper": 0.02628469924741671,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:mae": {
+          "name": "c21-adjusted-offensiveRebound-margin:margin:distribution:mae",
+          "estimate": 0.005989608741272366,
+          "lower": -0.002500993075746684,
+          "upper": 0.015471539997461748,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:crps": {
+          "name": "c21-adjusted-offensiveRebound-margin:margin:distribution:crps",
+          "estimate": 0.003756244933641476,
+          "lower": -0.0007603954252371587,
+          "upper": 0.008577133317607602,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:intervalScore": {
+          "name": "c21-adjusted-offensiveRebound-margin:margin:distribution:intervalScore",
+          "estimate": 0.01250432385765883,
+          "lower": -0.024274270398467353,
+          "upper": 0.04914824934068236,
+          "interval": "95% bootstrap percentile"
+        }
+      }
+    },
+    {
+      "id": "c21-adjusted-freeThrow-margin",
+      "head": "margin",
+      "group": "freeThrow",
+      "features": [
+        "c21:opponentAdjustedFtrAdvantage20"
+      ],
+      "primaryMetric": "rawMarginMae",
+      "primaryDifference": {
+        "name": "c21-adjusted-freeThrow-margin:rawMarginMae",
+        "estimate": 0.00311460931807984,
+        "lower": -0.0010938475199423954,
+        "upper": 0.007327392835936221,
+        "interval": "95% bootstrap percentile"
+      },
+      "classification": "no-point-gain",
+      "rawMeanErrors": {
+        "total": {
+          "n": 4920,
+          "mae": 14.639368378511803,
+          "rmse": 18.465539652350245,
+          "bias": 0.037000262593373794,
+          "errorConvention": "prediction minus observed target"
+        },
+        "margin": {
+          "n": 4920,
+          "mae": 10.80486112850474,
+          "rmse": 13.832288909567525,
+          "bias": -0.05287192790722696,
+          "errorConvention": "prediction minus observed target"
+        }
+      },
+      "rawMeanErrorsBySeason": {
+        "2022": {
+          "total": {
+            "n": 1230,
+            "mae": 14.545264312796593,
+            "rmse": 18.658299385102733,
+            "bias": -0.19749934223277,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.255882904807338,
+            "rmse": 12.965210403991607,
+            "bias": -0.48911240428529246,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2023": {
+          "total": {
+            "n": 1230,
+            "mae": 14.466729275176911,
+            "rmse": 18.09647615055979,
+            "bias": 0.5649062527202564,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.948726102926729,
+            "rmse": 14.063281327853193,
+            "bias": -0.19535227404427224,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2024": {
+          "total": {
+            "n": 1230,
+            "mae": 14.585706725439042,
+            "rmse": 18.17426805869222,
+            "bias": 0.16863777761278956,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 10.84385733001722,
+            "rmse": 13.9338003384538,
+            "bias": 0.2970359599633048,
+            "errorConvention": "prediction minus observed target"
+          }
+        },
+        "2025": {
+          "total": {
+            "n": 1230,
+            "mae": 14.959773200634894,
+            "rmse": 18.920518336688737,
+            "bias": -0.3880436377267831,
+            "errorConvention": "prediction minus observed target"
+          },
+          "margin": {
+            "n": 1230,
+            "mae": 11.170978176267639,
+            "rmse": 14.32848601607889,
+            "bias": 0.17594100673735294,
+            "errorConvention": "prediction minus observed target"
+          }
+        }
+      },
+      "distributionLosses": {
+        "pooledGameWeighted": {
+          "n": 4920,
+          "probability": {
+            "brier": 0.21128159803354252,
+            "logLoss": 0.6103179513984051
+          },
+          "marginAbsoluteError": 10.804861128504736,
+          "sides": {
+            "home": {
+              "mae": 9.268946974304676,
+              "rmse": 11.597686599137912,
+              "bias": -0.01281737090676257,
+              "crps": 6.551422701666949,
+              "intervalScore": 42.83780591879247
+            },
+            "away": {
+              "mae": 9.10467439223053,
+              "rmse": 11.470720588875551,
+              "bias": 0.04005455700046631,
+              "crps": 6.4551296867910635,
+              "intervalScore": 42.81842531201013
+            },
+            "margin": {
+              "mae": 10.804861128504736,
+              "rmse": 13.832288909567524,
+              "bias": -0.052871927907226696,
+              "crps": 7.732246726865615,
+              "intervalScore": 52.76676891946997
+            }
+          }
+        },
+        "perSeasonGameWeighted": {
+          "2022": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.22832977639458826,
+              "logLoss": 0.6487751679682362
+            },
+            "marginAbsoluteError": 10.255882904807338,
+            "sides": {
+              "home": {
+                "mae": 9.146195038959142,
+                "rmse": 11.507002467823842,
+                "bias": -0.3132452556709038,
+                "crps": 6.464637236934234,
+                "intervalScore": 42.9840387741163
+              },
+              "away": {
+                "mae": 8.805669873725112,
+                "rmse": 11.21702628084809,
+                "bias": 0.1758671486143878,
+                "crps": 6.285830853887787,
+                "intervalScore": 42.150092694270995
+              },
+              "margin": {
+                "mae": 10.255882904807338,
+                "rmse": 12.965210403991605,
+                "bias": -0.48911240428529246,
+                "crps": 7.280667425300354,
+                "intervalScore": 49.37007391300096
+              }
+            }
+          },
+          "2023": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.21062300440761217,
+              "logLoss": 0.6093146334183329
+            },
+            "marginAbsoluteError": 10.948726102926729,
+            "sides": {
+              "home": {
+                "mae": 9.213741406112394,
+                "rmse": 11.4796684418132,
+                "bias": 0.10392613331817452,
+                "crps": 6.49232647724642,
+                "intervalScore": 42.445571643066856
+              },
+              "away": {
+                "mae": 9.170309860670649,
+                "rmse": 11.427080158912304,
+                "bias": 0.29927840736244216,
+                "crps": 6.455217908504614,
+                "intervalScore": 42.466191562009826
+              },
+              "margin": {
+                "mae": 10.948726102926729,
+                "rmse": 14.063281327853193,
+                "bias": -0.19535227404427233,
+                "crps": 7.848072387450594,
+                "intervalScore": 54.06378681811888
+              }
+            }
+          },
+          "2024": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.20562353130325828,
+              "logLoss": 0.5964472864624549
+            },
+            "marginAbsoluteError": 10.843857330017222,
+            "sides": {
+              "home": {
+                "mae": 9.052553784022122,
+                "rmse": 11.311646167314102,
+                "bias": 0.2523857536355847,
+                "crps": 6.408744764508406,
+                "intervalScore": 41.461970090305726
+              },
+              "away": {
+                "mae": 9.229173240440844,
+                "rmse": 11.586852216342065,
+                "bias": -0.0446502063277146,
+                "crps": 6.520990481180644,
+                "intervalScore": 43.32754590359317
+              },
+              "margin": {
+                "mae": 10.843857330017222,
+                "rmse": 13.933800338453798,
+                "bias": 0.2970359599633051,
+                "crps": 7.791574411436236,
+                "intervalScore": 53.267336221688666
+              }
+            }
+          },
+          "2025": {
+            "n": 1230,
+            "probability": {
+              "brier": 0.2005500800287108,
+              "logLoss": 0.5867347177445947
+            },
+            "marginAbsoluteError": 11.170978176267633,
+            "sides": {
+              "home": {
+                "mae": 9.663297668125141,
+                "rmse": 12.078000888570685,
+                "bias": -0.09433611490990454,
+                "crps": 6.839982327978779,
+                "intervalScore": 44.45964316768138
+              },
+              "away": {
+                "mae": 9.213544594085516,
+                "rmse": 11.647091460335488,
+                "bias": -0.2702771216472512,
+                "crps": 6.558479503591255,
+                "intervalScore": 43.32987108816698
+              },
+              "margin": {
+                "mae": 11.170978176267633,
+                "rmse": 14.32848601607889,
+                "bias": 0.17594100673735344,
+                "crps": 8.00867268327518,
+                "intervalScore": 54.3658787250713
+              }
+            }
+          }
+        }
+      },
+      "pairedDifferences": {
+        "brier": {
+          "name": "c21-adjusted-freeThrow-margin:brier",
+          "estimate": 0.00005848290855082694,
+          "lower": -0.0000368835945826136,
+          "upper": 0.0001517429269661438,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-freeThrow-margin:logLoss",
+          "estimate": 0.00012639174706736536,
+          "lower": -0.00010108478220216374,
+          "upper": 0.0003363665284367908,
+          "interval": "95% bootstrap percentile"
+        },
+        "marginDistributionMae": {
+          "name": "c21-adjusted-freeThrow-margin:marginDistributionMae",
+          "estimate": 0.003114609318079371,
+          "lower": -0.0010938475199427345,
+          "upper": 0.007327392835935811,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalMae": {
+          "name": "c21-adjusted-freeThrow-margin:rawTotalMae",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSquaredError": {
+          "name": "c21-adjusted-freeThrow-margin:rawTotalSquaredError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawTotalSignedError": {
+          "name": "c21-adjusted-freeThrow-margin:rawTotalSignedError",
+          "estimate": 0,
+          "lower": 0,
+          "upper": 0,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginMae": {
+          "name": "c21-adjusted-freeThrow-margin:rawMarginMae",
+          "estimate": 0.00311460931807984,
+          "lower": -0.0010938475199423954,
+          "upper": 0.007327392835936221,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSquaredError": {
+          "name": "c21-adjusted-freeThrow-margin:rawMarginSquaredError",
+          "estimate": 0.08913004952164306,
+          "lower": -0.03101579239657955,
+          "upper": 0.21034926920119082,
+          "interval": "95% bootstrap percentile"
+        },
+        "rawMarginSignedError": {
+          "name": "c21-adjusted-freeThrow-margin:rawMarginSignedError",
+          "estimate": 0.0009062943993069895,
+          "lower": -0.0028113415674752406,
+          "upper": 0.004945727935354015,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:mae": {
+          "name": "c21-adjusted-freeThrow-margin:home:distribution:mae",
+          "estimate": 0.0009074521465918609,
+          "lower": -0.000979160217643436,
+          "upper": 0.0028820828314725226,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:crps": {
+          "name": "c21-adjusted-freeThrow-margin:home:distribution:crps",
+          "estimate": 0.0007748338176983998,
+          "lower": -0.00036079154420168074,
+          "upper": 0.001962443370173911,
+          "interval": "95% bootstrap percentile"
+        },
+        "home:distribution:intervalScore": {
+          "name": "c21-adjusted-freeThrow-margin:home:distribution:intervalScore",
+          "estimate": 0.0048111306963487584,
+          "lower": -0.0037583738670067947,
+          "upper": 0.013609409114790678,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:mae": {
+          "name": "c21-adjusted-freeThrow-margin:away:distribution:mae",
+          "estimate": 0.0004362230955402765,
+          "lower": -0.0015895450018414824,
+          "upper": 0.002361993735699487,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:crps": {
+          "name": "c21-adjusted-freeThrow-margin:away:distribution:crps",
+          "estimate": 0.0002484063110953736,
+          "lower": -0.0010358684951835761,
+          "upper": 0.0014995079015323563,
+          "interval": "95% bootstrap percentile"
+        },
+        "away:distribution:intervalScore": {
+          "name": "c21-adjusted-freeThrow-margin:away:distribution:intervalScore",
+          "estimate": 0.004121183454514303,
+          "lower": -0.007521579418188443,
+          "upper": 0.01613942349583193,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:mae": {
+          "name": "c21-adjusted-freeThrow-margin:margin:distribution:mae",
+          "estimate": 0.003114609318079371,
+          "lower": -0.0010938475199427345,
+          "upper": 0.007327392835935811,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:crps": {
+          "name": "c21-adjusted-freeThrow-margin:margin:distribution:crps",
+          "estimate": 0.002077254390109817,
+          "lower": -0.0003969697311650336,
+          "upper": 0.004517430369251163,
+          "interval": "95% bootstrap percentile"
+        },
+        "margin:distribution:intervalScore": {
+          "name": "c21-adjusted-freeThrow-margin:margin:distribution:intervalScore",
+          "estimate": 0.006405090400705855,
+          "lower": -0.01452747898603501,
+          "upper": 0.0264886611051134,
+          "interval": "95% bootstrap percentile"
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "This is a paired opened-label screen, not independent validation or formal model inference.",
+    "Source relocation maps are explicit and preserve exact hashes and byte lengths for all original pins.",
+    "Date-block draws are same-season circular blocks over game-date clusters and are shared across all candidate contrasts.",
+    "Raw total/margin head mean errors are computed from the pinned mean forecast inputs; distribution scores come from the pinned uncertainty screen outputs.",
+    "The resampling API is SCREEN ONLY and does not implement shared-team resampling or maxT correction."
+  ]
+}

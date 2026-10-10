@@ -1,0 +1,573 @@
+{
+  "format": "swishiq-source-milestone-v1",
+  "milestone": "04-boxscore-feature-screens-20261010",
+  "createdAt": "2026-10-10T08:16:01.698Z",
+  "scope": "development source and documentation; no datasets or credentials",
+  "summary": {
+    "format": "swishiq-development-milestone-summary-v1",
+    "milestone": "04-boxscore-feature-screens-20261010",
+    "reference": "Candidate100",
+    "cohort": {
+      "seasonStartYears": [
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "games": 4920,
+      "perSeason": 1230
+    },
+    "status": "completed-development-feature-screen; no selected successor",
+    "screenCounts": {
+      "rawFamilies": 7,
+      "rawColumns": 10,
+      "opponentAdjustedFourFactors": 8
+    },
+    "decisions": {
+      "raw": "no addition retained",
+      "opponentAdjusted": "no addition retained; eFG point gains provisional with adverse guardrail evidence",
+      "combinations": "none justified by these screens"
+    },
+    "baseline": {
+      "total": {
+        "n": 4920,
+        "mae": 14.639368378511803,
+        "rmse": 18.465539652350245,
+        "bias": 0.037000262593373794,
+        "errorConvention": "prediction minus observed target"
+      },
+      "margin": {
+        "n": 4920,
+        "mae": 10.801746519186628,
+        "rmse": 13.829066722965196,
+        "bias": -0.05377822230653323,
+        "errorConvention": "prediction minus observed target"
+      }
+    },
+    "probabilityBaseline": {
+      "brier": 0.21122311512499076,
+      "logLoss": 0.610191559651337
+    },
+    "adjustedDeltas": [
+      {
+        "id": "c21-adjusted-effectiveFieldGoal-total",
+        "head": "total",
+        "mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:rawTotalMae",
+          "estimate": -0.0005114992802522072,
+          "lower": -0.0019296265579807344,
+          "upper": 0.0007753918352517764,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:brier",
+          "estimate": 4.450738064571084e-18,
+          "lower": -2.3881918131408616e-18,
+          "upper": 1.204837315694662e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:logLoss",
+          "estimate": 1.4760663332986394e-17,
+          "lower": -2.978583219429217e-18,
+          "upper": 3.375980821459379e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.0007229414529348333
+      },
+      {
+        "id": "c21-adjusted-turnover-total",
+        "head": "total",
+        "mae": {
+          "name": "c21-adjusted-turnover-total:rawTotalMae",
+          "estimate": 0.0021423730638098974,
+          "lower": -0.0026635170189966712,
+          "upper": 0.007167940484284419,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-turnover-total:brier",
+          "estimate": -1.763723680427842e-18,
+          "lower": -9.342355470673464e-18,
+          "upper": 6.429342469547102e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-turnover-total:logLoss",
+          "estimate": -3.319950457275938e-18,
+          "lower": -2.2975696724153193e-17,
+          "upper": 1.7693980575354166e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.0013047000055266267
+      },
+      {
+        "id": "c21-adjusted-offensiveRebound-total",
+        "head": "total",
+        "mae": {
+          "name": "c21-adjusted-offensiveRebound-total:rawTotalMae",
+          "estimate": 0.0022706263018983084,
+          "lower": -0.002472572093841397,
+          "upper": 0.0064342592755010945,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-offensiveRebound-total:brier",
+          "estimate": -2.1121227931716597e-18,
+          "lower": -9.687163615466707e-18,
+          "upper": 6.0340512524664195e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-offensiveRebound-total:logLoss",
+          "estimate": -5.312766938215148e-18,
+          "lower": -2.342670161902054e-17,
+          "upper": 1.5469807419803586e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.002503639896843879
+      },
+      {
+        "id": "c21-adjusted-freeThrow-total",
+        "head": "total",
+        "mae": {
+          "name": "c21-adjusted-freeThrow-total:rawTotalMae",
+          "estimate": 0.002229227430189418,
+          "lower": -0.002195822785996863,
+          "upper": 0.006493822865023594,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-freeThrow-total:brier",
+          "estimate": -3.3267377391687336e-18,
+          "lower": -1.0310564370034027e-17,
+          "upper": 4.249013593419934e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-freeThrow-total:logLoss",
+          "estimate": -4.277574229786712e-18,
+          "lower": -2.2315592213305064e-17,
+          "upper": 1.5165242291055766e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.002329950949768289
+      },
+      {
+        "id": "c21-adjusted-effectiveFieldGoal-margin",
+        "head": "margin",
+        "mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:rawMarginMae",
+          "estimate": -0.0004380632732192428,
+          "lower": -0.003584957627574509,
+          "upper": 0.0029108940621084957,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:brier",
+          "estimate": 0.0000024250828350381787,
+          "lower": -0.00008077850184349022,
+          "upper": 0.00007902689127405937,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:logLoss",
+          "estimate": 0.000004809792963360875,
+          "lower": -0.000173810797251549,
+          "upper": 0.00017757559444195418,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.0006614418721735404
+      },
+      {
+        "id": "c21-adjusted-turnover-margin",
+        "head": "margin",
+        "mae": {
+          "name": "c21-adjusted-turnover-margin:rawMarginMae",
+          "estimate": 0.003798763165196723,
+          "lower": -0.0017349941128088533,
+          "upper": 0.009765326673272724,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-turnover-margin:brier",
+          "estimate": 0.000037748047292382946,
+          "lower": -0.00008314958262017957,
+          "upper": 0.00017505855371590236,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-turnover-margin:logLoss",
+          "estimate": 0.00007107853703244483,
+          "lower": -0.0002076458336115008,
+          "upper": 0.0003743130031709454,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.003478488094367904
+      },
+      {
+        "id": "c21-adjusted-offensiveRebound-margin",
+        "head": "margin",
+        "mae": {
+          "name": "c21-adjusted-offensiveRebound-margin:rawMarginMae",
+          "estimate": 0.005989608741272856,
+          "lower": -0.002500993075746314,
+          "upper": 0.01547153999746227,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-offensiveRebound-margin:brier",
+          "estimate": 0.00018795851457242347,
+          "lower": -0.00007252316973187064,
+          "upper": 0.00045884990477707856,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-offensiveRebound-margin:logLoss",
+          "estimate": 0.00040426025105504344,
+          "lower": -0.00015060097596389905,
+          "upper": 0.0009803727081090937,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.005782758728953397
+      },
+      {
+        "id": "c21-adjusted-freeThrow-margin",
+        "head": "margin",
+        "mae": {
+          "name": "c21-adjusted-freeThrow-margin:rawMarginMae",
+          "estimate": 0.00311460931807984,
+          "lower": -0.0010938475199423954,
+          "upper": 0.007327392835936221,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-freeThrow-margin:brier",
+          "estimate": 0.00005848290855082694,
+          "lower": -0.0000368835945826136,
+          "upper": 0.0001517429269661438,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-freeThrow-margin:logLoss",
+          "estimate": 0.00012639174706736536,
+          "lower": -0.00010108478220216374,
+          "upper": 0.0003363665284367908,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.0032221866023292023
+      }
+    ],
+    "provenanceRepair": {
+      "rawBuilderSha256": "508da7bd1f33c561fa6e10661813cf30ed28ab32b064a64991f083394bf0b49f",
+      "adjustedBuilderSha256": "a5eaf0555dfdb326a2e1b5c3fa4aaabbd83a2fea8ba785393e1dda564e73e00d",
+      "strictHashAndLengthChecks": true,
+      "rawComparisonCacheReused": true,
+      "pairedResamplingReused": true
+    },
+    "evidence": [
+      "evidence/04-boxscore-feature-screens-20261010/raw-screen-summary.json",
+      "evidence/04-boxscore-feature-screens-20261010/adjusted-screen-summary.json",
+      "evidence/04-boxscore-feature-screens-20261010/covariance-summary.json"
+    ],
+    "limitations": [
+      "Inspected historical seasons are development evidence, not independent confirmation.",
+      "Exploratory date-block percentile intervals have no shared-team or multiple-screen/maxT adjustment.",
+      "Source publication does not deploy the site or select a model.",
+      "Underlying feature rows, forecasts and caches remain separately retained; this milestone is not a self-contained data bundle."
+    ],
+    "next": "Cycle 4 canonical prepared optimizer and compatible five-player weight sweeps; complete remaining feature dispositions"
+  },
+  "files": [
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/audit-candidate100-candidate21-covariance.mjs",
+      "sha256": "7ca44b5ed5ed7a701233f45baa6cc3340f49f55081ab4114f0812da54c163cae",
+      "bytes": 10935
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/build-candidate100-candidate21-boxscore-feature-artifact-v2.mjs",
+      "sha256": "a5eaf0555dfdb326a2e1b5c3fa4aaabbd83a2fea8ba785393e1dda564e73e00d",
+      "bytes": 24359
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/build-candidate100-candidate21-boxscore-feature-artifact.mjs",
+      "sha256": "508da7bd1f33c561fa6e10661813cf30ed28ab32b064a64991f083394bf0b49f",
+      "bytes": 19893
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/compare-mean-screens-v2.mjs",
+      "sha256": "7a4840eab90d94088057b75ce16cdc48f847527ec5d1d544c8b880287e523223",
+      "bytes": 39848
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/compare-mean-screens.mjs",
+      "sha256": "761b92c2310af0d4e5504ef5cda25778f72fc29eb70c28897d0ed3937f9569d0",
+      "bytes": 39294
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/compose-forecasts.mjs",
+      "sha256": "69d0cf5827b02c8c41dfb4431723839d8e99e9fb541f16335094001d383c7c6c",
+      "bytes": 16898
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/extend-features.mjs",
+      "sha256": "69337e1066580f9357622175b9bc14c6df15876c4b1d409c9af28258c2796545",
+      "bytes": 1204
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/artifacts.mjs",
+      "sha256": "220ff0fc109caa233bff0cad44e254a42f450b2e9eb59dc2221f18baf7979cb8",
+      "bytes": 10095
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/canonical-plan.mjs",
+      "sha256": "16bc151fecc7160465d52a905017ab2815617663ee9fa324fef31708f041b3bb",
+      "bytes": 7526
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/chronology.mjs",
+      "sha256": "b64f3d3e6cf2ea7d7cff7b830f69b33122bfd32b32635b38aebee6d50e768e8f",
+      "bytes": 4104
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/configuration.mjs",
+      "sha256": "cb10d8ed6cbc4776fcf58fa7ae9f4a97ab1aca985d9981712062cce75172b1b1",
+      "bytes": 3980
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/dependence-planned.mjs",
+      "sha256": "7726c1380002b1b37a68359760bc235dbba9a3dc1f9823704c56ec4c12a3edc0",
+      "bytes": 10540
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/design-cache.mjs",
+      "sha256": "ee465dfced52f720739aa19edcf7446b7817ee27fbb0ad56c52f4d02e07d706d",
+      "bytes": 13874
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/feature-extension.mjs",
+      "sha256": "49778f3e13e8809bca3f41cf676cdb0f5e3f9e6916688456fefd658687f7d4aa",
+      "bytes": 16892
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/mean-batch.mjs",
+      "sha256": "dee34a60dcb006d699c36c9ea767704b95bd6b30e33352f9e6bd68f17a62825e",
+      "bytes": 10056
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/output.mjs",
+      "sha256": "1a622aac0bc2a9023f87c498c0510e1f615a01bf38e1ddb4b58e2ff50976d02a",
+      "bytes": 1246
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/resampling-plan.mjs",
+      "sha256": "dafa011916f03d3d2d90de4c6f48d749d44b8a4dda6b2410cda416fe3d4c8b40",
+      "bytes": 16542
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/screen-metrics.mjs",
+      "sha256": "9be5ff03e7208d0fb0ccbc9335f2b4b2819b6e0d603d264728816c6311919abe",
+      "bytes": 9952
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/screen-stage.mjs",
+      "sha256": "d1f97465ea481cd7f9e0edf0f3432c0296f4251a46a0f5900731f64c15b41d6b",
+      "bytes": 1900
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/shared-input.mjs",
+      "sha256": "3608b8a221a6644509bdbc53efbf5395cb6c758235fd2fdf437ac5f8a89e58ea",
+      "bytes": 1659
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/telemetry.mjs",
+      "sha256": "188c397984935f164be561f410618ebec3a60ee875891da2a65dd11bd1e11107",
+      "bytes": 4588
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/uncertainty-batch.mjs",
+      "sha256": "7ae00e2486087ba5dc1ff80538caadfc4c813eb5499d565b64c001a111a87629",
+      "bytes": 6896
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/worker-pool.mjs",
+      "sha256": "90fe1e3f407c0a42bce68a0ca54e671f22c2258e04f28dbe998c126299283ffb",
+      "bytes": 7982
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/prepare-candidate100-candidate21-boxscore-screen.mjs",
+      "sha256": "0163422c303d0688d4ce135059c9781864d8e65609780f27665bf6b7bff347a2",
+      "bytes": 14243
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/run-inference.mjs",
+      "sha256": "ac252b2e4e4d98fc75bfd877bea2b5046fd4900238c682fb3733771474063169",
+      "bytes": 6026
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/run-means.mjs",
+      "sha256": "e248d1affdfe9ad3e59ab90f44f7bd4b65f0c6422773cf9833f4a99ad7c46561",
+      "bytes": 10703
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/run-plan.mjs",
+      "sha256": "6272ae75c2b54fc41cc1d669a991e61c6647ab04b77142ed98cf409872f0fe96",
+      "bytes": 6821
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/run-screen.mjs",
+      "sha256": "83cdf41cc7d8886e5fb80352fbaf161d39c773cf863d070dfb5669ab9bf16673",
+      "bytes": 13439
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/summarize-candidate21-screen.mjs",
+      "sha256": "94cfad52c11ff8f2630e8cdedd8651e7cbb008d83da73bb9ebac23bf624179e4",
+      "bytes": 8860
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate10-predictive-metrics-v2.mjs",
+      "sha256": "9d12db2b83f42328db3103fc8d5f78f273a893e26bf95f694ab886773a0eb176",
+      "bytes": 3999
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate100-pruned-total-model-blend090-v1.mjs",
+      "sha256": "fe8733d092f2a28b1c5395a035880a58c50650e5e1f918862b32138fd8e4a63c",
+      "bytes": 9001
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate21-boxscore-history-context-v1.mjs",
+      "sha256": "2939104c1ee672a08a21d196fdc125b0a84f52d5c329e195d51156dd8809ad8b",
+      "bytes": 15108
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-c51-pass6-hybrid-v4.mjs",
+      "sha256": "62eb8e270c46ae830d9bfb84b68c58e35009632f1a122fba8025a7dba035ecbe",
+      "bytes": 22521
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-configurable-uncertainty-v7.mjs",
+      "sha256": "3067506e5496b23fa6f6108ce0d7acc0dad73115ee227fe3417b8ece99bba71f",
+      "bytes": 15625
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-dependence-inference-v1.mjs",
+      "sha256": "42b23ee808b0fcd392556bcddce6a6d9c1ff43af04179005cdbcd793015020cd",
+      "bytes": 10587
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-fast-empirical-scoring-v1.mjs",
+      "sha256": "63ee56484cc0d0749077fa19cf1e026dffb80a1a0a2e72d38ed419af986538fe",
+      "bytes": 7089
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-fast-gaussian-scoring-v1.mjs",
+      "sha256": "49f0fa78d3e367bad599625653d61547e820dae83d15dd1266f3200d69632071",
+      "bytes": 4817
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-feature-penalty-fit-v3.mjs",
+      "sha256": "9b9dd43d1a390b952b5122f7f5e4292fcc07991752fcfe839430c29b5c953215",
+      "bytes": 1920
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-candidate57-runtime-checkpoint-v3.mjs",
+      "sha256": "650eae195702d5db7cd18c95bc71e08b8e99e20b9ddc0dd874f00998e8f109e5",
+      "bytes": 17641
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/models/game-lab-head-feature-policy-v1.mjs",
+      "sha256": "e77000e5187f666d14cee13f0ada57b092d689680b02d137331177ff05bf03c0",
+      "bytes": 2895
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/scripts/prepare-hoopsim-milestone.mjs",
+      "sha256": "207068ff7e8d59d33731959cf6b4a5ecaa1f2e535a36c2712815429a96e0d3ee",
+      "bytes": 8497
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/scripts/swishiq-experiment.mjs",
+      "sha256": "fcab6542d0d20bcc6ec9ea4cec3882b898af19ce75df75ce2fcfa97ae9325ce1",
+      "bytes": 7779
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/docs/swishiq-candidate100-candidate21-raw-boxscore-screen-results-20261010.md",
+      "sha256": "f03bc4ca2aa922e88a5e96a5eef5a72c6c4214afd35e5698cecfe819764bd4a8",
+      "bytes": 8364
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/docs/swishiq-candidate100-adjusted-fourfactor-screen-results-20261010.md",
+      "sha256": "b54660aa6e53a5c3ac642f53edc3c7a8dee1d3368efaf4a2cb83c6ed810c34e2",
+      "bytes": 7508
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/docs/swishiq-candidate100-fourfactor-overlap-review-20261010.md",
+      "sha256": "b327261b525b3d32dc2c08054e060829c522fd998fce7efebf70cab65ef448f6",
+      "bytes": 13008
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/docs/swishiq-candidate21-screen-field-map-20261010.md",
+      "sha256": "d862c49efce65a030d46800d074ae4499141fab0c2426f5eee689f78a355f37f",
+      "bytes": 10704
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/docs/swishiq-game-lab-feature-readiness-20261010.md",
+      "sha256": "4e7859e409afe39fff3ef9ceb205e30b3d799b3c96708c7a5b1c9268e407324a",
+      "bytes": 17863
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/docs/swishiq-implementation-ledger-20261010.json",
+      "sha256": "a061e9141c6b358a5aa3f9118090c43d635a1b322429a791397818f77600417a",
+      "bytes": 11550
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/docs/swishiq-milestone-04-boxscore-feature-screens-20261010.json",
+      "sha256": "bb68243142b932d5ec6e9fb42e5c66a8712c870348f58adf4645bf905c53e5a6",
+      "bytes": 9599
+    },
+    {
+      "path": "evidence/04-boxscore-feature-screens-20261010/raw-screen-summary.json",
+      "sha256": "7d44675405c1e7ba4838cdaf9f71070220e0e0c36c2e6829b2fcae8a29e12f3e",
+      "bytes": 103081
+    },
+    {
+      "path": "evidence/04-boxscore-feature-screens-20261010/adjusted-screen-summary.json",
+      "sha256": "f7946d3fcffd23c77660a2d3e3a9061f90b30cffaea6e522317d31cce9c98943",
+      "bytes": 118994
+    },
+    {
+      "path": "evidence/04-boxscore-feature-screens-20261010/covariance-summary.json",
+      "sha256": "ef8b077afa75250e2617770614c8e3d81a929e75e10f84c7024e5880387ee707",
+      "bytes": 101911
+    },
+    {
+      "path": "evidence/04-boxscore-feature-screens-20261010/covariance.md",
+      "sha256": "1bfe62fdd1455e2d8b41017dae7a8cfbb34f8520294e7e51bb5009186dd0aac0",
+      "bytes": 5803
+    },
+    {
+      "path": "evidence/04-boxscore-feature-screens-20261010/raw-artifact-run.json",
+      "sha256": "ddb79bd326d7e36fb23e0e7e1b49e120ee7aeea83da8d5965543f37570df3ca0",
+      "bytes": 4763
+    },
+    {
+      "path": "evidence/04-boxscore-feature-screens-20261010/adjusted-artifact-run.json",
+      "sha256": "b32089a2afa368282037b9750ab4bf868f3745efcd975fbda253668bfb28e14c",
+      "bytes": 4928
+    },
+    {
+      "path": "evidence/04-boxscore-feature-screens-20261010/adjusted-source-path-map.json",
+      "sha256": "04458501155a91b860ad5e0f15408b542250ee3655c9b32c02e42e07d0ebb9ca",
+      "bytes": 358
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/mean-worker.mjs",
+      "bytes": 1491,
+      "sha256": "d6fbdbbe102587b3c2134151f79599cdf4d2c5ae9c4710f6b63d050cd1719213"
+    },
+    {
+      "path": "site-source/04-boxscore-feature-screens-20261010/prototypes/swishiq-package-v4/experiment-tools/lib/screen-worker.mjs",
+      "bytes": 1229,
+      "sha256": "27884135525ebc8726b72d9441827cbde7a890e305c96586140e961d3ddb6c0b"
+    }
+  ]
+}

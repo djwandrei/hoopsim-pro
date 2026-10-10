@@ -1,54 +1,280 @@
 {
-  "milestone": "rotation-continuity-screen",
-  "manifest": "milestones/rotation-continuity-screen.json",
-  "files": 56,
+  "milestone": "04-boxscore-feature-screens-20261010",
+  "manifest": "milestones/04-boxscore-feature-screens-20261010.json",
+  "files": 58,
   "summary": {
     "format": "swishiq-development-milestone-summary-v1",
-    "milestone": "rotation-continuity-screen",
-    "status": "completed-development-screen-only",
-    "reference": {
-      "candidate": "swishiq-v4-game-lab-candidate100-pruned-total-model-blend090-v1",
-      "configurationSha256": "6e7fa2868fb9bcf4716603a15a953f42f1f6faa0b70e3ecd7f1ea56b45992e94"
-    },
-    "scope": {
-      "targetSeasonStartYears": [
+    "milestone": "04-boxscore-feature-screens-20261010",
+    "reference": "Candidate100",
+    "cohort": {
+      "seasonStartYears": [
         2022,
         2023,
         2024,
         2025
       ],
-      "targetGames": 4920,
-      "inputs": [
-        "meanActivePlayerOverlap5",
-        "meanStarterOverlap5",
-        "meanMinuteShareOverlap5",
-        "activePlayerOverlapAdvantage5",
-        "starterOverlapAdvantage5",
-        "minuteShareOverlapAdvantage5"
-      ],
-      "method": "six single-slot Candidate100 additions; paired 1,000-repetition date-block bootstrap comparisons; unchanged canonical uncertainty settings"
+      "games": 4920,
+      "perSeason": 1230
     },
-    "result": {
-      "selectedSuccessor": null,
-      "candidate100Changed": false,
-      "decision": "Do not retain or combine a rotation-continuity addition from this screen.",
-      "reasons": [
-        "Active-player and starter overlap had interval-separated harm in their tested heads.",
-        "Minute-share overlap in the margin head had only a negligible favorable point estimate and its paired 95 percent interval crossed zero.",
-        "Minute-share overlap in the total head had no point gain.",
-        "The redundancy review found no exact or near-duplicate inputs, so non-selection reflects the paired screen rather than alias duplication."
-      ]
+    "status": "completed-development-feature-screen; no selected successor",
+    "screenCounts": {
+      "rawFamilies": 7,
+      "rawColumns": 10,
+      "opponentAdjustedFourFactors": 8
     },
-    "evidence": {
-      "screenSummary": "prototypes/swishiq-package-v4/experiment-tools/runs/rotation-continuity-individual/run-1791611514047-b52cc30a-3db1-4147-90a7-a50e470f86ef/pipeline/run-1791611552949-25524/summary.json",
-      "comparisonKey": "a0d96e26bfd6b71377fb179968142cc03b2902f80333ce861e867e6e9b11b776",
-      "rotationInputAdapterSha256": "6fd959666855a9271a36217ccb109aefd801ec067f71f74dfbd36a863716433b",
-      "redundancyReview": "docs/candidate100-rotation-continuity-redundancy-review-20261010.md"
+    "decisions": {
+      "raw": "no addition retained",
+      "opponentAdjusted": "no addition retained; eFG point gains provisional with adverse guardrail evidence",
+      "combinations": "none justified by these screens"
     },
+    "baseline": {
+      "total": {
+        "n": 4920,
+        "mae": 14.639368378511803,
+        "rmse": 18.465539652350245,
+        "bias": 0.037000262593373794,
+        "errorConvention": "prediction minus observed target"
+      },
+      "margin": {
+        "n": 4920,
+        "mae": 10.801746519186628,
+        "rmse": 13.829066722965196,
+        "bias": -0.05377822230653323,
+        "errorConvention": "prediction minus observed target"
+      }
+    },
+    "probabilityBaseline": {
+      "brier": 0.21122311512499076,
+      "logLoss": 0.610191559651337
+    },
+    "adjustedDeltas": [
+      {
+        "id": "c21-adjusted-effectiveFieldGoal-total",
+        "head": "total",
+        "mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:rawTotalMae",
+          "estimate": -0.0005114992802522072,
+          "lower": -0.0019296265579807344,
+          "upper": 0.0007753918352517764,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:brier",
+          "estimate": 4.450738064571084e-18,
+          "lower": -2.3881918131408616e-18,
+          "upper": 1.204837315694662e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-effectiveFieldGoal-total:logLoss",
+          "estimate": 1.4760663332986394e-17,
+          "lower": -2.978583219429217e-18,
+          "upper": 3.375980821459379e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.0007229414529348333
+      },
+      {
+        "id": "c21-adjusted-turnover-total",
+        "head": "total",
+        "mae": {
+          "name": "c21-adjusted-turnover-total:rawTotalMae",
+          "estimate": 0.0021423730638098974,
+          "lower": -0.0026635170189966712,
+          "upper": 0.007167940484284419,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-turnover-total:brier",
+          "estimate": -1.763723680427842e-18,
+          "lower": -9.342355470673464e-18,
+          "upper": 6.429342469547102e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-turnover-total:logLoss",
+          "estimate": -3.319950457275938e-18,
+          "lower": -2.2975696724153193e-17,
+          "upper": 1.7693980575354166e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.0013047000055266267
+      },
+      {
+        "id": "c21-adjusted-offensiveRebound-total",
+        "head": "total",
+        "mae": {
+          "name": "c21-adjusted-offensiveRebound-total:rawTotalMae",
+          "estimate": 0.0022706263018983084,
+          "lower": -0.002472572093841397,
+          "upper": 0.0064342592755010945,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-offensiveRebound-total:brier",
+          "estimate": -2.1121227931716597e-18,
+          "lower": -9.687163615466707e-18,
+          "upper": 6.0340512524664195e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-offensiveRebound-total:logLoss",
+          "estimate": -5.312766938215148e-18,
+          "lower": -2.342670161902054e-17,
+          "upper": 1.5469807419803586e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.002503639896843879
+      },
+      {
+        "id": "c21-adjusted-freeThrow-total",
+        "head": "total",
+        "mae": {
+          "name": "c21-adjusted-freeThrow-total:rawTotalMae",
+          "estimate": 0.002229227430189418,
+          "lower": -0.002195822785996863,
+          "upper": 0.006493822865023594,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-freeThrow-total:brier",
+          "estimate": -3.3267377391687336e-18,
+          "lower": -1.0310564370034027e-17,
+          "upper": 4.249013593419934e-18,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-freeThrow-total:logLoss",
+          "estimate": -4.277574229786712e-18,
+          "lower": -2.2315592213305064e-17,
+          "upper": 1.5165242291055766e-17,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.002329950949768289
+      },
+      {
+        "id": "c21-adjusted-effectiveFieldGoal-margin",
+        "head": "margin",
+        "mae": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:rawMarginMae",
+          "estimate": -0.0004380632732192428,
+          "lower": -0.003584957627574509,
+          "upper": 0.0029108940621084957,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:brier",
+          "estimate": 0.0000024250828350381787,
+          "lower": -0.00008077850184349022,
+          "upper": 0.00007902689127405937,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-effectiveFieldGoal-margin:logLoss",
+          "estimate": 0.000004809792963360875,
+          "lower": -0.000173810797251549,
+          "upper": 0.00017757559444195418,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.0006614418721735404
+      },
+      {
+        "id": "c21-adjusted-turnover-margin",
+        "head": "margin",
+        "mae": {
+          "name": "c21-adjusted-turnover-margin:rawMarginMae",
+          "estimate": 0.003798763165196723,
+          "lower": -0.0017349941128088533,
+          "upper": 0.009765326673272724,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-turnover-margin:brier",
+          "estimate": 0.000037748047292382946,
+          "lower": -0.00008314958262017957,
+          "upper": 0.00017505855371590236,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-turnover-margin:logLoss",
+          "estimate": 0.00007107853703244483,
+          "lower": -0.0002076458336115008,
+          "upper": 0.0003743130031709454,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.003478488094367904
+      },
+      {
+        "id": "c21-adjusted-offensiveRebound-margin",
+        "head": "margin",
+        "mae": {
+          "name": "c21-adjusted-offensiveRebound-margin:rawMarginMae",
+          "estimate": 0.005989608741272856,
+          "lower": -0.002500993075746314,
+          "upper": 0.01547153999746227,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-offensiveRebound-margin:brier",
+          "estimate": 0.00018795851457242347,
+          "lower": -0.00007252316973187064,
+          "upper": 0.00045884990477707856,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-offensiveRebound-margin:logLoss",
+          "estimate": 0.00040426025105504344,
+          "lower": -0.00015060097596389905,
+          "upper": 0.0009803727081090937,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.005782758728953397
+      },
+      {
+        "id": "c21-adjusted-freeThrow-margin",
+        "head": "margin",
+        "mae": {
+          "name": "c21-adjusted-freeThrow-margin:rawMarginMae",
+          "estimate": 0.00311460931807984,
+          "lower": -0.0010938475199423954,
+          "upper": 0.007327392835936221,
+          "interval": "95% bootstrap percentile"
+        },
+        "brier": {
+          "name": "c21-adjusted-freeThrow-margin:brier",
+          "estimate": 0.00005848290855082694,
+          "lower": -0.0000368835945826136,
+          "upper": 0.0001517429269661438,
+          "interval": "95% bootstrap percentile"
+        },
+        "logLoss": {
+          "name": "c21-adjusted-freeThrow-margin:logLoss",
+          "estimate": 0.00012639174706736536,
+          "lower": -0.00010108478220216374,
+          "upper": 0.0003363665284367908,
+          "interval": "95% bootstrap percentile"
+        },
+        "rmseDelta": 0.0032221866023292023
+      }
+    ],
+    "provenanceRepair": {
+      "rawBuilderSha256": "508da7bd1f33c561fa6e10661813cf30ed28ab32b064a64991f083394bf0b49f",
+      "adjustedBuilderSha256": "a5eaf0555dfdb326a2e1b5c3fa4aaabbd83a2fea8ba785393e1dda564e73e00d",
+      "strictHashAndLengthChecks": true,
+      "rawComparisonCacheReused": true,
+      "pairedResamplingReused": true
+    },
+    "evidence": [
+      "evidence/04-boxscore-feature-screens-20261010/raw-screen-summary.json",
+      "evidence/04-boxscore-feature-screens-20261010/adjusted-screen-summary.json",
+      "evidence/04-boxscore-feature-screens-20261010/covariance-summary.json"
+    ],
     "limitations": [
-      "This is an opened-label development screen, not independent predictive validation.",
-      "Canonical final scoring and model promotion were not run.",
-      "No site wiring, package build, or deployment changed in this milestone."
-    ]
+      "Inspected historical seasons are development evidence, not independent confirmation.",
+      "Exploratory date-block percentile intervals have no shared-team or multiple-screen/maxT adjustment.",
+      "Source publication does not deploy the site or select a model.",
+      "Underlying feature rows, forecasts and caches remain separately retained; this milestone is not a self-contained data bundle."
+    ],
+    "next": "Cycle 4 canonical prepared optimizer and compatible five-player weight sweeps; complete remaining feature dispositions"
   }
 }

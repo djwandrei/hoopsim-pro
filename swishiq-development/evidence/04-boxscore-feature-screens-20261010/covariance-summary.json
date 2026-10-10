@@ -1,0 +1,2812 @@
+{
+  "format": "swishiq-candidate100-candidate21-covariance-compact-v1",
+  "status": "completed-predictor-only-development-diagnostic; no-fit-no-promotion",
+  "promotionAllowed": false,
+  "targetLabelsUsed": false,
+  "sourcePins": {
+    "artifactRun": {
+      "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\candidate21-boxscore-feature-artifacts\\run-1791616734032-8556-dde0c78a-b7b5-412e-97c4-04e4ce3c6ede\\run.json",
+      "bytes": 4763,
+      "sha256": "ddb79bd326d7e36fb23e0e7e1b49e120ee7aeea83da8d5965543f37570df3ca0"
+    },
+    "featureRows": {
+      "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\experiment-tools\\runs\\cache\\candidate100-candidate21-boxscore-features\\d0f1ee8ac7538527de9c290e7fb8d4b116ff46428d53c34cb32a1fd7dc336d20\\feature-rows.jsonl",
+      "bytes": 38132863,
+      "sha256": "57b38e29ca2b7ec31d0f60423ddb7443293eaa11b837c19d5381b0e488c9319a"
+    },
+    "candidate100Configuration": {
+      "path": "C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied\\prototypes\\swishiq-package-v4\\diagnostics\\game-lab-candidate100-pruned-total-model-blend090-v1-20261008\\configuration.json",
+      "bytes": 7763,
+      "sha256": "6e7fa2868fb9bcf4716603a15a953f42f1f6faa0b70e3ecd7f1ea56b45992e94"
+    }
+  },
+  "cohorts": {
+    "development2022to2025": [
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "fullWarmupAndDevelopment": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "correlationThresholds": {
+    "high": 0.8,
+    "veryHigh": 0.9,
+    "nearDuplicate": 0.98
+  },
+  "heads": {
+    "total": {
+      "development2022to2025": {
+        "seasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "rows": 4920,
+        "featureCount": 47,
+        "missingCountByFeature": {
+          "c51:meanPointsForLast10": 57,
+          "c51:meanPointsAgainstLast10": 57,
+          "c51:meanWinRateLast10": 57,
+          "c51:meanRestDays": 57,
+          "c51:meanGamesLast7Days": 0,
+          "c51:meanPointsFor20Shrunk": 0,
+          "c51:meanPointsAgainst20Shrunk": 0,
+          "c51:meanAdjustedOffense": 0,
+          "c51:meanAdjustedDefenseAllowance": 0,
+          "c51:meanBoxscoreThreePointAttemptRate20": 0,
+          "c51:meanBoxscoreThreePointPct20": 0,
+          "c51:meanBoxscoreOpponentThreePointAttemptRate20": 0,
+          "c51:meanBoxscoreOpponentThreePointPct20": 0,
+          "c51:meanBoxscoreTwoPointPct20": 0,
+          "c51:meanBoxscoreOpponentTwoPointPct20": 0,
+          "c51:meanBoxscoreAssistPerMadeFieldGoal20": 0,
+          "c51:meanBoxscoreOpponentAssistPerMadeFieldGoal20": 0,
+          "c51:meanTopScorerPointsShare20": 0,
+          "c51:meanTopUsagePlayerLoadShare20": 0,
+          "c51:meanTopThreeUsagePlayersTrueShooting20": 0,
+          "c51:meanVenueOffenseDeviation10": 0,
+          "c51:meanVenueDefenseAllowanceDeviation10": 0,
+          "c51:meanVenueOffenseDeviation20": 0,
+          "c51:meanVenueDefenseAllowanceDeviation20": 0,
+          "c51:meanBackToBackPressure": 0,
+          "c51:meanThreeInFourPressure": 0,
+          "c51:meanFourInSixPressure": 0,
+          "c51:meanFiveInSevenPressure": 0,
+          "c51:meanActivePlayerCount5": 0,
+          "c51:meanMinuteShareHhi5": 0,
+          "pass6:hp10": 0,
+          "pass6:ap10": 0,
+          "pass6:hpa10": 0,
+          "pass6:apa10": 0,
+          "pass6:hp20": 0,
+          "pass6:ap20": 0,
+          "pass6:hpa20": 0,
+          "pass6:apa20": 0,
+          "pass6:etMean": 0,
+          "pass6:venueTotMean": 0,
+          "c21:meanBoxscorePace20": 0,
+          "c21:meanBoxscoreTovRate20": 0,
+          "c21:meanBoxscoreOpponentTovRate20": 0,
+          "c21:meanBoxscoreOrbRate20": 0,
+          "c21:meanBoxscoreOpponentOrbRate20": 0,
+          "c21:meanBoxscoreFtr20": 0,
+          "c21:meanBoxscoreOpponentFtr20": 0
+        },
+        "sampleStandardDeviationByFeature": {
+          "c51:meanPointsForLast10": 4.250660767893488,
+          "c51:meanPointsAgainstLast10": 4.362930840315653,
+          "c51:meanWinRateLast10": 0.15605325987671953,
+          "c51:meanRestDays": 0.8490828136588043,
+          "c51:meanGamesLast7Days": 0.7769927791363821,
+          "c51:meanPointsFor20Shrunk": 3.0247158743075118,
+          "c51:meanPointsAgainst20Shrunk": 3.2301181049538807,
+          "c51:meanAdjustedOffense": 2.520539682427548,
+          "c51:meanAdjustedDefenseAllowance": 2.6784917251268374,
+          "c51:meanBoxscoreThreePointAttemptRate20": 0.023212309322990583,
+          "c51:meanBoxscoreThreePointPct20": 0.011269616183005255,
+          "c51:meanBoxscoreOpponentThreePointAttemptRate20": 0.017189281394392266,
+          "c51:meanBoxscoreOpponentThreePointPct20": 0.010036986778591335,
+          "c51:meanBoxscoreTwoPointPct20": 0.012066909752120752,
+          "c51:meanBoxscoreOpponentTwoPointPct20": 0.011806002649433463,
+          "c51:meanBoxscoreAssistPerMadeFieldGoal20": 0.02268601462609666,
+          "c51:meanBoxscoreOpponentAssistPerMadeFieldGoal20": 0.018888038157035443,
+          "c51:meanTopScorerPointsShare20": 0.01178711102218424,
+          "c51:meanTopUsagePlayerLoadShare20": 0.011718162748079937,
+          "c51:meanTopThreeUsagePlayersTrueShooting20": 0.013526850407992936,
+          "c51:meanVenueOffenseDeviation10": 1.2784597428390772,
+          "c51:meanVenueDefenseAllowanceDeviation10": 1.2675195218844943,
+          "c51:meanVenueOffenseDeviation20": 1.5055715975098858,
+          "c51:meanVenueDefenseAllowanceDeviation20": 1.4741777288929736,
+          "c51:meanBackToBackPressure": 0.28719424480361105,
+          "c51:meanThreeInFourPressure": 0.3610221285812766,
+          "c51:meanFourInSixPressure": 0.3818353875219843,
+          "c51:meanFiveInSevenPressure": 0.34301022917392787,
+          "c51:meanActivePlayerCount5": 0.3825962182602417,
+          "c51:meanMinuteShareHhi5": 0.003929896711300082,
+          "pass6:hp10": 5.738814071906895,
+          "pass6:ap10": 5.844385057727037,
+          "pass6:hpa10": 6.039196179296333,
+          "pass6:apa10": 6.040979561126299,
+          "pass6:hp20": 5.1062817366623205,
+          "pass6:ap20": 5.173553851250358,
+          "pass6:hpa20": 5.410064988916246,
+          "pass6:apa20": 5.3719038329260345,
+          "pass6:etMean": 5.825546574984792,
+          "pass6:venueTotMean": 6.847147255783928,
+          "c21:meanBoxscorePace20": 1.207542793159272,
+          "c21:meanBoxscoreTovRate20": 0.006840146198378705,
+          "c21:meanBoxscoreOpponentTovRate20": 0.007561936188342664,
+          "c21:meanBoxscoreOrbRate20": 0.01683232565863321,
+          "c21:meanBoxscoreOpponentOrbRate20": 0.012662377215548727,
+          "c21:meanBoxscoreFtr20": 0.01654897458634053,
+          "c21:meanBoxscoreOpponentFtr20": 0.01659687212027318
+        },
+        "topPearsonPairs": [
+          {
+            "left": "pass6:hpa10",
+            "right": "pass6:hpa20",
+            "n": 4920,
+            "covariance": 29.619858031368825,
+            "pearson": 0.9065700197660377,
+            "spearman": 0.9001561052451842
+          },
+          {
+            "left": "c51:meanTopScorerPointsShare20",
+            "right": "c51:meanTopUsagePlayerLoadShare20",
+            "n": 4920,
+            "covariance": 0.00012509793531890695,
+            "pearson": 0.9056976530668993,
+            "spearman": 0.8959115372354389
+          },
+          {
+            "left": "pass6:apa10",
+            "right": "pass6:apa20",
+            "n": 4920,
+            "covariance": 29.346946710767146,
+            "pearson": 0.9043308109741564,
+            "spearman": 0.896663838187528
+          },
+          {
+            "left": "pass6:ap10",
+            "right": "pass6:ap20",
+            "n": 4920,
+            "covariance": 27.169194841593438,
+            "pearson": 0.8985639120982571,
+            "spearman": 0.8845007544885639
+          },
+          {
+            "left": "pass6:hp10",
+            "right": "pass6:hp20",
+            "n": 4920,
+            "covariance": 26.281561713678215,
+            "pearson": 0.8968591448748592,
+            "spearman": 0.8830924241518464
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 4920,
+            "covariance": 7.553882886128192,
+            "pearson": 0.873095070705345,
+            "spearman": 0.8614905832559199
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "c51:meanAdjustedOffense",
+            "n": 4920,
+            "covariance": 6.525217459139504,
+            "pearson": 0.855887856841034,
+            "spearman": 0.8401473714989129
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanPointsAgainst20Shrunk",
+            "n": 4863,
+            "covariance": 11.980199693818566,
+            "pearson": 0.8509365209736816,
+            "spearman": 0.8463130622333392
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "c51:meanPointsFor20Shrunk",
+            "n": 4863,
+            "covariance": 10.836800739784277,
+            "pearson": 0.8436270025820278,
+            "spearman": 0.8357216626422992
+          },
+          {
+            "left": "pass6:etMean",
+            "right": "pass6:venueTotMean",
+            "n": 4920,
+            "covariance": 31.451996017223973,
+            "pearson": 0.788500304275495,
+            "spearman": 0.7782742188595942
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 4863,
+            "covariance": 9.134014901824507,
+            "pearson": 0.7802046824366501,
+            "spearman": 0.7731923164214842
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "c51:meanAdjustedOffense",
+            "n": 4863,
+            "covariance": 8.17786656486068,
+            "pearson": 0.7615572547298695,
+            "spearman": 0.7496743059868416
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:etMean",
+            "n": 4863,
+            "covariance": 18.994018654527128,
+            "pearson": 0.7469840737104552,
+            "spearman": 0.7416931420507774
+          },
+          {
+            "left": "c51:meanThreeInFourPressure",
+            "right": "c51:meanFourInSixPressure",
+            "n": 4920,
+            "covariance": 0.09986119650534155,
+            "pearson": 0.7244138878264513,
+            "spearman": 0.7111331744150519
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:ap10",
+            "n": 4863,
+            "covariance": 17.79616199441569,
+            "pearson": 0.7232764896644946,
+            "spearman": 0.7053776407052844
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:etMean",
+            "n": 4863,
+            "covariance": 17.761282228465905,
+            "pearson": 0.7169529889202005,
+            "spearman": 0.6991961604995397
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:etMean",
+            "n": 4920,
+            "covariance": 12.525438193222923,
+            "pearson": 0.7108396819864253,
+            "spearman": 0.6856327998456639
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:etMean",
+            "n": 4920,
+            "covariance": 13.361516072169408,
+            "pearson": 0.7100691714559788,
+            "spearman": 0.6941120897038703
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:hpa10",
+            "n": 4863,
+            "covariance": 18.422533482491158,
+            "pearson": 0.7039600069203767,
+            "spearman": 0.6939021330248912
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:hp10",
+            "n": 4863,
+            "covariance": 16.945239122226056,
+            "pearson": 0.7033985000817753,
+            "spearman": 0.6963082768445643
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:apa10",
+            "n": 4863,
+            "covariance": 18.38087195756704,
+            "pearson": 0.7015718795252291,
+            "spearman": 0.6889836451344907
+          },
+          {
+            "left": "c51:meanGamesLast7Days",
+            "right": "c51:meanFiveInSevenPressure",
+            "n": 4920,
+            "covariance": 0.1836801406360249,
+            "pearson": 0.6891887011064256,
+            "spearman": 0.8994204461962785
+          },
+          {
+            "left": "c51:meanGamesLast7Days",
+            "right": "c51:meanFourInSixPressure",
+            "n": 4920,
+            "covariance": 0.203884690109861,
+            "pearson": 0.6872131439863353,
+            "spearman": 0.6710168026210607
+          },
+          {
+            "left": "c51:meanBoxscoreTwoPointPct20",
+            "right": "c51:meanTopThreeUsagePlayersTrueShooting20",
+            "n": 4920,
+            "covariance": 0.00011201502438601552,
+            "pearson": 0.6862518462361412,
+            "spearman": 0.6644809166006869
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:ap20",
+            "n": 4920,
+            "covariance": 10.652818929817467,
+            "pearson": 0.6807552285330151,
+            "spearman": 0.6696494908541603
+          }
+        ],
+        "topSpearmanPairs": [
+          {
+            "left": "pass6:hpa10",
+            "right": "pass6:hpa20",
+            "n": 4920,
+            "covariance": 29.619858031368825,
+            "pearson": 0.9065700197660377,
+            "spearman": 0.9001561052451842
+          },
+          {
+            "left": "c51:meanGamesLast7Days",
+            "right": "c51:meanFiveInSevenPressure",
+            "n": 4920,
+            "covariance": 0.1836801406360249,
+            "pearson": 0.6891887011064256,
+            "spearman": 0.8994204461962785
+          },
+          {
+            "left": "pass6:apa10",
+            "right": "pass6:apa20",
+            "n": 4920,
+            "covariance": 29.346946710767146,
+            "pearson": 0.9043308109741564,
+            "spearman": 0.896663838187528
+          },
+          {
+            "left": "c51:meanTopScorerPointsShare20",
+            "right": "c51:meanTopUsagePlayerLoadShare20",
+            "n": 4920,
+            "covariance": 0.00012509793531890695,
+            "pearson": 0.9056976530668993,
+            "spearman": 0.8959115372354389
+          },
+          {
+            "left": "pass6:ap10",
+            "right": "pass6:ap20",
+            "n": 4920,
+            "covariance": 27.169194841593438,
+            "pearson": 0.8985639120982571,
+            "spearman": 0.8845007544885639
+          },
+          {
+            "left": "pass6:hp10",
+            "right": "pass6:hp20",
+            "n": 4920,
+            "covariance": 26.281561713678215,
+            "pearson": 0.8968591448748592,
+            "spearman": 0.8830924241518464
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 4920,
+            "covariance": 7.553882886128192,
+            "pearson": 0.873095070705345,
+            "spearman": 0.8614905832559199
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanPointsAgainst20Shrunk",
+            "n": 4863,
+            "covariance": 11.980199693818566,
+            "pearson": 0.8509365209736816,
+            "spearman": 0.8463130622333392
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "c51:meanAdjustedOffense",
+            "n": 4920,
+            "covariance": 6.525217459139504,
+            "pearson": 0.855887856841034,
+            "spearman": 0.8401473714989129
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "c51:meanPointsFor20Shrunk",
+            "n": 4863,
+            "covariance": 10.836800739784277,
+            "pearson": 0.8436270025820278,
+            "spearman": 0.8357216626422992
+          },
+          {
+            "left": "pass6:etMean",
+            "right": "pass6:venueTotMean",
+            "n": 4920,
+            "covariance": 31.451996017223973,
+            "pearson": 0.788500304275495,
+            "spearman": 0.7782742188595942
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 4863,
+            "covariance": 9.134014901824507,
+            "pearson": 0.7802046824366501,
+            "spearman": 0.7731923164214842
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "c51:meanAdjustedOffense",
+            "n": 4863,
+            "covariance": 8.17786656486068,
+            "pearson": 0.7615572547298695,
+            "spearman": 0.7496743059868416
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:etMean",
+            "n": 4863,
+            "covariance": 18.994018654527128,
+            "pearson": 0.7469840737104552,
+            "spearman": 0.7416931420507774
+          },
+          {
+            "left": "c51:meanRestDays",
+            "right": "c51:meanBackToBackPressure",
+            "n": 4863,
+            "covariance": -0.11354606552740351,
+            "pearson": -0.46393150578152687,
+            "spearman": -0.7248300580426917
+          },
+          {
+            "left": "c51:meanThreeInFourPressure",
+            "right": "c51:meanFourInSixPressure",
+            "n": 4920,
+            "covariance": 0.09986119650534155,
+            "pearson": 0.7244138878264513,
+            "spearman": 0.7111331744150519
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:ap10",
+            "n": 4863,
+            "covariance": 17.79616199441569,
+            "pearson": 0.7232764896644946,
+            "spearman": 0.7053776407052844
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:etMean",
+            "n": 4863,
+            "covariance": 17.761282228465905,
+            "pearson": 0.7169529889202005,
+            "spearman": 0.6991961604995397
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:hp10",
+            "n": 4863,
+            "covariance": 16.945239122226056,
+            "pearson": 0.7033985000817753,
+            "spearman": 0.6963082768445643
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:etMean",
+            "n": 4920,
+            "covariance": 13.361516072169408,
+            "pearson": 0.7100691714559788,
+            "spearman": 0.6941120897038703
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:hpa10",
+            "n": 4863,
+            "covariance": 18.422533482491158,
+            "pearson": 0.7039600069203767,
+            "spearman": 0.6939021330248912
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:apa10",
+            "n": 4863,
+            "covariance": 18.38087195756704,
+            "pearson": 0.7015718795252291,
+            "spearman": 0.6889836451344907
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:etMean",
+            "n": 4920,
+            "covariance": 12.525438193222923,
+            "pearson": 0.7108396819864253,
+            "spearman": 0.6856327998456639
+          },
+          {
+            "left": "c51:meanGamesLast7Days",
+            "right": "c51:meanFourInSixPressure",
+            "n": 4920,
+            "covariance": 0.203884690109861,
+            "pearson": 0.6872131439863353,
+            "spearman": 0.6710168026210607
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:ap20",
+            "n": 4920,
+            "covariance": 10.652818929817467,
+            "pearson": 0.6807552285330151,
+            "spearman": 0.6696494908541603
+          }
+        ],
+        "highPearsonPairs": [
+          {
+            "left": "pass6:hpa10",
+            "right": "pass6:hpa20",
+            "n": 4920,
+            "covariance": 29.619858031368825,
+            "pearson": 0.9065700197660377,
+            "spearman": 0.9001561052451842
+          },
+          {
+            "left": "c51:meanTopScorerPointsShare20",
+            "right": "c51:meanTopUsagePlayerLoadShare20",
+            "n": 4920,
+            "covariance": 0.00012509793531890695,
+            "pearson": 0.9056976530668993,
+            "spearman": 0.8959115372354389
+          },
+          {
+            "left": "pass6:apa10",
+            "right": "pass6:apa20",
+            "n": 4920,
+            "covariance": 29.346946710767146,
+            "pearson": 0.9043308109741564,
+            "spearman": 0.896663838187528
+          },
+          {
+            "left": "pass6:ap10",
+            "right": "pass6:ap20",
+            "n": 4920,
+            "covariance": 27.169194841593438,
+            "pearson": 0.8985639120982571,
+            "spearman": 0.8845007544885639
+          },
+          {
+            "left": "pass6:hp10",
+            "right": "pass6:hp20",
+            "n": 4920,
+            "covariance": 26.281561713678215,
+            "pearson": 0.8968591448748592,
+            "spearman": 0.8830924241518464
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 4920,
+            "covariance": 7.553882886128192,
+            "pearson": 0.873095070705345,
+            "spearman": 0.8614905832559199
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "c51:meanAdjustedOffense",
+            "n": 4920,
+            "covariance": 6.525217459139504,
+            "pearson": 0.855887856841034,
+            "spearman": 0.8401473714989129
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanPointsAgainst20Shrunk",
+            "n": 4863,
+            "covariance": 11.980199693818566,
+            "pearson": 0.8509365209736816,
+            "spearman": 0.8463130622333392
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "c51:meanPointsFor20Shrunk",
+            "n": 4863,
+            "covariance": 10.836800739784277,
+            "pearson": 0.8436270025820278,
+            "spearman": 0.8357216626422992
+          }
+        ],
+        "veryHighPearsonPairs": [
+          {
+            "left": "pass6:hpa10",
+            "right": "pass6:hpa20",
+            "n": 4920,
+            "covariance": 29.619858031368825,
+            "pearson": 0.9065700197660377,
+            "spearman": 0.9001561052451842
+          },
+          {
+            "left": "c51:meanTopScorerPointsShare20",
+            "right": "c51:meanTopUsagePlayerLoadShare20",
+            "n": 4920,
+            "covariance": 0.00012509793531890695,
+            "pearson": 0.9056976530668993,
+            "spearman": 0.8959115372354389
+          },
+          {
+            "left": "pass6:apa10",
+            "right": "pass6:apa20",
+            "n": 4920,
+            "covariance": 29.346946710767146,
+            "pearson": 0.9043308109741564,
+            "spearman": 0.896663838187528
+          }
+        ],
+        "nearDuplicatePearsonPairs": [],
+        "pairwiseCompleteCases": true,
+        "denominator": "sample covariance with n-1; Pearson on pairwise-complete raw values; Spearman uses average ranks with ties on each pairwise-complete cohort",
+        "pairCount": 1081
+      },
+      "fullWarmupAndDevelopment": {
+        "seasonStartYears": [
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "rows": 7230,
+        "featureCount": 47,
+        "missingCountByFeature": {
+          "c51:meanPointsForLast10": 85,
+          "c51:meanPointsAgainstLast10": 85,
+          "c51:meanWinRateLast10": 85,
+          "c51:meanRestDays": 85,
+          "c51:meanGamesLast7Days": 0,
+          "c51:meanPointsFor20Shrunk": 0,
+          "c51:meanPointsAgainst20Shrunk": 0,
+          "c51:meanAdjustedOffense": 0,
+          "c51:meanAdjustedDefenseAllowance": 0,
+          "c51:meanBoxscoreThreePointAttemptRate20": 0,
+          "c51:meanBoxscoreThreePointPct20": 0,
+          "c51:meanBoxscoreOpponentThreePointAttemptRate20": 0,
+          "c51:meanBoxscoreOpponentThreePointPct20": 0,
+          "c51:meanBoxscoreTwoPointPct20": 0,
+          "c51:meanBoxscoreOpponentTwoPointPct20": 0,
+          "c51:meanBoxscoreAssistPerMadeFieldGoal20": 0,
+          "c51:meanBoxscoreOpponentAssistPerMadeFieldGoal20": 0,
+          "c51:meanTopScorerPointsShare20": 0,
+          "c51:meanTopUsagePlayerLoadShare20": 0,
+          "c51:meanTopThreeUsagePlayersTrueShooting20": 0,
+          "c51:meanVenueOffenseDeviation10": 0,
+          "c51:meanVenueDefenseAllowanceDeviation10": 0,
+          "c51:meanVenueOffenseDeviation20": 0,
+          "c51:meanVenueDefenseAllowanceDeviation20": 0,
+          "c51:meanBackToBackPressure": 0,
+          "c51:meanThreeInFourPressure": 0,
+          "c51:meanFourInSixPressure": 0,
+          "c51:meanFiveInSevenPressure": 0,
+          "c51:meanActivePlayerCount5": 0,
+          "c51:meanMinuteShareHhi5": 0,
+          "pass6:hp10": 0,
+          "pass6:ap10": 0,
+          "pass6:hpa10": 0,
+          "pass6:apa10": 0,
+          "pass6:hp20": 0,
+          "pass6:ap20": 0,
+          "pass6:hpa20": 0,
+          "pass6:apa20": 0,
+          "pass6:etMean": 0,
+          "pass6:venueTotMean": 0,
+          "c21:meanBoxscorePace20": 0,
+          "c21:meanBoxscoreTovRate20": 0,
+          "c21:meanBoxscoreOpponentTovRate20": 0,
+          "c21:meanBoxscoreOrbRate20": 0,
+          "c21:meanBoxscoreOpponentOrbRate20": 0,
+          "c21:meanBoxscoreFtr20": 0,
+          "c21:meanBoxscoreOpponentFtr20": 0
+        },
+        "sampleStandardDeviationByFeature": {
+          "c51:meanPointsForLast10": 4.587089700634697,
+          "c51:meanPointsAgainstLast10": 4.677934218658663,
+          "c51:meanWinRateLast10": 0.15376359089708808,
+          "c51:meanRestDays": 0.8454614803387618,
+          "c51:meanGamesLast7Days": 0.7797854430235784,
+          "c51:meanPointsFor20Shrunk": 3.3810159523509724,
+          "c51:meanPointsAgainst20Shrunk": 3.498382629078446,
+          "c51:meanAdjustedOffense": 2.4977483218807515,
+          "c51:meanAdjustedDefenseAllowance": 2.5810997027146327,
+          "c51:meanBoxscoreThreePointAttemptRate20": 0.02334877056541647,
+          "c51:meanBoxscoreThreePointPct20": 0.01169699448395788,
+          "c51:meanBoxscoreOpponentThreePointAttemptRate20": 0.01742598317498674,
+          "c51:meanBoxscoreOpponentThreePointPct20": 0.01053074016026138,
+          "c51:meanBoxscoreTwoPointPct20": 0.013855556593770711,
+          "c51:meanBoxscoreOpponentTwoPointPct20": 0.013213904560303762,
+          "c51:meanBoxscoreAssistPerMadeFieldGoal20": 0.023636648378795908,
+          "c51:meanBoxscoreOpponentAssistPerMadeFieldGoal20": 0.02037122469859648,
+          "c51:meanTopScorerPointsShare20": 0.011453659409630118,
+          "c51:meanTopUsagePlayerLoadShare20": 0.01155305397529274,
+          "c51:meanTopThreeUsagePlayersTrueShooting20": 0.014336096083892767,
+          "c51:meanVenueOffenseDeviation10": 1.2977856287975131,
+          "c51:meanVenueDefenseAllowanceDeviation10": 1.2844400844440154,
+          "c51:meanVenueOffenseDeviation20": 1.5328531161970875,
+          "c51:meanVenueDefenseAllowanceDeviation20": 1.5008653886531695,
+          "c51:meanBackToBackPressure": 0.2878143321907531,
+          "c51:meanThreeInFourPressure": 0.3551301329020328,
+          "c51:meanFourInSixPressure": 0.3776551005362493,
+          "c51:meanFiveInSevenPressure": 0.3509638699967514,
+          "c51:meanActivePlayerCount5": 0.3816138363724979,
+          "c51:meanMinuteShareHhi5": 0.0038467217196132904,
+          "pass6:hp10": 5.957335165976736,
+          "pass6:ap10": 6.056458705916451,
+          "pass6:hpa10": 6.20368610185958,
+          "pass6:apa10": 6.181818756096677,
+          "pass6:hp20": 5.389660860346203,
+          "pass6:ap20": 5.460171734408918,
+          "pass6:hpa20": 5.624821271262711,
+          "pass6:apa20": 5.58171281426947,
+          "pass6:etMean": 6.655305207829196,
+          "pass6:venueTotMean": 7.7933257930382975,
+          "c21:meanBoxscorePace20": 1.2393109032527783,
+          "c21:meanBoxscoreTovRate20": 0.0066781256459706355,
+          "c21:meanBoxscoreOpponentTovRate20": 0.00725264361974119,
+          "c21:meanBoxscoreOrbRate20": 0.017637554861295784,
+          "c21:meanBoxscoreOpponentOrbRate20": 0.014254088585357174,
+          "c21:meanBoxscoreFtr20": 0.016276529196251634,
+          "c21:meanBoxscoreOpponentFtr20": 0.016363060873980876
+        },
+        "topPearsonPairs": [
+          {
+            "left": "pass6:hpa10",
+            "right": "pass6:hpa20",
+            "n": 7230,
+            "covariance": 31.74836447095528,
+            "pearson": 0.9098353678885056,
+            "spearman": 0.9016329091872517
+          },
+          {
+            "left": "pass6:apa10",
+            "right": "pass6:apa20",
+            "n": 7230,
+            "covariance": 31.367619382931245,
+            "pearson": 0.9090710004565264,
+            "spearman": 0.9009871507184652
+          },
+          {
+            "left": "pass6:ap10",
+            "right": "pass6:ap20",
+            "n": 7230,
+            "covariance": 30.03136040421164,
+            "pearson": 0.9081340153406072,
+            "spearman": 0.8963832618194219
+          },
+          {
+            "left": "pass6:hp10",
+            "right": "pass6:hp20",
+            "n": 7230,
+            "covariance": 29.153959901509158,
+            "pearson": 0.9079963004153105,
+            "spearman": 0.895913780590031
+          },
+          {
+            "left": "c51:meanTopScorerPointsShare20",
+            "right": "c51:meanTopUsagePlayerLoadShare20",
+            "n": 7230,
+            "covariance": 0.00011844743134889188,
+            "pearson": 0.8951268412725535,
+            "spearman": 0.883332827123318
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanPointsAgainst20Shrunk",
+            "n": 7145,
+            "covariance": 14.257463864774836,
+            "pearson": 0.8701646907994642,
+            "spearman": 0.8676073575568305
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "c51:meanPointsFor20Shrunk",
+            "n": 7145,
+            "covariance": 13.48059419648128,
+            "pearson": 0.8686807278881219,
+            "spearman": 0.8646291623421907
+          },
+          {
+            "left": "pass6:etMean",
+            "right": "pass6:venueTotMean",
+            "n": 7230,
+            "covariance": 43.24631528802712,
+            "pearson": 0.833793109138537,
+            "spearman": 0.8277134457519565
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:etMean",
+            "n": 7230,
+            "covariance": 17.62455046323543,
+            "pearson": 0.7832544157522112,
+            "spearman": 0.7667991623900758
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:etMean",
+            "n": 7145,
+            "covariance": 24.394408641532653,
+            "pearson": 0.7822877799772099,
+            "spearman": 0.7773878402204678
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 7230,
+            "covariance": 7.046842612984976,
+            "pearson": 0.7804093845466404,
+            "spearman": 0.7702027785414426
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:etMean",
+            "n": 7230,
+            "covariance": 18.094020250028223,
+            "pearson": 0.7771409383843301,
+            "spearman": 0.7626229266565016
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:etMean",
+            "n": 7145,
+            "covariance": 23.55759651415292,
+            "pearson": 0.7704138972799891,
+            "spearman": 0.7627949298755271
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "c51:meanAdjustedOffense",
+            "n": 7230,
+            "covariance": 6.446210001128155,
+            "pearson": 0.7633233610249123,
+            "spearman": 0.744198782734253
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:ap10",
+            "n": 7145,
+            "covariance": 20.72781792421956,
+            "pearson": 0.7510478589176379,
+            "spearman": 0.7361102902566335
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:hpa10",
+            "n": 7145,
+            "covariance": 21.347883466343166,
+            "pearson": 0.7393318994877256,
+            "spearman": 0.7265566582143391
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:apa10",
+            "n": 7145,
+            "covariance": 21.090055983433054,
+            "pearson": 0.7327633732440981,
+            "spearman": 0.7233053618391333
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:hp10",
+            "n": 7145,
+            "covariance": 19.825666649412405,
+            "pearson": 0.7325074502854734,
+            "spearman": 0.7245784648342426
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:ap20",
+            "n": 7230,
+            "covariance": 13.387671964156102,
+            "pearson": 0.7251895546725504,
+            "spearman": 0.7149114309170195
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:hpa20",
+            "n": 7230,
+            "covariance": 14.264704885379913,
+            "pearson": 0.7249144487086285,
+            "spearman": 0.7140496993226956
+          },
+          {
+            "left": "c51:meanThreeInFourPressure",
+            "right": "c51:meanFourInSixPressure",
+            "n": 7230,
+            "covariance": 0.09662829348595625,
+            "pearson": 0.7204791732198178,
+            "spearman": 0.7054610588579303
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:hp20",
+            "n": 7230,
+            "covariance": 13.056928018293323,
+            "pearson": 0.716526656094266,
+            "spearman": 0.7129731646079522
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:apa20",
+            "n": 7230,
+            "covariance": 13.989508333038685,
+            "pearson": 0.7164199245901929,
+            "spearman": 0.7096112493999075
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 7145,
+            "covariance": 8.60344479476802,
+            "pearson": 0.7109729525303858,
+            "spearman": 0.7100852088908606
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:venueTotMean",
+            "n": 7230,
+            "covariance": 19.144275047580823,
+            "pearson": 0.7021805335249341,
+            "spearman": 0.6916858230558313
+          }
+        ],
+        "topSpearmanPairs": [
+          {
+            "left": "c51:meanGamesLast7Days",
+            "right": "c51:meanFiveInSevenPressure",
+            "n": 7230,
+            "covariance": 0.19102476348240313,
+            "pearson": 0.6979947190230547,
+            "spearman": 0.9071849373412973
+          },
+          {
+            "left": "pass6:hpa10",
+            "right": "pass6:hpa20",
+            "n": 7230,
+            "covariance": 31.74836447095528,
+            "pearson": 0.9098353678885056,
+            "spearman": 0.9016329091872517
+          },
+          {
+            "left": "pass6:apa10",
+            "right": "pass6:apa20",
+            "n": 7230,
+            "covariance": 31.367619382931245,
+            "pearson": 0.9090710004565264,
+            "spearman": 0.9009871507184652
+          },
+          {
+            "left": "pass6:ap10",
+            "right": "pass6:ap20",
+            "n": 7230,
+            "covariance": 30.03136040421164,
+            "pearson": 0.9081340153406072,
+            "spearman": 0.8963832618194219
+          },
+          {
+            "left": "pass6:hp10",
+            "right": "pass6:hp20",
+            "n": 7230,
+            "covariance": 29.153959901509158,
+            "pearson": 0.9079963004153105,
+            "spearman": 0.895913780590031
+          },
+          {
+            "left": "c51:meanTopScorerPointsShare20",
+            "right": "c51:meanTopUsagePlayerLoadShare20",
+            "n": 7230,
+            "covariance": 0.00011844743134889188,
+            "pearson": 0.8951268412725535,
+            "spearman": 0.883332827123318
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanPointsAgainst20Shrunk",
+            "n": 7145,
+            "covariance": 14.257463864774836,
+            "pearson": 0.8701646907994642,
+            "spearman": 0.8676073575568305
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "c51:meanPointsFor20Shrunk",
+            "n": 7145,
+            "covariance": 13.48059419648128,
+            "pearson": 0.8686807278881219,
+            "spearman": 0.8646291623421907
+          },
+          {
+            "left": "pass6:etMean",
+            "right": "pass6:venueTotMean",
+            "n": 7230,
+            "covariance": 43.24631528802712,
+            "pearson": 0.833793109138537,
+            "spearman": 0.8277134457519565
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:etMean",
+            "n": 7145,
+            "covariance": 24.394408641532653,
+            "pearson": 0.7822877799772099,
+            "spearman": 0.7773878402204678
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 7230,
+            "covariance": 7.046842612984976,
+            "pearson": 0.7804093845466404,
+            "spearman": 0.7702027785414426
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:etMean",
+            "n": 7230,
+            "covariance": 17.62455046323543,
+            "pearson": 0.7832544157522112,
+            "spearman": 0.7667991623900758
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:etMean",
+            "n": 7145,
+            "covariance": 23.55759651415292,
+            "pearson": 0.7704138972799891,
+            "spearman": 0.7627949298755271
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:etMean",
+            "n": 7230,
+            "covariance": 18.094020250028223,
+            "pearson": 0.7771409383843301,
+            "spearman": 0.7626229266565016
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "c51:meanAdjustedOffense",
+            "n": 7230,
+            "covariance": 6.446210001128155,
+            "pearson": 0.7633233610249123,
+            "spearman": 0.744198782734253
+          },
+          {
+            "left": "c51:meanRestDays",
+            "right": "c51:meanBackToBackPressure",
+            "n": 7145,
+            "covariance": -0.11389395261487835,
+            "pearson": -0.46637157587638434,
+            "spearman": -0.7373609124296894
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:ap10",
+            "n": 7145,
+            "covariance": 20.72781792421956,
+            "pearson": 0.7510478589176379,
+            "spearman": 0.7361102902566335
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:hpa10",
+            "n": 7145,
+            "covariance": 21.347883466343166,
+            "pearson": 0.7393318994877256,
+            "spearman": 0.7265566582143391
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "pass6:hp10",
+            "n": 7145,
+            "covariance": 19.825666649412405,
+            "pearson": 0.7325074502854734,
+            "spearman": 0.7245784648342426
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "pass6:apa10",
+            "n": 7145,
+            "covariance": 21.090055983433054,
+            "pearson": 0.7327633732440981,
+            "spearman": 0.7233053618391333
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:ap20",
+            "n": 7230,
+            "covariance": 13.387671964156102,
+            "pearson": 0.7251895546725504,
+            "spearman": 0.7149114309170195
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:hpa20",
+            "n": 7230,
+            "covariance": 14.264704885379913,
+            "pearson": 0.7249144487086285,
+            "spearman": 0.7140496993226956
+          },
+          {
+            "left": "c51:meanPointsFor20Shrunk",
+            "right": "pass6:hp20",
+            "n": 7230,
+            "covariance": 13.056928018293323,
+            "pearson": 0.716526656094266,
+            "spearman": 0.7129731646079522
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanAdjustedDefenseAllowance",
+            "n": 7145,
+            "covariance": 8.60344479476802,
+            "pearson": 0.7109729525303858,
+            "spearman": 0.7100852088908606
+          },
+          {
+            "left": "c51:meanPointsAgainst20Shrunk",
+            "right": "pass6:apa20",
+            "n": 7230,
+            "covariance": 13.989508333038685,
+            "pearson": 0.7164199245901929,
+            "spearman": 0.7096112493999075
+          }
+        ],
+        "highPearsonPairs": [
+          {
+            "left": "pass6:hpa10",
+            "right": "pass6:hpa20",
+            "n": 7230,
+            "covariance": 31.74836447095528,
+            "pearson": 0.9098353678885056,
+            "spearman": 0.9016329091872517
+          },
+          {
+            "left": "pass6:apa10",
+            "right": "pass6:apa20",
+            "n": 7230,
+            "covariance": 31.367619382931245,
+            "pearson": 0.9090710004565264,
+            "spearman": 0.9009871507184652
+          },
+          {
+            "left": "pass6:ap10",
+            "right": "pass6:ap20",
+            "n": 7230,
+            "covariance": 30.03136040421164,
+            "pearson": 0.9081340153406072,
+            "spearman": 0.8963832618194219
+          },
+          {
+            "left": "pass6:hp10",
+            "right": "pass6:hp20",
+            "n": 7230,
+            "covariance": 29.153959901509158,
+            "pearson": 0.9079963004153105,
+            "spearman": 0.895913780590031
+          },
+          {
+            "left": "c51:meanTopScorerPointsShare20",
+            "right": "c51:meanTopUsagePlayerLoadShare20",
+            "n": 7230,
+            "covariance": 0.00011844743134889188,
+            "pearson": 0.8951268412725535,
+            "spearman": 0.883332827123318
+          },
+          {
+            "left": "c51:meanPointsAgainstLast10",
+            "right": "c51:meanPointsAgainst20Shrunk",
+            "n": 7145,
+            "covariance": 14.257463864774836,
+            "pearson": 0.8701646907994642,
+            "spearman": 0.8676073575568305
+          },
+          {
+            "left": "c51:meanPointsForLast10",
+            "right": "c51:meanPointsFor20Shrunk",
+            "n": 7145,
+            "covariance": 13.48059419648128,
+            "pearson": 0.8686807278881219,
+            "spearman": 0.8646291623421907
+          },
+          {
+            "left": "pass6:etMean",
+            "right": "pass6:venueTotMean",
+            "n": 7230,
+            "covariance": 43.24631528802712,
+            "pearson": 0.833793109138537,
+            "spearman": 0.8277134457519565
+          }
+        ],
+        "veryHighPearsonPairs": [
+          {
+            "left": "pass6:hpa10",
+            "right": "pass6:hpa20",
+            "n": 7230,
+            "covariance": 31.74836447095528,
+            "pearson": 0.9098353678885056,
+            "spearman": 0.9016329091872517
+          },
+          {
+            "left": "pass6:apa10",
+            "right": "pass6:apa20",
+            "n": 7230,
+            "covariance": 31.367619382931245,
+            "pearson": 0.9090710004565264,
+            "spearman": 0.9009871507184652
+          },
+          {
+            "left": "pass6:ap10",
+            "right": "pass6:ap20",
+            "n": 7230,
+            "covariance": 30.03136040421164,
+            "pearson": 0.9081340153406072,
+            "spearman": 0.8963832618194219
+          },
+          {
+            "left": "pass6:hp10",
+            "right": "pass6:hp20",
+            "n": 7230,
+            "covariance": 29.153959901509158,
+            "pearson": 0.9079963004153105,
+            "spearman": 0.895913780590031
+          }
+        ],
+        "nearDuplicatePearsonPairs": [],
+        "pairwiseCompleteCases": true,
+        "denominator": "sample covariance with n-1; Pearson on pairwise-complete raw values; Spearman uses average ranks with ties on each pairwise-complete cohort",
+        "pairCount": 1081
+      }
+    },
+    "margin": {
+      "development2022to2025": {
+        "seasonStartYears": [
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "rows": 4920,
+        "featureCount": 42,
+        "missingCountByFeature": {
+          "c51:pointsForAdvantageLast10": 0,
+          "c51:defenseAllowanceAdvantageLast10": 0,
+          "c51:winRateAdvantageLast10": 0,
+          "c51:restAdvantageDays": 0,
+          "c51:scheduleDensityAdvantageLast7": 0,
+          "c51:pointsForAdvantage20Shrunk": 0,
+          "c51:defenseAllowanceAdvantage20Shrunk": 0,
+          "c51:opponentAdjustedStrengthAdvantage": 0,
+          "c51:boxscoreThreePointAttemptRateAdvantage20": 0,
+          "c51:boxscoreThreePointMatchupAdvantage20": 0,
+          "c51:boxscoreTwoPointMatchupAdvantage20": 0,
+          "c51:boxscoreAssistRateAdvantage20": 0,
+          "c51:topScorerPointsShareAdvantage20": 0,
+          "c51:topUsagePlayerLoadShareAdvantage20": 0,
+          "c51:topThreeUsagePlayersTrueShootingAdvantage20": 0,
+          "c51:venueOffenseDeviationAdvantage10": 0,
+          "c51:venueDefenseAllowanceAdvantage10": 0,
+          "c51:venueOffenseDeviationAdvantage20": 0,
+          "c51:venueDefenseAllowanceAdvantage20": 0,
+          "c51:backToBackPressureAdvantage": 0,
+          "c51:threeInFourPressureAdvantage": 0,
+          "c51:fourInSixPressureAdvantage": 0,
+          "c51:fiveInSevenPressureAdvantage": 0,
+          "c51:adjustedOffenseAdvantage": 0,
+          "c51:activePlayerCountAdvantage5": 0,
+          "c51:minuteShareHhiAdvantage5": 0,
+          "pass6:pfAdv10": 0,
+          "pass6:defAdv10": 0,
+          "pass6:wrAdv10": 0,
+          "pass6:pfAdv20": 0,
+          "pass6:defAdv20": 0,
+          "pass6:wrAdv20": 0,
+          "pass6:rStrAdv90": 0,
+          "pass6:eloAdv": 0,
+          "pass6:venueAdv": 0,
+          "pass6:availAdv5": 0,
+          "pass6:availAdv8": 0,
+          "pass6:missAdv10": 0,
+          "pass6:minTop5Adv": 0,
+          "c21:boxscoreTurnoverMatchupAdvantage20": 0,
+          "c21:boxscoreOrbMatchupAdvantage20": 0,
+          "c21:boxscoreFtrMatchupAdvantage20": 0
+        },
+        "sampleStandardDeviationByFeature": {
+          "c51:pointsForAdvantageLast10": 3.9074284897145994,
+          "c51:defenseAllowanceAdvantageLast10": 4.174529194420634,
+          "c51:winRateAdvantageLast10": 0.1581556108742615,
+          "c51:restAdvantageDays": 0.48900730488327404,
+          "c51:scheduleDensityAdvantageLast7": 0.3947647645585837,
+          "c51:pointsForAdvantage20Shrunk": 2.814265524330335,
+          "c51:defenseAllowanceAdvantage20Shrunk": 3.107871140204028,
+          "c51:opponentAdjustedStrengthAdvantage": 3.947850214067876,
+          "c51:boxscoreThreePointAttemptRateAdvantage20": 0.02100451256364572,
+          "c51:boxscoreThreePointMatchupAdvantage20": 0.007941162164310631,
+          "c51:boxscoreTwoPointMatchupAdvantage20": 0.00941250364649553,
+          "c51:boxscoreAssistRateAdvantage20": 0.020067456604005298,
+          "c51:topScorerPointsShareAdvantage20": 0.011746324964383301,
+          "c51:topUsagePlayerLoadShareAdvantage20": 0.011698811529317297,
+          "c51:topThreeUsagePlayersTrueShootingAdvantage20": 0.013290018091639932,
+          "c51:venueOffenseDeviationAdvantage10": 1.2554035924988922,
+          "c51:venueDefenseAllowanceAdvantage10": 1.237255682913799,
+          "c51:venueOffenseDeviationAdvantage20": 1.4555086800993868,
+          "c51:venueDefenseAllowanceAdvantage20": 1.4350409033875462,
+          "c51:backToBackPressureAdvantage": 0.24752696831050258,
+          "c51:threeInFourPressureAdvantage": 0.2835000254382754,
+          "c51:fourInSixPressureAdvantage": 0.29093071523265496,
+          "c51:fiveInSevenPressureAdvantage": 0.30387871951627654,
+          "c51:adjustedOffenseAdvantage": 2.4556682939486336,
+          "c51:activePlayerCountAdvantage5": 0.3621501958990403,
+          "c51:minuteShareHhiAdvantage5": 0.0038345789363615226,
+          "pass6:pfAdv10": 7.911473992800895,
+          "pass6:defAdv10": 8.397424984326996,
+          "pass6:wrAdv10": 0.3114616021623021,
+          "pass6:pfAdv20": 7.03427377067919,
+          "pass6:defAdv20": 7.474602978128272,
+          "pass6:wrAdv20": 0.2765885522653437,
+          "pass6:rStrAdv90": 5.452099042764234,
+          "pass6:eloAdv": 1.5896975025609446,
+          "pass6:venueAdv": 7.445357757055278,
+          "pass6:availAdv5": 0.1269828021713806,
+          "pass6:availAdv8": 0.12644292494347562,
+          "pass6:missAdv10": 0.07540150094090407,
+          "pass6:minTop5Adv": 0.08813556205369621,
+          "c21:boxscoreTurnoverMatchupAdvantage20": 0.005057093926077508,
+          "c21:boxscoreOrbMatchupAdvantage20": 0.009803646662497905,
+          "c21:boxscoreFtrMatchupAdvantage20": 0.009850738491897281
+        },
+        "topPearsonPairs": [
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv10",
+            "n": 4920,
+            "covariance": 33.92602380461894,
+            "pearson": 0.9677859813734621,
+            "spearman": 0.9795376064804436
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv10",
+            "n": 4920,
+            "covariance": 29.43658480825989,
+            "pearson": 0.9522236833401787,
+            "spearman": 0.968513350590753
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv10",
+            "n": 4920,
+            "covariance": 0.0468416961951009,
+            "pearson": 0.9509189360605482,
+            "spearman": 0.9740982120733469
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 21.916931403567133,
+            "pearson": 0.9434711295334114,
+            "spearman": 0.9578676835735751
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "c51:adjustedOffenseAdvantage",
+            "n": 4920,
+            "covariance": 6.4733282240336045,
+            "pearson": 0.9366834668421512,
+            "spearman": 0.9333902454297704
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 18.465981080203402,
+            "pearson": 0.9327989508316732,
+            "spearman": 0.947783348009595
+          },
+          {
+            "left": "pass6:defAdv10",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 56.8949172706995,
+            "pearson": 0.9064403040315754,
+            "spearman": 0.8981014719297766
+          },
+          {
+            "left": "c51:topScorerPointsShareAdvantage20",
+            "right": "c51:topUsagePlayerLoadShareAdvantage20",
+            "n": 4920,
+            "covariance": 0.00012413143306881628,
+            "pearson": 0.9033124860030272,
+            "spearman": 0.8976918524121075
+          },
+          {
+            "left": "pass6:pfAdv10",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 49.642779895337625,
+            "pearson": 0.8920299199950145,
+            "spearman": 0.8768388765918651
+          },
+          {
+            "left": "pass6:wrAdv10",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.07673904420817429,
+            "pearson": 0.8907947961807207,
+            "spearman": 0.8759928851021853
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:rStrAdv90",
+            "n": 4920,
+            "covariance": 19.135317942186422,
+            "pearson": 0.8890194842563126,
+            "spearman": 0.867808008686721
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 27.116277048391314,
+            "pearson": 0.8690293220110831,
+            "spearman": 0.8755349432342412
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 5.452362519879703,
+            "pearson": 0.86877950100242,
+            "spearman": 0.8617036856306608
+          },
+          {
+            "left": "c51:adjustedOffenseAdvantage",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 14.85957806067886,
+            "pearson": 0.8602357912363017,
+            "spearman": 0.8749599285892045
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "c51:defenseAllowanceAdvantage20Shrunk",
+            "n": 4920,
+            "covariance": 11.129798978866955,
+            "pearson": 0.8578607821900488,
+            "spearman": 0.857096324356855
+          },
+          {
+            "left": "c51:scheduleDensityAdvantageLast7",
+            "right": "c51:fiveInSevenPressureAdvantage",
+            "n": 4920,
+            "covariance": 0.10280403305914103,
+            "pearson": 0.8569815713794491,
+            "spearman": 0.8712699717928634
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv10",
+            "n": 4920,
+            "covariance": 22.322658279498768,
+            "pearson": 0.8553360456906425,
+            "spearman": 0.855712824714541
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.03671436023731294,
+            "pearson": 0.8392998776077013,
+            "spearman": 0.8484719547513611
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 22.965162837789606,
+            "pearson": 0.8355245662985125,
+            "spearman": 0.8421192734856662
+          },
+          {
+            "left": "pass6:rStrAdv90",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 7.234003706627353,
+            "pearson": 0.8346425060807048,
+            "spearman": 0.82224282215368
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv10",
+            "n": 4920,
+            "covariance": 18.536000102923445,
+            "pearson": 0.8325178384491041,
+            "spearman": 0.8271992949437675
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "c51:pointsForAdvantage20Shrunk",
+            "n": 4920,
+            "covariance": 9.154346927560658,
+            "pearson": 0.8324751108840208,
+            "spearman": 0.8277661425895045
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.9071051873698208,
+            "pearson": 0.8307355249578756,
+            "spearman": 0.843702845005638
+          },
+          {
+            "left": "pass6:wrAdv20",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 0.3519814036985487,
+            "pearson": 0.8005178602573965,
+            "spearman": 0.8075680864655856
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:wrAdv10",
+            "n": 4920,
+            "covariance": 0.9793568072178608,
+            "pearson": 0.7964816348448137,
+            "spearman": 0.7990740864785615
+          }
+        ],
+        "topSpearmanPairs": [
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv10",
+            "n": 4920,
+            "covariance": 33.92602380461894,
+            "pearson": 0.9677859813734621,
+            "spearman": 0.9795376064804436
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv10",
+            "n": 4920,
+            "covariance": 0.0468416961951009,
+            "pearson": 0.9509189360605482,
+            "spearman": 0.9740982120733469
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv10",
+            "n": 4920,
+            "covariance": 29.43658480825989,
+            "pearson": 0.9522236833401787,
+            "spearman": 0.968513350590753
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 21.916931403567133,
+            "pearson": 0.9434711295334114,
+            "spearman": 0.9578676835735751
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 18.465981080203402,
+            "pearson": 0.9327989508316732,
+            "spearman": 0.947783348009595
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "c51:adjustedOffenseAdvantage",
+            "n": 4920,
+            "covariance": 6.4733282240336045,
+            "pearson": 0.9366834668421512,
+            "spearman": 0.9333902454297704
+          },
+          {
+            "left": "pass6:defAdv10",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 56.8949172706995,
+            "pearson": 0.9064403040315754,
+            "spearman": 0.8981014719297766
+          },
+          {
+            "left": "c51:topScorerPointsShareAdvantage20",
+            "right": "c51:topUsagePlayerLoadShareAdvantage20",
+            "n": 4920,
+            "covariance": 0.00012413143306881628,
+            "pearson": 0.9033124860030272,
+            "spearman": 0.8976918524121075
+          },
+          {
+            "left": "pass6:pfAdv10",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 49.642779895337625,
+            "pearson": 0.8920299199950145,
+            "spearman": 0.8768388765918651
+          },
+          {
+            "left": "pass6:wrAdv10",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.07673904420817429,
+            "pearson": 0.8907947961807207,
+            "spearman": 0.8759928851021853
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 27.116277048391314,
+            "pearson": 0.8690293220110831,
+            "spearman": 0.8755349432342412
+          },
+          {
+            "left": "c51:adjustedOffenseAdvantage",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 14.85957806067886,
+            "pearson": 0.8602357912363017,
+            "spearman": 0.8749599285892045
+          },
+          {
+            "left": "c51:scheduleDensityAdvantageLast7",
+            "right": "c51:fiveInSevenPressureAdvantage",
+            "n": 4920,
+            "covariance": 0.10280403305914103,
+            "pearson": 0.8569815713794491,
+            "spearman": 0.8712699717928634
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:rStrAdv90",
+            "n": 4920,
+            "covariance": 19.135317942186422,
+            "pearson": 0.8890194842563126,
+            "spearman": 0.867808008686721
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 5.452362519879703,
+            "pearson": 0.86877950100242,
+            "spearman": 0.8617036856306608
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "c51:defenseAllowanceAdvantage20Shrunk",
+            "n": 4920,
+            "covariance": 11.129798978866955,
+            "pearson": 0.8578607821900488,
+            "spearman": 0.857096324356855
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv10",
+            "n": 4920,
+            "covariance": 22.322658279498768,
+            "pearson": 0.8553360456906425,
+            "spearman": 0.855712824714541
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.03671436023731294,
+            "pearson": 0.8392998776077013,
+            "spearman": 0.8484719547513611
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.9071051873698208,
+            "pearson": 0.8307355249578756,
+            "spearman": 0.843702845005638
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 22.965162837789606,
+            "pearson": 0.8355245662985125,
+            "spearman": 0.8421192734856662
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "c51:pointsForAdvantage20Shrunk",
+            "n": 4920,
+            "covariance": 9.154346927560658,
+            "pearson": 0.8324751108840208,
+            "spearman": 0.8277661425895045
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv10",
+            "n": 4920,
+            "covariance": 18.536000102923445,
+            "pearson": 0.8325178384491041,
+            "spearman": 0.8271992949437675
+          },
+          {
+            "left": "pass6:rStrAdv90",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 7.234003706627353,
+            "pearson": 0.8346425060807048,
+            "spearman": 0.82224282215368
+          },
+          {
+            "left": "pass6:wrAdv20",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 0.3519814036985487,
+            "pearson": 0.8005178602573965,
+            "spearman": 0.8075680864655856
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:wrAdv10",
+            "n": 4920,
+            "covariance": 0.9793568072178608,
+            "pearson": 0.7964816348448137,
+            "spearman": 0.7990740864785615
+          }
+        ],
+        "highPearsonPairs": [
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv10",
+            "n": 4920,
+            "covariance": 33.92602380461894,
+            "pearson": 0.9677859813734621,
+            "spearman": 0.9795376064804436
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv10",
+            "n": 4920,
+            "covariance": 29.43658480825989,
+            "pearson": 0.9522236833401787,
+            "spearman": 0.968513350590753
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv10",
+            "n": 4920,
+            "covariance": 0.0468416961951009,
+            "pearson": 0.9509189360605482,
+            "spearman": 0.9740982120733469
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 21.916931403567133,
+            "pearson": 0.9434711295334114,
+            "spearman": 0.9578676835735751
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "c51:adjustedOffenseAdvantage",
+            "n": 4920,
+            "covariance": 6.4733282240336045,
+            "pearson": 0.9366834668421512,
+            "spearman": 0.9333902454297704
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 18.465981080203402,
+            "pearson": 0.9327989508316732,
+            "spearman": 0.947783348009595
+          },
+          {
+            "left": "pass6:defAdv10",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 56.8949172706995,
+            "pearson": 0.9064403040315754,
+            "spearman": 0.8981014719297766
+          },
+          {
+            "left": "c51:topScorerPointsShareAdvantage20",
+            "right": "c51:topUsagePlayerLoadShareAdvantage20",
+            "n": 4920,
+            "covariance": 0.00012413143306881628,
+            "pearson": 0.9033124860030272,
+            "spearman": 0.8976918524121075
+          },
+          {
+            "left": "pass6:pfAdv10",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 49.642779895337625,
+            "pearson": 0.8920299199950145,
+            "spearman": 0.8768388765918651
+          },
+          {
+            "left": "pass6:wrAdv10",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.07673904420817429,
+            "pearson": 0.8907947961807207,
+            "spearman": 0.8759928851021853
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:rStrAdv90",
+            "n": 4920,
+            "covariance": 19.135317942186422,
+            "pearson": 0.8890194842563126,
+            "spearman": 0.867808008686721
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 27.116277048391314,
+            "pearson": 0.8690293220110831,
+            "spearman": 0.8755349432342412
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 5.452362519879703,
+            "pearson": 0.86877950100242,
+            "spearman": 0.8617036856306608
+          },
+          {
+            "left": "c51:adjustedOffenseAdvantage",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 14.85957806067886,
+            "pearson": 0.8602357912363017,
+            "spearman": 0.8749599285892045
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "c51:defenseAllowanceAdvantage20Shrunk",
+            "n": 4920,
+            "covariance": 11.129798978866955,
+            "pearson": 0.8578607821900488,
+            "spearman": 0.857096324356855
+          },
+          {
+            "left": "c51:scheduleDensityAdvantageLast7",
+            "right": "c51:fiveInSevenPressureAdvantage",
+            "n": 4920,
+            "covariance": 0.10280403305914103,
+            "pearson": 0.8569815713794491,
+            "spearman": 0.8712699717928634
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv10",
+            "n": 4920,
+            "covariance": 22.322658279498768,
+            "pearson": 0.8553360456906425,
+            "spearman": 0.855712824714541
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.03671436023731294,
+            "pearson": 0.8392998776077013,
+            "spearman": 0.8484719547513611
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 22.965162837789606,
+            "pearson": 0.8355245662985125,
+            "spearman": 0.8421192734856662
+          },
+          {
+            "left": "pass6:rStrAdv90",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 7.234003706627353,
+            "pearson": 0.8346425060807048,
+            "spearman": 0.82224282215368
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv10",
+            "n": 4920,
+            "covariance": 18.536000102923445,
+            "pearson": 0.8325178384491041,
+            "spearman": 0.8271992949437675
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "c51:pointsForAdvantage20Shrunk",
+            "n": 4920,
+            "covariance": 9.154346927560658,
+            "pearson": 0.8324751108840208,
+            "spearman": 0.8277661425895045
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:wrAdv20",
+            "n": 4920,
+            "covariance": 0.9071051873698208,
+            "pearson": 0.8307355249578756,
+            "spearman": 0.843702845005638
+          },
+          {
+            "left": "pass6:wrAdv20",
+            "right": "pass6:eloAdv",
+            "n": 4920,
+            "covariance": 0.3519814036985487,
+            "pearson": 0.8005178602573965,
+            "spearman": 0.8075680864655856
+          }
+        ],
+        "veryHighPearsonPairs": [
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv10",
+            "n": 4920,
+            "covariance": 33.92602380461894,
+            "pearson": 0.9677859813734621,
+            "spearman": 0.9795376064804436
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv10",
+            "n": 4920,
+            "covariance": 29.43658480825989,
+            "pearson": 0.9522236833401787,
+            "spearman": 0.968513350590753
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv10",
+            "n": 4920,
+            "covariance": 0.0468416961951009,
+            "pearson": 0.9509189360605482,
+            "spearman": 0.9740982120733469
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 21.916931403567133,
+            "pearson": 0.9434711295334114,
+            "spearman": 0.9578676835735751
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "c51:adjustedOffenseAdvantage",
+            "n": 4920,
+            "covariance": 6.4733282240336045,
+            "pearson": 0.9366834668421512,
+            "spearman": 0.9333902454297704
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv20",
+            "n": 4920,
+            "covariance": 18.465981080203402,
+            "pearson": 0.9327989508316732,
+            "spearman": 0.947783348009595
+          },
+          {
+            "left": "pass6:defAdv10",
+            "right": "pass6:defAdv20",
+            "n": 4920,
+            "covariance": 56.8949172706995,
+            "pearson": 0.9064403040315754,
+            "spearman": 0.8981014719297766
+          },
+          {
+            "left": "c51:topScorerPointsShareAdvantage20",
+            "right": "c51:topUsagePlayerLoadShareAdvantage20",
+            "n": 4920,
+            "covariance": 0.00012413143306881628,
+            "pearson": 0.9033124860030272,
+            "spearman": 0.8976918524121075
+          }
+        ],
+        "nearDuplicatePearsonPairs": [],
+        "pairwiseCompleteCases": true,
+        "denominator": "sample covariance with n-1; Pearson on pairwise-complete raw values; Spearman uses average ranks with ties on each pairwise-complete cohort",
+        "pairCount": 861
+      },
+      "fullWarmupAndDevelopment": {
+        "seasonStartYears": [
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "rows": 7230,
+        "featureCount": 42,
+        "missingCountByFeature": {
+          "c51:pointsForAdvantageLast10": 0,
+          "c51:defenseAllowanceAdvantageLast10": 0,
+          "c51:winRateAdvantageLast10": 0,
+          "c51:restAdvantageDays": 0,
+          "c51:scheduleDensityAdvantageLast7": 0,
+          "c51:pointsForAdvantage20Shrunk": 0,
+          "c51:defenseAllowanceAdvantage20Shrunk": 0,
+          "c51:opponentAdjustedStrengthAdvantage": 0,
+          "c51:boxscoreThreePointAttemptRateAdvantage20": 0,
+          "c51:boxscoreThreePointMatchupAdvantage20": 0,
+          "c51:boxscoreTwoPointMatchupAdvantage20": 0,
+          "c51:boxscoreAssistRateAdvantage20": 0,
+          "c51:topScorerPointsShareAdvantage20": 0,
+          "c51:topUsagePlayerLoadShareAdvantage20": 0,
+          "c51:topThreeUsagePlayersTrueShootingAdvantage20": 0,
+          "c51:venueOffenseDeviationAdvantage10": 0,
+          "c51:venueDefenseAllowanceAdvantage10": 0,
+          "c51:venueOffenseDeviationAdvantage20": 0,
+          "c51:venueDefenseAllowanceAdvantage20": 0,
+          "c51:backToBackPressureAdvantage": 0,
+          "c51:threeInFourPressureAdvantage": 0,
+          "c51:fourInSixPressureAdvantage": 0,
+          "c51:fiveInSevenPressureAdvantage": 0,
+          "c51:adjustedOffenseAdvantage": 0,
+          "c51:activePlayerCountAdvantage5": 0,
+          "c51:minuteShareHhiAdvantage5": 0,
+          "pass6:pfAdv10": 0,
+          "pass6:defAdv10": 0,
+          "pass6:wrAdv10": 0,
+          "pass6:pfAdv20": 0,
+          "pass6:defAdv20": 0,
+          "pass6:wrAdv20": 0,
+          "pass6:rStrAdv90": 0,
+          "pass6:eloAdv": 0,
+          "pass6:venueAdv": 0,
+          "pass6:availAdv5": 0,
+          "pass6:availAdv8": 0,
+          "pass6:missAdv10": 0,
+          "pass6:minTop5Adv": 0,
+          "c21:boxscoreTurnoverMatchupAdvantage20": 0,
+          "c21:boxscoreOrbMatchupAdvantage20": 0,
+          "c21:boxscoreFtrMatchupAdvantage20": 0
+        },
+        "sampleStandardDeviationByFeature": {
+          "c51:pointsForAdvantageLast10": 3.9210381403552996,
+          "c51:defenseAllowanceAdvantageLast10": 4.115131219674579,
+          "c51:winRateAdvantageLast10": 0.15726460240272333,
+          "c51:restAdvantageDays": 0.5075376054688235,
+          "c51:scheduleDensityAdvantageLast7": 0.3998106112322065,
+          "c51:pointsForAdvantage20Shrunk": 2.822083509090587,
+          "c51:defenseAllowanceAdvantage20Shrunk": 3.0080489179683023,
+          "c51:opponentAdjustedStrengthAdvantage": 3.842418890226533,
+          "c51:boxscoreThreePointAttemptRateAdvantage20": 0.021594743257088354,
+          "c51:boxscoreThreePointMatchupAdvantage20": 0.0081114337716419,
+          "c51:boxscoreTwoPointMatchupAdvantage20": 0.009155325953621231,
+          "c51:boxscoreAssistRateAdvantage20": 0.020167268766966104,
+          "c51:topScorerPointsShareAdvantage20": 0.01139855578404774,
+          "c51:topUsagePlayerLoadShareAdvantage20": 0.011529133372901842,
+          "c51:topThreeUsagePlayersTrueShootingAdvantage20": 0.013451840325509504,
+          "c51:venueOffenseDeviationAdvantage10": 1.2600431195122552,
+          "c51:venueDefenseAllowanceAdvantage10": 1.2460612647213904,
+          "c51:venueOffenseDeviationAdvantage20": 1.4489476120469635,
+          "c51:venueDefenseAllowanceAdvantage20": 1.4262549652799719,
+          "c51:backToBackPressureAdvantage": 0.25338130402830145,
+          "c51:threeInFourPressureAdvantage": 0.28237389283573505,
+          "c51:fourInSixPressureAdvantage": 0.28887323170753415,
+          "c51:fiveInSevenPressureAdvantage": 0.30583391578131236,
+          "c51:adjustedOffenseAdvantage": 2.4473134759465434,
+          "c51:activePlayerCountAdvantage5": 0.3629933558501938,
+          "c51:minuteShareHhiAdvantage5": 0.0037516249296190352,
+          "pass6:pfAdv10": 7.855048871858117,
+          "pass6:defAdv10": 8.199639622591913,
+          "pass6:wrAdv10": 0.3095236073740521,
+          "pass6:pfAdv20": 6.985673445523329,
+          "pass6:defAdv20": 7.283212245465412,
+          "pass6:wrAdv20": 0.27323937345004806,
+          "pass6:rStrAdv90": 5.275327758534082,
+          "pass6:eloAdv": 1.5416673228362177,
+          "pass6:venueAdv": 7.468618767391113,
+          "pass6:availAdv5": 0.12942218402794312,
+          "pass6:availAdv8": 0.1275340463627712,
+          "pass6:missAdv10": 0.07576873917858425,
+          "pass6:minTop5Adv": 0.0869019077510973,
+          "c21:boxscoreTurnoverMatchupAdvantage20": 0.004732603716636369,
+          "c21:boxscoreOrbMatchupAdvantage20": 0.009410430136311829,
+          "c21:boxscoreFtrMatchupAdvantage20": 0.009564464056243806
+        },
+        "topPearsonPairs": [
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv10",
+            "n": 7230,
+            "covariance": 32.57387431691029,
+            "pearson": 0.9653636967359492,
+            "spearman": 0.9789610358160811
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv10",
+            "n": 7230,
+            "covariance": 0.04650533701562137,
+            "pearson": 0.9553841597411113,
+            "spearman": 0.9769633826738495
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 29.407343227536277,
+            "pearson": 0.9547855381504267,
+            "spearman": 0.9723074537984298
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 20.644167590834094,
+            "pearson": 0.9423007031295372,
+            "spearman": 0.954965664280192
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "c51:adjustedOffenseAdvantage",
+            "n": 7230,
+            "covariance": 6.4802101402256405,
+            "pearson": 0.9382738808381439,
+            "spearman": 0.9358552587437489
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 18.36130494470851,
+            "pearson": 0.9313767713579645,
+            "spearman": 0.9458161817685208
+          },
+          {
+            "left": "pass6:defAdv10",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 53.781576078847394,
+            "pearson": 0.9005665121065658,
+            "spearman": 0.8906870065886795
+          },
+          {
+            "left": "pass6:pfAdv10",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 49.06450673138327,
+            "pearson": 0.8941497624079181,
+            "spearman": 0.8819856549832977
+          },
+          {
+            "left": "c51:topScorerPointsShareAdvantage20",
+            "right": "c51:topUsagePlayerLoadShareAdvantage20",
+            "n": 7230,
+            "covariance": 0.00011712542271927865,
+            "pearson": 0.8912605404437394,
+            "spearman": 0.883639451201324
+          },
+          {
+            "left": "pass6:wrAdv10",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.07510013511046668,
+            "pearson": 0.887980971191247,
+            "spearman": 0.8743743497450924
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:rStrAdv90",
+            "n": 7230,
+            "covariance": 17.972933982824582,
+            "pearson": 0.8866757330059577,
+            "spearman": 0.868321793263601
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 25.848242968424596,
+            "pearson": 0.8624310280232463,
+            "spearman": 0.8675894210580963
+          },
+          {
+            "left": "c51:adjustedOffenseAdvantage",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 14.703720642369694,
+            "pearson": 0.8600612107570687,
+            "spearman": 0.8741861628943282
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:eloAdv",
+            "n": 7230,
+            "covariance": 5.073209726661785,
+            "pearson": 0.8564212614269838,
+            "spearman": 0.8498679653837895
+          },
+          {
+            "left": "c51:scheduleDensityAdvantageLast7",
+            "right": "c51:fiveInSevenPressureAdvantage",
+            "n": 7230,
+            "covariance": 0.10421416677523884,
+            "pearson": 0.8522888343155457,
+            "spearman": 0.8728868602806336
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv10",
+            "n": 7230,
+            "covariance": 20.942207073216217,
+            "pearson": 0.8490686181107653,
+            "spearman": 0.8470569908353659
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "c51:defenseAllowanceAdvantage20Shrunk",
+            "n": 7230,
+            "covariance": 10.481773034833902,
+            "pearson": 0.8467713758362446,
+            "spearman": 0.8477417289348524
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 23.09050955990168,
+            "pearson": 0.8429933916633909,
+            "spearman": 0.8514600294930569
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.036158263928054414,
+            "pearson": 0.8414596751987362,
+            "spearman": 0.849626617407993
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 18.471797905546747,
+            "pearson": 0.833278959778315,
+            "spearman": 0.8302351500878005
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "c51:pointsForAdvantage20Shrunk",
+            "n": 7230,
+            "covariance": 9.207929049148683,
+            "pearson": 0.8321297260510142,
+            "spearman": 0.8311054095429157
+          },
+          {
+            "left": "pass6:rStrAdv90",
+            "right": "pass6:eloAdv",
+            "n": 7230,
+            "covariance": 6.739343052946511,
+            "pearson": 0.8286620478516825,
+            "spearman": 0.8157735616176146
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.8588779386137615,
+            "pearson": 0.818056797967525,
+            "spearman": 0.8335431708069618
+          },
+          {
+            "left": "c51:adjustedOffenseAdvantage",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 15.240577247283639,
+            "pearson": 0.7927986892646908,
+            "spearman": 0.7919211933610953
+          },
+          {
+            "left": "pass6:wrAdv20",
+            "right": "pass6:eloAdv",
+            "n": 7230,
+            "covariance": 0.33319383452312906,
+            "pearson": 0.7909754578355114,
+            "spearman": 0.8014138683033736
+          }
+        ],
+        "topSpearmanPairs": [
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv10",
+            "n": 7230,
+            "covariance": 32.57387431691029,
+            "pearson": 0.9653636967359492,
+            "spearman": 0.9789610358160811
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv10",
+            "n": 7230,
+            "covariance": 0.04650533701562137,
+            "pearson": 0.9553841597411113,
+            "spearman": 0.9769633826738495
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 29.407343227536277,
+            "pearson": 0.9547855381504267,
+            "spearman": 0.9723074537984298
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 20.644167590834094,
+            "pearson": 0.9423007031295372,
+            "spearman": 0.954965664280192
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 18.36130494470851,
+            "pearson": 0.9313767713579645,
+            "spearman": 0.9458161817685208
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "c51:adjustedOffenseAdvantage",
+            "n": 7230,
+            "covariance": 6.4802101402256405,
+            "pearson": 0.9382738808381439,
+            "spearman": 0.9358552587437489
+          },
+          {
+            "left": "pass6:defAdv10",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 53.781576078847394,
+            "pearson": 0.9005665121065658,
+            "spearman": 0.8906870065886795
+          },
+          {
+            "left": "c51:topScorerPointsShareAdvantage20",
+            "right": "c51:topUsagePlayerLoadShareAdvantage20",
+            "n": 7230,
+            "covariance": 0.00011712542271927865,
+            "pearson": 0.8912605404437394,
+            "spearman": 0.883639451201324
+          },
+          {
+            "left": "pass6:pfAdv10",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 49.06450673138327,
+            "pearson": 0.8941497624079181,
+            "spearman": 0.8819856549832977
+          },
+          {
+            "left": "pass6:wrAdv10",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.07510013511046668,
+            "pearson": 0.887980971191247,
+            "spearman": 0.8743743497450924
+          },
+          {
+            "left": "c51:adjustedOffenseAdvantage",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 14.703720642369694,
+            "pearson": 0.8600612107570687,
+            "spearman": 0.8741861628943282
+          },
+          {
+            "left": "c51:scheduleDensityAdvantageLast7",
+            "right": "c51:fiveInSevenPressureAdvantage",
+            "n": 7230,
+            "covariance": 0.10421416677523884,
+            "pearson": 0.8522888343155457,
+            "spearman": 0.8728868602806336
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:rStrAdv90",
+            "n": 7230,
+            "covariance": 17.972933982824582,
+            "pearson": 0.8866757330059577,
+            "spearman": 0.868321793263601
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 25.848242968424596,
+            "pearson": 0.8624310280232463,
+            "spearman": 0.8675894210580963
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 23.09050955990168,
+            "pearson": 0.8429933916633909,
+            "spearman": 0.8514600294930569
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:eloAdv",
+            "n": 7230,
+            "covariance": 5.073209726661785,
+            "pearson": 0.8564212614269838,
+            "spearman": 0.8498679653837895
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.036158263928054414,
+            "pearson": 0.8414596751987362,
+            "spearman": 0.849626617407993
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "c51:defenseAllowanceAdvantage20Shrunk",
+            "n": 7230,
+            "covariance": 10.481773034833902,
+            "pearson": 0.8467713758362446,
+            "spearman": 0.8477417289348524
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv10",
+            "n": 7230,
+            "covariance": 20.942207073216217,
+            "pearson": 0.8490686181107653,
+            "spearman": 0.8470569908353659
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.8588779386137615,
+            "pearson": 0.818056797967525,
+            "spearman": 0.8335431708069618
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "c51:pointsForAdvantage20Shrunk",
+            "n": 7230,
+            "covariance": 9.207929049148683,
+            "pearson": 0.8321297260510142,
+            "spearman": 0.8311054095429157
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 18.471797905546747,
+            "pearson": 0.833278959778315,
+            "spearman": 0.8302351500878005
+          },
+          {
+            "left": "pass6:rStrAdv90",
+            "right": "pass6:eloAdv",
+            "n": 7230,
+            "covariance": 6.739343052946511,
+            "pearson": 0.8286620478516825,
+            "spearman": 0.8157735616176146
+          },
+          {
+            "left": "pass6:wrAdv20",
+            "right": "pass6:eloAdv",
+            "n": 7230,
+            "covariance": 0.33319383452312906,
+            "pearson": 0.7909754578355114,
+            "spearman": 0.8014138683033736
+          },
+          {
+            "left": "c51:adjustedOffenseAdvantage",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 15.240577247283639,
+            "pearson": 0.7927986892646908,
+            "spearman": 0.7919211933610953
+          }
+        ],
+        "highPearsonPairs": [
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv10",
+            "n": 7230,
+            "covariance": 32.57387431691029,
+            "pearson": 0.9653636967359492,
+            "spearman": 0.9789610358160811
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv10",
+            "n": 7230,
+            "covariance": 0.04650533701562137,
+            "pearson": 0.9553841597411113,
+            "spearman": 0.9769633826738495
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 29.407343227536277,
+            "pearson": 0.9547855381504267,
+            "spearman": 0.9723074537984298
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 20.644167590834094,
+            "pearson": 0.9423007031295372,
+            "spearman": 0.954965664280192
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "c51:adjustedOffenseAdvantage",
+            "n": 7230,
+            "covariance": 6.4802101402256405,
+            "pearson": 0.9382738808381439,
+            "spearman": 0.9358552587437489
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 18.36130494470851,
+            "pearson": 0.9313767713579645,
+            "spearman": 0.9458161817685208
+          },
+          {
+            "left": "pass6:defAdv10",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 53.781576078847394,
+            "pearson": 0.9005665121065658,
+            "spearman": 0.8906870065886795
+          },
+          {
+            "left": "pass6:pfAdv10",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 49.06450673138327,
+            "pearson": 0.8941497624079181,
+            "spearman": 0.8819856549832977
+          },
+          {
+            "left": "c51:topScorerPointsShareAdvantage20",
+            "right": "c51:topUsagePlayerLoadShareAdvantage20",
+            "n": 7230,
+            "covariance": 0.00011712542271927865,
+            "pearson": 0.8912605404437394,
+            "spearman": 0.883639451201324
+          },
+          {
+            "left": "pass6:wrAdv10",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.07510013511046668,
+            "pearson": 0.887980971191247,
+            "spearman": 0.8743743497450924
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:rStrAdv90",
+            "n": 7230,
+            "covariance": 17.972933982824582,
+            "pearson": 0.8866757330059577,
+            "spearman": 0.868321793263601
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 25.848242968424596,
+            "pearson": 0.8624310280232463,
+            "spearman": 0.8675894210580963
+          },
+          {
+            "left": "c51:adjustedOffenseAdvantage",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 14.703720642369694,
+            "pearson": 0.8600612107570687,
+            "spearman": 0.8741861628943282
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:eloAdv",
+            "n": 7230,
+            "covariance": 5.073209726661785,
+            "pearson": 0.8564212614269838,
+            "spearman": 0.8498679653837895
+          },
+          {
+            "left": "c51:scheduleDensityAdvantageLast7",
+            "right": "c51:fiveInSevenPressureAdvantage",
+            "n": 7230,
+            "covariance": 0.10421416677523884,
+            "pearson": 0.8522888343155457,
+            "spearman": 0.8728868602806336
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv10",
+            "n": 7230,
+            "covariance": 20.942207073216217,
+            "pearson": 0.8490686181107653,
+            "spearman": 0.8470569908353659
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "c51:defenseAllowanceAdvantage20Shrunk",
+            "n": 7230,
+            "covariance": 10.481773034833902,
+            "pearson": 0.8467713758362446,
+            "spearman": 0.8477417289348524
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 23.09050955990168,
+            "pearson": 0.8429933916633909,
+            "spearman": 0.8514600294930569
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.036158263928054414,
+            "pearson": 0.8414596751987362,
+            "spearman": 0.849626617407993
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 18.471797905546747,
+            "pearson": 0.833278959778315,
+            "spearman": 0.8302351500878005
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "c51:pointsForAdvantage20Shrunk",
+            "n": 7230,
+            "covariance": 9.207929049148683,
+            "pearson": 0.8321297260510142,
+            "spearman": 0.8311054095429157
+          },
+          {
+            "left": "pass6:rStrAdv90",
+            "right": "pass6:eloAdv",
+            "n": 7230,
+            "covariance": 6.739343052946511,
+            "pearson": 0.8286620478516825,
+            "spearman": 0.8157735616176146
+          },
+          {
+            "left": "c51:opponentAdjustedStrengthAdvantage",
+            "right": "pass6:wrAdv20",
+            "n": 7230,
+            "covariance": 0.8588779386137615,
+            "pearson": 0.818056797967525,
+            "spearman": 0.8335431708069618
+          }
+        ],
+        "veryHighPearsonPairs": [
+          {
+            "left": "c51:defenseAllowanceAdvantageLast10",
+            "right": "pass6:defAdv10",
+            "n": 7230,
+            "covariance": 32.57387431691029,
+            "pearson": 0.9653636967359492,
+            "spearman": 0.9789610358160811
+          },
+          {
+            "left": "c51:winRateAdvantageLast10",
+            "right": "pass6:wrAdv10",
+            "n": 7230,
+            "covariance": 0.04650533701562137,
+            "pearson": 0.9553841597411113,
+            "spearman": 0.9769633826738495
+          },
+          {
+            "left": "c51:pointsForAdvantageLast10",
+            "right": "pass6:pfAdv10",
+            "n": 7230,
+            "covariance": 29.407343227536277,
+            "pearson": 0.9547855381504267,
+            "spearman": 0.9723074537984298
+          },
+          {
+            "left": "c51:defenseAllowanceAdvantage20Shrunk",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 20.644167590834094,
+            "pearson": 0.9423007031295372,
+            "spearman": 0.954965664280192
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "c51:adjustedOffenseAdvantage",
+            "n": 7230,
+            "covariance": 6.4802101402256405,
+            "pearson": 0.9382738808381439,
+            "spearman": 0.9358552587437489
+          },
+          {
+            "left": "c51:pointsForAdvantage20Shrunk",
+            "right": "pass6:pfAdv20",
+            "n": 7230,
+            "covariance": 18.36130494470851,
+            "pearson": 0.9313767713579645,
+            "spearman": 0.9458161817685208
+          },
+          {
+            "left": "pass6:defAdv10",
+            "right": "pass6:defAdv20",
+            "n": 7230,
+            "covariance": 53.781576078847394,
+            "pearson": 0.9005665121065658,
+            "spearman": 0.8906870065886795
+          }
+        ],
+        "nearDuplicatePearsonPairs": [],
+        "pairwiseCompleteCases": true,
+        "denominator": "sample covariance with n-1; Pearson on pairwise-complete raw values; Spearman uses average ranks with ties on each pairwise-complete cohort",
+        "pairCount": 861
+      }
+    }
+  },
+  "limitations": [
+    "Pairwise correlation is descriptive and does not measure conditional or causal information.",
+    "The 2022-26 cohort was inspected during model development and is not independent validation.",
+    "High correlation alone is not a promotion/removal rule; paired predictive effects and coefficient stability still matter."
+  ],
+  "fullReport": {
+    "path": "C:/Users/djwan/Downloads/djshouseofcards-next-fixes-applied/prototypes/swishiq-package-v4/experiment-tools/runs/candidate100-candidate21-covariance/run-1791617543662-8106abc8-fd34-4a28-9f6e-11317e3cd53f/covariance.json",
+    "bytes": 1220404,
+    "sha256": "a314dba2034b3f6c261a6a1935391f7725d5bf0cea73e9356c3e23e4f15c3d20"
+  }
+}

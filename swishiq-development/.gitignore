@@ -1,0 +1,3 @@
+site-source/**/runs/
+site-source/**/outputs/
+site-source/**/.env*

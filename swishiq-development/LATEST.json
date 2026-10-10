@@ -1,0 +1,39 @@
+{
+  "milestone": "01-workflow-and-appearance-cache",
+  "manifest": "milestones/01-workflow-and-appearance-cache.json",
+  "files": 43,
+  "summary": {
+    "milestone": "01-workflow-and-appearance-cache",
+    "referenceModel": "Candidate 100; unchanged",
+    "implemented": [
+      "standard development launcher with prepare/run/compare/status/resume",
+      "immutable start and terminal workflow receipts",
+      "existing pinned mean/uncertainty/comparison/inference executors reused",
+      "prepared eight individual hustle predictor screens",
+      "reconciled real archive appearance extraction cache"
+    ],
+    "evidence": {
+      "baselineScreen": {
+        "games": 4920,
+        "cacheHitOnResume": true,
+        "implementation": "configured-canonical"
+      },
+      "appearanceCache": {
+        "games": 120,
+        "exactRows": true,
+        "exactBenchmarkOutcome": true,
+        "secondRunCacheHit": true,
+        "sourceByteInvalidation": true,
+        "reconciliation": "legacy PBP-to-final-team-score gate; official player totals not retained"
+      }
+    },
+    "pending": [
+      "hustle screen results",
+      "canonical optimizer reuse",
+      "selected successor model",
+      "site runtime integration"
+    ],
+    "independentPredictiveValidityEstablished": false,
+    "deploymentPerformed": false
+  }
+}

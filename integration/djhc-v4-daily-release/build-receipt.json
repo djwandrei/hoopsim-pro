@@ -1,0 +1,2867 @@
+{
+  "format": "djhc-swishiq-v4-observed-box-score-daily-board-build-receipt-v1",
+  "generatedAt": "2026-10-09T12:00:00.000Z",
+  "releaseId": "v4-site-12ad90dc8710",
+  "scoringContract": "observed-box-score-production-v1",
+  "package": {
+    "packageId": "nba-swishiq-v4-2025-26",
+    "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+    "seasonStartYear": 2025,
+    "phase": "regular",
+    "indexSha256": "1fd25b4aa1b27df8aab3a1802a0afb69e62fce5faffa4278c02171fbb2aa806f",
+    "playerGamesPartSha256": "4fb297e54eb7d7c2b8a6f32ba070a3a556f63ea6ba09d1557bb24675ade66e0e",
+    "playerGamesPartBytes": 35784446,
+    "playerGamesPartRows": 28712,
+    "aggregatedProfiles": 661,
+    "eligibleProfiles": 460,
+    "eligibleProfilesByTeam": {
+      "ATL": 14,
+      "BKN": 17,
+      "BOS": 12,
+      "CHA": 15,
+      "CHI": 19,
+      "CLE": 17,
+      "DAL": 17,
+      "DEN": 14,
+      "DET": 15,
+      "GSW": 16,
+      "HOU": 13,
+      "IND": 18,
+      "LAC": 15,
+      "LAL": 16,
+      "MEM": 16,
+      "MIA": 14,
+      "MIL": 16,
+      "MIN": 13,
+      "NOP": 14,
+      "NYK": 14,
+      "OKC": 16,
+      "ORL": 16,
+      "PHI": 14,
+      "PHX": 15,
+      "POR": 16,
+      "SAC": 16,
+      "SAS": 14,
+      "TOR": 14,
+      "UTA": 16,
+      "WAS": 18
+    }
+  },
+  "dateRange": {
+    "start": "2026-10-09",
+    "days": 14,
+    "end": "2026-10-22"
+  },
+  "boardCount": 28,
+  "requiredCounts": {
+    "fixTheFiveChallenges": 5,
+    "fixLineup": 5,
+    "fixCandidates": 3,
+    "draftRounds": 5,
+    "draftCandidates": 3
+  },
+  "dailyGamePins": [
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-09",
+      "path": "daily-games/fix-the-five/2026-10-09.json",
+      "boardSha256": "a10bf71f51b88217d6d9c6ecaeb94fb7a5d608c8cd412aae2595367d0db27412",
+      "boardContentSha256": "d3954c6cde92f738b2d9d7504c796fb4b97cb3b4391dcfd265894c0a628b8433",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-09",
+      "path": "daily-games/draft-night/2026-10-09.json",
+      "boardSha256": "42a5e51033861ba517eaa34785496a6f446bd00dd19d1ad0afea74b7224676dd",
+      "boardContentSha256": "642785a5575c25892778928185c1b63cafc34b5bec5a60be522338732e62ca27",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-10",
+      "path": "daily-games/fix-the-five/2026-10-10.json",
+      "boardSha256": "6840089875a13ca2820da890bed327aad7b49e6732154bded2037d65c595d8a6",
+      "boardContentSha256": "ca94e9d8ff91950f529e5987fc53884093a9917a8139897113c642c86521a3e6",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-10",
+      "path": "daily-games/draft-night/2026-10-10.json",
+      "boardSha256": "c5ef6561719ff04fe8f752dd1587a54bc120bb2ed1e3c595cc1db697100fe94b",
+      "boardContentSha256": "2a7131afb4e1de4ad12464be0a974c0cca754f75111183737f12d526e7edc4ac",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-11",
+      "path": "daily-games/fix-the-five/2026-10-11.json",
+      "boardSha256": "0ea4d4055855e0a6b95e5aa6b00b193f507595c202e9923fce15ba77ea66cfc9",
+      "boardContentSha256": "79b6959c020f171bae703ae88b99df08a197c6c06d3d4d2e35e8ed3ee65338ef",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-11",
+      "path": "daily-games/draft-night/2026-10-11.json",
+      "boardSha256": "3e5e5245f742d927419c3bbfc030838d511291f9901fad1563838953a5ce19dd",
+      "boardContentSha256": "4ab3de0d63c00c969d126198add3492e0e58102c08d00ac3f0ef5c17acf6c473",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-12",
+      "path": "daily-games/fix-the-five/2026-10-12.json",
+      "boardSha256": "2ab815be033a532ef9ced06d8844786048b935e723826e22db43bbd2d2308581",
+      "boardContentSha256": "6ee4c83d02beddf3dfdb00eb99b3f78e9a2edb749e718f2079257eedaf08342c",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-12",
+      "path": "daily-games/draft-night/2026-10-12.json",
+      "boardSha256": "2e5f3bbb11415fba0de5ffca33a745e27ccc386142bd923e8a76cc0052bca6de",
+      "boardContentSha256": "1a9ca7638a1920f25247d831695baab7b2870ab094f935f395bc15cfeb0560b4",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-13",
+      "path": "daily-games/fix-the-five/2026-10-13.json",
+      "boardSha256": "5d8c0d0dc52520aa0d47bffab3b27fc7429934173fc9b7d631749a6bdc501de5",
+      "boardContentSha256": "e5625a8087d900274adc6db9b4afa334e5ca404c7a5eefad285e8632256d20b5",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-13",
+      "path": "daily-games/draft-night/2026-10-13.json",
+      "boardSha256": "a393717058e439f58f3fbd5fc212be1b4c8a1b0be425325fff72a737eb591fab",
+      "boardContentSha256": "4e1c611815e3646e4399a225d08c10d4f8ac5573fbdc532d7a716236900720af",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-14",
+      "path": "daily-games/fix-the-five/2026-10-14.json",
+      "boardSha256": "ee4bbbadfaea303271f640021ab34fd09ae46f5870dbb4d7cee755e1ac1979d2",
+      "boardContentSha256": "91969c87133fbc3ccc2fa3bdaa1f5aeaa014ac80887c83b4c281fc309574d282",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-14",
+      "path": "daily-games/draft-night/2026-10-14.json",
+      "boardSha256": "6b2ba814c6d4b7a228cee1f157fc8d4595a6a9830819c935ba6f656e44c6c7da",
+      "boardContentSha256": "a410fba159902389d90f1ed5abf26cce2bb3fb052b5926946da2a2d37b171cec",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-15",
+      "path": "daily-games/fix-the-five/2026-10-15.json",
+      "boardSha256": "5a3238ed421558bb6061ff3f988151e463877362148a3cc5be880e3ee62de21d",
+      "boardContentSha256": "08057becdece6cd6e8d5b770bf5778ba17f5b1168a47284deab5ad66330d2f90",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-15",
+      "path": "daily-games/draft-night/2026-10-15.json",
+      "boardSha256": "19c0452d52825b88bb620ba4784795d0db7dfcf6e27c53ae9d14171004c07c24",
+      "boardContentSha256": "23d96aabeffeddb9477bb72416e45d61478ec20f103afc4beae4e4b73dd82d01",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-16",
+      "path": "daily-games/fix-the-five/2026-10-16.json",
+      "boardSha256": "7d195a03183d63768ed3e727eebec6a25275be85968d8dea7f41b692b7cc1711",
+      "boardContentSha256": "c74087edf99dd67c9612a5987ce3d31086ac0db78c9a315c6a6c4c9c34535b5a",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-16",
+      "path": "daily-games/draft-night/2026-10-16.json",
+      "boardSha256": "57c9de19faef4be2fc003eb5291549f1f821e1b2d9a33ae39c3861325d4468af",
+      "boardContentSha256": "0c5933189f92f67306c162f25044b3d7c57a6e9ddd9c31676d25b3a0fdb902a8",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-17",
+      "path": "daily-games/fix-the-five/2026-10-17.json",
+      "boardSha256": "ca32f7718c30941f7975686e36ae2b34c34669c489d529937c5d19d88072b7ab",
+      "boardContentSha256": "a4624d9556d758652833e039d0c713f9f89139d676d0001c266abe3f8b9f1634",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-17",
+      "path": "daily-games/draft-night/2026-10-17.json",
+      "boardSha256": "88df144172202ba2dea12bc6d01274e150a6b3d38c38820189dd5025a4f77c6d",
+      "boardContentSha256": "4a312029a0d6c641aa467f0f1ed1a38ad3d5dc277bd187990c934eb554c1f55c",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-18",
+      "path": "daily-games/fix-the-five/2026-10-18.json",
+      "boardSha256": "d68e466c6a73f0087d83245024393f7c0fa9183a28b67d0a9a55deda81026970",
+      "boardContentSha256": "e0a135aebe6aa592e2c9a3c728eed7cae8bbdcf58e44fc3ae4de87146ea80120",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-18",
+      "path": "daily-games/draft-night/2026-10-18.json",
+      "boardSha256": "bd37094792b98134c33f0e71c4648e1b348107178343319837d63982314e9b12",
+      "boardContentSha256": "aea62711f23474c272d5716eab64d7cfb3ed62598a87deec0ea0df93139b2c75",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-19",
+      "path": "daily-games/fix-the-five/2026-10-19.json",
+      "boardSha256": "ff7d44cf937e6e5c46cebdea10ca2a8c221c273fa30a53156a33b9501d704c70",
+      "boardContentSha256": "e4d4b310eb55996bfef06010d858f5fae91944abad2f1861c1cbc3f91fd967ab",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-19",
+      "path": "daily-games/draft-night/2026-10-19.json",
+      "boardSha256": "b518ce51070ebd0c5520544180608b0fe342294cf1fa525e8de7141de9530c30",
+      "boardContentSha256": "89f6610eeb2adf16bc2b465775cba34ca53b9039e3155a9f9a4b4cdee8640814",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-20",
+      "path": "daily-games/fix-the-five/2026-10-20.json",
+      "boardSha256": "ca33f4ccabebff0c77e98ca37f535608b0cfb35e7b409f315b414a772f94b867",
+      "boardContentSha256": "0ebee7c9880942d4e1ebf4947b19107d49004a6a8e7beeddc9892c6f6dafd681",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-20",
+      "path": "daily-games/draft-night/2026-10-20.json",
+      "boardSha256": "09b57e7d05d0da85c34e38a73a6d75cba3c9bca744b3936372fddab320509711",
+      "boardContentSha256": "f1f086dbf3bfbe042efa7638ced62afecfe214f37809644db3db2450088634d0",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-21",
+      "path": "daily-games/fix-the-five/2026-10-21.json",
+      "boardSha256": "4f8a1da3b973f44e4e3f21d84ffb0d724f49ec13e6e5b0caf149d720cf6c40ac",
+      "boardContentSha256": "89440aa7b088f421b2148efbd0cdfd7bbf0365d5d096ba9c6fb1666798626ee7",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-21",
+      "path": "daily-games/draft-night/2026-10-21.json",
+      "boardSha256": "b4b196867431122b4c23942a00ed951d4f1cd5e9b5098207f8d3c40956e0da70",
+      "boardContentSha256": "dc85965cabb28d9e78b99c929476599482c513826ff098f5ffa2bc91d5624f37",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-22",
+      "path": "daily-games/fix-the-five/2026-10-22.json",
+      "boardSha256": "56184c6ad64b6c6aa98af90e017d8134f4d8b978faccdad3ccbe6366c5159914",
+      "boardContentSha256": "1164280fca01d91b9e900446b0a479ca6e443a0645c9f97d0a1e8857e2f116e9",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-22",
+      "path": "daily-games/draft-night/2026-10-22.json",
+      "boardSha256": "8904b984c9928d08fc5d0a15e93ca53d60b1b8749bad193312fe10622df8c52d",
+      "boardContentSha256": "912b97c3deb84e9d3ef48e8bac54017d0497a98c1a1c56fe62a9616c306881e4",
+      "packageId": "nba-swishiq-v4-2025-26",
+      "packageVersion": "v4-canonical-20260929-1469d53a1c0c",
+      "scope": {
+        "kind": "exact-season",
+        "seasonStartYears": [
+          2025
+        ],
+        "seasonStartYear": 2025,
+        "seasonEndYear": 2026,
+        "phases": [
+          "regular",
+          "in_season_tournament",
+          "play_in",
+          "playoffs"
+        ],
+        "pooledFitIsSeasonSpecific": true
+      },
+      "phase": "regular"
+    }
+  ],
+  "boards": [
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-09",
+      "boardId": "swishiq-v4-fix-the-five-20261009-d3954c6cde92",
+      "path": "daily-games/fix-the-five/2026-10-09.json",
+      "boardSha256": "a10bf71f51b88217d6d9c6ecaeb94fb7a5d608c8cd412aae2595367d0db27412",
+      "boardContentSha256": "d3954c6cde92f738b2d9d7504c796fb4b97cb3b4391dcfd265894c0a628b8433",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "PHX",
+        "DEN",
+        "MIA",
+        "MIN",
+        "POR"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "PHX",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "DEN",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MIA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MIN",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "POR",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-09",
+      "boardId": "swishiq-v4-draft-night-20261009-642785a5575c",
+      "path": "daily-games/draft-night/2026-10-09.json",
+      "boardSha256": "42a5e51033861ba517eaa34785496a6f446bd00dd19d1ad0afea74b7224676dd",
+      "boardContentSha256": "642785a5575c25892778928185c1b63cafc34b5bec5a60be522338732e62ca27",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "CLE",
+        "BKN"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-10",
+      "boardId": "swishiq-v4-fix-the-five-20261010-ca94e9d8ff91",
+      "path": "daily-games/fix-the-five/2026-10-10.json",
+      "boardSha256": "6840089875a13ca2820da890bed327aad7b49e6732154bded2037d65c595d8a6",
+      "boardContentSha256": "ca94e9d8ff91950f529e5987fc53884093a9917a8139897113c642c86521a3e6",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "POR",
+        "ORL",
+        "ATL",
+        "LAC",
+        "CLE"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "POR",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "ORL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "ATL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "LAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "CLE",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-10",
+      "boardId": "swishiq-v4-draft-night-20261010-2a7131afb4e1",
+      "path": "daily-games/draft-night/2026-10-10.json",
+      "boardSha256": "c5ef6561719ff04fe8f752dd1587a54bc120bb2ed1e3c595cc1db697100fe94b",
+      "boardContentSha256": "2a7131afb4e1de4ad12464be0a974c0cca754f75111183737f12d526e7edc4ac",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "WAS",
+        "IND",
+        "CLE",
+        "BKN"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-11",
+      "boardId": "swishiq-v4-fix-the-five-20261011-79b6959c020f",
+      "path": "daily-games/fix-the-five/2026-10-11.json",
+      "boardSha256": "0ea4d4055855e0a6b95e5aa6b00b193f507595c202e9923fce15ba77ea66cfc9",
+      "boardContentSha256": "79b6959c020f171bae703ae88b99df08a197c6c06d3d4d2e35e8ed3ee65338ef",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "MIA",
+        "GSW",
+        "BKN",
+        "OKC",
+        "SAS"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "MIA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "GSW",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "BKN",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "OKC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "SAS",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-11",
+      "boardId": "swishiq-v4-draft-night-20261011-4ab3de0d63c0",
+      "path": "daily-games/draft-night/2026-10-11.json",
+      "boardSha256": "3e5e5245f742d927419c3bbfc030838d511291f9901fad1563838953a5ce19dd",
+      "boardContentSha256": "4ab3de0d63c00c969d126198add3492e0e58102c08d00ac3f0ef5c17acf6c473",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "WAS",
+        "IND",
+        "CLE",
+        "BKN"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-12",
+      "boardId": "swishiq-v4-fix-the-five-20261012-6ee4c83d02be",
+      "path": "daily-games/fix-the-five/2026-10-12.json",
+      "boardSha256": "2ab815be033a532ef9ced06d8844786048b935e723826e22db43bbd2d2308581",
+      "boardContentSha256": "6ee4c83d02beddf3dfdb00eb99b3f78e9a2edb749e718f2079257eedaf08342c",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "PHX",
+        "SAC",
+        "ATL",
+        "LAC",
+        "UTA"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "PHX",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "SAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "ATL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "LAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "UTA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-12",
+      "boardId": "swishiq-v4-draft-night-20261012-1a9ca7638a19",
+      "path": "daily-games/draft-night/2026-10-12.json",
+      "boardSha256": "2e5f3bbb11415fba0de5ffca33a745e27ccc386142bd923e8a76cc0052bca6de",
+      "boardContentSha256": "1a9ca7638a1920f25247d831695baab7b2870ab094f935f395bc15cfeb0560b4",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "WAS",
+        "IND",
+        "DAL",
+        "BKN"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-13",
+      "boardId": "swishiq-v4-fix-the-five-20261013-e5625a8087d9",
+      "path": "daily-games/fix-the-five/2026-10-13.json",
+      "boardSha256": "5d8c0d0dc52520aa0d47bffab3b27fc7429934173fc9b7d631749a6bdc501de5",
+      "boardContentSha256": "e5625a8087d900274adc6db9b4afa334e5ca404c7a5eefad285e8632256d20b5",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "SAC",
+        "MIA",
+        "LAC",
+        "GSW",
+        "NYK"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "SAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MIA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "LAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "GSW",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "NYK",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-13",
+      "boardId": "swishiq-v4-draft-night-20261013-4e1c611815e3",
+      "path": "daily-games/draft-night/2026-10-13.json",
+      "boardSha256": "a393717058e439f58f3fbd5fc212be1b4c8a1b0be425325fff72a737eb591fab",
+      "boardContentSha256": "4e1c611815e3646e4399a225d08c10d4f8ac5573fbdc532d7a716236900720af",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "CLE",
+        "BKN"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-14",
+      "boardId": "swishiq-v4-fix-the-five-20261014-91969c87133f",
+      "path": "daily-games/fix-the-five/2026-10-14.json",
+      "boardSha256": "ee4bbbadfaea303271f640021ab34fd09ae46f5870dbb4d7cee755e1ac1979d2",
+      "boardContentSha256": "91969c87133fbc3ccc2fa3bdaa1f5aeaa014ac80887c83b4c281fc309574d282",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "ORL",
+        "SAC",
+        "ATL",
+        "PHX",
+        "BKN"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "ORL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "SAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "ATL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "PHX",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "BKN",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-14",
+      "boardId": "swishiq-v4-draft-night-20261014-a410fba15990",
+      "path": "daily-games/draft-night/2026-10-14.json",
+      "boardSha256": "6b2ba814c6d4b7a228cee1f157fc8d4595a6a9830819c935ba6f656e44c6c7da",
+      "boardContentSha256": "a410fba159902389d90f1ed5abf26cce2bb3fb052b5926946da2a2d37b171cec",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "BKN",
+        "CLE"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-15",
+      "boardId": "swishiq-v4-fix-the-five-20261015-08057becdece",
+      "path": "daily-games/fix-the-five/2026-10-15.json",
+      "boardSha256": "5a3238ed421558bb6061ff3f988151e463877362148a3cc5be880e3ee62de21d",
+      "boardContentSha256": "08057becdece6cd6e8d5b770bf5778ba17f5b1168a47284deab5ad66330d2f90",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "DAL",
+        "NOP",
+        "GSW",
+        "LAC",
+        "MEM"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "DAL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "NOP",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "GSW",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "LAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MEM",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-15",
+      "boardId": "swishiq-v4-draft-night-20261015-23d96aabeffe",
+      "path": "daily-games/draft-night/2026-10-15.json",
+      "boardSha256": "19c0452d52825b88bb620ba4784795d0db7dfcf6e27c53ae9d14171004c07c24",
+      "boardContentSha256": "23d96aabeffeddb9477bb72416e45d61478ec20f103afc4beae4e4b73dd82d01",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "BKN",
+        "CLE"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-16",
+      "boardId": "swishiq-v4-fix-the-five-20261016-c74087edf99d",
+      "path": "daily-games/fix-the-five/2026-10-16.json",
+      "boardSha256": "7d195a03183d63768ed3e727eebec6a25275be85968d8dea7f41b692b7cc1711",
+      "boardContentSha256": "c74087edf99dd67c9612a5987ce3d31086ac0db78c9a315c6a6c4c9c34535b5a",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CLE",
+        "MEM",
+        "DAL",
+        "NYK",
+        "MIA"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "CLE",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MEM",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "DAL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "NYK",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MIA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-16",
+      "boardId": "swishiq-v4-draft-night-20261016-0c5933189f92",
+      "path": "daily-games/draft-night/2026-10-16.json",
+      "boardSha256": "57c9de19faef4be2fc003eb5291549f1f821e1b2d9a33ae39c3861325d4468af",
+      "boardContentSha256": "0c5933189f92f67306c162f25044b3d7c57a6e9ddd9c31676d25b3a0fdb902a8",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "BKN",
+        "CLE"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-17",
+      "boardId": "swishiq-v4-fix-the-five-20261017-a4624d9556d7",
+      "path": "daily-games/fix-the-five/2026-10-17.json",
+      "boardSha256": "ca32f7718c30941f7975686e36ae2b34c34669c489d529937c5d19d88072b7ab",
+      "boardContentSha256": "a4624d9556d758652833e039d0c713f9f89139d676d0001c266abe3f8b9f1634",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "DAL",
+        "PHI",
+        "MIA",
+        "TOR",
+        "SAC"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "DAL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "PHI",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MIA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "TOR",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "SAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-17",
+      "boardId": "swishiq-v4-draft-night-20261017-4a312029a0d6",
+      "path": "daily-games/draft-night/2026-10-17.json",
+      "boardSha256": "88df144172202ba2dea12bc6d01274e150a6b3d38c38820189dd5025a4f77c6d",
+      "boardContentSha256": "4a312029a0d6c641aa467f0f1ed1a38ad3d5dc277bd187990c934eb554c1f55c",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "DAL",
+        "BKN"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-18",
+      "boardId": "swishiq-v4-fix-the-five-20261018-e0a135aebe6a",
+      "path": "daily-games/fix-the-five/2026-10-18.json",
+      "boardSha256": "d68e466c6a73f0087d83245024393f7c0fa9183a28b67d0a9a55deda81026970",
+      "boardContentSha256": "e0a135aebe6aa592e2c9a3c728eed7cae8bbdcf58e44fc3ae4de87146ea80120",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "MEM",
+        "POR",
+        "WAS",
+        "BOS",
+        "DET"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "MEM",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "POR",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "WAS",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "BOS",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "DET",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-18",
+      "boardId": "swishiq-v4-draft-night-20261018-aea62711f234",
+      "path": "daily-games/draft-night/2026-10-18.json",
+      "boardSha256": "bd37094792b98134c33f0e71c4648e1b348107178343319837d63982314e9b12",
+      "boardContentSha256": "aea62711f23474c272d5716eab64d7cfb3ed62598a87deec0ea0df93139b2c75",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "DAL",
+        "CLE"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-19",
+      "boardId": "swishiq-v4-fix-the-five-20261019-e4d4b310eb55",
+      "path": "daily-games/fix-the-five/2026-10-19.json",
+      "boardSha256": "ff7d44cf937e6e5c46cebdea10ca2a8c221c273fa30a53156a33b9501d704c70",
+      "boardContentSha256": "e4d4b310eb55996bfef06010d858f5fae91944abad2f1861c1cbc3f91fd967ab",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "DET",
+        "PHX",
+        "SAC",
+        "ORL",
+        "IND"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "DET",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "PHX",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "SAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "ORL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "IND",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-19",
+      "boardId": "swishiq-v4-draft-night-20261019-89f6610eeb2a",
+      "path": "daily-games/draft-night/2026-10-19.json",
+      "boardSha256": "b518ce51070ebd0c5520544180608b0fe342294cf1fa525e8de7141de9530c30",
+      "boardContentSha256": "89f6610eeb2adf16bc2b465775cba34ca53b9039e3155a9f9a4b4cdee8640814",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "CLE",
+        "BKN"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-20",
+      "boardId": "swishiq-v4-fix-the-five-20261020-0ebee7c98809",
+      "path": "daily-games/fix-the-five/2026-10-20.json",
+      "boardSha256": "ca33f4ccabebff0c77e98ca37f535608b0cfb35e7b409f315b414a772f94b867",
+      "boardContentSha256": "0ebee7c9880942d4e1ebf4947b19107d49004a6a8e7beeddc9892c6f6dafd681",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "LAL",
+        "CHA",
+        "PHI",
+        "MIN",
+        "MIA"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "LAL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "CHA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "PHI",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MIN",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "MIA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-20",
+      "boardId": "swishiq-v4-draft-night-20261020-f1f086dbf3bf",
+      "path": "daily-games/draft-night/2026-10-20.json",
+      "boardSha256": "09b57e7d05d0da85c34e38a73a6d75cba3c9bca744b3936372fddab320509711",
+      "boardContentSha256": "f1f086dbf3bfbe042efa7638ced62afecfe214f37809644db3db2450088634d0",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "WAS",
+        "IND",
+        "DAL",
+        "CLE"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-21",
+      "boardId": "swishiq-v4-fix-the-five-20261021-89440aa7b088",
+      "path": "daily-games/fix-the-five/2026-10-21.json",
+      "boardSha256": "4f8a1da3b973f44e4e3f21d84ffb0d724f49ec13e6e5b0caf149d720cf6c40ac",
+      "boardContentSha256": "89440aa7b088f421b2148efbd0cdfd7bbf0365d5d096ba9c6fb1666798626ee7",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "SAS",
+        "UTA",
+        "BOS",
+        "LAL",
+        "IND"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "SAS",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "UTA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "BOS",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "LAL",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "IND",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-21",
+      "boardId": "swishiq-v4-draft-night-20261021-dc85965cabb2",
+      "path": "daily-games/draft-night/2026-10-21.json",
+      "boardSha256": "b4b196867431122b4c23942a00ed951d4f1cd5e9b5098207f8d3c40956e0da70",
+      "boardContentSha256": "dc85965cabb28d9e78b99c929476599482c513826ff098f5ffa2bc91d5624f37",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "WAS",
+        "IND",
+        "CLE",
+        "BKN"
+      ],
+      "selectedPlayerCount": 15
+    },
+    {
+      "gameKind": "fix-the-five",
+      "dailySeed": "2026-10-22",
+      "boardId": "swishiq-v4-fix-the-five-20261022-1164280fca01",
+      "path": "daily-games/fix-the-five/2026-10-22.json",
+      "boardSha256": "56184c6ad64b6c6aa98af90e017d8134f4d8b978faccdad3ccbe6366c5159914",
+      "boardContentSha256": "1164280fca01d91b9e900446b0a479ca6e443a0645c9f97d0a1e8857e2f116e9",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "BKN",
+        "UTA",
+        "PHX",
+        "HOU",
+        "SAC"
+      ],
+      "selectedPlayerCount": 40,
+      "rolePolicy": [
+        {
+          "teamCode": "BKN",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "UTA",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "PHX",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "HOU",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        },
+        {
+          "teamCode": "SAC",
+          "playersInLineup": 5,
+          "candidates": 3,
+          "positionsPresent": [
+            "G",
+            "F",
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "gameKind": "draft-night",
+      "dailySeed": "2026-10-22",
+      "boardId": "swishiq-v4-draft-night-20261022-912b97c3deb8",
+      "path": "daily-games/draft-night/2026-10-22.json",
+      "boardSha256": "8904b984c9928d08fc5d0a15e93ca53d60b1b8749bad193312fe10622df8c52d",
+      "boardContentSha256": "912b97c3deb84e9d3ef48e8bac54017d0497a98c1a1c56fe62a9616c306881e4",
+      "eligibleProfiles": 460,
+      "eligibleProfilesByTeam": {
+        "ATL": 14,
+        "BKN": 17,
+        "BOS": 12,
+        "CHA": 15,
+        "CHI": 19,
+        "CLE": 17,
+        "DAL": 17,
+        "DEN": 14,
+        "DET": 15,
+        "GSW": 16,
+        "HOU": 13,
+        "IND": 18,
+        "LAC": 15,
+        "LAL": 16,
+        "MEM": 16,
+        "MIA": 14,
+        "MIL": 16,
+        "MIN": 13,
+        "NOP": 14,
+        "NYK": 14,
+        "OKC": 16,
+        "ORL": 16,
+        "PHI": 14,
+        "PHX": 15,
+        "POR": 16,
+        "SAC": 16,
+        "SAS": 14,
+        "TOR": 14,
+        "UTA": 16,
+        "WAS": 18
+      },
+      "selectedTeamCodes": [
+        "CHI",
+        "IND",
+        "WAS",
+        "CLE",
+        "DAL"
+      ],
+      "selectedPlayerCount": 15
+    }
+  ]
+}

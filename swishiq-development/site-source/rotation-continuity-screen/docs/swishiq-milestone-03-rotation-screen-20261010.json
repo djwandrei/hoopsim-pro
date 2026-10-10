@@ -1,0 +1,44 @@
+{
+  "format": "swishiq-development-milestone-summary-v1",
+  "milestone": "rotation-continuity-screen",
+  "status": "completed-development-screen-only",
+  "reference": {
+    "candidate": "swishiq-v4-game-lab-candidate100-pruned-total-model-blend090-v1",
+    "configurationSha256": "6e7fa2868fb9bcf4716603a15a953f42f1f6faa0b70e3ecd7f1ea56b45992e94"
+  },
+  "scope": {
+    "targetSeasonStartYears": [2022, 2023, 2024, 2025],
+    "targetGames": 4920,
+    "inputs": [
+      "meanActivePlayerOverlap5",
+      "meanStarterOverlap5",
+      "meanMinuteShareOverlap5",
+      "activePlayerOverlapAdvantage5",
+      "starterOverlapAdvantage5",
+      "minuteShareOverlapAdvantage5"
+    ],
+    "method": "six single-slot Candidate100 additions; paired 1,000-repetition date-block bootstrap comparisons; unchanged canonical uncertainty settings"
+  },
+  "result": {
+    "selectedSuccessor": null,
+    "candidate100Changed": false,
+    "decision": "Do not retain or combine a rotation-continuity addition from this screen.",
+    "reasons": [
+      "Active-player and starter overlap had interval-separated harm in their tested heads.",
+      "Minute-share overlap in the margin head had only a negligible favorable point estimate and its paired 95 percent interval crossed zero.",
+      "Minute-share overlap in the total head had no point gain.",
+      "The redundancy review found no exact or near-duplicate inputs, so non-selection reflects the paired screen rather than alias duplication."
+    ]
+  },
+  "evidence": {
+    "screenSummary": "prototypes/swishiq-package-v4/experiment-tools/runs/rotation-continuity-individual/run-1791611514047-b52cc30a-3db1-4147-90a7-a50e470f86ef/pipeline/run-1791611552949-25524/summary.json",
+    "comparisonKey": "a0d96e26bfd6b71377fb179968142cc03b2902f80333ce861e867e6e9b11b776",
+    "rotationInputAdapterSha256": "6fd959666855a9271a36217ccb109aefd801ec067f71f74dfbd36a863716433b",
+    "redundancyReview": "docs/candidate100-rotation-continuity-redundancy-review-20261010.md"
+  },
+  "limitations": [
+    "This is an opened-label development screen, not independent predictive validation.",
+    "Canonical final scoring and model promotion were not run.",
+    "No site wiring, package build, or deployment changed in this milestone."
+  ]
+}

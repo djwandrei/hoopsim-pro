@@ -4,7 +4,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const DEFAULT_SITE_ROOT = 'C:\\Users\\djwan\\Downloads\\djshouseofcards-next-fixes-applied';
-const LOCAL_PUBLIC_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'public');
+const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const LOCAL_PUBLIC_ROOT = path.join(PROJECT_ROOT, 'public');
+const LOCAL_SITE_ROOT = path.join(PROJECT_ROOT, 'integration', 'site');
 const EXTENSION_TYPES = new Map([
   ['.css', 'text/css; charset=utf-8'],
   ['.csv', 'text/csv; charset=utf-8'],
@@ -23,7 +25,7 @@ const EXTENSION_TYPES = new Map([
 
 const PUBLIC_MOUNTS = [
   { url: '/lineup-lab', root: 'lineup-lab' },
-  { url: '/tools/swishiq-studio/data', root: 'tools/swishiq-studio/data' },
+  { url: '/tools/swishiq-studio/data', root: 'tools/swishiq-studio/data', siteRoot: LOCAL_SITE_ROOT },
   { url: '/tools/swishiq-studio/engine', root: 'tools/swishiq-studio/engine' },
   { url: '/tools/swishiq-studio/franchise-sim-20261008', root: 'tools/swishiq-studio/franchise-sim-20261008' },
   { url: '/tools/swishiq-studio/react-app', root: 'tools/swishiq-studio/react-app' },
@@ -109,6 +111,7 @@ function routeFor(pathname) {
     if (pathname === mount.url || pathname.startsWith(`${mount.url}/`)) {
       return {
         root: mount.root,
+        siteRoot: mount.siteRoot,
         relative: pathname.slice(mount.url.length).replace(/^\//, ''),
       };
     }
@@ -144,7 +147,8 @@ function sendMethodNotAllowed(response) {
 
 async function resolvePublicFile(siteRoot, route) {
   if (!route.relative) return null;
-  const routeRoot = route.root ? path.resolve(siteRoot, route.root) : siteRoot;
+  const sourceRoot = route.siteRoot || siteRoot;
+  const routeRoot = route.root ? path.resolve(sourceRoot, route.root) : sourceRoot;
   const routePath = path.resolve(routeRoot, ...route.relative.split('/'));
   if (!isWithin(routeRoot, routePath)) return null;
 

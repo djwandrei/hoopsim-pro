@@ -1,24 +1,26 @@
 # SwishIQ Studio site integration
 
-The app builds as a static site under `/tools/swishiq-studio/`. Canonical data,
-native runtime modules, and public media remain at their existing DJHC URLs;
-browsers request them from the same origin as the Studio page. Vite includes
-this repository's checked-in `public/` assets in `dist/`, but the much larger
-external storefront checkout and its 3.83 GB data tree stay outside the app
-build.
+The app builds as a static site under `/tools/swishiq-studio/`. The complete
+3.83 GB Studio data tree is checked into this repository at
+`integration/site/tools/swishiq-studio/data` using Git LFS. The Vite bridge
+streams that tree at its canonical `/tools/swishiq-studio/data/` URLs; the
+large files stay outside the app build. Native runtime modules and other public
+media remain at their existing DJHC URLs and are read from the local storefront
+checkout during development. Vite includes this repository's checked-in
+`public/` assets in `dist/`.
 
 ## Local development
 
 See [README.md](./README.md) for the install, dev, build, and preview commands.
-Vite's local bridge maps only approved public URL paths to the local DJHC
-checkout, serves files read-only, and streams them without copying the
-storefront data into `dist/`. Set `DJHC_SITE_ROOT` when the checkout is not at
-the default path.
+Vite's local bridge serves the repository's Studio data tree and maps only the
+other approved public URL paths to the local DJHC checkout. It serves files
+read-only and streams the large data tree without copying it into `dist/`. Set
+`DJHC_SITE_ROOT` when the checkout is not at the default path.
 
 The bridge maps these existing public paths:
 
 - `/lineup-lab/` (the reviewed Lineup Lab source modules and fixture files)
-- `/tools/swishiq-studio/data/`
+- `/tools/swishiq-studio/data/` (from this repo's Git LFS tree)
 - `/tools/swishiq-studio/engine/`
 - `/tools/swishiq-studio/franchise-sim-20261008/`
 - `/tools/swishiq-studio/react-app/`
@@ -69,8 +71,8 @@ with the `/tools/swishiq-studio/` base path. To check that output locally, run
 `npm run preview` and open `http://localhost:4173/tools/swishiq-studio/`.
 
 Serve the built app shell and its generated assets at
-`/tools/swishiq-studio/`. Existing DJHC public data and native files remain
-served at their original website-root paths. The hosting layer must route
+`/tools/swishiq-studio/`. The matching DJHC data package tree and native files
+must be served at their original website-root paths. The hosting layer must route
 Studio page paths to the app shell while serving data and static files
 directly; a missing data or asset file must remain a 404 instead of receiving
 the app shell.

@@ -12,24 +12,37 @@ npm ci
 npm run dev
 ```
 
+The full Studio package tree lives in `integration/site/tools/swishiq-studio/data`
+and is stored with Git LFS. After cloning, install Git LFS and fetch the data:
+
+```sh
+git lfs install
+git lfs pull
+```
+
+`integration/site/studio-data-receipt.json` records the relative path, byte
+size, and SHA-256 of every data file in this repository snapshot.
+
 Open `http://localhost:5173/tools/swishiq-studio/`.
 
-The dev server reads the DJHC storefront's public files through a read-only
-Vite bridge. By default it uses:
+The dev server reads the full Studio data tree from this repository and reads
+the other DJHC storefront public files through a read-only Vite bridge. By
+default, those other files come from:
 
 ```text
 C:\Users\djwan\Downloads\djshouseofcards-next-fixes-applied
 ```
 
 On another computer, set `DJHC_SITE_ROOT` to the local storefront checkout
-before starting Vite. The bridge exposes only the Studio data, engine,
-franchise, and public asset paths needed by the app. It accepts `GET` and
+before starting Vite. The bridge exposes only the engine, franchise, and
+public asset paths needed by the app from that checkout. It accepts `GET` and
 `HEAD`, returns no directory listings, and denies protected paths such as
 `.env`, `.git`, `.deploy`, and `products.json`.
 
-The external storefront checkout and its 3.83 GB data tree stay outside the
-app build. Vite still copies this repository's checked-in `public/` assets into
-`dist/`; those are the smaller, already-tracked app assets.
+The full 3.83 GB data tree is tracked in this repository with Git LFS. The Vite
+bridge streams it at the existing `/tools/swishiq-studio/data/` URLs, while
+keeping it outside the app build. Vite copies this repository's checked-in
+`public/` assets into `dist/`; those are the smaller app assets.
 
 The Lineup Lab controller is generated into
 `public/djhc-runtime/lineup-controller.js` by

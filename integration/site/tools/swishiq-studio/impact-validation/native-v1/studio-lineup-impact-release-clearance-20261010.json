@@ -1,0 +1,196 @@
+{
+  "format": "studio-lineup-native-v4-impact-local-release-clearance-v1",
+  "recordedAt": "2026-10-10T08:36:44.446Z",
+  "route": "https://www.djshouseofcards-comics.com/tools/swishiq-studio/lineup-lab",
+  "testedUrl": "http://127.0.0.1:4186/tools/swishiq-studio/lineup-lab?impactqa=20261010c",
+  "localQA": "passed",
+  "liveVerification": "pending-coordinator-activation",
+  "githubPublication": "pending-coordinator-milestone-push",
+  "modelReleaseId": "swishiq-v4-impact-native-20261010-v1",
+  "impactManifestSha256": "33ffa08170730bdd072c10b911f699aeeec38e5cc3b76cd567c17bdf49626b2a",
+  "assessment": {
+    "status": "chronological-conditional-lineup-acceptance-passed",
+    "checksPassed": 12,
+    "checksTotal": 12,
+    "supportedClaim": "historical conditional scoring for specified observed paired lineups",
+    "individualPlayerUncertainty": "not-estimated",
+    "optimizerCounterfactualsValidated": false
+  },
+  "seasonCoverage": [
+    {
+      "seasonStartYear": 2017,
+      "coverage": {
+        "numericRows": 490,
+        "limitedExposureRows": 81,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    },
+    {
+      "seasonStartYear": 2018,
+      "coverage": {
+        "numericRows": 478,
+        "limitedExposureRows": 60,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    },
+    {
+      "seasonStartYear": 2019,
+      "coverage": {
+        "numericRows": 482,
+        "limitedExposureRows": 78,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    },
+    {
+      "seasonStartYear": 2020,
+      "coverage": {
+        "numericRows": 499,
+        "limitedExposureRows": 65,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    },
+    {
+      "seasonStartYear": 2021,
+      "coverage": {
+        "numericRows": 567,
+        "limitedExposureRows": 109,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    },
+    {
+      "seasonStartYear": 2022,
+      "coverage": {
+        "numericRows": 506,
+        "limitedExposureRows": 71,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    },
+    {
+      "seasonStartYear": 2023,
+      "coverage": {
+        "numericRows": 539,
+        "limitedExposureRows": 96,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    },
+    {
+      "seasonStartYear": 2024,
+      "coverage": {
+        "numericRows": 538,
+        "limitedExposureRows": 75,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    },
+    {
+      "seasonStartYear": 2025,
+      "coverage": {
+        "numericRows": 545,
+        "limitedExposureRows": 80,
+        "explicitZeroCenteredPriorRows": 0
+      }
+    }
+  ],
+  "contractRegression": "26/26 focused checks including actual immutable-byte loader to Studio model and optimizer",
+  "staticImportClosure": {
+    "modules": 47,
+    "namedImports": 182,
+    "missingExports": 0
+  },
+  "browserConsole": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "startingFive": {
+    "ok": true,
+    "mode": "lineup",
+    "checked": 3003,
+    "legal": 504,
+    "objective": 0.587803967725324,
+    "expected": 0.5878039677253242,
+    "displayed": "Solver objective\n0.588\nBounded display fit\n74.2 / 100\n\nweighted player-impac",
+    "modelVersion": "native-v4-conditional-lineup-od-v1",
+    "width": 390,
+    "scrollWidth": 390,
+    "selected": [
+      "demar derozan|2025|SAC|regular",
+      "dylan cardwell|2025|SAC|regular",
+      "keegan murray|2025|SAC|regular",
+      "killian hayes|2025|SAC|regular",
+      "nique clifford|2025|SAC|regular"
+    ],
+    "manifestSha256": "33ffa08170730bdd072c10b911f699aeeec38e5cc3b76cd567c17bdf49626b2a",
+    "desktopSolveAlsoPassed": true,
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "rotation": {
+    "ok": true,
+    "checkedGroups": 5005,
+    "legalGroups": 1610,
+    "exactTopKProven": true,
+    "selectedPlayers": 9,
+    "totalMinutes": 240,
+    "objective": 0.627826006677954,
+    "independentObjective": 0.6278260066779543,
+    "objectiveDifference": -3.3306690738754696e-16,
+    "allHardRulesPassed": true,
+    "allMinuteBoundsPassed": true,
+    "onCourtProof": {
+      "frameCount": 48,
+      "fiveDistinctPlayersEveryMinute": true,
+      "playerMinutesMatch": true,
+      "roleMinutesMatch": true
+    },
+    "modelVersion": "native-v4-conditional-lineup-od-v1"
+  },
+  "runtimeFiles": [
+    {
+      "path": "tools/swishiq-studio/studio-runtime/lineup-lab/app.js",
+      "sha256": "00e6a3d1ac1e5611e40e6c8004e10a9b1f45e9ea1854a0afb7186e4e8930addc",
+      "bytes": 435794,
+      "isolatedReleaseMatches": true
+    },
+    {
+      "path": "tools/swishiq-studio/djhc-runtime/lineup-controller.js",
+      "sha256": "c5dbc8b37c9fd61501da03b2cf4fea71ea0041d5a70b372fb85600366189f71f",
+      "bytes": 454065,
+      "isolatedReleaseMatches": true
+    },
+    {
+      "path": "tools/swishiq-studio/studio-runtime/lineup-lab/swishiq-impact.js",
+      "sha256": "e902c9be4e9c7fa484c9f3907a8372cfdeae755d1b95d5021b90d9620504dbc4",
+      "bytes": 86923,
+      "isolatedReleaseMatches": true
+    },
+    {
+      "path": "tools/swishiq-studio/studio-runtime/lineup-lab/optimizer-core.js",
+      "sha256": "ae9e47b7cfd99780ac3fe15de024042efdae265f74203d0b487ac03faf81b3a2",
+      "bytes": 389836,
+      "isolatedReleaseMatches": true
+    },
+    {
+      "path": "tools/swishiq-studio/studio-runtime/lineup-lab/optimizer-worker.js",
+      "sha256": "2d3973c931749845d1933f4480cf79532111c03b8a3a68a3b4c7ddc29fe7ceff",
+      "bytes": 3195,
+      "isolatedReleaseMatches": true
+    },
+    {
+      "path": "tools/swishiq-studio/studio-runtime/lineup-lab/swishiq-static-projection.js",
+      "sha256": "2fba79e612e6ef2d3daeed5c10560ff8371a2157a5132ee7a2a4df1152c68916",
+      "bytes": 5954,
+      "isolatedReleaseMatches": true
+    },
+    {
+      "path": "tools/swishiq-studio/studio-runtime/modules/swishiq-static-projection.js",
+      "sha256": "e6d687ab71fb34b3a3ebed5ff76e79cdf39c59f2f51c01436e94ef1a57bd8c44",
+      "bytes": 61205,
+      "isolatedReleaseMatches": true
+    }
+  ],
+  "evidence": {
+    "mobileScreenshot": "output/playwright/impact-studio-starting-five-mobile-20261010.png",
+    "rotationWorkerCapture": "output/playwright/impact-studio-rotation-20261010.json"
+  }
+}

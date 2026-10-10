@@ -25,17 +25,21 @@ size, and SHA-256 of every data file in this repository snapshot.
 
 Open `http://localhost:5173/tools/swishiq-studio/`.
 
-The dev server reads the full Studio data tree from this repository and reads
-the other DJHC storefront public files through a read-only Vite bridge. By
-default, those other files come from:
+The dev server reads Studio data and native engine modules from this repository.
+Lineup Lab and the four shared helper modules ship inside `public/studio-runtime/`.
+The engine sources and their reviewed integrity hashes are checked in under
+`public/tools/swishiq-studio/`; no retired tool directory is required.
+
+A read-only Vite bridge supplies optional storefront pages, catalog data, and
+storefront media from a DJHC checkout. By default, that checkout is:
 
 ```text
 C:\Users\djwan\Downloads\djshouseofcards-next-fixes-applied
 ```
 
 On another computer, set `DJHC_SITE_ROOT` to the local storefront checkout
-before starting Vite. The bridge exposes only the engine, franchise, and
-public asset paths needed by the app from that checkout. It accepts `GET` and
+before starting Vite to use those storefront integrations. The bridge prefers
+the checked-in native modules and exposes only approved public paths. It accepts `GET` and
 `HEAD`, returns no directory listings, and denies protected paths such as
 `.env`, `.git`, `.deploy`, and `products.json`.
 
@@ -49,8 +53,8 @@ The Lineup Lab controller is generated into
 `scripts/prepare-lineup-runtime.mjs`. The generator records the reviewed
 source SHA-256, rewrites the controller's relative imports to same-origin
 paths, and keeps initialization behind an explicit mount function. `dev`,
-`build`, and `build:site` run this bounded preparation step first. If the
-storefront checkout is unavailable, they use the checked-in generated module.
+`build`, and `build:site` run this bounded preparation step first, using the
+checked-in `public/studio-runtime/lineup-lab/app.js` source.
 
 ## Build and preview
 
@@ -65,9 +69,20 @@ npm run preview
 ```
 
 Both build commands write the static app to `dist/`. Preview serves that build
-and uses the same local read-only bridge for public data and runtime files.
-When using a different storefront checkout, set `DJHC_SITE_ROOT` for both the
-build-time preview server and `npm run dev`.
+and uses the same read-only bridge for repository data and optional storefront
+files. The build does not need a separate storefront checkout. Set
+`DJHC_SITE_ROOT` when previewing integrations against another checkout.
+
+For a cPanel release, package an existing build into a new external directory:
+
+```sh
+node scripts/prepare-cpanel-release.mjs --output <new-absolute-directory>
+```
+
+The packager verifies the explicit native dependency closure, scans staged text
+for secrets, and records every deployed path, byte count, and SHA-256. It keeps
+the full data tree outside the app build and includes the new pinned Impact
+model companions needed by Lineup Lab.
 
 See [INTEGRATION.md](./INTEGRATION.md) for the static-site path and data
 contract.

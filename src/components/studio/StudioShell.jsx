@@ -9,6 +9,9 @@ import { findStudioTool } from '@/components/studio/workbenches';
 import { recordToolVisit } from '@/lib/recentTools';
 import PullToRefresh from '@/components/djhc/PullToRefresh';
 import PageTransition from '@/components/studio/PageTransition';
+/**
+ * @param {{ active: string, children: import('react').ReactNode, followTeam?: string }} props
+ */
 export default function StudioShell({ active, children, followTeam }) {
   const [collapsed,setCollapsed] = useState(() => { try { return localStorage.getItem('swishiq-nav-collapsed') === '1'; } catch { return false; } });
   const toggle = () => setCollapsed(value => { try { localStorage.setItem('swishiq-nav-collapsed',value ? '0' : '1'); } catch { /* ignore */ } return !value; });

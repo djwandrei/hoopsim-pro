@@ -5,6 +5,9 @@ import { useMobileView } from '@/components/mobile/MobileViewContext';
 const CourtThemeContext=createContext(null);
 const stored=(key,fallback)=>{try{return localStorage.getItem(key)||fallback;}catch{return fallback;}};
 export const useCourtTheme=()=>useContext(CourtThemeContext);
+/**
+ * @param {{ children: import('react').ReactNode, followTeam?: string }} props
+ */
 export default function CourtThemeProvider({children,followTeam}) {
   const { active } = useMobileView();
   const [team,setTeam]=useState(()=>paletteForTeam(stored('djhc-court-team-v1','djhc')).id);

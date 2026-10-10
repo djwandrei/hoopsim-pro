@@ -1,6 +1,7 @@
 import { siteUrl } from '@/lib/deployConfig';
+const LINEUP_RUNTIME_PREFIX = '/tools/swishiq-studio/studio-runtime/lineup-lab/';
 export async function readSourceText(path) {
-  if (!path.startsWith('/lineup-lab/')) throw new Error('Unsupported Lineup Lab asset.');
+  if (!path.startsWith(LINEUP_RUNTIME_PREFIX)) throw new Error('Unsupported Lineup Lab asset.');
   const response = await fetch(siteUrl(path), { cache: 'no-cache' });
   if (!response.ok) throw new Error('The Lineup Lab source could not be loaded.');
   return response.text();

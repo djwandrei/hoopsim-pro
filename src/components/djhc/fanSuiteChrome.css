@@ -1,5 +1,4 @@
-/* Required shell rule from fan-tools.css: the Menu drawer is the fan-suite
-   navigation surface at every viewport; the legacy destination rail is hidden. */
+/* The top rail and Menu drawer navigate within SwishIQ Studio workbenches. */
 body.court-themed .site-header.fan-suite-header .fan-suite-nav {
   grid-area:nav; position:static; display:block; width:100%; min-width:0; max-width:none;
   margin:0; padding:0; overflow:hidden; border:0; background:transparent; box-shadow:none;

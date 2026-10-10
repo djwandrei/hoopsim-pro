@@ -1,7 +1,8 @@
 /**
  * Buyer-safe SwishIQ daily-game boundary. Board loading and result reveals are
- * delegated to the reviewed site module /tools/swishiq-daily-game-client.js
- * (v=20261001g, V5 name-identity revision) through the studio's
+ * delegated to the Studio-owned module
+ * /tools/swishiq-studio/studio-runtime/modules/swishiq-daily-game-client.js
+ * (V4 game-client module) through the studio's
  * integrity-checked transport, and the canonical V4 runtime adapter supplies
  * the reviewed release pin. The reviewed V4 source gate therefore decides which
  * boards load — exactly like the live site: V3 boards are blocked the moment a
@@ -17,7 +18,7 @@ import { SITE_ORIGIN } from '@/lib/deployConfig';
 const SWISHIQ_DAILY_GAME_KINDS = Object.freeze(['fix-the-five', 'draft-night']);
 export const SWISHIQ_DAILY_GAME_FAMILY = 'team-season';
 
-const NATIVE_DAILY_CLIENT_URL = '/tools/swishiq-daily-game-client.js?v=20261009b&rev=daily-v4-observed-box-score-v1';
+const NATIVE_DAILY_CLIENT_URL = 'studio-runtime/modules/swishiq-daily-game-client.js?v=20261010a&rev=daily-v4-error-classification-v1';
 const NATIVE_RUNTIME_ADAPTER_URL = 'engine/canonical-v4-studio-runtime-adapter.js?v=20261009b';
 const SWISHIQ_PUBLIC_REGISTRY_PATH = '/tools/swishiq-studio/data/registry.json';
 const SWISHIQ_PUBLIC_BOARD_ROOT = '/tools/swishiq-studio/data/boards/';

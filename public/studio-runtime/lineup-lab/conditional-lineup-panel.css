@@ -1,0 +1,47 @@
+.conditional-lineup-projection {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(148, 163, 184, .25);
+  border-radius: 1rem;
+}
+.conditional-lineup-projection > summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.conditional-lineup-projection .input-stability-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: .8rem;
+  margin: .75rem 0 1rem;
+}
+.conditional-lineup-projection .field {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  min-width: 0;
+}
+.conditional-lineup-projection select {
+  width: 100%;
+  min-width: 0;
+}
+.conditional-lineup-projection .result-passport__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: .75rem;
+  margin: 1rem 0;
+}
+.conditional-lineup-projection .result-passport__metrics > div {
+  padding: .8rem;
+  border: 1px solid rgba(148, 163, 184, .25);
+  border-radius: .6rem;
+}
+.conditional-lineup-projection .result-passport__metrics dd {
+  margin: .25rem 0 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.conditional-lineup-projection .helper,
+.conditional-lineup-projection .result-passport__note {
+  font-size: .85rem;
+  line-height: 1.5;
+}

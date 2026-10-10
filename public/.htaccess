@@ -12,6 +12,12 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /tools/swishiq-studio/
+  # Old Studio document routes hand off to the React workspace even when a
+  # legacy directory still exists for support assets.
+  RewriteRule ^career(?:/index\.html)?/?$ analytics/career [R=301,L]
+  RewriteRule ^game(?:/index\.html)?/?$ sims/game [R=301,L]
+  RewriteRule ^season(?:/index\.html)?/?$ sims/season [R=301,L]
+  RewriteRule ^(?:chemistry|forge|spin|players(?:/(?:compare|dossier))?)(?:/index\.html)?/?$ index.html [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   # Rewrite app routes only. Missing data, native modules and assets stay 404.

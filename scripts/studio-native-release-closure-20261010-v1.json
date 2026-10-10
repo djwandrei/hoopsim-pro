@@ -1,0 +1,1328 @@
+{
+  "format": "djhc-react-studio-native-release-closure-v1",
+  "releaseId": "swishiq-studio-self-contained-native-20261010-v1",
+  "createdAt": "2026-10-10",
+  "counts": {
+    "pinnedAssets": 64,
+    "nonNestedPinnedAssets": 57,
+    "nestedStudioRuntimePins": 7,
+    "impactEngineSources": 14,
+    "impactCompanionDataAndReceipts": 12,
+    "candidate100BundlePayloads": 13,
+    "requiredStaticClosureEntries": 99,
+    "dynamicWorkerDependencies": 1,
+    "dynamicStylesheetDependencies": 2,
+    "dynamicRuntimeDependencies": 4,
+    "historicalReplayModelDependencies": 1
+  },
+  "sourceIntegrity": {
+    "candidate100FilesCleanAgainstDjhcHead": true,
+    "candidate100ModelId": "game-lab-candidate100",
+    "candidate100ModelVersion": "swishiq-v4-game-lab-candidate100-pruned-total-model-blend090-v1",
+    "candidate100ReleaseStatus": "owner-manual-override-approved",
+    "candidate100IndependentPredictiveValidityEstablished": false,
+    "candidate100ProspectiveValidityEstablished": false,
+    "impactReceiptPath": "integration/site/tools/swishiq-studio/impact-native-release-receipt-20261010-v1.json",
+    "impactReceiptSha256": "4a504510fdea28b10e127c765bbcaa59f9c41d84bf5d56b9361eb2e44ab4cd74"
+  },
+  "integrationGate": {
+    "unknownNativeAssetsRemainUnpinned": [
+      "tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js",
+      "tools/swishiq-studio/engine/canonical-v4-impact-model-resolver.js",
+      "tools/swishiq-studio/engine/canonical-v4-impact-model-release-pin.js",
+      "tools/swishiq-studio/engine/canonical-v4-impact-lineup-adapter.js",
+      "tools/swishiq-studio/engine/canonical-v4-player-builder-adapter.js",
+      "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js"
+    ],
+    "note": "Copied for controller/worker and Impact closure. Any nativeModuleUrl/verifyGraph entrypoint must have approved PINS for unpinned module paths."
+  },
+  "entries": [
+    {
+      "deploymentPath": "tools/shared-result/public-keys.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/shared-result/public-keys.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 1498,
+      "sha256": "6b28b48123a14ee8fcf876ad7d20f30039151e415dd9cb297508b7bcf529c0b6",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/advanced-labs.css",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/advanced-labs.css",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 89104,
+      "sha256": "812a6a0bbb89a7cb480e393f2685880499d917ab79fe5789d8236fd2c562da5e",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/advanced-labs.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/advanced-labs.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 265679,
+      "sha256": "74dd093155aa3285981cb755094f23986e45412148cf36a2fa24c1ca44b6953f",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/career-lab-visuals.css",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/career-lab-visuals.css",
+      "sourceLabel": "DJHC Career Lab stylesheet runtime dependency",
+      "bytes": 19709,
+      "sha256": "fec244c31178c3a814dee6394d6acc6a701dc3866e048ca39d497f7a08a54fc6",
+      "roles": [
+        "native-runtime-stylesheet"
+      ],
+      "pinStatus": "unpinned-runtime-stylesheet"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/chemistry-lab.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/chemistry-lab.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 169685,
+      "sha256": "2f6625a9fea4295656795c32f5cf490d0a8d7a05e620fba8d40c90dd9617b9b3",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/chemistry-observed-worker.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/chemistry-observed-worker.js",
+      "sourceLabel": "DJHC chemistry worker with reviewed static-projection retarget",
+      "bytes": 6532,
+      "sha256": "6171d19f0fd901664e369cfa9a67bb80f9107eaf2574f22bdebc061a6af6861b",
+      "roles": [
+        "native-dynamic-worker"
+      ],
+      "pinStatus": "unpinned-dynamic-worker-source"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/composite-public-result-share.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/composite-public-result-share.js",
+      "sourceLabel": "DJHC HEAD with client-query-only retarget",
+      "bytes": 15808,
+      "sha256": "e23497ca1282feba7ab31038dd999732e9eea095e0894bf293fba079264f3244",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/manifest.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/manifest.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/manifest.json Impact receipt",
+      "bytes": 9006,
+      "sha256": "33ffa08170730bdd072c10b911f699aeeec38e5cc3b76cd567c17bdf49626b2a",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2017/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2017/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2017/regular/player-impact.json Impact receipt",
+      "bytes": 2459550,
+      "sha256": "675fb1078fba3512c7cbdc0e8bf9cf8365a66ed1b22ecd6639cd0604da658539",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2018/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2018/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2018/regular/player-impact.json Impact receipt",
+      "bytes": 2399272,
+      "sha256": "533f97e3996a0fed74c75a09ebb601146e84ddaffa3f5fb7fe59ce14259f5633",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2019/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2019/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2019/regular/player-impact.json Impact receipt",
+      "bytes": 2419682,
+      "sha256": "aec778356221499ad48fedea7e466d977a75ebd3566cd2bbfeea2adeced468c9",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2020/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2020/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2020/regular/player-impact.json Impact receipt",
+      "bytes": 2504549,
+      "sha256": "7beeefca9e52a29741958fb716c95788a3fb956d26224a229696012e856f0aa5",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2021/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2021/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2021/regular/player-impact.json Impact receipt",
+      "bytes": 2846800,
+      "sha256": "9461ca6ed48b8e1ba97f410c9b8816c05c676d065d7365a6188bc6baeefe1a02",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2022/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2022/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2022/regular/player-impact.json Impact receipt",
+      "bytes": 2539602,
+      "sha256": "2e7666a1e4e8d7ba91b2a4b75b169a1f122a11744e73a769d10215a71a0187cb",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2023/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2023/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2023/regular/player-impact.json Impact receipt",
+      "bytes": 2706016,
+      "sha256": "f287b4b69950065b0789837932ea86b8abbf280b938e86eac94c09571a2654c6",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2024/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2024/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2024/regular/player-impact.json Impact receipt",
+      "bytes": 2699893,
+      "sha256": "f7c5ed24d47518ec11e81ea69d1fb7c5970616b6b77755f53cb07630e3b41af5",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2025/regular/player-impact.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2025/regular/player-impact.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2025/regular/player-impact.json Impact receipt",
+      "bytes": 2735290,
+      "sha256": "9ba00de9edf1fbbf84ae383640044a696448158d773ad6300cc50d52c29a5da3",
+      "roles": [
+        "companion-data"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/bundle.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/bundle.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/bundle.json",
+      "bytes": 11368,
+      "sha256": "0b03e7a5d9d4da1cbf562f5bc01d57ca621332339109c00a60a6080e24ce2a0a",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2021.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2021.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2021.json",
+      "bytes": 531414,
+      "sha256": "9de62c440b9182001089e02c296b5ba5fb91b9572b81fd1e7c252cb04cc36b74",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2022.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2022.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2022.json",
+      "bytes": 785249,
+      "sha256": "224c0e99bdbd5267cb657af4835521410910182e5e4ae2bb48cec83581407ca3",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2023.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2023.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2023.json",
+      "bytes": 785193,
+      "sha256": "c033ee3a7b1831d6f6996a809c5705cce01e01055bf296328822142b720f28b2",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2024.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2024.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2024.json",
+      "bytes": 785387,
+      "sha256": "ec342f75bfe4e0bd0ea31665c52e9d3aa8bbd06f59cfc66570ee3026d76187a6",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2025.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2025.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-2025.json",
+      "bytes": 785490,
+      "sha256": "c465a9606d092d0102abab83d44594652f590bdc95f5dafba707220407088c21",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-current.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-current.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/checkpoint-current.json",
+      "bytes": 785540,
+      "sha256": "279a80da9ae7f83a2ba9871c3709a66f3b8c08eb56284ca20a23f7e571157b9e",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2021.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2021.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/features-2021.json",
+      "bytes": 72967,
+      "sha256": "59248929c68f56807580a2c18cbf2224704b806d61adee4957816b9b5f53eab5",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2022.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2022.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/features-2022.json",
+      "bytes": 73560,
+      "sha256": "a3d28816c065248f4beaf767fe4716ac9a80289b27afdf9b6392473788ce5e76",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2023.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2023.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/features-2023.json",
+      "bytes": 73731,
+      "sha256": "8e07c7ac035439bf3e2f35db4abc20f1922d87de33a4c3e2f6cefc0da067737e",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2024.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2024.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/features-2024.json",
+      "bytes": 74403,
+      "sha256": "4d5b71ce3db1c0325862ff2545441e9844886582cd822566eb9853038a8bc5f8",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2025.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/features-2025.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/features-2025.json",
+      "bytes": 74324,
+      "sha256": "4f78d507cc0f25a91b9f36948147d18108c3b28498f718ee7433a8f9088055d5",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate100-pruned-total-model-blend090-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate100-pruned-total-model-blend090-v1.mjs",
+      "sourceLabel": "DJHC HEAD",
+      "bytes": 9001,
+      "sha256": "fe8733d092f2a28b1c5395a035880a58c50650e5e1f918862b32138fd8e4a63c",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate57-c51-pass6-hybrid-v4.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate57-c51-pass6-hybrid-v4.mjs",
+      "sourceLabel": "DJHC HEAD",
+      "bytes": 20180,
+      "sha256": "97f644c7fbe70892047bfb5f8f21fb9bbedb106e7eebccfbe8f993eb19ea1a7c",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate57-configurable-uncertainty-v7.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate57-configurable-uncertainty-v7.mjs",
+      "sourceLabel": "DJHC HEAD",
+      "bytes": 15625,
+      "sha256": "3067506e5496b23fa6f6108ce0d7acc0dad73115ee227fe3417b8ece99bba71f",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate57-feature-penalty-fit-v3.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate57-feature-penalty-fit-v3.mjs",
+      "sourceLabel": "DJHC HEAD",
+      "bytes": 1920,
+      "sha256": "9b9dd43d1a390b952b5122f7f5e4292fcc07991752fcfe839430c29b5c953215",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate57-runtime-checkpoint-v3.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-candidate57-runtime-checkpoint-v3.mjs",
+      "sourceLabel": "DJHC HEAD",
+      "bytes": 17641,
+      "sha256": "650eae195702d5db7cd18c95bc71e08b8e99e20b9ddc0dd874f00998e8f109e5",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-head-feature-policy-v1.mjs",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/game-lab-head-feature-policy-v1.mjs",
+      "sourceLabel": "DJHC HEAD",
+      "bytes": 2895,
+      "sha256": "e77000e5187f666d14cee13f0ada57b092d689680b02d137331177ff05bf03c0",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/candidate100-release-20261008/release-decision.json",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/candidate100-release-20261008/release-decision.json",
+      "sourceLabel": "DJHC HEAD tools/swishiq-studio/engine/candidate100-release-20261008/release-decision.json",
+      "bytes": 5493,
+      "sha256": "7346586dfc91e23549cdbb8f1e57fe577658777bb16723329ac45b2e944b57b9",
+      "roles": [
+        "candidate100-bundle-payload"
+      ],
+      "pinStatus": "bundle-hash-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-descriptive-source-consumer.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-descriptive-source-consumer.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 13029,
+      "sha256": "b9b147f8835e1e1701d57872dfb3c663842dc35bd63dc3adea5d27ddfb2da7f4",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 3338,
+      "sha256": "75255673400de31557142a65038b7996ffc6496291869c4ea463322878bd4baf",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-impact-lineup-adapter.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-impact-lineup-adapter.js",
+      "sourceLabel": "integration/site/tools/swishiq-studio/engine/canonical-v4-impact-lineup-adapter.js Impact receipt",
+      "bytes": 19622,
+      "sha256": "54140cedfb6448a3369d6e116cde7168c52ba6241788fe4423b49d3e663ee318",
+      "roles": [
+        "impact-engine-source"
+      ],
+      "pinStatus": "not-in-PINS"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-impact-model-release-pin.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-impact-model-release-pin.js",
+      "sourceLabel": "integration/site/tools/swishiq-studio/engine/canonical-v4-impact-model-release-pin.js Impact receipt",
+      "bytes": 1825,
+      "sha256": "a6f47e3b031b7ac0b72c0a41d2d8e685808cf5a0d8a634bb065ddcc19629b146",
+      "roles": [
+        "impact-engine-source"
+      ],
+      "pinStatus": "not-in-PINS"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-impact-model-resolver.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-impact-model-resolver.js",
+      "sourceLabel": "integration/site/tools/swishiq-studio/engine/canonical-v4-impact-model-resolver.js Impact receipt",
+      "bytes": 36848,
+      "sha256": "5a86337c533d37019accff6e489b6f09eb83e9f85ad42d9c057c41b18113ee67",
+      "roles": [
+        "impact-engine-source"
+      ],
+      "pinStatus": "not-in-PINS"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js",
+      "sourceLabel": "DJHC tools/swishiq-studio/engine/canonical-v4-lineup-model-gate.js",
+      "bytes": 3052,
+      "sha256": "6a0e4d0ed273a71e3fffe9a256d9710540ae2f72cfea05247059f9596d38667a",
+      "roles": [
+        "controller-worker-static-dependency"
+      ],
+      "pinStatus": "not-in-PINS"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-player-builder-adapter.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-builder-adapter.js",
+      "sourceLabel": "integration/site/tools/swishiq-studio/engine/canonical-v4-player-builder-adapter.js Impact receipt",
+      "bytes": 4147,
+      "sha256": "f20209f076924e76e440cf0b8b1cc20d2ba09a6a2e3d1d8c654ccf14317fda66",
+      "roles": [
+        "impact-engine-source"
+      ],
+      "pinStatus": "not-in-PINS"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 7711,
+      "sha256": "d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "sourceLabel": "integration/site/tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js Impact receipt",
+      "bytes": 20479,
+      "sha256": "8d1fafb6108e437ae2b4ca0b930a25f12368db0bdadcc12d9b7bd9a0b70df58c",
+      "roles": [
+        "impact-engine-source"
+      ],
+      "pinStatus": "not-in-PINS"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 12566,
+      "sha256": "7fb5ce6155135ac7ec9d1c7e5f6a7db5c6a78e329415698e86222d0696b7eee0",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 27842,
+      "sha256": "8225fde5b9b4b9a347069c724b7b28013fecc5f21c710db2b50623fbaf58332d",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 22546,
+      "sha256": "39e737644abc8c478bab692320710f0485cc5e52a107c829d1a6664eae495b78",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-site-consumer-policy.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-site-consumer-policy.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 2812,
+      "sha256": "922242f8f51ca906ef5de922bb596baac9465a7349d912fbe2a6c7cd59ceb311",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 13862,
+      "sha256": "42cfbcd4641c783e6f150a230d81c15d589a126cb9e1acbe3f215055d99f619d",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 1291995,
+      "sha256": "a8e47f1cbafcbf6ea7b2f35736a68391c99253c72f889c28fd3a3cdeefdd16b0",
+      "roles": [
+        "native-pinned-source",
+        "impact-engine-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/career-simulation-model.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/career-simulation-model.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 177856,
+      "sha256": "cada921d478c3419e050830b1aa6ef0f665574091cd34b83513abfc0a9c440a1",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/career-simulator.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/career-simulator.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 18022,
+      "sha256": "849b480398cb7c6b755be404ed17e822f7a817161e4d2d9a0f24ede353987079",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/career-state-source.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/career-state-source.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 16021,
+      "sha256": "0e63328ab000221e743c322bb064b4e5583b8bcb901568c599dc1d9888f1a5d8",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/composite-forge-native.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/composite-forge-native.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 27773,
+      "sha256": "31b673f18eef2daef06abf6c7219887d5e7fc3f00b34cc18c1d0ac48b8861966",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/composite-forge.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/composite-forge.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 218505,
+      "sha256": "3978b2a4e16ed4eff141d65d88985294cddcebd28acdf120a2e4e7759aed9999",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/context-contract.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/context-contract.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 3522,
+      "sha256": "82528ef429143960f4d09531498e9c3419b591fc2fbe1517aef1d1f00961350f",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/cross-lab-integration.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/cross-lab-integration.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 55279,
+      "sha256": "e2f422ae3a4428367dfeadeeddb71e85a0c6fcf0a8f2ab14d8810f96327da7c8",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/franchise-cpu-rotation.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/franchise-cpu-rotation.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 22869,
+      "sha256": "e5449eb414113949344be3bd4f4e9550672714536b149a4268dd7fea8c794a36",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/franchise-simulation.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/franchise-simulation.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 133968,
+      "sha256": "f8037558beedcc96e9516f2f76be14fa001c32101c65a6dd2aa8c4095bc34908",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/game-lab-evaluation.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/game-lab-evaluation.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 25291,
+      "sha256": "01ecbe66fe28823aae1212a848a3eb35e4b1a938a9ade6f2868d3c79f1376022",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/league-lab.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/league-lab.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 143960,
+      "sha256": "b550c932ca4974b090460dfb4cbae3eeca3351c4a353ba64761203930f0d547a",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/model-calibration.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/model-calibration.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 10499,
+      "sha256": "8c65825cf2c14791a87221feb0589457dc25addeb3ca4c984b7099a7820a9840",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/nba-cup-schedule-completion.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/nba-cup-schedule-completion.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 47818,
+      "sha256": "a7a16cf81e97053d8ec8e94cf7939b53cb7d58f0b57408b7db3d34e618a1ce29",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/nba-schedule-source.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/nba-schedule-source.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 22848,
+      "sha256": "c2db12f4760563c1fa92df0bc0acd204e6f047059a4829e2b8f5bfb6c7cece00",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/possession-simulator.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/possession-simulator.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 27667,
+      "sha256": "11b2bd7082b1830f56aeecfbe96a1db80dbfead15a88b98a2df71136b88ad061",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/public-result-share-client.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/public-result-share-client.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 27432,
+      "sha256": "ae3459c8e42696c680d85c6b0d356fb75f3945e7cbd30bea567dc0a7475fd6a9",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/public-result-share-v2.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/public-result-share-v2.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 12898,
+      "sha256": "5740b923a2dc978b9c41d9454c48923130c8cf359f7cbd7bd7a20e7cc909ab08",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/public-result-share-v4.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/public-result-share-v4.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 18928,
+      "sha256": "23ed314cf3acd0939ec52a932b1a281966517b96470de46f5b328e655d820233",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/public-result-share.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/public-result-share.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 17570,
+      "sha256": "8c681c8163528ca7475623eb33d4c8a929f491923bc82482b88a6526f6f6f18a",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/season-lab-model.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/season-lab-model.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 265390,
+      "sha256": "44920d1387b47d723c7b56e22d16103f5428c8ac6d3ec127cda92cc02ddc9450",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/season-simulator.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/season-simulator.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 12583,
+      "sha256": "7d3c87278313ed421d77e1f9e359917e54b52e8bcdb8b59d2bbfb5d7ad9cd1c9",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/selected-game-model-candidate100-runtime-adapter.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/selected-game-model-candidate100-runtime-adapter.js",
+      "sourceLabel": "DJHC HEAD",
+      "bytes": 8102,
+      "sha256": "595d49584f89a29c21eed5068a08b322ba21be29bc632700aa058029810e84ec",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/simulation-seed.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/simulation-seed.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 2900,
+      "sha256": "503d60d1eea095a17c71cdf78132d19f243e195f410f3c43cf09146c1ab4e21a",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/studio-analysis.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/studio-analysis.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 17299,
+      "sha256": "3ed6c7f79c62de897a320f0cb24443d6768afea27c71fdc8d4731b2cd057e673",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/engine/swishiq-daily-game-v4-contract.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/engine/swishiq-daily-game-v4-contract.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 45499,
+      "sha256": "beafa62560550e7a2fd2221080843dac8d3f90d2e604433d1775d9c0fed9f370",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/game-lab.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/game-lab.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 104165,
+      "sha256": "a1e7b6a660b37251f1c78d1c1a7e7c9fae841f72bfb9f9efe1d5699f6473cc3b",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/impact-validation/native-v1/report.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/impact-validation/native-v1/report.json",
+      "sourceLabel": "integration/site/tools/swishiq-studio/impact-validation/native-v1/report.json Impact receipt",
+      "bytes": 196786,
+      "sha256": "d7273fd8c5017a54eb3638c4bac429d0ffdff189823ff8b0b8c385871dd16e41",
+      "roles": [
+        "assessment-receipt"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/impact-validation/native-v1/report.md",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/impact-validation/native-v1/report.md",
+      "sourceLabel": "integration/site/tools/swishiq-studio/impact-validation/native-v1/report.md Impact receipt",
+      "bytes": 2506,
+      "sha256": "d0b5cc5564ab67d63bdfe76e388bedc86cb15cae135f0bcb460925d6537c7b2e",
+      "roles": [
+        "assessment-receipt"
+      ],
+      "pinStatus": "data-receipt-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/integration-bridge.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/integration-bridge.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 11422,
+      "sha256": "07e65797e6f2f2374a7464db5b582fdb1f90a6ab88c0968acc1060266100e773",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/models/djhc-player-game-sim-v1-bundle-20261005.json",
+      "sourceKind": "integrationSite",
+      "sourcePath": "tools/swishiq-studio/models/djhc-player-game-sim-v1-bundle-20261005.json",
+      "sourceLabel": "DJHC HEAD historical replay model; exact React hardcoded SHA verified",
+      "bytes": 1034652,
+      "sha256": "afe914b2ba06292a8ea10fb60f13973f1e06e8f31a0c5939c3f8c6fdd7791d54",
+      "roles": [
+        "react-game-lab-replay-model"
+      ],
+      "pinStatus": "runtime-sha256-verified"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/player-context.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/player-context.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 23019,
+      "sha256": "4fe95f851ef46591ce6470539bf1c304efead8f6eed5e30332fb26d6304c0f58",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/player-metadata.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/player-metadata.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 1959,
+      "sha256": "287fe6f4ca79a475c54aef4fb4ed4d2ee0cd2e40d351292ea0c25890733a4310",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/react-app/studio-react-labs-candidate100-20261008.css",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/react-app/studio-react-labs-candidate100-20261008.css",
+      "sourceLabel": "DJHC Candidate100 bridge stylesheet runtime dependency",
+      "bytes": 82982,
+      "sha256": "b9b93fa1860b049545a1ecfdc213a1154a6e81bceb5420afdeb1fd19b9283fed",
+      "roles": [
+        "native-runtime-stylesheet"
+      ],
+      "pinStatus": "unpinned-runtime-stylesheet"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/react-app/studio-react-labs-candidate100-20261008.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/react-app/studio-react-labs-candidate100-20261008.js",
+      "sourceLabel": "DJHC HEAD",
+      "bytes": 2144925,
+      "sha256": "a30f2391c8e400ad31d4f5d0408d2185f5159a2c8b1a50ab77337bd838d16e50",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/react-game-lab-bridge.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/react-game-lab-bridge.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 8018,
+      "sha256": "3bbfbd07b5764595b8b64812fedc51202ebe7c3039056e3b737d979e65742401",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/react-season-lab-bridge.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/react-season-lab-bridge.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 10040,
+      "sha256": "f1a99a6b53d2e1c3fa723028d6416c8afa6fd9cca7dac31d6cb1aec013b50b89",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/season-lab.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/season-lab.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 136022,
+      "sha256": "cb5298f218c92112fcec9ba9763173ba470bbb95ac9e2fbdcdd8a13eb657689e",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/selector-system.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/selector-system.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 28432,
+      "sha256": "2958ec6adfe44eb3ebb4cd19af74970150b4058dae426b5e03ce190ad0480d62",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/simulation-session-ui.js",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/simulation-session-ui.js",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 19281,
+      "sha256": "2e8296fa24d45652453fae4673a5287a50cda42a9bf5dd8d2701f5906d3fe5f8",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio-redesign.css",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/studio-redesign.css",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 109079,
+      "sha256": "2da71cb7ad6f8bf622d61574e66a06095d1b1af25fb38328bc12d2a9998ac563",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio-runtime/modules/collection-fit-core.js",
+      "sourceKind": "dist",
+      "sourcePath": "studio-runtime/modules/collection-fit-core.js",
+      "sourceLabel": "React public/studio-runtime/modules/collection-fit-core.js",
+      "bytes": 9652,
+      "sha256": "b406bd49e944464a72f4db177ddc4cdf98408a0e023a67605e7ac96dedb9ea34",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio-runtime/modules/public-keys.js",
+      "sourceKind": "dist",
+      "sourcePath": "studio-runtime/modules/public-keys.js",
+      "sourceLabel": "React public/studio-runtime/modules/public-keys.js",
+      "bytes": 1498,
+      "sha256": "6b28b48123a14ee8fcf876ad7d20f30039151e415dd9cb297508b7bcf529c0b6",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio-runtime/modules/result-passport.js",
+      "sourceKind": "dist",
+      "sourcePath": "studio-runtime/modules/result-passport.js",
+      "sourceLabel": "React public/studio-runtime/modules/result-passport.js",
+      "bytes": 45169,
+      "sha256": "5d48d837052721ebd6912e25736cd4db6b69399abba6fa97d0ad51be81e4b5d0",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio-runtime/modules/result-visuals.js",
+      "sourceKind": "dist",
+      "sourcePath": "studio-runtime/modules/result-visuals.js",
+      "sourceLabel": "React public/studio-runtime/modules/result-visuals.js",
+      "bytes": 25409,
+      "sha256": "a92079689f46f911ad883c201cc78c670987ef4c8aee1504278d13cbd1c01255",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio-runtime/modules/swishiq-daily-game-client.js",
+      "sourceKind": "dist",
+      "sourcePath": "studio-runtime/modules/swishiq-daily-game-client.js",
+      "sourceLabel": "React public/studio-runtime/modules/swishiq-daily-game-client.js",
+      "bytes": 44073,
+      "sha256": "3cbc2d1d830126492ce075c2c0f3a9d7cfad4dbf0b788e47aad59a0543fdf1f4",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio-runtime/modules/swishiq-static-projection.js",
+      "sourceKind": "dist",
+      "sourcePath": "studio-runtime/modules/swishiq-static-projection.js",
+      "sourceLabel": "React public/studio-runtime/modules/swishiq-static-projection.js",
+      "bytes": 61205,
+      "sha256": "e6d687ab71fb34b3a3ebed5ff76e79cdf39c59f2f51c01436e94ef1a57bd8c44",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio-runtime/modules/team-assets.js",
+      "sourceKind": "dist",
+      "sourcePath": "studio-runtime/modules/team-assets.js",
+      "sourceLabel": "React public/studio-runtime/modules/team-assets.js",
+      "bytes": 1098,
+      "sha256": "77519216915dd7ce53462942cac6b4bc2c270f3c910b2ed59311666830c559a0",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    },
+    {
+      "deploymentPath": "tools/swishiq-studio/studio.css",
+      "sourceKind": "dist",
+      "sourcePath": "tools/swishiq-studio/studio.css",
+      "sourceLabel": "DJHC pinned source",
+      "bytes": 199114,
+      "sha256": "40d6085552e5c5b612fb3cfcb4f6ffa21e223afa561309285e79c1bc2b4635a4",
+      "roles": [
+        "native-pinned-source"
+      ],
+      "pinStatus": "pinned"
+    }
+  ],
+  "invalidWindowsPathArtifacts": [
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-identity.js?v=20260927s&rev=canonical-v4-identity-v1",
+      "gitBlobBytes": 64,
+      "gitBlobSha256": "69a1078f25f0a58f7c529acdad3a17b1f2d56c129c7579a023a32e78a6080e00",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "canonicalHeadBytes": 3338,
+      "canonicalHeadSha256": "75255673400de31557142a65038b7996ffc6496291869c4ea463322878bd4baf"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js?v=20261001d&rev=canonical-v4-player-name-identity-v1",
+      "gitBlobBytes": 76,
+      "gitBlobSha256": "63144a90a5c46ae78537e830b750f85468d28953e04e58a45525cde1f5344ef5",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "canonicalHeadBytes": 7711,
+      "canonicalHeadSha256": "d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js?v=20261008&rev=franchise-v4-intake-v1",
+      "gitBlobBytes": 76,
+      "gitBlobSha256": "63144a90a5c46ae78537e830b750f85468d28953e04e58a45525cde1f5344ef5",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "canonicalHeadBytes": 7711,
+      "canonicalHeadSha256": "d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js?v=20261008&rev=franchise-v4-intake-v1",
+      "gitBlobBytes": 78,
+      "gitBlobSha256": "f7bf8a16c3e40fe16d10d270cdeeabdcf1c47e735e82205c56a3aecf4387e8ee",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "canonicalHeadBytes": 20479,
+      "canonicalHeadSha256": "8d1fafb6108e437ae2b4ca0b930a25f12368db0bdadcc12d9b7bd9a0b70df58c"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js?v=20261001d&rev=capability-map-v1",
+      "gitBlobBytes": 81,
+      "gitBlobSha256": "635fed6f713b9d5526ceb019a9d15634919bfc213cbf9e49cd6b002c8de6c11d",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "canonicalHeadBytes": 12566,
+      "canonicalHeadSha256": "7fb5ce6155135ac7ec9d1c7e5f6a7db5c6a78e329415698e86222d0696b7eee0"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-projection-resolver.js?v=20261002e&rev=canonical-v4-projection-resolver-v4-dependency-cache-closure",
+      "gitBlobBytes": 75,
+      "gitBlobSha256": "30b2a35568b26c70f87f7d6b5732a9371b87f392b3b9af31e0498eaa8f7402d1",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "canonicalHeadBytes": 27842,
+      "canonicalHeadSha256": "8225fde5b9b4b9a347069c724b7b28013fecc5f21c710db2b50623fbaf58332d"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-public-network-loader.js?v=20261002e&rev=canonical-v4-public-network-loader-v4-dependency-cache-closure",
+      "gitBlobBytes": 77,
+      "gitBlobSha256": "cc5dabc15edfee3ca285b15de1ef6db7fa9d9f0714e4cf97108eed1b0ca216c4",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "canonicalHeadBytes": 22546,
+      "canonicalHeadSha256": "39e737644abc8c478bab692320710f0485cc5e52a107c829d1a6664eae495b78"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js?v=20261002e&rev=canonical-v4-studio-runtime-adapter-v4-dependency-cache-closure",
+      "gitBlobBytes": 78,
+      "gitBlobSha256": "762ec4b757d1144972142662caa847bdce48efee53d70178dd8b418ce14e6494",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "canonicalHeadBytes": 13877,
+      "canonicalHeadSha256": "e163bf97d92ca202bbbf46f0afb735eb22e23f2b63f9601b2f36dc0a63c2cc3c"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js?v=20261008&rev=franchise-v4-intake-v1",
+      "gitBlobBytes": 78,
+      "gitBlobSha256": "762ec4b757d1144972142662caa847bdce48efee53d70178dd8b418ce14e6494",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "canonicalHeadBytes": 13877,
+      "canonicalHeadSha256": "e163bf97d92ca202bbbf46f0afb735eb22e23f2b63f9601b2f36dc0a63c2cc3c"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js?v=20261002e&rev=canonical-v4-release-pin-v5-dependency-cache-closure",
+      "gitBlobBytes": 82,
+      "gitBlobSha256": "2f6ca2af2773094c42d2ec0b42fcec3389940f1b0563316acd20ba7a9956aef1",
+      "canonicalPath": "public/tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "canonicalHeadBytes": 1275737,
+      "canonicalHeadSha256": "3f77681775b95b9fba42454d6ed62c785551cdd7db5a439babfbad9d753352bd"
+    },
+    {
+      "gitPath": "public/tools/swishiq-studio/engine/nba-schedule-source.js?v=20261008&rev=franchise-v4-intake-v1",
+      "gitBlobBytes": 62,
+      "gitBlobSha256": "ef411a573effaf209101f691defbbcbcc76c84cba9cdb4c0f4ce9d228adeb88a",
+      "canonicalPath": "public/tools/swishiq-studio/engine/nba-schedule-source.js",
+      "canonicalHeadBytes": 22848,
+      "canonicalHeadSha256": "c2db12f4760563c1fa92df0bc0acd204e6f047059a4829e2b8f5bfb6c7cece00"
+    }
+  ]
+}

@@ -5,8 +5,9 @@ import { installLineupLabBridge } from '@/lineupLab/lineup-lab/siteBridge';
 import nativeWorkflow from '@/components/lineupLab/native/nativeWorkflow';
 import controllerContract from '@/components/lineupLab/native/controllerContract';
 
-const REV = '?v=20261002c&rev=lineup-v4-share-client-contract-pin-closure-v1';
-const WORKFLOW = '/lineup-lab/workflow-state.js?v=20261002c&rev=lineup-workflow-state-phase10-component-reliability-v1-20260928j';
+const LINEUP_RUNTIME_PREFIX = '/tools/swishiq-studio/studio-runtime/lineup-lab';
+const REV = '?v=20261010a&rev=studio-runtime-lineup-lab-v1';
+const WORKFLOW = LINEUP_RUNTIME_PREFIX + '/workflow-state.js?v=20261002c&rev=lineup-workflow-state-phase10-component-reliability-v1-20260928j';
 // Compute the public-dir URL at runtime: a static-looking import specifier
 // makes the dev server try to transform a /public file, which refuses it.
 const workflowUrl = new URL(WORKFLOW, location.origin).href;
@@ -15,7 +16,7 @@ const controllerUrl = new URL(`${import.meta.env.BASE_URL}djhc-runtime/lineup-co
 export default async function nativeRuntime(root, signal) {
   await workerConnection(); signal.throwIfAborted();
   const [, original, workflow, controller] = await Promise.all([
-    ensureSiteConfig(), readSourceText('/lineup-lab/app.js' + REV), import(/* @vite-ignore */ workflowUrl), import(/* @vite-ignore */ controllerUrl),
+    ensureSiteConfig(), readSourceText(LINEUP_RUNTIME_PREFIX + '/app.js' + REV), import(/* @vite-ignore */ workflowUrl), import(/* @vite-ignore */ controllerUrl),
   ]);
   signal.throwIfAborted();
   controllerContract(root, original);

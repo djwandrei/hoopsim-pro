@@ -5,6 +5,9 @@ import { useMobileTabs } from '@/components/mobile/mobileTabsContext';
 import useTouchRefresh from '@/components/mobile/useTouchRefresh';
 import RefreshIndicator from '@/components/mobile/RefreshIndicator';
 
+/**
+ * @param {{ children: import('react').ReactNode, className?: string, id?: string, onRefresh?: () => unknown }} props
+ */
 export default function PullToRefresh({ children, className = '', id, onRefresh }) {
   const isWebView = useMobileWebView();
   const tabsCtx = useMobileTabs();

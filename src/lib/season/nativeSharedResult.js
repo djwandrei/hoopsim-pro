@@ -10,8 +10,8 @@ import { originalFetch } from '@/components/native/nativeTransport';
 const V2_MODULE = 'engine/public-result-share-v2.js?v=20261001e&rev=daily-v4-rank-share-summary-v2';
 const V4_MODULE = 'engine/public-result-share-v4.js?v=20261001e&rev=daily-v4-rank-share-summary-v2';
 const RUNTIME_ADAPTER = 'engine/canonical-v4-studio-runtime-adapter.js?v=20261002e&rev=canonical-v4-studio-runtime-adapter-v4-dependency-cache-closure';
-const STATIC_PROJECTION = '../swishiq-static-projection.js?v=20261001&rev=swishiq-v3-helper-typed-v4-cutover-gate-v1';
-const TRUSTED_KEYS = '../shared-result/public-keys.js?v=20260927s&rev=phase9-empty-public-key-allowlist-v2-20260928a';
+const STATIC_PROJECTION = 'studio-runtime/modules/swishiq-static-projection.js?v=20261010a&rev=swishiq-v3-helper-studio-runtime-v1';
+const TRUSTED_KEYS = 'studio-runtime/modules/public-keys.js?v=20261010a&rev=phase9-empty-public-key-allowlist-v2-20260928a';
 
 let modulesPromise = null;
 function sharedResultModules() {

@@ -1,6 +1,6 @@
 /**
  * Shared SwishIQ Result Passport + Scenario Envelope contracts, ported 1:1 from
- * the reviewed site module /tools/result-passport.js (v=20260930f) so the
+ * the Studio-owned module /tools/swishiq-studio/studio-runtime/modules/result-passport.js (v=20260930f) so the
  * studio's daily games hash and validate exactly like the original.
  */
 

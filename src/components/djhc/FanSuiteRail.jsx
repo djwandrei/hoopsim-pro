@@ -1,6 +1,14 @@
 import React from 'react';
-import { Image } from '@/components/ui/image';
-import { FAN_TOOLS } from '@/components/djhc/siteNavigation';
+import { Link, useLocation } from 'react-router-dom';
+import { WORKBENCHES, findStudioTool } from '@/components/studio/workbenches';
 export default function FanSuiteRail() {
-  return <nav className="fan-suite-nav" aria-label="Fan tools navigation"><div className="container fan-suite-nav__scroll">{FAN_TOOLS.filter(item=>item.emblem && item.label!=='Virtual Packs').map(item=><a key={item.path} className="fan-suite-nav__link" href={item.href} aria-current={item.label==='SwishIQ Studio'?'page':undefined}><Image src={item.emblem} alt="" fittingType="fit" className="h-[30px] w-[30px]" />{item.label}</a>)}</div></nav>;
+  const { pathname } = useLocation();
+  const activePath = findStudioTool(pathname)?.workbench.path;
+  return <nav className="fan-suite-nav" aria-label="Studio workbench navigation"><div className="container fan-suite-nav__scroll">{WORKBENCHES.map(workbench => {
+    const Icon = workbench.icon;
+    return <Link key={workbench.path} to={workbench.path} className="fan-suite-nav__link" aria-current={activePath === workbench.path ? 'page' : undefined}>
+      {Icon && <Icon aria-hidden="true" className="h-[30px] w-[30px] shrink-0" />}
+      <span>{workbench.title}</span>
+    </Link>;
+  })}</div></nav>;
 }

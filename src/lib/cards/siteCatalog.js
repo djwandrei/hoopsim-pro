@@ -1,3 +1,4 @@
+import { loadNativeModule } from '@/components/native/nativeModules';
 import { siteUrl } from '@/lib/deployConfig';
 import { eligiblePackCardFromMatches } from '@/lib/cards/packEngine';
 
@@ -6,7 +7,7 @@ const REMOTE_CATALOG_SOURCE = 'products-basketball.json';
 const CANDIDATE_BATCH_SIZE = 24;
 const PLAYER_SUGGESTION_LIMIT = 8;
 const RPC_CONCURRENCY = 4;
-const COLLECTION_MODULE_PATH = '/tools/collection-lineup-builder/collection-fit-core.js?v=20260928i&rev=phase10-pack-mapping-v1';
+const COLLECTION_MODULE_PATH = 'studio-runtime/modules/collection-fit-core.js?v=20261010a&rev=studio-owned-collection-runtime-v1';
 
 let catalogPromise = null;
 let collectionModulePromise = null;
@@ -104,8 +105,7 @@ async function loadReadOnlyAdapter() {
 
 function loadCollectionModule() {
   if (!collectionModulePromise) {
-    const collectionUrl = siteUrl(COLLECTION_MODULE_PATH);
-    collectionModulePromise = import(/* @vite-ignore */ collectionUrl)
+    collectionModulePromise = loadNativeModule(COLLECTION_MODULE_PATH)
       .then((collection) => {
         if (typeof collection.extractVerifiedCollectionMatches !== 'function') {
           throw new Error('The DJHC reviewed card-mapping module is unavailable.');

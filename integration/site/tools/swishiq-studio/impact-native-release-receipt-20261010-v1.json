@@ -1,0 +1,249 @@
+{
+  "format": "djhc-native-v4-impact-source-copy-receipt-v1",
+  "releaseId": "swishiq-v4-impact-native-20261010-v1",
+  "destinationRoute": "/tools/swishiq-studio/lineup-lab",
+  "dataStorage": "existing integration/site Git LFS tree; outside Vite dist",
+  "assessmentStatus": "chronological-conditional-lineup-acceptance-passed",
+  "acceptedScope": "historical conditional scoring for specified observed paired lineups",
+  "publicationUse": "mean-only retrospective estimates; optimizer counterfactual validity is not established",
+  "historicalSeasonStartYears": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "sourceManifestSha256": "33ffa08170730bdd072c10b911f699aeeec38e5cc3b76cd567c17bdf49626b2a",
+  "assessmentSha256": "d7273fd8c5017a54eb3638c4bac429d0ffdff189823ff8b0b8c385871dd16e41",
+  "baseDataReceipt": "integration/site/studio-data-receipt.json",
+  "baseDataReceiptMeaning": "This is an additive companion/source receipt. The earlier full-tree receipt remains unchanged and does not count these new files.",
+  "coverage": [
+    {
+      "seasonStartYear": 2017,
+      "records": 490,
+      "numericRows": 490,
+      "limitedExposureRows": 81,
+      "explicitZeroCenteredPriorRows": 0
+    },
+    {
+      "seasonStartYear": 2018,
+      "records": 478,
+      "numericRows": 478,
+      "limitedExposureRows": 60,
+      "explicitZeroCenteredPriorRows": 0
+    },
+    {
+      "seasonStartYear": 2019,
+      "records": 482,
+      "numericRows": 482,
+      "limitedExposureRows": 78,
+      "explicitZeroCenteredPriorRows": 0
+    },
+    {
+      "seasonStartYear": 2020,
+      "records": 499,
+      "numericRows": 499,
+      "limitedExposureRows": 65,
+      "explicitZeroCenteredPriorRows": 0
+    },
+    {
+      "seasonStartYear": 2021,
+      "records": 567,
+      "numericRows": 567,
+      "limitedExposureRows": 109,
+      "explicitZeroCenteredPriorRows": 0
+    },
+    {
+      "seasonStartYear": 2022,
+      "records": 506,
+      "numericRows": 506,
+      "limitedExposureRows": 71,
+      "explicitZeroCenteredPriorRows": 0
+    },
+    {
+      "seasonStartYear": 2023,
+      "records": 539,
+      "numericRows": 539,
+      "limitedExposureRows": 96,
+      "explicitZeroCenteredPriorRows": 0
+    },
+    {
+      "seasonStartYear": 2024,
+      "records": 538,
+      "numericRows": 538,
+      "limitedExposureRows": 75,
+      "explicitZeroCenteredPriorRows": 0
+    },
+    {
+      "seasonStartYear": 2025,
+      "records": 545,
+      "numericRows": 545,
+      "limitedExposureRows": 80,
+      "explicitZeroCenteredPriorRows": 0
+    }
+  ],
+  "fileCount": 26,
+  "bytes": 24997574,
+  "files": [
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-impact-model-resolver.js",
+      "kind": "engine-source",
+      "bytes": 36848,
+      "sha256": "5a86337c533d37019accff6e489b6f09eb83e9f85ad42d9c057c41b18113ee67"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-impact-model-release-pin.js",
+      "kind": "engine-source",
+      "bytes": 1825,
+      "sha256": "a6f47e3b031b7ac0b72c0a41d2d8e685808cf5a0d8a634bb065ddcc19629b146"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-impact-lineup-adapter.js",
+      "kind": "engine-source",
+      "bytes": 19622,
+      "sha256": "54140cedfb6448a3369d6e116cde7168c52ba6241788fe4423b49d3e663ee318"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-player-name-identity.js",
+      "kind": "engine-source",
+      "bytes": 7711,
+      "sha256": "d3503098c930d4800ca56fdee54f15e526f479a3a7819c1c632fa256c718d9b5"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-player-builder-adapter.js",
+      "kind": "engine-source",
+      "bytes": 4147,
+      "sha256": "f20209f076924e76e440cf0b8b1cc20d2ba09a6a2e3d1d8c654ccf14317fda66"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-site-consumer-policy.js",
+      "kind": "engine-source",
+      "bytes": 2812,
+      "sha256": "922242f8f51ca906ef5de922bb596baac9465a7349d912fbe2a6c7cd59ceb311"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-descriptive-source-consumer.js",
+      "kind": "engine-source",
+      "bytes": 13029,
+      "sha256": "b9b147f8835e1e1701d57872dfb3c663842dc35bd63dc3adea5d27ddfb2da7f4"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-adapter.js",
+      "kind": "engine-source",
+      "bytes": 13862,
+      "sha256": "42cfbcd4641c783e6f150a230d81c15d589a126cb9e1acbe3f215055d99f619d"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-studio-runtime-release-pin.js",
+      "kind": "engine-source",
+      "bytes": 1291995,
+      "sha256": "a8e47f1cbafcbf6ea7b2f35736a68391c99253c72f889c28fd3a3cdeefdd16b0"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-public-network-loader.js",
+      "kind": "engine-source",
+      "bytes": 22546,
+      "sha256": "39e737644abc8c478bab692320710f0485cc5e52a107c829d1a6664eae495b78"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-identity.js",
+      "kind": "engine-source",
+      "bytes": 3338,
+      "sha256": "75255673400de31557142a65038b7996ffc6496291869c4ea463322878bd4baf"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-projection-resolver.js",
+      "kind": "engine-source",
+      "bytes": 27842,
+      "sha256": "8225fde5b9b4b9a347069c724b7b28013fecc5f21c710db2b50623fbaf58332d"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-projection-capability-map.js",
+      "kind": "engine-source",
+      "bytes": 12566,
+      "sha256": "7fb5ce6155135ac7ec9d1c7e5f6a7db5c6a78e329415698e86222d0696b7eee0"
+    },
+    {
+      "path": "tools/swishiq-studio/engine/canonical-v4-player-season-evidence.js",
+      "kind": "engine-source",
+      "bytes": 20479,
+      "sha256": "8d1fafb6108e437ae2b4ca0b930a25f12368db0bdadcc12d9b7bd9a0b70df58c"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/manifest.json",
+      "kind": "companion-data",
+      "bytes": 9006,
+      "sha256": "33ffa08170730bdd072c10b911f699aeeec38e5cc3b76cd567c17bdf49626b2a"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2017/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2459550,
+      "sha256": "675fb1078fba3512c7cbdc0e8bf9cf8365a66ed1b22ecd6639cd0604da658539"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2018/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2399272,
+      "sha256": "533f97e3996a0fed74c75a09ebb601146e84ddaffa3f5fb7fe59ce14259f5633"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2019/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2419682,
+      "sha256": "aec778356221499ad48fedea7e466d977a75ebd3566cd2bbfeea2adeced468c9"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2020/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2504549,
+      "sha256": "7beeefca9e52a29741958fb716c95788a3fb956d26224a229696012e856f0aa5"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2021/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2846800,
+      "sha256": "9461ca6ed48b8e1ba97f410c9b8816c05c676d065d7365a6188bc6baeefe1a02"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2022/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2539602,
+      "sha256": "2e7666a1e4e8d7ba91b2a4b75b169a1f122a11744e73a769d10215a71a0187cb"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2023/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2706016,
+      "sha256": "f287b4b69950065b0789837932ea86b8abbf280b938e86eac94c09571a2654c6"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2024/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2699893,
+      "sha256": "f7c5ed24d47518ec11e81ea69d1fb7c5970616b6b77755f53cb07630e3b41af5"
+    },
+    {
+      "path": "tools/swishiq-studio/data/v4/impact-models/swishiq-v4-impact-native-20261010-v1/seasons/2025/regular/player-impact.json",
+      "kind": "companion-data",
+      "bytes": 2735290,
+      "sha256": "9ba00de9edf1fbbf84ae383640044a696448158d773ad6300cc50d52c29a5da3"
+    },
+    {
+      "path": "tools/swishiq-studio/impact-validation/native-v1/report.json",
+      "kind": "assessment-receipt",
+      "bytes": 196786,
+      "sha256": "d7273fd8c5017a54eb3638c4bac429d0ffdff189823ff8b0b8c385871dd16e41"
+    },
+    {
+      "path": "tools/swishiq-studio/impact-validation/native-v1/report.md",
+      "kind": "assessment-receipt",
+      "bytes": 2506,
+      "sha256": "d0b5cc5564ab67d63bdfe76e388bedc86cb15cae135f0bcb460925d6537c7b2e"
+    }
+  ]
+}
